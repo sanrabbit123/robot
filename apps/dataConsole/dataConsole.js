@@ -66,7 +66,6 @@ DataConsole.prototype.connect = async function () {
 	try {
 		//database on
 		await MONGOC.connect();
-		console.log(`mongo on`);
 
 		//static file sync
 		this.mother.shell.exec(`cp -r ./apps/dataConsole/static ${process.env.HOME};`);
