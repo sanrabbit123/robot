@@ -1,0 +1,36 @@
+CREATE TABLE BD2_deslist (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	a1_relation VARCHAR(255),
+	a2_contractday VARCHAR(255),
+	a3_contract VARCHAR(255),
+	a4_desid VARCHAR(255),
+	a5_name VARCHAR(255),
+	b2_phone VARCHAR(255),
+	b3_email VARCHAR(255),
+	b1_web VARCHAR(255),
+	b4_sns VARCHAR(255),
+	b7_showroom VARCHAR(255),
+	b5_address VARCHAR(255),
+	b6_career VARCHAR(255),
+	c1_fees VARCHAR(255),
+	c2_classification VARCHAR(255),
+	c3_businessnumber VARCHAR(255),
+	c4_bankname VARCHAR(255),
+	c5_accountnumber VARCHAR(255),
+	c6_cashreceipt VARCHAR(255),
+	d1_personality TEXT,
+	d2_designstyle VARCHAR(255),
+	d3_determinants VARCHAR(255),
+	d4_needs TEXT,
+	e1_servicearea VARCHAR(255),
+	e2_available VARCHAR(255),
+	e3_technology VARCHAR(255),
+	e4_furniture TEXT,
+	e5_fabric TEXT,
+	e6_construction VARCHAR(255),
+	f1_designerinfo TEXT,
+	PRIMARY KEY (id)
+);
+
+
+-- INSERT INTO BD2_deslist (a4_desid,a5_name) VALUES ('__create__','__create__');

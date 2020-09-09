@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoB00.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoR00.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoM00.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoEB00.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoSB00.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoUL00.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoT00.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoH00.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sandoll';
+    src: url('./sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
+        url('./sandoll/AppleSDGothicNeoL00.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Futura';
+    src: url('./futura/Futura-Medium.woff2') format('woff2'),
+        url('./futura/Futura-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Futura';
+    src: url('./futura/Futura-Bold.woff2') format('woff2'),
+        url('./futura/Futura-Bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
