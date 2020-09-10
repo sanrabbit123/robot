@@ -1308,7 +1308,7 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
 
   //title
   height = toggle ? 68 : 15.5;
-  top = toggle ? 41 : 9.5;
+  top = toggle ? 41 : 9.2;
   left = toggle ? 41 : 0;
 
   svg_clone = SvgTong.tongMaker();
@@ -1527,6 +1527,5 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
     inputs[i].addEventListener("keypress", submitEventKey);
   }
   //inputs[1].addEventListener("blur", submitEvent, false);
-
 
 }

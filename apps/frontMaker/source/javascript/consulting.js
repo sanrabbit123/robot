@@ -75,7 +75,7 @@ ConsultingJs.prototype.pendingBox = function (mother, boo, clear = false, partia
     height = (boo === "desktop") ? 20 : 5;
     svg_clone = SvgTong.tongMaker();
     svg_clone.src = pending.src;
-    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((boo === "desktop") ? 0 : -1);
     style = {
       position: "absolute",
       top: String((boo === "desktop") ? 29 : 7.8) + ea,
@@ -386,20 +386,7 @@ ConsultingJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order,
     svg_clone.style[i] = style[i];
   }
   svg_clone.addEventListener("click", function () {
-    GeneralJs.stacks[fileMotherinput.getAttribute("cus_name")].push(order);
-    let fileBox = fileMotherinput.parentNode;
-    let fileList = new DataTransfer();
-    for (let i = 0; i < fileMother.length; i++) {
-      if (!GeneralJs.stacks[fileMotherinput.getAttribute("cus_name")].includes(i)) {
-        fileList.items.add(fileMother[i]);
-      }
-    }
-    fileMotherinput.files = fileList.files;
-    if (fileMotherinput.files.length === 0) {
-      fileBox.querySelector(".grayboxwording").style.opacity = '';
-    } else {
-      fileBox.querySelector(".grayboxwording").style.opacity = '0';
-    }
+    fileMotherinput.setAttribute("cus_close" + String(order), "true");
     mother.removeChild(div_clone);
   });
   div_clone.appendChild(SvgTong.parsing(svg_clone));
@@ -563,7 +550,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
         width = thankyouFixedWidth.mobile;
         svg_clone = SvgTongAsync.tongMaker();
         svg_clone.src = vector;
-        height = GeneralJs.parseRatio({ source: svg_clone.src, target: width, method: "width", result: "number" });
+        height = GeneralJs.parseRatio({ source: svg_clone.src, target: width, method: "width", result: "number" }) + 0.5;
         style = {
           position: "relative",
           height: String(height) + ea,
@@ -606,7 +593,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
         width = thankyouFixedWidth.mobile;
         svg_clone = SvgTongAsync.tongMaker();
         svg_clone.src = vector;
-        height = GeneralJs.parseRatio({ source: svg_clone.src, target: width, method: "width", result: "number" });
+        height = GeneralJs.parseRatio({ source: svg_clone.src, target: width, method: "width", result: "number" }) + 0.5;
         style = {
           position: "relative",
           height: String(height) + ea,
@@ -679,7 +666,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
         position: "relative",
         display: "block",
         height: String(height) + ea,
-        width: String(width) + ea,
+        width: String(width + (toggle ? 1 : 0.3)) + ea,
         top: String(0) + ea,
         paddingLeft: String(paddingLeft) + "%",
         marginBottom: String(marginBottom) + ea,
@@ -710,6 +697,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
       for (let j in style) {
         div_clone.style[j] = style[j];
       }
+      div_clone.id = "grayFileBox" + String(i);
       div_clone.setAttribute("cus_order", String(i));
 
       //gray box in wording
@@ -761,7 +749,6 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
       //file input
       file_input = GeneralJs.nodes.input.cloneNode(true);
       file_input.classList.add("targetInputs");
-      GeneralJs.stacks["fileInput" + String(i)] = [];
       attribute = {
         type: "file",
         name: "upload" + String(i),
@@ -781,40 +768,20 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
       div_clone.appendChild(file_input);
       targetDoms.push(file_input);
 
-      //temp file input
-      file_input = GeneralJs.nodes.input.cloneNode(true);
-      attribute = {
-        type: "file",
-        name: "tempUpload" + String(i),
-        accept: "image/*",
-      };
-      style = {
-        display: "none",
-      };
-      for (let j in attribute) {
-        file_input.setAttribute(j, attribute[j]);
-      }
-      for (let j in style) {
-        file_input.style[j] = style[j];
-      }
-      file_input.multiple = true;
-      div_clone.appendChild(file_input);
-      hiddenFileInputs.push(file_input);
-
       //file selection button
       height = toggle ? 12.2 : 3.2;
       top = toggle ? -28 : -6.2;
       right = toggle ? 66 : 15.8;
       svg_clone = SvgTongAsync.tongMaker();
       svg_clone.src = fileSendWhite[0].src[boo];
-      svg_clone.classList.add("hoverdefault");
       width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
       style = {
         position: "absolute",
         height: String(height) + ea,
-        width: String(width) + ea,
+        width: String(width + (toggle ? 1 : 0.3)) + ea,
         right: String(right) + ea,
         top: String(top) + ea,
+        pointer: "cursor"
       };
       for (let j in style) {
         svg_clone.style[j] = style[j];
@@ -826,14 +793,14 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
       right = toggle ? 2 : 0.3;
       svg_clone = SvgTongAsync.tongMaker();
       svg_clone.src = fileSendWhite[1].src[boo];
-      svg_clone.classList.add("hoverdefault");
       width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
       style = {
         position: "absolute",
         height: String(height) + ea,
-        width: String(width) + ea,
+        width: String(width + (toggle ? 1 : 0.3)) + ea,
         right: String(right) + ea,
         top: String(top) + ea,
+        pointer: "cursor"
       };
       for (let j in style) {
         svg_clone.style[j] = style[j];
@@ -864,7 +831,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
     for (let i in style) {
       input_clone.style[i] = style[i];
     }
-    div_clone.appendChild(input_clone);
+    div_clone.parentNode.appendChild(input_clone);
     targetDoms.push(input_clone);
 
     //phone input
@@ -884,13 +851,14 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
     for (let i in style) {
       input_clone.style[i] = style[i];
     }
-    div_clone.appendChild(input_clone);
+    div_clone.parentNode.appendChild(input_clone);
     targetDoms.push(input_clone);
 
     //EVENTS -----------------------------------------------------------------------------------
 
     //drag and drop events
     const allDropEvents = [ 'dragenter', 'dragover', 'dragleave', 'drop' ];
+    let additionFileInputs = new Array(fileBoxes.length);
 
     for (let j = 0; j < fileBoxes.length; j++) {
 
@@ -904,30 +872,154 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
 
       //click event
       GeneralJs.events["fileClickOpen" + String(j)] = function (e) {
+        //initial --------------- start
+        //initial remove add inputs
+        let hiddenInputs = document.getElementById("grayFileBox" + String(j)).querySelectorAll(".grayFileInputAdd" + String(j));
+        for (let i = 0; i < hiddenInputs.length; i++) {
+          document.getElementById("grayFileBox" + String(j)).removeChild(hiddenInputs[i]);
+        }
+        //initial remove white boxes
+        while (fileBoxes[j].firstChild) {
+          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
+        }
+        //initial attributes
+        for (let i = 0; i < 20; i++) {
+          if (targetDoms[j].hasAttribute("cus_close" + String(i))) {
+            targetDoms[j].removeAttribute("cus_close" + String(i));
+          }
+        }
+        //initial --------------- end
+
         targetDoms[j].click();
       }
+
+      //click event add
       fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
       fileSelectionButtons[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
 
       //addition click event
       fileAddButtons[j].addEventListener("click", function (e) {
-        hiddenFileInputs[j].click();
+        let file_input;
+        let attribute = {}, style = {};
+
+        file_input = GeneralJs.nodes.input.cloneNode(true);
+        attribute = {
+          type: "file",
+          name: "upload" + String(j),
+          accept: "image/*",
+        };
+        style = {
+          display: "none",
+        };
+        for (let k in attribute) {
+          file_input.setAttribute(k, attribute[k]);
+        }
+        for (let k in style) {
+          file_input.style[k] = style[k];
+        }
+        file_input.multiple = true;
+        file_input.classList.add("grayFileInputAdd" + String(j));
+        additionFileInputs[j] = file_input;
+
+        document.getElementById("grayFileBox" + String(j)).appendChild(additionFileInputs[j]);
+
+        //append white box
+        additionFileInputs[j].addEventListener("change", function (e) {
+          let inputs = document.getElementById("grayFileBox" + String(j)).querySelectorAll("input");
+          let filesArr = [];
+          let inputArrs = [];
+          let tempArr;
+          for (let i = 0; i < inputs.length; i++) {
+            tempArr = [ ...inputs[i].files ];
+            inputArrs.push(tempArr);
+            for (let k = 0; k < tempArr.length; k++) {
+              filesArr.push(tempArr[k]);
+            }
+          }
+          if (filesArr.length > 0) {
+            fileWording[j].style.opacity = '0';
+            fileBoxes[j].removeEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
+          } else {
+            fileWording[j].style.opacity = '';
+            fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
+          }
+          while (fileBoxes[j].firstChild) {
+            fileBoxes[j].removeChild(fileBoxes[j].lastChild);
+          }
+          for (let i = 0; i < inputArrs.length; i++) {
+            for (let k = 0; k < inputArrs[i].length; k++) {
+              if (!inputs[i].hasAttribute("cus_close" + String(k))) {
+                instance.imageBoxMaker(fileBoxes[j], inputs[i], k, toggle);
+              }
+            }
+          }
+        });
+        additionFileInputs[j].click();
+
       });
+
+      //change event
+      GeneralJs.events["fileStatusChange" + String(j)] = function (e) {
+
+        //initial --------------- start
+        //initial remove add inputs
+        let hiddenInputs = document.getElementById("grayFileBox" + String(j)).querySelectorAll(".grayFileInputAdd" + String(j));
+        for (let i = 0; i < hiddenInputs.length; i++) {
+          document.getElementById("grayFileBox" + String(j)).removeChild(hiddenInputs[i]);
+        }
+        //initial remove white boxes
+        while (fileBoxes[j].firstChild) {
+          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
+        }
+        //initial attributes
+        for (let i = 0; i < 20; i++) {
+          if (targetDoms[j].hasAttribute("cus_close" + String(i))) {
+            targetDoms[j].removeAttribute("cus_close" + String(i));
+          }
+        }
+        //initial --------------- end
+
+        let filesArr = targetDoms[j].files;
+        if (filesArr.length > 0) {
+          fileWording[j].style.opacity = '0';
+          fileBoxes[j].removeEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
+        } else {
+          fileWording[j].style.opacity = '';
+          fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
+        }
+        for (let i = 0; i < filesArr.length; i++) {
+          instance.imageBoxMaker(fileBoxes[j], targetDoms[j], i, toggle);
+        }
+      }
+
+      //change event add
+      targetDoms[j].addEventListener("change", GeneralJs.events["fileStatusChange" + String(j)]);
 
       //drop event
       fileBoxes[j].addEventListener("drop", function (e) {
-        GeneralJs.stacks["fileInput" + String(j)] = [];
+        //prevent change event
+        targetDoms[j].removeEventListener("change", GeneralJs.events["fileStatusChange" + String(j)]);
 
-        let fileList = new DataTransfer();
-        for (let i = 0; i < targetDoms[j].files.length; i++) {
-          fileList.items.add(targetDoms[j].files[i]);
+        //initial --------------- start
+        //initial remove add inputs
+        let hiddenInputs = document.getElementById("grayFileBox" + String(j)).querySelectorAll(".grayFileInputAdd" + String(j));
+        for (let i = 0; i < hiddenInputs.length; i++) {
+          document.getElementById("grayFileBox" + String(j)).removeChild(hiddenInputs[i]);
         }
-        for (let i = 0; i < e.dataTransfer.files.length; i++) {
-          fileList.items.add(e.dataTransfer.files[i]);
+        //initial remove white boxes
+        while (fileBoxes[j].firstChild) {
+          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
         }
+        //initial attributes
+        for (let i = 0; i < 20; i++) {
+          if (targetDoms[j].hasAttribute("cus_close" + String(i))) {
+            targetDoms[j].removeAttribute("cus_close" + String(i));
+          }
+        }
+        //initial --------------- end
 
-        targetDoms[j].files = fileList.files;
-        let filesArr = [ ...targetDoms[j].files ];
+        targetDoms[j].files = e.dataTransfer.files;
+        let filesArr = targetDoms[j].files;
         if (filesArr.length > 0) {
           fileWording[j].style.opacity = '0';
           fileBoxes[j].removeEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
@@ -935,61 +1027,15 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
           fileWording[j].style.opacity = '';
           fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
         }
-        while (fileBoxes[j].firstChild) {
-          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
-        }
+
         for (let i = 0; i < filesArr.length; i++) {
           instance.imageBoxMaker(fileBoxes[j], targetDoms[j], i, toggle);
         }
+
+        //change event add
+        targetDoms[j].addEventListener("change", GeneralJs.events["fileStatusChange" + String(j)]);
+
       }, false);
-
-      //change event
-      targetDoms[j].addEventListener("change", function (e) {
-        GeneralJs.stacks["fileInput" + String(j)] = [];
-        let filesArr = [ ...targetDoms[j].files ];
-        if (filesArr.length > 0) {
-          fileWording[j].style.opacity = '0';
-          fileBoxes[j].removeEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
-        } else {
-          fileWording[j].style.opacity = '';
-          fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
-        }
-        while (fileBoxes[j].firstChild) {
-          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
-        }
-        for (let i = 0; i < filesArr.length; i++) {
-          instance.imageBoxMaker(fileBoxes[j], targetDoms[j], i, toggle);
-        }
-      });
-
-      //file add event
-      hiddenFileInputs[j].addEventListener("change", function (e) {
-        GeneralJs.stacks["fileInput" + String(j)] = [];
-
-        let fileList = new DataTransfer();
-        for (let i = 0; i < targetDoms[j].files.length; i++) {
-          fileList.items.add(targetDoms[j].files[i]);
-        }
-        for (let i = 0; i < hiddenFileInputs[j].files.length; i++) {
-          fileList.items.add(hiddenFileInputs[j].files[i]);
-        }
-
-        targetDoms[j].files = fileList.files;
-        let filesArr = [ ...targetDoms[j].files ];
-        if (filesArr.length > 0) {
-          fileWording[j].style.opacity = '0';
-          fileBoxes[j].removeEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
-        } else {
-          fileWording[j].style.opacity = '';
-          fileBoxes[j].addEventListener("click", GeneralJs.events["fileClickOpen" + String(j)]);
-        }
-        while (fileBoxes[j].firstChild) {
-          fileBoxes[j].removeChild(fileBoxes[j].lastChild);
-        }
-        for (let i = 0; i < filesArr.length; i++) {
-          instance.imageBoxMaker(fileBoxes[j], targetDoms[j], i, toggle);
-        }
-      });
 
     }
 
@@ -1050,12 +1096,29 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
       let formData = new FormData();
       formData.enctype = "multipart/form-data";
 
+      //set files
+      let temp, additionInputs, targetAddInput, targetAddInputFiles;
       for (let i = 0; i < listNum; i++) {
         files[i] = [];
+        temp = [ ...targetDoms[i].files ];
+        additionInputs = document.querySelectorAll(".grayFileInputAdd" + String(i));
+        for (let z = 0; z < temp.length; z++) {
+          if (!targetDoms[i].hasAttribute("cus_close" + String(z))) {
+            files[i].push(temp[z]);
+          }
+        }
+        for (let z = 0; z < additionInputs.length; z++) {
+          targetAddInput = additionInputs[z];
+          targetAddInputFiles = [ ...targetAddInput.files ];
+          for (let x = 0; x < targetAddInputFiles.length; x++) {
+            if (!targetAddInput.hasAttribute("cus_close" + String(x))) {
+              files[i].push(targetAddInputFiles[x]);
+            }
+          }
+        }
       }
-      for (let i = 0; i < listNum; i++) {
-        files[i] = [ ...targetDoms[i].files ];
-      }
+
+      //set name, phone
       for (let i = 0; i < targetDoms.length - listNum; i++) {
         formData.append(targetDoms[listNum + i].getAttribute("name"), targetDoms[listNum + i].value);
       }
@@ -1083,12 +1146,9 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
         instance.pendingBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"));
 
       } else {
-
         alert("현장 사진 또는 선호 사진을 보내주세요!");
         window.scrollTo(0, 0);
-
       }
-
     });
 
     width = width + ((toggle ? 25.5 : 5.5) * 2);
@@ -1635,7 +1695,7 @@ ConsultingJs.prototype.returnBlocks = function () {
               svg_clone = SvgTong.tongMaker();
               svg_clone.classList.add("moblocks_budgetbox_money_off");
               svg_clone.src = buttons[i].src.mobile.off;
-              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.5;
               svg_clone.style.height = String(height) + ea;
               svg_clone.style.width = String(width) + ea;
               div_clone.appendChild(SvgTong.parsing(svg_clone));
@@ -1655,7 +1715,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             svg_clone = SvgTong.tongMaker();
             svg_clone.classList.add("moblocks_budgetbox_etc");
             svg_clone.src = notice.src.mobile;
-            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1.1;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1;
             svg_clone.style.height = String(height) + ea;
             svg_clone.style.width = String(width) + ea;
             dom.appendChild(SvgTong.parsing(svg_clone));
@@ -1959,12 +2019,12 @@ ConsultingJs.prototype.returnBlocks = function () {
             svg_clone = SvgTong.tongMaker();
             svg_clone.src = notice.src.mobile;
             svg_clone.classList.add("moblocks_pyeong_word");
-            height = 3.8;
+            height = 3.2;
             width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
             style = {
               position: "absolute",
               height: String(height) + ea,
-              top: String(11.4) + ea,
+              top: String(11.5) + ea,
               left: String(47.9) + ea,
               width: String(width) + ea,
             };
@@ -2044,12 +2104,12 @@ ConsultingJs.prototype.returnBlocks = function () {
               svg_clone.src = subtitles[i].src.mobile;
               svg_clone.classList.add("moblocks_date_word");
               height = 3.8;
-              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 0.1;
               style = {
                 height: String(height) + ea,
                 left: String(list[i].img.left) + ea,
                 width: String(width) + ea,
-                top: String(21.04) + ea,
+                top: String(20.7) + ea,
               };
               for (let i in style) {
                 svg_clone.style[i] = style[i];
@@ -2074,7 +2134,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             svg_clone.src = buttons[0].src.mobile.off;
             svg_clone.classList.add("moblocks_date_resident_off");
             height = 3.9;
-            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1;
             style = {
               height: String(height) + ea,
               width: String(width) + ea,
@@ -2088,7 +2148,7 @@ ConsultingJs.prototype.returnBlocks = function () {
             svg_clone.src = buttons[0].src.mobile.on;
             svg_clone.classList.add("moblocks_date_resident_on");
             height = 3.9;
-            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1;
             style = {
               height: String(height) + ea,
               width: String(width) + ea,
@@ -2141,10 +2201,10 @@ ConsultingJs.prototype.returnBlocks = function () {
               div_clone.appendChild(input_clone);
 
               svg_clone = SvgTong.tongMaker();
-              svg_clone.src = buttons[i].src.desktop.off;
+              svg_clone.src = buttons[i].src.mobile.off;
               svg_clone.classList.add("moblocks_contract_off");
               height = 3.9;
-              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1;
               style = {
                 height: String(height) + ea,
                 width: String(width) + ea,
@@ -2155,10 +2215,10 @@ ConsultingJs.prototype.returnBlocks = function () {
               div_clone.appendChild(SvgTong.parsing(svg_clone));
 
               svg_clone = SvgTong.tongMaker();
-              svg_clone.src = buttons[i].src.desktop.on;
+              svg_clone.src = buttons[i].src.mobile.on;
               svg_clone.classList.add("moblocks_contract_on");
               height = 3.9;
-              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 1;
               style = {
                 height: String(height) + ea,
                 width: String(width) + ea,
@@ -2546,7 +2606,7 @@ ConsultingJs.prototype.returnBlocks = function () {
                 height = 3;
                 svg_clone = SvgTong.tongMaker();
                 svg_clone.src = list[i][onoff[j]];
-                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 1;
                 svg_clone.style.height = String(height) + ea;
                 svg_clone.style.width = String(width) + ea;
                 svg_clone.style.position = "absolute";
@@ -2598,7 +2658,7 @@ ConsultingJs.prototype.returnBlocks = function () {
                 height = 3;
                 svg_clone = SvgTong.tongMaker();
                 svg_clone.src = list[i][onoff[j]];
-                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+                width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 1;
                 svg_clone.style.height = String(height) + ea;
                 svg_clone.style.width = String(width) + ea;
                 svg_clone.style.position = "absolute";
@@ -2694,12 +2754,12 @@ ConsultingJs.prototype.serveyBox = function (boo) {
   ea = (boo === "desktop") ? "px" : "vw";
 
   let list = [
-    { style: { mobile: { top: "0.85vw", left: "11.2vw", }, }, },
-    { style: { mobile: { top: "0.85vw", left: "35.8vw", }, }, },
-    { style: { mobile: { top: "0.85vw", left: "57.8vw", }, }, },
-    { style: { mobile: { top: "6.15vw", left: "11.2vw", }, }, },
-    { style: { mobile: { top: "6.15vw", left: "35.8vw", }, }, },
-    { style: { mobile: { top: "6.15vw", left: "57.8vw", }, }, },
+    { style: { mobile: { top: "0.85vw", left: "11.2vw" } } },
+    { style: { mobile: { top: "0.85vw", left: "35.8vw" } } },
+    { style: { mobile: { top: "0.85vw", left: "57.8vw" } } },
+    { style: { mobile: { top: "6.15vw", left: "11.2vw" } } },
+    { style: { mobile: { top: "6.15vw", left: "35.8vw" } } },
+    { style: { mobile: { top: "6.15vw", left: "57.8vw" } } },
   ];
   for (let i = 0; i < list.length; i++) {
     list[i].value = survey.children[0].buttons[i].title;
@@ -2799,7 +2859,7 @@ ConsultingJs.prototype.serveyBox = function (boo) {
     height = 3.6;
     svg_clone = SvgTong.tongMaker();
     svg_clone.src = survey.children[0].src[boo];
-    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 0.5;
     style = {
       position: "absolute",
       height: String(height) + ea,
@@ -2828,10 +2888,10 @@ ConsultingJs.prototype.serveyBox = function (boo) {
       if (i === 0) { input_clone.checked = true; }
       div_clone2.appendChild(input_clone);
       for (let j = 0; j < onoff.length; j++) {
-        height = 3.4;
+        height = 3.3;
         svg_clone = SvgTong.tongMaker();
         svg_clone.src = survey.children[0].buttons[i].src[boo][onoff[j]];
-        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.5;
         style = {
           height: String(height) + ea,
           width: String(width) + ea,
@@ -3109,7 +3169,7 @@ ConsultingJs.prototype.baseMaker = function () {
       svg_clone.src = this.map.main[i].src.desktop;
       svg_clone.classList.add("absolutedefault");
       height = (flatform[z] === "desktop") ? 18 : 4.1;
-      width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+      width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform[z] === "desktop") ? 1 : -0.5);
       svg_clone.style.height = String(height) + ea;
       svg_clone.style.width = String(width) + ea;
 
@@ -3167,7 +3227,7 @@ ConsultingJs.prototype.baseMaker = function () {
           svg_clone = SvgTong.tongMaker();
           svg_clone.src = this.map.main[i].children[j].src.mobile;
 
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 0.5;
           svg_clone.style.position = "absolute";
           svg_clone.style.height = String(height) + ea;
           svg_clone.style.width = String(width) + ea;

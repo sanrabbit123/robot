@@ -188,7 +188,7 @@ module.exports = function () {
   .mocenter{margin-left:auto;margin-right:auto;}
 
 
-  .inputdefault{width:100%;height:100%;border:0;outline:0;background-color:transparent;font-family:'Noto Sans KR', sans-serif;font-size:3vw;height:6.4vw;text-decoration:none;text-transform:none;color:#303030;line-height:1.7;letter-spacing:-0.50px;text-shadow:none;padding:0;padding-bottom:0.5vw;}
+  .inputdefault{width:100%;height:100%;border:0;outline:0;background-color:transparent;font-family:'Noto Sans KR', sans-serif;font-size:3.5vw;height:6.4vw;text-decoration:none;text-transform:none;color:#303030;line-height:1.7;letter-spacing:-0.50px;text-shadow:none;padding:0;padding-bottom:0.5vw;}
 
 
   #mologinbox_back{
