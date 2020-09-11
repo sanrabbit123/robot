@@ -184,8 +184,8 @@ Robot.prototype.launching = async function () {
 	}
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 // development
 
@@ -194,29 +194,12 @@ async function main() {
 	const Mother = require(process.cwd() + "/apps/mother.js");
 	let mother = new Mother();
 
-
-	const toGoogle = {
-		"entry.1330142163": "성함",
-		"entry.113799560": "핸드폰",
-		"entry.2114079722": "주소",
-		"entry.132869049": "가족 구성원",
-		"entry.1481370131": "이메일",
-		"entry.795490298": "예산",
-		"entry.1040328027": "평수",
-		"entry.2088583577": "입주일",
-		"entry.2069033904": "계약형태",
-		"entry.1127622227": "공간 상태",
-		"entry.462371043": "요청 사항",
-		"entry.795957898": "유입 경로",
-		"entry.1749939672": "타임 라인",
-	};
-
-	let data = await mother.requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", toGoogle);
-
-	console.log(data);
+	console.log(mother.todayMaker());
+	let today = new Date();
+	console.log(today.getHours());
 
 }
 
-// main();
+main();
 
 // */
