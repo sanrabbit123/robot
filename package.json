@@ -5,7 +5,7 @@
   "main": "robot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "source": "node robot.js frontsource --about",
+    "source": "node robot.js frontsource --entire",
     "pack": "node robot.js front --webpack"
   },
   "author": "",

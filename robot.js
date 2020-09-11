@@ -38,7 +38,7 @@ Robot.prototype.contentsMaker = function (button, arg) {
 		app.launching();
 	} else if (button === "front" || button === "5") {
 		app = new ContentMaker();
-		app.front_maker();
+		app.front_maker(arg);
 	}
 }
 
@@ -91,6 +91,13 @@ Robot.prototype.frontMaker = function (webpack) {
 	fobot.totalLaunching(webpack);
 }
 
+Robot.prototype.frontUpdate = function () {
+	const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
+	let fobot = new FrontMaker();
+	fobot.totalUpdate();
+}
+
+
 Robot.prototype.launching = async function () {
 	try {
 		let re, re2, re3, re4;
@@ -107,7 +114,15 @@ Robot.prototype.launching = async function () {
 			this.frontMaker(true);
 
 		} else if (process.argv[2] === "frontsource") {
-			this.contentsMaker("front");
+
+			if (process.argv[3] !== undefined) {
+				this.contentsMaker("front", process.argv[3].replace(/-/g, ''));
+			} else {
+				this.contentsMaker("front", "general");
+			}
+
+		} else if (process.argv[2] === "frontupdate") {
+			this.frontUpdate();
 
 		} else {
 			re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.exit\n`);

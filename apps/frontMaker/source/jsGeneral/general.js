@@ -619,13 +619,12 @@ GeneralJs.prototype.navigatorMake = function () {
   });
   mobileNavigator.appendChild(SvgTong.parsing(hamburger));
 
-
   document.body.insertBefore(mobileNavigator, loader);
   this.navigator = { desktop: desktopNavigator, mobile: mobileNavigator };
 }
 
 GeneralJs.prototype.footerMake = function (type) {
-  let div_clone, div_clone2, a_clone, svg_clone, mobileType;
+  let div_clone, div_clone2, a_clone, svg_clone;
   let height, width, top;
   let style = {};
   let ea;
@@ -704,36 +703,33 @@ GeneralJs.prototype.footerMake = function (type) {
   document.getElementById("totalcontents").appendChild(div_clone);
 
   //mobile
+  const { mobileCase } = words;
+
   let arr = [];
-  switch (type) {
-    case 'A':
-    case "About":
-    case "Revdetail":
-    case "Portdetail":
-    case "Payment":
-    case "Notfound":
-    case "Event":
-    case "Designer":
-    case "Consulting":
-      arr = ['mofooterA','/portfolio.php','/review.php','/consulting.php'];
-      mobileType = 'A';
-      break;
-    case 'B':
-    case "Portfolio":
-    case "Desdetail":
-      arr = ['mofooterB','/designer.php','/review.php','/consulting.php'];
-      mobileType = 'B';
-      break;
-    case 'C':
-    case "Review":
-      arr = ['mofooterC','/portfolio.php','/designer.php','/consulting.php'];
-      mobileType = 'C';
-      break;
-    case 'D':
-    case "Index":
-      arr = ['mofooterD','/payment.php?card=true','/payment.php?card=true&type=left','/consulting.php'];
-      mobileType = 'D';
-      break;
+  let mobileType;
+  let mobileCaseKeys = Object.keys(mobileCase);
+  let mobileCaseTempArr;
+  let mobileCaseTongs = {};
+
+  for (let i in mobileCase) {
+    mobileCaseTongs[i] = [];
+    mobileCaseTongs[i].push(i);
+    for (let j = 0; j < mobileCase[i].targets.length; j++) {
+      mobileCaseTongs[i].push(mobileCase[i].targets[j]);
+    }
+  }
+
+  for (let i in mobileCaseTongs) {
+    for (let j = 0; j < mobileCaseTongs[i].length; j++) {
+      if (type === mobileCaseTongs[i][j]) {
+        mobileType = i;
+      }
+    }
+  }
+
+  arr.push("mofooter" + mobileType);
+  for (let i = 0; i < mobileCase[mobileType].menu.length; i++) {
+    arr.push(mobileCase[mobileType].menu[i].href);
   }
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1286,24 +1282,39 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
   const mother = document.getElementById(((boo === "desktop") ? "" : "mo") + "totalcontents");
 
   let toggle = (boo === "desktop") ? true : false;
-  let div_back, div_clone, div_clone2, svg_clone, input_clone;
+  let div_back, white_back, div_clone, div_clone2, svg_clone, input_clone;
   let height, width, top, left, right;
   let ea = toggle ? "px" : "vw";
   let style = {};
   let inputs = [];
   let inputsBack = [];
-  let submitEvent, submitEventKey;
+  let submitEvent, submitEventKey, cancelOrSubmitEvent;
   let targetDoms = {};
 
+  //MAKE DOMS -----------------------------------------------------------------------------
+
+  //gray back
   div_back = GeneralJs.nodes.div.cloneNode(true);
   div_back.id = ((boo === "desktop") ? "" : "mo") + "loginbox_back";
-  div_back.addEventListener("click", function (e) {
-    mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "loginbox_back"));
-    mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "loginbox"));
-  });
   mother.appendChild(div_back);
+
+
+  //login box window (div_clone)
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.id = ((boo === "desktop") ? "" : "mo") + "loginbox";
+
+
+  //white back
+  white_back = GeneralJs.nodes.div.cloneNode(true);
+  white_back.classList.add("absolutedefault");
+  style = {
+    background: "#ffffff",
+    borderRadius: "5px",
+  }
+  for (let i in style) {
+    white_back.style[i] = style[i];
+  }
+  div_clone.appendChild(white_back);
 
 
   //title
@@ -1356,6 +1367,7 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
   }
   targetDoms.subTitle = SvgTong.parsing(svg_clone);
   div_clone.appendChild(targetDoms.subTitle);
+
 
   //name
   height = toggle ? 18 : 4.4;
@@ -1483,12 +1495,17 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
   inputsBack[1].appendChild(input_clone);
   inputs.push(input_clone);
 
+
   //end
   mother.appendChild(div_clone);
 
-  //focus and submit
+
+  //EVENTS --------------------------------------------------------------------------------------
+
+  //input submit event
   submitEvent = function (e) {
 
+    //certification
     if (inputs[0].value === "") {
       GeneralJs.inputBackward(inputs[0], "성함을 입력해주세요!");
     } else if (inputs[1].value === "") {
@@ -1506,15 +1523,15 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
       loaderImg.src = instance.map.sub.loader;
       loaderImg.classList.add("loading");
       loaderImg.classList.add("loaderc");
-
       loaderImg.style.top = String(toggle ? 73 : 23.5) + ea;
       div_clone.appendChild(SvgTong.parsing(loaderImg));
 
     }
   }
 
-  GeneralJs.stacks["whiteLoginBox"] = 0;
 
+  //submit event to keypress event
+  GeneralJs.stacks["whiteLoginBox"] = 0;
   submitEventKey = function (e) {
     if (e.keyCode === 13 && GeneralJs.stacks["whiteLoginBox"] === 0) {
       submitEvent(e);
@@ -1522,10 +1539,31 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
     }
   }
 
+
+  //focus on name and keypress event on
   inputs[0].focus();
   for (let i = 0; i < inputs.length; i++) {
     inputs[i].addEventListener("keypress", submitEventKey);
   }
-  //inputs[1].addEventListener("blur", submitEvent, false);
 
+
+  //cancel or submit event (gray back and white back on)
+  cancelOrSubmitEvent = function (cancelBoo) {
+    return function (e) {
+      if (GeneralJs.stacks["whiteLoginBox"] === 0 && inputs[0].value !== '' && inputs[1].value !== '') {
+        submitEvent(e);
+        GeneralJs.stacks["whiteLoginBox"] = 1;
+      } else {
+        if (cancelBoo) {
+          mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "loginbox_back"));
+          mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "loginbox"));
+        }
+      }
+    }
+  }
+
+
+  //cancel or submit event on
+  div_back.addEventListener("click", cancelOrSubmitEvent(true));
+  white_back.addEventListener("click", cancelOrSubmitEvent(false));
 }

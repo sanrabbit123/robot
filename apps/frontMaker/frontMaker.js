@@ -10,6 +10,7 @@ FrontMaker.prototype.links = {
   app: `${process.cwd()}/apps/frontMaker`,
   source: `${process.cwd()}/apps/frontMaker/source`,
   binary: `${process.cwd()}/binary/frontMaker`,
+	binary_www: `${process.cwd()}/binary/frontMaker/www`,
   server: `${process.env.HOME}/poo`,
   server_raw: `${process.env.HOME}`,
   server_name: `poo`,
@@ -378,7 +379,7 @@ FrontMaker.prototype.staticSetting = async function () {
 	}
 }
 
-FrontMaker.prototype.totalLaunching = async function (webpack) {
+FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
   try {
     const dayString = this.mother.todayMaker();
 
@@ -389,14 +390,92 @@ FrontMaker.prototype.totalLaunching = async function (webpack) {
     await this.phpExecToPoo();
     await this.phpGeneralToPoo(dayString);
     await this.tokenToPoo();
-		await this.startChrome(`http://127.0.0.1`, false);
+
+		if (!update) {
+			await this.startChrome(`http://127.0.0.1`, false);
+			console.log(`done`);
+			process.exit();
+		}
 
   } catch (e) {
     console.log(e);
-  } finally {
-    console.log(`done`);
-    process.exit();
   }
 }
+
+FrontMaker.prototype.totalUpdate = async function () {
+	const { fileSystem, shell, shellLink, frontinfo: { host, user } } = this.mother;
+	const { exec } = shell;
+	const { server, binary, binary_www } = this.links;
+	const home = process.env.HOME;
+	const dayString = this.mother.todayMaker();
+	const www = (binary_www.split('/'))[binary_www.split('/').length - 1];
+
+	try {
+		await this.totalLaunching(true, true);
+
+
+		//read home and mkdir autoUpdateFront folder
+		let homeBoo = false;
+		let pastHomeUpdateFolder;
+		let finalUpdateDir;
+		let homeDirList = await fileSystem(`readDir`, [ home ]);
+
+		for (let i of homeDirList) { if (i !== `.DS_Store`) {
+			if (/autoUpdateFront/gi.test(i)) {
+				homeBoo = true;
+				pastHomeUpdateFolder = i;
+			}
+		}}
+		if (homeBoo) {
+			exec(`rm -rf ${home}/${pastHomeUpdateFolder};`);
+		}
+		finalUpdateDir = home + "/autoUpdateFront";
+		exec(`mkdir ${finalUpdateDir}`);
+
+
+		//set binary targets
+		let binaryTragets = [];
+		let binaryDirList = await fileSystem(`readDir`, [ binary ]);
+		for (let i of binaryDirList) { if (i !== `.DS_Store` && i !== `poo` && i !== `www`) {
+			binaryTragets.push(i);
+		}}
+
+
+		//make shellScript : update www and copy homeFolder
+		let totalOrder = '';
+		totalOrder += "cd " + shellLink(server) + ";";
+		totalOrder += "git add -A" + ";";
+		totalOrder += "git commit -m \"Butterfly_Autoupdate" + dayString + "\"" + ";";
+		totalOrder += "git push" + ";";
+		totalOrder += "cd " + shellLink(binary_www) + ";";
+		totalOrder += "git pull" + ";";
+		totalOrder += "cp -r " + shellLink(binary_www) + " " + shellLink(finalUpdateDir) + ";";
+		totalOrder += "rm -rf " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+		totalOrder += "mkdir " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+
+
+		//and copy binaries
+		for (let i of binaryTragets) {
+			totalOrder += "cp -r " + shellLink(binary) + "/" + i + " " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+		}
+
+
+		//send to server
+		totalOrder += "scp -r " + shellLink(finalUpdateDir) + "/" + www + " " + user + "@" + host + ":/" + user + ";";
+		totalOrder += "rm -rf " + shellLink(finalUpdateDir) + ";";
+
+
+		//execute
+		exec(totalOrder);
+
+
+	} catch (e) {
+		console.log(e);
+	} finally {
+		console.log(`done`);
+		process.exit();
+	}
+}
+
 
 module.exports = FrontMaker;

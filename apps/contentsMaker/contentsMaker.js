@@ -689,34 +689,34 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		await fr.writeMap_makeTong();
 
 		//remove binary
-		// let resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
-		// let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
-		// let resBinaryDir = await this.mother.fileSystem(`readDir`, [ resBinaryDirPath ]);
-		// for (let i of resBinaryDir) {
-		// 	if (/\.png$/.test(i)) {
-		// 		this.mother.shell.exec(`rm -rf ${this.mother.shellLink(resBinaryDirPath)}/${i};`);
-		// 	}
-		// }
-		// for (let i of resDir) {
-		// 	if (/\.svg$/.test(i)) {
-		// 		this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${sw}/${i};`);
-		// 	} else if (/\.png$/.test(i)) {
-		// 		this.mother.shell.exec(`mv ${this.options.home_dir}result/${sw}/${i} ${this.mother.shellLink(resBinaryDirPath)};`);
-		// 	}
-		// }
+		let resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
+		let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
+		let resBinaryDir = await this.mother.fileSystem(`readDir`, [ resBinaryDirPath ]);
+		for (let i of resBinaryDir) {
+			if (/\.png$/.test(i)) {
+				this.mother.shell.exec(`rm -rf ${this.mother.shellLink(resBinaryDirPath)}/${i};`);
+			}
+		}
+		for (let i of resDir) {
+			if (/\.svg$/.test(i)) {
+				this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${sw}/${i};`);
+			} else if (/\.png$/.test(i)) {
+				this.mother.shell.exec(`mv ${this.options.home_dir}result/${sw}/${i} ${this.mother.shellLink(resBinaryDirPath)};`);
+			}
+		}
 
 		//remove confirm
-		// resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
-		// for (let i of resDir) {
-		// 	this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${i}`);
-		// }
+		resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
+		for (let i of resDir) {
+			this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${i}`);
+		}
 
 	} catch (e) {
 		console.log(e);
 	}
 }
 
-ContentMaker.prototype.front_maker = async function () {
+ContentMaker.prototype.front_maker = async function (target) {
 	const instance = this;
 	const MongoClient = this.mother.mongo;
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
@@ -725,7 +725,7 @@ ContentMaker.prototype.front_maker = async function () {
 		await this.static_setting();
 
 		//delete result folder
-		let resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
+		const resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
 		for (let i of resDir) {
 			this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${i}`);
 		}
@@ -734,14 +734,22 @@ ContentMaker.prototype.front_maker = async function () {
 		this.options.script_dir = `${process.cwd()}/apps/contentsMaker/factory/script/front_maker`;
 
 		//if map exist, make source files
-		// let mapDir = await this.mother.fileSystem("readDir", [ `${process.cwd()}/apps/contentsMaker/module/frontMaker/map` ]);
-		// for (let i of mapDir) { if (i !== ".DS_Store") {
-		// 	await this.renderSvgPng(i.replace(/\.js$/, ''));
-		// }}
-		await this.renderSvgPng("general");
+		const mapDir = await this.mother.fileSystem("readDir", [ `${process.cwd()}/apps/contentsMaker/module/frontMaker/map` ]);
 
-		//front webpack
-		// this.mother.shell.exec(`node ${this.mother.shellLink(process.cwd())}/robot.js front --webpack`);
+		// image and svg make
+		if (target === undefined) {
+			await this.renderSvgPng("general");
+		} else {
+			if (target === "entire") {
+				for (let i of mapDir) { if (i !== ".DS_Store") {
+					await this.renderSvgPng(i.replace(/\.js$/, ''));
+				}}
+			} else if (mapDir.includes(target + ".js")) {
+				await this.renderSvgPng(target);
+			} else {
+				throw new Error("invaild target");
+			}
+		}
 
 	} catch (e) {
 		console.log(e);

@@ -130,8 +130,6 @@ module.exports = function () {
     left: calc(50% - 283.5px);
     width: 567px;
     height: 226px;
-    background: #fff;
-    border-radius: 5px;
     box-shadow: 0px 5px 15px -14px #404040;
     z-index: 1;
   }
@@ -211,8 +209,6 @@ module.exports = function () {
     left: calc(50% - 39vw);
     width: 78vw;
     height: 62vw;
-    background: #fff;
-    border-radius: 5px;
     box-shadow: 0px 5px 15px -14px #404040;
     z-index: 1;
   }
