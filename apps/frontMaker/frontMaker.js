@@ -14,8 +14,8 @@ FrontMaker.prototype.links = {
   server: `${process.env.HOME}/poo`,
   server_raw: `${process.env.HOME}`,
   server_name: `poo`,
-	map: `${process.cwd()}/apps/contentsMaker/module/frontMaker/map`,
-	svgTong: `${process.cwd()}/apps/contentsMaker/module/frontMaker/svgTong`,
+	map: `${process.cwd()}/apps/mapMaker/map`,
+	svgTong: `${process.cwd()}/apps/mapMaker/svgTong`,
 }
 
 FrontMaker.prototype.startChrome = async function (link, newBoo = true) {
@@ -339,7 +339,7 @@ FrontMaker.prototype.imageToStatic = async function () {
   try {
 		let list = await this.mother.fileSystem(`readDir`, [ `${this.links.binary}` ]);
 		let list_image = await this.mother.fileSystem(`readDir`, [ `${this.links.server}/list_image` ]);
-		for (let i of list_image) { if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo") {
+		for (let i of list_image) { if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www") {
 			this.mother.shell.exec(`rm -rf ${this.mother.shellLink(`${this.links.server}/list_image/${i}`)};`);
       console.log(`delete image ${i} success`);
 		}}
@@ -413,7 +413,6 @@ FrontMaker.prototype.totalUpdate = async function () {
 	try {
 		await this.totalLaunching(true, true);
 
-
 		//read home and mkdir autoUpdateFront folder
 		let homeBoo = false;
 		let pastHomeUpdateFolder;
@@ -432,14 +431,12 @@ FrontMaker.prototype.totalUpdate = async function () {
 		finalUpdateDir = home + "/autoUpdateFront";
 		exec(`mkdir ${finalUpdateDir}`);
 
-
 		//set binary targets
 		let binaryTragets = [];
 		let binaryDirList = await fileSystem(`readDir`, [ binary ]);
 		for (let i of binaryDirList) { if (i !== `.DS_Store` && i !== `poo` && i !== `www`) {
 			binaryTragets.push(i);
 		}}
-
 
 		//make shellScript : update www and copy homeFolder
 		let totalOrder = '';
@@ -453,21 +450,17 @@ FrontMaker.prototype.totalUpdate = async function () {
 		totalOrder += "rm -rf " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
 		totalOrder += "mkdir " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
 
-
 		//and copy binaries
 		for (let i of binaryTragets) {
 			totalOrder += "cp -r " + shellLink(binary) + "/" + i + " " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
 		}
 
-
 		//send to server
 		totalOrder += "scp -r " + shellLink(finalUpdateDir) + "/" + www + " " + user + "@" + host + ":/" + user + ";";
 		totalOrder += "rm -rf " + shellLink(finalUpdateDir) + ";";
 
-
 		//execute
 		exec(totalOrder);
-
 
 	} catch (e) {
 		console.log(e);

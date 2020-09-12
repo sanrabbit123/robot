@@ -33,13 +33,13 @@ module.exports = {
         },
         "words": {
           "desktop": {
-            "main": "slideWords_3rspot633_082112.svg",
-            "sub": "slideSub_10rspot049_082112.svg"
+            "main": "slideWords_3rspot633_091216.svg",
+            "sub": "slideSub_10rspot049_091216.svg"
           },
           "mobile": {
-            "main": "slideWords_3rspot633_082112.svg",
-            "sub": "moslideSub_5rspot196_082112.svg",
-            "circles": "moslideCircles_4rspot679_082112.svg"
+            "main": "slideWords_3rspot633_091216.svg",
+            "sub": "moslideSub_5rspot196_091216.svg",
+            "circles": "moslideCircles_4rspot679_091216.svg"
           }
         }
       }
@@ -92,31 +92,31 @@ module.exports = {
       "src": {
         "desktop": {
           "left": {
-            "words": "aboutleft_1rspot791_082112.svg",
-            "button": "aboutbuttonleft_6rspot759_082112.svg",
+            "words": "aboutleft_1rspot791_091216.svg",
+            "button": "aboutbuttonleft_6rspot759_091216.svg",
             "image": "main3s1.jpg"
           },
           "right": {
-            "words": "aboutright_1rspot824_082112.svg",
-            "button": "aboutbuttonright_6rspot749_082112.svg",
+            "words": "aboutright_1rspot824_091216.svg",
+            "button": "aboutbuttonright_6rspot749_091216.svg",
             "image": "main3s2.jpg"
           }
         },
         "mobile": {
           "left": {
-            "words": "moaboutleft_2rspot746_082112.svg",
+            "words": "moaboutleft_2rspot746_091216.svg",
             "images": [
-              "moabout0_level0_1rspot378_082112.svg",
-              "moabout0_level1_1rspot378_082112.png",
-              "moabout0_level2_1rspot378_082112.svg"
+              "moabout0_level0_1rspot378_091216.svg",
+              "moabout0_level1_1rspot378_091216.png",
+              "moabout0_level2_1rspot378_091216.svg"
             ]
           },
           "right": {
-            "words": "moaboutright_2rspot721_082112.svg",
+            "words": "moaboutright_2rspot721_091216.svg",
             "images": [
-              "moabout1_level0_1rspot378_082112.svg",
-              "moabout1_level1_1rspot378_082112.png",
-              "moabout1_level2_1rspot378_082112.svg"
+              "moabout1_level0_1rspot378_091216.svg",
+              "moabout1_level1_1rspot378_091216.png",
+              "moabout1_level2_1rspot378_091216.svg"
             ]
           }
         }
@@ -130,15 +130,15 @@ module.exports = {
         "subButton": "Consulting"
       },
       "src": {
-        "desktop": "bannerMain_7rspot209_082112.svg",
-        "mobile": "bannermoMain_8rspot363_082112.svg",
-        "button": "bannerButton_6rspot753_082112.svg",
-        "subbutton": "bannerSubButton_4rspot984_082112.svg",
-        "arrow": "bannerArrow_2rspot801_082112.svg",
+        "desktop": "bannerMain_7rspot209_091216.svg",
+        "mobile": "bannermoMain_8rspot363_091216.svg",
+        "button": "bannerButton_6rspot753_091216.svg",
+        "subbutton": "bannerSubButton_4rspot984_091216.svg",
+        "arrow": "bannerArrow_2rspot801_091216.svg",
         "shadow": [
-          "bannerShadow0_3rspot367_082112.svg",
-          "bannerShadow1_3rspot367_082112.png",
-          "bannerShadow2_3rspot367_082112.svg"
+          "bannerShadow0_3rspot367_091216.svg",
+          "bannerShadow1_3rspot367_091216.png",
+          "bannerShadow2_3rspot367_091216.svg"
         ]
       }
     },
@@ -156,12 +156,12 @@ module.exports = {
         ]
       },
       "src": {
-        "portfolio": "portfolio_p_8rspot491_082112.svg",
-        "review": "portfolio_r_6rspot881_082112.svg",
-        "tags": "portfolio_tags_5rspot512_082112.svg",
+        "portfolio": "portfolio_p_8rspot491_091216.svg",
+        "review": "portfolio_r_6rspot881_091216.svg",
+        "tags": "portfolio_tags_5rspot512_091216.svg",
         "icons": {
-          "search": "portfoliosearch_0rspot945_082112.svg",
-          "circles": "portfoliocircles_4rspot679_082112.svg"
+          "search": "portfoliosearch_0rspot945_091216.svg",
+          "circles": "portfoliocircles_4rspot679_091216.svg"
         }
       }
     },
@@ -191,21 +191,21 @@ module.exports = {
       },
       "src": {
         "words": {
-          "desktop": "belowAboutWord_1rspot667_082112.svg",
-          "tablet": "tabelowAboutWord_0rspot93_082112.svg",
-          "mobile": "mobelowAboutWord_2rspot615_082112.svg"
+          "desktop": "belowAboutWord_1rspot667_091216.svg",
+          "tablet": "tabelowAboutWord_0rspot93_091216.svg",
+          "mobile": "mobelowAboutWord_2rspot615_091216.svg"
         },
-        "button": "belowAboutbutton_6rspot759_082112.svg",
+        "button": "belowAboutbutton_6rspot759_091216.svg",
         "images": {
           "desktop": [
-            "belowabout_level0_2rspot332_082112.png",
-            "belowabout_level1_2rspot332_082112.svg",
-            "belowabout_level2_2rspot332_082112.png"
+            "belowabout_level0_2rspot332_091216.png",
+            "belowabout_level1_2rspot332_091216.svg",
+            "belowabout_level2_2rspot332_091216.png"
           ],
           "mobile": [
-            "mobelowabout_level0_0rspot587_082112.png",
-            "mobelowabout_level1_0rspot587_082112.svg",
-            "mobelowabout_level2_0rspot587_082112.png"
+            "mobelowabout_level0_0rspot587_091216.png",
+            "mobelowabout_level1_0rspot587_091216.svg",
+            "mobelowabout_level2_0rspot587_091216.png"
           ]
         }
       }
@@ -220,21 +220,21 @@ module.exports = {
       ],
       "src": [
         {
-          "src": "belowButton0_4rspot789_082112.svg",
+          "src": "belowButton0_4rspot789_091216.svg",
           "link": "/about.php"
         },
         {
-          "src": "belowButton1_6rspot65_082112.svg",
+          "src": "belowButton1_6rspot65_091216.svg",
           "link": "http://hansungidschool.com/ver02/course/course2.asp"
         },
         {
-          "src": "belowButton2_5rspot644_082112.svg",
+          "src": "belowButton2_5rspot644_091216.svg",
           "link": "https://docs.google.com/forms/d/e/1FAIpQLSceV-1hP44vmNJas3zBiKQqISkLHs8916AdsDSxlj2yYytQwg/viewform"
         }
       ]
     },
     "copyRight": {
-      "src": "copyRight_25rspot51_082112.svg"
+      "src": "copyRight_25rspot51_091216.svg"
     }
   }
 }

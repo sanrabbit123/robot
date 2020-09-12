@@ -97,6 +97,15 @@ Robot.prototype.frontUpdate = function () {
 	fobot.totalUpdate();
 }
 
+Robot.prototype.getConsulting = async function (webpack = false) {
+  try {
+    const GetConsulting = require(`${process.cwd()}/apps/getConsulting/getConsulting.js`);
+    let app = new GetConsulting();
+    await app.launching(webpack);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 Robot.prototype.launching = async function () {
 	try {
@@ -124,8 +133,15 @@ Robot.prototype.launching = async function () {
 		} else if (process.argv[2] === "frontupdate") {
 			this.frontUpdate();
 
+		} else if (process.argv[2] === "consulting") {
+			if (process.argv[3] !== "pack" && process.argv[3] !== "webpack") {
+				await this.getConsulting(false);
+			} else {
+				await this.getConsulting(true);
+			}
+
 		} else {
-			re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.exit\n`);
+			re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);
 
 			//console server
 			if (re === "back" || re === "1") {
@@ -174,8 +190,12 @@ Robot.prototype.launching = async function () {
 			} else if (re === "front" || re === "6") {
 				this.frontMaker(false);
 
+			//consulting
+		} else if (re === "consulting" || re === "7") {
+				await this.getConsulting(false);
+
 			//exit
-			} else if (re === "exit" || re === "7") {
+			} else if (re === "exit" || re === "8") {
 				process.exit();
 			}
 		}
@@ -184,8 +204,8 @@ Robot.prototype.launching = async function () {
 	}
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 // development
 
@@ -200,6 +220,6 @@ async function main() {
 
 }
 
-main();
+// main();
 
 // */

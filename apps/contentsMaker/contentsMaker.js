@@ -1,18 +1,16 @@
 const ContentMaker = function (arg = "g00") {
 	const Mother = require(`${process.cwd()}/apps/mother.js`);
 	this.mother = new Mother();
-	this.dir = `${process.cwd()}/apps/contentsMaker`;
-	this.generator = {
-		factory: require(`${this.dir}/factory/generator.js`),
-	}
-	this.text = {}
+	this.text = {};
 	this.portfolioNum = arg;
+
 	this.queryObj = {
 		revdeta_query: '',
 		revlist_query: '',
 		pordeta_query: '',
 		porlist_query: '',
-	}
+	};
+
 	this.options = {
 		os_home_dir: process.env.HOME,
 		home_dir: `${process.env.HOME}/contentsMaker/`,
@@ -23,13 +21,25 @@ const ContentMaker = function (arg = "g00") {
 		new_photo_sg: [],
 		fileSystem: this.mother.fileSystem,
 		dayString: (this.mother.todayMaker()),
-	}
+	};
+
 	this.motherLink = {
 		mainBinary: `${this.mother.returnUragenPath()}/_NewWeb/poo`,
 		webPath: `${this.mother.returnUragenPath()}/_NewWeb`,
 		portfoiloBinary: `${this.mother.returnUragenPath()}/_Portfolio`,
 		proposalBinary: `${process.env.HOME}/static`,
-	}
+	};
+
+	this.links = {
+		app: `${process.cwd()}/apps/contentsMaker`,
+		factory: `${process.cwd()}/apps/contentsMaker/factory`,
+		mapMaker: `${process.cwd()}/apps/mapMaker`,
+		map: `${process.cwd()}/apps/mapMaker/map`,
+		svgTong: `${process.cwd()}/apps/mapMaker/map/svgTong`,
+	};
+
+	this.generator = require(`${this.links.app}/factory/generator.js`);
+
 }
 
 ContentMaker.prototype.startAdobe = async function (obj) {
@@ -275,7 +285,7 @@ ContentMaker.prototype.makeAnd_execute = async function () {
 			temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
 			temp_scriptString += await this.mother.fileSystem(`readString`, [ `${this.options.home_dir}factory/script/polyfill.js` ]);
 			temp_scriptString += `\n`;
-			temp_scriptString += await this.mother.babelSystem(this.generator.factory.contents_maker[i](this.options));
+			temp_scriptString += await this.mother.babelSystem(this.generator.contents_maker[i](this.options));
 			await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/${i}.js`, temp_scriptString ]);
 		}
 		if (this.text.r_id !== "re999") {
@@ -283,7 +293,7 @@ ContentMaker.prototype.makeAnd_execute = async function () {
 				temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
 				temp_scriptString += await this.mother.fileSystem(`readString`, [ `${this.options.home_dir}factory/script/polyfill.js` ]);
 				temp_scriptString += `\n`;
-				temp_scriptString += await this.mother.babelSystem(this.generator.factory.contents_maker[i](this.options));
+				temp_scriptString += await this.mother.babelSystem(this.generator.contents_maker[i](this.options));
 				await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/${i}.js`, temp_scriptString ]);
 			}
 		}
@@ -590,7 +600,7 @@ ContentMaker.prototype.proposal_make = async function () {
 		temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
 		temp_scriptString += await fileSystem(`readString`, [ `${shellLink(home_dir)}factory/script/polyfill.js` ]);
 		temp_scriptString += `\n`;
-		temp_scriptString += await babelSystem(this.generator.factory.proposal_maker.proposal(this.options));
+		temp_scriptString += await babelSystem(this.generator.proposal_maker.proposal(this.options));
 		await fileSystem(`write`, [ `${this.options.home_dir}script/proposal.js`, temp_scriptString ]);
 		let result_dir = await fileSystem(`readDir`, [ `${shellLink(home_dir)}result` ]);
 		for (let i of result_dir) { if (i !== ".DS_Store") {
@@ -644,23 +654,26 @@ ContentMaker.prototype.proposal_launching = async function () {
 
 ContentMaker.prototype.renderSvgPng = async function (sw) {
 	if (/\.js$/.test(sw)) { sw = sw.replace(/\.js$/, ''); }
+
 	const instance = this;
-	let aiFilesDir = "/apps/frontMaker";
-	let binaryTotalPath = this.mother.returnFriendsPath("rabbit").pathDirString + aiFilesDir + "/" + sw;
+	const { fileSystem, shell, shellLink } = this.mother;
+	const { exec } = shell;
+
+	const binaryTotalPath = this.mother.returnFriendsPath("rabbit").pathDirString + "/apps/frontMaker/" + sw;
 	let binaryTotalDir, targetAIList;
 	try {
 
 		//init setting
-		let fr, temp_scriptString, front_options;
-		const FrontMaker = require(`${process.cwd()}/apps/contentsMaker/module/frontMaker/frontMaker.js`);
-		fr = new FrontMaker(sw, this.options);
-		this.mother.shell.exec(`mkdir ${this.options.home_dir}result/${sw}`);
+		let mapMaker, temp_scriptString, front_options;
+		const MapMaker = require(`${this.links.mapMaker}/mapMaker.js`);
+		mapMaker = new MapMaker(sw);
+		exec(`mkdir ${shellLink(this.options.home_dir + "result")}/${sw}`);
 
-		//make map into aiScript
-		this.text = await fr.mapGenerator();
+		//get map object
+		this.text = await mapMaker.mapGenerator();
 
 		//if ai file exist, add ai file info
-		binaryTotalDir = await this.mother.fileSystem("readDir", [ binaryTotalPath ]);
+		binaryTotalDir = await fileSystem("readDir", [ binaryTotalPath ]);
 		targetAIList = [];
 		for (let i of binaryTotalDir) { if (/\.ai$/.test(i)) {
 			targetAIList.push(i);
@@ -676,7 +689,7 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		}
 
 		//start aiScript
-		temp_scriptString = await this.generator.factory.front_maker[sw](this.options);
+		temp_scriptString = await this.generator.front_maker[sw](this.options);
 		await this.startAdobe({
 			name: `front_${sw}`,
 			data: this.text,
@@ -686,29 +699,29 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		});
 
 		//make svgTong files and make map with source written
-		await fr.writeMap_makeTong();
+		await mapMaker.writeMap_makeTong();
 
 		//remove binary
-		let resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
+		let resDir = await fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
 		let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
-		let resBinaryDir = await this.mother.fileSystem(`readDir`, [ resBinaryDirPath ]);
+		let resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
 		for (let i of resBinaryDir) {
 			if (/\.png$/.test(i)) {
-				this.mother.shell.exec(`rm -rf ${this.mother.shellLink(resBinaryDirPath)}/${i};`);
+				exec(`rm -rf ${shellLink(resBinaryDirPath)}/${i};`);
 			}
 		}
 		for (let i of resDir) {
 			if (/\.svg$/.test(i)) {
-				this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${sw}/${i};`);
+				exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${sw}/${i};`);
 			} else if (/\.png$/.test(i)) {
-				this.mother.shell.exec(`mv ${this.options.home_dir}result/${sw}/${i} ${this.mother.shellLink(resBinaryDirPath)};`);
+				exec(`mv ${shellLink(this.options.home_dir + "result")}/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
 			}
 		}
 
 		//remove confirm
-		resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
+		resDir = await fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
 		for (let i of resDir) {
-			this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${i}`);
+			exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
 		}
 
 	} catch (e) {
@@ -718,6 +731,8 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 
 ContentMaker.prototype.front_maker = async function (target) {
 	const instance = this;
+	const { fileSystem, shell, shellLink } = this.mother;
+	const { exec } = shell;
 	const MongoClient = this.mother.mongo;
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
 	try {
@@ -725,16 +740,16 @@ ContentMaker.prototype.front_maker = async function (target) {
 		await this.static_setting();
 
 		//delete result folder
-		const resDir = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
+		const resDir = await fileSystem(`readDir`, [ this.options.home_dir + "result" ]);
 		for (let i of resDir) {
-			this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${i}`);
+			exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
 		}
 
 		//init setting
-		this.options.script_dir = `${process.cwd()}/apps/contentsMaker/factory/script/front_maker`;
+		this.options.script_dir = `${this.links.factory}/script/front_maker`;
 
 		//if map exist, make source files
-		const mapDir = await this.mother.fileSystem("readDir", [ `${process.cwd()}/apps/contentsMaker/module/frontMaker/map` ]);
+		const mapDir = await fileSystem("readDir", [ this.links.map ]);
 
 		// image and svg make
 		if (target === undefined) {
