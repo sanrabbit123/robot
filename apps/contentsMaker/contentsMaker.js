@@ -119,7 +119,7 @@ ContentMaker.prototype.photo_clean = async function () {
 		let photo_list = await this.mother.fileSystem(`readDir`, [ this.options.photo_dir ]);
 		if (photo_list.length !== 0) {
 			for (let i of photo_list) { if (i !== ".DS_Store") {
-				this.mother.shell.exec(`rm -f ${this.mother.shellLink(this.options.photo_dir)}/${i};`);
+				this.mother.shell.exec(`rm -f ${this.mother.shellLink(this.options.photo_dir)}${i};`);
 			}}
 			console.log(`clean success`);
 		} else {
@@ -175,8 +175,8 @@ ContentMaker.prototype.photo_search = async function () {
 }
 
 ContentMaker.prototype.photo_sort = async function () {
+	const instance = this;
 	try {
-		let instance = this;
 		let photo_list = [];
 		let file_list = await this.mother.fileSystem(`readDir`, [ this.options.photo_dir ]);
 		if (file_list.length === 0) {
@@ -200,8 +200,8 @@ ContentMaker.prototype.photo_sort = async function () {
 }
 
 ContentMaker.prototype.photo_list = async function () {
+	const instance = this;
 	try {
-		let instance = this;
 		let photo_list = await this.photo_sort();
 		let new_item, dimensions;
 		function photoshopScript(argv) {
@@ -236,38 +236,49 @@ ContentMaker.prototype.photo_list = async function () {
 }
 
 ContentMaker.prototype.static_setting = async function () {
+	const instance = this;
+	const { fileSystem, shell, shellLink } = this.mother;
+	const { exec } = shell;
 	try {
-		const instance = this;
-		let staticFolderBoo = await this.mother.fileSystem(`readDir`, [ process.env.HOME ]);
-		let staticFolderBootr = false;
+		let staticFolderBoo, staticFolderBootr;
+		let staticFolderscriptBoo, staticFolderscriptBootr, staticFolderresultBootr, staticFoldertempBootr;
+
+		staticFolderBoo = await fileSystem(`readDir`, [ process.env.HOME ]);
+		staticFolderBootr = false;
 		for (let i of staticFolderBoo) {
 			if (/^contentsMaker/.test(i)) { staticFolderBootr = true; }
 		}
+
 		if (!staticFolderBootr) {
-			this.mother.shell.exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}script;mkdir ${this.options.home_dir}result;mkdir ${this.options.home_dir}temp`);
+
+			exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}script;mkdir ${this.options.home_dir}result;mkdir ${this.options.home_dir}temp`);
+
 		} else {
-			let staticFolderscriptBoo = await this.mother.fileSystem(`readDir`, [ this.options.home_dir ]);
-			let staticFolderscriptBootr = false;
+
+			staticFolderscriptBoo = await fileSystem(`readDir`, [ this.options.home_dir ]);
+			staticFolderscriptBootr = false;
 			for (let i of staticFolderscriptBoo) {
 				if (/^script$/.test(i)) { staticFolderscriptBootr = true; }
 			}
-			if (!staticFolderscriptBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}script`); }
-			let staticFolderresultBootr = false;
+			if (!staticFolderscriptBootr) { exec(`mkdir ${this.options.home_dir}script`); }
+			staticFolderresultBootr = false;
 			for (let i of staticFolderscriptBoo) {
 				if (/^result$/.test(i)) { staticFolderresultBootr = true; }
 			}
-			if (!staticFolderresultBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}result`); }
-			let staticFoldertempBootr = false;
+			if (!staticFolderresultBootr) { exec(`mkdir ${this.options.home_dir}result`); }
+			staticFoldertempBootr = false;
 			for (let i of staticFolderscriptBoo) {
 				if (/^temp/.test(i)) { staticFoldertempBootr = true; }
 			}
-			if (!staticFoldertempBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}temp`); }
+			if (!staticFoldertempBootr) { exec(`mkdir ${this.options.home_dir}temp`); }
+
 		}
 
 		let folderList = [ "factory", "resource" ];
 		for (let f of folderList) {
-			this.mother.shell.exec(`cp -r ./apps/contentsMaker/${f} ${this.options.home_dir}`);
+			exec(`cp -r ${shellLink(this.links.app)}/${f} ${this.options.home_dir}`);
 		}
+
 	} catch (e) {
 		console.log(e.message);
 	}
@@ -297,6 +308,7 @@ ContentMaker.prototype.makeAnd_execute = async function () {
 				await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/${i}.js`, temp_scriptString ]);
 			}
 		}
+
 		//folder maker
 		let resultFolderBoo = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
 		for (let i of resultFolderBoo) {
@@ -311,6 +323,7 @@ ContentMaker.prototype.makeAnd_execute = async function () {
 			this.mother.shell.exec(`mkdir ${this.options.home_dir}result/${this.text.r_id}code`);
 			this.mother.shell.exec(`mkdir ${this.options.home_dir}result/${this.text.r_id}code/${this.text.r_id}`);
 		}
+
 		//execute
 		for (let i of orders) {
 			this.mother.shell.exec(`osascript ${this.options.home_dir}factory/applescript/start_adobe.scpt ${i}`);
