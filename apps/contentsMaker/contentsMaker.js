@@ -204,7 +204,7 @@ ContentMaker.prototype.photo_list = async function () {
 	try {
 		let photo_list = await this.photo_sort();
 		let new_item, dimensions;
-		function photoshopScript(argv) {
+		let photoshopScript = function (argv) {
 			let text = '';
 			text += 'tell application "Adobe Photoshop 2020"\n';
 			text += '\tactivate\n';
@@ -230,6 +230,7 @@ ContentMaker.prototype.photo_list = async function () {
 			this.options.new_photo_list.push(new_item);
 			this.options.new_photo_sg.push(dimensions.replace(/[^gs]/g, ''));
 		}
+
 	} catch (e) {
 		console.log(e.message);
 	}
@@ -423,19 +424,22 @@ ContentMaker.prototype.query_maker = async function (result) {
 }
 
 ContentMaker.prototype.total_make = async function () {
-	let instance = this;
+	const instance = this;
 	const MongoClient = this.mother.mongo;
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
 	try {
-		this.text = require(`${process.cwd()}/apps/contentsMaker/resource/${this.portfolioNum}.js`);
+		this.text = require(`${this.links.app}/resource/${this.portfolioNum}.js`);
+		
 		await MONGOC.connect();
 		await this.static_setting();
 		await this.photo_search();
 		await this.photo_list();
 		await this.makeAnd_execute();
-		let result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: this.text.designer });
+
+		const result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: this.text.designer });
 		await this.query_maker(result);
 		console.log(`done`);
+
 	} catch (e) {
 		console.log(e);
 	} finally {
@@ -592,7 +596,10 @@ ContentMaker.prototype.to_poo = async function () {
 			scpMsg += `scp -r ${pooPath.revrev} miro81@home-liaison.com:/miro81/www/list_svg/;`;
 			scpMsg += `scp -i ${process.env.HOME}/database.pem -r ${pooPath.revrev} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
 		}
+
+		//view scp
 		console.log(scpMsg);
+
 	} catch (e) {
 		console.log(e.message);
 	} finally {
@@ -787,5 +794,6 @@ ContentMaker.prototype.front_maker = async function (target) {
 		process.exit();
 	}
 }
+
 
 module.exports = ContentMaker;
