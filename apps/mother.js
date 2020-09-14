@@ -52,17 +52,43 @@ Mother.prototype.shellLink = function (str) {
 	return newStr;
 }
 
-Mother.prototype.tempDelete = async function (dir = null) {
-	let targetDir, tempDir;
+Mother.prototype.tempDelete = function (dir = null) {
+	const fs = require('fs');
+	const shell = require('shelljs');
+	const shellLink = function (str) {
+		let arr = str.split('/');
+		let newStr = '';
+		for (let i of arr) {
+		  if (!/ /g.test(i)) {
+				newStr += i + '/';
+		  } else if (!/^'/.test(i) && !/'$/.test(i)) {
+				newStr += "'" + i + "'" + '/';
+		  } else {
+				newStr += i + '/';
+		  }
+		}
+		newStr = newStr.slice(0, -1);
+		return newStr;
+	}
+
+	let targetDir;
 	if (dir === null) {
-		targetDir = this.tempDir;
+		targetDir = `${process.cwd()}/temp`;
 	} else {
 		targetDir = dir;
 	}
-	tempDir = await this.fileSystem(`readDir`, [ targetDir ]);
-	for (let i = 0; i < tempDir.length; i++) { if (tempDir[i] !== `.DS_Store`) {
-		this.shell.exec(`rm -rf ${this.shellLink(targetDir)}/${tempDir[i]};`);
-	}}
+	return new Promise(function (resolve, reject) {
+		fs.readdir(targetDir, function (err, filelist) {
+			if (err) {
+				reject(err);
+			} else {
+				for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
+					shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+				}}
+				resolve("success");
+			}
+		});
+	});
 }
 
 Mother.prototype.todayMaker = function () {
@@ -328,21 +354,68 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
-Mother.prototype.appleScript = async function (name, contents, dir = null, clean = true, silent = false) {
-	try {
-		let targetDir;
-		if (dir === null) {
-			targetDir = this.tempDir;
-		} else {
-			targetDir = dir;
+Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
+	const fs = require('fs');
+	const shell = require('shelljs');
+	const shellLink = function (str) {
+		let arr = str.split('/');
+		let newStr = '';
+		for (let i of arr) {
+		  if (!/ /g.test(i)) {
+				newStr += i + '/';
+		  } else if (!/^'/.test(i) && !/'$/.test(i)) {
+				newStr += "'" + i + "'" + '/';
+		  } else {
+				newStr += i + '/';
+		  }
 		}
-		if (clean) { await this.tempDelete(targetDir); }
-    await this.fileSystem(`write`, [ `${targetDir}/${name}.applescript`, contents ]);
-    let output = this.shell.exec(`osascript ${this.shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-		if (clean) { await this.tempDelete(targetDir); }
-    return output.stdout;
-	} catch (e) {
-		console.log(e);
+		newStr = newStr.slice(0, -1);
+		return newStr;
+	}
+
+	let targetDir;
+	if (dir === null) {
+		targetDir = `${process.cwd()}/temp`;
+	} else {
+		targetDir = dir;
+	}
+
+	if (clean) {
+
+		return new Promise(function (resolve, reject) {
+			fs.readdir(targetDir, function (err, filelist) {
+				if (err) {
+					reject(err);
+				} else {
+					for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
+						shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+					}}
+					fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
+						if (err) {
+							reject(err);
+						} else {
+							let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
+							shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
+							resolve(output.stdout);
+						}
+					});
+				}
+			});
+		});
+
+	} else {
+
+		return new Promise(function (resolve, reject) {
+			fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
+				if (err) {
+					reject(err);
+				} else {
+					let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
+					resolve(output.stdout);
+				}
+			});
+		});
+
 	}
 }
 

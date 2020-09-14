@@ -242,8 +242,6 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "성함을 입력해주세요!");
     } else if (/[a-zA-Z]/g.test(obj.pretext)) {
       GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "한글로 성함을 입력해주세요!");
-    } else if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(obj.pretext)) {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "성함을 정확히 입력해주세요!");
     } else if (obj.cellphone === '') {
       GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_phone > input"), "연락처를 남겨주세요!");
     } else if (mother.querySelector(queryId + "blocks_address0 > input").value === '') {

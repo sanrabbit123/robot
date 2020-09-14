@@ -314,6 +314,73 @@ Mother.prototype.return_asterisk = function (options = {}) {
   return pathAsterisk;
 }
 
+Mother.prototype.return_arrow = function (options = {}) {
+  let pathArrow, ratio, points;
+  let x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5;
+  let anchors, leftHandle, rightHandle;
+
+	x0 = 445.830130989714;
+	y0 = -433.930483092399;
+	x1 = 605.880341209988;
+	y1 = -156.715269559292;
+	x2 = 585.112454453134;
+	y2 = -120.745084860751;
+	x3 = 265.012056741798;
+	y3 = -120.745084860751;
+	x4 = 244.24467286879;
+	y4 = -156.715744031619;
+	x5 = 404.294868883306;
+	y5 = -433.930960405878;
+
+	anchors = [
+	  [ x0, y0 ],
+	  [ x1, y1 ],
+	  [ x2, y2 ],
+	  [ x3, y3 ],
+	  [ x4, y4 ],
+	  [ x5, y5 ],
+	];
+	leftHandle = [
+	  [ 436.59995657231, -449.917848061534 ],
+	  [ x1, y1 ],
+	  [ 603.572780558727, y2 ],
+	  [ x3, y3 ],
+	  [ 235.014510171135, -140.728836487902 ],
+	  [ x5, y5 ],
+	];
+	rightHandle = [
+	  [ x0, y0 ],
+	  [ 615.110492898177, -140.728836487902 ],
+	  [ x2, y2 ],
+	  [ 246.552215052565, y3 ],
+	  [ x4, y4 ],
+	  [ 413.5250319361, -449.917848061534 ],
+	];
+
+  pathArrow = app.activeDocument.pathItems.add();
+  pathArrow.setEntirePath(anchors);
+  pathArrow.closed = true;
+
+  points = pathArrow.pathPoints;
+	for (let i = 0; i < points.length; i++) {
+	  points[i].leftDirection = leftHandle[i];
+	  points[i].rightDirection = rightHandle[i];
+	}
+
+  if (options.height === undefined) {
+    options.height = pathArrow.height;
+  }
+  if (options.color === undefined) {
+    options.color = "#2fa678";
+  }
+
+  pathArrow.strokeColor = new NoColor();
+  pathArrow.fillColor = this.colorpick(options.color);
+  ratio = (options.height / pathArrow.height) * 100;
+  pathArrow.resize(ratio, ratio);
+  return pathArrow;
+}
+
 Mother.prototype.return_checkBox = function (options = {}) {
   let anchors, leftHandle, rightHandle, newPath, points, ratio;
 
@@ -485,7 +552,7 @@ Mother.prototype.fit_box = function (force = false, fixOption = {}) {
     fixOption = force;
     force = false;
   }
-	let instance = this;
+	const instance = this;
 	let allItems = app.activeDocument.pageItems;
 	let maxValue = {
 		top: 0,

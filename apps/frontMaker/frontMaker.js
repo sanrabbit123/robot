@@ -339,11 +339,11 @@ FrontMaker.prototype.imageToStatic = async function () {
   try {
 		let list = await this.mother.fileSystem(`readDir`, [ `${this.links.binary}` ]);
 		let list_image = await this.mother.fileSystem(`readDir`, [ `${this.links.server}/list_image` ]);
-		for (let i of list_image) { if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www") {
+		for (let i of list_image) { if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
 			this.mother.shell.exec(`rm -rf ${this.mother.shellLink(`${this.links.server}/list_image/${i}`)};`);
       console.log(`delete image ${i} success`);
 		}}
-    for (let i of list) { if (i !== ".DS_Store" && i !== "poo" && i !== "www") {
+    for (let i of list) { if (i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
       this.mother.shell.exec(`cp -r ${this.mother.shellLink(`${this.links.binary}/${i}`)} ${this.mother.shellLink(`${this.links.server}/list_image`)};`);
       console.log(`image copy ${i} success`);
     }}
@@ -404,7 +404,6 @@ FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
 
 FrontMaker.prototype.totalUpdate = async function () {
 	const { fileSystem, shell, shellLink, frontinfo: { host, user } } = this.mother;
-	const { exec } = shell;
 	const { server, binary, binary_www } = this.links;
 	const home = process.env.HOME;
 	const dayString = this.mother.todayMaker();
@@ -426,15 +425,15 @@ FrontMaker.prototype.totalUpdate = async function () {
 			}
 		}}
 		if (homeBoo) {
-			exec(`rm -rf ${home}/${pastHomeUpdateFolder};`);
+			shell.exec(`rm -rf ${home}/${pastHomeUpdateFolder};`);
 		}
 		finalUpdateDir = home + "/autoUpdateFront";
-		exec(`mkdir ${finalUpdateDir}`);
+		shell.exec(`mkdir ${finalUpdateDir}`);
 
 		//set binary targets
 		let binaryTragets = [];
 		let binaryDirList = await fileSystem(`readDir`, [ binary ]);
-		for (let i of binaryDirList) { if (i !== `.DS_Store` && i !== `poo` && i !== `www`) {
+		for (let i of binaryDirList) { if (i !== `.DS_Store` && i !== `poo` && i !== `www` && i !== `ai`) {
 			binaryTragets.push(i);
 		}}
 
@@ -460,7 +459,7 @@ FrontMaker.prototype.totalUpdate = async function () {
 		totalOrder += "rm -rf " + shellLink(finalUpdateDir) + ";";
 
 		//execute
-		exec(totalOrder);
+		shell.exec(totalOrder);
 
 	} catch (e) {
 		console.log(e);

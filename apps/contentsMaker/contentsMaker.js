@@ -239,7 +239,6 @@ ContentMaker.prototype.photo_list = async function () {
 ContentMaker.prototype.static_setting = async function () {
 	const instance = this;
 	const { fileSystem, shell, shellLink } = this.mother;
-	const { exec } = shell;
 	try {
 		let staticFolderBoo, staticFolderBootr;
 		let staticFolderscriptBoo, staticFolderscriptBootr, staticFolderresultBootr, staticFoldertempBootr;
@@ -252,7 +251,7 @@ ContentMaker.prototype.static_setting = async function () {
 
 		if (!staticFolderBootr) {
 
-			exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}script;mkdir ${this.options.home_dir}result;mkdir ${this.options.home_dir}temp`);
+			shell.exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}script;mkdir ${this.options.home_dir}result;mkdir ${this.options.home_dir}temp`);
 
 		} else {
 
@@ -261,23 +260,23 @@ ContentMaker.prototype.static_setting = async function () {
 			for (let i of staticFolderscriptBoo) {
 				if (/^script$/.test(i)) { staticFolderscriptBootr = true; }
 			}
-			if (!staticFolderscriptBootr) { exec(`mkdir ${this.options.home_dir}script`); }
+			if (!staticFolderscriptBootr) { shell.exec(`mkdir ${this.options.home_dir}script`); }
 			staticFolderresultBootr = false;
 			for (let i of staticFolderscriptBoo) {
 				if (/^result$/.test(i)) { staticFolderresultBootr = true; }
 			}
-			if (!staticFolderresultBootr) { exec(`mkdir ${this.options.home_dir}result`); }
+			if (!staticFolderresultBootr) { shell.exec(`mkdir ${this.options.home_dir}result`); }
 			staticFoldertempBootr = false;
 			for (let i of staticFolderscriptBoo) {
 				if (/^temp/.test(i)) { staticFoldertempBootr = true; }
 			}
-			if (!staticFoldertempBootr) { exec(`mkdir ${this.options.home_dir}temp`); }
+			if (!staticFoldertempBootr) { shell.exec(`mkdir ${this.options.home_dir}temp`); }
 
 		}
 
 		let folderList = [ "factory", "resource" ];
 		for (let f of folderList) {
-			exec(`cp -r ${shellLink(this.links.app)}/${f} ${this.options.home_dir}`);
+			shell.exec(`cp -r ${shellLink(this.links.app)}/${f} ${this.options.home_dir}`);
 		}
 
 	} catch (e) {
@@ -429,7 +428,7 @@ ContentMaker.prototype.total_make = async function () {
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
 	try {
 		this.text = require(`${this.links.app}/resource/${this.portfolioNum}.js`);
-		
+
 		await MONGOC.connect();
 		await this.static_setting();
 		await this.photo_search();
@@ -613,7 +612,6 @@ ContentMaker.prototype.to_poo = async function () {
 ContentMaker.prototype.proposal_make = async function () {
 	const instance = this;
 	const { shell, shellLink, fileSystem, babelSystem } = this.mother;
-	const { exec } = shell;
 	const { home_dir } = this.options;
 	try {
 		let temp_scriptString = '';
@@ -624,10 +622,10 @@ ContentMaker.prototype.proposal_make = async function () {
 		await fileSystem(`write`, [ `${this.options.home_dir}script/proposal.js`, temp_scriptString ]);
 		let result_dir = await fileSystem(`readDir`, [ `${shellLink(home_dir)}result` ]);
 		for (let i of result_dir) { if (i !== ".DS_Store") {
-			exec(`rm -rf ${shellLink(home_dir)}result/${i};`);
+			shell.exec(`rm -rf ${shellLink(home_dir)}result/${i};`);
 		}}
-		exec(`osascript ${shellLink(home_dir)}factory/applescript/start_adobe.scpt proposal`);
-		exec(`osascript ${shellLink(home_dir)}factory/applescript/return_terminal.scpt`);
+		shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/start_adobe.scpt proposal`);
+		shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/return_terminal.scpt`);
 	} catch (e) {
 		console.log(e);
 	}
@@ -677,9 +675,8 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 
 	const instance = this;
 	const { fileSystem, shell, shellLink } = this.mother;
-	const { exec } = shell;
 
-	const binaryTotalPath = this.mother.returnFriendsPath("rabbit").pathDirString + "/apps/frontMaker/" + sw;
+	const binaryTotalPath = process.cwd() + "/binary/frontMaker/ai/" + sw;
 	let binaryTotalDir, targetAIList;
 	try {
 
@@ -687,7 +684,7 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		let mapMaker, temp_scriptString, front_options;
 		const MapMaker = require(`${this.links.mapMaker}/mapMaker.js`);
 		mapMaker = new MapMaker(sw);
-		exec(`mkdir ${shellLink(this.options.home_dir + "result")}/${sw}`);
+		shell.exec(`mkdir ${shellLink(this.options.home_dir + "result")}/${sw}`);
 
 		//get map object
 		this.text = await mapMaker.mapGenerator();
@@ -700,16 +697,18 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		}}
 		if (targetAIList.length > 0) {
 			targetAIList.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')) });
-			this.options.etc = {}
+			this.options.etc = {};
 			this.options.etc.targetFile = [];
 			for (let i of targetAIList) {
 				this.options.etc.targetFile.push(binaryTotalPath + "/" + i);
 			}
-			if (this.options.etc.targetFile.length > 0) { console.log(this.options.etc.targetFile); }
+			if (this.options.etc.targetFile.length > 0) {
+				console.log(this.options.etc.targetFile);
+			}
 		}
 
 		//start aiScript
-		temp_scriptString = await this.generator.front_maker[sw](this.options);
+		temp_scriptString = await this.generator.front_maker.exec(this.options, sw);
 		await this.startAdobe({
 			name: `front_${sw}`,
 			data: this.text,
@@ -717,6 +716,8 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 			app: "Illustrator",
 			end: true,
 		});
+
+		/*
 
 		//make svgTong files and make map with source written
 		await mapMaker.writeMap_makeTong();
@@ -727,22 +728,24 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		let resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
 		for (let i of resBinaryDir) {
 			if (/\.png$/.test(i)) {
-				exec(`rm -rf ${shellLink(resBinaryDirPath)}/${i};`);
+				shell.exec(`rm -rf ${shellLink(resBinaryDirPath)}/${i};`);
 			}
 		}
 		for (let i of resDir) {
 			if (/\.svg$/.test(i)) {
-				exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${sw}/${i};`);
+				shell.exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${sw}/${i};`);
 			} else if (/\.png$/.test(i)) {
-				exec(`mv ${shellLink(this.options.home_dir + "result")}/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
+				shell.exec(`mv ${shellLink(this.options.home_dir + "result")}/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
 			}
 		}
 
 		//remove confirm
 		resDir = await fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
 		for (let i of resDir) {
-			exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
+			shell.exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
 		}
+
+		*/
 
 	} catch (e) {
 		console.log(e);
@@ -752,7 +755,6 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 ContentMaker.prototype.front_maker = async function (target) {
 	const instance = this;
 	const { fileSystem, shell, shellLink } = this.mother;
-	const { exec } = shell;
 	const MongoClient = this.mother.mongo;
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
 	try {
@@ -762,7 +764,7 @@ ContentMaker.prototype.front_maker = async function (target) {
 		//delete result folder
 		const resDir = await fileSystem(`readDir`, [ this.options.home_dir + "result" ]);
 		for (let i of resDir) {
-			exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
+			shell.exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
 		}
 
 		//init setting

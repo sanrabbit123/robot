@@ -3,7 +3,7 @@ ExecMain.prototype.titleMaker = function (obj) {
 	let this_ai;
 
 	this_ai = this.createDoc();
-	this.setCreateSetting({ from: "general", to: ("title" + String(obj.order)), doc: this.createDocSetting, });
+	this.setCreateSetting({ from: "general", to: ("title" + String(obj.order)) });
 	this.setParagraph({ from: obj.text, to: ("title" + String(obj.order)), });
 	this.createElements(this_ai, this.createSetting[("title" + String(obj.order))]);
 	this.mother.fit_box();
@@ -11,7 +11,7 @@ ExecMain.prototype.titleMaker = function (obj) {
 	this.saveSvg(this_ai, ("title" + String(obj.order)));
 
 	this_ai = this.createDoc();
-	this.setCreateSetting({ from: "general", to: ("titleNum" + String(obj.order)), doc: this.createDocSetting, exception: { font: "Graphik-Medium", horizontalScale: 100, }, });
+	this.setCreateSetting({ from: "general", to: ("titleNum" + String(obj.order)), exception: { font: "Graphik-Medium", horizontalScale: 100, }, });
 	this.setParagraph({ from: ("0" + String(obj.order + 1)), to: ("titleNum" + String(obj.order)), });
 	this.createElements(this_ai, this.createSetting[("titleNum" + String(obj.order))]);
 	this.mother.fit_box();
@@ -31,7 +31,7 @@ ExecMain.prototype.wordMaker_desktop = function (obj, x, textObj) {
 		for (let j = 0; j < contents.length; j++) {
 			from = textObj[i].type;
 			to = textObj[i].type + String(x) + String(j);
-			this.setCreateSetting({ from: from, to: to, direction: textObj["direction"], doc: this.createDocSetting, });
+			this.setCreateSetting({ from: from, to: to, direction: textObj["direction"] });
 			this.setParagraph({ from: contents, to: to, order: j });
 			temp = this.createElements(this_ai, this.createSetting[to]);
 			dom[i].push(temp);
@@ -66,7 +66,7 @@ ExecMain.prototype.wordMaker_mobile = function (obj, x, textObj) {
 	}
 	contents = contents.slice(0, -1);
 
-	this.setCreateSetting({ from: from, to: to, direction: "left", doc: this.createDocSetting, exception: { width: mobileWidth, font: "SDGothicNeoa-gBd", fontSize: 26.5, }, });
+	this.setCreateSetting({ from: from, to: to, direction: "left", exception: { width: mobileWidth, font: "SDGothicNeoa-gBd", fontSize: 26.5, }, });
 	this.setParagraph({ from: contents, to: to, order: 0 });
 	temp = this.createElements(this_ai, this.createSetting[to]);
 	dom.main.push(temp);
@@ -80,7 +80,7 @@ ExecMain.prototype.wordMaker_mobile = function (obj, x, textObj) {
 		}
 	}
 	contents = contents.slice(0, -1);
-	this.setCreateSetting({ from: from, to: to, direction: "left", doc: this.createDocSetting, exception: { width: mobileWidth, justification: "FULLJUSTIFYLASTLINELEFT", font: "SDGothicNeoa-cLt", fontSize: 21, leading: 37, }, });
+	this.setCreateSetting({ from: from, to: to, direction: "left", exception: { width: mobileWidth, justification: "FULLJUSTIFYLASTLINELEFT", font: "SDGothicNeoa-cLt", fontSize: 21, leading: 37, }, });
 	this.setParagraph({ from: contents, to: to, order: 0 });
 	temp = this.createElements(this_ai, this.createSetting[to]);
 	dom.sub.push(temp);
@@ -108,7 +108,7 @@ ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
 		contents = textObj.buttons;
 		to = "button" + String(x) + String(b);
 
-		this.setCreateSetting({ from: from, to: to, doc: this.createDocSetting, exception: { color: "#ffffff", }, });
+		this.setCreateSetting({ from: from, to: to, exception: { color: "#ffffff", }, });
 		this.setParagraph({ from: contents, to: to, order: b });
 		this.createElements(this_ai, this.createSetting[to]);
 		this.mother.fit_box();
@@ -120,7 +120,7 @@ ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
 		contents = "0" + String(b + 1);
 		to = "buttonNum" + String(x) + String(b);
 
-		this.setCreateSetting({ from: from, to: to, doc: this.createDocSetting, exception: { font: "Graphik-Medium", horizontalScale: 100, color: "#ffffff" }, });
+		this.setCreateSetting({ from: from, to: to, exception: { font: "Graphik-Medium", horizontalScale: 100, color: "#ffffff" }, });
 		this.setParagraph({ from: contents, to: to, });
 		this.createElements(this_ai, this.createSetting[to]);
 		this.mother.fit_box();
@@ -170,7 +170,7 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 		contents = String(obj.order + x + 1) + " - " + String(popupNumber + 1);
 		from = "main";
 		to = "popnumber" + String(x) + String(0) + String(popupNumber);
-		this.setCreateSetting({ from: from, to: to, direction: "left", doc: this.createDocSetting, exception: { font: "SDGothicNeoa-gBd", fontSize: 26.5, color: "#2fa678" } });
+		this.setCreateSetting({ from: from, to: to, direction: "left", exception: { font: "SDGothicNeoa-gBd", fontSize: 26.5, color: "#2fa678" } });
 		this.setParagraph({ from: contents, to: to, order: 0 });
 		this.createElements(this_ai, this.createSetting[to]);
 
@@ -191,7 +191,7 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 		}
 		contents = contents.slice(0, -1);
 
-		this.setCreateSetting({ from: from, to: to, direction: "left", doc: this.createDocSetting, exception: { width: mobileWidth, font: "SDGothicNeoa-gBd", fontSize: 28, }, });
+		this.setCreateSetting({ from: from, to: to, direction: "left", exception: { width: mobileWidth, font: "SDGothicNeoa-gBd", fontSize: 28, }, });
 		this.setParagraph({ from: contents, to: to, order: 0 });
 		temp = this.createElements(this_ai, this.createSetting[to]);
 		dom.main.push(temp);
@@ -224,7 +224,7 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 			from = "sub";
 			to = "mopopup" + "sub" + String(x) + String(j) + String(popupNumber);
 			contents = (j !== 0 ? "<g%*%g>" : '') + contentsArr[j];
-			this.setCreateSetting({ from: from, to: to, direction: "left", doc: this.createDocSetting, exception: { width: mobileWidth, justification: "FULLJUSTIFYLASTLINELEFT", font: "SDGothicNeoa-cLt", }, });
+			this.setCreateSetting({ from: from, to: to, direction: "left", exception: { width: mobileWidth, justification: "FULLJUSTIFYLASTLINELEFT", font: "SDGothicNeoa-cLt", }, });
 			this.setParagraph({ from: contents, to: to, order: j });
 			temp = this.createElements(this_ai, this.createSetting[to]);
 			dom.sub.push(temp);
@@ -263,7 +263,7 @@ ExecMain.prototype.imageMaker = function (obj) {
 	for (let i of images) {
 		if (i.vector) {
 			this_ai = this.createDoc();
-			this.setCreateSetting({ from: "general", to: i.name, doc: this.createDocSetting, });
+			this.setCreateSetting({ from: "general", to: i.name });
 			this.setParagraph({ from: i.vectoroption.content, to: i.name, });
 			this.createElements(this_ai, this.createSetting[i.name]);
 			this.mother.fit_box();
@@ -285,7 +285,7 @@ ExecMain.prototype.generalTitle = function (obj) {
 	this_ai = this.createDoc();
 	obj.text.unshift("About");
 	for (let i = 0; i < nameList.length; i++) {
-		this.setCreateSetting({ from: "general", to: "subtitle" + obj.list + nameList[i], doc: this.createDocSetting, exception: exceptionList[i] });
+		this.setCreateSetting({ from: "general", to: "subtitle" + obj.list + nameList[i], exception: exceptionList[i] });
 		this.setParagraph({ from: obj.text[i], to: "subtitle" + obj.list + nameList[i], });
 		nameArr.push(this.createElements(this_ai, this.createSetting["subtitle" + obj.list + nameList[i]]));
 	}
@@ -341,7 +341,6 @@ ExecMain.prototype.generalBelow = function (obj) {
     this.setCreateSetting({
       from: "general",
       to: "below" + obj.list + "up",
-      doc: this.createDocSetting,
     });
     this.setParagraph({
       from: obj.text[i][0],
@@ -352,7 +351,6 @@ ExecMain.prototype.generalBelow = function (obj) {
     this.setCreateSetting({
       from: "general",
       to: "below" + obj.list + "down",
-      doc: this.createDocSetting,
       exception: { color: "#d3d2d0", font: "Futura-Medium", fontSize: 18 }
     });
     this.setParagraph({

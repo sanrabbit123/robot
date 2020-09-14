@@ -194,9 +194,9 @@ GetConsulting.prototype.routerPath = function (front) {
 
 GetConsulting.prototype.serverOn = async function (front) {
 	const instance = this;
-	const { createSecureServer } = require('http2');
-  	const { fileSystem } = this.mother;
-  	const { parse } = require("url");
+	const http2 = require('http2');
+	const { fileSystem } = this.mother;
+	const { parse } = require("url");
 	try {
 		let funcObj, pems = {};
   	let pemsLink = process.cwd() + "/pems/localhost";
@@ -217,7 +217,7 @@ GetConsulting.prototype.serverOn = async function (front) {
 		routerKeys = Object.keys(funcObj);
 		routerKeysNumber = routerKeys.length;
 
-  	createSecureServer(pems, async function (req, res) {
+  	http2.createSecureServer(pems, async function (req, res) {
     		const pathname = parse(req.url).pathname;
     		let targetFunc;
 				routerTargetIndex = 0;
