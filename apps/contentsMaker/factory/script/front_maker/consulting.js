@@ -1048,7 +1048,7 @@ ExecMain.prototype.generalTitle = function (obj) {
 	let [ title, main, sub ] = nameArr;
 
   let title_bottom = this.mother.return_bottom(title);
-	title_bottom = title_bottom + 3
+	title_bottom = title_bottom + 3;
   main.top = title_bottom - this.mother.convertMillimeters(3.8);
   sub.top = this.mother.return_bottom(main) - this.mother.convertMillimeters(3);
 
