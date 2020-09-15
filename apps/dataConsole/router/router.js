@@ -72,26 +72,37 @@ Router.prototype.rou_get_Mongo = function () {
 	let instance = this;
 	let obj = { link: '/mongo/:id' }
 	obj.func = async function (req, res) {
+		let mongoSetting, mongoRoot, plugins, plugins_raw;
 		try {
-			let monSet = require(`../block_data/mongo/${req.params.id}/${req.params.id}_data.js`);
+			mongoRoot = `${process.cwd()}/apps/dataConsole/block_data/mongo`;
+			mongoSetting = require(`${mongoRoot}/${req.params.id}/${req.params.id}_data.js`);
+
+			//set css
 			if (/Mac/g.test(req.useragent.platform)) {
-				monSet.css = await instance.mother.fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/${monSet.dbtitle}/${monSet.dbtitle}.css` ]);
+				mongoSetting.css = await instance.mother.fileSystem(`readString`, [ `${mongoRoot}/${mongoSetting.dbtitle}/${mongoSetting.dbtitle}.css` ]);
 			} else if (/Window/g.test(req.useragent.platform)) {
-				monSet.css = await instance.mother.fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/${monSet.dbtitle}/${monSet.dbtitle}_windows.css` ]);
+				mongoSetting.css = await instance.mother.fileSystem(`readString`, [ `${mongoRoot}/${mongoSetting.dbtitle}/${mongoSetting.dbtitle}_windows.css` ]);
 			}
-			monSet.js = await instance.mother.fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/genemongo.js` ]);
-			monSet.js += await instance.mother.fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/${monSet.dbtitle}/${monSet.dbtitle}.js` ]);
-			let plugins = [];
-			let plugins_raw = await instance.mother.fileSystem(`readDir`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/${monSet.dbtitle}/plugins` ]);
-			for (let i of plugins_raw) { if (i !== `.DS_Store`) {
-				plugins.push(i);
+
+			//set js general
+			mongoSetting.js = await instance.mother.fileSystem(`readString`, [ `${mongoRoot}/genemongo.js` ]);
+
+			//set js local
+			mongoSetting.js += await instance.mother.fileSystem(`readString`, [ `${mongoRoot}/${mongoSetting.dbtitle}/${mongoSetting.dbtitle}.js` ]);
+
+			//set js plugins
+			plugins = await instance.mother.fileSystem(`readDir`, [ `${mongoRoot}/${mongoSetting.dbtitle}/plugins` ]);
+			for (let i of plugins) { if (i !== `.DS_Store`) {
+				mongoSetting.js += await instance.mother.fileSystem(`readString`, [ `${mongoRoot}/${mongoSetting.dbtitle}/plugins/${i}` ]);
 			}}
-			for (let i of plugins) {
-				monSet.js += await instance.mother.fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/block_data/mongo/${monSet.dbtitle}/plugins/${i}` ]);
-			}
-			monSet.query = req.query;
+
+			//set query
+			mongoSetting.query = req.query;
+
+			//end
 			res.set('Content-Type', 'text/html');
-			res.send(instance.template.mongo_render(monSet));
+			res.send(instance.template.mongo_render(mongoSetting));
+
 		} catch (e) {
 			console.error("error", e.message);
 		}

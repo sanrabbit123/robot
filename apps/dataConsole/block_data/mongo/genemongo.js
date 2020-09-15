@@ -107,3 +107,11 @@ Genemongo.tagCoverting = function (obj) {
   str = str.slice(0, -10);
   return str;
 }
+
+Genemongo.nodes = {
+  div: document.createElement("DIV"),
+  label: document.createElement("LABEL"),
+  input: document.createElement("INPUT"),
+  img: document.createElement("IMG"),
+  textarea: document.createElement("TEXTAREA"),
+}

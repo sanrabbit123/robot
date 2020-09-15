@@ -13,7 +13,7 @@ Proposal.toggleTimeout = {
 }
 
 Proposal.prototype.firstToggle = function (m, domBox) {
-  let instance = this;
+  const instance = this;
   let nodes = {
     title: domBox.get("고객 선택").children[0],
     contents: domBox.get("고객 선택").children[1],
@@ -93,14 +93,14 @@ Proposal.prototype.firstProcess = async function () {
   let titles_con = [ "고객 선택", "서비스 선택", "디자이너 선택", ];
   let domBox = new Map();
   for (let i = 0; i < titles.length; i++) {
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.id = titles[i];
     div_clone.classList.add("pp_box");
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("pp_title");
     div_clone2.textContent = titles_con[i];
     div_clone.appendChild(div_clone2);
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("pp_contents");
     div_clone.appendChild(div_clone2);
     h.appendChild(div_clone);
@@ -109,27 +109,27 @@ Proposal.prototype.firstProcess = async function () {
   this.mother.appendChild(h);
   console.log(domBox);
   let clients = JSON.parse(await Genemongo.ajax("/post_select", "col_arr=a4_customernumber,a19_name&title=BC1_conlist&standard=a1_class1&where=응대중"));
-  div_clone4 = this.nodes.div.cloneNode(true);
+  div_clone4 = Genemongo.nodes.div.cloneNode(true);
   div_clone4.classList.add("pp_contents_inbox");
 
   for (let i = 0; i < clients.length; i++) {
-    input_clone = this.nodes.input.cloneNode(true);
+    input_clone = Genemongo.nodes.input.cloneNode(true);
     input_clone.classList.add("pp_clients_input");
     input_clone.id = "pp_clients_input" + String(i);
     input_clone.setAttribute("type", "radio");
     input_clone.setAttribute("name", "pp_clients_input");
     div_clone4.appendChild(input_clone);
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_clients");
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.textContent = clients[i].a4_customernumber + " | " + clients[i].a19_name;
     div_clone.appendChild(div_clone2);
-    label_clone = this.nodes.label.cloneNode(true);
+    label_clone = Genemongo.nodes.label.cloneNode(true);
     label_clone.classList.add("pp_clients_label");
     label_clone.setAttribute("for", "pp_clients_input" + String(i));
     label_clone.setAttribute("cus_value", clients[i].a19_name);
     label_clone.setAttribute("cus_id", clients[i].a4_customernumber);
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("garim");
     label_clone.appendChild(div_clone2);
     label_clone.addEventListener("click", this.firstToggle("on", domBox));
@@ -247,28 +247,28 @@ Proposal.prototype.secondProcess = async function () {
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
   let serviceX = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
   let serviceY = [ "mini", "basic", "premium" ];
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("pp_contents_inbox");
   for (let i = 0; i < serviceY.length; i++) {
     for (let j = 0; j < serviceX.length; j++) {
-      input_clone = this.nodes.input.cloneNode(true);
+      input_clone = Genemongo.nodes.input.cloneNode(true);
       input_clone.classList.add("pp_clients_input");
       input_clone.id = "pp_service_input" + String(j) + String(i);
       input_clone.setAttribute("type", "radio");
       input_clone.setAttribute("name", "pp_service_input");
       div_clone.appendChild(input_clone);
-      div_clone2 = this.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_service");
-      div_clone3 = this.nodes.div.cloneNode(true);
+      div_clone3 = Genemongo.nodes.div.cloneNode(true);
       div_clone3.classList.add("pp_service_wording");
       div_clone3.textContent = serviceX[j] + ' ' + serviceY[i];
       div_clone2.appendChild(div_clone3);
-      label_clone = this.nodes.label.cloneNode(true);
+      label_clone = Genemongo.nodes.label.cloneNode(true);
       label_clone.classList.add("pp_clients_label");
       label_clone.setAttribute("for", "pp_service_input" + String(j) + String(i));
       label_clone.setAttribute("cus_value", serviceX[j] + ' ' + serviceY[i]);
       label_clone.addEventListener("click", this.secondToggle("on", this.domBox));
-      div_clone3 = this.nodes.div.cloneNode(true);
+      div_clone3 = Genemongo.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
       label_clone.appendChild(div_clone3);
       div_clone2.appendChild(label_clone);
@@ -282,7 +282,7 @@ Proposal.prototype.secondProcess = async function () {
 // Create process 3 ------------------------------------------------------------
 
 Proposal.prototype.thirdKeyup = function () {
-  let instance = this;
+  const instance = this;
   return function (e) {
     if (e.cancelable) { e.preventDefault(); }
     if (e.keyCode !== 13 && e.keyCode !== 9) {
@@ -303,33 +303,33 @@ Proposal.prototype.thirdProcess = async function () {
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
   let children = new Map();
 
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("pp_contents_inbox");
   for (let i = 0; i < 3; i++) {
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("pp_designer");
     div_clone.appendChild(div_clone2);
     children.set("box" + String(i), div_clone2);
   }
   third.contents.appendChild(div_clone);
 
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("pp_designer_question");
   children.set("box1_question", div_clone);
 
-  div_clone2 = this.nodes.div.cloneNode(true);
+  div_clone2 = Genemongo.nodes.div.cloneNode(true);
   div_clone2.textContent = "추천 디자이너 수 : "
   div_clone.appendChild(div_clone2);
   children.set("box1_title", div_clone2);
 
-  input_clone = this.nodes.input.cloneNode(true);
+  input_clone = Genemongo.nodes.input.cloneNode(true);
   input_clone.id = "pp_designer_question_input";
   input_clone.setAttribute("type", "text");
   input_clone.setAttribute("name", "pp_designer_question_input");
   input_clone.setAttribute("value", "3명");
   div_clone.appendChild(input_clone);
 
-  div_clone3 = this.nodes.div.cloneNode(true);
+  div_clone3 = Genemongo.nodes.div.cloneNode(true);
   div_clone3.className = "pp_designer_question_press";
   div_clone3.textContent = "완료 후 Enter나 Tap키를 누르세요.";
   div_clone.appendChild(div_clone3);
@@ -340,6 +340,7 @@ Proposal.prototype.thirdProcess = async function () {
     if (e.keyCode === 13 || e.keyCode === 9) { if (e.cancelable) { e.preventDefault(); } }
   });
   input_clone.addEventListener("keyup", this.thirdKeyup());
+
   return children;
 }
 
@@ -357,7 +358,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
   fourth.box = fourth.contents.querySelector(".pp_contents_inbox");
   fourth.titles = [ "디자이너 이름", "서비스 방식", "서비스 금액", "사진 선택" ];
   fourth.callbacks = new Map();
-  fourth.events = {}
+  fourth.events = {};
 
   fourth.events.money = function (e) {
     if (this.value === '') { this.value = "0"; }
@@ -380,7 +381,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
   let money_set = function (onoff, s = 0) {
     let div_clone, div_clone2, div_clone3, input_clone;
     //set
-    div_clone3 = instance.nodes.div.cloneNode(true);
+    div_clone3 = Genemongo.nodes.div.cloneNode(true);
     div_clone3.classList.add("pp_designer_selected_box_contents_money_set");
     //--------------------------------------------------------------------------
     if (typeof onoff === "string") {
@@ -390,7 +391,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
     }
     //--------------------------------------------------------------------------
     //1
-    div_clone2 = instance.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("pp_designer_selected_box_contents_money_text");
     //--------------------------------------------------------------------------
     if (typeof onoff === "string") {
@@ -401,7 +402,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
     //--------------------------------------------------------------------------
     div_clone3.appendChild(div_clone2);
     //2
-    input_clone = instance.nodes.input.cloneNode(true);
+    input_clone = Genemongo.nodes.input.cloneNode(true);
     input_clone.setAttribute("type", "text");
     input_clone.classList.add("pp_designer_selected_box_contents_money_input");
     //--------------------------------------------------------------------------
@@ -416,7 +417,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
     input_clone.addEventListener("blur", fourth.events.money);
     div_clone3.appendChild(input_clone);
     //3
-    div_clone2 = instance.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("pp_designer_selected_box_contents_money_text2");
     div_clone2.insertAdjacentHTML("beforeend", '원');
     div_clone3.appendChild(div_clone2);
@@ -488,13 +489,13 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
   //------------------------------------------------------------------------
 
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
-    let input = instance.nodes.input.cloneNode(true);
+    let input = Genemongo.nodes.input.cloneNode(true);
     input.classList.add("pp_designer_selected_box_contents_designers_input");
     input.setAttribute("type", "radio");
     input.setAttribute("name", "pp_designer_selected_box_contents_designers_input" + String(n));
     input.style.display = "none";
     let div_clone, div_clone2, div_clone3, input_clone, label_clone;
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_designers_total");
     let i = 0;
     for (let designer of designers) {
@@ -502,12 +503,12 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
       input_clone.id = "pp_designer_selected_box_contents_designers_input" + String(n) + String(i);
       input_clone.value = designer.past_desid;
       div_clone.appendChild(input_clone);
-      div_clone2 = instance.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
       div_clone2.textContent = designer.designer;
-      label_clone = instance.nodes.label.cloneNode(true);
+      label_clone = Genemongo.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_designers_input" + String(n) + String(i));
-      div_clone3 = instance.nodes.div.cloneNode(true);
+      div_clone3 = Genemongo.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
       div_clone3.setAttribute("cus_value", designer.designer);
       div_clone3.setAttribute("cus_num", String(n));
@@ -525,7 +526,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
       i = i + 1;
     }
     for (let j = 0; j < 10; j++) {
-      div_clone2 = instance.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
       div_clone2.textContent = "자이너";
       div_clone2.style.opacity = 0;
@@ -536,14 +537,14 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
 
   //서비스 방식
   fourth.callbacks.set("서비스 방식", function (dom, n) {
-    let input = instance.nodes.input.cloneNode(true);
+    let input = Genemongo.nodes.input.cloneNode(true);
     input.classList.add("pp_designer_selected_box_contents_service_input");
     input.setAttribute("type", "checkbox");
     input.setAttribute("name", "pp_designer_selected_box_contents_service_input" + String(n));
     input.style.display = "none";
 
     let div_clone, div_clone2, div_clone3, input_clone, label_clone;
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_service_total");
     let service = [ "오프라인", "온라인", "부분 공간" ];
 
@@ -557,13 +558,13 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
       }
       //------------------------------------------------------------------------
       div_clone.appendChild(input_clone);
-      div_clone2 = instance.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_service");
       div_clone2.textContent = service[i];
       div_clone2.insertAdjacentHTML('afterbegin', '<div class="pp_designer_selected_box_contents_service_won"></div>');
-      label_clone = instance.nodes.label.cloneNode(true);
+      label_clone = Genemongo.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_service_input" + String(n) + String(i));
-      div_clone3 = instance.nodes.div.cloneNode(true);
+      div_clone3 = Genemongo.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
       div_clone3.setAttribute("cus_value", service[i]);
       div_clone3.setAttribute("cus_id", 's' + String(n));
@@ -597,7 +598,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
   //서비스 금액
   fourth.callbacks.set("서비스 금액", function (dom, n) {
     let div_clone, div_clone2, div_clone3, input_clone;
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_money");
     div_clone.id = "pp_designer_selected_box_contents_money" + String(n);
     //------------------------------------------------------------------------
@@ -615,7 +616,7 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
   //사진 선택
   fourth.callbacks.set("사진 선택", function (dom, n) {
     let div_clone, div_clone2, div_clone3, input_clone;
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_selection");
     div_clone.id = "pp_designer_selected_box_contents_selection" + String(n);
     div_clone.textContent = "디자이너를 선택해주세요!";
@@ -652,27 +653,27 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
     if (instance.pastMaps[0] === undefined) {
       console.log("out past");
       for (let i = 0; i < num; i++) {
-        div_clone = instance.nodes.div.cloneNode(true);
+        div_clone = Genemongo.nodes.div.cloneNode(true);
         div_clone.classList.add("pp_designer_selected");
         div_clone.setAttribute("cus_id", 's' + String(i));
         div_clone.style.width = "calc(100% / " + String(num) + ")";
         if (i !== 0) { div_clone.style.borderLeft = "1px solid #ececec"; }
 
         for (let j = 0; j < fourth.titles.length; j++) {
-          div_clone2 = instance.nodes.div.cloneNode(true);
+          div_clone2 = Genemongo.nodes.div.cloneNode(true);
           div_clone2.classList.add("pp_designer_selected_box");
-          div_clone3 = instance.nodes.div.cloneNode(true);
+          div_clone3 = Genemongo.nodes.div.cloneNode(true);
           div_clone3.classList.add("pp_designer_selected_box_title");
           div_clone3.textContent = fourth.titles[j];
           div_clone2.appendChild(div_clone3);
-          div_clone3 = instance.nodes.div.cloneNode(true);
+          div_clone3 = Genemongo.nodes.div.cloneNode(true);
           div_clone3.classList.add("pp_designer_selected_box_contents");
           (fourth.callbacks.get(fourth.titles[j]))(div_clone3, i);
           div_clone2.appendChild(div_clone3);
           div_clone.appendChild(div_clone2);
         }
         //remember value
-        div_clone4 = instance.nodes.div.cloneNode(true);
+        div_clone4 = Genemongo.nodes.div.cloneNode(true);
         div_clone4.classList.add("pp_designer_selected_box_value");
         //------------------------------------------------------------------------
         if (obj.proposal !== undefined) {
@@ -732,26 +733,26 @@ Proposal.prototype.fourthsetTimeout = async function (num, obj = {}) {
           node.addEventListener("blur", fourth.events.money);
         }
         for (let i = instance.pastMaps[0].size; i < num; i++) {
-          div_clone = instance.nodes.div.cloneNode(true);
+          div_clone = Genemongo.nodes.div.cloneNode(true);
           div_clone.classList.add("pp_designer_selected");
           div_clone.setAttribute("cus_id", 's' + String(i));
           div_clone.style.width = "calc(100% / " + String(num) + ")";
           if (i !== 0) { div_clone.style.borderLeft = "1px solid #ececec"; }
           for (let j = 0; j < fourth.titles.length; j++) {
-            div_clone2 = instance.nodes.div.cloneNode(true);
+            div_clone2 = Genemongo.nodes.div.cloneNode(true);
             div_clone2.classList.add("pp_designer_selected_box");
-            div_clone3 = instance.nodes.div.cloneNode(true);
+            div_clone3 = Genemongo.nodes.div.cloneNode(true);
             div_clone3.classList.add("pp_designer_selected_box_title");
             div_clone3.textContent = fourth.titles[j];
             div_clone2.appendChild(div_clone3);
-            div_clone3 = instance.nodes.div.cloneNode(true);
+            div_clone3 = Genemongo.nodes.div.cloneNode(true);
             div_clone3.classList.add("pp_designer_selected_box_contents");
             (fourth.callbacks.get(fourth.titles[j]))(div_clone3, i);
             div_clone2.appendChild(div_clone3);
             div_clone.appendChild(div_clone2);
           }
           //remember value
-          div_clone4 = instance.nodes.div.cloneNode(true);
+          div_clone4 = Genemongo.nodes.div.cloneNode(true);
           div_clone4.classList.add("pp_designer_selected_box_value");
           //------------------------------------------------------------------------
           if (obj.proposal !== undefined) {
@@ -848,13 +849,13 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
   let mother = whitebox;
   let whiteBoxDom = new Map();
 
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_leftbox");
   mother.appendChild(div_clone);
   whiteBoxDom.set("leftbox", div_clone);
   leftMother = div_clone;
 
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_rightbox");
   mother.appendChild(div_clone);
   whiteBoxDom.set("rightbox", div_clone);
@@ -883,10 +884,10 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
     //picturebox
     function (dom) {
       let div_clone, inbox;
-      inbox = instance.nodes.div.cloneNode(true);
+      inbox = Genemongo.nodes.div.cloneNode(true);
       inbox.classList.add("ppw_left_picturebox_inbox");
       for (let i = 0; i < default_setting.length; i++) {
-        div_clone = instance.nodes.div.cloneNode(true);
+        div_clone = Genemongo.nodes.div.cloneNode(true);
         div_clone.classList.add("ppw_left_picturebox_inbox_detail");
         if (default_setting[i].unionPo !== "union") {
           div_clone.addEventListener("click", Proposal.fifthPicturebox_union(), { once: true });
@@ -903,20 +904,20 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
     //description
     function (dom) {
       let inbox, inbutton, div_clone, div_clone2, input_clone;
-      inbox = instance.nodes.div.cloneNode(true);
+      inbox = Genemongo.nodes.div.cloneNode(true);
       inbox.classList.add("ppw_left_description_inbox");
-      div_clone = instance.nodes.div.cloneNode(true);
+      div_clone = Genemongo.nodes.div.cloneNode(true);
       div_clone.classList.add("ppw_left_description_inbox_detail");
       div_clone.textContent = "디자이너 설명";
       inbox.appendChild(div_clone);
       for (let i in descriptions) {
-        input_clone = instance.nodes.input.cloneNode(true);
+        input_clone = Genemongo.nodes.input.cloneNode(true);
         input_clone.classList.add("ppw_left_description_inbox_input");
         input_clone.value = descriptions[i];
         inbox.appendChild(input_clone);
       }
       dom.appendChild(inbox);
-      inbutton = instance.nodes.div.cloneNode(true);
+      inbutton = Genemongo.nodes.div.cloneNode(true);
       inbutton.classList.add("ppw_left_description_inbutton");
       inbutton.textContent = "완료";
       inbutton.addEventListener("click", instance.fifthWhitesave(id));
@@ -924,7 +925,7 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
     },
   ];
   for (let i = 0; i < leftList.length; i++) {
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("ppw_left_" + leftList[i]);
     (leftcallbacks[i])(div_clone);
     leftMother.appendChild(div_clone);
@@ -937,14 +938,14 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
     g: [],
   }
   let imgSrc, sgTrue;
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_right_totalbox");
 
   for (let j = 0; j < (porpor.length + 1); j++) {
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("ppw_right_set");
     for (let i = 0; i < rightList.length; i++) {
-      div_clone3 = this.nodes.div.cloneNode(true);
+      div_clone3 = Genemongo.nodes.div.cloneNode(true);
       div_clone3.classList.add("ppw_right_" + rightList[i]);
 
       //title
@@ -959,14 +960,14 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
       else if (i === 1) {
         sgTong.s = [];
         sgTong.g = [];
-        scroll_box = this.nodes.div.cloneNode(true);
+        scroll_box = Genemongo.nodes.div.cloneNode(true);
         scroll_box.classList.add("ppw_right_picturebox_scroll");
         if (j < porpor.length) {
           for (let k = 0; k < porpor[j].photosg.length; k++) {
-            div_clone4 = this.nodes.div.cloneNode(true);
+            div_clone4 = Genemongo.nodes.div.cloneNode(true);
             div_clone4.classList.add("ppw_right_picturebox_" + porpor[j].photosg[k]);
             div_clone4.id = "ppw_right_picturebox_totaldiv" + String(j) + String(k);
-            img_clone = this.nodes.img.cloneNode(true);
+            img_clone = Genemongo.nodes.img.cloneNode(true);
             img_clone.classList.add("ppw_right_picturebox_img");
             img_clone.classList.add("fifth_drag_img");
             imgSrc = "/list_image/portp" + porpor[j].porlid + "/t" + String(k + 1) + porpor[j].porlid + ".jpg";
@@ -985,10 +986,10 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
         } else {
 
           for (let k = 0; k < ghost.length; k++) {
-            div_clone4 = this.nodes.div.cloneNode(true);
+            div_clone4 = Genemongo.nodes.div.cloneNode(true);
             div_clone4.classList.add("ppw_right_picturebox_" + ghost[k].sgTrue);
             div_clone4.id = "ppw_right_picturebox_totaldiv" + String(j) + String(k);
-            img_clone = this.nodes.img.cloneNode(true);
+            img_clone = Genemongo.nodes.img.cloneNode(true);
             img_clone.classList.add("ppw_right_picturebox_img");
             img_clone.classList.add("fifth_drag_img");
             imgSrc = ghost[k].link;
@@ -1012,15 +1013,15 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
       }
       //buttonup
       else if (i === 2) {
-        img_clone2  = this.nodes.img.cloneNode(true);
+        img_clone2  = Genemongo.nodes.img.cloneNode(true);
         img_clone2.classList.add("ppw_right_buttonup_img_left");
         img_clone2.src = "/list_svg/triangle1.svg";
         div_clone3.appendChild(img_clone2);
-        img_clone2  = this.nodes.img.cloneNode(true);
+        img_clone2  = Genemongo.nodes.img.cloneNode(true);
         img_clone2.classList.add("ppw_right_buttonup_img_right");
         img_clone2.src = "/list_svg/triangle2.svg";
         div_clone3.appendChild(img_clone2);
-        div_clone4 = this.nodes.div.cloneNode(true);
+        div_clone4 = Genemongo.nodes.div.cloneNode(true);
         div_clone4.classList.add("ppw_right_buttonup_div_left");
         div_clone4.addEventListener("click", this.fifthScrollX("click", { direction: "left", order: j, id: id, }));
         div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
@@ -1029,7 +1030,7 @@ Proposal.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture
         div_clone4.addEventListener("mouseout", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
 
         div_clone3.appendChild(div_clone4);
-        div_clone4 = this.nodes.div.cloneNode(true);
+        div_clone4 = Genemongo.nodes.div.cloneNode(true);
         div_clone4.classList.add("ppw_right_buttonup_div_right");
         div_clone4.addEventListener("click", this.fifthScrollX("click", { direction: "right", order: j, id: id, }));
         div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
@@ -1115,12 +1116,12 @@ Proposal.prototype.fifthProcess = async function (desid, id) {
   }
   return function () {
     let div_clone;
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_fifth_cancelback");
     div_clone.addEventListener("click", instance.fifthWhitesave(id));
     total.appendChild(div_clone);
     popupDom.set("cancelBack", div_clone);
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_fifth_whitebox");
     div_clone.setAttribute("cus_designer", ghost[0].designer);
     div_clone.setAttribute("cus_desid", ghost[0].past_desid);

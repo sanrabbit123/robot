@@ -13,21 +13,13 @@ const Proposal = function () {
   this.list_domBox = new Map();
 }
 
-Proposal.prototype.nodes = {
-  div: document.createElement("DIV"),
-  label: document.createElement("LABEL"),
-  input: document.createElement("INPUT"),
-  img: document.createElement("IMG"),
-  textarea: document.createElement("TEXTAREA"),
-}
-
 Proposal.prototype.totalInitial = async function () {
   let div_clone;
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.className = "mongo_box_create";
   this.grandmother.appendChild(div_clone);
   this.mother = div_clone;
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.className = "mongo_box_list";
   this.grandmother.appendChild(div_clone);
 }

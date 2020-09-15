@@ -74,11 +74,16 @@ Proposal.below_events = {
             }
           }
         } else {
-          targets = mothers[mothers.length - 1].querySelectorAll('.pp_designer_selected_box_contents_designers > label > div');
-          for (let i of targets) {
-            if (i.getAttribute("cus_value") === this.value) {
-              i.click();
+          if (mothers.length > 0) {
+            targets = mothers[mothers.length - 1].querySelectorAll('.pp_designer_selected_box_contents_designers > label > div');
+            for (let i of targets) {
+              if (i.getAttribute("cus_value") === this.value) {
+                i.click();
+              }
             }
+          } else {
+            alert("디자이너 명수를 선택해주세요!");
+            document.getElementById('pp_designer_question_input').focus();
           }
         }
         this.value = '';
@@ -234,7 +239,7 @@ Proposal.below_events = {
 }
 
 Proposal.prototype.below_initial = function () {
-  let instance = this;
+  const instance = this;
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let buttonTexts = {
     width: [ 122, 108, 126, 108 ],
@@ -244,16 +249,16 @@ Proposal.prototype.below_initial = function () {
   let h = document.createDocumentFragment();
   for (let i = 0; i < buttonTexts.contents.length; i++) {
     if (i === 2) {
-      div_clone = this.nodes.div.cloneNode(true);
+      div_clone = Genemongo.nodes.div.cloneNode(true);
       div_clone.classList.add("blewpp_bar");
       div_clone.classList.add("blewpp_barleft");
       this.below_tong.set("barleft", div_clone);
       h.appendChild(div_clone);
 
-      div_clone = this.nodes.div.cloneNode(true);
+      div_clone = Genemongo.nodes.div.cloneNode(true);
       div_clone.className = "blewpp_numberbar_total";
 
-      input_clone = this.nodes.input.cloneNode(true);
+      input_clone = Genemongo.nodes.input.cloneNode(true);
       input_clone.setAttribute("type", "text");
       input_clone.setAttribute("placeholder", "고객 이름 검색...");
       input_clone.classList.add("blewpp_input");
@@ -261,13 +266,13 @@ Proposal.prototype.below_initial = function () {
       div_clone.appendChild(input_clone);
       h.appendChild(div_clone);
 
-      div_clone = this.nodes.div.cloneNode(true);
+      div_clone = Genemongo.nodes.div.cloneNode(true);
       div_clone.classList.add("blewpp_bar");
       div_clone.classList.add("blewpp_barright");
       this.below_tong.set("barright", div_clone);
       h.appendChild(div_clone);
     }
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.className = "blewpp_button";
     div_clone.id = "blewpp_button" + String(i);
     if (i === 0) {
@@ -321,11 +326,11 @@ Proposal.prototype.below_initial = function () {
     else { div_clone.style.right = String(buttonTexts.leftRight[i]) + "px"; }
     div_clone.style.width = String(buttonTexts.width[i]) + "px";
 
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.className = "blewpp_button_text";
     div_clone2.textContent = buttonTexts.contents[i];
     div_clone.appendChild(div_clone2);
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.className = "blewpp_button_garim";
     div_clone.appendChild(div_clone2);
     h.appendChild(div_clone);
@@ -335,7 +340,7 @@ Proposal.prototype.below_initial = function () {
 }
 
 Proposal.prototype.below_first = function () {
-  let instance = this;
+  const instance = this;
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
@@ -360,7 +365,7 @@ Proposal.prototype.below_first = function () {
 }
 
 Proposal.prototype.below_second = function (onoff) {
-  let instance = this;
+  const instance = this;
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
@@ -411,7 +416,7 @@ Proposal.prototype.below_second = function (onoff) {
 }
 
 Proposal.prototype.below_third = function (onoff) {
-  let instance = this;
+  const instance = this;
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
@@ -461,7 +466,7 @@ Proposal.prototype.below_third = function (onoff) {
 }
 
 Proposal.prototype.below_fourth = function (onoff) {
-  let instance = this;
+  const instance = this;
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
@@ -515,7 +520,7 @@ Proposal.prototype.below_fourth = function (onoff) {
 }
 
 Proposal.prototype.below_fifth = function (onoff) {
-  let instance = this;
+  const instance = this;
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";

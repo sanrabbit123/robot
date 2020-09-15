@@ -2,8 +2,6 @@ module.exports = function (d) {
 //Inline js
 let js = `
 
-
-
 const plugin2 = new M_moneymath(['c1_supply', 'd2_left', 'e2_feeamount', 'f2_calculamount', 'f3_calculfirst', 'f5_calcullast', 'g3_constuctfee', 'h2_refund', 'g2_constuctamount', 'g6_constuctcustomer', 'g7_constuctvat', 'g8_constuctfeesun']);
 let funcs_arr = [
   function (m1, m2) { console.log('Callbacks : ', m1, m2); },

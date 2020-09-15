@@ -4,7 +4,7 @@ Proposal.prototype.list_initial = async function () {
   let classes = [ "listpp_searchBar", "listpp_leftBar", "listpp_mainArea" ];
   let mapname = [ "검색창", "제안 현황", "메인 리스트" ];
   for (let i = 0; i < classes.length; i++) {
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add(classes[i]);
     mother.appendChild(div_clone);
     this.list_domBox.set(mapname[i], div_clone);
@@ -67,11 +67,11 @@ Proposal.prototype.list_searchBar_event = async function () {
 Proposal.prototype.list_searchBar = async function () {
   let parent = this.list_domBox.get("검색창");
   let div_clone, div_clone2, img_clone, input_clone;
-  img_clone = this.nodes.img.cloneNode(true);
+  img_clone = Genemongo.nodes.img.cloneNode(true);
   img_clone.src = "/list_svg/porporpor/search/searbae01.svg";
   img_clone.classList.add("listpp_searchBar_img");
   parent.appendChild(img_clone);
-  input_clone = this.nodes.input.cloneNode(true);
+  input_clone = Genemongo.nodes.input.cloneNode(true);
   input_clone.setAttribute("type", "text");
   input_clone.classList.add("listpp_searchBar_input");
   input_clone.addEventListener("keyup", (await this.list_searchBar_event()));
@@ -90,26 +90,26 @@ Proposal.prototype.list_leftBar = async function () {
       desid_numbers[obj2.desid] = desid_numbers[obj2.desid] + 1;
     }
   }
-  div_clone = this.nodes.div.cloneNode(true);
+  div_clone = Genemongo.nodes.div.cloneNode(true);
   div_clone.classList.add("listpp_leftBar_totalbox");
   for (let i = 0; i < designers.length; i++) {
     //designer id
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("listpp_leftBar_detail_id");
     div_clone2.textContent = designers[i].past_desid;
     div_clone.appendChild(div_clone2);
     //designer name
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("listpp_leftBar_detail");
     div_clone2.textContent = designers[i].designer;
     div_clone.appendChild(div_clone2);
     //designer bar
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("listpp_leftBar_detail_bar");
     div_clone2.style.top = String(7.5 + (34 * i)) + "px";
     div_clone.appendChild(div_clone2);
     //designer number
-    div_clone2 = this.nodes.div.cloneNode(true);
+    div_clone2 = Genemongo.nodes.div.cloneNode(true);
     div_clone2.classList.add("listpp_leftBar_detail_num");
     div_clone2.textContent = String(desid_numbers[designers[i].past_desid]);
     div_clone.appendChild(div_clone2);
@@ -171,11 +171,11 @@ Proposal.prototype.list_mainArea_tongMake = function (parent, proposal_list_raw,
     details_list.unshift(proposal_obj_new);
   }
   for (let i = 0; i < details_list.length; i++) {
-    div_clone = this.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("listpp_mainArea_tong");
     div_clone.setAttribute("cus_id", details_list[i][0]);
     for (let j = 0; j < details.length; j++) {
-      div_clone2 = this.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("listpp_mainArea_tong" + details[j]);
       if (j === 1 || j === 2) {
         div_clone2.addEventListener("click", this.load_initevent());
@@ -208,7 +208,7 @@ Proposal.prototype.list_menu = function () {
     this.style.color = "#59af89";
 
     // cancel
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("listpp_menu_cancelback");
     div_clone.addEventListener("click", function (e) {
       this.nextElementSibling.remove();
@@ -218,11 +218,11 @@ Proposal.prototype.list_menu = function () {
     this.parentElement.appendChild(div_clone);
 
     // menu
-    div_clone = instance.nodes.div.cloneNode(true);
+    div_clone = Genemongo.nodes.div.cloneNode(true);
     div_clone.classList.add("listpp_menu");
 
     for (let i of list) {
-      div_clone2 = instance.nodes.div.cloneNode(true);
+      div_clone2 = Genemongo.nodes.div.cloneNode(true);
       div_clone2.classList.add("listpp_menuEvent");
       div_clone2.classList.add("listpp_menuEvent_" + i.key);
       div_clone2.textContent = i.name;
