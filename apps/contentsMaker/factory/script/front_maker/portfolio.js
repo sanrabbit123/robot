@@ -43,7 +43,6 @@ ExecMain.prototype.generalTitle = function (obj) {
 	this.saveSvg(this_ai, obj.list + "subtitle");
 }
 
-
 ExecMain.prototype.generalBelow = function (obj) {
 	const mother = this.mother;
   let this_ai, from, to, contents, temp;
@@ -94,13 +93,18 @@ ExecMain.prototype.generalBelow = function (obj) {
 	}
 }
 
-
 ExecMain.prototype.arrowMaker = function () {
 	let this_ai = this.createDoc();
 	this.mother.return_arrow();
 	app.doScript("expandall", "contents_maker");
 	this.mother.fit_box();
-	this.saveSvg(this_ai, "arrow");
+	this.saveSvg(this_ai, "arrow0");
+
+	this_ai = app.open(new File(this.etc.targetFile[0]));
+	this.mother.deleteWithout("arrow1");
+	app.doScript("expandall", "contents_maker");
+	this.mother.fit_box();
+	this.saveSvg(this_ai, "arrow1");
 }
 
 ExecMain.prototype.searchTitle = function (obj) {
@@ -158,20 +162,16 @@ ExecMain.prototype.searchFactor = function (obj) {
 }
 
 ExecMain.prototype.searchMaker = function () {
-	const { search: { option: { sort, type } } } = this.text.main;
+	const { search: { option } } = this.text.main;
 	let titleTarget = [];
 	let factorTarget = [];
 
-	//title target
-	titleTarget.push({ contents: sort.wording, xyz: [ 0, 0 ], flatform: "desktop" });
-	titleTarget.push({ contents: type.wording, xyz: [ 1, 0 ], flatform: "desktop" });
-
-	//factor target
-	for (let i = 0; i < sort.children.length; i++) {
-		factorTarget.push({ contents: sort.children[i].wording, xyz: [ 0, i ], flatform: "desktop" });
-	}
-	for (let i = 0; i < type.children.length; i++) {
-		factorTarget.push({ contents: type.children[i].wording, xyz: [ 1, i ], flatform: "desktop" });
+	//target
+	for (let i = 0; i < option.length; i++) {
+		titleTarget.push({ contents: option[i].wording, xyz: [ i, 0 ], flatform: "desktop" });
+		for (let j = 0; j < option[i].children.length; j++) {
+			factorTarget.push({ contents: option[i].children[j].wording, xyz: [ i, j ], flatform: "desktop" });
+		}
 	}
 
 	//make words
@@ -183,7 +183,6 @@ ExecMain.prototype.searchMaker = function () {
 	}
 
 }
-
 
 ExecMain.prototype.listTitleTitle = function (obj) {
 	const { contents, xyz, flatform } = obj;
@@ -200,7 +199,6 @@ ExecMain.prototype.listTitleTitle = function (obj) {
 	this.saveSvg(this_ai, to);
 }
 
-
 ExecMain.prototype.listTitleIcon = function (obj) {
 	const { contents, xyz, name, flatform } = obj;
 	let this_ai, from, to, temp;
@@ -216,46 +214,99 @@ ExecMain.prototype.listTitleIcon = function (obj) {
 	this.saveSvg(this_ai, to);
 
 	//ai icon
-
-
-
-
-
-
-
-
-
-
+	this_ai = app.open(new File(this.etc.targetFile[0]));
+	this.mother.deleteWithout(name);
+	app.doScript("expandall", "contents_maker");
+	this.mother.fit_box();
+	this.saveSvg(this_ai, "listTitleIcon_Icon_" + name);
 
 }
-
 
 ExecMain.prototype.listTitleDetailTitle = function (obj) {
 	const { contents, xyz, flatform } = obj;
 	let this_ai, from, to, temp;
 
-
-
-
+	this_ai = this.createDoc();
+	from = "general";
+	to = "listTitleDetailTitle_" + flatform + "_" + String(xyz[0]) + String(xyz[1]) + String(xyz[2]);
+	this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm" } });
+	this.setParagraph({ from: contents, to: to });
+	temp = this.createElements(this_ai, this.createSetting[to]);
+	temp = temp.createOutline();
+	asterisk = this.mother.return_asterisk({ height: temp.height * 0.535, color: "#2fa678" });
+	asterisk.top = this.mother.return_middle(temp) + (asterisk.height / 2) + 0.2;
+	asterisk.left = temp.left - 18.1;
+	this.mother.fit_box();
+	app.doScript("expandall", "contents_maker");
+	this.saveSvg(this_ai, to);
 }
-
 
 ExecMain.prototype.listTitleDetailChild = function (obj) {
-	const { contents, xyz, flatform } = obj;
-	let this_ai, from, to, temp;
+	let options, this_ai, from, to, contents, temp, temp2, height;
+	const { contents: text, xyz: [ x, y, z ], flatform, exception } = obj;
 
+	//off
+	this_ai = this.createDoc();
+	from = "general";
+	to = "listTitleDetailChildren_off_" + flatform + "_" + String(x) + String(y) + String(z);
+	contents = text;
+	options = {
+		font: "SDGothicNeoa-eMd",
+		color: "#575757",
+	};
+	for (let i in exception) { options[i] = exception[i]; }
+	this.setCreateSetting({ from: from, to: to, exception: options });
+	this.setParagraph({ from: contents, to: to });
+	temp = this.createElements(this_ai, this.createSetting[to]);
+	temp = temp.createOutline();
+	if (flatform === "desktop") {
+		height = temp.height * 0.45;
+		temp2 = this_ai.pathItems.ellipse(this.mother.return_middle(temp) + (height / 2), temp.left - 18.5, height, height);
+	} else {
+		height = temp.height * 0.61;
+		temp2 = this_ai.pathItems.ellipse(this.mother.return_middle(temp) + (height / 2), temp.left - 21.2, height, height);
+	}
+	temp2.strokeColor = new NoColor();
+	temp2.fillColor = this.mother.colorpick("#ececec");
+	this.mother.white_box();
+	app.doScript("expandall", "contents_maker");
+	this.saveSvg(this_ai, to);
 
-
+	//on
+	this_ai = this.createDoc();
+	from = "general";
+	to = "listTitleDetailChildren_on_" + flatform + "_" + String(x) + String(y) + String(z);
+	contents = text;
+	options = {
+		font: "SDGothicNeoa-eMd",
+		color: "#2fa678",
+	};
+	for (let i in exception) { options[i] = exception[i]; }
+	this.setCreateSetting({ from: from, to: to, exception: options });
+	this.setParagraph({ from: contents, to: to });
+	temp = this.createElements(this_ai, this.createSetting[to]);
+	temp = temp.createOutline();
+	if (flatform === "desktop") {
+		height = temp.height * 0.45;
+		temp2 = this_ai.pathItems.ellipse(this.mother.return_middle(temp) + (height / 2), temp.left - 18.5, height, height);
+	} else {
+		height = temp.height * 0.61;
+		temp2 = this_ai.pathItems.ellipse(this.mother.return_middle(temp) + (height / 2), temp.left - 21.2, height, height);
+	}
+	temp2.strokeColor = new NoColor();
+	temp2.fillColor = this.mother.colorpick("#2fa678");
+	this.mother.white_box();
+	app.doScript("expandall", "contents_maker");
+	this.saveSvg(this_ai, to);
 
 }
-
 
 ExecMain.prototype.listTitleMaker = function () {
 	const { listTitle: { wording, icons, details } } = this.text.main;
 	let this_ai, from, to, contents, temp;
 
 	//list title
-	this.listTitleTitle({ contents: type.wording, xyz: [ 0, 0, 9 ], flatform: "desktop" });
+	this.listTitleTitle({ contents: wording.title, xyz: [ 0, 0, 9 ], flatform: "desktop" });
 
 	//icons
 	for (let i = 0; i < icons.length; i++) {
@@ -268,12 +319,12 @@ ExecMain.prototype.listTitleMaker = function () {
 
 		//details - children
 		for (let j = 0; j < details[i].children.length; j++) {
-			this.listTitleDetailChild({ contents: details[i].children[j].title, xyz: [ 2, i, j ], flatform: "desktop" });
+			this.listTitleDetailChild({ contents: details[i].children[j].title, xyz: [ 2, i, j ], flatform: "desktop", exception: {} });
+			this.listTitleDetailChild({ contents: details[i].children[j].title, xyz: [ 2, i, j ], flatform: "mobile", exception: {} });
 		}
 	}
 
 }
-
 
 ExecMain.prototype.start = function (dayString) {
 	const list = [ "desktop", "mobile" ];

@@ -1,5 +1,6 @@
 const PortfolioJs = function () {
   this.mother = new GeneralJs();
+  this.map = /<%map%>/;
 }
 
 PortfolioJs.prototype.truefalse = true;
@@ -136,7 +137,85 @@ PortfolioJs.prototype.methodselect = function (id, dm) {
   };
 }
 
+//------------------------------------------------------------------------------------------new
+
+/*
+
+PortfolioJs.prototype.initialDom = function () {
+  const instance = this;
+  const grand = {
+    desktop: document.getElementById("totalcontents"),
+    mobile: document.getElementById("mototalcontents"),
+  };
+  let list = {
+    desktop: [
+      {
+        id: "slide",
+        source: [ instance.map.main.slide.src.images.desktop, instance.map.main.slide.src.words.desktop ],
+        callback: function (id, source) {
+
+        }
+      },
+    ],
+    mobile: [
+    ],
+  };
+  let boo = Object.keys(list);
+  let temp, temp_callback, temp_id, temp_source;
+  for (let i = 0; i < boo.length; i++) {
+    for (let j = 0; j < list[boo[i]].length; j++) {
+      temp_callback = list[boo[i]][j]["callback"];
+      temp_id = list[boo[i]][j]["id"];
+      temp_source = list[boo[i]][j]["source"];
+      temp = temp_callback(temp_id, temp_source);
+      grand[boo[i]].appendChild(temp);
+    }
+  }
+}
+
+*/
+
 PortfolioJs.prototype.launching = async function () {
+  const instance = this;
+  try {
+    //this.initialDom();
+
+    /<%cssOut%>/ %/max-width:900px/%`
+
+    #bodymain0817 {
+      position:relative;
+      top:0px;
+      width:100%;
+    }
+    #totalcontents {
+      display:block;
+      position:relative;
+      width:100%;
+      height:auto;
+    }
+    #mototalcontents{
+      display:none;
+    }
+    .circles{
+      position:absolute;
+      bottom:0;
+      width:10px;
+      height:10px;
+      border-radius:6px;
+      background-color:#aaaaaa;
+      transition:all 0.5s ease;
+    }
+    .zlevel1{
+      z-index:1;
+    }
+
+    `%/%/e
+
+
+  } catch (e) {
+    window.location.href = "https://home-liaison.com";
+  }
+  /*
   var me = this;
   var i = 0, j = 0;
   (this.loopAjaxGet("porporform", "porporid"))();
@@ -162,4 +241,5 @@ PortfolioJs.prototype.launching = async function () {
     document.querySelector(".plt" + String(i)).addEventListener("click", me.methodselect(i, true));
     document.querySelector(".moplt" + String(i)).addEventListener("click", me.methodselect(i, false));
   }
+  */
 }

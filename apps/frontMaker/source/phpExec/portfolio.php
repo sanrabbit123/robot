@@ -57,8 +57,13 @@ echo $headhtml;
 <?php echo $htmlindex->searchbar(true); ?>
 
 <!-- Contents -->
-<div class="porli2s1position"><img src="./list_svg/porporpor/porli.svg" class="porporporimgh"><div class="graybari"></div></div>
+<div class="porli2s1position">
+  <img src="./list_svg/porporpor/porli.svg" class="porporporimgh">
+  <div class="graybari"></div>
+</div>
+
 <div id="porporid" class="porlicontent"></div>
+
 <form id="porporform" style="display:none;" method="POST">
   <input type="hidden" id="qqueryid" name="qquery" value="<?= $qquery ?>">
   <input type="hidden" name="switch" value="deporlist">

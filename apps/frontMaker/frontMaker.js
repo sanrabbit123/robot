@@ -104,6 +104,7 @@ FrontMaker.prototype.mediaLoad = function (code) {
 			media_temp_string2 = '';
 		}
 	}
+
 	media_mother = [ ...code.matchAll(/\/<%media%>\//g) ];
 	for (let i = 0; i < media_mother.length; i++) {
 		media_arr0 = code.match(/\/<%media%>\//);
@@ -120,13 +121,52 @@ FrontMaker.prototype.mediaLoad = function (code) {
 	return code;
 }
 
+FrontMaker.prototype.cssOut = function (code) {
+	let cssOutStart, cssOutEnd, tempArr0, tempArr1;
+	let resultCssString = '';
+	let resultCssArr0, resultCssArr1, resultCssResult, resultCssResults = [];
+
+	cssOutStart = [ ...code.matchAll(/\/<%cssOut%>\//g) ];
+	cssOutEnd = [ ...code.matchAll(/\`%\/%\/e/g) ];
+
+	if (cssOutStart.length !== cssOutEnd.length) {
+	  throw new Error("invaild css-out system");
+	}
+
+	for (let i = 0; i < cssOutStart.length; i++) {
+	  tempArr0 = code.match(/\/<%cssOut%>\//);
+	  tempArr1 = code.match(/\`%\/%\/e/);
+
+	  resultCssString = code.slice(tempArr0.index + 12, tempArr1.index);
+	  resultCssArr0 = resultCssString.split('/%`');
+	  resultCssArr1 = resultCssArr0[0].split('%/');
+
+	  if (resultCssArr1[1].trim() === "all") {
+	    resultCssString = resultCssArr0[1];
+	    resultCssResults.push(resultCssString);
+	  } else {
+	    resultCssString = '@media (' + resultCssArr1[1].trim() + ') {' + resultCssArr0[1] + '}';
+	    resultCssResults.push(resultCssString);
+	  }
+
+	  code = code.slice(0, tempArr0.index) + code.slice(tempArr1.index + 6);
+	}
+
+	resultCssResult = resultCssResults.join('\n');
+
+	return { code: code, css: resultCssResult };
+}
+
 FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
   try {
     let code, generalCode, result, svg_result, async_result, temp_string, exec_string, css_code, css_string, css_string_general, css_string_final, svgTong, svgDirBoo;
     let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/javascript` ]);
     let past = await this.mother.fileSystem(`readDir`, [ `${this.links.server}/js` ]);
     let map = await this.mother.fileSystem(`readDir`, [ this.links.map ]);
-    let mapObj = {}, generalObj, generalObj_clone;
+    let mapObj = {};
+		let generalObj, generalObj_clone;
+		let tempObj;
+		let cssOutString = '';
 
     for (let i of map) { if (i !== ".DS_Store") {
       temp_string = i.replace(/\.js/g, '');
@@ -145,19 +185,29 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
 			//code start
       code = await this.mother.fileSystem(`readString`, [ `${this.links.source}/javascript/${i}` ]);
 
+			//js code calculate : media
 			if (/\/<%media%>\//.test(code)) {
 				code = this.mediaLoad(code);
 			}
 
+			//js code calculate : contents
 			if (/\/<%contents%>\//.test(code)) {
         code = code.replace(/(\/<%contents%>\/)/g, (await this.mother.fileSystem(`readString`, [ `${this.links.source}/jsGeneral/contents.js` ])));
       }
 
+			//js code calculate : map
       if (/\/<%map%>\//.test(code)) {
         code = code.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
 					return JSON.stringify(mapObj[i.replace(/\.js/g, '')], null, 2);
         });
       }
+
+			//js code calculate : css-out
+			if (/\/<%cssOut%>\//.test(code)) {
+				tempObj = this.cssOut(code);
+				code = tempObj.code;
+				cssOutString = tempObj.css;
+			}
 
 			//unshift general
 			generalCode = await this.mother.fileSystem(`readString`, [ `${this.links.source}/jsGeneral/general.js` ]);
@@ -187,7 +237,7 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
 
 			//css local
 			css_code = require(`${this.links.source}/css/${i}`);
-      css_string = this.csso.minify(css_code()).css;
+      css_string = this.csso.minify(css_code() + cssOutString).css;
 			css_string = css_string.replace(/"/g, '\\"');
 			css_string_final = this.strings.cssRenderString.replace(/\/<%css%>\//g, ('"' + css_string_general + css_string + '";'));
 

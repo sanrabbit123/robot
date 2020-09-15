@@ -110,14 +110,14 @@ const funcs_obj = {
               insert_query += ",h5_refundleaf"
             }
             insert_query += "&val_arr=" + obj.where;
-            insert_query += "," + document.getElementById('a19_name_init' + obj.r_id).textContent;
-            insert_query += "," + document.getElementById('a16_service' + obj.r_id).textContent;
-            insert_query += "," + document.getElementById('a21_address' + obj.r_id).textContent;
-            insert_query += "," + document.getElementById('a24_pyeong' + obj.r_id).textContent;
+            insert_query += "," + document.getElementById('a19_name_init' + obj.r_id).textContent.replace(/,/g, '');
+            insert_query += "," + document.getElementById('a16_service' + obj.r_id).textContent.replace(/,/g, '');
+            insert_query += "," + document.getElementById('a21_address' + obj.r_id).textContent.replace(/,/g, '');
+            insert_query += "," + document.getElementById('a24_pyeong' + obj.r_id).textContent.replace(/,/g, '');
             insert_query += ",대기";
             if (r === 'BP1_process') {
-              insert_query += "," + document.getElementById('a30_channel' + obj.r_id).textContent;
-              insert_query += "," + document.getElementById('a18_timeline' + obj.r_id).textContent;
+              insert_query += "," + document.getElementById('a30_channel' + obj.r_id).textContent.replace(/,/g, '');
+              insert_query += "," + document.getElementById('a18_timeline' + obj.r_id).textContent.replace(/,/g, '');
               insert_query += ",";
               insert_query += ",";
               insert_query += ",";
@@ -180,7 +180,7 @@ const funcs_obj = {
       });
     }
     for (let r of target_arr) {
-      if (obj.data === "진행") {do_create(r, obj, true); }
+      if (obj.data === "진행") { do_create(r, obj, true); }
       else if (obj.data === "응대중" || obj.data === "드랍") { do_create(r, obj, false); }
     }
 

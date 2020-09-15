@@ -2,6 +2,18 @@ module.exports = function () {
   const orderarray = [[1,700/655],[1,7/6],[1200,1050],[1400,1050],['display:inline-block;','display:none;'],[18,12],['about.php','consulting.php']];
   const porlistratio = [0.238,0.016,0.41,0.045];
 
+  let html = `
+  
+
+
+
+
+
+
+
+  `;
+
+
   function css_deflexible() {
     let html = '';
     html += '.portliblock{display:inline-block;position:relative;margin-top:' + String(orderarray[3][0]*porlistratio[3]) + 'px;margin-right:' + String(orderarray[3][0]*porlistratio[1]) + 'px;height:' + String(orderarray[3][0]*porlistratio[2]) + 'px;}';
@@ -9,7 +21,7 @@ module.exports = function () {
     html += '.porlicontent{display:block;position:relative;top:-' + String(orderarray[3][0]*porlistratio[3]*(3/4)) + 'px;left:50%;margin-left:-' + String(orderarray[3][0]/2) + 'px;width:' + String(orderarray[3][0]+(porlistratio[1]*orderarray[3][0])) + 'px;height:auto;}';
     html += '.psero{width:' + String(orderarray[3][0]*porlistratio[0]) + 'px;}';
     html += '.pgaro{width:' + String(orderarray[3][0]*((porlistratio[0]*2)+porlistratio[1])) + 'px;}';
-    html += '.porli2s1position{display:block;position:relative;width:1400px;height:66px;left:50%;margin-left:-699px;}';
+    html += '.porli2s1position{display:block;position:relative;width:1400px;height:66px;left:50%;margin-left:-700px;}';
     html += '.graybari{position:absolute;top:28px;left:138px;width:' + String(orderarray[3][0]-139) + 'px;height:1.5px;background-color:#f7f7f7;border-radius:1px;}';
     html += '.polisearchbox{display:block;position:relative;top:0;left:50%;margin-left:-' + String(orderarray[3][0]/2) + 'px;height:55px;width:' + String(orderarray[3][0]) + 'px;}';
     html += '}';
@@ -108,5 +120,5 @@ module.exports = function () {
     return html;
   }
 
-  return (css_deflexible() + css_degeneral() + css_mogeneral());
+  return html + (css_deflexible() + css_degeneral() + css_mogeneral());
 }

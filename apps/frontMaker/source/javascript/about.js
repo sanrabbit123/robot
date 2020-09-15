@@ -1894,73 +1894,76 @@ AboutJs.prototype.reloadState = function (reloadPopup = true) {
 
 AboutJs.prototype.launching = async function () {
   const instance = this;
-  const { desktopDom_review, mobileDom_review } = await GeneralJs.getContents({
-    collection: "revlist",
-    sort: [ "order_function", "DESC" ],
-    limit: [ 10 ],
-    garo: true,
-  });
-  const rows = {
-    desktop: desktopDom_review,
-    mobile: mobileDom_review,
-  }
-  const flatform = window.innerWidth > 900 ? "desktop" : "mobile";
+  try {
+    const { desktopDom_review, mobileDom_review } = await GeneralJs.getContents({
+      collection: "revlist",
+      sort: [ "order_function", "DESC" ],
+      limit: [ 10 ],
+      garo: true,
+    });
+    const rows = {
+      desktop: desktopDom_review,
+      mobile: mobileDom_review,
+    }
+    const flatform = window.innerWidth > 900 ? "desktop" : "mobile";
 
-  window.history.replaceState({ level: 0, flatform: flatform, xyz: [] }, '');
+    window.history.replaceState({ level: 0, flatform: flatform, xyz: [] }, '');
 
-  mobileDom_review.removeChild(mobileDom_review.lastChild);
+    mobileDom_review.removeChild(mobileDom_review.lastChild);
 
-  this.toHidden(rows);
-  this.initialDom();
-  this.basicLoader(rows);
+    this.toHidden(rows);
+    this.initialDom();
+    this.basicLoader(rows);
 
-  this.mother.resizeLaunching(this.reloadState(true));
-  this.mother.stateLaunching(function (state) {
-    if (state === null) {
-      window.location.href = "https://home-liaison.com";
-    } else {
-      const { level, flatform, xyz } = state;
-      let reloadFunction, popupFunction, hiddenSpot, mother;
-      if (level === 0) {
+    this.mother.resizeLaunching(this.reloadState(true));
+    this.mother.stateLaunching(function (state) {
+      if (state === null) {
+        window.location.href = "https://home-liaison.com";
+      } else {
+        const { level, flatform, xyz } = state;
+        let reloadFunction, popupFunction, hiddenSpot, mother;
+        if (level === 0) {
 
-        GeneralJs.totalDelete();
-        reloadFunction = instance.reloadState(false);
-        reloadFunction();
-        instance.mother.specialBan();
-        instance.mother.homeliaisonTalk();
+          GeneralJs.totalDelete();
+          reloadFunction = instance.reloadState(false);
+          reloadFunction();
+          instance.mother.specialBan();
+          instance.mother.homeliaisonTalk();
 
-      } else if (level === 1) {
+        } else if (level === 1) {
 
-        if (document.getElementById("whitePopup") !== null) {
-          if (flatform === "desktop") {
-            mother = document.getElementById("totalcontents");
-          } else {
-            mother = document.getElementById("mototalcontents");
+          if (document.getElementById("whitePopup") !== null) {
+            if (flatform === "desktop") {
+              mother = document.getElementById("totalcontents");
+            } else {
+              mother = document.getElementById("mototalcontents");
+            }
+            hiddenSpot = document.getElementById("hiddentextmain0817");
+            for (let i = 0; i < 2; i++) {
+              mother.removeChild(mother.lastChild);
+              hiddenSpot.removeChild(hiddenSpot.lastChild);
+            }
+            instance.mother.resizePopup = 0;
           }
-          hiddenSpot = document.getElementById("hiddentextmain0817");
-          for (let i = 0; i < 2; i++) {
-            mother.removeChild(mother.lastChild);
-            hiddenSpot.removeChild(hiddenSpot.lastChild);
-          }
-          instance.mother.resizePopup = 0;
+          popupFunction = instance.whitePopup(flatform, xyz, true);
+          popupFunction();
+
         }
-        popupFunction = instance.whitePopup(flatform, xyz, true);
-        popupFunction();
+      }
+    });
 
+    //popup open
+    const getObj = GeneralJs.returnGet();
+    if (getObj.popup !== undefined) {
+      if (getObj.popup === "true") {
+        let getTimeout = setTimeout(function () {
+          let popupFunction = instance.whitePopup(flatform, [ 0, 0, 0 ], true);
+          popupFunction();
+          clearTimeout(getTimeout);
+        }, 1000);
       }
     }
-  });
-
-  //popup open
-  const getObj = GeneralJs.returnGet();
-  if (getObj.popup !== undefined) {
-    if (getObj.popup === "true") {
-      let getTimeout = setTimeout(function () {
-        let popupFunction = instance.whitePopup(flatform, [ 0, 0, 0 ], true);
-        popupFunction();
-        clearTimeout(getTimeout);
-      }, 1000);
-    }
+  } catch (e) {
+    window.location.href = "https://home-liaison.com";
   }
-
 }

@@ -212,7 +212,7 @@ IndexJs.prototype.initialDom = function () {
   const grand = {
     desktop: document.getElementById("totalcontents"),
     mobile: document.getElementById("mototalcontents"),
-  }
+  };
   let list = {
     desktop: [
       {
@@ -711,7 +711,7 @@ IndexJs.prototype.initialDom = function () {
         }
       },
     ],
-  }
+  };
   let boo = Object.keys(list);
   let temp, temp_callback, temp_id, temp_source;
   for (let i = 0; i < boo.length; i++) {
@@ -1799,12 +1799,13 @@ IndexJs.prototype.reloadState = function () {
 
 IndexJs.prototype.launching = async function () {
   const instance = this;
-
-  this.toHidden();
-  this.initialDom();
-
-  this.mother.scrollAsyncLaunching(this.asyncLoader());
-  this.mother.loadLaunching(this.asyncAnimation());
-  this.mother.resizeLaunching(this.reloadState());
-
+  try {
+    this.toHidden();
+    this.initialDom();
+    this.mother.scrollAsyncLaunching(this.asyncLoader());
+    this.mother.loadLaunching(this.asyncAnimation());
+    this.mother.resizeLaunching(this.reloadState());
+  } catch (e) {
+    window.location.href = "https://home-liaison.com";
+  }
 }

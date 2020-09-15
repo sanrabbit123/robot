@@ -717,10 +717,10 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 			end: true,
 		});
 
-		/*
-
 		//make svgTong files and make map with source written
 		await mapMaker.writeMap_makeTong();
+
+		/*
 
 		//remove binary
 		let resDir = await fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
