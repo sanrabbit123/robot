@@ -7,8 +7,6 @@ module.exports = function () {
 #bodymain0817{position:relative;top:0px;width:100%;}
 #totalcontents{display:block;position:relative;width:100%;height:auto;padding-top: 407px;}
 #mototalcontents{display:none;}
-#aboutback{display:block;position:absolute;top:71px;width:100%;height:336px;}
-#aboutbackword{display:block;position:absolute;top:157px;width:100%;height:128px;}
 .blockbox{display:block;position:relative;left:0;}
 .belowbox{display:block;position:relative;width:100%;height:280px;background-color:#f7f7f7}
 #belowboxposition{display:block;position:absolute;top:41px;width:1050px;height:176px;left:50%;margin-left:-525px;}

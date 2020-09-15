@@ -3,7 +3,7 @@ module.exports = function () {
   const porlistratio = [0.238,0.016,0.41,0.045];
 
   let html = `
-  
+
 
 
 
@@ -38,9 +38,9 @@ module.exports = function () {
 
   function css_degeneral() {
     let html = '#bodymain0817{position:relative;top:0px;width:100%;}';
-    html += '#porli2s0back0817{display:block;position:absolute;top:71px;width:100%;height:336px;}';
-    html += '#porli2s0position{display:block;position:absolute;top:157px;width:600px;height:128px;left:50%;margin-left:-300px;}';
-    html += '#totalcontents{display:block;position:relative;top:486px;width:100%;height:auto;}';
+    html += '#totalcontents{display:block;position:relative;padding-top: 407px;width:100%;height:auto;}';
+    html += '#polisearch{position:absolute;width:642px;height:42px;background-color:transparent;color:#303030;border:0;text-indent:12px;font-size:13pt;padding-bottom:4px;font-family: \'Noto Sans KR\', sans-serif;}';
+
     html += '.porporporimg{position:absolute;top:0;left:0;width:100%;height:100%}';
     html += '.porporporimgh{position:absolute;top:0;left:0;height:100%}';
     html += '.portliblock1{display:block;position:relative;background-color:#f7f7f7;background-size:100% 100%;background-position:50% 50%;background-repeat:no-repeat;width:100%;height:470px;border-radius:3px;overflow:hidden;}';
@@ -57,7 +57,6 @@ module.exports = function () {
     html += '#polisearch03{position:absolute;top:21px;right:1px;width:182px;height:21px;}';
     html += '#porlidelidediv{position:absolute;top:42px;right:1px;width:107px;height:188px;z-index:100;transform-origin:0 0;transition:all 0.3s ease;overflow:hidden;}';
     html += '#porlidelideimg{top:-190px;transition:all 0.3s ease;}';
-    html += '#polisearch{position:absolute;width:642px;height:42px;background-color:transparent;color:#303030;border:0;text-indent:12px;font-size:13pt;padding-bottom:4px;font-family: \'Noto Sans KR\', sans-serif;}';
     html += '.polilabel{cursor:pointer;}';
     html += '#poliordered1div{position:absolute;top:0px;left:85px;width:44px;height:21px;opacity:0;}';
     html += '#poliordered2div{position:absolute;top:0px;left:138px;width:44px;height:21px;opacity:0;}';

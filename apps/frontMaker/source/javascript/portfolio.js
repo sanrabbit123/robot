@@ -3,6 +3,8 @@ const PortfolioJs = function () {
   this.map = /<%map%>/;
 }
 
+PortfolioJs.sourceLink = "/list_image/portfolio";
+
 PortfolioJs.prototype.truefalse = true;
 
 PortfolioJs.prototype.loopAjaxGet = function (from, to) {
@@ -139,7 +141,7 @@ PortfolioJs.prototype.methodselect = function (id, dm) {
 
 //------------------------------------------------------------------------------------------new
 
-/*
+
 
 PortfolioJs.prototype.initialDom = function () {
   const instance = this;
@@ -150,11 +152,184 @@ PortfolioJs.prototype.initialDom = function () {
   let list = {
     desktop: [
       {
-        id: "slide",
-        source: [ instance.map.main.slide.src.images.desktop, instance.map.main.slide.src.words.desktop ],
+        id: "back",
+        source: [ instance.map.sub.title.desktop.back.src ],
+        callback: function (id, source) {
+          const [ back ] = source;
+          let div_clone;
+          let style = {};
+          let ea = "px";
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            display: "block",
+            position: "absolute",
+            width: "100%",
+            height: String(336) + ea,
+            top: String(71) + ea,
+            left: String(0) + ea,
+            backgroundImage: 'url("' + PortfolioJs.sourceLink + back + '")',
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 40%",
+          }
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
+          return div_clone;
+        }
+      },
+      {
+        id: "backword",
+        source: [ instance.map.sub.title.desktop.words.src ],
+        callback: function (id, source) {
+          const [ words ] = source;
+          let height, top, width, ea;
+          let h = document.createDocumentFragment();
+          let svg_clone;
+
+          height = 92;
+          top = 172;
+          width = GeneralJs.parseRatio({ source: words, target: height, method: "height", result: "number" });
+          ea = "px";
+
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = words;
+          svg_clone.style.position = "absolute";
+          svg_clone.style.left = "50%";
+          svg_clone.style.top = String(top) + ea;
+          svg_clone.style.height = String(height) + ea;
+          svg_clone.style.width = String(width) + ea;
+          svg_clone.style.marginLeft = '-' + String(width / 2) + ea;
+          h.appendChild(SvgTong.parsing(svg_clone));
+
+          return h;
+        },
+      },
+      {
+        id: "searchbar",
+        source: [ instance.map.sub.title.desktop.words.src ],
         callback: function (id, source) {
 
-        }
+          /<%cssOut%>/
+
+            let h0 = '', h1 = '', h2 = '', h3 = '';
+            const cssString = function (media) {
+              let ea = "px";
+              return ".polisearchbox { display:block;position:relative;top:0;left:50%;height:55px;width:" + String(media) + ea + ";margin-left:-" + String(media/2) + ea + "; }";
+            }
+            h1 = cssString(1400);
+            h2 = cssString(1050);
+            return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
+
+          %/%/e
+
+          let div_clone, div_clone2, div_clone3, input_clone, svg_clone;
+          let style = {};
+          let attribute = {};
+
+          //mother
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          div_clone.classList.add("polisearchbox");
+
+          //keyboard input
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            display: "block",
+            position: "relative",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(690) + ea,
+            height: String(42) + ea,
+          };
+          for (let i in style) {
+            div_clone2.style[i] = style[i];
+          }
+
+          //gray box
+
+
+
+          //search input
+          input_clone = GeneralJs.nodes.input.cloneNode(true);
+          input_clone.id = "polisearch";
+          attribute = {
+            type: "text",
+            name: "search1",
+            value: "",
+          };
+          for (let i in attribute) {
+            input_clone.setAttribute(i, attribute[i]);
+          }
+          div_clone2.appendChild(input_clone);
+
+          //hidden input 1
+          input_clone = GeneralJs.nodes.input.cloneNode(true);
+          input_clone.style.display = "none";
+          attribute = {
+            type: "hidden",
+            name: "search2",
+            value: "key9",
+          };
+          for (let i in attribute) {
+            input_clone.setAttribute(i, attribute[i]);
+          }
+          div_clone2.appendChild(input_clone);
+
+          //hidden input 2
+          input_clone = GeneralJs.nodes.input.cloneNode(true);
+          input_clone.style.display = "none";
+          attribute = {
+            type: "hidden",
+            name: "search3",
+            value: "all",
+          };
+          for (let i in attribute) {
+            input_clone.setAttribute(i, attribute[i]);
+          }
+          div_clone2.appendChild(input_clone);
+
+          //svg icon
+
+
+          //white hover
+
+
+
+
+
+          div_clone.appendChild(div_clone2);
+
+          //sort
+
+
+          //type
+
+
+          return div_clone;
+        },
+      },
+      {
+        id: "contents",
+        source: [],
+        callback: function (id, source) {
+          let h = document.createDocumentFragment();
+
+
+
+          return h;
+        },
+      },
+      {
+        id: "below",
+        source: [],
+        callback: function (id, source) {
+          let h = document.createDocumentFragment();
+
+
+
+          return h;
+        },
       },
     ],
     mobile: [
@@ -173,43 +348,12 @@ PortfolioJs.prototype.initialDom = function () {
   }
 }
 
-*/
+
 
 PortfolioJs.prototype.launching = async function () {
   const instance = this;
   try {
-    //this.initialDom();
-
-    /<%cssOut%>/ %/max-width:900px/%`
-
-    #bodymain0817 {
-      position:relative;
-      top:0px;
-      width:100%;
-    }
-    #totalcontents {
-      display:block;
-      position:relative;
-      width:100%;
-      height:auto;
-    }
-    #mototalcontents{
-      display:none;
-    }
-    .circles{
-      position:absolute;
-      bottom:0;
-      width:10px;
-      height:10px;
-      border-radius:6px;
-      background-color:#aaaaaa;
-      transition:all 0.5s ease;
-    }
-    .zlevel1{
-      z-index:1;
-    }
-
-    `%/%/e
+    this.initialDom();
 
 
   } catch (e) {

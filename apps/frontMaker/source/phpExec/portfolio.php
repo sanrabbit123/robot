@@ -42,9 +42,6 @@ $headhtml .= $htmlhtml->htmlstart($titleinfo, 'portfolio');
 //navigator
 $headhtml .= $htmlhtml->navinavi().$htmlhtml->hiddentext($hiddentext);
 
-//porlist back
-$headhtml .= $htmlindex->porliback();
-
 //desktop start
 $headhtml .= $htmlhtml->totalstart();
 

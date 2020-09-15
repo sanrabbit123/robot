@@ -20,11 +20,27 @@ AboutJs.prototype.initialDom = function () {
         id: "aboutback",
         source: [ instance.map.sub.title.desktop.back.src ],
         callback: function (id, source) {
-          let div_clone = GeneralJs.nodes.div.cloneNode(true);
-          div_clone.id = id;
-          div_clone.style.backgroundImage = "url('" + AboutJs.sourceLink + source[0] +  "')";
-          div_clone.style.backgroundSize = "101% auto";
-          div_clone.style.backgroundPosition = "50% 25%";
+          const [ back ] = source;
+          let div_clone;
+          let style = {};
+          let ea = "px";
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            display: "block",
+            position: "absolute",
+            width: "100%",
+            height: String(336) + ea,
+            top: String(71) + ea,
+            left: String(0) + ea,
+            backgroundImage: 'url("' + AboutJs.sourceLink + back + '")',
+            backgroundSize: "101% auto",
+            backgroundPosition: "50% 25%",
+          }
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
           return div_clone;
         },
       },
@@ -32,25 +48,27 @@ AboutJs.prototype.initialDom = function () {
         id: "aboutbackword",
         source: [ instance.map.sub.title.desktop.words.src ],
         callback: function (id, source) {
-          let height = 92;
-          let top = 15;
-          let width = GeneralJs.parseRatio({ source: source[0], target: height, method: "height", result: "number" });
-          let ea = "px";
+          const [ words ] = source;
+          let height, top, width, ea;
+          let h = document.createDocumentFragment();
+          let svg_clone;
 
-          let div_clone = GeneralJs.nodes.div.cloneNode(true);
-          div_clone.id = id;
+          height = 92;
+          top = 172;
+          width = GeneralJs.parseRatio({ source: words, target: height, method: "height", result: "number" });
+          ea = "px";
 
-          let svg_clone = SvgTong.tongMaker();
-          svg_clone.src = AboutJs.sourceLink + source[0];
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = words;
           svg_clone.style.position = "absolute";
           svg_clone.style.left = "50%";
           svg_clone.style.top = String(top) + ea;
           svg_clone.style.height = String(height) + ea;
           svg_clone.style.width = String(width) + ea;
           svg_clone.style.marginLeft = '-' + String(width / 2) + ea;
-          div_clone.appendChild(SvgTong.parsing(svg_clone));
+          h.appendChild(SvgTong.parsing(svg_clone));
 
-          return div_clone;
+          return h;
         },
       },
       {

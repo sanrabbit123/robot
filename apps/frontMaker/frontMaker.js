@@ -124,35 +124,41 @@ FrontMaker.prototype.mediaLoad = function (code) {
 FrontMaker.prototype.cssOut = function (code) {
 	let cssOutStart, cssOutEnd, tempArr0, tempArr1;
 	let resultCssString = '';
-	let resultCssArr0, resultCssArr1, resultCssResult, resultCssResults = [];
+	let resultCssArr, resultCssResult;
+	let tempFunction, tempObject;
+	let keys = [ "mediaAll", "media1400", "media1050", "media900" ];
+	let matchMedia = [
+		[ "", "" ],
+		[ "@media (min-width:1611px) {", "}" ],
+		[ "@media (min-width:901px) and (max-width:1610px) {", "}" ],
+		[ "@media (max-width:900px) {", "}" ],
+	];
 
 	cssOutStart = [ ...code.matchAll(/\/<%cssOut%>\//g) ];
-	cssOutEnd = [ ...code.matchAll(/\`%\/%\/e/g) ];
+	cssOutEnd = [ ...code.matchAll(/%\/%\/e/g) ];
 
 	if (cssOutStart.length !== cssOutEnd.length) {
 	  throw new Error("invaild css-out system");
 	}
 
+	resultCssArr = [];
 	for (let i = 0; i < cssOutStart.length; i++) {
 	  tempArr0 = code.match(/\/<%cssOut%>\//);
-	  tempArr1 = code.match(/\`%\/%\/e/);
+	  tempArr1 = code.match(/%\/%\/e/);
 
 	  resultCssString = code.slice(tempArr0.index + 12, tempArr1.index);
-	  resultCssArr0 = resultCssString.split('/%`');
-	  resultCssArr1 = resultCssArr0[0].split('%/');
+		tempFunction = new Function(resultCssString);
+		tempObject = tempFunction();
 
-	  if (resultCssArr1[1].trim() === "all") {
-	    resultCssString = resultCssArr0[1];
-	    resultCssResults.push(resultCssString);
-	  } else {
-	    resultCssString = '@media (' + resultCssArr1[1].trim() + ') {' + resultCssArr0[1] + '}';
-	    resultCssResults.push(resultCssString);
-	  }
-
-	  code = code.slice(0, tempArr0.index) + code.slice(tempArr1.index + 6);
+		for (let j = 0; j < keys.length; j++) {
+			if (tempObject[keys[j]] !== '') {
+				resultCssArr.push("\n" + matchMedia[j][0] + " " + tempObject[keys[j]] + " " + matchMedia[j][1]);
+			}
+		}
+	  code = code.slice(0, tempArr0.index) + code.slice(tempArr1.index + 5);
 	}
 
-	resultCssResult = resultCssResults.join('\n');
+	resultCssResult = resultCssArr.join('\n');
 
 	return { code: code, css: resultCssResult };
 }
