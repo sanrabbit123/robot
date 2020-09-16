@@ -525,7 +525,7 @@ ContentMaker.prototype.to_poo = async function () {
 	const mother = this.mother;
 	try {
 
-		//setting binary folders -------------------------------------------------------------------------------------
+		//setting binary folders -------------------------------------------------------------------------------------------------
 		let pooPath_mother, pooPath;
 		let webPath_mother, webPath;
 		let staticPath_mother, staticPath;
@@ -559,8 +559,13 @@ ContentMaker.prototype.to_poo = async function () {
 		};
 
 
-		//setting ids -------------------------------------------------------------------------------------------
-		let arr, p_id, r_id;
+		//setting ids -----------------------------------------------------------------------------------------------------------
+		let arr;
+		let p_id, r_id;
+		let p_path, r_path;
+		let svgAis, revAis;
+		let delete_arr = [];
+		let revdelete_arr = [];
 
 		//set p_id and r_id
 		arr = await mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
@@ -571,43 +576,52 @@ ContentMaker.prototype.to_poo = async function () {
 			else if (/^re[0-9]+/g.test(arr[i])) { r_id = arr[i].replace(/code/g, ''); }
 		}
 
-		let svgAis = await mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${p_id}code/portp${p_id}/svg` ]);
-		let delete_arr = [];
+		//move svgs and ai delete
+		p_path = `${this.options.home_dir}result/${p_id}code`;
+		svgAis = await mother.fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
 		for (let i of svgAis) { if (/\.ai$/g.test(i)) {
 			delete_arr.push(i);
 		}}
-		this.mother.shell.exec(`cp -r ${this.options.home_dir}result/${p_id}code ${webPath.porpor}`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/moportivecgaro${p_id}.svg ${pooPath.porpor}/mobile/motitlegaro/`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/portivecgaro${p_id}.svg ${pooPath.porpor}/titlegaro/`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/porhovecgaro${p_id}.svg ${pooPath.porpor}/titlehovergaro/`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/moportivec${p_id}.svg ${pooPath.porpor}/mobile/motitlesero/`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/portivec${p_id}.svg ${pooPath.porpor}/titlesero/`);
-		this.mother.shell.exec(`cp ${this.options.home_dir}result/${p_id}code/porhovec${p_id}.svg ${pooPath.porpor}/titlehoversero/`);
+		mother.shell.exec(`cp -r ${p_path} ${webPath.porpor}`);
+		mother.shell.exec(`cp ${p_path}/moportivecgaro${p_id}.svg ${pooPath.porpor}/mobile/motitlegaro/`);
+		mother.shell.exec(`cp ${p_path}/portivecgaro${p_id}.svg ${pooPath.porpor}/titlegaro/`);
+		mother.shell.exec(`cp ${p_path}/porhovecgaro${p_id}.svg ${pooPath.porpor}/titlehovergaro/`);
+		mother.shell.exec(`cp ${p_path}/moportivec${p_id}.svg ${pooPath.porpor}/mobile/motitlesero/`);
+		mother.shell.exec(`cp ${p_path}/portivec${p_id}.svg ${pooPath.porpor}/titlesero/`);
+		mother.shell.exec(`cp ${p_path}/porhovec${p_id}.svg ${pooPath.porpor}/titlehoversero/`);
 		for (let ai of delete_arr) {
-			this.mother.shell.exec(`rm -f ${this.options.home_dir}result/${p_id}code/portp${p_id}/svg/${ai}`);
+			mother.shell.exec(`rm -f ${p_path}/portp${p_id}/svg/${ai}`);
 		}
 
-		//image
-		this.mother.shell.exec(`cp -r ${this.options.home_dir}result/${p_id}code/portp${p_id} ${pooPath.list_image}`);
-		this.mother.shell.exec(`cp -r ${this.options.home_dir}result/${p_id}code/portp${p_id} ${staticPath.list_image}`);
+		//image copy to poo
+		mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${pooPath.list_image}`);
 
+		//image copy to static
+		mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${staticPath.list_image}`);
+
+		//image copy to google static
+		mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${googlePath.list_image}`);
+
+		//review version
 		if (r_id !== `none`) {
-			let revAis = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${r_id}code/${r_id}` ]);
-			let revdelete_arr = [];
+			r_path = `${this.options.home_dir}result/${r_id}code`;
+			revAis = await this.mother.fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
 			for (let i of revAis) { if (/\.ai$/g.test(i)) {
 				revdelete_arr.push(i);
 			}}
-			this.mother.shell.exec(`cp -r ${this.options.home_dir}result/${r_id}code ${webPath.revrev}`);
-			this.mother.shell.exec(`cp ${this.options.home_dir}result/${r_id}code/morevtivec${r_id}.svg ${pooPath.revrev}/morevivector/`);
-			this.mother.shell.exec(`cp ${this.options.home_dir}result/${r_id}code/revhovec${r_id}.svg ${pooPath.revrev}/revhovector/`);
-			this.mother.shell.exec(`cp ${this.options.home_dir}result/${r_id}code/revtivec${r_id}.svg ${pooPath.revrev}/revivector/`);
-			this.mother.shell.exec(`cp ${this.options.home_dir}result/${r_id}code/nu${r_id}.svg ${pooPath.revrev}/detail/number`);
+			mother.shell.exec(`cp -r ${r_path} ${webPath.revrev}`);
+			mother.shell.exec(`cp ${r_path}/morevtivec${r_id}.svg ${pooPath.revrev}/morevivector/`);
+			mother.shell.exec(`cp ${r_path}/revhovec${r_id}.svg ${pooPath.revrev}/revhovector/`);
+			mother.shell.exec(`cp ${r_path}/revtivec${r_id}.svg ${pooPath.revrev}/revivector/`);
+			mother.shell.exec(`cp ${r_path}/nu${r_id}.svg ${pooPath.revrev}/detail/number`);
 			for (let ai of revdelete_arr) {
-				this.mother.shell.exec(`rm -f ${this.options.home_dir}result/${r_id}code/${r_id}/${ai}`);
+				mother.shell.exec(`rm -f ${r_path}/${r_id}/${ai}`);
 			}
-			this.mother.shell.exec(`cp -r ${this.options.home_dir}result/${r_id}code/${r_id} ${pooPath.revrev}/detail/`);
+			mother.shell.exec(`cp -r ${r_path}/${r_id} ${pooPath.revrev}/detail/`);
 		}
 
+
+		//setting scp message -----------------------------------------------------------------------------------------------------------
 		let scpMsg = '';
 		scpMsg += `scp -r ${pooPath.porpor} miro81@home-liaison.com:/miro81/www/list_svg/;`;
 		scpMsg += `scp -r ${pooPath.list_image}/portp${p_id} miro81@home-liaison.com:/miro81/www/list_image/;`;
@@ -635,26 +649,29 @@ ContentMaker.prototype.proposal_make = async function () {
 	const instance = this;
 	const { shell, shellLink, fileSystem, babelSystem } = this.mother;
 	const { home_dir } = this.options;
+	let temp_scriptString, result_dir;
 	try {
-		let temp_scriptString = '';
 		temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
 		temp_scriptString += await fileSystem(`readString`, [ `${shellLink(home_dir)}factory/script/polyfill.js` ]);
 		temp_scriptString += `\n`;
 		temp_scriptString += await babelSystem(this.generator.proposal_maker.proposal(this.options));
+
 		await fileSystem(`write`, [ `${this.options.home_dir}script/proposal.js`, temp_scriptString ]);
-		let result_dir = await fileSystem(`readDir`, [ `${shellLink(home_dir)}result` ]);
+
+		result_dir = await fileSystem(`readDir`, [ `${shellLink(home_dir)}result` ]);
 		for (let i of result_dir) { if (i !== ".DS_Store") {
 			shell.exec(`rm -rf ${shellLink(home_dir)}result/${i};`);
 		}}
 		shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/start_adobe.scpt proposal`);
 		shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/return_terminal.scpt`);
+
 	} catch (e) {
 		console.log(e);
 	}
 }
 
 ContentMaker.prototype.proposal_launching = async function () {
-	let instance = this;
+	const instance = this;
 	const MongoClient = this.mother.mongo;
 	const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
 	try {
@@ -742,8 +759,6 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		//make svgTong files and make map with source written
 		await mapMaker.writeMap_makeTong();
 
-		/*
-
 		//remove binary
 		let resDir = await fileSystem(`readDir`, [ `${this.options.home_dir}result/${sw}` ]);
 		let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
@@ -766,8 +781,6 @@ ContentMaker.prototype.renderSvgPng = async function (sw) {
 		for (let i of resDir) {
 			shell.exec(`rm -rf ${shellLink(this.options.home_dir + "result")}/${i}`);
 		}
-
-		*/
 
 	} catch (e) {
 		console.log(e);
