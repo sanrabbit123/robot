@@ -1,5 +1,11 @@
 const PortfolioJs = function () {
   this.mother = new GeneralJs();
+  this.searchDoms = {
+    keyInput: {},
+    sort: {},
+    type: {},
+    details: [],
+  };
   this.map = /<%map%>/;
 }
 
@@ -141,7 +147,275 @@ PortfolioJs.prototype.methodselect = function (id, dm) {
 
 //------------------------------------------------------------------------------------------new
 
+PortfolioJs.prototype.sortBox = function (mother, flatform) {
+  const instance = this;
+  const { src: title, children } = this.map.main.search.option[0];
 
+  let div_clone, svg_clone;
+  let style = {};
+  let attribute = {};
+  let width, height, top, left, right;
+  let boo = (flatform === "desktop") ? true : false;
+  let ea = boo ? "px" : "vw";
+  let sortWording;
+  let buttons = new Array(2);
+
+  //sort wording
+  top = boo ? 1.6 : 10;
+  right = boo ? 110 : 10;
+  height = boo ? 12 : 10;
+  width = GeneralJs.parseRatio({ source: title[flatform], target: height, method: "height", result: "number" });
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = title[flatform];
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  svg_clone.setAttribute("cus_value", "key9");
+  sortWording = SvgTong.parsing(svg_clone);
+  this.searchDoms.sort = sortWording;
+  mother.appendChild(sortWording);
+
+  //sort child 1 - off
+  top = boo ? 1.4 : 10;
+  right = boo ? 61 : 10;
+  height = boo ? 13 : 10;
+  width = GeneralJs.parseRatio({ source: children[0].src.desktop.off, target: height, method: "height", result: "number" });
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = children[0].src.desktop.off;
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  mother.appendChild(SvgTong.parsing(svg_clone));
+
+  //sort child 1 - on
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = children[0].src.desktop.on;
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    transition: "all 0.5s ease",
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  buttons[0] = SvgTong.parsing(svg_clone);
+  mother.appendChild(buttons[0]);
+
+  //sort child 2 - off
+  right = boo ? 0 : 0;
+  width = GeneralJs.parseRatio({ source: children[1].src.desktop.off, target: height, method: "height", result: "number" });
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = children[1].src.desktop.off;
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  mother.appendChild(SvgTong.parsing(svg_clone));
+
+  //sort child 2 - on
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = children[1].src.desktop.on;
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    opacity: String(0),
+    transition: "all 0.5s ease",
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  buttons[1] = SvgTong.parsing(svg_clone);
+  mother.appendChild(buttons[1]);
+
+  //gray bar
+  right = boo ? 48 : 10;
+  height = boo ? 13.3 : 10;
+  width = boo ? 1.5 : 10;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    background: "#dddddd",
+    borderRadius: String(boo ? 3 : 1) + ea,
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  mother.appendChild(div_clone);
+
+  //white box 1
+  top = boo ? 0 : 0;
+  right = boo ? 54 : 10;
+  height = boo ? 17 : 10;
+  width = boo ? 48 : 10;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("mouseoverdefault");
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    background: "#ffffff",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  div_clone.addEventListener("click", function (e) {
+    sortWording.setAttribute("cus_value", "key9");
+    buttons[0].style.opacity = '';
+    buttons[1].style.opacity = '0';
+  });
+  mother.appendChild(div_clone);
+
+  //white box 2
+  right = boo ? 0 : 0;
+  width = boo ? 44 : 10;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("mouseoverdefault");
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    background: "#ffffff",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  div_clone.addEventListener("click", function (e) {
+    sortWording.setAttribute("cus_value", "key8");
+    buttons[0].style.opacity = '0';
+    buttons[1].style.opacity = '';
+  });
+  mother.appendChild(div_clone);
+
+}
+
+PortfolioJs.prototype.typeBox = function (mother, flatform) {
+  const instance = this;
+  const { src: title, children } = this.map.main.search.option[1];
+  const { src: greenArrow } = this.map.sub.etc.arrow[0];
+
+  let div_clone, svg_clone;
+  let style = {};
+  let attribute = {};
+  let width, height, top, left, right;
+  let boo = (flatform === "desktop") ? true : false;
+  let ea = boo ? "px" : "vw";
+  let typeWording;
+
+  //type wording
+  top = boo ? 25 : 10;
+  right = boo ? 110 : 10;
+  height = boo ? 12 : 10;
+  width = GeneralJs.parseRatio({ source: title[flatform], target: height, method: "height", result: "number" });
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = title[flatform];
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  svg_clone.setAttribute("cus_value", "key9");
+  typeWording = SvgTong.parsing(svg_clone);
+  this.searchDoms.type = typeWording;
+  mother.appendChild(typeWording);
+
+  //children
+  top = boo ? 24.3 : 10;
+  height = boo ? 13 : 10;
+  for (let i = 0; i < children.length; i++) {
+    width = GeneralJs.parseRatio({ source: children[i].src.desktop.off, target: height, method: "height", result: "number" });
+    right = boo ? (97 - width) : 10;
+    svg_clone = SvgTong.tongMaker();
+    svg_clone.src = children[i].src.desktop.off;
+    style = {
+      position: "absolute",
+      top: String(top) + ea,
+      right: String(right) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+    };
+    for (let j in style) {
+      svg_clone.style[j] = style[j];
+    }
+    if (i !== 0) { svg_clone.style.opacity = '0'; }
+    mother.appendChild(SvgTong.parsing(svg_clone));
+  }
+
+  //greenArrow
+  top = boo ? 26 : 10;
+  height = boo ? 7 : 10;
+  right = boo ? 0 : 0;
+  width = GeneralJs.parseRatio({ source: greenArrow, target: height, method: "height", result: "number" });
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = greenArrow;
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let j in style) {
+    svg_clone.style[j] = style[j];
+  }
+  mother.appendChild(SvgTong.parsing(svg_clone));
+
+  //white box
+
+
+
+  //detail frame
+
+
+
+  //detail white back
+
+
+
+  //details
+
+
+
+
+}
 
 PortfolioJs.prototype.initialDom = function () {
   const instance = this;
@@ -208,31 +482,33 @@ PortfolioJs.prototype.initialDom = function () {
       },
       {
         id: "searchbar",
-        source: [ instance.map.sub.title.desktop.words.src ],
+        source: [],
         callback: function (id, source) {
+          const { main: { navigator: { src: { icons: { search: searchIcon } } } } } = instance.mother.map;
+          const { main: { search: { option: [ searchSort, searchType ] } } } = instance.map;
+          let div_clone, div_clone2, div_clone3, input_clone, svg_clone;
+          let style = {};
+          let attribute = {};
+          let width, height, top, left, right;
+          let ea = "px";
 
-          /<%cssOut%>/
-
+          //css
+          /<%cssOut%>/ {
             let h0 = '', h1 = '', h2 = '', h3 = '';
             const cssString = function (media) {
               let ea = "px";
-              return ".polisearchbox { display:block;position:relative;top:0;left:50%;height:55px;width:" + String(media) + ea + ";margin-left:-" + String(media/2) + ea + "; }";
+              return ".polisearchbox { display:block;margin-top:20px;position:relative;top:0;left:50%;height:55px;width:" + String(media) + ea + ";margin-left:-" + String(media/2) + ea + "; }";
             }
             h1 = cssString(1400);
             h2 = cssString(1050);
             return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
-
-          %/%/e
-
-          let div_clone, div_clone2, div_clone3, input_clone, svg_clone;
-          let style = {};
-          let attribute = {};
+          } %/%/e
 
           //mother
           div_clone = GeneralJs.nodes.div.cloneNode(true);
           div_clone.classList.add("polisearchbox");
 
-          //keyboard input
+          //search input box start
           div_clone2 = GeneralJs.nodes.div.cloneNode(true);
           style = {
             display: "block",
@@ -247,12 +523,25 @@ PortfolioJs.prototype.initialDom = function () {
           }
 
           //gray box
-
-
+          width = 642;
+          height = 42;
+          div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            backgroundColor: "#f7f7f7",
+            borderRadius: String(3) + ea,
+          };
+          for (let i in style) {
+            div_clone3.style[i] = style[i];
+          }
+          div_clone2.appendChild(div_clone3);
 
           //search input
           input_clone = GeneralJs.nodes.input.cloneNode(true);
-          input_clone.id = "polisearch";
           attribute = {
             type: "text",
             name: "search1",
@@ -260,6 +549,23 @@ PortfolioJs.prototype.initialDom = function () {
           };
           for (let i in attribute) {
             input_clone.setAttribute(i, attribute[i]);
+          }
+          style = {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            backgroundColor: "transparent",
+            color: "#303030",
+            border: String(0) + ea,
+            textIndent: String(12) + ea,
+            fontSize: String(13) + "pt",
+            paddingBottom: String(4) + ea,
+            fontFamily: "'Noto Sans KR', sans-serif",
+          };
+          for (let i in style) {
+            input_clone.style[i] = style[i];
           }
           div_clone2.appendChild(input_clone);
 
@@ -290,20 +596,51 @@ PortfolioJs.prototype.initialDom = function () {
           div_clone2.appendChild(input_clone);
 
           //svg icon
-
+          top = 4;
+          left = width + 15;
+          height = 32;
+          width = GeneralJs.parseRatio({ source: searchIcon, target: height, method: "height", result: "number" });
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = searchIcon;
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(left) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+          };
+          for (let i in style) {
+            svg_clone.style[i] = style[i];
+          }
+          div_clone2.appendChild(SvgTong.parsing(svg_clone));
 
           //white hover
+          div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone3.classList.add("mouseoverdefault");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(left) + ea,
+            width: String(width) + ea,
+            height: String(height + 5) + ea,
+            backgroundColor: "#ffffff",
+            borderRadius: String(3) + ea,
+          };
+          for (let i in style) {
+            div_clone3.style[i] = style[i];
+          }
+          div_clone2.appendChild(div_clone3);
 
-
-
-
-
+          //search input end
           div_clone.appendChild(div_clone2);
 
           //sort
-
+          instance.sortBox(div_clone, "desktop");
 
           //type
+          instance.typeBox(div_clone, "desktop");
+
+
 
 
           return div_clone;

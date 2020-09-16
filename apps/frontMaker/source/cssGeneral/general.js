@@ -87,9 +87,14 @@ module.exports = function () {
     transition:all 0.5s ease;
     cursor: pointer;
   }
-  .hoverdefault:hover{
-    opacity: 0.5;
+  .hoverdefault:hover{ opacity: 0.5; }
+  .mouseoverdefault{
+    opacity: 0;
+    transition:all 0.5s ease;
+    cursor: pointer;
   }
+  .mouseoverdefault:hover{ opacity: 0.5; }
+
   .inputdefault{
     width:100%;
     height:100%;

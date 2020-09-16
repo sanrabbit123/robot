@@ -38,8 +38,12 @@ module.exports = function () {
 
   function css_degeneral() {
     let html = '#bodymain0817{position:relative;top:0px;width:100%;}';
-    html += '#totalcontents{display:block;position:relative;padding-top: 407px;width:100%;height:auto;}';
-    html += '#polisearch{position:absolute;width:642px;height:42px;background-color:transparent;color:#303030;border:0;text-indent:12px;font-size:13pt;padding-bottom:4px;font-family: \'Noto Sans KR\', sans-serif;}';
+    html += '#totalcontents{display:block;position:relative;padding-top:407px;width:100%;height:auto;}';
+
+
+
+
+
 
     html += '.porporporimg{position:absolute;top:0;left:0;width:100%;height:100%}';
     html += '.porporporimgh{position:absolute;top:0;left:0;height:100%}';
@@ -52,6 +56,7 @@ module.exports = function () {
     html += '.porhoverblack{position:absolute;top:0;width:100%;height:100%;background-color:#000;opacity:0.5;}';
     html += '#porlibelowback{display:block;position:relative;width:100%;height:278px;background-color:#f7f7f7;margin-top:190px;}';
     html += '#moporli2s0back0817,#moporli2s0position,#mototalcontents,#mopordbelow,.poliordered{display:none;}';
+    html += '#polisearch{position:absolute;width:642px;height:42px;background-color:transparent;color:#303030;border:0;text-indent:12px;font-size:13pt;padding-bottom:4px;font-family: \'Noto Sans KR\', sans-serif;}';
     html += '#polisearch01{display:block;position:relative;top:0;left:0;width:690px;height:42px;}';
     html += '#polisearch02{position:absolute;top:0;right:1px;width:182px;height:21px;}';
     html += '#polisearch03{position:absolute;top:21px;right:1px;width:182px;height:21px;}';

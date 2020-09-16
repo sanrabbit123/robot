@@ -126,7 +126,7 @@ ExecMain.prototype.searchTitle = function (obj) {
 	colon = this.createElements(this_ai, this.createSetting[to + "_col"]).createOutline();
 
 	//colon position
-	colon.left = this.mother.return_right(temp) + 12;
+	colon.left = this.mother.return_right(temp) + 16;
 	colon.top = this.mother.return_middle(temp) + (colon.height / 2);
 
 	app.doScript("expandall", "contents_maker");
@@ -147,7 +147,7 @@ ExecMain.prototype.searchFactor = function (obj) {
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]).createOutline();
 	app.doScript("expandall", "contents_maker");
-	this.mother.fit_box();
+	this.mother.white_box();
 	this.saveSvg(this_ai, to);
 
 	//on
@@ -157,7 +157,7 @@ ExecMain.prototype.searchFactor = function (obj) {
 	this.setParagraph({ from: contents, to: to });
 	temp = this.createElements(this_ai, this.createSetting[to]).createOutline();
 	app.doScript("expandall", "contents_maker");
-	this.mother.fit_box();
+	this.mother.white_box();
 	this.saveSvg(this_ai, to);
 }
 
@@ -281,6 +281,7 @@ ExecMain.prototype.listTitleDetailChild = function (obj) {
 		font: "SDGothicNeoa-eMd",
 		color: "#2fa678",
 	};
+
 	for (let i in exception) { options[i] = exception[i]; }
 	this.setCreateSetting({ from: from, to: to, exception: options });
 	this.setParagraph({ from: contents, to: to });
