@@ -28,6 +28,7 @@ const ContentMaker = function (arg = "g00") {
 		webPath: `${this.mother.returnUragenPath()}/_NewWeb`,
 		portfoiloBinary: `${this.mother.returnUragenPath()}/_Portfolio`,
 		proposalBinary: `${process.env.HOME}/static`,
+		googleBinary: `${process.env.HOME}/google/static`,
 	};
 
 	this.links = {
@@ -520,36 +521,57 @@ ContentMaker.prototype.to_mysql = async function (custom = "none") {
 // poo -----------------------------------------------------------------------------------------------------------------------
 
 ContentMaker.prototype.to_poo = async function () {
-	let instance = this;
+	const instance = this;
+	const mother = this.mother;
 	try {
-		let pooPath_mother = this.mother.shellLink(this.motherLink.mainBinary);
-		let pooPath = {
+
+		//setting binary folders -------------------------------------------------------------------------------------
+		let pooPath_mother, pooPath;
+		let webPath_mother, webPath;
+		let staticPath_mother, staticPath;
+		let googlePath_mother, googlePath;
+
+		//set icloud main poo folder
+		pooPath_mother = mother.shellLink(this.motherLink.mainBinary);
+		pooPath = {
 			list_image: pooPath_mother + "/list_image",
 			porpor: pooPath_mother + "/list_svg/porporpor",
 			revrev: pooPath_mother + "/list_svg/revrevrev",
 		};
-		let webPath_mother = this.mother.shellLink(this.motherLink.webPath);
-		let webPath = {
+
+		//set new-web folder
+		webPath_mother = mother.shellLink(this.motherLink.webPath);
+		webPath = {
 			porpor: webPath_mother + "/_PortfolioDetail",
 			revrev: webPath_mother + "/_Review",
 		};
-		let staticPath_mother = this.mother.shellLink(this.motherLink.proposalBinary);
-		let staticPath = {
+
+		//set ~/static folder
+		staticPath_mother = mother.shellLink(this.motherLink.proposalBinary);
+		staticPath = {
 			list_image: staticPath_mother + "/list_image",
 		};
 
-		let arr = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
-		let p_id = `none`;
-		let r_id = `none`;
+		//set google static sync folder
+		googlePath_mother = mother.shellLink(this.motherLink.googleBinary);
+		googlePath = {
+			list_image: googlePath_mother + "/list_image",
+		};
+
+
+		//setting ids -------------------------------------------------------------------------------------------
+		let arr, p_id, r_id;
+
+		//set p_id and r_id
+		arr = await mother.fileSystem(`readDir`, [ `${this.options.home_dir}result` ]);
+		p_id = `none`;
+		r_id = `none`;
 		for (let i = 0; i < arr.length; i++) {
-			if (/^[ap][0-9]+/g.test(arr[i])) {
-				p_id = arr[i].replace(/code/g, '');
-			} else if (/^re[0-9]+/g.test(arr[i])) {
-				r_id = arr[i].replace(/code/g, '');
-			}
+			if (/^[ap][0-9]+/g.test(arr[i])) { p_id = arr[i].replace(/code/g, ''); }
+			else if (/^re[0-9]+/g.test(arr[i])) { r_id = arr[i].replace(/code/g, ''); }
 		}
 
-		let svgAis = await this.mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${p_id}code/portp${p_id}/svg` ]);
+		let svgAis = await mother.fileSystem(`readDir`, [ `${this.options.home_dir}result/${p_id}code/portp${p_id}/svg` ]);
 		let delete_arr = [];
 		for (let i of svgAis) { if (/\.ai$/g.test(i)) {
 			delete_arr.push(i);

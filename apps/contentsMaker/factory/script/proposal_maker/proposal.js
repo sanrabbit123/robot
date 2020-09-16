@@ -48,7 +48,7 @@ Proposal.prototype.settings = {
 }
 
 Proposal.prototype.artboard_maker = function (id) {
-  let instance = this;
+  const instance = this;
   let current_art = app.activeDocument.artboards.getByName("ab" + String(id));
   let rect = current_art.artboardRect;
   rect[0] = rect[0] + this.settings.offsetY;
@@ -58,7 +58,7 @@ Proposal.prototype.artboard_maker = function (id) {
 }
 
 Proposal.prototype.firstProcess = function () {
-  let instance = this;
+  const instance = this;
   let mother = this.mother;
   let pick = function (name) { return mother.pick("active", name); }
   let target_obj = {};
@@ -92,14 +92,14 @@ Proposal.prototype.firstProcess = function () {
 }
 
 Proposal.prototype.second_process = function () {
-  let instance = this;
+  const instance = this;
   let mother = this.mother;
   let pick = function (name) { return mother.pick("moduleFinish", name); }
   pick("finish").left = pick("finish").left + (this.settings.offsetY * (this.text.proposal.length + 1));
 }
 
 Proposal.prototype.third_process = function () {
-  let instance = this;
+  const instance = this;
   let mother = this.mother;
   let pick = function (name) { return mother.pick("moduleTitle", name); }
   let items = [ "main", "serviceBlack", "serviceGreen", "static0" ];
@@ -124,7 +124,7 @@ Proposal.prototype.third_process = function () {
 }
 
 Proposal.prototype.fourth_process = function () {
-  let instance = this;
+  const instance = this;
   let mother = this.mother;
   let pick = function (name) { return mother.pick("moduleTexts", name); }
   let items = [ "designer", "statics", "descriptions", "money", "etc", "arrow" ];
@@ -183,7 +183,7 @@ Proposal.prototype.fourth_process = function () {
 }
 
 Proposal.prototype.fifth_process = function () {
-  let instance = this;
+  const instance = this;
   let mother = this.mother;
   let pick = function (name) { return mother.pick("moduleBoxes", name); }
   let temp_arr, temp, tempMother, tempImg;
@@ -272,7 +272,7 @@ ExecMain.prototype.fileName = function () {
 }
 
 ExecMain.prototype.fileSave = function () {
-  app.doScript("expandall","contents_maker");
+  app.doScript("expandall", "contents_maker");
   let saveName = new File(this.fileName());
   let saveOpts = new PDFSaveOptions();
   saveOpts.pDFPreset = "uragenpdf";
