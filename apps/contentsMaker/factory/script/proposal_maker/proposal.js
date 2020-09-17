@@ -44,7 +44,7 @@ Proposal.auto_comma = function (str) {
 
 Proposal.prototype.settings = {
   offsetY: 630,
-  staticLink: "${options.os_home_dir}/static",
+  staticLink: "${options.os_home_dir}/google/static",
 }
 
 Proposal.prototype.artboard_maker = function (id) {

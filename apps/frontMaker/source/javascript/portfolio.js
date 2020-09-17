@@ -327,13 +327,17 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
   const { src: title, children } = this.map.main.search.option[1];
   const { src: greenArrow } = this.map.sub.etc.arrow[0];
 
-  let div_clone, svg_clone;
+  let div_clone, div_clone2, div_clone3, svg_clone;
   let style = {};
   let attribute = {};
   let width, height, top, left, right;
+  let frameHeight, frameWidth;
   let boo = (flatform === "desktop") ? true : false;
   let ea = boo ? "px" : "vw";
   let typeWording;
+  let detailBox;
+  let buttonMain = new Array(children.length);
+  let buttonSub = new Array(children.length);
 
   //type wording
   top = boo ? 25 : 10;
@@ -376,7 +380,8 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
       svg_clone.style[j] = style[j];
     }
     if (i !== 0) { svg_clone.style.opacity = '0'; }
-    mother.appendChild(SvgTong.parsing(svg_clone));
+    buttonMain[i] = SvgTong.parsing(svg_clone);
+    mother.appendChild(buttonMain[i]);
   }
 
   //greenArrow
@@ -398,22 +403,139 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
   }
   mother.appendChild(SvgTong.parsing(svg_clone));
 
-  //white box
-
-
-
   //detail frame
-
-
+  height = boo ? 18 : 10;
+  frameWidth = boo ? 100 : 10;
+  frameHeight = height + (children.length * (boo ? 23.5 : 10));
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    top: String(top + height) + ea,
+    right: String(right) + ea,
+    width: String(frameWidth) + ea,
+    height: String(frameHeight) + ea,
+    overflow: "hidden",
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
 
   //detail white back
-
-
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    top: String(0) + ea,
+    width: String(frameWidth) + ea,
+    height: String(frameHeight) + ea,
+    transform: "translateY(-" + String(frameHeight) + ea + ")",
+    transition: "all 0.5s ease",
+    background: "aliceblue",
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  detailBox = div_clone2;
 
   //details
+  top = boo ? 23 : 10;
+  height = boo ? 13 : 10;
+  for (let i = 0; i < children.length; i++) {
+    width = GeneralJs.parseRatio({ source: children[i].src.desktop.off, target: height, method: "height", result: "number" });
+    right = boo ? ((frameWidth - width) / 2) : 10;
 
+    //off
+    svg_clone = SvgTong.tongMaker();
+    svg_clone.src = children[i].src.desktop.off;
+    style = {
+      position: "absolute",
+      top: String((boo ? 15 : 10) + (top * i)) + ea,
+      right: String(right) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+    };
+    for (let j in style) {
+      svg_clone.style[j] = style[j];
+    }
+    div_clone2.appendChild(SvgTong.parsing(svg_clone));
 
+    //on
+    svg_clone = SvgTong.tongMaker();
+    svg_clone.src = children[i].src.desktop.on;
+    style = {
+      position: "absolute",
+      top: String((boo ? 15 : 10) + (top * i)) + ea,
+      right: String(right) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+      transition: "all 0.5s ease",
+    };
+    for (let j in style) {
+      svg_clone.style[j] = style[j];
+    }
+    if (i !== 0) { svg_clone.style.opacity = '0'; }
+    buttonSub[i] = SvgTong.parsing(svg_clone);
+    div_clone2.appendChild(buttonSub[i]);
 
+    //white box
+    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone3.classList.add("mouseoverdefault");
+    style = {
+      position: "absolute",
+      top: String((boo ? 15 : 10) + (top * i)) + ea,
+      right: String(right) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+      background: "white",
+    };
+    for (let i in style) {
+      div_clone3.style[i] = style[i];
+    }
+    div_clone3.setAttribute("cus_order", String(i));
+    div_clone3.addEventListener("click", function (e) {
+      let order = Number(this.getAttribute("cus_order"));
+      for (let i = 0; i < buttonMain.length; i++) {
+        if (i !== order) {
+          buttonMain[i].style.opacity = '0';
+          buttonSub[i].style.opacity = '0';
+        } else {
+          buttonMain[i].style.opacity = '';
+          buttonSub[i].style.opacity = '';
+        }
+      }
+      detailBox.style.transform = "translateY(-" + String(frameHeight) + ea + ")";
+    });
+    div_clone2.appendChild(div_clone3);
+
+  }
+
+  div_clone.appendChild(div_clone2);
+  mother.appendChild(div_clone);
+
+  //white box
+  top = boo ? 22 : 10;
+  right = boo ? 0 : 0;
+  height = boo ? 18 : 10;
+  width = boo ? 100 : 10;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("mouseoverdefault");
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    right: String(right) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    background: "#ffffff",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  div_clone.addEventListener("click", function (e) {
+    detailBox.style.transform = "";
+  });
+
+  mother.appendChild(div_clone);
 
 }
 
@@ -497,7 +619,7 @@ PortfolioJs.prototype.initialDom = function () {
             let h0 = '', h1 = '', h2 = '', h3 = '';
             const cssString = function (media) {
               let ea = "px";
-              return ".polisearchbox { display:block;margin-top:20px;position:relative;top:0;left:50%;height:55px;width:" + String(media) + ea + ";margin-left:-" + String(media/2) + ea + "; }";
+              return ".polisearchbox { display:block;margin-top:20px;margin-bottom:150px;position:relative;top:0;left:50%;height:55px;width:" + String(media) + ea + ";margin-left:-" + String(media/2) + ea + "; }";
             }
             h1 = cssString(1400);
             h2 = cssString(1050);
@@ -639,9 +761,6 @@ PortfolioJs.prototype.initialDom = function () {
 
           //type
           instance.typeBox(div_clone, "desktop");
-
-
-
 
           return div_clone;
         },

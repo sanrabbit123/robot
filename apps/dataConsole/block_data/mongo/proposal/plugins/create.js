@@ -820,7 +820,7 @@ Proposal.prototype.fourthProcess = async function (num) {
 // Create process 5 ------------------------------------------------------------
 
 Proposal.prototype.fifthWhitesave = function (id) {
-  let instance = this;
+  const instance = this;
   return function (e) {
     let obj = {}
     let pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
@@ -1063,16 +1063,16 @@ Proposal.fifthDrag = function (mege) {
 }
 
 Proposal.prototype.fifthScrollX = function (method, options) {
-  let instance = this;
+  const instance = this;
   if (method === "click") {
     return function (e) {
       let target_nodes = document.querySelectorAll(".ppw_right_picturebox");
       let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
       let result;
       if (options.direction === "left") {
-        result = Math.abs(974 - left) - 120;
+        result = Math.abs(974 - left) - 400;
       } else {
-        result = Math.abs(974 - left) + 120;
+        result = Math.abs(974 - left) + 400;
       }
       target_nodes[options.order].scrollTo({ left: result, behavior: "smooth" });
     }
@@ -1083,9 +1083,9 @@ Proposal.prototype.fifthScrollX = function (method, options) {
         let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
         let result;
         if (options.direction === "left") {
-          result = Math.abs(974 - left) - 40;
+          result = Math.abs(974 - left) - 100;
         } else {
-          result = Math.abs(974 - left) + 40;
+          result = Math.abs(974 - left) + 100;
         }
         target_nodes[options.order].scrollTo({ left: result, behavior: "smooth" });
       }, 80);
