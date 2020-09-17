@@ -340,7 +340,7 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
   let buttonSub = new Array(children.length);
 
   //type wording
-  top = boo ? 25 : 10;
+  top = boo ? 24.9 : 10;
   right = boo ? 110 : 10;
   height = boo ? 12 : 10;
   width = GeneralJs.parseRatio({ source: title[flatform], target: height, method: "height", result: "number" });
@@ -356,7 +356,7 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
   for (let i in style) {
     svg_clone.style[i] = style[i];
   }
-  svg_clone.setAttribute("cus_value", "key9");
+  svg_clone.setAttribute("cus_value", children[0].wording);
   typeWording = SvgTong.parsing(svg_clone);
   this.searchDoms.type = typeWording;
   mother.appendChild(typeWording);
@@ -430,8 +430,9 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
     height: String(frameHeight) + ea,
     transform: "translateY(-" + String(frameHeight) + ea + ")",
     transition: "all 0.5s ease",
-    background: "aliceblue",
+    background: "#ffffff",
     cursor: "pointer",
+    borderRadius: String(boo ? 3 : 1) + ea,
   };
   for (let i in style) {
     div_clone2.style[i] = style[i];
@@ -504,6 +505,7 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
           buttonSub[i].style.opacity = '';
         }
       }
+      typeWording.setAttribute("cus_value", children[i].wording);
       detailBox.style.transform = "translateY(-" + String(frameHeight) + ea + ")";
     });
     div_clone2.appendChild(div_clone3);
@@ -763,6 +765,17 @@ PortfolioJs.prototype.initialDom = function () {
           instance.typeBox(div_clone, "desktop");
 
           return div_clone;
+        },
+      },
+      {
+        id: "titlebar",
+        source: [],
+        callback: function (id, source) {
+          let h = document.createDocumentFragment();
+          
+
+
+          return h;
         },
       },
       {
