@@ -50,32 +50,6 @@ echo $headhtml;
 //DESKTOP--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ?>
 
-<!-- Search bar -->
-<?php echo $htmlindex->searchbar(true); ?>
-
-<!-- Contents -->
-<div class="porli2s1position">
-  <img src="./list_svg/porporpor/porli.svg" class="porporporimgh">
-  <div class="graybari"></div>
-</div>
-
-<div id="porporid" class="porlicontent"></div>
-
-<form id="porporform" style="display:none;" method="POST">
-  <input type="hidden" id="qqueryid" name="qquery" value="<?= $qquery ?>">
-  <input type="hidden" name="switch" value="deporlist">
-  <input type="hidden" name="garoarray" value="porli">
-</form>
-
-<!-- Below bar -->
-<div id="porlibelowback">
-  <div id="pordbelowbox">
-    <img src="./list_svg/belowlir190905.svg" class="pordbelowsvg">
-    <a href="./designer.php"><div id="pordbelowbutton1" class="pordbelowbubu"></div></a>
-    <a href="./review.php"><div id="pordbelowbutton2" class="pordbelowbubu"></div></a>
-    <a href="./consulting.php"><div id="pordbelowbutton3" class="pordbelowbubu"></div></a>
-  </div>
-</div>
 
 <?php
 //desktop footer
@@ -83,24 +57,6 @@ echo $htmlhtml->footfoot();
 //MOBILE--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ?>
 
-<!-- Margin -->
-<div class="moporlimargin0"></div>
-
-<!-- Mobile search bar -->
-<?php echo $htmlindex->searchbar(false); ?>
-
-<!-- Margin -->
-<div class="moporlimargin1"></div><div class="moporlimargin2"></div>
-
-<!-- Mobile contents -->
-<img src="./list_svg/porporpor/mobile/moporli2s1.svg" id="moporli2s1position">
-<div id="moporporid" class="moporlicontent"></div>
-<form id="moporporform" style="display:none;" method="POST">
-  <input type="hidden" id="moqqueryid" name="qquery" value="<?= $qquery ?>">
-  <input type="hidden" name="switch" value="moporlist">
-  <input type="hidden" name="garoarray" value="porli">
-</form>
-<div class="moporlimargin0"></div>
 
 <?php
 //mobile footer

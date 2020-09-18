@@ -7,14 +7,9 @@ module.exports = function () {
 #bodymain0817{position:relative;top:0px;width:100%;}
 #totalcontents{display:block;position:relative;width:100%;height:auto;padding-top: 407px;}
 #mototalcontents{display:none;}
+
 .blockbox{display:block;position:relative;left:0;}
-.belowbox{display:block;position:relative;width:100%;height:280px;background-color:#f7f7f7}
-#belowboxposition{display:block;position:absolute;top:41px;width:1050px;height:176px;left:50%;margin-left:-525px;}
-#belowbutton1{position:absolute;top:50px;left:120px;width:165px;height:70px;}
-#belowbutton2{position:absolute;top:50px;left:450px;width:142px;height:70px;}
-#belowbutton3{position:absolute;top:50px;left:764px;width:140px;height:70px;}
-.belowbutton{background-color:#f7f7f7;opacity:0;transition:all 0.5s ease;}
-.belowbutton:hover{opacity:0.6;}
+
 .block_titlebox,.block_contentsbox,.block_contentsbox_review{
   display: block;
   position: relative;
@@ -131,8 +126,22 @@ module.exports = function () {
   .mfbelbu1{left:17vw;width:20vw;}
   .mfbelbu2{left:41vw;width:20vw;}
   .mfbelbu3{left:64vw;width:20vw;}
-  #moaboutback{display:block;position:relative;top:0px;width:100%;height:255px;}
-  #moaboutbackword{display:block;position:absolute;top:61px;width:320px;height:auto;left:50%;margin-left:-160px;}
+  #moaboutback{
+    display:block;
+    position:relative;
+    top:0px;
+    width:100%;
+    height:255px;
+  }
+  #moaboutbackword{
+    display:block;
+    position:absolute;
+    top:61px;
+    width:320px;
+    height:auto;
+    left:50%;
+    margin-left:-160px;
+  }
   .moblockbox{
     display:block;
     position:relative;

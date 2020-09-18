@@ -108,6 +108,21 @@ GeneralJs.deBounce = function (func, wait, immediate) {
 	}
 }
 
+GeneralJs.throTtle = function (callback, limit) {
+  let timeout;
+  let waiting = false;
+  return function () {
+    if (!waiting) {
+      callback.apply(this, arguments);
+      waiting = true;
+      timeout = setTimeout(function () {
+        waiting = false;
+        clearTimeout(timeout);
+      }, limit);
+    }
+  }
+}
+
 GeneralJs.totalDelete = function () {
   let desktop = document.getElementById("totalcontents");
   let mobile = document.getElementById("mototalcontents");

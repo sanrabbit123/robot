@@ -90,9 +90,32 @@ AboutJs.prototype.initialDom = function () {
       },
       {
         id: "belowbox",
-        source: [ instance.map.sub.below.desktop.words.src ],
+        source: [],
         callback: function (id, source) {
-          let div_clone, div_clone2, div_clone3, a_clone;
+          const { sub: { below: { desktop: { words: { src, href } } } } } = instance.map;
+          let div_clone, div_clone2, div_clone3, a_clone, svg_clone;
+          let height, top, width;
+          let ea = "px";
+          let style = {};
+
+          //css
+          /<%cssOut%>/ {
+            let h0 = '', h1 = '', h2 = '', h3 = '';
+            const cssString = function () {
+              let ea = "px";
+              let h = '';
+              h += ".belowbox{display:block;position:relative;width:100%;height:280px;background-color:#f7f7f7}";
+              h += "#belowboxposition{display:block;position:absolute;top:41px;width:1050px;height:176px;left:50%;margin-left:-525px;}";
+              h += "#belowbutton1{position:absolute;top:50px;left:120px;width:165px;height:70px;}";
+              h += "#belowbutton2{position:absolute;top:50px;left:450px;width:142px;height:70px;}";
+              h += "#belowbutton3{position:absolute;top:50px;left:764px;width:140px;height:70px;}";
+              h += ".belowbutton{background-color:#f7f7f7;opacity:0;transition:all 0.5s ease;}";
+              h += ".belowbutton:hover{opacity:0.6;}";
+              return h;
+            }
+            h0 = cssString();
+            return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
+          } %/%/e
 
           div_clone = GeneralJs.nodes.div.cloneNode(true);
           div_clone.classList.add(id);
@@ -100,25 +123,28 @@ AboutJs.prototype.initialDom = function () {
           div_clone2 = GeneralJs.nodes.div.cloneNode(true);
           div_clone2.id = "belowboxposition";
 
-          let height = 48;
-          let top = 59;
-          let width = GeneralJs.parseRatio({ source: source[0], target: height, method: "height", result: "number" });
-          let ea = "px";
+          height = 48;
+          top = 59;
+          width = GeneralJs.parseRatio({ source: src, target: height, method: "height", result: "number" });
 
-          let svg_clone = SvgTong.tongMaker();
-          svg_clone.src = AboutJs.sourceLink + source[0];
-          svg_clone.style.position = "absolute";
-          svg_clone.style.left = "50%";
-          svg_clone.style.top = String(top) + ea;
-          svg_clone.style.height = String(height) + ea;
-          svg_clone.style.width = String(width) + ea;
-          svg_clone.style.marginLeft = '-' + String(width / 2) + ea;
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = src;
+          style = {
+            position: "absolute",
+            left: "50%",
+            top: String(top) + ea,
+            height: String(height) + ea,
+            width: String(width) + ea,
+            marginLeft: '-' + String(width / 2) + ea,
+          };
+          for (let i in style) {
+            svg_clone.style[i] = style[i];
+          }
           div_clone2.appendChild(SvgTong.parsing(svg_clone));
 
-          let link_list = [ "./portfolio.php", "./designer.php", "./consulting.php", ];
-          for (let i = 0; i < link_list.length; i++) {
+          for (let i = 0; i < href.length; i++) {
             a_clone = GeneralJs.nodes.a.cloneNode(true);
-            a_clone.href = link_list[i];
+            a_clone.href = href[i];
             div_clone3 = GeneralJs.nodes.div.cloneNode(true);
             div_clone3.id = "belowbutton" + String(i + 1);
             div_clone3.classList.add("belowbutton");
@@ -154,7 +180,7 @@ AboutJs.prototype.initialDom = function () {
 
           let svg_clone = SvgTong.tongMaker();
           svg_clone.id = id;
-          svg_clone.src = AboutJs.sourceLink + source[0];
+          svg_clone.src = source[0];
           svg_clone.style.height = String(height) + ea;
           svg_clone.style.width = String(width) + ea;
           svg_clone.style.marginLeft = '-' + String(width / 2) + ea;
@@ -1913,6 +1939,8 @@ AboutJs.prototype.reloadState = function (reloadPopup = true) {
 AboutJs.prototype.launching = async function () {
   const instance = this;
   try {
+
+    //get review
     const { desktopDom_review, mobileDom_review } = await GeneralJs.getContents({
       collection: "revlist",
       sort: [ "order_function", "DESC" ],
@@ -1922,7 +1950,8 @@ AboutJs.prototype.launching = async function () {
     const rows = {
       desktop: desktopDom_review,
       mobile: mobileDom_review,
-    }
+    };
+
     const flatform = window.innerWidth > 900 ? "desktop" : "mobile";
 
     window.history.replaceState({ level: 0, flatform: flatform, xyz: [] }, '');

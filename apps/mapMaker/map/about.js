@@ -1302,6 +1302,11 @@ module.exports = {
               "Consulting"
             ]
           ],
+          "href": [
+            "/portfolio.php",
+            "/designer.php",
+            "/consulting.php",
+          ],
           "src": "/svg/desktopbelow_15rspot549_091414.svg"
         }
       },

@@ -73,6 +73,8 @@ class Submit extends Generalf {
       echo "error";
     }
 
+    echo "success";
+
   }
 }
 

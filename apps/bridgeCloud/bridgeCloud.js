@@ -250,6 +250,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           clientObj["a1_class1"] = additionColumns["a1_class1"];
         }
 
+        //view client object
         console.log(clientObj);
 
         //to mongo

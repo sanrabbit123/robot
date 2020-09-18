@@ -78,7 +78,7 @@ GeneralJs.portfolioRender = function (rows, garo) {
 
     div_clone.appendChild(a_clone);
 
-    //desktp-end
+    //desktop-end
     dom0.appendChild(div_clone);
 
     //mobile
@@ -197,7 +197,7 @@ GeneralJs.reviewRender = function (rows, garo) {
 
     div_clone.appendChild(a_clone);
 
-    //desktp-end
+    //desktop-end
     dom0.appendChild(div_clone);
 
     //mobile
@@ -209,7 +209,7 @@ GeneralJs.reviewRender = function (rows, garo) {
     a_clone = GeneralJs.nodes.a.cloneNode(true);
     a_clone.href = "/revdetail.php?qqq=" + rows[i].revid;
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("moportliblock" + garoBoo3);
+    div_clone2.classList.add("moreviliblock" + garoBoo3);
     div_clone2.style.backgroundImage = "url('" + "/list_image/portp" + rows[i].porlid + "/mobile/mot" + rows[i].review_photo + rows[i].porlid + ".jpg" + "')";
     a_clone.appendChild(div_clone2);
     div_clone.appendChild(a_clone);

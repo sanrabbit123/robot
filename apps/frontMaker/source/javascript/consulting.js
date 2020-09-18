@@ -294,9 +294,8 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       instance.pendingBox(mother, boo);
 
       //submit
-      GeneralJs.ajax(ajaxdata, "/engine/Submit.php", function (data) {
-        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", instance.thankyouPage(boo, submitNamePhone));
-      });
+      GeneralJs.ajax(ajaxdata, "/engine/Submit.php", function (data) {});
+      GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", instance.thankyouPage(boo, submitNamePhone));
 
       //test
       /*

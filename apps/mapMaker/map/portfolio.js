@@ -364,6 +364,11 @@ module.exports = {
               "Consulting"
             ]
           ],
+          "href": [
+            "/review.php",
+            "/designer.php",
+            "/consulting.php",
+          ],
           "src": "desktopbelow_15rspot274_091614.svg"
         }
       },
