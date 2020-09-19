@@ -11,6 +11,7 @@ module.exports = {
           "children": [
             {
               "wording": "최신순",
+              "value": "key9",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_00_2rspot769_091614.svg",
@@ -24,6 +25,7 @@ module.exports = {
             },
             {
               "wording": "인기순",
+              "value": "key8",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_01_2rspot748_091614.svg",
@@ -46,6 +48,7 @@ module.exports = {
           "children": [
             {
               "wording": "홈스타일링",
+              "value": "all",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_10_4rspot578_091614.svg",
@@ -59,6 +62,7 @@ module.exports = {
             },
             {
               "wording": "토탈 스타일링",
+              "value": "토탈",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_11_5rspot795_091614.svg",
@@ -72,6 +76,7 @@ module.exports = {
             },
             {
               "wording": "홈퍼니싱",
+              "value": "홈퍼",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_12_3rspot635_091614.svg",
@@ -85,6 +90,7 @@ module.exports = {
             },
             {
               "wording": "제작 가구",
+              "value": "가구",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_13_3rspot996_091614.svg",
@@ -98,6 +104,7 @@ module.exports = {
             },
             {
               "wording": "아이방",
+              "value": "아이",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_14_2rspot774_091614.svg",
@@ -111,6 +118,7 @@ module.exports = {
             },
             {
               "wording": "원룸 스타일링",
+              "value": "원룸",
               "src": {
                 "desktop": {
                   "on": "searchFactor_desktop_on_15_5rspot806_091614.svg",

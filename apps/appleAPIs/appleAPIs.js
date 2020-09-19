@@ -1,5 +1,5 @@
 const AppleAPIs = function (obj) {
-	const Mother = require("../mother.js");
+	const Mother = require(process.cwd() + "/apps/mother.js");
 	this.mother = new Mother();
 	if (obj !== undefined) {
 		this.folder = obj.folder;

@@ -955,7 +955,7 @@ IndexJs.prototype.asyncExec = function () {
         }
         searchEvent = function (e) {
           let value = input_clone.value.replace(/[&=<>\{\}\[\]\(\)\'\"]/g, '');
-          window.location.href = "/portfolio.php?search1=" + value + "&search2=key9&search3=.";
+          window.location.href = "/portfolio.php?search=" + value;
         }
         input_clone.addEventListener("keyup", function (e) {
           if (e.keyCode === 13) {
@@ -1495,7 +1495,7 @@ IndexJs.prototype.asyncExec = function () {
         }
         searchEvent = function (e) {
           let value = input_clone.value.replace(/[&=<>\{\}\[\]\(\)\'\"]/g, '');
-          window.location.href = "/portfolio.php?search1=" + value + "&search2=key9&search3=.";
+          window.location.href = "/portfolio.php?search=" + value;
         }
         input_clone.addEventListener("keyup", function (e) {
           if (e.keyCode === 13) {

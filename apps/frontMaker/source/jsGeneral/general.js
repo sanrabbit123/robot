@@ -108,7 +108,7 @@ GeneralJs.deBounce = function (func, wait, immediate) {
 	}
 }
 
-GeneralJs.throTtle = function (callback, limit) {
+GeneralJs.throTtle = function (callback, ms) {
   let timeout;
   let waiting = false;
   return function () {
@@ -118,8 +118,18 @@ GeneralJs.throTtle = function (callback, limit) {
       timeout = setTimeout(function () {
         waiting = false;
         clearTimeout(timeout);
-      }, limit);
+      }, ms);
     }
+  }
+}
+
+GeneralJs.delayLaunching = function (callback, ms) {
+  let timer = 0;
+  return function () {
+    if (timer !== 0) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(callback, ms);
   }
 }
 

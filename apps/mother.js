@@ -419,30 +419,42 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
 	}
 }
 
-Mother.prototype.returnFriendsPath = function (friend) {
-	const segment = '/';
+Mother.prototype.pythonExecute = function (target, inputObj, args = []) {
+  const fs = require(`fs`);
+  const shell = require(`shelljs`);
+  const shellLink = function (str) {
+  	let arr = str.split('/');
+  	let newStr = '';
+  	for (let i of arr) {
+  	  if (!/ /g.test(i)) {
+  			newStr += i + '/';
+  	  } else if (!/^'/.test(i) && !/'$/.test(i)) {
+  			newStr += "'" + i + "'" + '/';
+  	  } else {
+  			newStr += i + '/';
+  	  }
+  	}
+  	newStr = newStr.slice(0, -1);
+  	return newStr;
+  }
+  const targetArr = target.split('/');
+  const name = targetArr[targetArr.length - 3];
+  const bridgeFile = process.cwd() + "/temp/" + name + ".json";
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
+      if (err) { reject(err); }
+      let output, result, order;
 
-	let target = '';
-	if (/ghos/gi.test(friend)) {
-		target = "ghost";
-	} else if (/rabb/gi.test(friend)) {
-		target = "rabbit";
-	} else if (/robo/gi.test(friend)) {
-		target = "robot";
-	} else {
-		throw new Error("invalid friend name");
-	}
+			order = `python3 ${shellLink(target)}`;
+			if (args.length > 0) {
+				order += ` ${args.join(' ')}`;
+			}
+      output = shell.exec(order, { silent: true });
+      result = JSON.parse(output.stdout.replace(/\n$/, ''));
 
-	let totalRobotPath = '';
-	let pathString = '';
-	let pathDirString = '';
-
-	let pathArr = process.cwd().split(segment);
-	pathArr.pop();
-	totalRobotPath = pathArr.join(segment);
-	pathString = pathArr.join(segment) + "/" + target + "/" + target + ".js";
-	pathDirString = pathArr.join(segment) + "/" + target;
-	return { pathDirString: pathDirString, pathString: pathString, totalRobotPath: totalRobotPath }
+      resolve(result);
+    });
+  });
 }
 
 Mother.prototype.returnUragenPath = function () {
@@ -455,74 +467,6 @@ Mother.prototype.returnUragenPath = function () {
 	uragenPath = pathArr.join(segment);
 
 	return uragenPath;
-}
-
-Mother.prototype.callFriends = async function (friend, parameters = [], option = { exec: true }) {
-	try {
-		if (option.exec === undefined) {
-			throw new Error("invalid option : option => { exec: true/false }");
-		}
-
-		//make friend & path
-		let target = '';
-		if (/ghos/gi.test(friend)) {
-			target = "ghost";
-		} else if (/rabb/gi.test(friend)) {
-			target = "rabbit";
-		} else if (/robo/gi.test(friend)) {
-			target = "robot";
-		} else {
-			throw new Error("invalid friend name");
-		}
-		const { pathDirString, pathString, totalRobotPath } = this.returnFriendsPath(friend);
-
-		//check friend
-		let totalRobotStatus = await this.fileSystem(`readDir`, [ totalRobotPath ]);
-		let totalRobotBoo = false;
-		for (let i of totalRobotStatus) {
-			if (i === target) { totalRobotBoo = true; }
-		}
-		if (!totalRobotBoo) {
-			throw new Error("There is no friend : " + target);
-		}
-
-		//make parameter
-		/** friend self dir path call => <%self%> **/
-		let renderedParameters = [];
-		if (parameters.length > 0) {
-			for (let i of parameters) {
-				while (/<%self%>/.test(i)) {
-					i = i.replace(/<%self%>/, this.shellLink(pathDirString));
-				}
-				if (/\//g.test(i)) {
-					renderedParameters.push(this.shellLink(i));
-				} else if (/ /g.test(i)) {
-					renderedParameters.push("'" + i.replace(/^'/, '').replace(/'$/, '').replace(/'/g, '') + "'");
-				} else {
-					renderedParameters.push(i);
-				}
-			}
-		}
-
-		//execute
-		let outPut = {};
-		outPut.stdout = "no Execution";
-		outPut.stderr = '';
-		if (option.exec) {
-			outPut = this.shell.exec(`node ${this.shellLink(pathString)} ${renderedParameters.join(' ')};`, { silent: true });
-		}
-		if (outPut.stderr !== '') {
-			throw new Error("friends execute error : " + outPut.stderr);
-		}
-		if (/^<%json%>/.test(outPut.stdout)) {
-			outPut.stdout = outPut.stdout.replace(/\n$/, '');
-			outPut.stdout = JSON.parse(outPut.stdout.slice(outPut.stdout.search(/[{\[]/)).trim());
-		}
-
-		return { dir: pathDirString, path: pathString, shell: this.shellLink(pathString), stdout: outPut.stdout };
-	} catch (e) {
-		console.log(e);
-	}
 }
 
 module.exports = Mother;

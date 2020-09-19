@@ -35,6 +35,7 @@ module.exports = function (boo) {
   .mopsero{width:42.5vw}
   .mopgaro{width:87.9vw}
 
+  .moportliblock{display:inline-block;position:relative;margin-top:3.6vw;margin-right:2.8vw;height:78.7vw;}
   .moportliblock1{display:block;position:relative;width:100%;overflow:hidden;background-color:#f7f7f7;background-size:auto 100%;background-position:50% 50%;background-repeat:no-repeat;height:62.3vw;border-radius:3px}
   .moportliblock2{display:block;position:relative;width:100%;overflow:hidden;margin-top:1.6vw;height:13vw}
   .moportliblock3{display:block;position:relative;background-color:#f7f7f7;background-size:100% auto;background-position:50% 50%;background-repeat:no-repeat;width:100%;height:42.5vw;border-radius:3px;overflow:hidden;}

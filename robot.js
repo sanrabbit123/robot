@@ -204,8 +204,8 @@ Robot.prototype.launching = async function () {
 	}
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 // development
 
@@ -370,3 +370,16 @@ async function main() {
 }
 
 // main();
+
+async function main2() {
+	const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
+	let notion = new NotionAPIs();
+
+
+	await notion.launching();
+
+
+
+}
+
+main2();

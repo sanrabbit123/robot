@@ -284,26 +284,34 @@ GeneralJs.garoArrFunc = function (rowsLength, garoBoo, methodBoo) {
 }
 
 GeneralJs.getContents = async function (obj) {
+  const instance = this;
+  let garo, garoBoo;
+  let rowsRAW, rows;
+
   try {
-    let garoBoo = false;
+    garoBoo = false;
     if (obj.garo !== undefined) {
       garoBoo = obj.garo;
     }
 
-    let rowsRAW = await GeneralJs.ajaxPromise(GeneralJs.objectToQuery(obj), "/engine/ContentsLoop.php");
-    let rows = JSON.parse(rowsRAW);
+    if (/por/gi.test(obj.collection)) {
+      obj.columns = [ "porlid", "photodae_s", "photodae_d" ];
+    } else if (/rev/gi.test(obj.collection)) {
+      obj.columns = [ "revid", "porlid", "review_photo" ];
+    } else {
+      throw new Error("contents error");
+    }
 
-    let garo;
+    rowsRAW = await GeneralJs.ajaxPromise(GeneralJs.objectToQuery(obj), "/engine/ContentsLoop.php");
+    rows = JSON.parse(rowsRAW);
+
     if (/por/gi.test(obj.collection)) {
       garo = GeneralJs.garoArrFunc(rows.length, garoBoo, "portfolio");
       return GeneralJs.portfolioRender(rows, garo);
     } else if (/rev/gi.test(obj.collection)) {
       garo = GeneralJs.garoArrFunc(rows.length, garoBoo, "review");
       return GeneralJs.reviewRender(rows, garo);
-    } else {
-      throw new Error("contents error");
     }
-
   } catch (e) {
     window.location.href = "https://home-liaison.com";
   }

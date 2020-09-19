@@ -3,10 +3,26 @@
 const PortfolioJs = function () {
   this.mother = new GeneralJs();
   this.searchDoms = {
-    keyInput: {},
-    sort: {},
-    type: {},
-    details: [],
+    keyInput: {
+      desktop: {},
+      mobile: {}
+    },
+    sort: {
+      desktop: {},
+      mobile: {},
+      buttons: {
+        desktop: [],
+        mobile: []
+      }
+    },
+    type: {
+      desktop: {},
+      mobile: {},
+      buttons: {
+        desktop: [],
+        mobile: []
+      }
+    },
   };
   this.box = {
     desktop: {},
@@ -16,119 +32,6 @@ const PortfolioJs = function () {
 }
 
 PortfolioJs.sourceLink = "/list_image/portfolio";
-
-PortfolioJs.prototype.loopAjaxGet = function (from, to) {
-  var me = this;
-  return function () {
-    GeneralJs.ajax(GeneralJs.formtoAjax(from), "/engine/Dbdbpost.php", function (data) {
-      var toDom = document.getElementById(to);
-      while (toDom.firstChild) { toDom.removeChild(toDom.lastChild); }
-      toDom.insertAdjacentHTML("beforeend", data);
-    });
-  };
-}
-
-PortfolioJs.prototype.searchdelay = function (callback, ms) {
-  var timer = 0;
-  return function (e) {
-    if (timer !== 0) { clearTimeout(timer); }
-    timer = setTimeout(callback, ms);
-  };
-}
-
-PortfolioJs.prototype.searchcallback = function (id) {
-  var me = this;
-  var arrayid = [];
-  if (id === 'de') { arrayid = ['polisearch','polisearch2','polisearch3','qqueryid','porporform','porporid']; }
-  else { arrayid = ['mopolisearch','mopolisearch2','mopolisearch3','moqqueryid','moporporform','moporporid']; }
-  return function () {
-    me.truefalse = false;
-    var currentVal = document.getElementById(arrayid[0]).value;
-    var vararray = {
-      search1 : currentVal.replace(/[\*\!\?\~\^\:\/\@\%\&\+\<\>\;\#\$\[\]\\\|\-\(\)\`\'\"\{\}]/g, ''),
-      search2 : document.getElementById(arrayid[1]).value,
-      search3 : document.getElementById(arrayid[2]).value
-    };
-    if (vararray.search1 === '') { vararray.search1 = '.'; }
-    document.getElementById(arrayid[3]).value = "SELECT porlid,photodae_s,photodae_d FROM porlist WHERE (designer regexp '"+vararray.search1+"' OR region regexp '"+vararray.search1+"' OR tag regexp '"+vararray.search1+"' OR title regexp '"+vararray.search1+"' OR subtitle regexp '"+vararray.search1+"' OR apart regexp '"+vararray.search1+"' OR pyeong regexp '"+vararray.search1+"') AND (method regexp '"+vararray.search3+"' OR tag regexp '"+vararray.search3+"') ORDER BY "+vararray.search2+" DESC;";
-    (me.loopAjaxGet(arrayid[4], arrayid[5]))();
-  };
-}
-
-PortfolioJs.prototype.searchbaron = function (id) {
-  var me = this;
-  var arraym = [];
-  if (id === 'de') {
-    arraym = ['porlidelidediv','porlidelideimg','-190px'];
-  } else {
-    arraym = ['moporlidelidediv','moporlidelideimg','-35vw'];
-  }
-  return function () {
-    if (document.getElementById(arraym[0]).style.opacity === "0") {
-      document.getElementById(arraym[0]).style.opacity = "1";
-      document.getElementById(arraym[1]).style.top = "0";
-    } else {
-      document.getElementById(arraym[0]).style.opacity = "0";
-      document.getElementById(arraym[1]).style.top = arraym[2];
-    }
-  };
-}
-
-PortfolioJs.prototype.ordertoggle = function (id, dm) {
-  var me = this;
-  var arraym = [];
-  switch (id) {
-    case 1:
-      arraym = [ '0', 'key9' ];
-      break;
-    case 2:
-      arraym = [ '1', 'key8' ];
-      break;
-  }
-  return function () {
-    me.truefalse = false;
-    document.getElementById((dm ? '' : 'mo') + 'poliorderedsvg2').style.opacity = arraym[0];
-    document.getElementById((dm ? '' : 'mo') + 'polisearch2').value = arraym[1];
-    setTimeout(me.searchcallback(dm ? 'de' : 'mo'), 300);
-  };
-}
-
-PortfolioJs.prototype.methodselect = function (id, dm) {
-  var me = this;
-  var arraym = [];
-  switch (id) {
-    case 1:
-      arraym = ['0','0','0','0','0','all'];
-      break;
-    case 2:
-      arraym = ['1','0','0','0','0','토탈스타일링'];
-      break;
-    case 3:
-      arraym = ['0','1','0','0','0','홈퍼니싱'];
-      break;
-    case 4:
-      arraym = ['0','0','1','0','0','제작가구'];
-      break;
-    case 5:
-      arraym = ['0','0','0','1','0','아이방'];
-      break;
-    case 6:
-      arraym = ['0','0','0','0','1','원룸'];
-      break;
-  }
-  return function () {
-    me.truefalse = false;
-    document.getElementById((dm ? '' : 'mo') + 'politypesvg2').style.opacity = arraym[0];
-    document.getElementById((dm ? '' : 'mo') + 'politypesvg3').style.opacity = arraym[1];
-    document.getElementById((dm ? '' : 'mo') + 'politypesvg4').style.opacity = arraym[2];
-    document.getElementById((dm ? '' : 'mo') + 'politypesvg5').style.opacity = arraym[3];
-    document.getElementById((dm ? '' : 'mo') + 'politypesvg6').style.opacity = arraym[4];
-    document.getElementById((dm ? '' : 'mo') + 'polisearch3').value = arraym[5];
-    setTimeout(me.searchcallback(dm ? 'de' : 'mo'), 300);
-  };
-}
-
-//------------------------------------------------------------------------------------------new
 
 PortfolioJs.prototype.sortBoxBase = function (flatform) {
   const instance = this;
@@ -229,32 +132,7 @@ PortfolioJs.prototype.sortBoxBase = function (flatform) {
   for (let i in style) {
     input_clone.style[i] = style[i];
   }
-  div_clone2.appendChild(input_clone);
-
-  //hidden input 1
-  input_clone = GeneralJs.nodes.input.cloneNode(true);
-  input_clone.style.display = "none";
-  attribute = {
-    type: "hidden",
-    name: (boo ? "search2" : "mosearch2"),
-    value: "key9",
-  };
-  for (let i in attribute) {
-    input_clone.setAttribute(i, attribute[i]);
-  }
-  div_clone2.appendChild(input_clone);
-
-  //hidden input 2
-  input_clone = GeneralJs.nodes.input.cloneNode(true);
-  input_clone.style.display = "none";
-  attribute = {
-    type: "hidden",
-    name: (boo ? "search3" : "mosearch3"),
-    value: "all",
-  };
-  for (let i in attribute) {
-    input_clone.setAttribute(i, attribute[i]);
-  }
+  this.searchDoms.keyInput[flatform] = input_clone;
   div_clone2.appendChild(input_clone);
 
   //search icon
@@ -339,7 +217,7 @@ PortfolioJs.prototype.sortBox = function (mother, flatform) {
   }
   svg_clone.setAttribute("cus_value", "key9");
   sortWording = SvgTong.parsing(svg_clone);
-  this.searchDoms.sort = sortWording;
+  this.searchDoms.sort[flatform] = sortWording;
   mother.appendChild(sortWording);
 
   //sort child 1 - off
@@ -451,8 +329,10 @@ PortfolioJs.prototype.sortBox = function (mother, flatform) {
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
+
+  this.searchDoms.sort.buttons[flatform].push(div_clone);
   div_clone.addEventListener("click", function (e) {
-    sortWording.setAttribute("cus_value", "key9");
+    sortWording.setAttribute("cus_value", children[0].value);
     buttons[0].style.opacity = '';
     buttons[1].style.opacity = '0';
   });
@@ -475,8 +355,10 @@ PortfolioJs.prototype.sortBox = function (mother, flatform) {
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
+
+  this.searchDoms.sort.buttons[flatform].push(div_clone);
   div_clone.addEventListener("click", function (e) {
-    sortWording.setAttribute("cus_value", "key8");
+    sortWording.setAttribute("cus_value", children[1].value);
     buttons[0].style.opacity = '0';
     buttons[1].style.opacity = '';
   });
@@ -518,9 +400,9 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
   for (let i in style) {
     svg_clone.style[i] = style[i];
   }
-  svg_clone.setAttribute("cus_value", children[0].wording);
+  svg_clone.setAttribute("cus_value", children[0].value);
   typeWording = SvgTong.parsing(svg_clone);
-  this.searchDoms.type = typeWording;
+  this.searchDoms.type[flatform] = typeWording;
   mother.appendChild(typeWording);
 
   //children
@@ -655,6 +537,7 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
     for (let i in style) {
       div_clone3.style[i] = style[i];
     }
+    this.searchDoms.type.buttons[flatform].push(div_clone3);
     div_clone3.setAttribute("cus_order", String(i));
     div_clone3.addEventListener("click", function (e) {
       let order = Number(this.getAttribute("cus_order"));
@@ -667,7 +550,7 @@ PortfolioJs.prototype.typeBox = function (mother, flatform) {
           buttonSub[i].style.opacity = '';
         }
       }
-      typeWording.setAttribute("cus_value", children[i].wording);
+      typeWording.setAttribute("cus_value", children[i].value);
       detailBox.style.transform = "translateY(-" + String(frameHeight) + ea + ")";
       let timeout = setTimeout(function () {
         detailBox.parentNode.style.zIndex = '';
@@ -1048,14 +931,13 @@ PortfolioJs.prototype.initialDom = function (rows) {
   }
 }
 
-PortfolioJs.prototype.infinityScroll = function () {
+PortfolioJs.prototype.infinityScroll = function (queryObj) {
   const instance = this;
-  const flatform = (window.innerWidth >= 900) ? "desktop" : "mobile";
-  const domTarget = (window.innerWidth >= 900) ? "desktopDom_portfolio" : "mobileDom_portfolio";
   const boo = (window.innerWidth >= 900) ? true : false;
+  const flatform = boo ? "desktop" : "mobile";
+  const domTarget = flatform + "Dom_portfolio";
 
   //set global stacks
-  GeneralJs.stacks.portfolioScroll = {};
   GeneralJs.stacks.portfolioScroll = 0;
   GeneralJs.boos.portfolioScroll = true;
 
@@ -1065,78 +947,184 @@ PortfolioJs.prototype.infinityScroll = function () {
     let scroll = Math.abs(document.body.getBoundingClientRect().top + document.body.scrollTop);
 
     if ((scroll > (200 + ea + (ea * GeneralJs.stacks.portfolioScroll))) && GeneralJs.boos.portfolioScroll) {
-      const rowObj = await GeneralJs.getContents({
-        collection: "porlist",
-        sort: [ "key9", "DESC" ],
-        limit: [ (20 * (GeneralJs.stacks.portfolioScroll + 1)), 20 ],
-        garo: true,
-      });
+      queryObj.limit = [ (20 * (GeneralJs.stacks.portfolioScroll + 1)), 20 ];
+      const rowObj = await GeneralJs.getContents(queryObj);
 
       //infinity append
-      if (rowObj[domTarget].children.length > 0) {
+      if (rowObj[domTarget].firstChild !== null) {
         instance.box[flatform].appendChild(rowObj[domTarget]);
         GeneralJs.stacks.portfolioScroll++;
 
       //if done exit
       } else {
         GeneralJs.boos.portfolioScroll = false;
+
+        //remove event and global reset
         window.removeEventListener("scroll", GeneralJs.events.portfolioScroll);
+        GeneralJs.stacks.portfolioScroll = 0;
       }
     }
   }
 
   //set by throttle
-  GeneralJs.events.portfolioScroll = GeneralJs.throTtle(scrollEvent, 400);
+  GeneralJs.events.portfolioScroll = GeneralJs.throTtle(scrollEvent, 300);
   window.addEventListener("scroll", GeneralJs.events.portfolioScroll);
+}
+
+PortfolioJs.prototype.searchEvent = function (flatform) {
+  const instance = this;
+  const boo = (flatform === "desktop") ? true : false;
+  const rowDomName = "Dom_portfolio";
+  const box = this.box[flatform];
+
+  //get value
+  const { keyInput, sort, type } = this.searchDoms;
+  const inputDom = keyInput[flatform];
+  const sortDom = sort[flatform];
+  const typeDom = type[flatform];
+
+  return GeneralJs.delayLaunching(async function (e) {
+    let keyValue, queryObj;
+
+    //set query
+    keyValue = GeneralJs.escapeString(inputDom.value);
+    queryObj = {
+      collection: "porlist",
+      sort: [ sortDom.getAttribute("cus_value"), "DESC" ],
+      where: [
+        [
+          [ "designer", keyValue ],
+          [ "region", keyValue ],
+          [ "method", keyValue ],
+          [ "tag", keyValue ],
+          [ "title", keyValue ],
+          [ "subtitle", keyValue ],
+          [ "apart", keyValue ],
+          [ "pyeong", keyValue ],
+        ],
+        [
+          [ "method", typeDom.getAttribute("cus_value") ],
+          [ "tag", typeDom.getAttribute("cus_value") ],
+          [ "title", typeDom.getAttribute("cus_value") ],
+        ]
+      ],
+      limit: [ 20 ],
+      garo: true,
+    };
+    if (keyValue !== '') {
+      queryObj.where = [
+        [
+          [ "designer", keyValue ],
+          [ "region", keyValue ],
+          [ "method", keyValue ],
+          [ "tag", keyValue ],
+          [ "title", keyValue ],
+          [ "subtitle", keyValue ],
+          [ "apart", keyValue ],
+          [ "pyeong", keyValue ],
+        ],
+        [
+          [ "method", typeDom.getAttribute("cus_value") ],
+          [ "tag", typeDom.getAttribute("cus_value") ],
+          [ "title", typeDom.getAttribute("cus_value") ],
+        ]
+      ];
+    } else {
+      queryObj.where = [
+        [
+          [ "method", typeDom.getAttribute("cus_value") ],
+          [ "tag", typeDom.getAttribute("cus_value") ],
+          [ "title", typeDom.getAttribute("cus_value") ],
+        ]
+      ];
+    }
+
+    //get doms
+    const result = await GeneralJs.getContents(queryObj);
+
+    //remove event and global reset
+    window.removeEventListener("scroll", GeneralJs.events.portfolioScroll);
+    GeneralJs.stacks.portfolioScroll = 0;
+
+    //launch infinity scroll event
+    instance.infinityScroll(queryObj);
+
+    //set contents
+    while (box.firstChild) { box.removeChild(box.lastChild); }
+    box.appendChild(result[flatform + rowDomName]);
+  }, 500);
+
+}
+
+PortfolioJs.prototype.searchOn = function () {
+  const instance = this;
+
+  //keyup
+  this.searchDoms.keyInput.desktop.addEventListener("keyup", this.searchEvent("desktop"));
+  this.searchDoms.keyInput.mobile.addEventListener("keyup", this.searchEvent("mobile"));
+
+  //sort
+  for (let i = 0; i < this.searchDoms.sort.buttons.desktop.length; i++) {
+    this.searchDoms.sort.buttons.desktop[i].addEventListener("click", this.searchEvent("desktop"));
+  }
+  for (let i = 0; i < this.searchDoms.sort.buttons.mobile.length; i++) {
+    this.searchDoms.sort.buttons.mobile[i].addEventListener("click", this.searchEvent("mobile"));
+  }
+
+  //type
+  for (let i = 0; i < this.searchDoms.type.buttons.desktop.length; i++) {
+    this.searchDoms.type.buttons.desktop[i].addEventListener("click", this.searchEvent("desktop"));
+  }
+  for (let i = 0; i < this.searchDoms.type.buttons.mobile.length; i++) {
+    this.searchDoms.type.buttons.mobile[i].addEventListener("click", this.searchEvent("mobile"));
+  }
 }
 
 PortfolioJs.prototype.launching = async function () {
   const instance = this;
   try {
+    let queryObj, getObj, keyValue;
 
-    const { desktopDom_portfolio, mobileDom_portfolio } = await GeneralJs.getContents({
+    //parsing get
+    getObj = GeneralJs.returnGet();
+    queryObj = {
       collection: "porlist",
       sort: [ "key9", "DESC" ],
       limit: [ 20 ],
       garo: true,
-    });
-    const rows = {
-      desktop: desktopDom_portfolio,
-      mobile: mobileDom_portfolio,
     };
 
-    this.initialDom(rows);
-    this.infinityScroll();
+    if (getObj.search !== undefined) {
+      keyValue = GeneralJs.escapeString(getObj.search);
+      queryObj.where = [
+        [
+          [ "designer", keyValue ],
+          [ "region", keyValue ],
+          [ "method", keyValue ],
+          [ "tag", keyValue ],
+          [ "title", keyValue ],
+          [ "subtitle", keyValue ],
+          [ "apart", keyValue ],
+          [ "pyeong", keyValue ],
+        ]
+      ];
+    }
+
+    //get contents
+    const { desktopDom_portfolio, mobileDom_portfolio } = await GeneralJs.getContents(queryObj);
+
+    //init
+    this.initialDom({ desktop: desktopDom_portfolio, mobile: mobileDom_portfolio });
+    this.infinityScroll(queryObj);
+    this.searchOn();
+
+    //if exist get, add words in input
+    if (getObj.search !== undefined) {
+      this.searchDoms.keyInput.desktop.value = keyValue;
+      this.searchDoms.keyInput.mobile.value = keyValue;
+    }
 
   } catch (e) {
     window.location.href = "https://home-liaison.com";
   }
-
-  /*
-  var me = this;
-  var i = 0, j = 0;
-
-
-  document.getElementById("polisearch").addEventListener("keyup", me.searchdelay(me.searchcallback('de'), 500));
-  document.getElementById("polisubmit").addEventListener("click", me.searchdelay(me.searchcallback('de'), 500));
-  document.getElementById("mopolisearch").addEventListener("keyup", me.searchdelay(me.searchcallback('mo'), 500));
-  document.getElementById("mopolisubmit").addEventListener("click", me.searchdelay(me.searchcallback('mo'), 500));
-  var politypebu = document.querySelectorAll(".politypebu");
-  for (i = 0; i < politypebu.length; i++) {
-    politypebu[i].addEventListener("click", me.searchbaron('de'));
-  }
-  var mopolitypebu = document.querySelectorAll(".mopolitypebu");
-  for (j = 0; j < mopolitypebu.length; j++) {
-    mopolitypebu[j].addEventListener("click", me.searchbaron('mo'));
-  }
-  document.getElementById("poliordered1div").addEventListener("click", me.ordertoggle(1, true));
-  document.getElementById("poliordered2div").addEventListener("click", me.ordertoggle(2, true));
-  document.getElementById("mopoliordered1div").addEventListener("click", me.ordertoggle(1, false));
-  document.getElementById("mopoliordered2div").addEventListener("click", me.ordertoggle(2, false));
-  for (i = 1; i < 7; i++) {
-    document.querySelector(".plt" + String(i)).addEventListener("click", me.methodselect(i, true));
-    document.querySelector(".moplt" + String(i)).addEventListener("click", me.methodselect(i, false));
-  }
-  */
-
 }

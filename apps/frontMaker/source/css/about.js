@@ -1,6 +1,4 @@
 module.exports = function () {
-  const flexible_media = ['@media (min-width:1611px){','@media (min-width:901px) and (max-width:1610px) {','}'];
-  const width = [ 1400, 1200, 1050, 900, ];
   let html = `
 
 
