@@ -12,7 +12,6 @@ try:
     if argv[1] == 'single':
         newId = clientInstance.createElement(data)
         resultDic = clientInstance.toDictionary(newId)
-        resultDic["notionId"] = newId
         print(dumps(resultDic))
 
     if argv[1] == 'multiple':
@@ -20,9 +19,16 @@ try:
         resultArr = []
         for id in idArr:
             tempDic = clientInstance.toDictionary(id)
-            tempDic["notionId"] = id
             resultArr.append(tempDic)
         print(dumps(resultArr))
 
-except:
-    print("error")
+    if argv[1] == 'getById':
+        resultDic = clientInstance.toDictionary(data["id"])
+        print(dumps(resultDic))
+
+    if argv[1] == 'getAll':
+        arr = clientInstance.getAllRows()
+        print(dumps(arr))
+
+except Exception as e:
+    print(e)

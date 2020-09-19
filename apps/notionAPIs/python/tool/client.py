@@ -1,4 +1,3 @@
-from json import dumps
 from notion.collection import NotionDate
 from datetime import datetime, date
 
@@ -34,19 +33,54 @@ class Client:
                 target.append(row)
         return target[target.__len__() - 1]
 
+    def getElementsAll(self):
+        target = []
+        for row in self.table.collection.get_rows():
+            target.append(row)
+        return target
+
+    def dictionaryFilter(self, element):
+        dic = {}
+        dic["title"] = element.title
+        if element.multi != None and type(element.multi) == list:
+            dic["multi"] = element.multi
+        else:
+            dic["multi"] = []
+        if element.select != None:
+            dic["select"] = element.select
+        else:
+            dic["select"] = ""
+        if element.number != None:
+            dic["number"] = int(element.number)
+        else:
+            dic["number"] = 0
+        if element.email != None:
+            dic["email"] = element.email
+        else:
+            dic["email"] = ""
+        if element.text != None:
+            dic["text"] = element.text
+        else:
+            dic["text"] = ""
+        if element.phone != None:
+            dic["phone"] = element.phone
+        else:
+            dic["phone"] = "010-0000-0000"
+        if element.day != None and isinstance(element.day, NotionDate):
+            dic["day"] = str(element.day.start)
+        else:
+            dic["day"] = "0000-00-00"
+        dic["notionId"] = element.id
+        return dic
+
+    def getAllRows(self):
+        elements = self.getElementsAll()
+        resultArr = []
+        for element in elements:
+            resultArr.append(self.dictionaryFilter(element))
+        return resultArr
+
     def toDictionary(self, id):
         targetDom = self.getElementById(id)
-        result = {
-            "title": targetDom.title,
-            "multi": targetDom.multi,
-            "select": targetDom.select,
-            "number": targetDom.number,
-            "email": targetDom.email,
-            "text": targetDom.text,
-            "phone": targetDom.phone,
-            "day": str(targetDom.day.start),
-        }
+        result = self.dictionaryFilter(targetDom)
         return result
-
-    def toJson(self, id):
-        return dumps(self.toDictionary(id))

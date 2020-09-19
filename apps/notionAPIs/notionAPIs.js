@@ -24,6 +24,24 @@ NotionAPIs.prototype.addNewRows = async function (arr) {
   }
 }
 
+NotionAPIs.prototype.getAllRows = async function () {
+  const instance = this;
+  try {
+    return (await this.mother.pythonExecute(this.pythonApp, {}, [ "getAll" ]));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.prototype.getOneRow = async function (id) {
+  const instance = this;
+  try {
+    return (await this.mother.pythonExecute(this.pythonApp, { id: id }, [ "getById" ]));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 NotionAPIs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -41,61 +59,65 @@ NotionAPIs.prototype.launching = async function () {
     // console.log(await this.addNewRow(obj));
 
 
-    let obj = [
-      {
-        title: "title40",
-        multi: [ "m1", "m4", "m1" ],
-        select: "s4",
-        number: 200,
-        email: "uragenbooks@gmail.com",
-        text: "hello?",
-        phone: "010-2747-3403",
-        day: "2020-04-01"
-      },
-      {
-        title: "title41",
-        multi: [ "m1", "m4", "m1" ],
-        select: "s4",
-        number: 200,
-        email: "uragenbooks@gmail.com",
-        text: "hello?",
-        phone: "010-2747-3403",
-        day: "2020-04-01"
-      },
-      {
-        title: "title42",
-        multi: [ "m1", "m4", "m1" ],
-        select: "s4",
-        number: 200,
-        email: "uragenbooks@gmail.com",
-        text: "hello?",
-        phone: "010-2747-3403",
-        day: "2020-04-01"
-      },
-      {
-        title: "title43",
-        multi: [ "m1", "m4", "m1" ],
-        select: "s4",
-        number: 200,
-        email: "uragenbooks@gmail.com",
-        text: "hello?",
-        phone: "010-2747-3403",
-        day: "2020-04-01"
-      },
-      {
-        title: "title44",
-        multi: [ "m1", "m4", "m1" ],
-        select: "s4",
-        number: 200,
-        email: "uragenbooks@gmail.com",
-        text: "hello?",
-        phone: "010-2747-3403",
-        day: "2020-04-01"
-      },
-    ];
+    // let obj = [
+    //   {
+    //     title: "title40",
+    //     multi: [ "m1", "m4", "m1" ],
+    //     select: "s4",
+    //     number: 200,
+    //     email: "uragenbooks@gmail.com",
+    //     text: "hello?",
+    //     phone: "010-2747-3403",
+    //     day: "2020-04-01"
+    //   },
+    //   {
+    //     title: "title41",
+    //     multi: [ "m1", "m4", "m1" ],
+    //     select: "s4",
+    //     number: 200,
+    //     email: "uragenbooks@gmail.com",
+    //     text: "hello?",
+    //     phone: "010-2747-3403",
+    //     day: "2020-04-01"
+    //   },
+    //   {
+    //     title: "title42",
+    //     multi: [ "m1", "m4", "m1" ],
+    //     select: "s4",
+    //     number: 200,
+    //     email: "uragenbooks@gmail.com",
+    //     text: "hello?",
+    //     phone: "010-2747-3403",
+    //     day: "2020-04-01"
+    //   },
+    //   {
+    //     title: "title43",
+    //     multi: [ "m1", "m4", "m1" ],
+    //     select: "s4",
+    //     number: 200,
+    //     email: "uragenbooks@gmail.com",
+    //     text: "hello?",
+    //     phone: "010-2747-3403",
+    //     day: "2020-04-01"
+    //   },
+    //   {
+    //     title: "title44",
+    //     multi: [ "m1", "m4", "m1" ],
+    //     select: "s4",
+    //     number: 200,
+    //     email: "uragenbooks@gmail.com",
+    //     text: "hello?",
+    //     phone: "010-2747-3403",
+    //     day: "2020-04-01"
+    //   },
+    // ];
+    //
+    //
+    // console.log(await this.addNewRows(obj));
 
+    // console.log(await this.getAllRows());
 
-    console.log(await this.addNewRows(obj));
+    console.log(await this.getOneRow('b59e45b7-8d7f-497f-8941-31dc2516fbd6'));
 
 
   } catch (e) {
