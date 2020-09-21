@@ -204,176 +204,10 @@ Robot.prototype.launching = async function () {
 	}
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
-
-/*
-
-async function main() {
-	const Mother = require(process.cwd() + "/apps/mother.js");
-	let mother = new Mother();
-	function newObj() {
-	  return {
-	    first_WebRequest: {
-	      timeline: [],
-	      cliid: "",
-	      name: "",
-	      phone: "",
-	      email: [],
-	      address: [],
-	      family: [],
-	      budget: [],
-	      pyeong: [],
-	      resident: [],
-	      contract: [],
-	      space: [],
-				// [
-				// 	{
-				// 		rooms: 0,
-				// 		bathrooms: 0,
-				// 		valcony: false,
-				// 	},
-				// ],
-	      etc: [],
-	      channel: [],
-	    },
-	    second_Analysis: {
-	      response: {
-	        status: [],
-	        outreason: [],
-	      },
-	      date: {
-	        phonecall: {
-	          history: [],
-	          channel: [],
-	        },
-	        space: {
-	          precheck: [],
-	          empty: [],
-	          movein: [],
-	        }
-	      },
-	      picture: {
-	        space: [],
-	        style: [],
-	      },
-	      history: {
-	        general: "",
-	        space: "",
-	        contruct: "",
-	        styling: "",
-	        budget: "",
-	        etc: ""
-	      }
-	    },
-	    third_Proposal: {
-	      service: [],
-	      proid: [],
-	      send: [],
-	    },
-	  };
-	}
-
-	const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = mother;
-
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-
-  await MONGOC.connect();
-
-	let row = await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: "c2009_aa12s" }).limit(1).toArray();
-
-	let first_WebRequest, second_Analysis, third_Proposal;
-	let tempObj;
-	let spaceArr;
-
-	console.log(row);
-
-	for (let past of row) {
-	  tempObj = newObj();
-
-	  first_WebRequest = tempObj.first_WebRequest
-	  first_WebRequest.timeline.push(past.a18_timeline);
-	  first_WebRequest.cliid = past.a4_customernumber;
-	  first_WebRequest.name = past.a19_name;
-	  first_WebRequest.phone = past.a20_phone;
-	  // first_WebRequest.email = emailFilter(past.a35_aboutetc);
-	  first_WebRequest.address = past.a21_address;
-	  first_WebRequest.family = past.a22_family;
-	  first_WebRequest.budget = past.a23_budget;
-	  first_WebRequest.pyeong = Number(past.a24_pyeong.replace(/[^0-9]/g, ''));
-	  first_WebRequest.resident = past.a25_due_date;
-	  first_WebRequest.contract = past.a27_contract;
-		if (/\//g.test(past.a28_space)) {
-			spaceArr = past.a28_space.split(" / ");
-			first_WebRequest.space.rooms = Number(spaceArr[0].replace(/[^0-9]/g, ''));
-			first_WebRequest.space.bathrooms = Number(spaceArr[1].replace(/[^0-9]/g, ''));
-			first_WebRequest.space.valcony = (/없음/g.test(spaceArr[2]) ? false : true);
-		}
-
-	  first_WebRequest.etc = past.a29_etc;
-	  first_WebRequest.channel = past.a30_channel;
-
-	  second_Analysis = tempObj.second_Analysis;
-	  second_Analysis.response.status = past.a1_class1;
-	  second_Analysis.response.outreason = past.a3_reason;
-
-	  if (past.a5_call !== '' && past.a5_call !== '-') {
-	    second_Analysis.date.phonecall.history.push(past.a5_call);
-	  }
-	  if (past.a10_comfirmcall !== '' && past.a10_comfirmcall !== '-') {
-	    second_Analysis.date.phonecall.history.push(past.a10_comfirmcall);
-	  }
-	  if (past.a11_next !== '' && past.a11_next !== '-') {
-	    second_Analysis.date.phonecall.history.push(past.a11_next);
-	  }
-	  if (past.a7_channelenroll !== '' && past.a7_channelenroll !== '-') {
-	    second_Analysis.date.phonecall.channel.push(past.a7_channelenroll);
-	  }
-
-	  if (past.a13_sajeon !== '' && past.a13_sajeon !== '-') {
-	    second_Analysis.date.space.precheck.push(past.a13_sajeon);
-	  }
-	  if (past.a14_emptyday !== '' && past.a14_emptyday !== '-') {
-	    second_Analysis.date.space.empty.push(past.a14_emptyday);
-	  }
-	  if (past.a25_due_date !== '' && past.a25_due_date !== '-') {
-	    second_Analysis.date.space.movein.push(past.a25_due_date);
-	  }
-
-	  second_Analysis.picture.space = ((past.a8_image !== '' && past.a8_image !== '-') ? true : false);
-	  second_Analysis.picture.style = ((past.a8_image !== '' && past.a8_image !== '-') ? true : false);
-
-	  second_Analysis.history.general = past.a12_history;
-	  second_Analysis.history.space = past.a31_aboutsite;
-	  second_Analysis.history.contruct = past.a32_aboutcom;
-	  second_Analysis.history.styling = past.a33_aboutsty;
-	  second_Analysis.history.budget = past.a34_aboutmon;
-	  second_Analysis.history.etc = past.a35_aboutetc;
-
-	  third_Proposal = tempObj.third_Proposal;
-	  if (past.a16_service !== '' && past.a16_service !== '-') {
-	    third_Proposal.service.push(past.a16_service);
-	  }
-	  if (past.a9_proposal !== '' && past.a9_proposal !== '-') {
-	    third_Proposal.send.push([ past.a9_proposal ]);
-	  }
-
-		console.log(tempObj)
-
-	}
-
-
-	await MONGOC.close();
-
-
-
-}
-
-main();
-
-*/
 
 async function main2() {
 	const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
@@ -382,3 +216,11 @@ async function main2() {
 }
 
 // main2();
+
+async function main3() {
+	const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+	let back = new BackMaker();
+	await back.launching();
+}
+
+main3();

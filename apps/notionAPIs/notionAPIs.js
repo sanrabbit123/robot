@@ -115,9 +115,9 @@ NotionAPIs.prototype.launching = async function () {
     //
     // console.log(await this.addNewRows(obj));
 
-    // console.log(await this.getAllRows());
+    console.log(await this.getAllRows());
 
-    console.log(await this.getOneRow('b59e45b7-8d7f-497f-8941-31dc2516fbd6'));
+    // console.log(await this.getOneRow('b59e45b7-8d7f-497f-8941-31dc2516fbd6'));
 
 
   } catch (e) {
