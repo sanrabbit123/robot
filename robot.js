@@ -212,15 +212,15 @@ Robot.prototype.launching = async function () {
 async function main2() {
 	const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
 	let notion = new NotionAPIs();
-	await notion.launching();
+	await notion.clientFilter();
 }
 
-// main2();
+main2();
 
 async function main3() {
 	const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
 	let back = new BackMaker();
-	await back.launching();
+	await back.launching("client");
 }
 
-main3();
+// main3();

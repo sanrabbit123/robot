@@ -443,14 +443,21 @@ Mother.prototype.pythonExecute = function (target, inputObj, args = []) {
   return new Promise(function(resolve, reject) {
     fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
       if (err) { reject(err); }
-      let output, result, order;
+      let output, result, order, jsonRaw, json;
 
 			order = `python3 ${shellLink(target)}`;
 			if (args.length > 0) {
 				order += ` ${args.join(' ')}`;
 			}
       output = shell.exec(order, { silent: true });
-      result = JSON.parse(output.stdout.replace(/\n$/, ''));
+			jsonRaw = output.stdout.replace(/\n$/, '');
+
+			try {
+				json = JSON.parse(jsonRaw);
+				result = json;
+			} catch (e) {
+				result = jsonRaw;
+			}
 
       resolve(result);
     });

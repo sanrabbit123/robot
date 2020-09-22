@@ -690,10 +690,10 @@ ContentMaker.prototype.proposal_launching = async function () {
 		await this.proposal_make();
 
 		const gd = this.mother.googleSystem("drive");
-		let gres;
-		let resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "result" ]);
+		let gres, resultDir;
+		resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "result" ]);
 		for (let i of resultDir) { if (!/^\.DS_Store/g.test(i)) {
-			gres = await gd.upload_andView("1SYvXvYveugYYdXlDL8Bn-ucVhTR1SSCj", this.options.home_dir + "result/" + i);
+			gres = await gd.upload_andView("1ofHfJmGJJ6TCk5qP_VttNvIvHt2IVZ21", this.options.home_dir + "result/" + i);
 		}}
 		await this.mother.slack_bot.chat.postMessage({ text: `${this.text.client} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
 		await MONGOC.db("miro81").collection(`Project`).updateOne({ proid: this.text.proid }, { $set: { status: "발송 대기" } });

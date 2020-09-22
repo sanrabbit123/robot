@@ -1,23 +1,31 @@
 from notion.collection import NotionDate
 from datetime import datetime, date
+import re as RegExp
 
 class Client:
 
     def __init__(self, app):
-        self.table = app.get_collection_view("https://www.notion.so/83b1e4d9b6f2458fac25afbc757deabc?v=6b2a1f15aab340c9abf6228e8dfc0288")
+        self.table = app.get_collection_view("https://www.notion.so/8fc93e280b18483dab13d24e5aca4078?v=b2f732a2826f451eaddbc1fb8a05c012")
+
 
     def createElement(self, dic):
         row = self.table.collection.add_row()
-        dayArr = dic["day"].split('-')
         row.name = dic["title"]
-        row.multi = dic["multi"]
-        row.select = dic["select"]
-        row.number = dic["number"]
-        row.email = dic["email"]
-        row.text = dic["text"]
+        row.status = dic["status"]
+        row.cliid = dic["cliid"]
         row.phone = dic["phone"]
-        row.day = NotionDate(date(int(dayArr[0]), int(dayArr[1]), int(dayArr[2])))
+        row.email = dic["email"]
+        row.address = dic["address"]
+        row.budget = dic["budget"]
+        row.pyeong = int(dic["pyeong"])
+        row.contract = dic["contract"]
+        row.family = dic["family"]
+        dayArr = dic["movein"].split('-')
+        row.movein = NotionDate(date(int(dayArr[0]), int(dayArr[1]), int(dayArr[2])))
+        row.space = dic["space"]
+        row.service = dic["service"]
         return row.id
+
 
     def createElementsAll(self, arr):
         idArr = []
@@ -26,6 +34,35 @@ class Client:
             idArr.append(tempId)
         return idArr
 
+
+    def updateElement(self, row, dic):
+        row.title = dic["title"]
+        row.status = dic["status"]
+        row.cliid = dic["cliid"]
+        row.phone = dic["phone"]
+        row.email = dic["email"]
+        row.address = dic["address"]
+        row.budget = dic["budget"]
+        row.pyeong = dic["pyeong"]
+        row.contract = dic["contract"]
+        row.family = dic["family"]
+        dayArr0 = dic["movein"].split('-')
+        row.movein = NotionDate(date(int(dayArr0[0]), int(dayArr0[1]), int(dayArr0[2])))
+        row.room = dic["room"]
+        row.bathroom = dic["bathroom"]
+        row.valcony = dic["valcony"]
+        row.etc = dic["etc"]
+        row.service = dic["service"]
+
+        dayArr1 = dic["precheck"].split('-')
+        row.precheck = NotionDate(date(int(dayArr1[0]), int(dayArr1[1]), int(dayArr1[2])))
+
+        dayArr2 = dic["empty"].split('-')
+        row.empty = NotionDate(date(int(dayArr2[0]), int(dayArr2[1]), int(dayArr2[2])))
+
+        return row.id
+
+
     def getElementById(self, id):
         target = []
         for row in self.table.collection.get_rows():
@@ -33,52 +70,70 @@ class Client:
                 target.append(row)
         return target[target.__len__() - 1]
 
+
     def getElementsAll(self):
         target = []
         for row in self.table.collection.get_rows():
             target.append(row)
         return target
 
+
     def dictionaryFilter(self, element):
         dic = {}
         dic["title"] = element.title
-        if element.multi != None and type(element.multi) == list:
-            dic["multi"] = element.multi
-        else:
-            dic["multi"] = []
-        if element.select != None:
-            dic["select"] = element.select
-        else:
-            dic["select"] = ""
-        if element.number != None:
-            dic["number"] = int(element.number)
-        else:
-            dic["number"] = 0
-        if element.email != None:
-            dic["email"] = element.email
-        else:
-            dic["email"] = ""
-        if element.text != None:
-            dic["text"] = element.text
-        else:
-            dic["text"] = ""
-        if element.phone != None:
-            dic["phone"] = element.phone
-        else:
-            dic["phone"] = "010-0000-0000"
-        if element.day != None and isinstance(element.day, NotionDate):
-            dic["day"] = str(element.day.start)
-        else:
-            dic["day"] = "0000-00-00"
+        dic["status"] = element.status
+        dic["cliid"] = element.cliid
+        dic["phone"] = element.phone
+        dic["email"] = element.email
+        dic["address"] = element.address
+        dic["budget"] = element.budget
+        dic["pyeong"] = element.pyeong
+        dic["contract"] = element.contract
+        dic["room"] = element.contract
+        dic["bathroom"] = element.contract
+        dic["valcony"] = element.contract
+        dic["etc"] = element.contract
+        # dic["designer"] = element.designer
         dic["notionId"] = element.id
+
+        if element.family != None and type(element.family) == list:
+            dic["family"] = element.family
+        else:
+            dic["family"] = []
+
+        if element.movein != None and isinstance(element.movein, NotionDate):
+            dic["movein"] = str(element.movein.start)
+        else:
+            dic["movein"] = "9999-09-09"
+
+        if element.precheck != None and isinstance(element.precheck, NotionDate):
+            dic["precheck"] = str(element.precheck.start)
+        else:
+            dic["precheck"] = "9999-09-09"
+
+        if element.empty != None and isinstance(element.empty, NotionDate):
+            dic["empty"] = str(element.empty.start)
+        else:
+            dic["empty"] = "9999-09-09"
+
+        if element.service != None and type(element.service) == list:
+            dic["service"] = element.service
+        else:
+            dic["service"] = []
+
         return dic
+
 
     def getAllRows(self):
         elements = self.getElementsAll()
         resultArr = []
         for element in elements:
-            resultArr.append(self.dictionaryFilter(element))
+            regex = RegExp.compile("^info")
+            regBoo = regex.search(element.title)
+            if regBoo == None:
+                resultArr.append(self.dictionaryFilter(element))
         return resultArr
+
 
     def toDictionary(self, id):
         targetDom = self.getElementById(id)

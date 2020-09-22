@@ -1,15 +1,20 @@
 const BackMaker = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   this.mother = new Mother();
+
+  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
+  this.notion = new NotionAPIs();
+
   this.dir = process.cwd() + "/apps/backMaker";
   this.mapDir = this.dir + "/map";
   this.pastDir = this.dir + "/intoMap";
   this.tempDir = process.cwd() + "/temp";
+  this.resourceDir = this.dir + "/resource";
 }
 
-BackMaker.prototype.jsonStructure = function (button) {
+BackMaker.prototype.jsonStructure = function () {
   const instance = this;
-  const map = require(this.mapDir + "/" + button + ".js");
+  const map = require(this.mapDir + "/" + this.button + ".js");
   const { main, sub } = map;
   return {
     main: function () {
@@ -21,17 +26,16 @@ BackMaker.prototype.jsonStructure = function (button) {
   }
 }
 
-BackMaker.prototype.pastToJson = async function (button) {
+BackMaker.prototype.pastToJson = async function () {
   const instance = this;
-  const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
+  const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const func = require(this.pastDir + "/" + button + ".js");
-  const filter = func(this.jsonStructure(button));
+  const map = require(this.pastDir + "/" + this.button + ".js");
+  const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: this.notion });
   try {
     await MONGOC.connect();
     const row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).toArray();
-    const tong = filter(row);
-    await fileSystem(`write`, [ `${this.tempDir}/temp.json`, JSON.stringify(tong, null, 2) ]);
+    return (await filter(row));
   } catch (e) {
     console.log(e);
   } finally {
@@ -40,10 +44,41 @@ BackMaker.prototype.pastToJson = async function (button) {
   }
 }
 
-BackMaker.prototype.launching = async function () {
+BackMaker.prototype.subLogicToJson = async function (tong) {
   const instance = this;
+  const { fileSystem } = this.mother;
   try {
-    await this.pastToJson("client");
+    const targetDir = this.pastDir + "/" + this.button;
+    const targetDirArr = await fileSystem(`readDir`, [ targetDir ]);
+
+    let tempFunc, funcs;
+
+    funcs = [];
+    for (let i of targetDirArr) { if (i !== `.DS_Store`) {
+      funcs.push(require(targetDir + "/" + i));
+    }}
+
+    for (let i = 0; i < funcs.length; i++) {
+      tempFunc = (funcs[i])({ Mother: this.mother, Notion: this.notion });
+      tong = await tempFunc(tong);
+    }
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    console.log("done");
+  }
+}
+
+BackMaker.prototype.launching = async function (button) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  this.button = button;
+  try {
+    const tong = await this.pastToJson();
+    const finalTong = await this.subLogicToJson(tong);
+    await fileSystem(`write`, [ `${this.resourceDir}/${this.button}.json`, JSON.stringify(finalTong, null, 2) ]);
   } catch (e) {
     console.log(e);
   }

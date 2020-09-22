@@ -2,6 +2,7 @@ const NotionAPIs = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   this.mother = new Mother();
   this.dir = process.cwd() + "/apps/notionAPIs";
+  this.jsonDir = this.dir + "/json";
   this.pythonApp = this.dir + "/python/app.py";
 }
 
@@ -42,86 +43,391 @@ NotionAPIs.prototype.getOneRow = async function (id) {
   }
 }
 
-NotionAPIs.prototype.launching = async function () {
+NotionAPIs.prototype.updateOneRows = async function (obj) {
   const instance = this;
   try {
+    return (await this.mother.pythonExecute(this.pythonApp, obj, [ "updateOne" ]));
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-    // let obj = {
-    //   title: "title38",
-    //   multi: [ "m1", "m4", "m1" ],
-    //   select: "s4",
-    //   number: 200,
-    //   email: "uragenbooks@gmail.com",
-    //   text: "hello?",
-    //   phone: "010-2747-3403",
-    //   day: "2020-04-01"
-    // };
-    // console.log(await this.addNewRow(obj));
+NotionAPIs.prototype.clientFilter = async function () {
+  const instance = this;
+  const { fileSystem, mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const menus = {
+    status: [
+      "신규 고객",
+      "신규 고객 대기",
+      "계약금 안내",
+      "계약금 대기",
+      "제안서",
+      "제안서 대기",
+      "잔금 대기",
+      "현장 미팅",
+      "계약서",
+      "프로젝트 진행",
+      "디자인 제안",
+      "시공 제안",
+      "스타일링 제안",
+      "기타 문의",
+      "마무리",
+      "촬영",
+      "정산",
+      "컨텐츠",
+      "공유",
+      "완료"
+    ],
+    family: [
+      "1인",
+      "2인",
+      "신혼부부",
+      "부부",
+      "여아",
+      "여아 2",
+      "딸",
+      "딸 2",
+      "남아",
+      "남아 2",
+      "아들",
+      "아들 2",
+      "상공간",
+      "부모님",
+      "반려견",
+      "반려묘 2",
+      "반려묘",
+      "모녀"
+    ],
+    budget: [
+      "500만원 이하",
+      "1000만원",
+      "1500만원",
+      "2000만원",
+      "2500만원",
+      "3000만원",
+      "4000만원",
+      "5000만원 이상",
+    ],
+    contract: [
+      "자가",
+      "전월세",
+      "알 수 없음",
+    ],
+    space: [
+      "방1개",
+      "방2개",
+      "방3개",
+      "방4개이상",
+      "화장실1개",
+      "화장실2개",
+      "화장실3개이상",
+      "발코니확장",
+      "발코니확장없음"
+    ],
+    service: [
+      "홈퍼니싱",
+      "홈스타일링",
+      "부분공간",
+      "토탈스타일링",
+      "기타"
+    ],
+    channel: [
+      "커뮤니티",
+      "검색",
+      "지인",
+      "인스타",
+      "블로그",
+      "언론"
+    ]
+  }
+  try {
+
+    let tong, row, temp;
+
+    await MONGOC.connect();
+
+    tong = await this.getAllRows();
+
+    for (let obj of tong) {
+      //title fix
+      if (obj.title === null) { obj.title = ''; }
+      obj.title = obj.title.trim();
+
+      //status fix
+      if (obj.status === null) { obj.status = ''; }
+      obj.status = obj.status.trim();
+      if (!menus.status.includes(obj.status)) {
+        console.log(obj.status);
+        obj.status = "신규 고객";
+      }
+
+      //cliid
+      if (obj.cliid === null) { obj.cliid = ''; }
+      obj.cliid = obj.cliid.trim();
+      if (obj.cliid === '') {
+        row = await MONGOC.db("miro81").collection("BC1_conlist").find({ a19_name: (obj.title.split(" : "))[0].trim() }).toArray();
+        if (row.length > 1) {
+          console.log("id ERROR : " + obj.title);
+        } else if (row.length === 0) {
+          console.log("id ERROR : " + obj.title);
+        } else {
+          obj.cliid = row[0].a4_customernumber;
+        }
+      }
+
+      row = await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: obj.cliid }).toArray();
+
+      //phone
+      if (obj.phone === null) { obj.phone = ''; }
+      obj.phone = obj.phone.trim();
+      if (obj.phone === '') {
+        obj.phone = row[0].a20_phone;
+      }
+
+      //email fix
+      if (!/@/g.test(obj.email) && obj.email !== '') {
+        console.log("email ERROR : " + obj.title);
+      }
+
+      //address
+      if (obj.address === null) { obj.address = ''; }
+      obj.address = obj.address.trim();
+      if (obj.address === '') {
+        obj.address = row[0].a21_address;
+      }
+
+      //budget
+      if (obj.budget === null) { obj.budget = ''; }
+      obj.budget = obj.budget.trim();
+      if (obj.budget === '') {
+        obj.budget = row[0].a23_budget.replace(/,/g, '');
+      }
+
+      //contract
+      if (obj.contract === null) { obj.contract = ''; }
+      obj.contract = obj.contract.trim();
+      if (obj.contract === '') {
+        obj.contract = row[0].a27_contract;
+      }
+
+      //number pyeong
+      obj.pyeong = Number(row[0].a24_pyeong.replace(/[^0-9]/g, ''))
 
 
-    // let obj = [
-    //   {
-    //     title: "title40",
-    //     multi: [ "m1", "m4", "m1" ],
-    //     select: "s4",
-    //     number: 200,
-    //     email: "uragenbooks@gmail.com",
-    //     text: "hello?",
-    //     phone: "010-2747-3403",
-    //     day: "2020-04-01"
-    //   },
-    //   {
-    //     title: "title41",
-    //     multi: [ "m1", "m4", "m1" ],
-    //     select: "s4",
-    //     number: 200,
-    //     email: "uragenbooks@gmail.com",
-    //     text: "hello?",
-    //     phone: "010-2747-3403",
-    //     day: "2020-04-01"
-    //   },
-    //   {
-    //     title: "title42",
-    //     multi: [ "m1", "m4", "m1" ],
-    //     select: "s4",
-    //     number: 200,
-    //     email: "uragenbooks@gmail.com",
-    //     text: "hello?",
-    //     phone: "010-2747-3403",
-    //     day: "2020-04-01"
-    //   },
-    //   {
-    //     title: "title43",
-    //     multi: [ "m1", "m4", "m1" ],
-    //     select: "s4",
-    //     number: 200,
-    //     email: "uragenbooks@gmail.com",
-    //     text: "hello?",
-    //     phone: "010-2747-3403",
-    //     day: "2020-04-01"
-    //   },
-    //   {
-    //     title: "title44",
-    //     multi: [ "m1", "m4", "m1" ],
-    //     select: "s4",
-    //     number: 200,
-    //     email: "uragenbooks@gmail.com",
-    //     text: "hello?",
-    //     phone: "010-2747-3403",
-    //     day: "2020-04-01"
-    //   },
-    // ];
-    //
-    //
-    // console.log(await this.addNewRows(obj));
+      //space parsing
+      temp = row[0].a28_space.split(' / ');
+      obj.room = temp[0];
+      obj.bathroom = temp[1];
+      obj.valcony = temp[2];
 
-    console.log(await this.getAllRows());
+      //etc
+      obj.etc = row[0].a29_etc;
 
-    // console.log(await this.getOneRow('b59e45b7-8d7f-497f-8941-31dc2516fbd6'));
+      //family parsing
+      obj.family = row[0].a22_family;
+
+      //service parsing
+      if (obj.service.includes("")) { obj.service = []; }
+
+      //move in
+      if (obj.movein === "9999-09-09") {
+        obj.movein = NotionAPIs.dateFilter(row[0].a25_due_date, row[0]);
+      }
+      obj.precheck = NotionAPIs.dateFilter(row[0].a13_sajeon, row[0]);
+      obj.empty = NotionAPIs.dateFilter(row[0].a14_emptyday, row[0]);
+
+      if (obj.movein === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.movein)) { obj.movein = "9999-09-09" }
+      if (obj.precheck === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.precheck)) { obj.precheck = "9999-09-09" }
+      if (obj.empty === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.empty)) { obj.empty = "9999-09-09" }
+
+    }
+
+    await fileSystem(`write`, [ this.jsonDir + "/client.json", JSON.stringify(tong, null, 2) ]);
+
+    for (let i = 0; i < tong.length; i++) {
+      console.log(await this.updateOneRows(tong[i]));
+      console.log(String(i + 1) + " / " + String(tong.length));
+    }
+
 
 
   } catch (e) {
     console.log(e);
+  } finally {
+    await MONGOC.close();
+    console.log(`client filter done`);
+  }
+}
+
+
+NotionAPIs.prototype.launching = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+
+
+
+    let res = await this.getAllRows();
+
+    await fileSystem(`write`, [ this.jsonDir + "/client.json", JSON.stringify(res, null, 2) ]);
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.dateFilter = function (raw, mother) {
+  const EMPTYDATE = "9999-09-09";
+  const { a18_timeline } = mother;
+  const currentDateRAW = a18_timeline.slice(0, 10).split('-');
+  let currentDate = [];
+  for (let i of currentDateRAW) {
+    currentDate.push(Number(i));
+  }
+  let temp, result;
+
+  //exception
+  if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(raw)) {
+
+    //resident error
+    if (/거주/g.test(raw.trim())) {
+      return a18_timeline.slice(0, 10);
+
+
+    //six-wording
+    } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(raw.trim())) {
+      console.log("fix : (six-wording) " + raw + " => " + "20" + raw)
+      return "20" + raw.trim();
+
+
+    //first-month-error
+    } else if (/^[0-9]+월[초]/.test(raw.trim())) {
+
+      temp = Number(raw.trim().replace(/[^0-9]/g, ''));
+
+      if (temp >= currentDate[1]) {
+        result = String(currentDate[0]) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '01';
+      } else {
+        result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '01';
+      }
+
+      console.log("fix : (first-month-error) " + raw + " => " + result);
+      return result;
+
+
+    //first-hangul-error
+    } else if (/\-[초]/.test(raw.trim())) {
+      temp = raw.trim().split('-');
+      result = '';
+      if (temp[0].length === 2) {
+        result += '20' + temp[0] + '-'
+      } else {
+        result += temp[0] + '-'
+      }
+      if (Number(temp[1]) < 10) {
+        result += '0' + temp[1].replace(/0/g, '') + '-';
+      } else {
+        result += temp[1] + '-';
+      }
+      result += '01';
+      console.log("fix : (first-hangul-error) " + raw + " => " + result);
+      return result;
+
+
+    //last-month-error
+    } else if (/^[0-9]+월[말]/.test(raw.trim())) {
+
+      temp = Number(raw.trim().replace(/[^0-9]/g, ''));
+
+      if (temp >= currentDate[1]) {
+        result = String(currentDate[0]) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '28';
+      } else {
+        result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '28';
+      }
+
+      console.log("fix : (last-month-error) " + raw + " => " + result);
+      return result;
+
+
+    //last-hangul-error
+    } else if (/\-[말]/.test(raw.trim())) {
+      temp = raw.trim().split('-');
+      result = '';
+      if (temp[0].length === 2) {
+        result += '20' + temp[0] + '-'
+      } else {
+        result += temp[0] + '-'
+      }
+      if (Number(temp[1]) < 10) {
+        result += '0' + temp[1].replace(/0/g, '') + '-';
+      } else {
+        result += temp[1] + '-';
+      }
+      result += '28';
+      console.log("fix : (last-hangul-error) " + raw + " => " + result);
+      return result;
+
+
+    //middle-month-error
+    } else if (/^[0-9]+월[중]/.test(raw.trim())) {
+
+        temp = Number(raw.trim().replace(/[^0-9]/g, ''));
+
+        if (temp >= currentDate[1]) {
+          result = String(currentDate[0]) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '15';
+        } else {
+          result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '15';
+        }
+
+        console.log("fix : (middle-month-error) " + raw + " => " + result);
+        return result;
+
+
+    //middle-hangul-error
+    } else if (/\-[중]/.test(raw.trim())) {
+      temp = raw.trim().split('-');
+      result = '';
+      if (temp[0].length === 2) {
+        result += '20' + temp[0] + '-'
+      } else {
+        result += temp[0] + '-'
+      }
+      if (Number(temp[1]) < 10) {
+        result += '0' + temp[1].replace(/0/g, '') + '-';
+      } else {
+        result += temp[1] + '-';
+      }
+      result += '15';
+      console.log("fix : (middle-hangul-error) " + raw + " => " + result);
+      return result;
+
+
+    //wait error
+    } else if (/wait/g.test(raw.trim()) || /대기/g.test(raw.trim()) || /피드백/g.test(raw.trim()) || /여유/g.test(raw.trim()) || /미정/g.test(raw.trim())) {
+
+        console.log("fix : (wait error) " + raw + " => " + EMPTYDATE);
+        return EMPTYDATE;
+
+
+    //leave error
+    } else if (/지남/g.test(raw.trim()) || /이미/g.test(raw.trim()) || /비어/g.test(raw.trim()) || /asap/g.test(raw.trim())) {
+
+        console.log("fix : (leave error) " + raw + " => " + a18_timeline.slice(0, 10));
+        return a18_timeline.slice(0, 10);
+
+
+    } else {
+      console.log(raw);
+      return raw.replace(/\?/, '').trim();
+    }
+  } else {
+    if (raw === EMPTYDATE) {
+      return a18_timeline.slice(0, 10);
+    } else {
+      return raw.trim();
+    }
   }
 }
 

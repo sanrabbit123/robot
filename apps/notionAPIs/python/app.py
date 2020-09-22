@@ -78,5 +78,10 @@ try:
         arr = clientInstance.getAllRows()
         print(dumps(arr))
 
+    if argv[1] == 'updateOne':
+        target = clientInstance.getElementById(data["notionId"])
+        clientInstance.updateElement(target, data)
+        print(dumps({ "id": data["notionId"], "update": "success" }))
+
 except Exception as e:
     print(e)
