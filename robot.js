@@ -204,8 +204,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 //development
 
@@ -215,7 +215,7 @@ async function main2() {
   await notion.launching();
 }
 
-main2();
+// main2();
 
 async function main3() {
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");

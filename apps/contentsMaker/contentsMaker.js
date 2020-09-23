@@ -663,7 +663,7 @@ ContentMaker.prototype.proposal_make = async function () {
       shell.exec(`rm -rf ${shellLink(home_dir)}result/${i};`);
     }}
     shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/start_adobe.scpt proposal`);
-    shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/return_terminal.scpt`);
+    // shell.exec(`osascript ${shellLink(home_dir)}factory/applescript/return_terminal.scpt`);
 
   } catch (e) {
     console.log(e);
