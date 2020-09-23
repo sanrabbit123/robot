@@ -1600,8 +1600,8 @@ PaymentJs.termsEvent = function (flatform, m) {
   return function () {
     document.querySelector("title").textContent = title;
     document.getElementById(mo + "terms0").style.display = list[0];
-  	document.getElementById(mo + "terms1").style.display = list[1];
-  	document.getElementById(mo + "terms2").style.display = list[2];
+    document.getElementById(mo + "terms1").style.display = list[1];
+    document.getElementById(mo + "terms2").style.display = list[2];
   }
 }
 

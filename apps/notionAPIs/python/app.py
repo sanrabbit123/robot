@@ -24,7 +24,6 @@ def returnModulepath():
 
 # return json data
 def getBridge():
-
     pathDic = returnModulepath()
 
     # name setting

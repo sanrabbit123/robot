@@ -836,11 +836,11 @@ SvgOptimizer.prototype.loadSVG = async function (file) {
   const { window } = new JSDOM(`<!DOCTYPE html><html></html>`);
   let svgDoc_raw, svgDoc, svgObj, svgStringNew;
   const parseXML = function(data) {
-  	let xml;
-  	if (!data || typeof data !== "string") { return null; }
-  	try { xml = (new window.DOMParser()).parseFromString(data, "text/xml"); }
+    let xml;
+    if (!data || typeof data !== "string") { return null; }
+    try { xml = (new window.DOMParser()).parseFromString(data, "text/xml"); }
     catch (e) { xml = undefined; }
-  	return xml;
+    return xml;
   };
   try {
     let svgString = await this.mother.fileSystem(`readString`, [ file ]);

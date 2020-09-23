@@ -4,14 +4,19 @@ import re as RegExp
 
 class Client:
 
+    client = None
+    table = None
+
+
     def __init__(self, app):
+        self.client = app
         self.table = app.get_collection_view("https://www.notion.so/8fc93e280b18483dab13d24e5aca4078?v=b2f732a2826f451eaddbc1fb8a05c012")
 
 
     def createElement(self, dic):
         row = self.table.collection.add_row()
-        row.name = dic["title"]
-        row.status = dic["status"]
+        row.title = dic["title"]
+        row.status = "신규 고객"
         row.cliid = dic["cliid"]
         row.phone = dic["phone"]
         row.email = dic["email"]
@@ -22,8 +27,11 @@ class Client:
         row.family = dic["family"]
         dayArr = dic["movein"].split('-')
         row.movein = NotionDate(date(int(dayArr[0]), int(dayArr[1]), int(dayArr[2])))
-        row.space = dic["space"]
-        row.service = dic["service"]
+        row.room = dic["room"]
+        row.bathroom = dic["bathroom"]
+        row.valcony = dic["valcony"]
+        row.etc = dic["etc"]
+        row.manager = self.client.current_user
         return row.id
 
 
@@ -53,13 +61,10 @@ class Client:
         row.valcony = dic["valcony"]
         row.etc = dic["etc"]
         row.service = dic["service"]
-
         dayArr1 = dic["precheck"].split('-')
         row.precheck = NotionDate(date(int(dayArr1[0]), int(dayArr1[1]), int(dayArr1[2])))
-
         dayArr2 = dic["empty"].split('-')
         row.empty = NotionDate(date(int(dayArr2[0]), int(dayArr2[1]), int(dayArr2[2])))
-
         return row.id
 
 
@@ -94,6 +99,7 @@ class Client:
         dic["valcony"] = element.contract
         dic["etc"] = element.contract
         # dic["designer"] = element.designer
+        # dic["manager"] = element.manager
         dic["notionId"] = element.id
 
         if element.family != None and type(element.family) == list:

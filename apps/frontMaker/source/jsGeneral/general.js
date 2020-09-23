@@ -93,19 +93,19 @@ GeneralJs.nodes = {
 }
 
 GeneralJs.deBounce = function (func, wait, immediate) {
-	let timeout;
-	return function() {
-		let context = this;
+  let timeout;
+  return function() {
+    let context = this;
     let args = arguments;
-		function later() {
-			timeout = null;
-			if (!immediate) { func.apply(context, args); };
-		}
-		let callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) { func.apply(context, args); };
-	}
+    function later() {
+      timeout = null;
+      if (!immediate) { func.apply(context, args); };
+    }
+    let callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) { func.apply(context, args); };
+  }
 }
 
 GeneralJs.throTtle = function (callback, ms) {
@@ -352,7 +352,7 @@ GeneralJs.prototype.resizeLaunching = function (callback) {
   this.resizeFrom = 0;
   this.resizePopup = 0;
   const resizeDebounceEvent = function () {
-  	let timeout;
+    let timeout;
     const reEvent = function () {
       if ((instance.resizeFrom >= 1510 && window.innerWidth <= 1610) || (instance.resizeFrom <= 1610 && window.innerWidth >= 1610)) {
         GeneralJs.totalDelete();
@@ -363,22 +363,22 @@ GeneralJs.prototype.resizeLaunching = function (callback) {
       instance.resizeStack = 0;
     }
     let immediate = null;
-  	return function (e) {
+    return function (e) {
       if (instance.resizeStack === 0) {
         instance.resizeStack = 1;
         instance.resizeFrom = window.innerWidth;
       }
-  		let context = this;
+      let context = this;
       let args = arguments;
-  		function later() {
-  			timeout = null;
-  			if (!immediate) { reEvent.apply(context, args); };
-  		}
-  		let callNow = immediate && !timeout;
-  		clearTimeout(timeout);
-  		timeout = setTimeout(later, 250);
-  		if (callNow) { reEvent.apply(context, args); };
-  	}
+      function later() {
+        timeout = null;
+        if (!immediate) { reEvent.apply(context, args); };
+      }
+      let callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, 250);
+      if (callNow) { reEvent.apply(context, args); };
+    }
   }
   window.addEventListener('resize', resizeDebounceEvent());
 }

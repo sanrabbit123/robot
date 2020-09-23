@@ -20,50 +20,50 @@ BridgeCloud.clientFilters = {
   },
   filterName: function (som) {
     let str = String(som);
-		return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
+    return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
   },
   filterDate: function (som) {
     if (String(som) === "거주중") {
-			return "거주중";
-		}
-		let str = String(som).replace(/[^0-9]/g, '');
-		if (str.length > 4) {
-			if (/^20[0-9][0-9]/.test(str)) {
-				if (str.length === 6) {
-					return str.slice(0, 4) + '-0' + str.slice(4, 5) + '-0' + str.slice(5);
-				} else if (str.length === 7) {
-					if (str.slice(4, 5) === '1') {
-						return str.slice(0, 4) + '-' + str.slice(4, 6) + '-0' + str.slice(6);
-					} else {
-						return str.slice(0, 4) + '-0' + str.slice(4, 5) + '-' + str.slice(5);
-					}
-				} else if (str.length === 8) {
-					return str.slice(0, 4) + '-' + str.slice(4, 6) + '-' + str.slice(6);
-				}
-			} else {
-				return String(som);
-			}
-		}
-		return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
+      return "거주중";
+    }
+    let str = String(som).replace(/[^0-9]/g, '');
+    if (str.length > 4) {
+      if (/^20[0-9][0-9]/.test(str)) {
+        if (str.length === 6) {
+          return str.slice(0, 4) + '-0' + str.slice(4, 5) + '-0' + str.slice(5);
+        } else if (str.length === 7) {
+          if (str.slice(4, 5) === '1') {
+            return str.slice(0, 4) + '-' + str.slice(4, 6) + '-0' + str.slice(6);
+          } else {
+            return str.slice(0, 4) + '-0' + str.slice(4, 5) + '-' + str.slice(5);
+          }
+        } else if (str.length === 8) {
+          return str.slice(0, 4) + '-' + str.slice(4, 6) + '-' + str.slice(6);
+        }
+      } else {
+        return String(som);
+      }
+    }
+    return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
   },
   filterCont: function (som) {
     let str = String(som);
-		if (str === '') {
-			return "알 수 없음";
-		} else if (/전/g.test(str)) {
-			return "전월세";
-		} else {
-			return "자가";
-		}
+    if (str === '') {
+      return "알 수 없음";
+    } else if (/전/g.test(str)) {
+      return "전월세";
+    } else {
+      return "자가";
+    }
   },
   filterNull: function (som) {
     let target;
-		target = String(som);
-		if (/^null/gi.test(target)) {
-			return "-";
-		} else {
-			return target;
-		}
+    target = String(som);
+    if (/^null/gi.test(target)) {
+      return "-";
+    } else {
+      return target;
+    }
   },
 }
 
@@ -114,7 +114,7 @@ BridgeCloud.returnTimeline = function () {
 
 BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   const instance = this;
-  const { shell, slack_bot, shellLink, googleSystem } = this.mother;
+  const { shell, slack_bot, shellLink, googleSystem, sendJandi } = this.mother;
   try {
     const { tong, name } = obj;
     let tongKeys = Object.keys(tong);
@@ -138,15 +138,17 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
     }
 
     slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#400_customer" });
+    sendJandi("file", "파일 전송을 완료하였습니다! : " + name);
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+    sendJandi("error", "파일 서버 문제 생김 : " + e);
   }
 }
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, sendJandi } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, KAKAO ] = needs;
   let funcObj = {};
@@ -163,6 +165,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext)) {
 
         slack_bot.chat.postMessage({ text: "불량 데이터 확인, 직접 확인해주세요. : " + resultObj.pretext + ' ' + resultObj.cellphone, channel: "#401_consulting" });
+        sendJandi("request", ("불량 데이터 확인, 직접 확인해주세요. : " + resultObj.pretext + ' ' + resultObj.cellphone));
 
       } else {
 
@@ -309,7 +312,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           message = message + "\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
         }
         slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-
+        sendJandi("request", message);
       }
 
       //end
@@ -323,6 +326,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
     } catch (e) {
       slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -359,6 +363,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
     } catch (e) {
       slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -419,6 +424,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //kakao and slack
           KAKAO.sendTalk("photo", name, phone);
           slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#400_customer" });
+          sendJandi("file", name + "님이 파일 전송을 시도중입니다!");
 
           //end
           res.set({
@@ -431,6 +437,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         } else {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
+          sendJandi("error", "Bridge 서버 문제 생김 : " + e);
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": '*',
@@ -442,6 +449,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
     } catch (e) {
       slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -467,8 +475,8 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   //express
   const app = express();
   app.use(useragent.express());
-	app.use(bodyParser.urlencoded({ extended: false }));
-	app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
 
   //set needs
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -505,7 +513,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     //set router
     const { get, post } = this.bridgeServer([ MONGOC, kakaoInstance ]);
     for (let obj of get) { app.get(obj.link, obj.func); }
-		for (let obj of post) { app.post(obj.link, obj.func); }
+    for (let obj of post) { app.post(obj.link, obj.func); }
 
     //server on
     https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {

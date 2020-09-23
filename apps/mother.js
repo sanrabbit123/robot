@@ -1,276 +1,271 @@
 const Mother = function () {
-	const infoObj = require(process.cwd() + "/apps/infoObj.js");
+  const infoObj = require(process.cwd() + "/apps/infoObj.js");
 
-	//mongo
-	this.mongoinfoObj = infoObj.mongoinfo;
-	this.bridgeinfoObj = infoObj.bridgeinfo;
-	this.mongoinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + infoObj.mongoinfo.host + ':' + String(infoObj.mongoinfo.port) + "/admin";
-	this.bridgeinfo = "mongodb://" + infoObj.bridgeinfo.user + ':' + infoObj.bridgeinfo.password + '@' + infoObj.bridgeinfo.host + ':' + String(infoObj.bridgeinfo.port) + "/admin";
-	this.mongo = require("mongodb").MongoClient;
+  //mongo
+  this.mongoinfoObj = infoObj.mongoinfo;
+  this.bridgeinfoObj = infoObj.bridgeinfo;
+  this.mongoinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + infoObj.mongoinfo.host + ':' + String(infoObj.mongoinfo.port) + "/admin";
+  this.bridgeinfo = "mongodb://" + infoObj.bridgeinfo.user + ':' + infoObj.bridgeinfo.password + '@' + infoObj.bridgeinfo.host + ':' + String(infoObj.bridgeinfo.port) + "/admin";
+  this.mongo = require("mongodb").MongoClient;
 
-	//mysql
-	this.myinfo = {
-		host: infoObj.myinfo.host,
-		user: infoObj.myinfo.user,
-		password: infoObj.myinfo.password,
-		port: infoObj.myinfo.port,
-		database: infoObj.myinfo.database
-	};
-	this.frontinfo = {
-		host: infoObj.frontinfo.host,
-		user: infoObj.frontinfo.user,
-		password: infoObj.frontinfo.password,
-		port: infoObj.frontinfo.port,
-		database: infoObj.frontinfo.database
-	};
-	this.mysql = require("mysql2");
+  //mysql
+  this.myinfo = {
+    host: infoObj.myinfo.host,
+    user: infoObj.myinfo.user,
+    password: infoObj.myinfo.password,
+    port: infoObj.myinfo.port,
+    database: infoObj.myinfo.database
+  };
+  this.frontinfo = {
+    host: infoObj.frontinfo.host,
+    user: infoObj.frontinfo.user,
+    password: infoObj.frontinfo.password,
+    port: infoObj.frontinfo.port,
+    database: infoObj.frontinfo.database
+  };
+  this.mysql = require("mysql2");
 
-	//shell
-	this.shell = require("shelljs");
+  //shell
+  this.shell = require("shelljs");
 
-	//slack
-	const { WebClient } = require('@slack/web-api');
-	this.slack_bot = new WebClient(`xoxb-717757271335-1044856512278-hQ42lRO25cRLHQ3Pd7HjMP6v`);
+  //slack
+  const { WebClient } = require('@slack/web-api');
+  this.slack_bot = new WebClient(`xoxb-717757271335-1044856512278-hQ42lRO25cRLHQ3Pd7HjMP6v`);
 
-	//temp
-	this.tempDir = `${process.cwd()}/temp`;
+  //temp
+  this.tempDir = `${process.cwd()}/temp`;
 }
 
 Mother.prototype.shellLink = function (str) {
-	let arr = str.split('/');
-	let newStr = '';
-	for (let i of arr) {
-	  if (!/ /g.test(i)) {
-			newStr += i + '/';
-	  } else if (!/^'/.test(i) && !/'$/.test(i)) {
-			newStr += "'" + i + "'" + '/';
-	  } else {
-			newStr += i + '/';
-	  }
-	}
-	newStr = newStr.slice(0, -1);
-	return newStr;
+  let arr = str.split('/');
+  let newStr = '';
+  for (let i of arr) {
+    if (!/ /g.test(i)) {
+      newStr += i + '/';
+    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      newStr += "'" + i + "'" + '/';
+    } else {
+      newStr += i + '/';
+    }
+  }
+  newStr = newStr.slice(0, -1);
+  return newStr;
 }
 
 Mother.prototype.tempDelete = function (dir = null) {
-	const fs = require('fs');
-	const shell = require('shelljs');
-	const shellLink = function (str) {
-		let arr = str.split('/');
-		let newStr = '';
-		for (let i of arr) {
-		  if (!/ /g.test(i)) {
-				newStr += i + '/';
-		  } else if (!/^'/.test(i) && !/'$/.test(i)) {
-				newStr += "'" + i + "'" + '/';
-		  } else {
-				newStr += i + '/';
-		  }
-		}
-		newStr = newStr.slice(0, -1);
-		return newStr;
-	}
+  const fs = require('fs');
+  const shell = require('shelljs');
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i)) {
+        newStr += i + '/';
+      } else if (!/^'/.test(i) && !/'$/.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
 
-	let targetDir;
-	if (dir === null) {
-		targetDir = `${process.cwd()}/temp`;
-	} else {
-		targetDir = dir;
-	}
-	return new Promise(function (resolve, reject) {
-		fs.readdir(targetDir, function (err, filelist) {
-			if (err) {
-				reject(err);
-			} else {
-				for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
-					shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
-				}}
-				resolve("success");
-			}
-		});
-	});
+  let targetDir;
+  if (dir === null) {
+    targetDir = `${process.cwd()}/temp`;
+  } else {
+    targetDir = dir;
+  }
+  return new Promise(function (resolve, reject) {
+    fs.readdir(targetDir, function (err, filelist) {
+      if (err) {
+        reject(err);
+      } else {
+        for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
+          shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+        }}
+        resolve("success");
+      }
+    });
+  });
 }
 
 Mother.prototype.todayMaker = function () {
-	let today = new Date();
-	let dayString = '';
-	if (today.getMonth() + 1 < 10) {
-	  dayString += '0' + String(today.getMonth() + 1);
-	} else {
-	  dayString += String(today.getMonth() + 1);
-	}
-	if (today.getDate() < 10) {
-	  dayString += '0' + String(today.getDate());
-	} else {
-	  dayString += String(today.getDate());
-	}
-	if (today.getHours() < 10) {
-	  dayString += '0' + String(today.getHours());
-	} else {
-	  dayString += String(today.getHours());
-	}
-	return dayString;
+  const today = new Date();
+  let dayString = '';
+  if (today.getMonth() + 1 < 10) {
+    dayString += '0' + String(today.getMonth() + 1);
+  } else {
+    dayString += String(today.getMonth() + 1);
+  }
+  if (today.getDate() < 10) {
+    dayString += '0' + String(today.getDate());
+  } else {
+    dayString += String(today.getDate());
+  }
+  if (today.getHours() < 10) {
+    dayString += '0' + String(today.getHours());
+  } else {
+    dayString += String(today.getHours());
+  }
+  return dayString;
 }
 
 Mother.prototype.fileSystem = function (sw, arr) {
-	const fs = require('fs');
-	switch (sw) {
-		case "read":
-			return new Promise(function (resolve, reject) {
-				fs.readFile(arr[0], (err, data) => {
-					if (err) { reject(err); }
-					else { resolve(data); }
-				});
-			});
-			break;
-		case "readString":
-			return new Promise(function (resolve, reject) {
-				fs.readFile(arr[0], "utf8", (err, data) => {
-					if (err) { reject(err); }
-					else { resolve(data); }
-				});
-			});
-			break;
-		case "readBinary":
-			return new Promise(function (resolve, reject) {
-				fs.readFile(arr[0], "binary", (err, data) => {
-					if (err) { reject(err); }
-					else { resolve(data); }
-				});
-			});
-			break;
-		case "readDir":
-			return new Promise(function (resolve, reject) {
-				fs.readdir(arr[0], function (err, filelist) {
-					if (err) { reject(err); }
-					else { resolve(filelist); }
-				});
-			});
-			break;
-		case "write":
-			return new Promise(function (resolve, reject) {
-				fs.writeFile(arr[0], arr[1], "utf8", (err) => {
-					if (err) { reject(err); }
-					else { resolve("success"); }
-				});
-			});
-			break;
-		case "writeBinary":
-			return new Promise(function (resolve, reject) {
-				fs.writeFile(arr[0], arr[1], "binary", (err) => {
-					if (err) { reject(err); }
-					else { resolve("success"); }
-				});
-			});
-			break;
-	}
+  const fs = require('fs');
+  switch (sw) {
+    case "read":
+      return new Promise(function (resolve, reject) {
+        fs.readFile(arr[0], (err, data) => {
+          if (err) { reject(err); }
+          else { resolve(data); }
+        });
+      });
+      break;
+    case "readString":
+      return new Promise(function (resolve, reject) {
+        fs.readFile(arr[0], "utf8", (err, data) => {
+          if (err) { reject(err); }
+          else { resolve(data); }
+        });
+      });
+      break;
+    case "readBinary":
+      return new Promise(function (resolve, reject) {
+        fs.readFile(arr[0], "binary", (err, data) => {
+          if (err) { reject(err); }
+          else { resolve(data); }
+        });
+      });
+      break;
+    case "readDir":
+      return new Promise(function (resolve, reject) {
+        fs.readdir(arr[0], function (err, filelist) {
+          if (err) { reject(err); }
+          else { resolve(filelist); }
+        });
+      });
+      break;
+    case "write":
+      return new Promise(function (resolve, reject) {
+        fs.writeFile(arr[0], arr[1], "utf8", (err) => {
+          if (err) { reject(err); }
+          else { resolve("success"); }
+        });
+      });
+      break;
+    case "writeBinary":
+      return new Promise(function (resolve, reject) {
+        fs.writeFile(arr[0], arr[1], "binary", (err) => {
+          if (err) { reject(err); }
+          else { resolve("success"); }
+        });
+      });
+      break;
+  }
 }
 
 Mother.prototype.googleSystem = function (sw) {
-	let app;
-	switch (sw) {
-		case "sheets":
-			const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
-			app = new GoogleSheet();
-			return app;
-			break;
-		case "docs":
-			const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
-			app = new GoogleDocs();
-			return app;
-			break;
-		case "analytics":
-			const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-			app = new GoogleAnalytics();
-			return app;
-			break;
-		case "drive":
-			const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
-			app = new GoogleDrive();
-			return app;
-			break;
-		case "gmail":
-			const GoogleMail = require(process.cwd() + "/apps/googleAPIs/googleMail.js");
-			app = new GoogleMail();
-			return app;
-			break;
-	}
+  let app;
+  switch (sw) {
+    case "sheets":
+      const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+      app = new GoogleSheet();
+      return app;
+      break;
+    case "docs":
+      const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
+      app = new GoogleDocs();
+      return app;
+      break;
+    case "analytics":
+      const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+      app = new GoogleAnalytics();
+      return app;
+      break;
+    case "drive":
+      const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+      app = new GoogleDrive();
+      return app;
+      break;
+    case "gmail":
+      const GoogleMail = require(process.cwd() + "/apps/googleAPIs/googleMail.js");
+      app = new GoogleMail();
+      return app;
+      break;
+  }
 }
 
 Mother.prototype.babelSystem = function (code, webpack = false, minify = false) {
-	const babel = require("@babel/core");
-	if (webpack) { minify = false; }
-
-	let babelOptions = {
+  const babel = require("@babel/core");
+  if (webpack) { minify = false; }
+  let babelOptions = {
     presets: [
-      [
-        "@babel/preset-env",
-        { targets: { browsers : [ "last 2 versions", "ie >= 11" ] } },
-      ],
+      [ "@babel/preset-env", { targets: { browsers : [ "last 2 versions", "ie >= 11" ] } }, ],
     ],
   }
-
-	if (minify) {
-		babelOptions.presets.push([ "minify", {
-			mangle: false,
-			simplify: false,
-		}]);
-	}
-	if (webpack) {
-		babelOptions.plugins = [];
-		babelOptions.plugins.push([ "@babel/plugin-transform-runtime", { corejs: 3, } ]);
-	}
+  if (minify) {
+    babelOptions.presets.push([ "minify", {
+      mangle: false,
+      simplify: false,
+    }]);
+  }
+  if (webpack) {
+    babelOptions.plugins = [];
+    babelOptions.plugins.push([ "@babel/plugin-transform-runtime", { corejs: 3, } ]);
+  }
   return new Promise(function(resolve, reject) {
     babel.transform(code, babelOptions, function(err, result) {
       if (err) { reject(err); }
-			let code;
-			if (minify) {
-				code = result.code.replace(/\\u([\d\w]{4})/gi, (m, g) => String.fromCharCode(parseInt(g, 16)));
-			} else {
-				code = result.code;
-			}
-			code = result.code;
+      let code;
+      if (minify) {
+        code = result.code.replace(/\\u([\d\w]{4})/gi, (m, g) => String.fromCharCode(parseInt(g, 16)));
+      } else {
+        code = result.code;
+      }
+      code = result.code;
       resolve(code);
     });
   });
 }
 
 Mother.prototype.webpackSystem = function (from, to, customOpt = null) {
-	const webpack = require('webpack');
-	let resultRaw, resultPath, resultFile, options;
-	resultRaw = to.split('/');
-	resultFile = resultRaw[resultRaw.length - 1];
-	resultPath = '';
-	for (let i = 1; i < resultRaw.length - 1; i++) {
-		resultPath += '/' + resultRaw[i];
-	}
+  const webpack = require('webpack');
+  let resultRaw, resultPath, resultFile, options;
+  resultRaw = to.split('/');
+  resultFile = resultRaw[resultRaw.length - 1];
+  resultPath = '';
+  for (let i = 1; i < resultRaw.length - 1; i++) {
+    resultPath += '/' + resultRaw[i];
+  }
 
-	if (customOpt === null) {
-		options = {
-	    mode: "production",
-	    entry: process.cwd() + '/temp/' + from,
-	    output: { path: resultPath, filename: resultFile },
-			module: {
-	      rules: [
-	        {
-	          test: /\.js$/,
-	          include: [
-	            `${process.cwd()}/temp`
-	          ],
-	          exclude: /node_modules/,
-	          use: {
-	            loader: 'babel-loader',
-	            options: {
-	              presets: ['@babel/preset-env'],
-	            }
-	          }
-	        }
-	      ]
-	    },
-	  }
-	} else {
-		options = customOpt;
-	}
+  if (customOpt === null) {
+    options = {
+      mode: "production",
+      entry: process.cwd() + '/temp/' + from,
+      output: { path: resultPath, filename: resultFile },
+      module: {
+        rules: [
+          {
+            test: /\.js$/,
+            include: [
+              `${process.cwd()}/temp`
+            ],
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env'],
+              }
+            }
+          }
+        ]
+      },
+    }
+  } else {
+    options = customOpt;
+  }
 
   return new Promise(function (resolve, reject) {
     webpack(options, function(err, stats) {
@@ -290,7 +285,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   let configKeys = Object.keys(config);
   let dataBoo = false;
   let configBoo = false;
-	let options;
+  let options;
 
   if (dataKeys.length === 0 && configKeys.length === 0) {
     method = "get";
@@ -355,109 +350,105 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
 }
 
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
-	const fs = require('fs');
-	const shell = require('shelljs');
-	const shellLink = function (str) {
-		let arr = str.split('/');
-		let newStr = '';
-		for (let i of arr) {
-		  if (!/ /g.test(i)) {
-				newStr += i + '/';
-		  } else if (!/^'/.test(i) && !/'$/.test(i)) {
-				newStr += "'" + i + "'" + '/';
-		  } else {
-				newStr += i + '/';
-		  }
-		}
-		newStr = newStr.slice(0, -1);
-		return newStr;
-	}
-
-	let targetDir;
-	if (dir === null) {
-		targetDir = `${process.cwd()}/temp`;
-	} else {
-		targetDir = dir;
-	}
-
-	if (clean) {
-
-		return new Promise(function (resolve, reject) {
-			fs.readdir(targetDir, function (err, filelist) {
-				if (err) {
-					reject(err);
-				} else {
-					for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
-						shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
-					}}
-					fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
-						if (err) {
-							reject(err);
-						} else {
-							let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-							shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
-							resolve(output.stdout);
-						}
-					});
-				}
-			});
-		});
-
-	} else {
-
-		return new Promise(function (resolve, reject) {
-			fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
-				if (err) {
-					reject(err);
-				} else {
-					let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-					resolve(output.stdout);
-				}
-			});
-		});
-
-	}
+  const fs = require('fs');
+  const shell = require('shelljs');
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i)) {
+        newStr += i + '/';
+      } else if (!/^'/.test(i) && !/'$/.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
+  let targetDir;
+  if (dir === null) {
+    targetDir = `${process.cwd()}/temp`;
+  } else {
+    targetDir = dir;
+  }
+  if (clean) {
+    return new Promise(function (resolve, reject) {
+      fs.readdir(targetDir, function (err, filelist) {
+        if (err) {
+          reject(err);
+        } else {
+          for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
+            shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+          }}
+          fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
+              shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
+              resolve(output.stdout);
+            }
+          });
+        }
+      });
+    });
+  } else {
+    return new Promise(function (resolve, reject) {
+      fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
+          resolve(output.stdout);
+        }
+      });
+    });
+  }
 }
 
-Mother.prototype.pythonExecute = function (target, inputObj, args = []) {
+Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
   const fs = require(`fs`);
   const shell = require(`shelljs`);
-  const shellLink = function (str) {
-  	let arr = str.split('/');
-  	let newStr = '';
-  	for (let i of arr) {
-  	  if (!/ /g.test(i)) {
-  			newStr += i + '/';
-  	  } else if (!/^'/.test(i) && !/'$/.test(i)) {
-  			newStr += "'" + i + "'" + '/';
-  	  } else {
-  			newStr += i + '/';
-  	  }
-  	}
-  	newStr = newStr.slice(0, -1);
-  	return newStr;
+
+  let targetLink, targetArr;
+
+  //shellLink and make target path
+  targetLink = '';
+  targetArr = target.split('/');
+  for (let i of targetArr) {
+    if (!/ /g.test(i)) {
+      targetLink += i + '/';
+    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      targetLink += "'" + i + "'" + '/';
+    } else {
+      targetLink += i + '/';
+    }
   }
-  const targetArr = target.split('/');
+  targetLink = targetLink.slice(0, -1);
+
   const name = targetArr[targetArr.length - 3];
   const bridgeFile = process.cwd() + "/temp/" + name + ".json";
+
   return new Promise(function(resolve, reject) {
     fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
       if (err) { reject(err); }
       let output, result, order, jsonRaw, json;
 
-			order = `python3 ${shellLink(target)}`;
-			if (args.length > 0) {
-				order += ` ${args.join(' ')}`;
-			}
+      order = `python3 ${targetLink}`;
+      if (args.length > 0) {
+        order += ` ${args.join(' ')}`;
+      }
       output = shell.exec(order, { silent: true });
-			jsonRaw = output.stdout.replace(/\n$/, '');
+      jsonRaw = output.stdout.replace(/\n$/, '');
 
-			try {
-				json = JSON.parse(jsonRaw);
-				result = json;
-			} catch (e) {
-				result = jsonRaw;
-			}
+      try {
+        json = JSON.parse(jsonRaw);
+        result = json;
+      } catch (e) {
+        result = jsonRaw;
+      }
 
       resolve(result);
     });
@@ -465,15 +456,45 @@ Mother.prototype.pythonExecute = function (target, inputObj, args = []) {
 }
 
 Mother.prototype.returnUragenPath = function () {
-	const segment = '/';
-	let pathArr, uragenPath;
+  const segment = '/';
+  let pathArr, uragenPath;
+  pathArr = process.cwd().split(segment);
+  pathArr.pop();
+  pathArr.pop();
+  uragenPath = pathArr.join(segment);
+  return uragenPath;
+}
 
-	pathArr = process.cwd().split(segment);
-	pathArr.pop();
-	pathArr.pop();
-	uragenPath = pathArr.join(segment);
-
-	return uragenPath;
+Mother.prototype.sendJandi = function (mode, msg) {
+  if (mode === undefined && msg === undefined) {
+    mode = "request";
+    msg = "default message";
+  } else if (mode !== undefined && msg === undefined) {
+    msg = mode;
+    mode = "request";
+  }
+  const axios = require('axios');
+  let url;
+  switch (mode) {
+    case "request":
+      url = "https://wh.jandi.com/connect-api/webhook/20614472/94b9b85183e946b8faf4623db850bca0";
+      break;
+    case "file":
+      url = "https://wh.jandi.com/connect-api/webhook/20614472/9cc255e8929afaf0f9f0c2643a1e1756";
+      break;
+    case "error":
+      url = "https://wh.jandi.com/connect-api/webhook/20614472/ae10cca5a209a08e6649635d2648255b";
+      break;
+    default:
+      url = "https://wh.jandi.com/connect-api/webhook/20614472/8919ae324cce2fc3616398b5084d9fee";
+  }
+  return new Promise(function (resolve, reject) {
+    axios.post(url, { body: msg }, { headers: { "Accept": "application/vnd.tosslab.jandi-v2+json", "Content-Type": "application/json" } }).then(function (response) {
+      resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
 }
 
 module.exports = Mother;

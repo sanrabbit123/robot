@@ -9,7 +9,7 @@ const NotionAPIs = function () {
 NotionAPIs.prototype.addNewRow = async function (obj) {
   const instance = this;
   try {
-    return (await this.mother.pythonExecute(this.pythonApp, obj, [ "single" ]));
+    return (await this.mother.pythonExecute(this.pythonApp, [ "single" ], obj));
   } catch (e) {
     console.log(e);
   }
@@ -19,7 +19,7 @@ NotionAPIs.prototype.addNewRows = async function (arr) {
   const instance = this;
   try {
     if (!Array.isArray(arr)) { throw new Error("invaild type") }
-    return (await this.mother.pythonExecute(this.pythonApp, arr, [ "multiple" ]));
+    return (await this.mother.pythonExecute(this.pythonApp, [ "multiple" ], arr));
   } catch (e) {
     console.log(e);
   }
@@ -28,7 +28,7 @@ NotionAPIs.prototype.addNewRows = async function (arr) {
 NotionAPIs.prototype.getAllRows = async function () {
   const instance = this;
   try {
-    return (await this.mother.pythonExecute(this.pythonApp, {}, [ "getAll" ]));
+    return (await this.mother.pythonExecute(this.pythonApp, [ "getAll" ], {}));
   } catch (e) {
     console.log(e);
   }
@@ -37,7 +37,7 @@ NotionAPIs.prototype.getAllRows = async function () {
 NotionAPIs.prototype.getOneRow = async function (id) {
   const instance = this;
   try {
-    return (await this.mother.pythonExecute(this.pythonApp, { id: id }, [ "getById" ]));
+    return (await this.mother.pythonExecute(this.pythonApp, [ "getById" ], { id: id }));
   } catch (e) {
     console.log(e);
   }
@@ -46,7 +46,7 @@ NotionAPIs.prototype.getOneRow = async function (id) {
 NotionAPIs.prototype.updateOneRows = async function (obj) {
   const instance = this;
   try {
-    return (await this.mother.pythonExecute(this.pythonApp, obj, [ "updateOne" ]));
+    return (await this.mother.pythonExecute(this.pythonApp, [ "updateOne" ], obj));
   } catch (e) {
     console.log(e);
   }
@@ -250,8 +250,6 @@ NotionAPIs.prototype.clientFilter = async function () {
       console.log(String(i + 1) + " / " + String(tong.length));
     }
 
-
-
   } catch (e) {
     console.log(e);
   } finally {
@@ -263,18 +261,45 @@ NotionAPIs.prototype.clientFilter = async function () {
 
 NotionAPIs.prototype.launching = async function () {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+
   try {
 
+    let latestObj, newObj, tempArr;
 
+    await MONGOC.connect();
 
-    let res = await this.getAllRows();
+    latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray())[0];
 
-    await fileSystem(`write`, [ this.jsonDir + "/client.json", JSON.stringify(res, null, 2) ]);
+    newObj = {};
+    newObj["title"] = latestObj.a19_name;
+    newObj["cliid"] = latestObj.a4_customernumber;
+    newObj["phone"] = latestObj.a20_phone;
+    newObj["email"] = latestObj.a35_aboutetc;
+    newObj["address"] = latestObj.a21_address;
+    newObj["budget"] = latestObj.a23_budget.replace(/,/g, '');
+    newObj["pyeong"] = Math.round(Number(latestObj.a24_pyeong.replace(/평/g, '')));
+    newObj["contract"] = latestObj.a27_contract;
+    newObj["family"] = latestObj.a22_family;
+    if (latestObj.a25_due_date === "거주중") {
+      newObj["movein"] = latestObj.a18_timeline.slice(0, 10);
+    } else {
+      newObj["movein"] = latestObj.a25_due_date;
+    }
+    tempArr = latestObj.a28_space.split(' / ');
+    newObj["room"] = tempArr[0];
+    newObj["bathroom"] = tempArr[1];
+    newObj["valcony"] = tempArr[2];
+    newObj["etc"] = latestObj.a29_etc;
 
+    console.log(await this.addNewRow(newObj));
 
   } catch (e) {
     console.log(e);
+  } finally {
+    await MONGOC.close();
+    console.log(`done`);
   }
 }
 
