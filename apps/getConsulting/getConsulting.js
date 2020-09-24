@@ -162,8 +162,8 @@ GetConsulting.prototype.routerPath = function (front) {
           }
           console.log(obj);
 
-          await MONGOC.db("miro81").collection("BC1_conlist").insertOne(obj);
-          await MONGOCBRIDGE.db("miro81").collection("BC1_conlist").insertOne(obj);
+          // await MONGOC.db("miro81").collection("BC1_conlist").insertOne(obj);
+          // await MONGOCBRIDGE.db("miro81").collection("BC1_conlist").insertOne(obj);
           MONGOC.close();
           MONGOCBRIDGE.close();
 

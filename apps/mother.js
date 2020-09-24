@@ -179,11 +179,6 @@ Mother.prototype.googleSystem = function (sw) {
       app = new GoogleDocs();
       return app;
       break;
-    case "analytics":
-      const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-      app = new GoogleAnalytics();
-      return app;
-      break;
     case "drive":
       const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
       app = new GoogleDrive();

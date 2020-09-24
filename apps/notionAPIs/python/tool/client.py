@@ -94,18 +94,14 @@ class Client:
         dic["budget"] = element.budget
         dic["pyeong"] = element.pyeong
         dic["contract"] = element.contract
-        dic["room"] = element.contract
-        dic["bathroom"] = element.contract
-        dic["valcony"] = element.contract
-        dic["etc"] = element.contract
+        dic["room"] = element.room
+        dic["bathroom"] = element.bathroom
+        dic["valcony"] = element.valcony
+        dic["etc"] = element.etc
         # dic["designer"] = element.designer
         # dic["manager"] = element.manager
         dic["notionId"] = element.id
-
-        if element.family != None and type(element.family) == list:
-            dic["family"] = element.family
-        else:
-            dic["family"] = []
+        dic["family"] = element.family
 
         if element.movein != None and isinstance(element.movein, NotionDate):
             dic["movein"] = str(element.movein.start)

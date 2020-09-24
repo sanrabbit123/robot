@@ -63,25 +63,14 @@ Robot.prototype.porfolioFilter = function (boo, clientName, apartName, exception
 
 Robot.prototype.googleAPIs = function (button) {
   const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
+  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   let app;
   if (button === "token" || button === "1") {
     app = new GoogleAPIs();
     app.generate_tokens();
-  } else if (button === "sheets" || button === "2") {
-    app = this.mother.googleSystem("sheets");
-    app.total_make();
-  } else if (button === "docs" || button === "3") {
-    app = this.mother.googleSystem("docs");
-    app.total_make();
-  } else if (button === "drive" || button === "4") {
-    app = this.mother.googleSystem("analytics");
-    app.total_make();
-  } else if (button === "analytics" || button === "5") {
-    app = this.mother.googleSystem("drive");
-    app.total_make();
-  } else if (button === "gmail" || button === "6") {
-    app = this.mother.googleSystem("gmail");
-    app.total_make();
+  } else if (button === "analytics" || button === "2") {
+    app = new GoogleAnalytics();
+    app.getClients();
   }
 }
 
@@ -183,7 +172,7 @@ Robot.prototype.launching = async function () {
 
       //google
       } else if (re === "google" || re === "5") {
-        re2 = await this.consoleQ(`Choose commands : 1.token 2.sheets 3.docs 4.drive 5.analytics 6.gmail\n`);
+        re2 = await this.consoleQ(`Choose commands : 1.token 2.analytics\n`);
         this.googleAPIs(re2);
 
       //front
@@ -191,7 +180,7 @@ Robot.prototype.launching = async function () {
         this.frontMaker(false);
 
       //consulting
-    } else if (re === "consulting" || re === "7") {
+      } else if (re === "consulting" || re === "7") {
         await this.getConsulting(false);
 
       //exit
