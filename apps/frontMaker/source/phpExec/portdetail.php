@@ -8,7 +8,7 @@ $htmlhtml = new Blockstyle();
 $headhtml = '';
 $htmlindex = new Portdetailf();
 
-if ($_GET['qqq'] === "g00" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/portfolio.php'); }
+if ($_GET['qqq'] === "g00" || $_GET['qqq'] === "_removed_" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/portfolio.php'); }
 $row = $htmlindex->getContents($_GET['qqq']);
 $designer = $htmlindex->getDesigner($row->desid);
 $htmlindex->setContents($row);

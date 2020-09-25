@@ -8,7 +8,7 @@ $htmlhtml = new Blockstyle();
 $headhtml = '';
 $htmlindex = new Revdetailf();
 
-if ($_GET['qqq'] === "re999" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/review.php'); }
+if ($_GET['qqq'] === "re999" || $_GET['qqq'] === "_removed_" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/review.php'); }
 $row = $htmlindex->getContents($_GET['qqq']);
 $designer = $htmlindex->getDesigner($row->desid);
 $htmlindex->setContents($row);

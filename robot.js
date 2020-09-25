@@ -86,11 +86,21 @@ Robot.prototype.frontUpdate = function () {
   fobot.totalUpdate();
 }
 
-Robot.prototype.getConsulting = async function (webpack = false) {
+Robot.prototype.getConsulting = async function (sw = "1") {
   try {
+    const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
     const GetConsulting = require(`${process.cwd()}/apps/getConsulting/getConsulting.js`);
-    let app = new GetConsulting();
-    await app.launching(webpack);
+
+    let app;
+
+    if (sw === "notion" || sw === "1") {
+      app = new NotionAPIs();
+      await app.launching();
+    } else {
+      app = new GetConsulting();
+      await app.launching(false);
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -181,7 +191,8 @@ Robot.prototype.launching = async function () {
 
       //consulting
       } else if (re === "consulting" || re === "7") {
-        await this.getConsulting(false);
+        re2 = await this.consoleQ(`Choose commands : 1.notion 2.junk\n`);
+        await this.getConsulting(re2);
 
       //exit
       } else if (re === "exit" || re === "8") {
@@ -193,18 +204,10 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
-
-async function main2() {
-  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
-  let notion = new NotionAPIs();
-  await notion.launching();
-}
-
-// main2();
 
 async function main3() {
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -213,3 +216,43 @@ async function main3() {
 }
 
 // main3();
+
+async function main4() {
+  // const Mother = require(process.cwd() + "/apps/mother.js");
+  // const mother = new Mother();
+  // const { fileSystem } = mother;
+  //
+  // const tempDir = process.cwd() + "/temp";
+  //
+  // let json = await fileSystem(`readString`, [ tempDir + "/analytics.json" ]);
+  // let js = JSON.parse(json);
+  //
+  // console.log(js.length);
+  // let ad = [];
+  // for (let obj of js) {
+  //   if (obj.info.campaign !== null) { ad.push(obj); }
+  // }
+  // console.log(ad.length);
+  //
+  // let real = [];
+  // let tempBoo = false;
+  // for (let obj of ad) {
+  //   tempBoo = false;
+  //   for (let page of obj.info.pageHistory) {
+  //     if (/consulting/gi.test(page.page)) { tempBoo = true; }
+  //   }
+  //   if (tempBoo) {
+  //     real.push(obj);
+  //   }
+  //   console.log(obj.info.pageHistory);
+  // }
+  //
+  // console.log(real.length);
+  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+
+  app = new GoogleAnalytics();
+  app.getClients();
+
+}
+
+main4();

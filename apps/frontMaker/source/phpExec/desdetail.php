@@ -8,7 +8,7 @@ $htmlhtml = new Blockstyle();
 $headhtml = '';
 $htmlindex = new Desdetailf();
 
-if ($_GET['qqq'] === "de999" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/designer.php'); }
+if ($_GET['qqq'] === "de999" || $_GET['qqq'] === "_removed_" || !isset($_GET['qqq'])) { header('Location: https://home-liaison.com/designer.php'); }
 $designer = $htmlindex->getDesigner($_GET['qqq']);
 $htmlindex->setDesigner($designer);
 $row = $htmlindex->getContents();

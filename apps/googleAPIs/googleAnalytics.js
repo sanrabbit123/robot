@@ -20,20 +20,84 @@ GoogleAnalytics.prototype.getClients = async function () {
     let sheetRow;
     let tempArr, tempString;
 
-    result = await mother.pythonExecute(this.pythonApp, [], { startDate: "2020-09-01", endDate: "2020-09-23" });
+    const dimensions = [
+        { name: "ga:country" }, // 국가
+        { name: "ga:city" }, // 도시
+        { name: "ga:longitude" }, // 경도
+        { name: "ga:latitude" }, // 위도
+        { name: "ga:browser" }, // 브라우저
+        { name: "ga:browserVersion" }, // 브라우저 버전
+        { name: "ga:operatingSystem" }, // OS
+        { name: "ga:keyword" }, // 검색어
+        { name: "ga:source" }, // 전 페이지
+        { name: "ga:sourceMedium" }, // 전 페이지
+        { name: "ga:deviceCategory" }, // 모바일 / 데스크탑
+        { name: "ga:pagePath" }, // 진입 경로
+        { name: "ga:pageTitle" }, // 검색어
+        // { name: "ga:minute" }, // 날짜 - 분
+        { name: "ga:date" }, // 날짜 - 일
+        { name: "ga:hour" }, // 날짜 - 시간
+        // { name: "ga:userType" }, // 새로운 사람인지 방문했던 사람인지
+        { name: "ga:campaign" }, // 광고 캠패인
+        { name: "ga:userDefinedValue" }, // 레퍼럴
+        { name: "ga:browserSize" }, // 브라우저 해상도
+    ];
 
+    const users = [
+        { name: "ga:userAgeBracket" }, // 나이대
+        { name: "ga:userGender" }, // 성별
+        { name: "ga:interestOtherCategory" }, // 관심사 1
+        { name: "ga:interestInMarketCategory" }, // 관심사 2
+        { name: "ga:mobileDeviceInfo" }, // 핸드폰 기종
+    ];
+
+    let dimensionsKeys = [];
+    for (let obj of dimensions) {
+      dimensionsKeys.push(obj.name.replace(/^ga:/, ''));
+    }
+
+    const startDate = "2020-09-18";
+    const endDate = "2020-09-24";
+    const bridgeData = { startDate, endDate, dimensions, users };
+
+    //write objects
+    let totalTong = [];
+    for (let i = 0; i < dimensions.length - 2; i++) {
+      result = await mother.pythonExecute(this.pythonApp, [ i ], bridgeData);
+      console.log(result);
+      totalTong.push(result);
+      // await mother.fileSystem(`write`, [ this.tempDir + "/analytics" + String(i) + ".json", JSON.stringify(result, null, 2) ]);
+    }
+
+    //merge objects
+    for (let i = 1; i < totalTong.length; i++) {
+      for (let obj of totalTong[0]) {
+
+        for (let obj2 of totalTong[i]) {
+          if (obj[dimensionsKeys[i]] === obj2[dimensionsKeys[i]] && obj[dimensionsKeys[dimensionsKeys.length - 1]] === obj2[dimensionsKeys[dimensionsKeys.length - 1]]) {
+            obj[dimensionsKeys[i + 1]] = obj2[dimensionsKeys[i + 1]];
+          }
+        }
+
+      }
+    }
+    let [ mergeTong ] = totalTong;
+    await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(mergeTong, null, 2) ]);
+    console.log("merge done");
+
+    /*
     //to object
     obj = {};
     for (let i of result) {
       if (!obj.hasOwnProperty(i.clientId)) {
         obj[i.clientId] = {};
-        if (i.city === '(not set)') {
+        if (/^\(not/.test(i.city)) {
           obj[i.clientId].city = null;
         } else {
           obj[i.clientId].city = i.city;
         }
         obj[i.clientId].browser = i.browser;
-        if (i.keyword === '(not set)') {
+        if (/^\(not/.test(i.keyword)) {
           obj[i.clientId].keyword = null;
         } else {
           obj[i.clientId].keyword = i.keyword;
@@ -51,10 +115,10 @@ GoogleAnalytics.prototype.getClients = async function () {
           obj[i.clientId].deviceCategory = "태블릿";
         }
         obj[i.clientId].pageHistory = [ { page: i.pagePath, date: Number(i.dateHourMinute) } ];
-        if (i.userType === 'New Visitor') {
-          obj[i.clientId].userType = "새로운 방문자";
+        if (/^\(not/.test(i.campaign)) {
+          obj[i.clientId].campaign = null;
         } else {
-          obj[i.clientId].userType = "재방문자";
+          obj[i.clientId].campaign = i.campaign;
         }
       } else {
         obj[i.clientId].pageHistory.push({ page: i.pagePath, date: Number(i.dateHourMinute) });
@@ -74,10 +138,10 @@ GoogleAnalytics.prototype.getClients = async function () {
         i.info.pageHistory[j].date = String(i.info.pageHistory[j].date).slice(0, 4) + "-" + String(i.info.pageHistory[j].date).slice(4, 6) + "-" + String(i.info.pageHistory[j].date).slice(6, 8) + " " + String(i.info.pageHistory[j].date).slice(8, 10) + ":" + String(i.info.pageHistory[j].date).slice(10, 12)
       }
     }
-
+    */
     //write json file
-    await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(finalArr, null, 2) ]);
-
+    // await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(result, null, 2) ]);
+    /*
     //to sheet
     sheetRow = [];
 
@@ -109,8 +173,8 @@ GoogleAnalytics.prototype.getClients = async function () {
       } else {
         tempArr.push("알 수 없음");
       }
-      if (z.info.userType !== null) {
-        tempArr.push(z.info.userType);
+      if (z.info.campaign !== null) {
+        tempArr.push(z.info.campaign);
       } else {
         tempArr.push("알 수 없음");
       }
@@ -125,7 +189,7 @@ GoogleAnalytics.prototype.getClients = async function () {
     }
 
     await sheet.update_value(sheetInfo.id, sheetInfo.sheet, sheetRow, sheetInfo.startPoint);
-
+    */
   } catch (e) {
     console.log(e.message);
   } finally {

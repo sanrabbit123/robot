@@ -75,7 +75,9 @@ class GoogleAnalysis:
         http = credentials.authorize(http=httplib2.Http())
         self.app = build('analyticsreporting', 'v4', http=http)
 
-    def getAllClients(self):
+    def getAllClients(self, dimensions, users, index):
+        target = dimensions[(0 + index):(2 + index)]
+        target.append(dimensions[dimensions.__len__() - 1])
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -84,45 +86,42 @@ class GoogleAnalysis:
                         "dateRanges": [
                             { "startDate": self.startDate, "endDate": self.endDate }
                         ],
-                        "dimensions": [
-                            { "name": "ga:city" }, # 도시
-                            { "name": "ga:browser" }, # 브라우저
-                            { "name": "ga:keyword" }, # 검색어
-                            { "name": "ga:sourceMedium" }, # 전 페이지
-                            { "name": "ga:deviceCategory" }, # 모바일 / 데스크탑
-                            { "name": "ga:pagePath" }, # 진입 시점
-                            { "name": "ga:dateHourMinute" }, # 진입 시점
-                            { "name": "ga:userType" }, # 새로운 사람인지 방문했던 사람인지
-                            { "name": "ga:clientId" },
-                        ],
+                        "dimensions": target,
+                        "metrics": [
+                            { "expression": "ga:sessions" },
+                        ]
                     }
                 ]
             }).execute()
 
+        resultArr = []
         for report in result.get('reports', []):
             columnHeader = report.get('columnHeader', {})
         dimensionHeaders = columnHeader.get('dimensions', [])
         metricHeaders = columnHeader.get('metricHeader', {}).get('metricHeaderEntries', [])
         rows = report.get('data', {}).get('rows', [])
-        resultArr = []
         for row in rows:
             temp = {}
             dimensions = row.get('dimensions', [])
             dateRangeValues = row.get('metrics', [])
             for header, dimension in zip(dimensionHeaders, dimensions):
                 temp[header[3:]] = dimension
-            resultArr.append(temp)
+            for i, values in enumerate(dateRangeValues):
+                for metricHeader, value in zip(metricHeaders, values.get('values')):
+                    for j in range(int(value)):
+                        resultArr.append(temp)
 
         return resultArr
 
 
-    def launching(self, startDate, endDate):
+    def launching(self, startDate, endDate, dimensions, users, index):
         self.startDate = startDate
         self.endDate = endDate
-        return dumps(self.getAllClients())
+        return dumps(self.getAllClients(dimensions, users, index))
 
 
 analyticsApp = GoogleAnalysis()
 data = getBridge()
-result = analyticsApp.launching(data["startDate"], data["endDate"])
+result = analyticsApp.launching(data["startDate"], data["endDate"], data["dimensions"], data["users"], int(argv[1]))
+
 print(result)
