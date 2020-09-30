@@ -141,4 +141,51 @@ GoogleAPIs.prototype.get_app = async function (app) {
   return return_app;
 }
 
+GoogleAPIs.prototype.pythonExecute = function (target, args = [], inputObj) {
+  const fs = require(`fs`);
+  const shell = require(`shelljs`);
+
+  let targetLink, targetArr;
+
+  //shellLink and make target path
+  targetLink = '';
+  targetArr = target.split('/');
+  for (let i of targetArr) {
+    if (!/ /g.test(i)) {
+      targetLink += i + '/';
+    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      targetLink += "'" + i + "'" + '/';
+    } else {
+      targetLink += i + '/';
+    }
+  }
+  targetLink = targetLink.slice(0, -1);
+
+  const name = targetArr[targetArr.length - 3];
+  const bridgeFile = process.cwd() + "/temp/" + name + ".json";
+
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
+      if (err) { reject(err); }
+      let output, result, order, jsonRaw, json;
+
+      order = `python3 ${targetLink}`;
+      if (args.length > 0) {
+        order += ` ${args.join(' ')}`;
+      }
+      output = shell.exec(order, { silent: true });
+      jsonRaw = output.stdout.replace(/\n$/, '');
+
+      try {
+        json = JSON.parse(jsonRaw);
+        result = json;
+      } catch (e) {
+        result = jsonRaw;
+      }
+
+      resolve(result);
+    });
+  });
+}
+
 module.exports = GoogleAPIs;

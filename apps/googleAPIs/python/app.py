@@ -48,80 +48,27 @@ except Exception as e:
 
 # python start --------------------------------------------------------------------------------------------------------
 
-import argparse
-from json import dumps
-from apiclient.discovery import build
-import httplib2
-from oauth2client import client
-from oauth2client import file
-from oauth2client import tools
+from google.googleAnalytics import GoogleAnalytics
+from google.googleSheet import GoogleSheet
 
-class GoogleAnalysis:
+try:
 
-    viewId = '148670049'
-    app = None
-    startDate = None
-    endDate = None
+    data = getBridge()
 
-    def __init__(self):
-        thisApp = osPath.abspath(__file__)
-        parser = argparse.ArgumentParser( formatter_class=argparse.RawDescriptionHelpFormatter, parents=[tools.argparser])
-        flags = parser.parse_args([])
-        flow = client.flow_from_clientsecrets( thisApp[0:-6] + 'client_secrets.json', scope=[ 'https://www.googleapis.com/auth/analytics.readonly' ], message=tools.message_if_missing(thisApp[0:-6] + 'client_secrets.json'))
-        storage = file.Storage(thisApp[0:-6] + 'analyticsreporting.dat')
-        credentials = storage.get()
-        if credentials is None or credentials.invalid:
-            credentials = tools.run_flow(flow, storage, flags)
-        http = credentials.authorize(http=httplib2.Http())
-        self.app = build('analyticsreporting', 'v4', http=http)
+    if argv[1] == 'analytics':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.launching(data["startDate"], data["endDate"], data["standard"], data["dimensions"], data["users"], int(argv[2]))
+        print(result)
 
-    def getAllClients(self, standard, dimensions, users, index):
-        target = dimensions[(0 + index):(2 + index)]
-        target.append(standard)
-        result = self.app.reports().batchGet(
-            body={
-                "reportRequests": [
-                    {
-                        "viewId": self.viewId,
-                        "dateRanges": [
-                            { "startDate": self.startDate, "endDate": self.endDate }
-                        ],
-                        "dimensions": target,
-                        "metrics": [
-                            { "expression": "ga:sessions" },
-                        ]
-                    }
-                ]
-            }).execute()
+    elif argv[1] == 'sheets' and argv[2] == 'get':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.getValue(data["id"], data["range"])
+        print(result)
 
-        resultArr = []
-        for report in result.get('reports', []):
-            columnHeader = report.get('columnHeader', {})
-        dimensionHeaders = columnHeader.get('dimensions', [])
-        metricHeaders = columnHeader.get('metricHeader', {}).get('metricHeaderEntries', [])
-        rows = report.get('data', {}).get('rows', [])
-        for row in rows:
-            temp = {}
-            dimensions = row.get('dimensions', [])
-            dateRangeValues = row.get('metrics', [])
-            for header, dimension in zip(dimensionHeaders, dimensions):
-                temp[header[3:]] = dimension
-            for i, values in enumerate(dateRangeValues):
-                for metricHeader, value in zip(metricHeaders, values.get('values')):
-                    for j in range(int(value)):
-                        resultArr.append(temp)
+    elif argv[1] == 'sheets' and argv[2] == 'update':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.updateValue(data["id"], data["range"], data["values"])
+        print(result)
 
-        return resultArr
-
-
-    def launching(self, startDate, endDate, standard, dimensions, users, index):
-        self.startDate = startDate
-        self.endDate = endDate
-        return dumps(self.getAllClients(standard, dimensions, users, index))
-
-
-analyticsApp = GoogleAnalysis()
-data = getBridge()
-result = analyticsApp.launching(data["startDate"], data["endDate"], data["standard"], data["dimensions"], data["users"], int(argv[1]))
-
-print(result)
+except Exception as e:
+    print(e)

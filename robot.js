@@ -204,8 +204,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
 
@@ -248,11 +248,17 @@ async function main4() {
   // }
   //
   // console.log(real.length);
-  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+  // const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+  // const app = new GoogleAnalytics();
+  // app.getClients();
 
-  app = new GoogleAnalytics();
-  app.getClients();
+
+  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+  const app = new GoogleSheet();
+  // console.log(await app.get_value_inPython("10diBorehqlUtLCetbJ6tBirL0ONTZFmyh-VYEuxFhnE", "트래픽/문의건수/계약건수!A2:A10"));
+  console.log(await app.update_value_inPython("10diBorehqlUtLCetbJ6tBirL0ONTZFmyh-VYEuxFhnE", "트래픽/문의건수/계약건수", [ [ "a" ], [ "a" ], [ "a" ], [ "a" ] ], [ 6, 10 ]));
+
 
 }
 
-// main4();
+main4();

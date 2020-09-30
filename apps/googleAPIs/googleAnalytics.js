@@ -65,12 +65,18 @@ GoogleAnalytics.prototype.getClients = async function () {
 
     //write objects
     let totalTong = [];
+    
+    /*
     for (let i = 0; i < dimensions.length - 2; i++) {
-      result = await mother.pythonExecute(this.pythonApp, [ i ], bridgeData);
+      result = await mother.pythonExecute(this.pythonApp, [ "analytics", i ], bridgeData);
       console.log(result);
       totalTong.push(result);
       await mother.fileSystem(`write`, [ this.tempDir + "/analytics" + String(i) + ".json", JSON.stringify(result, null, 2) ]);
     }
+    */
+
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", 0 ], bridgeData);
+    console.log(result);
 
     /*
 
