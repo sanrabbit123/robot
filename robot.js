@@ -204,8 +204,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 //development
 
@@ -255,4 +255,4 @@ async function main4() {
 
 }
 
-main4();
+// main4();

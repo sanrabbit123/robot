@@ -11,24 +11,24 @@ const ContentMaker = function (arg = "g00") {
     porlist_query: '',
   };
 
+  this.motherLink = {
+    mainBinary: `${this.mother.returnUragenPath()}/_NewWeb/poo`,
+    webPath: `${this.mother.returnUragenPath()}/_NewWeb`,
+    portfoiloBinary: `${this.mother.returnUragenPath()}/_Portfolio`,
+    proposalBinary: `${process.env.HOME}/static`,
+  };
+
   this.options = {
     os_home_dir: process.env.HOME,
     home_dir: `${process.env.HOME}/contentsMaker/`,
     photo_dir: `${process.env.HOME}/contentsMaker/resource/photo/`,
+    static_dir: this.motherLink.proposalBinary,
     script_dir: ``,
     photo_list: [],
     new_photo_list: [],
     new_photo_sg: [],
     fileSystem: this.mother.fileSystem,
     dayString: (this.mother.todayMaker()),
-  };
-
-  this.motherLink = {
-    mainBinary: `${this.mother.returnUragenPath()}/_NewWeb/poo`,
-    webPath: `${this.mother.returnUragenPath()}/_NewWeb`,
-    portfoiloBinary: `${this.mother.returnUragenPath()}/_Portfolio`,
-    proposalBinary: `${process.env.HOME}/static`,
-    googleBinary: `${process.env.HOME}/google/static`,
   };
 
   this.links = {
@@ -529,7 +529,6 @@ ContentMaker.prototype.to_poo = async function () {
     let pooPath_mother, pooPath;
     let webPath_mother, webPath;
     let staticPath_mother, staticPath;
-    let googlePath_mother, googlePath;
 
     //set icloud main poo folder
     pooPath_mother = mother.shellLink(this.motherLink.mainBinary);
@@ -551,13 +550,6 @@ ContentMaker.prototype.to_poo = async function () {
     staticPath = {
       list_image: staticPath_mother + "/list_image",
     };
-
-    //set google static sync folder
-    googlePath_mother = mother.shellLink(this.motherLink.googleBinary);
-    googlePath = {
-      list_image: googlePath_mother + "/list_image",
-    };
-
 
     //setting ids -----------------------------------------------------------------------------------------------------------
     let arr;
@@ -598,9 +590,6 @@ ContentMaker.prototype.to_poo = async function () {
 
     //image copy to static
     mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${staticPath.list_image}`);
-
-    //image copy to google static
-    mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${googlePath.list_image}`);
 
     //review version
     if (r_id !== `none`) {

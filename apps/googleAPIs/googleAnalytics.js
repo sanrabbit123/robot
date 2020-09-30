@@ -20,6 +20,10 @@ GoogleAnalytics.prototype.getClients = async function () {
     let sheetRow;
     let tempArr, tempString;
 
+    const standard = {
+      name: "ga:userDefinedValue"
+    };
+
     const dimensions = [
         { name: "ga:country" }, // 국가
         { name: "ga:city" }, // 도시
@@ -34,12 +38,11 @@ GoogleAnalytics.prototype.getClients = async function () {
         { name: "ga:deviceCategory" }, // 모바일 / 데스크탑
         { name: "ga:pagePath" }, // 진입 경로
         { name: "ga:pageTitle" }, // 검색어
-        // { name: "ga:minute" }, // 날짜 - 분
+        { name: "ga:minute" }, // 날짜 - 분
         { name: "ga:date" }, // 날짜 - 일
         { name: "ga:hour" }, // 날짜 - 시간
-        // { name: "ga:userType" }, // 새로운 사람인지 방문했던 사람인지
+        { name: "ga:userType" }, // 새로운 사람인지 방문했던 사람인지
         { name: "ga:campaign" }, // 광고 캠패인
-        { name: "ga:userDefinedValue" }, // 레퍼럴
         { name: "ga:browserSize" }, // 브라우저 해상도
     ];
 
@@ -58,7 +61,7 @@ GoogleAnalytics.prototype.getClients = async function () {
 
     const startDate = "2020-09-18";
     const endDate = "2020-09-24";
-    const bridgeData = { startDate, endDate, dimensions, users };
+    const bridgeData = { startDate, endDate, standard, dimensions, users };
 
     //write objects
     let totalTong = [];
@@ -66,8 +69,10 @@ GoogleAnalytics.prototype.getClients = async function () {
       result = await mother.pythonExecute(this.pythonApp, [ i ], bridgeData);
       console.log(result);
       totalTong.push(result);
-      // await mother.fileSystem(`write`, [ this.tempDir + "/analytics" + String(i) + ".json", JSON.stringify(result, null, 2) ]);
+      await mother.fileSystem(`write`, [ this.tempDir + "/analytics" + String(i) + ".json", JSON.stringify(result, null, 2) ]);
     }
+
+    /*
 
     //merge objects
     for (let i = 1; i < totalTong.length; i++) {
@@ -84,6 +89,13 @@ GoogleAnalytics.prototype.getClients = async function () {
     let [ mergeTong ] = totalTong;
     await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(mergeTong, null, 2) ]);
     console.log("merge done");
+
+
+    */
+
+
+
+
 
     /*
     //to object

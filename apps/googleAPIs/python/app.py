@@ -75,9 +75,9 @@ class GoogleAnalysis:
         http = credentials.authorize(http=httplib2.Http())
         self.app = build('analyticsreporting', 'v4', http=http)
 
-    def getAllClients(self, dimensions, users, index):
+    def getAllClients(self, standard, dimensions, users, index):
         target = dimensions[(0 + index):(2 + index)]
-        target.append(dimensions[dimensions.__len__() - 1])
+        target.append(standard)
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -114,14 +114,14 @@ class GoogleAnalysis:
         return resultArr
 
 
-    def launching(self, startDate, endDate, dimensions, users, index):
+    def launching(self, startDate, endDate, standard, dimensions, users, index):
         self.startDate = startDate
         self.endDate = endDate
-        return dumps(self.getAllClients(dimensions, users, index))
+        return dumps(self.getAllClients(standard, dimensions, users, index))
 
 
 analyticsApp = GoogleAnalysis()
 data = getBridge()
-result = analyticsApp.launching(data["startDate"], data["endDate"], data["dimensions"], data["users"], int(argv[1]))
+result = analyticsApp.launching(data["startDate"], data["endDate"], data["standard"], data["dimensions"], data["users"], int(argv[1]))
 
 print(result)

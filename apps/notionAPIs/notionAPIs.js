@@ -271,7 +271,7 @@ NotionAPIs.prototype.launching = async function () {
     await MONGOC.connect();
 
     latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray())[0];
-    // latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: "c2009_aa23s" }).limit(1).toArray())[0];
+    // latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: "c2009_aa66s" }).limit(1).toArray())[0];
 
     newObj = {};
     newObj["title"] = latestObj.a19_name;
