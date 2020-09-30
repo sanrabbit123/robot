@@ -9,7 +9,7 @@ ExecMain.prototype.start = function () {
   let jpgSaveOptions;
 
   if (this.text.r_id !== "re999") {
-    fileObj0 = new File(options.photo_dir + options.photo_list[this.text.r_info.photodae[1] - 1]);
+    fileObj0 = new File(options.photo_dir + "/" + options.photo_list[this.text.r_info.photodae[1] - 1]);
     origin_photo = fileObj0.get_file();
     jpgSaveOptions = new JPEGSaveOptions();
     jpgSaveOptions.quality = 12;
@@ -24,14 +24,14 @@ ExecMain.prototype.start = function () {
 
   for (let i = 0; i < options.photo_list.length; i++) {
 
-    fileObj0 = new File(options.photo_dir + options.photo_list[i]);
+    fileObj0 = new File(options.photo_dir + "/" + options.photo_list[i]);
     origin_photo = fileObj0.get_file();
     jpgSaveOptions = new JPEGSaveOptions();
     jpgSaveOptions.quality = 12;
     origin_photo.saveAs(new File(this.folder_list.portp.string + '/' + options.new_photo_list[i]), jpgSaveOptions);
     origin_photo.close();
 
-    fileObj0 = new File(options.photo_dir + options.photo_list[i]);
+    fileObj0 = new File(options.photo_dir + "/" + options.photo_list[i]);
     origin_photo = fileObj0.get_file();
     origin_photo.saveAs(new File(this.folder_list.mobile.string + '/mo' + options.new_photo_list[i]), jpgSaveOptions);
     origin_photo.close();

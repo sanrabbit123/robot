@@ -59,7 +59,7 @@ module.exports = {
       h += require(`${process.cwd()}/apps/contentsMaker/factory/script/general.js`).exec(options, 'N');
       h += require(`${process.cwd()}/apps/contentsMaker/factory/script/contents_maker/mileo.js`).exec(options);
       h += await options.fileSystem(`readString`, [ `${options.script_dir}/${sw}.js` ]);
-      h += "\nconst main = new ExecMain(text, \"" + options.home_dir + "result/" + sw + "\", " + JSON.stringify(options.etc) + ");";
+      h += "\nconst main = new ExecMain(text, \"" + options.home_dir + "/result/" + sw + "\", " + JSON.stringify(options.etc) + ");";
       h += "\nmain.start(\"" + options.dayString + "\");\n";
       return h;
     },

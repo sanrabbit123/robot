@@ -21,32 +21,29 @@ Robot.prototype.dataConsole = function () {
 }
 
 Robot.prototype.contentsMaker = function (button, arg) {
-  const ContentMaker = require(process.cwd() + "/apps/contentsMaker/contentsMaker.js");
+  const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   let app;
   if (button === "make" || button === "1") {
-    app = new ContentMaker(arg);
+    app = new AiContents(arg);
     app.total_make();
   } else if (button === "mysql" || button === "2") {
-    app = new ContentMaker();
-    app.to_mysql(arg);
+    app = new AiContents();
+    app.to_mysql();
   } else if (button === "poo" || button === "3") {
-    app = new ContentMaker();
+    app = new AiContents();
     app.to_poo();
   } else if (button === "resource" || button === "4") {
     app = new ResourceMaker(arg);
     app.launching();
-  } else if (button === "front" || button === "5") {
-    app = new ContentMaker();
-    app.front_maker(arg);
   }
 }
 
 Robot.prototype.proposalMaker = function (button, arg) {
-  const ContentMaker = require(process.cwd() + "/apps/contentsMaker/contentsMaker.js");
+  const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
   let app;
   if (button === "make" || button === "1") {
-    app = new ContentMaker(arg);
+    app = new AiProposal(arg);
     app.proposal_launching();
   }
 }
@@ -72,6 +69,12 @@ Robot.prototype.googleAPIs = function (button) {
     app = new GoogleAnalytics();
     app.getClients();
   }
+}
+
+Robot.prototype.frontSource = function (argv) {
+  const AiFront = require(process.cwd() + "/apps/contentsMaker/aiFront.js");
+  let fobot = new AiFront();
+  fobot.front_maker(argv);
 }
 
 Robot.prototype.frontMaker = function (webpack) {
@@ -124,9 +127,9 @@ Robot.prototype.launching = async function () {
     } else if (process.argv[2] === "frontsource") {
 
       if (process.argv[3] !== undefined) {
-        this.contentsMaker("front", process.argv[3].replace(/-/g, ''));
+        this.frontSource(process.argv[3].replace(/-/g, ''));
       } else {
-        this.contentsMaker("front", "general");
+        this.frontSource("general");
       }
 
     } else if (process.argv[2] === "frontupdate") {
@@ -152,13 +155,11 @@ Robot.prototype.launching = async function () {
         if (re2 === "make" || re2 === "1") {
           re3 = await this.consoleQ(`Porfolio number?\n`);
         } else if (re2 === "mysql" || re2 === "2") {
-          re3 = await this.consoleQ(`Custom exist? (no : "none")\n`);
+          re3 = ``;
         } else if (re2 === "poo" || re2 === "3") {
           re3 = ``;
         } else if (re2 === "resource" || re2 === "4") {
           re3 = await this.consoleQ(`Porfolio number?\n`);
-        } else if (re2 === "front" || re2 === "5") {
-          re3 = ``;
         }
         this.contentsMaker(re2, re3);
 
