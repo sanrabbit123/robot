@@ -60,7 +60,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     //make svgTong files and make map with source written
     await mapMaker.writeMap_makeTong();
 
-    //remove binary
+    //copy binary
     let resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
     let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
     let resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
@@ -70,17 +70,9 @@ AiFront.prototype.renderSvgPng = async function (sw) {
       }
     }
     for (let i of resDir) {
-      if (/\.svg$/.test(i)) {
-        shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}/${i};`);
-      } else if (/\.png$/.test(i)) {
-        shell.exec(`mv ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
+      if (/\.png$/.test(i)) {
+        shell.exec(`cp ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
       }
-    }
-
-    //remove confirm
-    resDir = await fileSystem(`readDir`, [ `${home_dir}/result` ]);
-    for (let i of resDir) {
-      shell.exec(`rm -rf ${shellLink(home_dir)}/result/${i}`);
     }
 
   } catch (e) {

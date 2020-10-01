@@ -55,9 +55,14 @@ try:
 
     data = getBridge()
 
-    if argv[1] == 'analytics':
+    if argv[1] == 'analytics' and argv[2] == 'getAllClients':
         analyticsApp = GoogleAnalytics()
-        result = analyticsApp.launching(data["startDate"], data["endDate"], data["standard"], data["dimensions"], data["users"], int(argv[2]))
+        result = analyticsApp.getAllClients(data["startDate"], data["endDate"], data["standard"], data["dimensions"], data["users"], int(argv[3]))
+        print(result)
+
+    elif argv[1] == 'analytics' and argv[2] == 'getUsers':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getUserNumber(data["consulting"])
         print(result)
 
     elif argv[1] == 'sheets' and argv[2] == 'get':

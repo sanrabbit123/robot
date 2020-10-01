@@ -268,7 +268,7 @@ ExecMain.prototype.fileName = function () {
   if (day < 10) { day_str = '0' + String(day); }
   else { day_str = String(day); }
   let new_name = this.text.proid + '_' + this.text.client + '_' + String(today.getFullYear()).slice(2) + month_str + day_str;
-  return this.dir + "result/" + new_name + ".pdf";
+  return this.dir + "/result/" + new_name + ".pdf";
 }
 
 ExecMain.prototype.fileSave = function () {
@@ -281,7 +281,7 @@ ExecMain.prototype.fileSave = function () {
 
 ExecMain.prototype.start = function () {
   this.proposal = new Proposal(this.text);
-  app.open(new File(this.dir + "factory/template/proposal/template.ai"));
+  app.open(new File(this.dir + "/factory/template/proposal/template.ai"));
   this.proposal.firstProcess();
   for (let i = 0; i < this.text.proposal.length + 1; i++) {
     this.proposal.artboard_maker(i);

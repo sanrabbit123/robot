@@ -19,17 +19,17 @@ File.prototype.get_file = function () {
 const ExecMain = function (text, dir, etc = {}) {
   this.list = [ "desktop", "mobile" ];
   if (dir.slice(-1) !== '/') {
-    this.dir = dir + '/';
-  } else {
     this.dir = dir;
+  } else {
+    this.dir = dir.slice(0, -1);
   }
   this.text = text;
   this.filename = {};
   this.createSetting = {};
   this.createDocSetting = {
-  	title: "example.ai",
-  	height: 200,
-  	width: 300,
+    title: "example.ai",
+    height: 200,
+    width: 300,
   }
   this.etc = etc;
     `;
@@ -42,13 +42,13 @@ const ExecMain = function (text, dir, etc = {}) {
     svg: {},
     mobile: {},
   }
-  this.folder_list.main.string = this.dir + "result/" + this.text.p_id + "code";
+  this.folder_list.main.string = this.dir + "/result/" + this.text.p_id + "code";
   this.folder_list.main.obj = new Folder(this.folder_list.main.string);
-  this.folder_list.portp.string = this.dir + "result/" + this.text.p_id + "code/portp" + this.text.p_id;
+  this.folder_list.portp.string = this.dir + "/result/" + this.text.p_id + "code/portp" + this.text.p_id;
   this.folder_list.portp.obj = new Folder(this.folder_list.portp.string);
-  this.folder_list.svg.string = this.dir + "result/" + this.text.p_id + "code/portp" + this.text.p_id + "/svg";
+  this.folder_list.svg.string = this.dir + "/result/" + this.text.p_id + "code/portp" + this.text.p_id + "/svg";
   this.folder_list.svg.obj = new Folder(this.folder_list.svg.string);
-  this.folder_list.mobile.string = this.dir + "result/" + this.text.p_id + "code/portp" + this.text.p_id + "/mobile";
+  this.folder_list.mobile.string = this.dir + "/result/" + this.text.p_id + "code/portp" + this.text.p_id + "/mobile";
   this.folder_list.mobile.obj = new Folder(this.folder_list.mobile.string);
       `;
 
@@ -58,9 +58,9 @@ const ExecMain = function (text, dir, etc = {}) {
     main: {},
     rev: {},
   }
-  this.folder_list.main.string = this.dir + "result/" + this.text.r_id + "code";
+  this.folder_list.main.string = this.dir + "/result/" + this.text.r_id + "code";
   this.folder_list.main.obj = new Folder(this.folder_list.main.string);
-  this.folder_list.rev.string = this.dir + "result/" + this.text.r_id + "code/" + this.text.r_id;
+  this.folder_list.rev.string = this.dir + "/result/" + this.text.r_id + "code/" + this.text.r_id;
   this.folder_list.rev.obj = new Folder(this.folder_list.rev.string);
       `;
     }
@@ -155,52 +155,52 @@ Mother.prototype.return_width = function (dom) {
   let copyItem, outline_group, width;
   if (dom.createOutline !== undefined) {
     copyItem = dom.duplicate();
-  	outline_group = copyItem.createOutline();
-  	width = outline_group.width;
-  	outline_group.remove();
+    outline_group = copyItem.createOutline();
+    width = outline_group.width;
+    outline_group.remove();
   } else {
     width = dom.width;
   }
-	return width;
+  return width;
 }
 
 Mother.prototype.return_height = function (dom) {
   let copyItem, outline_group, height;
   if (dom.createOutline !== undefined) {
     copyItem = dom.duplicate();
-  	outline_group = copyItem.createOutline();
-  	height = outline_group.height;
-  	outline_group.remove();
+    outline_group = copyItem.createOutline();
+    height = outline_group.height;
+    outline_group.remove();
   } else {
     height = dom.height;
   }
-	return height;
+  return height;
 }
 
 Mother.prototype.return_top = function (dom) {
   let copyItem, outline_group, top;
   if (dom.createOutline !== undefined) {
     copyItem = dom.duplicate();
-  	outline_group = copyItem.createOutline();
-  	top = outline_group.top;
-  	outline_group.remove();
+    outline_group = copyItem.createOutline();
+    top = outline_group.top;
+    outline_group.remove();
   } else {
     top = dom.top;
   }
-	return top;
+  return top;
 }
 
 Mother.prototype.return_left = function (dom) {
   let copyItem, outline_group, left;
   if (dom.createOutline !== undefined) {
     copyItem = dom.duplicate();
-  	outline_group = copyItem.createOutline();
-  	left = outline_group.left;
-  	outline_group.remove();
+    outline_group = copyItem.createOutline();
+    left = outline_group.left;
+    outline_group.remove();
   } else {
     left = dom.left;
   }
-	return left;
+  return left;
 }
 
 Mother.prototype.return_bottom = function (dom) {
@@ -319,53 +319,53 @@ Mother.prototype.return_arrow = function (options = {}) {
   let x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5;
   let anchors, leftHandle, rightHandle;
 
-	x0 = 445.830130989714;
-	y0 = -433.930483092399;
-	x1 = 605.880341209988;
-	y1 = -156.715269559292;
-	x2 = 585.112454453134;
-	y2 = -120.745084860751;
-	x3 = 265.012056741798;
-	y3 = -120.745084860751;
-	x4 = 244.24467286879;
-	y4 = -156.715744031619;
-	x5 = 404.294868883306;
-	y5 = -433.930960405878;
+  x0 = 445.830130989714;
+  y0 = -433.930483092399;
+  x1 = 605.880341209988;
+  y1 = -156.715269559292;
+  x2 = 585.112454453134;
+  y2 = -120.745084860751;
+  x3 = 265.012056741798;
+  y3 = -120.745084860751;
+  x4 = 244.24467286879;
+  y4 = -156.715744031619;
+  x5 = 404.294868883306;
+  y5 = -433.930960405878;
 
-	anchors = [
-	  [ x0, y0 ],
-	  [ x1, y1 ],
-	  [ x2, y2 ],
-	  [ x3, y3 ],
-	  [ x4, y4 ],
-	  [ x5, y5 ],
-	];
-	leftHandle = [
-	  [ 436.59995657231, -449.917848061534 ],
-	  [ x1, y1 ],
-	  [ 603.572780558727, y2 ],
-	  [ x3, y3 ],
-	  [ 235.014510171135, -140.728836487902 ],
-	  [ x5, y5 ],
-	];
-	rightHandle = [
-	  [ x0, y0 ],
-	  [ 615.110492898177, -140.728836487902 ],
-	  [ x2, y2 ],
-	  [ 246.552215052565, y3 ],
-	  [ x4, y4 ],
-	  [ 413.5250319361, -449.917848061534 ],
-	];
+  anchors = [
+    [ x0, y0 ],
+    [ x1, y1 ],
+    [ x2, y2 ],
+    [ x3, y3 ],
+    [ x4, y4 ],
+    [ x5, y5 ],
+  ];
+  leftHandle = [
+    [ 436.59995657231, -449.917848061534 ],
+    [ x1, y1 ],
+    [ 603.572780558727, y2 ],
+    [ x3, y3 ],
+    [ 235.014510171135, -140.728836487902 ],
+    [ x5, y5 ],
+  ];
+  rightHandle = [
+    [ x0, y0 ],
+    [ 615.110492898177, -140.728836487902 ],
+    [ x2, y2 ],
+    [ 246.552215052565, y3 ],
+    [ x4, y4 ],
+    [ 413.5250319361, -449.917848061534 ],
+  ];
 
   pathArrow = app.activeDocument.pathItems.add();
   pathArrow.setEntirePath(anchors);
   pathArrow.closed = true;
 
   points = pathArrow.pathPoints;
-	for (let i = 0; i < points.length; i++) {
-	  points[i].leftDirection = leftHandle[i];
-	  points[i].rightDirection = rightHandle[i];
-	}
+  for (let i = 0; i < points.length; i++) {
+    points[i].leftDirection = leftHandle[i];
+    points[i].rightDirection = rightHandle[i];
+  }
 
   if (options.height === undefined) {
     options.height = pathArrow.height;
@@ -552,37 +552,37 @@ Mother.prototype.fit_box = function (force = false, fixOption = {}) {
     fixOption = force;
     force = false;
   }
-	const instance = this;
-	let allItems = app.activeDocument.pageItems;
-	let maxValue = {
-		top: 0,
-		left: 1000000,
-		right: -1000000,
-		height: 0,
-	}
-	let tops = [];
+  const instance = this;
+  let allItems = app.activeDocument.pageItems;
+  let maxValue = {
+    top: 0,
+    left: 1000000,
+    right: -1000000,
+    height: 0,
+  }
+  let tops = [];
   let bottoms = [];
-	let tempNum;
+  let tempNum;
   if (force) {
     app.doScript("expandall", "contents_maker");
   }
-	for (let i = 0; i < allItems.length; i++) {
-		tops.push(allItems[i]);
+  for (let i = 0; i < allItems.length; i++) {
+    tops.push(allItems[i]);
     bottoms.push(allItems[i]);
-		tempNum = this.return_left(allItems[i]);
-		if (tempNum < maxValue.left) { maxValue.left = tempNum; }
-		tempNum = this.return_right(allItems[i]);
-		if (tempNum > maxValue.right) { maxValue.right = tempNum; }
-	}
-	tops.sort(function (a, b) {
-		return instance.return_top(b) - instance.return_top(a);
-	});
+    tempNum = this.return_left(allItems[i]);
+    if (tempNum < maxValue.left) { maxValue.left = tempNum; }
+    tempNum = this.return_right(allItems[i]);
+    if (tempNum > maxValue.right) { maxValue.right = tempNum; }
+  }
+  tops.sort(function (a, b) {
+    return instance.return_top(b) - instance.return_top(a);
+  });
   bottoms.sort(function (a, b) {
     return instance.return_bottom(b) - instance.return_bottom(a);
   });
   maxValue.top = this.return_top(tops[0]);
-	maxValue.height = this.return_bottom(bottoms[bottoms.length - 1]) - this.return_top(tops[0]);
-	let target = app.activeDocument.artboards[0];
+  maxValue.height = this.return_bottom(bottoms[bottoms.length - 1]) - this.return_top(tops[0]);
+  let target = app.activeDocument.artboards[0];
   let resultRectArr = [ maxValue.left, maxValue.top, maxValue.right, maxValue.top + maxValue.height ];
   if (fixOption.width !== undefined) {
     if (fixOption.width.direction === "left") {
@@ -594,8 +594,8 @@ Mother.prototype.fit_box = function (force = false, fixOption = {}) {
   if (fixOption.height !== undefined) {
     resultRectArr[3] = maxValue.top - fixOption.height.value;
   }
-	app.activeDocument.artboards.add(resultRectArr);
-	target.remove();
+  app.activeDocument.artboards.add(resultRectArr);
+  target.remove();
   if (force) {
     app.doScript("expandall", "contents_maker");
   }
@@ -682,38 +682,38 @@ ExecMain.prototype.newdoc_setting = function (obj) {
 }
 
 ExecMain.prototype.createDoc = function () {
-	let this_ai = app.documents.addDocument("", this.newdoc_setting(this.createDocSetting));
+  let this_ai = app.documents.addDocument("", this.newdoc_setting(this.createDocSetting));
   return this_ai;
 }
 
 ExecMain.prototype.returnMileoPosition = function (arr) {
-	let temp, temp2, startNum, endNum, small, big;
+  let temp, temp2, startNum, endNum, small, big;
 
-	let [ o, a, b ] = arr;
+  let [ o, a, b ] = arr;
   let oArr = o.split(' ');
   let aArr = a.split(' ');
 
   let startBold = [];
   let endBold = [];
   let aBold = [];
-	let bBold = [];
+  let bBold = [];
 
-	let startColor = [];
+  let startColor = [];
   let endColor = [];
   let aColor = [];
-	let bColor = [];
+  let bColor = [];
 
   let map = [];
   let aMap = {};
   let stack = 0;
 
-	let aCopy, bCopy;
+  let aCopy, bCopy;
   let commaArr = [];
   let minusStack = 0;
 
-	//make map
-	if (a.replace(/ /g, '') !== b.replace(/ /g, '')) {
-		aCopy = a;
+  //make map
+  if (a.replace(/ /g, '') !== b.replace(/ /g, '')) {
+    aCopy = a;
     bCopy = b;
 
     for (let i = 0; i < bCopy.length; i++) {
@@ -724,7 +724,7 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
         aCopy = aCopy.slice(0, i) + ' ' + aCopy.slice(i);
         map.push(i);
       }
-  	}
+    }
 
     for (let i = 0; i < bCopy.length - map.length + commaArr.length + 1; i++) {
       if (map.indexOf(i) !== -1) { stack++; }
@@ -735,29 +735,29 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
     }
 
   } else {
-		for (let i = 0; i < b.length; i++) {
-			if (a[i] !== b[i]) {
-				a = a.slice(0, i) + ' ' + a.slice(i);
-				map.push(i);
-			}
-		}
-		for (let i = 0; i < b.length - map.length + 1; i++) {
-			if (map.indexOf(i) !== -1) {
-				stack++;
-			}
-			aMap[String(i)] = i + stack;
-		}
+    for (let i = 0; i < b.length; i++) {
+      if (a[i] !== b[i]) {
+        a = a.slice(0, i) + ' ' + a.slice(i);
+        map.push(i);
+      }
+    }
+    for (let i = 0; i < b.length - map.length + 1; i++) {
+      if (map.indexOf(i) !== -1) {
+        stack++;
+      }
+      aMap[String(i)] = i + stack;
+    }
   }
 
-	//original to index
+  //original to index
   for (let i = 0; i < oArr.length; i++) {
     if (/<b%/g.test(oArr[i])) { startBold.push(i); }
     if (/%b>/g.test(oArr[i])) { endBold.push(i); }
-		if (/<g%/g.test(oArr[i])) { startColor.push(i); }
-		if (/%g>/g.test(oArr[i])) { endColor.push(i); }
+    if (/<g%/g.test(oArr[i])) { startColor.push(i); }
+    if (/%g>/g.test(oArr[i])) { endColor.push(i); }
   }
 
-	//bold
+  //bold
   for (let j = 0; j < startBold.length; j++) {
     startNum = 0;
     endNum = 0;
@@ -767,11 +767,11 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
     for (let i = 0; i < endBold[j]; i++) {
       endNum += aArr[i].length + 1
     }
-		if (/<b%/g.test(oArr[endBold[j]])) {
-			endNum += oArr[endBold[j]].indexOf('%b>') - 3;
-		} else {
-			endNum += oArr[endBold[j]].indexOf('%b>');
-		}
+    if (/<b%/g.test(oArr[endBold[j]])) {
+      endNum += oArr[endBold[j]].indexOf('%b>') - 3;
+    } else {
+      endNum += oArr[endBold[j]].indexOf('%b>');
+    }
     temp = [];
     for (let i = startNum; i < endNum; i++) {
       temp.push(i);
@@ -794,7 +794,7 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
     bBold.push(temp2);
   }
 
-	//color
+  //color
   for (let j = 0; j < startColor.length; j++) {
     startNum = 0;
     endNum = 0;
@@ -804,11 +804,11 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
     for (let i = 0; i < endColor[j]; i++) {
       endNum += aArr[i].length + 1
     }
-		if (/<g%/g.test(oArr[endColor[j]])) {
-			endNum += oArr[endColor[j]].indexOf('%g>') - 3;
-		} else {
-			endNum += oArr[endColor[j]].indexOf('%g>');
-		}
+    if (/<g%/g.test(oArr[endColor[j]])) {
+      endNum += oArr[endColor[j]].indexOf('%g>') - 3;
+    } else {
+      endNum += oArr[endColor[j]].indexOf('%g>');
+    }
     temp = [];
     for (let i = startNum; i < endNum; i++) {
       temp.push(i);
@@ -834,66 +834,66 @@ ExecMain.prototype.returnMileoPosition = function (arr) {
 }
 
 ExecMain.prototype.setCreateSetting = function (obj) {
-	let basicObj = {
-		general: {
-			width: this.createDocSetting.width,
-			height: this.createDocSetting.height,
-			color: "#505050",
-			pointColor: "#2fa678",
-			fontSize: 22,
-			font: "SDGothicNeoa-gBd",
-			bold: "SDGothicNeoa-gBd",
-			leading: 38,
-			horizontalScale: 98,
-			tracking: -25,
-			justification: "CENTER",
-		},
-		main: {
-			width: this.createDocSetting.width,
-			height: this.createDocSetting.height,
-			color: "#505050",
-			pointColor: "#2fa678",
-			fontSize: 37,
-			font: "SDGothicNeoa-gBd",
-			leading: 58.7,
-			horizontalScale: 98,
-			tracking: -25,
-			justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
-		},
-		sub: {
-			width: this.createDocSetting.width,
-			height: this.createDocSetting.height,
-			color: "#505050",
-			pointColor: "#2fa678",
-			fontSize: 22,
-			font: "SDGothicNeoa-dRg",
-			bold: "SDGothicNeoa-fSm",
-			leading: 38,
-			horizontalScale: 98,
-			tracking: -25,
-			justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
-		},
-	}
-	this.createSetting[obj.to] = basicObj[obj.from];
-	if (obj.exception !== undefined) {
-		for (let i in obj.exception) {
-			this.createSetting[obj.to][i] = obj.exception[i];
-		}
-	}
+  let basicObj = {
+    general: {
+      width: this.createDocSetting.width,
+      height: this.createDocSetting.height,
+      color: "#505050",
+      pointColor: "#2fa678",
+      fontSize: 22,
+      font: "SDGothicNeoa-gBd",
+      bold: "SDGothicNeoa-gBd",
+      leading: 38,
+      horizontalScale: 98,
+      tracking: -25,
+      justification: "CENTER",
+    },
+    main: {
+      width: this.createDocSetting.width,
+      height: this.createDocSetting.height,
+      color: "#505050",
+      pointColor: "#2fa678",
+      fontSize: 37,
+      font: "SDGothicNeoa-gBd",
+      leading: 58.7,
+      horizontalScale: 98,
+      tracking: -25,
+      justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
+    },
+    sub: {
+      width: this.createDocSetting.width,
+      height: this.createDocSetting.height,
+      color: "#505050",
+      pointColor: "#2fa678",
+      fontSize: 22,
+      font: "SDGothicNeoa-dRg",
+      bold: "SDGothicNeoa-fSm",
+      leading: 38,
+      horizontalScale: 98,
+      tracking: -25,
+      justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
+    },
+  }
+  this.createSetting[obj.to] = basicObj[obj.from];
+  if (obj.exception !== undefined) {
+    for (let i in obj.exception) {
+      this.createSetting[obj.to][i] = obj.exception[i];
+    }
+  }
 }
 
 ExecMain.prototype.setParagraph = function (obj) {
-	this.createSetting[obj.to].text = '';
-	if (typeof obj.from !== "string") {
-		for (let j = 0; j < obj.from[obj.order].length; j++) {
-			this.createSetting[obj.to].text += obj.from[obj.order][j];
-			if (j !== obj.from[obj.order].length - 1) {
-				this.createSetting[obj.to].text += "\\n";
-			}
-		}
-	} else {
-		this.createSetting[obj.to].text = obj.from;
-	}
+  this.createSetting[obj.to].text = '';
+  if (typeof obj.from !== "string") {
+    for (let j = 0; j < obj.from[obj.order].length; j++) {
+      this.createSetting[obj.to].text += obj.from[obj.order][j];
+      if (j !== obj.from[obj.order].length - 1) {
+        this.createSetting[obj.to].text += "\\n";
+      }
+    }
+  } else {
+    this.createSetting[obj.to].text = obj.from;
+  }
 }
 
 ExecMain.prototype.createElements = function (doc, obj) {
@@ -913,103 +913,103 @@ ExecMain.prototype.createElements = function (doc, obj) {
   areaTextRef.textRange.characterAttributes.tracking = obj.tracking;
   areaTextRef.selected = true;
 
-	//bold
-	let total_arrBold, total_arrColor, numbers;
-	total_arrBold = [];
-	while (areaTextRef.contents.indexOf("<b%") !== -1) {
-		numbers = {}
-		numbers.start = areaTextRef.contents.indexOf("<b%");
-		numbers.end = areaTextRef.contents.indexOf("%b>");
-		numbers.length = numbers.end - numbers.start - 3;
-		total_arrBold.push(numbers);
-		areaTextRef.contents = areaTextRef.contents.replace(/<b%/, '').replace(/%b>/, '');
-	}
+  //bold
+  let total_arrBold, total_arrColor, numbers;
+  total_arrBold = [];
+  while (areaTextRef.contents.indexOf("<b%") !== -1) {
+    numbers = {}
+    numbers.start = areaTextRef.contents.indexOf("<b%");
+    numbers.end = areaTextRef.contents.indexOf("%b>");
+    numbers.length = numbers.end - numbers.start - 3;
+    total_arrBold.push(numbers);
+    areaTextRef.contents = areaTextRef.contents.replace(/<b%/, '').replace(/%b>/, '');
+  }
 
-	// color
-	total_arrColor = [];
-	while (areaTextRef.contents.indexOf("<g%") !== -1) {
-		numbers = {}
-		numbers.start = areaTextRef.contents.indexOf("<g%");
-		numbers.end = areaTextRef.contents.indexOf("%g>");
-		numbers.length = numbers.end - numbers.start - 3;
-		total_arrColor.push(numbers);
-		areaTextRef.contents = areaTextRef.contents.replace(/<g%/, '').replace(/%g>/, '');
+  // color
+  total_arrColor = [];
+  while (areaTextRef.contents.indexOf("<g%") !== -1) {
+    numbers = {}
+    numbers.start = areaTextRef.contents.indexOf("<g%");
+    numbers.end = areaTextRef.contents.indexOf("%g>");
+    numbers.length = numbers.end - numbers.start - 3;
+    total_arrColor.push(numbers);
+    areaTextRef.contents = areaTextRef.contents.replace(/<g%/, '').replace(/%g>/, '');
     for (let z = 0; z < total_arrBold.length; z++) {
       if (numbers.start < total_arrBold[z].start) {
         total_arrBold[z].start = total_arrBold[z].start - 6;
         total_arrBold[z].end = total_arrBold[z].end - 6;
       }
     }
-	}
+  }
 
   // bold / color execute
   for (let z = 0; z < total_arrBold.length; z++) {
-		for (let w = 0; w < total_arrBold[z].length; w++) {
-			areaTextRef.textRanges[total_arrBold[z].start + w].characterAttributes.textFont = textFonts.getByName(obj.bold);
-		}
-	}
-	for (let z = 0; z < total_arrColor.length; z++) {
-		for (let w = 0; w < total_arrColor[z].length; w++) {
-			areaTextRef.textRanges[total_arrColor[z].start + w].characterAttributes.fillColor = this.mother.colorpick(obj.pointColor);
-		}
-	}
+    for (let w = 0; w < total_arrBold[z].length; w++) {
+      areaTextRef.textRanges[total_arrBold[z].start + w].characterAttributes.textFont = textFonts.getByName(obj.bold);
+    }
+  }
+  for (let z = 0; z < total_arrColor.length; z++) {
+    for (let w = 0; w < total_arrColor[z].length; w++) {
+      areaTextRef.textRanges[total_arrColor[z].start + w].characterAttributes.fillColor = this.mother.colorpick(obj.pointColor);
+    }
+  }
 
-	//mobile
-	let mileo, mileoResult, mileoBbold, mileoBcolor, mileoText;
-	mileoText = '';
-	if (/FULLJUSTIFY/g.test(obj.justification)) {
-		for (let w = 0; w < areaTextRef.textRanges.length; w++) {
-			areaTextRef.textRanges[w].characterAttributes.fillColor = this.mother.colorpick(obj.color);
-		}
-		mileoText = obj.text.replace(/<[bg]%/g, '').replace(/%[bg]>/g, '');
-		mileo = new Mileo(mileoText, areaTextRef, "mobile");
-		mileoResult = mileo.execute();
-		[ mileoBbold, mileoBcolor ] = this.returnMileoPosition([ obj.text, mileoText, mileoResult ]);
+  //mobile
+  let mileo, mileoResult, mileoBbold, mileoBcolor, mileoText;
+  mileoText = '';
+  if (/FULLJUSTIFY/g.test(obj.justification)) {
+    for (let w = 0; w < areaTextRef.textRanges.length; w++) {
+      areaTextRef.textRanges[w].characterAttributes.fillColor = this.mother.colorpick(obj.color);
+    }
+    mileoText = obj.text.replace(/<[bg]%/g, '').replace(/%[bg]>/g, '');
+    mileo = new Mileo(mileoText, areaTextRef, "mobile");
+    mileoResult = mileo.execute();
+    [ mileoBbold, mileoBcolor ] = this.returnMileoPosition([ obj.text, mileoText, mileoResult ]);
 
-		for (let i = 0; i < mileoBbold.length; i++) {
-			for (let j = 0; j < mileoBbold[i].length; j++) {
-				if (mileoBbold[i][j] < mileoResult.length) {
-					areaTextRef.textRanges[mileoBbold[i][j]].characterAttributes.textFont = textFonts.getByName(obj.bold);
-				}
-			}
-		}
-		for (let i = 0; i < mileoBcolor.length; i++) {
-			for (let j = 0; j < mileoBcolor[i].length; j++) {
-				if (mileoBcolor[i][j] < mileoResult.length) {
-					areaTextRef.textRanges[mileoBcolor[i][j]].characterAttributes.fillColor = this.mother.colorpick(obj.pointColor);
-				}
-			}
-		}
-	}
+    for (let i = 0; i < mileoBbold.length; i++) {
+      for (let j = 0; j < mileoBbold[i].length; j++) {
+        if (mileoBbold[i][j] < mileoResult.length) {
+          areaTextRef.textRanges[mileoBbold[i][j]].characterAttributes.textFont = textFonts.getByName(obj.bold);
+        }
+      }
+    }
+    for (let i = 0; i < mileoBcolor.length; i++) {
+      for (let j = 0; j < mileoBcolor[i].length; j++) {
+        if (mileoBcolor[i][j] < mileoResult.length) {
+          areaTextRef.textRanges[mileoBcolor[i][j]].characterAttributes.fillColor = this.mother.colorpick(obj.pointColor);
+        }
+      }
+    }
+  }
 
-	return areaTextRef;
+  return areaTextRef;
 }
 
 ExecMain.prototype.saveSvg = function (ai, name) {
-	let exportOptions = new ExportOptionsSVG();
+  let exportOptions = new ExportOptionsSVG();
   exportOptions.coordinatePrecision = 7;
-	let fileName;
-	if (this.dayString === undefined) {
-		fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + "_000000";
-	} else {
-		fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + '_' + this.dayString;
-	}
-  ai.exportFile(new File(this.dir + fileName), ExportType.SVG, exportOptions);
+  let fileName;
+  if (this.dayString === undefined) {
+    fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + "_000000";
+  } else {
+    fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + '_' + this.dayString;
+  }
+  ai.exportFile(new File(this.dir + '/' + fileName), ExportType.SVG, exportOptions);
   ai.close(SaveOptions.DONOTSAVECHANGES);
 }
 
 ExecMain.prototype.savePng = function (ai, name, scale, widthRatio = []) {
-	let exportOptions = new ExportOptionsPNG24();
+  let exportOptions = new ExportOptionsPNG24();
   exportOptions.artBoardClipping = true;
   exportOptions.horizontalScale = Number(scale);
   exportOptions.verticalScale = Number(scale);
-	let fileName, ratioName;
+  let fileName, ratioName;
   if (widthRatio.length === 0) {
     if (this.dayString === undefined) {
-  		fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + "_000000";
-  	} else {
-  		fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + '_' + this.dayString;
-  	}
+      fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + "_000000";
+    } else {
+      fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + '_' + this.dayString;
+    }
   } else {
     ratioName = '';
     for (let i = 0; i < widthRatio.length; i++) {
@@ -1017,12 +1017,12 @@ ExecMain.prototype.savePng = function (ai, name, scale, widthRatio = []) {
     }
     ratioName = ratioName.slice(0, -1);
     if (this.dayString === undefined) {
-  		fileName = name + '_' + ratioName + "_000000";
-  	} else {
-  		fileName = name + '_' + ratioName + '_' + this.dayString;
-  	}
+      fileName = name + '_' + ratioName + "_000000";
+    } else {
+      fileName = name + '_' + ratioName + '_' + this.dayString;
+    }
   }
-  ai.exportFile(new File(this.dir + fileName), ExportType.PNG24, exportOptions);
+  ai.exportFile(new File(this.dir + '/' + fileName), ExportType.PNG24, exportOptions);
   ai.close(SaveOptions.DONOTSAVECHANGES);
 }
 

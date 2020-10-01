@@ -20,6 +20,7 @@ const ContentsMaker = function () {
   this.links = {
     app: `${process.cwd()}/apps/contentsMaker`,
     factory: `${process.cwd()}/apps/contentsMaker/factory`,
+    lambda: `${process.cwd()}/apps/contentsMaker/lambda`,
     mapMaker: `${process.cwd()}/apps/mapMaker`,
     map: `${process.cwd()}/apps/mapMaker/map`,
     svgTong: `${process.cwd()}/apps/mapMaker/map/svgTong`,
@@ -109,7 +110,7 @@ ContentsMaker.prototype.static_setting = async function () {
 
     if (!staticFolderBootr) {
 
-      shell.exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}/script;mkdir ${this.options.home_dir}/result;mkdir ${this.options.home_dir}/temp`);
+      shell.exec(`mkdir ${shellLink(this.options.home_dir)};mkdir ${shellLink(this.options.home_dir)}/script;mkdir ${shellLink(this.options.home_dir)}/result;mkdir ${shellLink(this.options.home_dir)}/temp`);
 
     } else {
 
@@ -118,27 +119,52 @@ ContentsMaker.prototype.static_setting = async function () {
       for (let i of staticFolderscriptBoo) {
         if (/^script$/.test(i)) { staticFolderscriptBootr = true; }
       }
-      if (!staticFolderscriptBootr) { shell.exec(`mkdir ${this.options.home_dir}/script`); }
+      if (!staticFolderscriptBootr) { shell.exec(`mkdir ${shellLink(this.options.home_dir)}/script`); }
       staticFolderresultBootr = false;
       for (let i of staticFolderscriptBoo) {
         if (/^result$/.test(i)) { staticFolderresultBootr = true; }
       }
-      if (!staticFolderresultBootr) { shell.exec(`mkdir ${this.options.home_dir}/result`); }
+      if (!staticFolderresultBootr) { shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result`); }
       staticFoldertempBootr = false;
       for (let i of staticFolderscriptBoo) {
         if (/^temp/.test(i)) { staticFoldertempBootr = true; }
       }
-      if (!staticFoldertempBootr) { shell.exec(`mkdir ${this.options.home_dir}/temp`); }
+      if (!staticFoldertempBootr) { shell.exec(`mkdir ${shellLink(this.options.home_dir)}/temp`); }
 
     }
 
     let folderList = [ "factory", "resource" ];
     for (let f of folderList) {
-      shell.exec(`cp -r ${shellLink(this.links.app)}/${f} ${this.options.home_dir}`);
+      shell.exec(`cp -r ${shellLink(this.links.app)}/${f} ${shellLink(this.options.home_dir)}`);
     }
 
   } catch (e) {
     console.log(e.message);
+  }
+}
+
+ContentsMaker.prototype.lambdaLatest = async function (target) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    let lambdaList_raw, lambdaList_number, final_target;
+
+    lambdaList_raw = await fileSystem(`readDir`, [ this.links.lambda + "/" + target ]);
+    lambdaList_number = [];
+    for (let i of lambdaList_raw) { if (i !== `.DS_Store`) {
+      lambdaList_number.push(Number((i.split('_'))[0]));
+    }}
+    lambdaList_number.sort((a, b) => { return b - a; });
+
+    for (let i of lambdaList_raw) { if (i !== `.DS_Store`) {
+      if ((new RegExp("^" + String(lambdaList_number[0]))).test(i)) {
+        final_target = i;
+      }
+    }}
+
+    return final_target;
+  } catch (e) {
+    console.log(e);
   }
 }
 

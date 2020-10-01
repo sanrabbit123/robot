@@ -36,7 +36,7 @@ AiContents.prototype.photo_clean = async function () {
   try {
     let photo_list;
 
-    photo_list = await this.mother.fileSystem(`readDir`, [ photo_dir ]);
+    photo_list = await fileSystem(`readDir`, [ photo_dir ]);
     if (photo_list.length !== 0) {
       for (let i of photo_list) { if (i !== ".DS_Store") {
         shell.exec(`rm -f ${shellLink(photo_dir)}/${i};`);
@@ -63,7 +63,7 @@ AiContents.prototype.photo_search = async function () {
       for (let i of portfolio_rawList) { if (i !== ".DS_Store" && i !== "_A") {
         if (this.image_filter(i) === this.portfolioNum.replace(/[^0-9]/g, '')) {
           target = i;
-        };
+        }
       }}
       portfolio_target = `${this.motherLink.portfoiloBinary}/${target}/원본`;
 
@@ -72,7 +72,7 @@ AiContents.prototype.photo_search = async function () {
       for (let i of portfolio_rawList) { if (i !== ".DS_Store") {
         if (this.image_filter(i) === this.portfolioNum.replace(/[^0-9]/g, '')) {
           target = i;
-        };
+        }
       }}
       portfolio_target = `${this.motherLink.portfoiloBinary}/_A/${target}/원본`;
 
@@ -311,6 +311,7 @@ AiContents.prototype.total_make = async function () {
     this.text = require(`${this.general.links.app}/resource/${this.portfolioNum}.js`);
 
     await MONGOC.connect();
+    
     await this.general.static_setting();
     await this.photo_search();
     await this.photo_list();

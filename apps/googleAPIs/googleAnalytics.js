@@ -59,13 +59,13 @@ GoogleAnalytics.prototype.getClients = async function () {
       dimensionsKeys.push(obj.name.replace(/^ga:/, ''));
     }
 
-    const startDate = "2020-09-18";
-    const endDate = "2020-09-24";
+    const startDate = "2019-03-18";
+    const endDate = "2020-09-28";
     const bridgeData = { startDate, endDate, standard, dimensions, users };
 
     //write objects
     let totalTong = [];
-    
+
     /*
     for (let i = 0; i < dimensions.length - 2; i++) {
       result = await mother.pythonExecute(this.pythonApp, [ "analytics", i ], bridgeData);
@@ -75,7 +75,7 @@ GoogleAnalytics.prototype.getClients = async function () {
     }
     */
 
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", 0 ], bridgeData);
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients", 0 ], bridgeData);
     console.log(result);
 
     /*
@@ -215,5 +215,109 @@ GoogleAnalytics.prototype.getClients = async function () {
   }
 }
 
+GoogleAnalytics.prototype.getUsers = async function () {
+  const instance = this;
+  const mother = this.mother;
+
+  const MongoClient = this.mother.mongo;
+  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
+  const getAnalytics = async function (boo) {
+    try {
+      let result = await mother.pythonExecute(instance.pythonApp, [ "analytics", "getUsers" ], { consulting: boo });
+      const { reports: [ reports_raw ] } = result;
+      const { data: { rows } } = reports_raw;
+      let temp;
+      let finalArr = [];
+      for (let { dimensions, metrics } of rows) {
+        temp = {};
+        temp.name = String(dimensions[0]) + "-" + String(dimensions[1]);
+        temp.value = Number(metrics[0].values[0]);
+        finalArr.push(temp);
+      }
+      return finalArr;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  const idParsing = function (id) {
+    const ABC = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' ];
+    let ABCOBJ = {};
+    for (let i = 0; i < ABC.length; i++) { ABCOBJ[ABC[i]] = i; }
+    let max, maxLength, target, result_num, append;
+
+    max = ABC[ABC.length - 1] + ABC[ABC.length - 1];
+    maxLength = String((ABCOBJ[max[0]] * ABC.length) + ABCOBJ[max[1]]).length;
+
+    target = id.split('_')[1].slice(0, 2);
+    result_num = (ABCOBJ[target[0]] * ABC.length) + ABCOBJ[target[1]]
+
+    append = '';
+    for (let i = 0; i < maxLength - String(result_num).length; i++) {
+      append += '0';
+    }
+
+    return append + String(result_num) + id.split('_')[1].replace(/[^0-9]/g, '');
+  }
+
+  try {
+    let totalFinalArr, totalFinal;
+    let temp, temp2;
+    let row, requestArr;
+
+    await MONGOC.connect();
+
+    //total, consulting
+
+    totalFinalArr = {};
+    totalFinalArr.total = await getAnalytics(false);
+    totalFinalArr.consulting = await getAnalytics(true);
+
+    totalFinal = [];
+    for (let i = 0; i < totalFinalArr.total.length; i++) {
+      totalFinal.push({ name: totalFinalArr.total[i].name, totalValue: totalFinalArr.total[i].value, consultingValue: totalFinalArr.consulting[i].value });
+    }
+
+    //request
+
+    row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).toArray();
+    rowNumber = [];
+    for (let { a4_customernumber } of row) {
+      temp = { raw: a4_customernumber, parsing: idParsing(a4_customernumber) };
+      temp2 = temp.parsing;
+      while (/^0/.test(temp2)) {
+        temp2 = temp2.replace(/^0/, '');
+      }
+      temp.num = Number(temp2);
+      rowNumber.push(temp);
+    }
+    rowNumber.sort((a, b) => { return ((Number(a.raw.split('_')[0].slice(1)) * 1000) + a.num) - ((Number(b.raw.split('_')[0].slice(1)) * 1000) + b.num); });
+    requestArr = [];
+    for (let i = 0; i < rowNumber.length - 1; i++) {
+      if ((rowNumber[i + 1].num - rowNumber[i].num) !== 1) {
+        requestArr.push(rowNumber[i]);
+      }
+    }
+    requestArr.push(rowNumber[rowNumber.length - 1]);
+    for (let i = 0; i < totalFinal.length; i++) {
+      totalFinal[i].requestValue = requestArr[i].num;
+    }
+
+    //contract
+
+
+
+
+    console.log(totalFinal);
+    await mother.fileSystem(`write`, [ `${process.cwd()}/temp/ana.json`, JSON.stringify(totalFinal, null, 2) ]);
+
+    //return totalFinal;
+
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    MONGOC.close();
+    console.log("done");
+  }
+}
 
 module.exports = GoogleAnalytics;

@@ -114,7 +114,7 @@ ExecMain.prototype.createDoc = function () {
     `;
     if (boo === 'P') { h += `
 ExecMain.prototype.copyDoc = function (target) {
-  let templateObj = new File(this.dir + "factory/template/portfolio/subtitles/" + target + ".ai");
+  let templateObj = new File(this.dir + "/factory/template/portfolio/subtitles/" + target + ".ai");
   let template_ai = templateObj.get_file();
   let new_file_string = ((target === "word1003") ? this.folder_list.svg.string + "/word1003" + this.text.p_id + "_00" : this.folder_list.main.string + '/' + target + this.text.p_id);
   template_ai.saveAs(new File(new_file_string + ".ai"));
@@ -181,7 +181,7 @@ ExecMain.prototype.start = function () {
     `; }
     else if (boo === 'R') { h += `
 ExecMain.prototype.copyDoc = function (target) {
-  let templateObj = new File(this.dir + "factory/template/review/subtitles/" + target + ".ai");
+  let templateObj = new File(this.dir + "/factory/template/review/subtitles/" + target + ".ai");
   let template_ai = templateObj.get_file();
   let new_file_string;
   if (target === "name2" || target === "resubti") { new_file_string = this.folder_list.rev.string + '/' + target + this.text.r_id; }

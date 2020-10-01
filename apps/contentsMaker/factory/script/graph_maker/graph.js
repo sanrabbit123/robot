@@ -328,25 +328,32 @@ ExecMain.prototype.listTitleMaker = function () {
 }
 
 ExecMain.prototype.start = function (dayString) {
-  const list = [ "desktop", "mobile" ];
-  let temp;
+  // const list = [ "desktop", "mobile" ];
+  // let temp;
   this.dayString = dayString;
+  // 
+  // this.searchMaker();
+  // this.listTitleMaker();
+  //
+  // // general make
+  // const { sub } = this.text;
+  // for (let d of list) {
+  //   temp = {};
+  //   temp.text = sub.title[d].words.contents;
+  //   temp.list = d;
+  //   this.generalTitle(temp);
+  //   temp = {};
+  //   temp.text = sub.below[d].words.contents;
+  //   temp.list = d;
+  //   this.generalBelow(temp);
+  // }
+  // this.arrowMaker();
 
-  this.searchMaker();
-  this.listTitleMaker();
+  let this_ai = this.createDoc();
+  this.mother.return_arrow();
+  app.doScript("expandall", "contents_maker");
+  this.mother.fit_box();
+  this.saveSvg(this_ai, "arrow0");
 
-  // general make
-  const { sub } = this.text;
-  for (let d of list) {
-    temp = {};
-    temp.text = sub.title[d].words.contents;
-    temp.list = d;
-    this.generalTitle(temp);
-    temp = {};
-    temp.text = sub.below[d].words.contents;
-    temp.list = d;
-    this.generalBelow(temp);
-  }
-  this.arrowMaker();
 
 }

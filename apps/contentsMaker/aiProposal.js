@@ -9,7 +9,6 @@ const AiProposal = function (proid = "none") {
 
   this.options = this.general.options;
   this.options.static_dir = this.general.motherLink.proposalBinary;
-
 }
 
 AiProposal.prototype.proposal_make = async function () {
@@ -19,7 +18,7 @@ AiProposal.prototype.proposal_make = async function () {
   let temp_scriptString, result_dir;
   try {
     temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
-    temp_scriptString += await fileSystem(`readString`, [ `${shellLink(home_dir)}/factory/script/polyfill.js` ]);
+    temp_scriptString += await fileSystem(`readString`, [ `${home_dir}/factory/script/polyfill.js` ]);
     temp_scriptString += `\n`;
     temp_scriptString += await babelSystem(this.general.generator.proposal_maker.proposal(this.options));
 

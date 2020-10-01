@@ -12,7 +12,7 @@ ExecMain.prototype.create_init = function (order) {
   let this_ai_temp = {};
   for (let i = 0; i < list.length; i++) {
     new_file_name[list[i]] = ((list[i] === "desktop") ? '' : "mo") + "word1003" + this.text.p_id + '_' + '0' + String(order + 1);
-    fileObj_temp[list[i]] = new File(this.dir + "factory/template/portfolio/" + list[i] + "/template.ai");
+    fileObj_temp[list[i]] = new File(this.dir + "/factory/template/portfolio/" + list[i] + "/template.ai");
     this_ai_temp[list[i]] = fileObj_temp[list[i]].get_file();
     this_ai_temp[list[i]].saveAs(new File(this.folder_list.svg.string + '/' + new_file_name[list[i]] + ".ai"));
     this_ai_temp[list[i]].close();
@@ -80,7 +80,7 @@ ExecMain.prototype.create_init = function (order) {
   let this_ai_temp = {};
   for (let i = 0; i < list.length; i++) {
     new_file_name[list[i]] = ((list[i] === "desktop") ? '' : "mo") + "reword" + this.text.r_id + '_' + '0' + String(order + 1);
-    fileObj_temp[list[i]] = new File(this.dir + "factory/template/review/" + list[i] + "/template" + ((order === 0) ? '' : 'p') +  ".ai");
+    fileObj_temp[list[i]] = new File(this.dir + "/factory/template/review/" + list[i] + "/template" + ((order === 0) ? '' : 'p') +  ".ai");
     this_ai_temp[list[i]] = fileObj_temp[list[i]].get_file();
     this_ai_temp[list[i]].saveAs(new File(this.folder_list.rev.string + '/' + new_file_name[list[i]] + ".ai"));
     this_ai_temp[list[i]].close();

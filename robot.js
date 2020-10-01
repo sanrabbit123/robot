@@ -262,4 +262,16 @@ async function main4() {
 
 }
 
-main4();
+// main4();
+
+async function main5() {
+  // const AiGraph = require(process.cwd() + "/apps/contentsMaker/aiGraph.js");
+  // const fobot = new AiGraph();
+  // fobot.launching();
+
+  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+  const app = new GoogleAnalytics();
+  app.getUsers();
+}
+
+main5();
