@@ -6,5 +6,4 @@ temp/
 node_modules/
 python_modules/
 pems/
-apps/contentsMaker/module/frontMaker/svgTong/
 apps/mapMaker/svgTong/
