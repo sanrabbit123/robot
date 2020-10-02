@@ -205,8 +205,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 //development
 
@@ -218,60 +218,10 @@ async function main3() {
 
 // main3();
 
-async function main4() {
-  // const Mother = require(process.cwd() + "/apps/mother.js");
-  // const mother = new Mother();
-  // const { fileSystem } = mother;
-  //
-  // const tempDir = process.cwd() + "/temp";
-  //
-  // let json = await fileSystem(`readString`, [ tempDir + "/analytics.json" ]);
-  // let js = JSON.parse(json);
-  //
-  // console.log(js.length);
-  // let ad = [];
-  // for (let obj of js) {
-  //   if (obj.info.campaign !== null) { ad.push(obj); }
-  // }
-  // console.log(ad.length);
-  //
-  // let real = [];
-  // let tempBoo = false;
-  // for (let obj of ad) {
-  //   tempBoo = false;
-  //   for (let page of obj.info.pageHistory) {
-  //     if (/consulting/gi.test(page.page)) { tempBoo = true; }
-  //   }
-  //   if (tempBoo) {
-  //     real.push(obj);
-  //   }
-  //   console.log(obj.info.pageHistory);
-  // }
-  //
-  // console.log(real.length);
-  // const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-  // const app = new GoogleAnalytics();
-  // app.getClients();
-
-
-  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
-  const app = new GoogleSheet();
-  // console.log(await app.get_value_inPython("10diBorehqlUtLCetbJ6tBirL0ONTZFmyh-VYEuxFhnE", "트래픽/문의건수/계약건수!A2:A10"));
-  console.log(await app.update_value_inPython("10diBorehqlUtLCetbJ6tBirL0ONTZFmyh-VYEuxFhnE", "트래픽/문의건수/계약건수", [ [ "a" ], [ "a" ], [ "a" ], [ "a" ] ], [ 6, 10 ]));
-
-
-}
-
-// main4();
-
 async function main5() {
   const AiGraph = require(process.cwd() + "/apps/contentsMaker/aiGraph.js");
   const fobot = new AiGraph();
   fobot.launching();
-
-  // const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-  // const app = new GoogleAnalytics();
-  // console.log(await app.getUsers());
 }
 
-main5();
+// main5();

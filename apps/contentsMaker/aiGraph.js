@@ -4,16 +4,28 @@ const AiGraph = function () {
   this.general = new ContentsMaker();
   this.mother = new Mother();
 
+  this.tempDir = process.cwd() + "/temp";
   this.text = {};
   this.options = this.general.options;
   this.links = this.general.links;
 }
 
 AiGraph.prototype.parsingValues = async function () {
+  const { fileSystem } = this.mother;
   try {
-    const lambdaFunc = require(this.links.lambda + "/graph_maker/" + (await this.general.lambdaLatest("graph_maker")));
-    const res = await lambdaFunc(this.mother);
-    return res;
+    let result, name;
+
+    name = await this.general.lambdaLatest("graph_maker");
+    const lambdaFunc = require(this.links.lambda + "/graph_maker/" + name);
+    const tempDirList = await fileSystem(`readDir`, [ this.tempDir ]);
+
+    if (tempDirList.includes(name)) {
+      result = JSON.parse(await fileSystem(`readString`, [ this.tempDir + "/" + name ]));
+    } else {
+      result = await lambdaFunc(this.mother);
+    }
+
+    return result;
   } catch (e) {
     console.log(e);
   }
@@ -38,10 +50,6 @@ AiGraph.prototype.launching = async function () {
     //set text
     this.text = await this.parsingValues();
 
-    console.log(this.text);
-
-    /*
-
     //start aiScript
     temp_scriptString = await this.general.generator.graph_maker.exec(this.options);
     await this.general.startAdobe({
@@ -49,10 +57,8 @@ AiGraph.prototype.launching = async function () {
       data: this.text,
       script: temp_scriptString,
       app: "Illustrator",
-      end: true,
+      end: false,
     });
-
-    */
 
   } catch (e) {
     console.log(e);
