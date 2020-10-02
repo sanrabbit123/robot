@@ -75,8 +75,10 @@ GoogleAnalytics.prototype.getClients = async function () {
     }
     */
 
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients", 0 ], bridgeData);
-    console.log(result);
+    console.log(bridgeData);
+
+    // result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients", 0 ], bridgeData);
+    // console.log(result);
 
     /*
     //merge objects
