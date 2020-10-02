@@ -20,7 +20,6 @@ module.exports = async function (Mother) {
   }
 
   try {
-
     let rawArr = {};
     let resultObj = { lines: [], circles: [] };
     let tempObj, tempObj2;
@@ -126,8 +125,6 @@ module.exports = async function (Mother) {
       add: [
         "CAC",
         "AOV",
-        "ROAS",
-        "ROI",
       ],
       subtract: [
       ]
@@ -136,8 +133,6 @@ module.exports = async function (Mother) {
       add: [
         "원",
         "원",
-        "%",
-        "%",
       ],
       subtract: [
       ]
@@ -162,6 +157,45 @@ module.exports = async function (Mother) {
       } else {
         tempObj2.add.push(0);
       }
+      tempObj2.subtract = [];
+      tempObj.values.push({ name: firstValues[i].name, value: tempObj2 });
+    }
+    resultObj.lines.push(tempObj);
+
+
+    //fourth
+    tempObj = {};
+    tempObj.name = "marketing";
+    tempObj.columns = {
+      add: [
+        "ROAS",
+        "ROI",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.ea = {
+      add: [
+        "%",
+        "%",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.values = [];
+
+    for (let i = 0; i < firstValues.length; i++) {
+
+      revenue = firstValues[i].value.add[2];
+      profit = firstValues[i].value.add[3];
+      adCost = firstValues[i].value.subtract[0];
+      marketingCost = firstValues[i].value.subtract[1];
+      newClient = secondValues[i].value.add[2];
+      contractClient = secondValues[i].value.add[3];
+      netProfit = profit - adCost;
+
+      tempObj2 = {};
+      tempObj2.add = [];
       tempObj2.add.push(Math.round((revenue / adCost) * 100));
       tempObj2.add.push(Math.round((netProfit / adCost) * 100));
       tempObj2.subtract = [];
