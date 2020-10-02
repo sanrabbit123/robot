@@ -271,7 +271,7 @@ async function main5() {
 
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const app = new GoogleAnalytics();
-  console.log(app.getUsers());
+  console.log(await app.getUsers());
 }
 
 main5();
