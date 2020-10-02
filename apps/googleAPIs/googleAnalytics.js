@@ -79,7 +79,6 @@ GoogleAnalytics.prototype.getClients = async function () {
     console.log(result);
 
     /*
-
     //merge objects
     for (let i = 1; i < totalTong.length; i++) {
       for (let obj of totalTong[0]) {
@@ -95,13 +94,7 @@ GoogleAnalytics.prototype.getClients = async function () {
     let [ mergeTong ] = totalTong;
     await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(mergeTong, null, 2) ]);
     console.log("merge done");
-
-
     */
-
-
-
-
 
     /*
     //to object
@@ -263,22 +256,20 @@ GoogleAnalytics.prototype.getUsers = async function () {
     let totalFinalArr, totalFinal;
     let temp, temp2;
     let row, requestArr;
+    let contract_raw;
 
     await MONGOC.connect();
 
     //total, consulting
-
     totalFinalArr = {};
     totalFinalArr.total = await getAnalytics(false);
     totalFinalArr.consulting = await getAnalytics(true);
-
     totalFinal = [];
     for (let i = 0; i < totalFinalArr.total.length; i++) {
-      totalFinal.push({ name: totalFinalArr.total[i].name, totalValue: totalFinalArr.total[i].value, consultingValue: totalFinalArr.consulting[i].value });
+      totalFinal.push({ name: totalFinalArr.total[i].name, values: { total: totalFinalArr.total[i].value, consulting: totalFinalArr.consulting[i].value } });
     }
 
     //request
-
     row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).toArray();
     rowNumber = [];
     for (let { a4_customernumber } of row) {
@@ -299,18 +290,28 @@ GoogleAnalytics.prototype.getUsers = async function () {
     }
     requestArr.push(rowNumber[rowNumber.length - 1]);
     for (let i = 0; i < totalFinal.length; i++) {
-      totalFinal[i].requestValue = requestArr[i].num;
+      totalFinal[i].values.request = requestArr[i].num;
     }
 
     //contract
 
+    row = await MONGOC.db("miro81").collection("BP2_calculation").find({}).project({ d5_deposit_yn: 1 }).toArray();
+    contract_raw = [];
+    for (let { d5_deposit_yn: value } of row) {
+      if (/^[0-9][0-9][0-9][0-9]/.test(value)) {
+        contract_raw.push(value.slice(0, 7));
+      }
+    }
+    for (let i of totalFinal) {
+      i.values.contract = 0;
+      for (let j of contract_raw) {
+        if (i.name === j) {
+          i.values.contract = i.values.contract + 1;
+        }
+      }
+    }
 
-
-
-    console.log(totalFinal);
-    await mother.fileSystem(`write`, [ `${process.cwd()}/temp/ana.json`, JSON.stringify(totalFinal, null, 2) ]);
-
-    //return totalFinal;
+    return totalFinal;
 
   } catch (e) {
     console.log(e.message);
