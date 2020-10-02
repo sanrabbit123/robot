@@ -35,9 +35,8 @@ class GoogleAnalytics:
         self.app = build('analyticsreporting', 'v4', http=http)
 
 
-    def getAllClients(self, startDate, endDate, standard, dimensions, users, index):
-        target = dimensions[(0 + index):(2 + index)]
-        target.append(standard)
+    def clientsIdTesting(self, startDate, endDate):
+        total = self.app.reports().batchGet(body={ "reportRequests": [ { "viewId": self.viewId, "pageSize": 100000, "dateRanges": [ { "startDate": startDate, "endDate": endDate } ], "dimensions": [], "metrics": [ { "expression": "ga:users" } ] } ] }).execute()
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -47,32 +46,50 @@ class GoogleAnalytics:
                         "dateRanges": [
                             { "startDate": startDate, "endDate": endDate }
                         ],
-                        "dimensions": target,
+                        "dimensions": [
+                            { "name": "ga:clientId" },
+                        ],
                         "metrics": [
-                            { "expression": "ga:sessions" },
+                            { "expression": "ga:users" },
                         ]
                     }
                 ]
             }).execute()
+        return dumps({ "totalNum": int(total["reports"][0]["data"]["totals"][0]["values"][0]), "data": result["reports"][0]["data"] })
 
-        resultArr = []
-        for report in result.get('reports', []):
-            columnHeader = report.get('columnHeader', {})
-            dimensionHeaders = columnHeader.get('dimensions', [])
-            metricHeaders = columnHeader.get('metricHeader', {}).get('metricHeaderEntries', [])
-            rows = report.get('data', {}).get('rows', [])
-            for row in rows:
-                temp = {}
-                dimensionValue = row.get('dimensions', [])
-                dateRangeValues = row.get('metrics', [])
-                for header, dimension in zip(dimensionHeaders, dimensionValue):
-                    temp[header[3:]] = dimension
-                for i, values in enumerate(dateRangeValues):
-                    for metricHeader, value in zip(metricHeaders, values.get('values')):
-                        for j in range(int(value)):
-                            resultArr.append(temp)
 
-        return dumps(resultArr)
+    def getAllClients(self, startDate, endDate, dimensionsList, clientsBox):
+        totalTong = {}
+        for c in range(10):
+            result = self.app.reports().batchGet(
+                body={
+                    "reportRequests": [
+                        {
+                            "viewId": self.viewId,
+                            "pageSize": 100000,
+                            "dateRanges": [
+                                { "startDate": startDate, "endDate": endDate }
+                            ],
+                            "dimensions": dimensionsList,
+                            "dimensionFilterClauses": [
+                                {
+                                    "filters": [
+                                        {
+                                            "dimensionName": "ga:clientId",
+                                            "expressions": [ clientsBox[c] ],
+                                        }
+                                    ]
+                                }
+                            ],
+                            "metrics": [
+                                { "expression": "ga:users" },
+                            ]
+                        }
+                    ]
+                }).execute()
+            totalTong[c] = result
+
+        return dumps(totalTong)
 
 
     def getUserNumber(self, consulting=False):

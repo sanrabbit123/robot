@@ -6,6 +6,36 @@ const GoogleAnalytics = function () {
   this.tempDir = process.cwd() + "/temp";
 }
 
+GoogleAnalytics.prototype.returnMonthBox = function () {
+  // const startDate = "2019-03-01";
+  const startDate = "2020-09-01";
+  const startDay = new Date(startDate);
+  const today = new Date();
+
+  let pastMonth, newMonth, pastyear, lastDate;
+  let middle = [], result = [];
+  let temp;
+
+  while (startDay.getFullYear() !== today.getFullYear() || startDay.getMonth() !== today.getMonth()) {
+    do {
+      pastyear = startDay.getFullYear();
+      pastMonth = startDay.getMonth();
+      lastDate = startDay.getDate();
+      startDay.setDate(startDay.getDate() + 1);
+      newMonth = startDay.getMonth();
+    } while (pastMonth === newMonth);
+    middle.push({ year: pastyear, month: pastMonth + 1, date: lastDate });
+  }
+
+  for (let { year, month, date } of middle) {
+    temp = (month < 10) ? '0' + String(month) : String(month);
+    result.push({ startDate: String(year) + '-' + temp + '-' + "01", endDate: String(year) + '-' + temp + '-' + String(date) });
+  }
+
+  return result;
+}
+
+
 GoogleAnalytics.prototype.getClients = async function () {
   const instance = this;
   const mother = this.mother;
@@ -20,30 +50,19 @@ GoogleAnalytics.prototype.getClients = async function () {
     let sheetRow;
     let tempArr, tempString;
 
-    const standard = {
-      name: "ga:userDefinedValue"
-    };
-
     const dimensions = [
+        { name: "ga:dateHourMinute" }, // 시간
         { name: "ga:country" }, // 국가
         { name: "ga:city" }, // 도시
-        { name: "ga:longitude" }, // 경도
-        { name: "ga:latitude" }, // 위도
         { name: "ga:browser" }, // 브라우저
-        { name: "ga:browserVersion" }, // 브라우저 버전
         { name: "ga:operatingSystem" }, // OS
         { name: "ga:keyword" }, // 검색어
+        { name: "ga:userDefinedValue" }, // 레퍼럴 1
         { name: "ga:source" }, // 전 페이지
-        { name: "ga:sourceMedium" }, // 전 페이지
         { name: "ga:deviceCategory" }, // 모바일 / 데스크탑
-        { name: "ga:pagePath" }, // 진입 경로
-        { name: "ga:pageTitle" }, // 검색어
-        { name: "ga:minute" }, // 날짜 - 분
-        { name: "ga:date" }, // 날짜 - 일
-        { name: "ga:hour" }, // 날짜 - 시간
-        { name: "ga:userType" }, // 새로운 사람인지 방문했던 사람인지
-        { name: "ga:campaign" }, // 광고 캠패인
-        { name: "ga:browserSize" }, // 브라우저 해상도
+        // { name: "ga:pagePath" }, // 진입 경로
+        // { name: "ga:pageTitle" }, // 검색어
+        // { name: "ga:campaign" }, // 광고 캠패인
     ];
 
     const users = [
@@ -59,26 +78,38 @@ GoogleAnalytics.prototype.getClients = async function () {
       dimensionsKeys.push(obj.name.replace(/^ga:/, ''));
     }
 
-    const startDate = "2019-03-18";
-    const endDate = "2020-09-28";
-    const bridgeData = { startDate, endDate, standard, dimensions, users };
-
     //write objects
+    let clientsBox = [];
+    let client;
     let totalTong = [];
 
-    /*
-    for (let i = 0; i < dimensions.length - 2; i++) {
-      result = await mother.pythonExecute(this.pythonApp, [ "analytics", i ], bridgeData);
-      console.log(result);
-      totalTong.push(result);
-      await mother.fileSystem(`write`, [ this.tempDir + "/analytics" + String(i) + ".json", JSON.stringify(result, null, 2) ]);
+
+    //testing
+    let monthBox = this.returnMonthBox();
+    for (let i = 0; i < monthBox.length; i++) {
+      result = await mother.pythonExecute(this.pythonApp, [ "analytics", "clientsIdTesting" ], { startDate: monthBox[i].startDate, endDate: monthBox[i].endDate });
+      if (Number(result.totalNum) !== result.data.rows.length) { throw new Error("invaild ID"); process.exit(); return; }
+      if (Number(result.totalNum) !== Number(result.data.totals[0].values[0])) { throw new Error("invaild ID"); process.exit(); return; }
+      if (result.data.rows.length !== Number(result.data.totals[0].values[0])) { throw new Error("invaild ID"); process.exit(); return; }
+
+      client = [];
+      for (let obj of result.data.rows) {
+        client.push(obj.dimensions[0]);
+      }
+
+      clientsBox.push(client);
+      console.log(monthBox[i].startDate + " success");
     }
-    */
+    console.log("testing success");
 
-    console.log(bridgeData);
+    for (let i = 0; i < monthBox.length; i++) {
+      result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients" ], { startDate: monthBox[i].startDate, endDate: monthBox[i].endDate, dimensionsList: dimensions, clientsBox: clientsBox[i] });
+      totalTong.push(result);
+      console.log(monthBox[i].startDate + " success");
+    }
 
-    // result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients", 0 ], bridgeData);
-    // console.log(result);
+    await mother.fileSystem(`write`, [ process.cwd() + "/temp/ana.json", JSON.stringify(totalTong, null, 2) ]);
+
 
     /*
     //merge objects
