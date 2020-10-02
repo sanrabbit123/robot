@@ -27,6 +27,7 @@ module.exports = async function (Mother) {
   let rawArr = {};
   let resultObj = { lines: [], circle: [] };
   let tempObj, tempObj2;
+  let rawObj;
 
   try {
     rawArr.first = await sheet.get_value_inPython("152PKTPNhEfRX31JiKmDqUSaiburcXBcwGdK3lYHOQWg", "시트1!B1:V12");
@@ -52,6 +53,11 @@ module.exports = async function (Mother) {
     await fileSystem(`write`, [ `${process.cwd()}/temp/secondIR0.json`, JSON.stringify(resultObj, null, 2) ]);
 
     //second
+    rawObj = await analytics.getUsers();
+    tempObj = {};
+    tempObj.name = "users";
+    tempObj.values = [];
+    
 
 
 
