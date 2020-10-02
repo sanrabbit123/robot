@@ -7,5 +7,4 @@ node_modules/
 python_modules/
 pems/
 apps/mapMaker/svgTong/
-apps/googleAPIs/python/google/tokens/analyticsreporting.dat
 apps/googleAPIs/python/google/tokens/token.pickle
