@@ -6,7 +6,7 @@ from os import path as osPath
 # install list
 install = [
     [ "notion" ],
-    [ "uwsgi", "flask" ],
+    [ "flask" ],
     [ "pymysql" ],
     [ "pymongo" ],
     [ "argparse" ]
