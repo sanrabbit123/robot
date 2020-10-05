@@ -899,7 +899,11 @@ ExecMain.prototype.setParagraph = function (obj) {
 ExecMain.prototype.createElements = function (doc, obj) {
   let rectRef = doc.pathItems.rectangle(doc.height, 0, this.mother.convertMillimeters(obj.width), this.mother.convertMillimeters(obj.height));
   let areaTextRef = doc.textFrames.areaText(rectRef);
-  areaTextRef.contents = obj.text;
+  if (/\\n$/.test(obj.text)) {
+    areaTextRef.contents = obj.text.slice(0, -1);
+  } else {
+    areaTextRef.contents = obj.text;
+  }
 
   for (let i = 0; i < areaTextRef.paragraphs.length; i++) {
     areaTextRef.paragraphs[i].paragraphAttributes.justification = Justification[obj.justification];

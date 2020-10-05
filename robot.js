@@ -224,7 +224,7 @@ async function main5() {
   fobot.launching();
 }
 
-// main5();
+main5();
 
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
@@ -232,4 +232,4 @@ async function main6() {
   analytics.getClients();
 }
 
-main6();
+// main6();

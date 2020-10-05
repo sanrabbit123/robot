@@ -18,6 +18,14 @@ module.exports = async function (Mother) {
       return str;
     }
   }
+  const sheetIds = {
+    get: [
+      { id: "152PKTPNhEfRX31JiKmDqUSaiburcXBcwGdK3lYHOQWg", sheet: "시트1", xyz: "B1:V12" }
+    ],
+    update: [
+      { id: "1ygfQKHwigARiTh1sBaP4eRxNH8gOtsQYDnlAjQ0xKvg", sheet: "지표", xyz: [ 0, 0 ] }
+    ]
+  }
 
   try {
     let rawArr = {};
@@ -26,7 +34,7 @@ module.exports = async function (Mother) {
     let rawObj;
     let revenue, profit, adCost, marketingCost, newClient, contractClient, netProfit;
 
-    rawArr.first = await sheet.get_value_inPython("152PKTPNhEfRX31JiKmDqUSaiburcXBcwGdK3lYHOQWg", "시트1!B1:V12");
+    rawArr.first = await sheet.get_value_inPython(sheetIds.get[0].id, sheetIds.get[0].sheet + '!' + sheetIds.get[0].xyz);
     rawArr.second = await analytics.getUsers();
     const { first, second } = rawArr;
 
@@ -35,41 +43,42 @@ module.exports = async function (Mother) {
     const [ firstStandard ] = first;
     tempObj = {};
     tempObj.name = "inOut";
+    tempObj.ea = "원";
     tempObj.columns = {
       add: [
-        "서비스 매출",
-        "시공 매출",
         "총 매출",
         "총 순수익",
+        "서비스 매출",
+        "시공 매출",
+        "마케팅 비용",
+        "광고 비용",
       ],
       subtract: [
-        "광고 비용",
-        "마케팅 비용",
       ]
     };
-    tempObj.ea = {
+    tempObj.display = {
       add: [
-        "원",
-        "원",
-        "원",
-        "원",
+        "graph_0-entire_0",
+        "hidden",
+        "graph_0-order_0",
+        "graph_0-order_1",
+        "graph_1-entire_0",
+        "graph_1-order_0",
       ],
       subtract: [
-        "원",
-        "원",
       ]
     };
     tempObj.values = [];
     for (let i = 2; i < firstStandard.length; i++) {
       tempObj2 = {};
       tempObj2.add = [];
-      tempObj2.add.push(numberFilter(first[4][i]));
-      tempObj2.add.push(numberFilter(first[5][i]));
       tempObj2.add.push(numberFilter(first[4][i]) + numberFilter(first[5][i]));
       tempObj2.add.push(Math.floor((numberFilter(first[4][i]) * 0.3) + numberFilter(first[5][i])));
+      tempObj2.add.push(numberFilter(first[4][i]));
+      tempObj2.add.push(numberFilter(first[5][i]));
+      tempObj2.add.push(numberFilter(first[11][i]));
+      tempObj2.add.push(numberFilter(first[9][i]));
       tempObj2.subtract = [];
-      tempObj2.subtract.push(numberFilter(first[9][i]));
-      tempObj2.subtract.push(numberFilter(first[11][i]));
       tempObj.values.push({ name: dateFilter(firstStandard[i]), value: tempObj2 })
     }
     resultObj.lines.push(tempObj);
@@ -79,6 +88,7 @@ module.exports = async function (Mother) {
     rawObj = await analytics.getUsers();
     tempObj = {};
     tempObj.name = "users";
+    tempObj.ea = "명";
     tempObj.columns = {
       add: [
         "방문자 수",
@@ -89,12 +99,12 @@ module.exports = async function (Mother) {
       subtract: [
       ]
     };
-    tempObj.ea = {
+    tempObj.display = {
       add: [
-        "명",
-        "명",
-        "명",
-        "명",
+        "graph_0-entire_0",
+        "hidden",
+        "hidden",
+        "hidden"
       ],
       subtract: [
       ]
@@ -121,6 +131,7 @@ module.exports = async function (Mother) {
 
     tempObj = {};
     tempObj.name = "marketing";
+    tempObj.ea = "원";
     tempObj.columns = {
       add: [
         "CAC",
@@ -129,10 +140,10 @@ module.exports = async function (Mother) {
       subtract: [
       ]
     };
-    tempObj.ea = {
+    tempObj.display = {
       add: [
-        "원",
-        "원",
+        "graph_0-entire_0",
+        "graph_1-entire_0",
       ],
       subtract: [
       ]
@@ -141,10 +152,10 @@ module.exports = async function (Mother) {
 
     for (let i = 0; i < firstValues.length; i++) {
 
-      revenue = firstValues[i].value.add[2];
-      profit = firstValues[i].value.add[3];
-      adCost = firstValues[i].value.subtract[0];
-      marketingCost = firstValues[i].value.subtract[1];
+      revenue = firstValues[i].value.add[0];
+      profit = firstValues[i].value.add[1];
+      adCost = firstValues[i].value.add[5];
+      marketingCost = firstValues[i].value.add[4];
       newClient = secondValues[i].value.add[2];
       contractClient = secondValues[i].value.add[3];
       netProfit = profit - adCost;
@@ -166,6 +177,7 @@ module.exports = async function (Mother) {
     //fourth
     tempObj = {};
     tempObj.name = "marketing";
+    tempObj.ea = "%";
     tempObj.columns = {
       add: [
         "ROAS",
@@ -174,10 +186,10 @@ module.exports = async function (Mother) {
       subtract: [
       ]
     };
-    tempObj.ea = {
+    tempObj.display = {
       add: [
-        "%",
-        "%",
+        "graph_0-entire_0",
+        "graph_1-entire_0",
       ],
       subtract: [
       ]
@@ -186,10 +198,10 @@ module.exports = async function (Mother) {
 
     for (let i = 0; i < firstValues.length; i++) {
 
-      revenue = firstValues[i].value.add[2];
-      profit = firstValues[i].value.add[3];
-      adCost = firstValues[i].value.subtract[0];
-      marketingCost = firstValues[i].value.subtract[1];
+      revenue = firstValues[i].value.add[0];
+      profit = firstValues[i].value.add[1];
+      adCost = firstValues[i].value.add[5];
+      marketingCost = firstValues[i].value.add[4];
       newClient = secondValues[i].value.add[2];
       contractClient = secondValues[i].value.add[3];
       netProfit = profit - adCost;
@@ -203,6 +215,38 @@ module.exports = async function (Mother) {
     }
     resultObj.lines.push(tempObj);
 
+
+    //to google sheet
+    let sheetTempArr;
+    let sheetFinalArr = [];
+
+    sheetTempArr = [];
+    sheetTempArr.push('');
+    for (let i = 0; i < resultObj.lines[0].values.length; i++) {
+      sheetTempArr.push(resultObj.lines[0].values[i].name);
+    }
+    sheetFinalArr.push(sheetTempArr);
+
+    for (let z = 0; z < resultObj.lines.length; z++) {
+      for (let i = 0; i < resultObj.lines[z].columns.add.length; i++) {
+        sheetTempArr = [];
+        sheetTempArr.push(resultObj.lines[z].columns.add[i]);
+        for (let j = 0; j < resultObj.lines[z].values.length; j++) {
+          sheetTempArr.push(String(resultObj.lines[z].values[j].value.add[i]) + resultObj.lines[z].ea);
+        }
+        sheetFinalArr.push(sheetTempArr);
+      }
+      for (let i = 0; i < resultObj.lines[z].columns.subtract.length; i++) {
+        sheetTempArr = [];
+        sheetTempArr.push(resultObj.lines[z].columns.subtract[i]);
+        for (let j = 0; j < resultObj.lines[z].values.length; j++) {
+          sheetTempArr.push(String(resultObj.lines[z].values[j].value.subtract[i]) + resultObj.lines[z].ea);
+        }
+        sheetFinalArr.push(sheetTempArr);
+      }
+    }
+
+    await sheet.update_value_inPython(sheetIds.update[0].id, sheetIds.update[0].sheet, sheetFinalArr, sheetIds.update[0].xyz);
 
     //end
     await fileSystem(`write`, [ `${process.cwd()}/temp/0_secondIR.js`, JSON.stringify(resultObj, null, 2) ]);
