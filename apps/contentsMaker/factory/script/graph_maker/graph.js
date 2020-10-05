@@ -150,7 +150,10 @@ GraphCalculation.graphParsing = function (lineObj) {
   return graphsFinal;
 }
 
-GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
+GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = { r: 1, fontSize: 22 }) {
+  if (option.r === undefined) { option.r = 1; }
+  if (option.fontSize === undefined) { option.fontSize = 22; }
+
   const this_ai = app.activeDocument;
   const list = [ "add", "subtract" ];
   const colorBox = GraphCalculation.colorBox();
@@ -167,24 +170,15 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
   let lineLength, lines;
   let maxValue_fixed;
   let orders = [];
-
-  let ratio = 40;
+  let ratio;
   let { length, maxValue } = GraphCalculation.getMaxium(values);
-  if (length > 5) {
-    for (let i = 0; i < length - 5; i++) {
-      ratio = ratio * 10;
-    }
-  } else {
-    for (let i = 0; i < 5 - length; i++) {
-      ratio = ratio / 10;
-    }
-  }
 
   number = 0;
   width = 50;
   margin = 15;
-  fontSize = 22;
+  fontSize = option.fontSize;
   contents = '';
+  ratio = 1 / (option.r / (maxValue / (((width + margin) * values.length) - margin)));
 
   for (let { name, value } of values) {
 
@@ -199,8 +193,18 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
           height = value[method][j] / ratio;
 
           if (orderArr[0] === "entire") {
-            rectangle = this_ai.pathItems.rectangle(height, startPoint + ((width + margin) * number), width, height);
-            rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+
+            if (height > 3) {
+              rectangle = this_ai.pathItems.rectangle(4, startPoint + ((width + margin) * number), width, 4);
+              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+              rectangle.strokeColor = new NoColor();
+              rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, 3, 3);
+              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+            } else {
+              rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, height, height);
+              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+            }
+
             entireBox = rectangle;
             if (number === 0) {
               firstBox = entireBox;
@@ -238,9 +242,9 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
   instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "RIGHT", height: 800, leading: (width + margin) } });
   instance.setParagraph({ from: contents, to: to });
   temp = instance.createElements(this_ai, instance.createSetting[to]);
-  temp.name = "lineObjectActive";
+  temp.name = "belowWording";
   temp.convertAreaObjectToPointObject();
-  temp2 = instance.mother.itempick("lineObjectActive");
+  temp2 = instance.mother.itempick("belowWording");
   temp2.rotate(90);
   temp2.left = instance.mother.return_center(firstBox) - (fontSize / 2);
   temp2.top = instance.mother.return_bottom(firstBox) - 25;
@@ -264,6 +268,7 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
   for (let i = 0; i < lineLength + 1; i++) {
     temp = this_ai.pathItems.add();
     height = (maxValue_fixed * (i / lineLength)) / ratio;
+    temp.name = "guideLine" + String(i);
     temp.stroked = true;
     temp.strokeColor = instance.mother.colorpick("#ff0000");
     temp.fillColor = new NoColor();
@@ -277,10 +282,10 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
   instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "LEFT", leading: ((maxValue_fixed * (1 / lineLength)) / ratio), height: 800 } });
   instance.setParagraph({ from: contents, to: to });
   temp = instance.createElements(this_ai, instance.createSetting[to]);
-  temp.name = "lineObjectActive2";
+  temp.name = "rightWording";
   temp.convertAreaObjectToPointObject();
 
-  temp2 = instance.mother.itempick("lineObjectActive2");
+  temp2 = instance.mother.itempick("rightWording");
   temp2.top = lines[lines.length - 1].top + (fontSize / 2) - 2;
   temp2.left = instance.mother.return_right(rectangle) + 25 + 25;
 
@@ -290,7 +295,8 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
   instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
   instance.setParagraph({ from: ("단위 : " + ea), to: to });
   temp = instance.createElements(this_ai, instance.createSetting[to]);
-  temp.top = instance.mother.return_bottom(firstBox) + fontSize;
+  temp.name = "ea";
+  temp.top = 0 + fontSize;
   temp.left = firstBox.left - 25 - temp.width;
   temp.convertAreaObjectToPointObject();
 
@@ -301,25 +307,52 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
     instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
     instance.setParagraph({ from: orders[i].name, to: to });
     temp = instance.createElements(this_ai, instance.createSetting[to]);
-    temp.top = instance.mother.return_bottom(firstBox) + fontSize + (36 * (i + 1));
+    temp.top = 0 + fontSize + ((fontSize + 14) * (i + 1));
     temp.left = firstBox.left - 25 - temp.width;
-    temp2 = this_ai.pathItems.roundedRectangle(temp.top - 3, instance.mother.return_left(temp) - 36, 26, fontSize - 6, 2, 2);
+    temp.name = "order" + String(i);
+    temp2 = this_ai.pathItems.roundedRectangle(temp.top - 3, instance.mother.return_left(temp) - (fontSize * (18 / 11)), (fontSize - 6) * (13 / 8), fontSize - 6, 2, 2);
     temp2.strokeColor = new NoColor();
     temp2.fillColor = orders[i].color;
+    temp2.name = "orderBox" + String(i);
     temp.convertAreaObjectToPointObject();
   }
 
-  return instance.mother.return_right(instance.mother.itempick("lineObjectActive2"));
+  return instance.mother.return_right(instance.mother.itempick("rightWording"));
 }
 
 GraphCalculation.drawBar = function (instance, lineObj, startPoint) {
+  const mother = instance.mother;
+  let temp, tempString, tempArr;
+  let number, finalNumber;
+
   //decorate
   GraphCalculation.drawGraph(instance, lineObj, startPoint);
 
-  instance.mother.allGroup(function (group, items) {
-    group.rotate(270);
-  }, true);
+  mother.allGroup((group, items) => { group.rotate(270); }, true);
 
+  number = 0;
+  while (mother.itempick("guideLine" + String(number)) !== null) {
+    number++;
+  }
+  finalNumber = number;
+
+  tempString = mother.itempick("rightWording");
+  tempArr = tempString.contents.replace(/[^0-9,a-zA-Z가-힣]/g, '%').split('%');
+  tempString.contents = tempArr[0];
+  tempString.rotate(90);
+  tempString.left = mother.return_center(mother.itempick("guideLine" + String(finalNumber - 1))) - (mother.return_width(tempString) / 2);
+  tempString.top = mother.return_bottom(mother.itempick("guideLine0")) - 18;
+
+  for (let i = 0; i < finalNumber - 1; i++) {
+    temp = tempString.duplicate();
+    temp.contents = tempArr[i + 1];
+    temp.left = mother.return_center(mother.itempick("guideLine" + String(finalNumber - 2 - i))) - (mother.return_width(temp) / 2);
+  }
+
+  temp = mother.itempick("ea");
+  temp.rotate(90);
+  temp.left = mother.return_left(mother.itempick("guideLine0")) + 1;
+  temp.top = mother.return_top(mother.itempick("guideLine0")) + 19 + mother.return_height(temp);
 }
 
 ExecMain.prototype.lineMaker = function (lineObj) {
@@ -329,9 +362,9 @@ ExecMain.prototype.lineMaker = function (lineObj) {
 
   for (let i = 0; i < graphs.length; i++) {
     if (i === 0) {
-      temp = GraphCalculation.drawGraph(this, graphs[i], 0);
+      temp = GraphCalculation.drawGraph(this, graphs[i], 0, { r: 1, fontSize: 22 });
     } else {
-      temp = GraphCalculation.drawGraph(this, graphs[i], tempArr[i - 1] + (300 * i));
+      temp = GraphCalculation.drawGraph(this, graphs[i], tempArr[i - 1] + (300 * i), { r: 0.75, fontSize: 22 });
     }
     tempArr.push(temp);
   }
@@ -358,13 +391,13 @@ ExecMain.prototype.start = function (dayString) {
   this.dayString = dayString;
   const { lines, bar, circles } = this.text;
 
-  // for (let i = 0; i < lines.length; i++) {
-  //   this.lineMaker(lines[i]);
-  // }
-
-  for (let i = 0; i < bar.length; i++) {
-    this.barMaker(bar[i]);
+  for (let i = 0; i < lines.length; i++) {
+    this.lineMaker(lines[i]);
   }
+
+  // for (let i = 0; i < bar.length; i++) {
+  //   this.barMaker(bar[i]);
+  // }
 
   for (let i = 0; i < circles.length; i++) {
     this.circleMaker(circles[i]);

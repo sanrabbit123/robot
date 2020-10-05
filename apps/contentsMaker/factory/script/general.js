@@ -79,8 +79,13 @@ Mother.prototype.pick = function (name, name2) {
 }
 
 Mother.prototype.itempick = function (name) {
-  let i = app.activeDocument.pageItems.getByName(name);
-  return i;
+  let item;
+  try {
+    item = app.activeDocument.pageItems.getByName(name);
+    return item;
+  } catch (e) {
+    return null;
+  }
 }
 
 Mother.prototype.colorpick = function (obj) {
