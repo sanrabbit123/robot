@@ -71,6 +71,11 @@ try:
         result = analyticsApp.getUserNumber(data["consulting"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getAgeGender':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getAgeGender()
+        print(result)
+
     elif argv[1] == 'sheets' and argv[2] == 'get':
         sheetsApp = GoogleSheet()
         result = sheetsApp.getValue(data["id"], data["range"])

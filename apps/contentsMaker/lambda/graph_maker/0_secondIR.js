@@ -29,14 +29,15 @@ module.exports = async function (Mother) {
 
   try {
     let rawArr = {};
-    let resultObj = { lines: [], circles: [] };
+    let resultObj = { lines: [], bar: [], circles: [] };
     let tempObj, tempObj2;
     let rawObj;
     let revenue, profit, adCost, marketingCost, newClient, contractClient, netProfit;
 
     rawArr.first = await sheet.get_value_inPython(sheetIds.get[0].id, sheetIds.get[0].sheet + '!' + sheetIds.get[0].xyz);
     rawArr.second = await analytics.getUsers();
-    const { first, second } = rawArr;
+    rawArr.third = await analytics.getAgeGender();
+    const { first, second, third } = rawArr;
 
 
     //first
@@ -216,7 +217,7 @@ module.exports = async function (Mother) {
     resultObj.lines.push(tempObj);
 
 
-    //to google sheet
+    //lines to google sheet
     let sheetTempArr;
     let sheetFinalArr = [];
 
@@ -247,6 +248,38 @@ module.exports = async function (Mother) {
     }
 
     await sheet.update_value_inPython(sheetIds.update[0].id, sheetIds.update[0].sheet, sheetFinalArr, sheetIds.update[0].xyz);
+
+
+    //bar
+    const { age, gender } = third;
+
+    //age
+    tempObj = {};
+    tempObj.name = "age";
+    tempObj.ea = "명";
+    tempObj.columns = { add: [], subtract: [] };
+    tempObj.display = { add: [], subtract: [] };
+    tempObj.values = [];
+    tempObj.columns.add.push("인원수");
+    tempObj.display.add.push("graph_0-entire_0");
+    for (let i = 0; i < age.length; i++) {
+      tempObj.values.push({ name: age[i].name, value: { add: [ age[i].value ], subtract: [] } });
+    }
+    resultObj.bar.push(tempObj);
+
+    //gender
+    tempObj = {};
+    tempObj.name = "gender";
+    tempObj.ea = "명";
+    tempObj.columns = { add: [], subtract: [] };
+    tempObj.display = { add: [], subtract: [] };
+    tempObj.values = [];
+    tempObj.columns.add.push("인원수");
+    tempObj.display.add.push("graph_0-entire_0");
+    for (let i = 0; i < gender.length; i++) {
+      tempObj.values.push({ name: gender[i].name, value: { add: [ gender[i].value ], subtract: [] } });
+    }
+    resultObj.bar.push(tempObj);
 
     //end
     await fileSystem(`write`, [ `${process.cwd()}/temp/0_secondIR.js`, JSON.stringify(resultObj, null, 2) ]);

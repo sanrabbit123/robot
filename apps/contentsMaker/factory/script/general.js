@@ -667,7 +667,40 @@ Mother.prototype.deleteWithoutLayer = function (layerName) {
   }
 }
 
+Mother.prototype.allGroup = function (callback = function (group, items) {}, ungroup = false) {
+  const this_ai = app.activeDocument;
+  let count, count2;
+  let selectionArr = [];
+  let groupItem;
+
+  count = this_ai.pageItems.length;
+  for (let i = 0; i < count; i++) {
+    selectionArr.push(this_ai.pageItems[i]);
+  }
+  count2 = selectionArr.length;
+
+  groupItem = this_ai.groupItems.add();
+  for (let i = 0; i < count2; i++) {
+    selectionArr[i].moveToEnd(groupItem);
+  }
+
+  callback(groupItem, selectionArr);
+
+  if (ungroup) {
+    count = selectionArr.length;
+    for (let i = 0; i < count; i++) {
+      selectionArr[i].move(this_ai.layers[0], ElementPlacement.PLACEATBEGINNING);
+    }
+    return { items: selectionArr };
+  } else {
+    return { group: groupItem, items: selectionArr };
+  }
+
+}
+
 ExecMain.prototype.mother = new Mother();
+
+//execute main only vaild : create and save functions
 
 ExecMain.prototype.newdoc_setting = function (obj) {
   let newdoc_setting = new DocumentPreset();

@@ -1,6 +1,6 @@
-const CalculationRatio = new Function();
+const GraphCalculation = function () {}
 
-CalculationRatio.getMaxium = function (values) {
+GraphCalculation.getMaxium = function (values) {
   let max, length;
   let tong = [];
   let temp;
@@ -18,7 +18,7 @@ CalculationRatio.getMaxium = function (values) {
   return { length: length, maxValue: max };
 }
 
-CalculationRatio.addAll = function (arr) {
+GraphCalculation.addAll = function (arr) {
   let number = 0;
   for (let i = 0; i < arr.length; i++) {
     number += arr[i];
@@ -26,7 +26,7 @@ CalculationRatio.addAll = function (arr) {
   return number;
 }
 
-CalculationRatio.colorBox = function () {
+GraphCalculation.colorBox = function () {
   const ABC = [ 'a','b','c','d','e' ];
   const NUM = [ '0','2','4','6','8' ];
   const LENGTH = NUM.length;
@@ -41,7 +41,7 @@ CalculationRatio.colorBox = function () {
   return obj;
 }
 
-CalculationRatio.eaParsing = function (num, ea) {
+GraphCalculation.eaParsing = function (num, ea) {
   let str, length, result, remainder;
   let pieces = [];
   let finalResult = '';
@@ -70,7 +70,7 @@ CalculationRatio.eaParsing = function (num, ea) {
   }
 }
 
-CalculationRatio.graphParsing = function (lineObj) {
+GraphCalculation.graphParsing = function (lineObj) {
   const { columns, ea, display, values } = lineObj;
   let tong = { add: [], subtract: [] };
 
@@ -150,193 +150,220 @@ CalculationRatio.graphParsing = function (lineObj) {
   return graphsFinal;
 }
 
-ExecMain.prototype.lineMaker = function (lineObj) {
-  const instance = this;
-  const this_ai = this.createDoc();
-  const graphs = CalculationRatio.graphParsing(lineObj);
+GraphCalculation.drawGraph = function (instance, lineObj, startPoint) {
+  const this_ai = app.activeDocument;
+  const list = [ "add", "subtract" ];
+  const colorBox = GraphCalculation.colorBox();
+  const { columns, ea, display, values } = lineObj;
 
-  const drawGraph = function (lineObj, startPoint) {
-    const list = [ "add", "subtract" ];
-    const colorBox = CalculationRatio.colorBox();
-    const { columns, ea, display, values } = lineObj;
+  let number;
+  let height, width, margin;
+  let fontSize;
+  let entireBox, firstBox, lastBox, heightsBox;
+  let temp, temp2;
+  let tempArr, graphArr, orderArr;
+  let rectangle;
+  let from, to, contents;
+  let lineLength, lines;
+  let maxValue_fixed;
+  let orders = [];
 
-    let number;
-    let height, width, margin;
-    let fontSize;
-    let entireBox, firstBox, lastBox, heightsBox;
-    let temp, temp2;
-    let tempArr, graphArr, orderArr;
-    let rectangle;
-    let from, to, contents;
-    let lineLength, lines;
-    let maxValue_fixed;
-    let orders = [];
-
-    let ratio = 40;
-    let { length, maxValue } = CalculationRatio.getMaxium(values);
-    if (length > 5) {
-      for (let i = 0; i < length - 5; i++) {
-        ratio = ratio * 10;
-      }
-    } else {
-      for (let i = 0; i < 5 - length; i++) {
-        ratio = ratio / 10;
-      }
+  let ratio = 40;
+  let { length, maxValue } = GraphCalculation.getMaxium(values);
+  if (length > 5) {
+    for (let i = 0; i < length - 5; i++) {
+      ratio = ratio * 10;
     }
-
-    number = 0;
-    width = 50;
-    margin = 15;
-    fontSize = 22;
-    contents = '';
-
-    for (let { name, value } of values) {
-
-      //value
-      heightsBox = [];
-      for (let method of list) {
-        for (let j = 0; j < value[method].length; j++) {
-          if (display[method][j] !== "hidden") {
-            tempArr = display[method][j].split('-');
-            graphArr = tempArr[0].split('_');
-            orderArr = tempArr[1].split('_');
-            height = value[method][j] / ratio;
-
-            if (orderArr[0] === "entire") {
-              rectangle = this_ai.pathItems.rectangle(height, startPoint + ((width + margin) * number), width, height);
-              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
-              entireBox = rectangle;
-              if (number === 0) {
-                firstBox = entireBox;
-              } else if (number === values.length - 1) {
-                lastBox = rectangle;
-              }
-
-            } else if (orderArr[0] === "order") {
-              rectangle = this_ai.pathItems.rectangle(height + CalculationRatio.addAll(heightsBox), startPoint + ((width + margin) * number), width, height);
-              rectangle.fillColor = instance.mother.colorpick(colorBox.order[orderArr[1]]);
-              if (number === 0) {
-                orders.push({ name: columns[method][j], color: rectangle.fillColor });
-              }
-              heightsBox.push(height);
-
-            } else {
-
-              //pass
-
-            }
-            rectangle.strokeColor = new NoColor();
-          }
-        }
-      }
-
-      //name
-      contents += name + "\n";
-      entireBox.zOrder = ZOrderMethod.SENDTOBACK;
-      number++;
+  } else {
+    for (let i = 0; i < 5 - length; i++) {
+      ratio = ratio / 10;
     }
-
-    //wording
-    from = "general";
-    to = "line";
-    instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "RIGHT", height: 800, leading: (width + margin) } });
-    instance.setParagraph({ from: contents, to: to });
-    temp = instance.createElements(this_ai, instance.createSetting[to]);
-    temp.name = "lineObjectActive";
-    temp.convertAreaObjectToPointObject();
-    temp2 = instance.mother.itempick("lineObjectActive");
-    temp2.rotate(90);
-    temp2.left = instance.mother.return_center(firstBox) - (fontSize / 2);
-    temp2.top = instance.mother.return_bottom(firstBox) - 25;
-    entireBox.zOrder = ZOrderMethod.SENDTOBACK;
-
-    //guide lines
-    lineLength = 5;
-    contents = '';
-    lines = [];
-
-    if (length > 1) {
-      if (Number(String(maxValue)[1]) >= 5) {
-        maxValue_fixed = (Number(String(maxValue)[0]) + 1) * (10 ** (length - 1));
-      } else {
-        maxValue_fixed = Number(String(maxValue)[0]) * (10 ** (length - 1));
-      }
-    } else {
-      maxValue_fixed = Math.round(maxValue);
-    }
-
-    for (let i = 0; i < lineLength + 1; i++) {
-      temp = this_ai.pathItems.add();
-      height = (maxValue_fixed * (i / lineLength)) / ratio;
-      temp.stroked = true;
-      temp.strokeColor = instance.mother.colorpick("#ff0000");
-      temp.fillColor = new NoColor();
-      temp.setEntirePath([ [ firstBox.left, height ], [ instance.mother.return_right(rectangle) + 25, height ] ]);
-      lines.push(temp);
-      contents += CalculationRatio.eaParsing(maxValue_fixed * ((lineLength - i) / lineLength), ea) + '\n';
-    }
-
-    from = "general";
-    to = "line2";
-    instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "LEFT", leading: ((maxValue_fixed * (1 / lineLength)) / ratio), height: 800 } });
-    instance.setParagraph({ from: contents, to: to });
-    temp = instance.createElements(this_ai, instance.createSetting[to]);
-    temp.name = "lineObjectActive2";
-    temp.convertAreaObjectToPointObject();
-
-    temp2 = instance.mother.itempick("lineObjectActive2");
-    temp2.top = lines[lines.length - 1].top + (fontSize / 2) - 2;
-    temp2.left = instance.mother.return_right(rectangle) + 25 + 25;
-
-    //ea
-    from = "general";
-    to = "lineea";
-    instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
-    instance.setParagraph({ from: ("단위 : " + ea), to: to });
-    temp = instance.createElements(this_ai, instance.createSetting[to]);
-    temp.top = instance.mother.return_bottom(firstBox) + fontSize;
-    temp.left = firstBox.left - 25 - temp.width;
-    temp.convertAreaObjectToPointObject();
-
-    //order box
-    for (let i = 0; i < orders.length; i++) {
-      from = "general";
-      to = "lineorder" + String(i);
-      instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
-      instance.setParagraph({ from: orders[i].name, to: to });
-      temp = instance.createElements(this_ai, instance.createSetting[to]);
-      temp.top = instance.mother.return_bottom(firstBox) + fontSize + (36 * (i + 1));
-      temp.left = firstBox.left - 25 - temp.width;
-      temp2 = this_ai.pathItems.roundedRectangle(temp.top - 3, instance.mother.return_left(temp) - 36, 26, fontSize - 6, 2, 2);
-      temp2.strokeColor = new NoColor();
-      temp2.fillColor = orders[i].color;
-      temp.convertAreaObjectToPointObject();
-    }
-
-    return instance.mother.return_right(instance.mother.itempick("lineObjectActive2"));
   }
 
+  number = 0;
+  width = 50;
+  margin = 15;
+  fontSize = 22;
+  contents = '';
+
+  for (let { name, value } of values) {
+
+    //value
+    heightsBox = [];
+    for (let method of list) {
+      for (let j = 0; j < value[method].length; j++) {
+        if (display[method][j] !== "hidden") {
+          tempArr = display[method][j].split('-');
+          graphArr = tempArr[0].split('_');
+          orderArr = tempArr[1].split('_');
+          height = value[method][j] / ratio;
+
+          if (orderArr[0] === "entire") {
+            rectangle = this_ai.pathItems.rectangle(height, startPoint + ((width + margin) * number), width, height);
+            rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+            entireBox = rectangle;
+            if (number === 0) {
+              firstBox = entireBox;
+            } else if (number === values.length - 1) {
+              lastBox = rectangle;
+            }
+
+          } else if (orderArr[0] === "order") {
+            rectangle = this_ai.pathItems.rectangle(height + GraphCalculation.addAll(heightsBox), startPoint + ((width + margin) * number), width, height);
+            rectangle.fillColor = instance.mother.colorpick(colorBox.order[orderArr[1]]);
+            if (number === 0) {
+              orders.push({ name: columns[method][j], color: rectangle.fillColor });
+            }
+            heightsBox.push(height);
+
+          } else {
+
+            //pass
+
+          }
+          rectangle.strokeColor = new NoColor();
+        }
+      }
+    }
+
+    //name
+    contents += name + "\n";
+    entireBox.zOrder = ZOrderMethod.SENDTOBACK;
+    number++;
+  }
+
+  //wording
+  from = "general";
+  to = "line";
+  instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "RIGHT", height: 800, leading: (width + margin) } });
+  instance.setParagraph({ from: contents, to: to });
+  temp = instance.createElements(this_ai, instance.createSetting[to]);
+  temp.name = "lineObjectActive";
+  temp.convertAreaObjectToPointObject();
+  temp2 = instance.mother.itempick("lineObjectActive");
+  temp2.rotate(90);
+  temp2.left = instance.mother.return_center(firstBox) - (fontSize / 2);
+  temp2.top = instance.mother.return_bottom(firstBox) - 25;
+  entireBox.zOrder = ZOrderMethod.SENDTOBACK;
+
+  //guide lines
+  lineLength = 5;
+  contents = '';
+  lines = [];
+
+  if (length > 1) {
+    if (Number(String(maxValue)[1]) >= 5) {
+      maxValue_fixed = (Number(String(maxValue)[0]) + 1) * (10 ** (length - 1));
+    } else {
+      maxValue_fixed = Number(String(maxValue)[0]) * (10 ** (length - 1));
+    }
+  } else {
+    maxValue_fixed = Math.round(maxValue);
+  }
+
+  for (let i = 0; i < lineLength + 1; i++) {
+    temp = this_ai.pathItems.add();
+    height = (maxValue_fixed * (i / lineLength)) / ratio;
+    temp.stroked = true;
+    temp.strokeColor = instance.mother.colorpick("#ff0000");
+    temp.fillColor = new NoColor();
+    temp.setEntirePath([ [ firstBox.left, height ], [ instance.mother.return_right(rectangle) + 25, height ] ]);
+    lines.push(temp);
+    contents += GraphCalculation.eaParsing(maxValue_fixed * ((lineLength - i) / lineLength), ea) + '\n';
+  }
+
+  from = "general";
+  to = "line2";
+  instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", fontSize: fontSize, justification: "LEFT", leading: ((maxValue_fixed * (1 / lineLength)) / ratio), height: 800 } });
+  instance.setParagraph({ from: contents, to: to });
+  temp = instance.createElements(this_ai, instance.createSetting[to]);
+  temp.name = "lineObjectActive2";
+  temp.convertAreaObjectToPointObject();
+
+  temp2 = instance.mother.itempick("lineObjectActive2");
+  temp2.top = lines[lines.length - 1].top + (fontSize / 2) - 2;
+  temp2.left = instance.mother.return_right(rectangle) + 25 + 25;
+
+  //ea
+  from = "general";
+  to = "lineea";
+  instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
+  instance.setParagraph({ from: ("단위 : " + ea), to: to });
+  temp = instance.createElements(this_ai, instance.createSetting[to]);
+  temp.top = instance.mother.return_bottom(firstBox) + fontSize;
+  temp.left = firstBox.left - 25 - temp.width;
+  temp.convertAreaObjectToPointObject();
+
+  //order box
+  for (let i = 0; i < orders.length; i++) {
+    from = "general";
+    to = "lineorder" + String(i);
+    instance.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", fontSize: fontSize, justification: "RIGHT" } });
+    instance.setParagraph({ from: orders[i].name, to: to });
+    temp = instance.createElements(this_ai, instance.createSetting[to]);
+    temp.top = instance.mother.return_bottom(firstBox) + fontSize + (36 * (i + 1));
+    temp.left = firstBox.left - 25 - temp.width;
+    temp2 = this_ai.pathItems.roundedRectangle(temp.top - 3, instance.mother.return_left(temp) - 36, 26, fontSize - 6, 2, 2);
+    temp2.strokeColor = new NoColor();
+    temp2.fillColor = orders[i].color;
+    temp.convertAreaObjectToPointObject();
+  }
+
+  return instance.mother.return_right(instance.mother.itempick("lineObjectActive2"));
+}
+
+GraphCalculation.drawBar = function (instance, lineObj, startPoint) {
+  //decorate
+  GraphCalculation.drawGraph(instance, lineObj, startPoint);
+
+  instance.mother.allGroup(function (group, items) {
+    group.rotate(270);
+  }, true);
+
+}
+
+ExecMain.prototype.lineMaker = function (lineObj) {
+  const this_ai = this.createDoc();
+  const graphs = GraphCalculation.graphParsing(lineObj);
   let temp, tempArr = [];
+
   for (let i = 0; i < graphs.length; i++) {
     if (i === 0) {
-      temp = drawGraph(graphs[i], 0);
+      temp = GraphCalculation.drawGraph(this, graphs[i], 0);
     } else {
-      temp = drawGraph(graphs[i], tempArr[i - 1] + (300 * i));
+      temp = GraphCalculation.drawGraph(this, graphs[i], tempArr[i - 1] + (300 * i));
     }
     tempArr.push(temp);
   }
 }
 
+ExecMain.prototype.barMaker = function (lineObj) {
+  const this_ai = this.createDoc();
+  const graphs = GraphCalculation.graphParsing(lineObj);
+  let temp, tempArr = [];
+
+  for (let i = 0; i < graphs.length; i++) {
+    if (i === 0) {
+      temp = GraphCalculation.drawBar(this, graphs[i], 0);
+    } else {
+      temp = GraphCalculation.drawBar(this, graphs[i], tempArr[i - 1] + (300 * i));
+    }
+    tempArr.push(temp);
+  }
+}
 
 ExecMain.prototype.circleMaker = function (circleObj) {}
 
-
 ExecMain.prototype.start = function (dayString) {
   this.dayString = dayString;
-  const { lines, circles } = this.text;
+  const { lines, bar, circles } = this.text;
 
-  for (let i = 0; i < lines.length; i++) {
-    this.lineMaker(lines[i]);
+  // for (let i = 0; i < lines.length; i++) {
+  //   this.lineMaker(lines[i]);
+  // }
+
+  for (let i = 0; i < bar.length; i++) {
+    this.barMaker(bar[i]);
   }
 
   for (let i = 0; i < circles.length; i++) {

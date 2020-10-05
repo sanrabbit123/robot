@@ -125,3 +125,28 @@ class GoogleAnalytics:
             }).execute()
 
         return dumps(result)
+
+
+    def getAgeGender(self):
+        def returnObj(dimension):
+            return {
+                "viewId": self.viewId,
+                "pageSize": 100000,
+                "dateRanges": [
+                    { "startDate": "2019-03-01", "endDate": "today" }
+                ],
+                "dimensions": [
+                    dimension,
+                ],
+                "metrics": [
+                    { "expression": "ga:users" },
+                ]
+            }
+
+        dic0 = returnObj({ "name": "ga:userAgeBracket" })
+        dic1 = returnObj({ "name": "ga:userGender" })
+
+        result0 = self.app.reports().batchGet(body={ "reportRequests": [ dic0 ] }).execute()
+        result1 = self.app.reports().batchGet(body={ "reportRequests": [ dic1 ] }).execute()
+
+        return dumps({ "age": result0, "gender": result1 })

@@ -229,7 +229,8 @@ main5();
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-  analytics.getClients();
+  console.log(await analytics.getAgeGender());
+
 }
 
 // main6();

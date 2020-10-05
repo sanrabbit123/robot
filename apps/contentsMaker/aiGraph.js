@@ -56,7 +56,7 @@ AiGraph.prototype.launching = async function () {
       name: `graph_maker`,
       data: this.text,
       script: temp_scriptString,
-      app: "Illustrator",
+      app: `Illustrator`,
       end: false,
     });
 

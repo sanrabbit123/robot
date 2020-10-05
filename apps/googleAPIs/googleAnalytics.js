@@ -35,6 +35,45 @@ GoogleAnalytics.prototype.returnMonthBox = function () {
   return result;
 }
 
+GoogleAnalytics.prototype.getAgeGender = async function () {
+  const instance = this;
+  const mother = this.mother;
+  const sheet = this.mother.googleSystem("sheets");
+  try {
+    const { age: { reports: [ ageResultRaw ] }, gender: { reports: [ genderResultRaw ] } } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAgeGender" ], {});
+    const { data: { rows: ageResult } } = ageResultRaw;
+    const { data: { rows: genderResult } } = genderResultRaw;
+    let temp, tempArr;
+    let age = [];
+    for (let { dimensions, metrics } of ageResult) {
+      temp = {};
+      tempArr = dimensions[0].replace(/[\-\+]/g, '_').split('_');
+      if (tempArr[1] === undefined || tempArr[1] === '') {
+        temp.name = tempArr[0] + "세 이상 ~";
+      } else {
+        temp.name = tempArr[0] + "세 ~ " + tempArr[1] + "세";
+      }
+      temp.value = Number(metrics[0].values[0]);
+      age.push(temp);
+    }
+    let gender = [];
+    for (let { dimensions, metrics } of genderResult) {
+      temp = {};
+      if (dimensions[0] === "female") {
+        temp.name = "여성";
+        temp.value = Number(metrics[0].values[0]);
+      } else {
+        temp.name = "남성";
+        temp.value = Number(metrics[0].values[0]);
+      }
+      gender.push(temp);
+    }
+
+    return { age, gender };
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 GoogleAnalytics.prototype.getClients = async function () {
   const instance = this;
@@ -275,7 +314,7 @@ GoogleAnalytics.prototype.getUsers = async function () {
     maxLength = String((ABCOBJ[max[0]] * ABC.length) + ABCOBJ[max[1]]).length;
 
     target = id.split('_')[1].slice(0, 2);
-    result_num = (ABCOBJ[target[0]] * ABC.length) + ABCOBJ[target[1]]
+    result_num = (ABCOBJ[target[0]] * ABC.length) + ABCOBJ[target[1]];
 
     append = '';
     for (let i = 0; i < maxLength - String(result_num).length; i++) {
@@ -327,7 +366,6 @@ GoogleAnalytics.prototype.getUsers = async function () {
     }
 
     //contract
-
     row = await MONGOC.db("miro81").collection("BP2_calculation").find({}).project({ d5_deposit_yn: 1 }).toArray();
     contract_raw = [];
     for (let { d5_deposit_yn: value } of row) {
