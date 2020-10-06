@@ -49,6 +49,7 @@ except Exception as e:
 # python start --------------------------------------------------------------------------------------------------------
 
 from google.googleAnalytics import GoogleAnalytics
+from google.googleSearchConsole import GoogleSearchConsole
 from google.googleSheet import GoogleSheet
 
 try:
@@ -74,6 +75,11 @@ try:
     elif argv[1] == 'analytics' and argv[2] == 'getAgeGender':
         analyticsApp = GoogleAnalytics()
         result = analyticsApp.getAgeGender()
+        print(result)
+
+    elif argv[1] == 'analytics' and argv[2] == 'monthSearch':
+        analyticsApp = GoogleSearchConsole()
+        result = analyticsApp.getAllMonthData(data["monthBox"])
         print(result)
 
     elif argv[1] == 'sheets' and argv[2] == 'get':

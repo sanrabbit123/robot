@@ -229,7 +229,7 @@ main5();
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-  console.log(await analytics.getAgeGender());
+  console.log(await analytics.getSearchData("2020-01-01"));
 
 }
 

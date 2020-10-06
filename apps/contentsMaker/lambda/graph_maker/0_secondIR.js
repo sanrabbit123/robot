@@ -1,5 +1,5 @@
 module.exports = async function (Mother) {
-  const { fileSystem } = Mother;
+  const { fileSystem, mongo, mongoinfo } = Mother;
   const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const sheet = new GoogleSheet();
@@ -26,6 +26,7 @@ module.exports = async function (Mother) {
       { id: "1ygfQKHwigARiTh1sBaP4eRxNH8gOtsQYDnlAjQ0xKvg", sheet: "지표", xyz: [ 0, 0 ] }
     ]
   }
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
 
   try {
     let rawArr = {};
@@ -33,6 +34,8 @@ module.exports = async function (Mother) {
     let tempObj, tempObj2;
     let rawObj;
     let revenue, profit, adCost, marketingCost, newClient, contractClient, netProfit;
+
+    await MONGOC.connect();
 
     rawArr.first = await sheet.get_value_inPython(sheetIds.get[0].id, sheetIds.get[0].sheet + '!' + sheetIds.get[0].xyz);
     rawArr.second = await analytics.getUsers();
@@ -59,12 +62,12 @@ module.exports = async function (Mother) {
     };
     tempObj.display = {
       add: [
-        "graph_0-entire_0",
+        "graph_0-entire_0-color_#ffffff-guide_#dddddd-ratio_0.8-fontSize_28",
         "hidden",
-        "graph_0-order_0",
-        "graph_0-order_1",
-        "graph_1-entire_0",
-        "graph_1-order_0",
+        "graph_0-order_0-color_#2fa678",
+        "graph_0-order_1-color_#f9e3a8",
+        "graph_1-entire_0-color_#2fa678-guide_#dddddd-ratio_0.327-fontSize_28",
+        "graph_1-order_0-color_#f9e3a8",
       ],
       subtract: [
       ]
@@ -102,7 +105,7 @@ module.exports = async function (Mother) {
     };
     tempObj.display = {
       add: [
-        "graph_0-entire_0",
+        "graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_0.6822-fontSize_28",
         "hidden",
         "hidden",
         "hidden"
@@ -143,8 +146,8 @@ module.exports = async function (Mother) {
     };
     tempObj.display = {
       add: [
-        "graph_0-entire_0",
-        "graph_1-entire_0",
+        "graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_0.327-fontSize_28",
+        "graph_1-entire_0-color_#2fa678-guide_#dddddd-ratio_1.2-fontSize_24",
       ],
       subtract: [
       ]
@@ -189,8 +192,8 @@ module.exports = async function (Mother) {
     };
     tempObj.display = {
       add: [
-        "graph_0-entire_0",
-        "graph_1-entire_0",
+        "graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_1.1-fontSize_28",
+        "graph_1-entire_0-color_#2fa678-guide_#dddddd-ratio_0.5-fontSize_28",
       ],
       subtract: [
       ]
@@ -249,7 +252,6 @@ module.exports = async function (Mother) {
 
     await sheet.update_value_inPython(sheetIds.update[0].id, sheetIds.update[0].sheet, sheetFinalArr, sheetIds.update[0].xyz);
 
-
     //bar
     const { age, gender } = third;
 
@@ -261,7 +263,7 @@ module.exports = async function (Mother) {
     tempObj.display = { add: [], subtract: [] };
     tempObj.values = [];
     tempObj.columns.add.push("인원수");
-    tempObj.display.add.push("graph_0-entire_0");
+    tempObj.display.add.push("graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_7-fontSize_28");
     for (let i = 0; i < age.length; i++) {
       tempObj.values.push({ name: age[i].name, value: { add: [ age[i].value ], subtract: [] } });
     }
@@ -275,17 +277,165 @@ module.exports = async function (Mother) {
     tempObj.display = { add: [], subtract: [] };
     tempObj.values = [];
     tempObj.columns.add.push("인원수");
-    tempObj.display.add.push("graph_0-entire_0");
+    tempObj.display.add.push("graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_18-fontSize_28");
     for (let i = 0; i < gender.length; i++) {
       tempObj.values.push({ name: gender[i].name, value: { add: [ gender[i].value ], subtract: [] } });
     }
     resultObj.bar.push(tempObj);
 
+
+    //google search console
+    const searchData = await analytics.getSearchData("2020-01-01");
+    tempObj = {};
+    tempObj.name = "googleSearch";
+    tempObj.ea = "개";
+    tempObj.columns = {
+      add: [
+        "노출수",
+        "클릭수",
+      ],
+      subtract: []
+    };
+    tempObj.display = {
+      add: [
+        "graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_0.4-fontSize_16",
+        "graph_0-order_0-color_#f9e3a8"
+      ],
+      subtract: []
+    };
+    tempObj.values = [];
+    for (let i = 0; i < searchData.length; i++) {
+      tempObj2 = {};
+      tempObj2.name = searchData[i].name;
+      tempObj2.value = {};
+      tempObj2.value.add = [];
+      tempObj2.value.subtract = [];
+      tempObj2.value.add.push(searchData[i].rows.impressions);
+      tempObj2.value.add.push(searchData[i].rows.clicks);
+      tempObj.values.push(tempObj2);
+    }
+    resultObj.lines.push(tempObj);
+
+
+    //naver blog
+    tempObj = {};
+    tempObj.name = "naverBlog";
+    tempObj.ea = "명";
+    tempObj.columns = { add: [], subtract: [] };
+    tempObj.display = { add: [], subtract: [] };
+    tempObj.columns.add.push("인원수");
+    tempObj.display.add.push("graph_0-entire_0-color_#2fa678-guide_#dddddd-ratio_0.4-fontSize_16");
+    tempObj.values = [
+      {
+        name: "2020년 1월",
+        value: {
+          add: [ 3215 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 2월",
+        value: {
+          add: [ 3090 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 3월",
+        value: {
+          add: [ 4601 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 4월",
+        value: {
+          add: [ 5741 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 5월",
+        value: {
+          add: [ 6139 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 6월",
+        value: {
+          add: [ 7017 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 7월",
+        value: {
+          add: [ 8260 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 8월",
+        value: {
+          add: [ 8248 ],
+          subtract: []
+        }
+      },
+      {
+        name: "2020년 9월",
+        value: {
+          add: [ 8128 ],
+          subtract: []
+        }
+      },
+    ]
+
+    resultObj.lines.push(tempObj);
+
+    let row;
+    let rowTotalNum;
+    let itemsCount = {
+      search: { count: 0, percent: 0 },
+      blog: { count: 0, percent: 0 },
+      sns: { count: 0, percent: 0 },
+      friend: { count: 0, percent: 0 },
+      news: { count: 0, percent: 0 },
+      etc: { count: 0, percent: 0 },
+    };
+
+    row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a30_channel: 1 }).toArray();
+    rowTotalNum = row.length;
+    for (let i = 0; i < rowTotalNum; i++) {
+      if (/검색/g.test(row[i].a30_channel) || /인터넷/g.test(row[i].a30_channel)) {
+        itemsCount.search.count++;
+      } else if (/블로그/g.test(row[i].a30_channel) || /커뮤니티/g.test(row[i].a30_channel)) {
+        itemsCount.blog.count++;
+      } else if (/인스타/g.test(row[i].a30_channel)) {
+        itemsCount.sns.count++;
+      } else if (/지인/g.test(row[i].a30_channel)) {
+        itemsCount.friend.count++;
+      } else if (/언론/g.test(row[i].a30_channel)) {
+        itemsCount.news.count++;
+      } else {
+        itemsCount.etc.count++;
+      }
+    }
+
+    for (let i in itemsCount) {
+      itemsCount[i].percent = Math.round((itemsCount[i].count / rowTotalNum) * 100);
+    }
+
+    console.log(itemsCount);
+
     //end
     await fileSystem(`write`, [ `${process.cwd()}/temp/0_secondIR.js`, JSON.stringify(resultObj, null, 2) ]);
 
+    MONGOC.close();
+
     return resultObj;
   } catch (e) {
+    MONGOC.close();
     console.log(e);
   }
 }

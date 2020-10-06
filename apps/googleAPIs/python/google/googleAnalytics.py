@@ -9,10 +9,9 @@ from oauth2client import tools
 
 class GoogleAnalytics:
 
-    viewId = '148670049'
-    app = None
-
     def __init__(self):
+
+        self.viewId = '148670049'
 
         # make this folder path
         thisAppPath = osPath.abspath(__file__)
@@ -22,7 +21,7 @@ class GoogleAnalytics:
 
         # make access token
         clientSecrets = thisFolderPath + '/tokens/client_secrets.json'
-        parser = argparse.ArgumentParser( formatter_class=argparse.RawDescriptionHelpFormatter, parents=[ tools.argparser ])
+        parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, parents=[ tools.argparser ])
         flags = parser.parse_args([])
         flow = client.flow_from_clientsecrets(clientSecrets, scope=[ 'https://www.googleapis.com/auth/analytics' ], message=tools.message_if_missing(clientSecrets))
         storage = file.Storage(thisFolderPath + '/tokens/analyticsreporting.dat')

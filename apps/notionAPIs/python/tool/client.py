@@ -4,9 +4,6 @@ import re as RegExp
 
 class Client:
 
-    client = None
-    table = None
-
 
     def __init__(self, app):
         self.client = app

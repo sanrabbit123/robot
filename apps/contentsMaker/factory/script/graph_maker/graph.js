@@ -26,19 +26,34 @@ GraphCalculation.addAll = function (arr) {
   return number;
 }
 
-GraphCalculation.colorBox = function () {
-  const ABC = [ 'a','b','c','d','e' ];
-  const NUM = [ '0','2','4','6','8' ];
-  const LENGTH = NUM.length;
-
-  let obj = {};
-  obj.entire = "#ff0000";
-  obj.order = [];
-
-  for (let i = 0; i < LENGTH; i++) {
-    obj.order.push("#" + NUM[LENGTH - i] + NUM[LENGTH - i] + ABC[i] + ABC[LENGTH - i] + NUM[i] + NUM[i]);
+GraphCalculation.extractOption = function (lineObj) {
+  const { display } = lineObj;
+  const { add, subtract } = display;
+  let target;
+  for (let i of add) {
+    if (/entire/gi.test(i)) {
+      target = i;
+    }
   }
-  return obj;
+  for (let i of subtract) {
+    if (/entire/gi.test(i)) {
+      target = i;
+    }
+  }
+
+  let tempArr = target.split('-');
+  let tempArr2;
+  let finalObj = {};
+  for (let i of tempArr) {
+    tempArr2 = i.split('_');
+    if (tempArr2[0] === "ratio" || tempArr2[0] === "fontSize") {
+      finalObj[tempArr2[0]] = Number(tempArr2[1]);
+    } else {
+      finalObj[tempArr2[0]] = tempArr2[1];
+    }
+  }
+
+  return finalObj;
 }
 
 GraphCalculation.eaParsing = function (num, ea) {
@@ -156,7 +171,7 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
 
   const this_ai = app.activeDocument;
   const list = [ "add", "subtract" ];
-  const colorBox = GraphCalculation.colorBox();
+  const entireOption = GraphCalculation.extractOption(lineObj);
   const { columns, ea, display, values } = lineObj;
 
   let number;
@@ -171,22 +186,25 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
   let maxValue_fixed;
   let orders = [];
   let ratio;
-  let selectionRec = [];
-  let selectionRec_length;
   let { length, maxValue } = GraphCalculation.getMaxium(values);
+  let clipPath, clipArr = [];
+  let tempGroup;
 
   number = 0;
   width = 50;
   margin = 15;
-  fontSize = option.fontSize;
+  fontSize = entireOption.fontSize;
   contents = '';
-  ratio = 1 / (option.r / (maxValue / (((width + margin) * values.length) - margin)));
+  ratio = 1 / (entireOption.ratio / (maxValue / (((width + margin) * values.length) - margin)));
 
   for (let { name, value } of values) {
 
     //value
     heightsBox = [];
+    clipArr = [];
+
     for (let method of list) {
+
       for (let j = 0; j < value[method].length; j++) {
         if (display[method][j] !== "hidden") {
           tempArr = display[method][j].split('-');
@@ -198,30 +216,17 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
 
             //entire rectangle
             if (height > 3) {
-              rectangle = this_ai.pathItems.rectangle(4, startPoint + ((width + margin) * number), width, 4);
-              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
-              rectangle.strokeColor = new NoColor();
-              selectionRec.push(rectangle);
-
-              rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, 3, 3);
-              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
-              rectangle.strokeColor = new NoColor();
-              selectionRec.push(rectangle);
-
-              selectionRec_length = selectionRec.length;
-              for (let r = 0; r < selectionRec_length; r++) {
-                selectionRec[r].selected = true;
-              }
-              app.doScript("union", "contents_maker");
-              selectionRec = [];
-
-              this_ai.pathItems;
-
-
+              rectangle = instance.mother.upRoundRectangle(height, startPoint + ((width + margin) * number), width, height, 3, 3);
+            } else if (height >= 0) {
+              rectangle = instance.mother.upRoundRectangle(height, startPoint + ((width + margin) * number), width, height, height, height);
+            } else if (height >= -3) {
+              rectangle = instance.mother.upRoundRectangle(height, startPoint + ((width + margin) * number), width, height, Math.abs(height), Math.abs(height));
             } else {
-              rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, height, height);
-              rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+              rectangle = instance.mother.upRoundRectangle(height, startPoint + ((width + margin) * number), width, height, 3, 3);
             }
+            rectangle.fillColor = instance.mother.colorpick(tempArr[2].split('_')[1]);
+
+            clipPath = rectangle.duplicate();
             entireBox = rectangle;
 
             if (number === 0) {
@@ -232,7 +237,8 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
 
           } else if (orderArr[0] === "order") {
             rectangle = this_ai.pathItems.rectangle(height + GraphCalculation.addAll(heightsBox), startPoint + ((width + margin) * number), width, height);
-            rectangle.fillColor = instance.mother.colorpick(colorBox.order[orderArr[1]]);
+
+            rectangle.fillColor = instance.mother.colorpick(tempArr[2].split('_')[1]);
             if (number === 0) {
               orders.push({ name: columns[method][j], color: rectangle.fillColor });
             }
@@ -243,10 +249,21 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
             //pass
 
           }
+          rectangle.zOrder(ZOrderMethod.SENDTOBACK);
+          entireBox.zOrder(ZOrderMethod.SENDTOBACK);
           rectangle.strokeColor = new NoColor();
+          clipArr.push(rectangle);
         }
       }
     }
+
+    tempGroup = this_ai.groupItems.add();
+    for (let i = 0; i < clipArr.length; i++) {
+      clipArr[i].moveToBeginning(tempGroup);
+    }
+    clipPath.clipping = true;
+    clipPath.moveToBeginning(tempGroup);
+    tempGroup.clipped = true;
 
     //name
     contents += name + "\n";
@@ -288,10 +305,11 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
     height = (maxValue_fixed * (i / lineLength)) / ratio;
     temp.name = "guideLine" + String(i);
     temp.stroked = true;
-    temp.strokeColor = instance.mother.colorpick("#ff0000");
+    temp.strokeColor = instance.mother.colorpick(entireOption.guide);
     temp.fillColor = new NoColor();
     temp.setEntirePath([ [ firstBox.left, height ], [ instance.mother.return_right(rectangle) + 25, height ] ]);
     lines.push(temp);
+    temp.zOrder(ZOrderMethod.SENDTOBACK);
     contents += GraphCalculation.eaParsing(maxValue_fixed * ((lineLength - i) / lineLength), ea) + '\n';
   }
 
@@ -371,6 +389,13 @@ GraphCalculation.drawBar = function (instance, lineObj, startPoint) {
   temp.rotate(90);
   temp.left = mother.return_left(mother.itempick("guideLine0")) + 1;
   temp.top = mother.return_top(mother.itempick("guideLine0")) + 19 + mother.return_height(temp);
+
+  number = 0;
+  while (mother.itempick("guideLine" + String(number)) !== null) {
+    mother.itempick("guideLine" + String(number)).zOrder(ZOrderMethod.SENDTOBACK);
+    number++;
+  }
+
 }
 
 ExecMain.prototype.lineMaker = function (lineObj) {
@@ -413,9 +438,9 @@ ExecMain.prototype.start = function (dayString) {
     this.lineMaker(lines[i]);
   }
 
-  // for (let i = 0; i < bar.length; i++) {
-  //   this.barMaker(bar[i]);
-  // }
+  for (let i = 0; i < bar.length; i++) {
+    this.barMaker(bar[i]);
+  }
 
   for (let i = 0; i < circles.length; i++) {
     this.circleMaker(circles[i]);

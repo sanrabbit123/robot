@@ -8,8 +8,6 @@ from os import path as osPath
 
 class GoogleSheet:
 
-    app = None
-
     def __init__(self):
 
         # make this folder path

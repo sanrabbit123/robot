@@ -6,9 +6,7 @@ const GoogleAnalytics = function () {
   this.tempDir = process.cwd() + "/temp";
 }
 
-GoogleAnalytics.prototype.returnMonthBox = function () {
-  // const startDate = "2019-03-01";
-  const startDate = "2020-09-01";
+GoogleAnalytics.prototype.returnMonthBox = function (startDate = "2019-03-01") {
   const startDay = new Date(startDate);
   const today = new Date();
 
@@ -75,6 +73,7 @@ GoogleAnalytics.prototype.getAgeGender = async function () {
   }
 }
 
+//this is problem
 GoogleAnalytics.prototype.getClients = async function () {
   const instance = this;
   const mother = this.mother;
@@ -124,7 +123,7 @@ GoogleAnalytics.prototype.getClients = async function () {
 
 
     //testing
-    let monthBox = this.returnMonthBox();
+    let monthBox = this.returnMonthBox("2020-09-01");
     for (let i = 0; i < monthBox.length; i++) {
       result = await mother.pythonExecute(this.pythonApp, [ "analytics", "clientsIdTesting" ], { startDate: monthBox[i].startDate, endDate: monthBox[i].endDate });
       if (Number(result.totalNum) !== result.data.rows.length) { throw new Error("invaild ID"); process.exit(); return; }
@@ -389,6 +388,34 @@ GoogleAnalytics.prototype.getUsers = async function () {
   } finally {
     MONGOC.close();
     console.log("done");
+  }
+}
+
+GoogleAnalytics.prototype.getSearchData = async function (startDay = "2020-01-01") {
+  const instance = this;
+  const mother = this.mother;
+  try {
+    const monthBox = this.returnMonthBox(startDay);
+    const pythonResult = await mother.pythonExecute(this.pythonApp, [ "analytics", "monthSearch" ], { monthBox });
+
+    let result = [];
+    let temp, tempString, tempArr, number;
+
+    number = 0;
+    for (let { rows } of pythonResult) {
+      tempString = monthBox[number].startDate.slice(0, 7);
+      tempArr = tempString.split('-');
+      temp = {};
+      temp.rows = rows[0];
+      temp.date = { year: Number(tempArr[0]), month: Number(tempArr[1]) };
+      temp.name = String(Number(tempArr[0])) + "년 " + String(Number(tempArr[1])) + "월";
+      result.push(temp);
+      number++;
+    }
+
+    return result;
+  } catch (e) {
+    console.log(e);
   }
 }
 

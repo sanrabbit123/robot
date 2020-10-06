@@ -703,6 +703,124 @@ Mother.prototype.allGroup = function (callback = function (group, items) {}, ung
 
 }
 
+Mother.prototype.upRoundRectangle = function (original_top, original_left, original_width, original_height, original_radius1, original_radius2) {
+  const this_ai = app.activeDocument;
+  const radius = original_radius1;
+  const circleRatio = radius * (0.552516041877744);
+  const boo = original_height >= 0 ? true : false;
+
+  let rectangle = this_ai.pathItems.rectangle(original_top, original_left, original_width, original_height);
+  let originalPoints = rectangle.pathPoints;
+  let pointsNum = rectangle.pathPoints.length;
+  let yAnchors = [];
+
+  for (let i = 0; i < pointsNum; i++) {
+    yAnchors.push({ y: rectangle.pathPoints[i].anchor[1], index: i });
+  }
+
+  let targetIndex = [], leftIndex = [], targets = [], left = [];
+
+  yAnchors.sort((a, b) => { return b.y - a.y; });
+
+  if (boo) {
+    targetIndex.push(yAnchors[0].index);
+    targetIndex.push(yAnchors[1].index);
+    leftIndex.push(yAnchors[2].index);
+    leftIndex.push(yAnchors[3].index);
+  } else {
+    targetIndex.push(yAnchors[2].index);
+    targetIndex.push(yAnchors[3].index);
+    leftIndex.push(yAnchors[0].index);
+    leftIndex.push(yAnchors[1].index);
+  }
+
+  for (let i = 0; i < targetIndex.length; i++) {
+    targets.push(originalPoints[targetIndex[i]]);
+  }
+  for (let i = 0; i < leftIndex.length; i++) {
+    left.push(originalPoints[leftIndex[i]]);
+  }
+
+  let finalAnchors, leftHandle, rightHandle;
+
+  if (boo) {
+
+    finalAnchors = [
+      [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+      [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+    ];
+
+    leftHandle = [
+      [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+      [ targets[0].anchor[0] + radius - circleRatio, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] - radius + circleRatio ],
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+    ];
+
+    rightHandle = [
+      [ targets[0].anchor[0], targets[0].anchor[1] - radius + circleRatio ],
+      [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius + circleRatio, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+    ];
+
+  } else {
+
+    finalAnchors = [
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+      [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+      [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+    ];
+
+    leftHandle = [
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+      [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+      [ targets[0].anchor[0] + radius - circleRatio, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] + radius - circleRatio ],
+    ];
+
+    rightHandle = [
+      [ left[0].anchor[0], left[0].anchor[1] ],
+      [ left[1].anchor[0], left[1].anchor[1] ],
+      [ targets[0].anchor[0], targets[0].anchor[1] + radius - circleRatio ],
+      [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+      [ targets[1].anchor[0] - radius + circleRatio, targets[1].anchor[1] ],
+      [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+    ];
+
+  }
+
+  let newPath, points;
+
+  rectangle.remove();
+
+  newPath = this_ai.pathItems.add();
+  newPath.setEntirePath(finalAnchors);
+  newPath.closed = true;
+
+  points = newPath.pathPoints;
+  for (let i = 0; i < points.length; i++) {
+    points[i].leftDirection = leftHandle[i];
+    points[i].rightDirection = rightHandle[i];
+  }
+
+  return newPath;
+}
+
+
 ExecMain.prototype.mother = new Mother();
 
 //execute main only vaild : create and save functions
