@@ -171,6 +171,8 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
   let maxValue_fixed;
   let orders = [];
   let ratio;
+  let selectionRec = [];
+  let selectionRec_length;
   let { length, maxValue } = GraphCalculation.getMaxium(values);
 
   number = 0;
@@ -194,18 +196,34 @@ GraphCalculation.drawGraph = function (instance, lineObj, startPoint, option = {
 
           if (orderArr[0] === "entire") {
 
+            //entire rectangle
             if (height > 3) {
               rectangle = this_ai.pathItems.rectangle(4, startPoint + ((width + margin) * number), width, 4);
               rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
               rectangle.strokeColor = new NoColor();
+              selectionRec.push(rectangle);
+
               rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, 3, 3);
               rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
+              rectangle.strokeColor = new NoColor();
+              selectionRec.push(rectangle);
+
+              selectionRec_length = selectionRec.length;
+              for (let r = 0; r < selectionRec_length; r++) {
+                selectionRec[r].selected = true;
+              }
+              app.doScript("union", "contents_maker");
+              selectionRec = [];
+
+              this_ai.pathItems;
+
+
             } else {
               rectangle = this_ai.pathItems.roundedRectangle(height, startPoint + ((width + margin) * number), width, height, height, height);
               rectangle.fillColor = instance.mother.colorpick(colorBox.entire);
             }
-
             entireBox = rectangle;
+
             if (number === 0) {
               firstBox = entireBox;
             } else if (number === values.length - 1) {
