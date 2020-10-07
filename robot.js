@@ -205,8 +205,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
 
@@ -229,8 +229,12 @@ async function main5() {
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-  console.log(await analytics.getSearchData("2020-01-01"));
+
+  console.log(await analytics.getLatestClient());
+
 
 }
 
-// main6();
+
+
+main6();

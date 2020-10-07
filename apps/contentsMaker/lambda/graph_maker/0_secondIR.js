@@ -236,7 +236,7 @@ module.exports = async function (Mother) {
         sheetTempArr = [];
         sheetTempArr.push(resultObj.lines[z].columns.add[i]);
         for (let j = 0; j < resultObj.lines[z].values.length; j++) {
-          sheetTempArr.push(String(resultObj.lines[z].values[j].value.add[i]) + resultObj.lines[z].ea);
+          sheetTempArr.push(String(resultObj.lines[z].values[j].value.add[i]));
         }
         sheetFinalArr.push(sheetTempArr);
       }
@@ -244,7 +244,7 @@ module.exports = async function (Mother) {
         sheetTempArr = [];
         sheetTempArr.push(resultObj.lines[z].columns.subtract[i]);
         for (let j = 0; j < resultObj.lines[z].values.length; j++) {
-          sheetTempArr.push(String(resultObj.lines[z].values[j].value.subtract[i]) + resultObj.lines[z].ea);
+          sheetTempArr.push(String(resultObj.lines[z].values[j].value.subtract[i]));
         }
         sheetFinalArr.push(sheetTempArr);
       }

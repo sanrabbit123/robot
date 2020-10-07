@@ -6,6 +6,8 @@ import httplib2
 from oauth2client import client
 from oauth2client import file
 from oauth2client import tools
+import time
+import calendar
 
 class GoogleAnalytics:
 
@@ -34,6 +36,37 @@ class GoogleAnalytics:
         self.app = build('analyticsreporting', 'v4', http=http)
 
 
+    def getAMonthAgo(self):
+        dic = {}
+        now = time.localtime(time.time())
+        monthAgo = time.localtime(time.time() - (60 * 60 * 24 * 30))
+
+        now_year = str(now.tm_year)
+        if now.tm_mon < 10:
+            now_month = '0' + str(now.tm_mon)
+        else:
+            now_month = str(now.tm_mon)
+        if now.tm_mday < 10:
+            now_day = '0' + str(now.tm_mday)
+        else:
+            now_day = str(now.tm_mday)
+
+        past_year = str(monthAgo.tm_year)
+        if monthAgo.tm_mon < 10:
+            past_month = '0' + str(monthAgo.tm_mon)
+        else:
+            past_month = str(monthAgo.tm_mon)
+        if monthAgo.tm_mday < 10:
+            past_day = '0' + str(monthAgo.tm_mday)
+        else:
+            past_day = str(monthAgo.tm_mday)
+
+        dic["startDate"] = past_year + "-" + past_month + "-" + past_day
+        dic["endDate"] = now_year + "-" + now_month + "-" + now_day
+
+        return dic
+
+
     def clientsIdTesting(self, startDate, endDate):
         total = self.app.reports().batchGet(body={ "reportRequests": [ { "viewId": self.viewId, "pageSize": 100000, "dateRanges": [ { "startDate": startDate, "endDate": endDate } ], "dimensions": [], "metrics": [ { "expression": "ga:users" } ] } ] }).execute()
         result = self.app.reports().batchGet(
@@ -57,38 +90,80 @@ class GoogleAnalytics:
         return dumps({ "totalNum": int(total["reports"][0]["data"]["totals"][0]["values"][0]), "data": result["reports"][0]["data"] })
 
 
-    def getAllClients(self, startDate, endDate, dimensionsList, clientsBox):
-        totalTong = {}
-        for c in range(10):
-            result = self.app.reports().batchGet(
-                body={
-                    "reportRequests": [
-                        {
-                            "viewId": self.viewId,
-                            "pageSize": 100000,
-                            "dateRanges": [
-                                { "startDate": startDate, "endDate": endDate }
-                            ],
-                            "dimensions": dimensionsList,
-                            "dimensionFilterClauses": [
-                                {
-                                    "filters": [
-                                        {
-                                            "dimensionName": "ga:clientId",
-                                            "expressions": [ clientsBox[c] ],
-                                        }
-                                    ]
-                                }
-                            ],
-                            "metrics": [
-                                { "expression": "ga:users" },
-                            ]
-                        }
-                    ]
-                }).execute()
-            totalTong[c] = result
+    def getLatestClientId(self):
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": "yesterday", "endDate": "today" }
+                        ],
+                        "dimensions": [
+                            { "name": "ga:clientId" },
+                            { "name": "ga:dateHourMinute" },
+                        ],
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:pagePath",
+                                        "expressions": [ "submit" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:users" },
+                        ]
+                    }
+                ]
+            }).execute()
 
-        return dumps(totalTong)
+        return dumps(result)
+
+
+    def getLatestClient(self, clientId):
+        aMonthAgo = self.getAMonthAgo()
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": aMonthAgo["startDate"], "endDate": aMonthAgo["endDate"] }
+                        ],
+                        "dimensions": [
+                            { "name": "ga:dateHourMinute" },
+                            { "name": "ga:pagePath" },
+                            { "name": "ga:pageTitle" },
+                            { "name": "ga:userDefinedValue" },
+                            { "name": "ga:source" },
+                            { "name": "ga:deviceCategory" },
+                            { "name": "ga:operatingSystem" },
+                            { "name": "ga:city" },
+                            { "name": "ga:campaign" },
+                        ],
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:clientId",
+                                        "expressions": [ clientId ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [
+                            { "expression": "ga:users" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
 
 
     def getUserNumber(self, consulting=False):
