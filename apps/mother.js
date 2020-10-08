@@ -410,13 +410,11 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
   });
 }
 
-Mother.prototype.binaryRequest = function (to, port, path) {
-  if (path === undefined) {
-    path = port;
-    port = 80;
-  }
-  let target;
+Mother.prototype.binaryRequest = function (to, port = 80) {
   const http = require("http");
+  let target, tempArr;
+  let targetHost, targetPath;
+
   if (/^https:\/\//.test(to)) {
     target = to.slice(8);
   } else if (/^http:\/\//.test(to)) {
@@ -424,11 +422,17 @@ Mother.prototype.binaryRequest = function (to, port, path) {
   } else {
     target = to;
   }
+
+  //host and path parsing
+  tempArr = target.split('/');
+  targetHost = tempArr.shift();
+  targetPath = '/' + tempArr.join('/');
+
   return new Promise(function(resolve, reject) {
     let req = http.request({
-      hostname: target,
+      hostname: targetHost,
       port: port,
-      path: path,
+      path: targetPath,
       method: "GET"
     }, (res) => {
         res.setEncoding('binary');

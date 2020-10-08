@@ -1,6 +1,6 @@
 module.exports = {
   exec: function (options) {
-    // let h = `
+    let h = `
 const Proposal = function (text) {
   this.text = "기본값 설정";
   if (text) {
@@ -228,7 +228,7 @@ Proposal.prototype.fifth_process = function () {
     }
     return "error";
   }
-  
+
   for (j = 0; j < this.text.proposal.length; j++) {
     temp_arr = [];
     for (i = 0; i < this.text.proposal[j].picture_settings.length - 1; i++) {
@@ -290,6 +290,7 @@ ExecMain.prototype.start = function () {
   this.proposal.fourth_process();
   this.proposal.fifth_process();
   this.fileSave();
+  app.activeDocument.close();
 }
     `;
 

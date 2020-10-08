@@ -44,7 +44,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
   let app;
   if (button === "make" || button === "1") {
     app = new AiProposal(arg);
-    app.proposal_launching();
+    app.proposalLaunching();
   }
 }
 
