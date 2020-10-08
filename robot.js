@@ -109,6 +109,26 @@ Robot.prototype.getConsulting = async function (sw = "1") {
   }
 }
 
+Robot.prototype.officePolling = async function (sw) {
+  try {
+    const OfficePolling = require(`${process.cwd()}/apps/officePolling/officePolling.js`);
+    const app = new OfficePolling();
+    switch (sw) {
+      case "server":
+        await app.serverLaunching();
+        break;
+      case "receive":
+        await app.receiveLaunching();
+        break;
+      case "injection":
+        await app.injectionLaunching();
+        break;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4;
@@ -141,6 +161,15 @@ Robot.prototype.launching = async function () {
       } else {
         await this.getConsulting(true);
       }
+
+    } else if (/pollingserver/gi.test(process.argv[2])) {
+      await this.OfficePolling("server");
+
+    } else if (/pollingreceive/gi.test(process.argv[2])) {
+      await this.OfficePolling("receive");
+
+    } else if (/pollinginjection/gi.test(process.argv[2])) {
+      await this.OfficePolling("injection");
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);

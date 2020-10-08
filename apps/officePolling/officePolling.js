@@ -209,7 +209,7 @@ OfficePolling.prototype.bridgeServer = function () {
   }
 }
 
-OfficePolling.prototype.serverLaunching = async function (toss = false) {
+OfficePolling.prototype.serverLaunching = async function () {
   const { createServer } = require('http');
   try {
     const server = createServer(this.bridgeServer());
@@ -230,7 +230,7 @@ OfficePolling.prototype.receiveLaunching = async function () {
   }
 }
 
-OfficePolling.prototype.injectionLaunching = async function (to, id = "none") {
+OfficePolling.prototype.injectionLaunching = async function (to = "office") {
   try {
     this.targetId = id;
     await this.bridgeInjection(to);
