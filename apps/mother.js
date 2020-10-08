@@ -372,7 +372,7 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
     path: pathString,
     method: meth
   }
-  options.header = {}
+  options.header = {};
   let postString = '';
   if (/POST/gi.test(meth)) {
     for (let i in postData) {
@@ -410,6 +410,44 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
   });
 }
 
+Mother.prototype.binaryRequest = function (to, port, path) {
+  if (path === undefined) {
+    path = port;
+    port = 80;
+  }
+  let target;
+  const http = require("http");
+  if (/^https:\/\//.test(to)) {
+    target = to.slice(8);
+  } else if (/^http:\/\//.test(to)) {
+    target = to.slice(7);
+  } else {
+    target = to;
+  }
+  return new Promise(function(resolve, reject) {
+    let req = http.request({
+      hostname: target,
+      port: port,
+      path: path,
+      method: "GET"
+    }, (res) => {
+        res.setEncoding('binary');
+        let chunks = [];
+        res.on('data', (chunk) => {
+            chunks.push(Buffer.from(chunk, 'binary'));
+        });
+        res.on('end', () => {
+            let binary = Buffer.concat(chunks);
+            resolve(binary);
+        });
+        res.on('error', function (e) {
+            reject(e);
+        });
+    });
+    req.on('error', function (e) { reject(e); });
+    req.end();
+  });
+}
 
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
   const fs = require('fs');
