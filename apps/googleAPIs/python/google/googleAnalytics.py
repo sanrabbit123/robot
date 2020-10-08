@@ -98,7 +98,7 @@ class GoogleAnalytics:
                         "viewId": self.viewId,
                         "pageSize": 100000,
                         "dateRanges": [
-                            { "startDate": "yesterday", "endDate": "today" }
+                            { "startDate": "today", "endDate": "today" }
                         ],
                         "dimensions": [
                             { "name": "ga:clientId" },
@@ -109,7 +109,7 @@ class GoogleAnalytics:
                                 "filters": [
                                     {
                                         "dimensionName": "ga:pagePath",
-                                        "expressions": [ "submit" ],
+                                        "expressions": [ "servicesubmit" ],
                                     }
                                 ]
                             }

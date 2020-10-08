@@ -78,12 +78,16 @@ GoogleAnalytics.prototype.getLatestClientId = async function () {
   const mother = this.mother;
   try {
     const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClientId" ], {});
-    let users = [];
     for (let { dimensions } of result.rows) {
-      users.push(dimensions);
+      console.log(dimensions);
     }
-    users.sort((a, b) => { return Number(b[1]) - Number(a[1]); });
-    return users[0][0];
+
+    // let users = [];
+    // for (let { dimensions } of result.rows) {
+    //   users.push(dimensions);
+    // }
+    // users.sort((a, b) => { return Number(b[1]) - Number(a[1]); });
+    // return users[0][0];
   } catch (e) {
     console.log(e);
   }
@@ -95,31 +99,31 @@ GoogleAnalytics.prototype.getLatestClient = async function () {
   const mother = this.mother;
   try {
     const latestId = await this.getLatestClientId();
-    const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClient" ], { clientId: latestId });
-    let users = [];
-    for (let { dimensions } of result.rows) {
-      users.push(dimensions);
-    }
-    users.sort((a, b) => { return Number(b[0]) - Number(a[0]); });
-
-    let resultObj = {};
-    resultObj.referrer = users[0][4] + " / " + users[0][3];
-    resultObj.device = users[0][5] + "(" + users[0][6] + ")";
-    resultObj.city = users[0][7];
-    resultObj.campaign = users[0][8];
-    resultObj.history = [];
-
-    let temp;
-    users.sort((a, b) => { return Number(a[0]) - Number(b[0]); });
-    for (let i = 0; i < users.length; i++) {
-      temp = {};
-      temp.time = users[i][0].slice(4, 6) + "-" + users[i][0].slice(6, 8) + " " + users[i][0].slice(8, 10) + ":" + users[i][0].slice(10, 12);
-      temp.page = users[i][2];
-      temp.page_raw = users[i][1];
-      resultObj.history.push(temp);
-    }
-
-    return resultObj;
+    // const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClient" ], { clientId: latestId });
+    // let users = [];
+    // for (let { dimensions } of result.rows) {
+    //   users.push(dimensions);
+    // }
+    // users.sort((a, b) => { return Number(b[0]) - Number(a[0]); });
+    //
+    // let resultObj = {};
+    // resultObj.referrer = users[0][4] + " / " + users[0][3];
+    // resultObj.device = users[0][5] + "(" + users[0][6] + ")";
+    // resultObj.city = users[0][7];
+    // resultObj.campaign = users[0][8];
+    // resultObj.history = [];
+    //
+    // let temp;
+    // users.sort((a, b) => { return Number(a[0]) - Number(b[0]); });
+    // for (let i = 0; i < users.length; i++) {
+    //   temp = {};
+    //   temp.time = users[i][0].slice(4, 6) + "-" + users[i][0].slice(6, 8) + " " + users[i][0].slice(8, 10) + ":" + users[i][0].slice(10, 12);
+    //   temp.page = users[i][2];
+    //   temp.page_raw = users[i][1];
+    //   resultObj.history.push(temp);
+    // }
+    //
+    // return resultObj;
   } catch (e) {
     console.log(e);
   }

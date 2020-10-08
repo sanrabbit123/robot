@@ -1,10 +1,9 @@
 window.dataLayer = window.dataLayer || [];
-
-function gtag() {
+window.gtag = function () {
   dataLayer.push(arguments);
 }
-gtag('js', new Date());
-gtag('config', 'UA-97880990-1');
+window.gtag('js', new Date());
+window.gtag('config', 'UA-97880990-1');
 
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -34,13 +33,10 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.homeliaisonTalk(local_funcs);
     document.body.style.height = "";
   } catch (e) {
-
-    console.log(e);
-    //window.location.href = "https://home-liaison.com/";
+    window.location.href = "https://home-liaison.com/";
   }
 });
 
 document.addEventListener("error", function (e) {
-  console.log(e);
-  //window.location.href = "https://home-liaison.com/";
+  window.location.href = "https://home-liaison.com/";
 });
