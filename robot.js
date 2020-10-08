@@ -163,13 +163,13 @@ Robot.prototype.launching = async function () {
       }
 
     } else if (/pollingserver/gi.test(process.argv[2])) {
-      await this.OfficePolling("server");
+      await this.officePolling("server");
 
     } else if (/pollingreceive/gi.test(process.argv[2])) {
-      await this.OfficePolling("receive");
+      await this.officePolling("receive");
 
     } else if (/pollinginjection/gi.test(process.argv[2])) {
-      await this.OfficePolling("injection");
+      await this.officePolling("injection");
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);
