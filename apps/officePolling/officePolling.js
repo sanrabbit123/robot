@@ -180,7 +180,7 @@ OfficePolling.prototype.bridgeServer = function () {
         res.end(JSON.stringify(resultObj));
 
       //POST - exec and func
-      } else if (req.method === "POST" && /^\/exec/i.test(pathname)) {
+      } else if (req.method === "POST") {
 
         req.on('data', function (chunk) {
           postData += chunk;
@@ -232,7 +232,6 @@ OfficePolling.prototype.receiveLaunching = async function () {
 
 OfficePolling.prototype.injectionLaunching = async function (to = "office") {
   try {
-    this.targetId = id;
     await this.bridgeInjection(to);
   } catch (e) {
     console.log(e);
