@@ -87,7 +87,7 @@ OfficePolling.prototype.bridgeInjection = async function (to = "office") {
     options.to = to;
     options.method = "post";
     console.log(options);
-    const { body } = await this.mother.requestSystem(this.cloudHost.outer, 3000, options);
+    const { body } = await this.mother.rawRequestSystem(this.cloudHost.outer, 3000, {}, options);
     console.log(body);
   } catch (e) {
     console.log(e);
@@ -98,7 +98,7 @@ OfficePolling.prototype.bridgeCreate = function () {
   const instance = this;
   return async function () {
     try {
-      const { body } = await instance.mother.requestSystem(instance.cloudHost.outer, 3000);
+      const { body } = await instance.mother.rawRequestSystem(instance.cloudHost.outer, 3000);
       const { exec, func } = JSON.parse(body);
 
       let execfunc, execfuncReturn, tong;

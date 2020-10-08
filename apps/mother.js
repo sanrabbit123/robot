@@ -344,6 +344,73 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
+
+Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postData = {}) {
+  let meth = "GET";
+  let postKeys = Object.keys(postData);
+  if (postKeys.length > 0) {
+    meth = "POST";
+  }
+  let target;
+  const http = require("http");
+  if (/^https:\/\//.test(to)) {
+    target = to.slice(8);
+  } else if (/^http:\/\//.test(to)) {
+    target = to.slice(7);
+  } else {
+    target = to;
+  }
+  let pathArr = target.split('/');
+  let pathString = '/';
+  for (let i = 0; i < pathArr.length; i++) { if (i !== 0) {
+    pathString += pathArr[i] + '/';
+  }}
+  pathString = pathString.slice(0, -1);
+  let options = {
+    hostname: pathArr[0],
+    port: port,
+    path: pathString,
+    method: meth
+  }
+  options.header = {}
+  let postString = '';
+  if (/POST/gi.test(meth)) {
+    for (let i in postData) {
+      postString += i.replace(/=/g, '').replace(/&/g, '');
+      postString += '=';
+      postString += postData[i].replace(/=/g, '').replace(/&/g, '');
+      postString += '&';
+    }
+    postString = postString.slice(0, -1);
+    options.header['Content-Type'] = 'application/x-www-form-urlencoded';
+    options.header['Content-Length'] = Buffer.byteLength(postString);
+  }
+  for (let i in header) {
+    options.header[i] = header[i];
+  }
+  return new Promise(function (resolve, reject) {
+    let req = http.request(options, function (res) {
+      res.setEncoding('utf8');
+      let resultObj = {}
+      resultObj.headers = res.headers;
+      resultObj.statusCode = res.statusCode;
+      resultObj.body = '';
+      res.on('data', function (chunk) {
+        resultObj.body += chunk.toString();
+      });
+      res.on('end', function () {
+        resolve(resultObj);
+      });
+    });
+    req.on('error', function (e) { reject(e); });
+    if (/POST/gi.test(meth)) {
+      req.write(postString);
+    }
+    req.end();
+  });
+}
+
+
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
   const fs = require('fs');
   const shell = require('shelljs');
