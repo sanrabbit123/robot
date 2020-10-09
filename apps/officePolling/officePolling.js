@@ -267,10 +267,12 @@ OfficePolling.prototype.routingOffice = function () {
           OfficePolling.timeout = setTimeout(async function () {
             const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
             let app;
-
+            let temp;
             let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
             for (let i of tongDir) {
-              app = new AiProposal(i.replace(/\.js$/, ''));
+              console.log(i.replace(/\.js$/, ''))
+              temp = require(instance.tong + "/" + i);
+              app = new AiProposal(temp());
               await app.proposalLaunching();
             }
             OfficePolling.doIt = true;
