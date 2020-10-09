@@ -266,11 +266,11 @@ OfficePolling.prototype.routingOffice = function () {
 
           OfficePolling.timeout = setTimeout(async function () {
             const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
-            let app, temp;
+            let app;
+            let temp;
             let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
             for (let i of tongDir) { if (i !== `.DS_Store`) {
-              temp = require(instance.tong + "/" + i);
-              app = new AiProposal(temp());
+              app = new AiProposal(i.replace(/\.js$/, ''));
               await app.proposalLaunching();
             }}
             OfficePolling.doIt = true;
