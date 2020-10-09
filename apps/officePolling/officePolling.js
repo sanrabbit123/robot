@@ -90,6 +90,9 @@ OfficePolling.prototype.requestPolling = function () {
       const { body } = await instance.mother.rawRequestSystem(instance.cloudHost.outer + "/polling", instance.cloudHost.port);
       const { exec, func } = JSON.parse(body);
 
+      console.log(exec);
+      console.log(func);
+
       let execfunc, execfuncReturn;
       let tong = await instance.mother.fileSystem('readDir', [ instance.dir + "/tong" ]);
 
