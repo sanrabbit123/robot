@@ -107,8 +107,6 @@ OfficePolling.prototype.requestPolling = function () {
           execfuncReturn = await execfunc(instance.mother);
           console.log(execfuncReturn);
         }
-      } else {
-        console.log("nothing");
       }
 
       let callback = instance.requestPolling();

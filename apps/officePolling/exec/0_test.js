@@ -1,7 +1,9 @@
 // Mother
 
 
-console.log("hello?");
+for (let i = 0; i < 100; i++) {
+  console.log("hello?\n");
+}
 
 // const getId = function (str) {
 //   let callbackId = str.slice(0, (str.search(/[0-9]_/g) + 1));
