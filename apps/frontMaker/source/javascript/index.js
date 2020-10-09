@@ -240,11 +240,11 @@ IndexJs.prototype.initialDom = function () {
             backgroundSize: "100% auto",
           }
           const slideColor = [
-            "linear-gradient(9deg, rgba(228,228,228,1) 0%, rgba(241,241,241,1) 100%)",
-            "linear-gradient(9deg, rgba(209,206,204,1) 0%, rgba(221,218,216,1) 100%)",
-            "linear-gradient(9deg, rgba(228,228,228,1) 0%, rgba(241,241,241,1) 100%)",
-            "linear-gradient(9deg, rgba(209,206,204,1) 0%, rgba(221,218,216,1) 100%)",
-            "linear-gradient(145deg, rgba(247,247,247,1) 0%, rgba(226,226,226,1) 100%)",
+            "#ececec",
+            "#cecece",
+            "#ececec",
+            "#cecece",
+            "#f7f7f7",
           ];
           let doms = {
             slide: [],
@@ -448,7 +448,7 @@ IndexJs.prototype.initialDom = function () {
 
           //about box
           let list = [ "right", "left" ];
-          let href = [ "/about.php", "consulting.php" ];
+          let href = [ "/about.php", "/consulting.php" ];
           let sourceArr = {
             words: [ about0.words, about1.words ],
             buttons: [ about0.button, about1.button ],

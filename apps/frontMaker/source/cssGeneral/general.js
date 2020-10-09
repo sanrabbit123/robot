@@ -35,8 +35,9 @@ module.exports = function () {
   input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
   svg{shape-rendering:geometricPrecision}
 
-  @-webkit-keyframes fadeInmain0821 {from { opacity: 0; } 30% { opacity: 0; } to { opacity: 1; }}@-moz-keyframes fadeInmain0821 {from { opacity: 0; } 30% { opacity: 0; } to { opacity: 1; }}@keyframes fadeInmain0821 {from { opacity: 0; } 30% { opacity: 0; } to { opacity: 1; }}
-  @-webkit-keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@-moz-keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  @keyframes fadeInmain0821 {from { opacity: 0; } 60% { opacity: 0; } to { opacity: 1; }}
+  @keyframes fadeInmainout0821 {from { opacity: 1; } 60% { opacity: 1; } to { opacity: 0; }}
+  @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   @keyframes justfadein {from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeout {from{opacity:1;}to{opacity:0;}}
   @keyframes talkfade {from,30%{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0px)}}
@@ -50,17 +51,16 @@ module.exports = function () {
   @keyframes fadeup{from,30%{opacity:0;transform: translateY(9px);}to{opacity:1;transform:translateY(0px);}}
 
   .fadeInmaininit{opacity:0;}
-  .fadeInmainclass{animation:fadeInmain0821 1s ease forwards;}
+  .fadeInmainclass{animation:fadeInmain0821 1.2s ease forwards;}
   #loader{position:fixed;width:100%;height:100vh;top:0;left:0;}
-  .loaderfadeout{animation:fadeInmain0821 1.5s ease reverse forwards;}
-  .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.8s linear 20;}
+  .loaderfadeout{animation:fadeInmainout0821 1.2s ease forwards;}
+  .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear 20;}
   @media (min-width:1611px) {.loaderc{width:60px;height:60px;margin-left:-30px;top:46vh;}}
   @media (min-width:901px) and (max-width:1610px) {.loaderc{width:50px;height:50px;margin-left:-25px;top:46vh;}}
   @media (max-width:900px) {.loaderc{width:40px;height:40px;margin-left:-20px;top:46vh;}}
 
   .hiddenobject{display:none;opacity:0;width:0;height:0;overflow:hidden;font-size:0;}
   #mobilenavihome,#menuBtn2bae0612{display:none;}
-
 
   #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:#2fa678;}
   #hiddentextmain0817{display:block;position:absolute;top:0;left:0;width:100%;height:auto;color:transparent;font-size:15px;line-height:27px;opacity:0;z-index:-1;}

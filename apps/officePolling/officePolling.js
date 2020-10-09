@@ -15,16 +15,6 @@ const OfficePolling = function () {
   this.stack = 0;
 }
 
-OfficePolling.prototype.postParser = function (str) {
-  let newObj = {}, tempArr, tempArr2;
-  tempArr = str.split('&');
-  for (let i of tempArr) {
-    tempArr2 = i.split('=');
-    newObj[tempArr2[0]] = this.execParser(tempArr2[1]);
-  }
-  return newObj;
-}
-
 OfficePolling.prototype.execParser = function (str) {
   let newStr = '';
   newStr = str.replace(/__equal__/g, '=');
@@ -74,7 +64,7 @@ OfficePolling.prototype.setInjection = async function () {
   }
 }
 
-OfficePolling.prototype.bridgeInjection = async function (to = "office") {
+OfficePolling.prototype.pollingInjection = async function () {
   const instance = this;
   let from;
   try {
@@ -84,42 +74,45 @@ OfficePolling.prototype.bridgeInjection = async function (to = "office") {
     this.injections = [];
     this.injectionDir = `${this.dir}/injection`;
     options.func = this.execFilter(await this.setInjection());
-    options.to = to;
     options.method = "post";
     console.log(options);
-    const { body } = await this.mother.rawRequestSystem(this.cloudHost.outer, 3000, {}, options);
+    const { body } = await this.mother.rawRequestSystem(this.cloudHost.outer + "/writeInjection", this.cloudHost.port, {}, options);
     console.log(body);
   } catch (e) {
     console.log(e);
   }
 }
 
-OfficePolling.prototype.bridgeCreate = function () {
+OfficePolling.prototype.requestPolling = function () {
   const instance = this;
   return async function () {
     try {
-      const { body } = await instance.mother.rawRequestSystem(instance.cloudHost.outer, 3000);
+      const { body } = await instance.mother.rawRequestSystem(instance.cloudHost.outer + "/polling", instance.cloudHost.port);
       const { exec, func } = JSON.parse(body);
 
-      let execfunc, execfuncReturn, tong;
-      if (func !== "__nothing__") {
-        tong = await instance.mother.fileSystem('readDir', [ instance.dir + "/tong" ]);
+      let execfunc, execfuncReturn;
+      let tong = await instance.mother.fileSystem('readDir', [ instance.dir + "/tong" ]);
+
+      for (let i = 0; i < func.length; i++) {
         if (tong.length === 0) {
-          await instance.mother.fileSystem('write', [ instance.dir + "/tong/" + "1_func" + instance.mother.todayMaker() + ".js", instance.execParser(func) ]);
+          await instance.mother.fileSystem('write', [ instance.dir + "/tong/func_0.js", instance.execParser(func[i]) ]);
         } else {
-          tong.sort((a, b) => { return instance.getId(b) - instance.getId(a); });
-          await instance.mother.fileSystem('write', [ instance.dir + "/tong/" + String(instance.getId(tong[0]) + 1) + "_func" + instance.mother.todayMaker() + ".js", instance.execParser(func) ]);
+          tong.sort((a, b) => { return Number(b.replace(/[^0-9]/g, '')) - Number(a.replace(/[^0-9]/g, '')); });
+          await instance.mother.fileSystem('write', [ instance.dir + "/tong/func_" + String(Number(tong[0].replace(/[^0-9]/g, '')) + 1) + ".js", instance.execParser(func[i]) ]);
         }
       }
-      if (exec !== "__nothing__") {
-        execfunc = new AsyncFunction("Mother", instance.execParser(exec));
-        execfuncReturn = await execfunc(instance.mother);
-        console.log(execfuncReturn);
+
+      if (exec.length > 0) {
+        for (let i = 0; i < exec.length; i++) {
+          execfunc = new AsyncFunction("Mother", instance.execParser(exec[i]));
+          execfuncReturn = await execfunc(instance.mother);
+          console.log(execfuncReturn);
+        }
       } else {
         console.log("nothing");
       }
 
-      let callback = instance.bridgeCreate();
+      let callback = instance.requestPolling();
       callback();
 
     } catch (e) {
@@ -128,92 +121,153 @@ OfficePolling.prototype.bridgeCreate = function () {
   }
 }
 
-OfficePolling.prototype.bridgeServer = function () {
+OfficePolling.prototype.routingCloud = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
-  const url = require("url");
-  return async function (req, res) {
-    const pathname = url.parse(req.url).pathname;
+  const { fileSystem, shell, slack_bot, shellLink } = this.mother;
+  let funcObj = {};
+
+  //GET - receive polling request
+  funcObj.get_polling = async function (req, res) {
     try {
-      let from = 'office', to = '', tempRegexp;
-      let stackString = '', execString = '', postData = '', stack;
-      let stackBoo = false, execBoo = false;
+      let stackFolder;
+      let execFileArr, stackFileArr;
+      let execArr, stackArr;
+      let tempRegexp;
+      let resultObj = {};
+      let finalResult;
 
-      //GET
-      if (req.method === "GET") {
+      stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
 
-        let resultObj = {};
+      execFileArr = [];
+      stackFileArr = [];
 
-        stack = await fileSystem('readDir', [ instance.dir + "/stack" ]);
+      execArr = [];
+      stackArr = [];
 
-        execString = "__nothing__";
-        stackString = "__nothing__";
+      tempRegexp = new RegExp('^exec_');
+      for (let i of stackFolder) { if (tempRegexp.test(i)) {
+        execFileArr.push(i);
+      }}
 
-        tempRegexp = new RegExp('^' + from + "_exec");
-        for (let i of stack) { if (tempRegexp.test(i)) {
-          execBoo = true;
-          execString += await fileSystem('readString', [ instance.dir + "/stack/" + i ]);
-          execString += "\n\n";
-          shell.exec("rm -rf " + shellLink(instance.dir) + "/stack/" + i);
-        }}
-        tempRegexp = new RegExp('^' + from + "_func");
-        for (let i of stack) { if (tempRegexp.test(i)) {
-          stackBoo = true;
-          stackString += await fileSystem('readString', [ instance.dir + "/stack/" + i ]);
-          stackString += "\n\n";
-          shell.exec("rm -rf " + shellLink(instance.dir) + "/stack/" + i);
-        }}
+      tempRegexp = new RegExp('^func_');
+      for (let i of stackFolder) { if (tempRegexp.test(i)) {
+        stackFileArr.push(i);
+      }}
 
-        if (execBoo) {
-          resultObj.exec = execString.slice(11);
-        } else {
-          resultObj.exec = execString;
-        }
+      execFileArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
+      stackFileArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
 
-        if (stackBoo) {
-          resultObj.func = stackString.slice(11);
-        } else {
-          resultObj.func = stackString;
-        }
-
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end(JSON.stringify(resultObj));
-
-      //POST - exec and func
-      } else if (req.method === "POST") {
-
-        req.on('data', function (chunk) {
-          postData += chunk;
-        });
-
-        req.on('end', async function () {
-          let execfunc, execfuncReturn = "no execute";
-          let resultObj = instance.postParser(postData);
-          if (resultObj.to === undefined) {
-            resultObj.to = "home";
-          }
-          if (resultObj.exec !== undefined) {
-            await instance.mother.fileSystem('write', [ instance.dir + "/stack/" + resultObj.to + "_exec" + instance.mother.todayMaker() + ".js", instance.execParser(resultObj.exec) ]);
-          }
-          if (resultObj.func !== undefined) {
-            await instance.mother.fileSystem('write', [ instance.dir + "/stack/" + resultObj.to + "_func" + instance.mother.todayMaker() + ".js", instance.execParser(resultObj.func) ]);
-          }
-          res.writeHead(200, { "Content-Type": "text/plain" });
-          res.end(execfuncReturn);
-        });
-
+      for (let i of execFileArr) {
+        execArr.push(await fileSystem('readString', [ instance.dir + "/stack/" + i ]));
       }
+
+      for (let i of stackFileArr) {
+        stackArr.push(await fileSystem('readString', [ instance.dir + "/stack/" + i ]));
+      }
+
+      resultObj.exec = execArr;
+      resultObj.func = stackArr;
+
+      finalResult = JSON.stringify(resultObj);
+
+      for (let i of stackFolder) {
+        shell.exec("rm -rf " + shellLink(instance.dir) + "/stack/" + i);
+      }
+
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(finalResult);
+
     } catch (e) {
       console.log(e);
     }
   }
+
+  //POST - write injection files
+  funcObj.post_writeInjection = async function (req, res) {
+    try {
+      const resultObj = req.body;
+      let stackFolder;
+      let execArr, stackArr;
+      let tempRegexp;
+
+      stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
+      execArr = [];
+      stackArr = [];
+
+      tempRegexp = new RegExp('^exec_');
+      for (let i of stackFolder) { if (tempRegexp.test(i)) {
+        execArr.push(i);
+      }}
+
+      tempRegexp = new RegExp('^func_');
+      for (let i of stackFolder) { if (tempRegexp.test(i)) {
+        stackArr.push(i);
+      }}
+
+      execArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
+      stackArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
+
+      if (resultObj.exec !== undefined) {
+        await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec ]);
+      }
+      if (resultObj.func !== undefined) {
+        await fileSystem('write', [ instance.dir + "/stack/" + "func_" + String(stackArr.length) + ".js", resultObj.func ]);
+      }
+
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send("done");
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    resultObj[i.split('_')[0]].push({ link: "/" + i.split('_')[1], func: funcObj[i] });
+  }
+  return resultObj;
 }
 
 OfficePolling.prototype.serverLaunching = async function () {
-  const { createServer } = require('http');
+  const instance = this;
+  const http = require("http");
+  const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
+  const { parse } = require("url");
+  const express = require("express");
+  const bodyParser = require("body-parser");
+  const useragent = require("express-useragent");
+
+  //express
+  const app = express();
+  app.use(useragent.express());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+
   try {
-    const server = createServer(this.bridgeServer());
-    server.listen(this.cloudHost.port, this.cloudHost.inner, () => {
+    //set router
+    let get, post, router;
+    if (true) {
+      router = this.routingCloud();
+    }
+    get = router.get;
+    post = router.post;
+    for (let obj of get) { app.get(obj.link, obj.func); }
+    for (let obj of post) { app.post(obj.link, obj.func); }
+
+    //server on
+    https.createServer(app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
       console.log(`Server running`);
     });
   } catch (e) {
@@ -223,16 +277,16 @@ OfficePolling.prototype.serverLaunching = async function () {
 
 OfficePolling.prototype.receiveLaunching = async function () {
   try {
-    let bridge = this.bridgeCreate();
+    let bridge = this.requestPolling();
     bridge();
   } catch (e) {
     console.log(e);
   }
 }
 
-OfficePolling.prototype.injectionLaunching = async function (to = "office") {
+OfficePolling.prototype.injectionLaunching = async function () {
   try {
-    await this.bridgeInjection(to);
+    await this.pollingInjection();
   } catch (e) {
     console.log(e);
   }

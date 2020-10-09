@@ -331,7 +331,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
-
   //POST - name phone check
   funcObj.post_namephone = async function (req, res) {
     try {
@@ -517,7 +516,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
 
     //server on
     https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
-      console.log(`Server running at https://${this.cloudHost.inner}:${String(this.cloudHost.port)}/`);
+      console.log(`Server running`);
     });
 
   } catch (e) {

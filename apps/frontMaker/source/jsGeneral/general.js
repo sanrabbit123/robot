@@ -420,7 +420,6 @@ GeneralJs.prototype.fadeIn = function () {
     fades[i].classList.add("fadeInmainclass");
   }
   this.loader.classList.add("loaderfadeout");
-  this.loader.style.opacity = '';
 }
 
 GeneralJs.prototype.rightClick = function () {
@@ -453,7 +452,6 @@ GeneralJs.prototype.loaderMake = function () {
 
   const loader = GeneralJs.nodes.div.cloneNode(true);
   loader.id = "loader";
-  loader.style.opacity = '0';
 
   const loaderImg = SvgTong.tongMaker();
   loaderImg.src = this.map.sub.loader;

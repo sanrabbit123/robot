@@ -25,9 +25,9 @@ local_funcs.mother.navigatorMake();
 
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
-    local_funcs.mother.fadeIn();
     local_funcs.mother.rightClick();
     await local_funcs.launching();
+    local_funcs.mother.fadeIn();
     local_funcs.mother.specialBan();
     local_funcs.mother.footerMake('/<%name%>/');
     local_funcs.mother.homeliaisonTalk(local_funcs);
