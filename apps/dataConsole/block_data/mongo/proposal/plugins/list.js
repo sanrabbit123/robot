@@ -262,7 +262,7 @@ Proposal.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "make":
       return_func = async function (e) {
         let message = "제안서의 제작을 요청드립니다! link: ";
-        await Genemongo.ajax("https://13.125.94.163:3000/writeInjection", "exec=await Mother.requestSystem('http://172.30.1.6:3000/proposalMake', { proid: '" + proid + "' });return 0;&func=/*nothing*/");
+        await Genemongo.ajax("http://13.125.94.163:3000/writeInjection", "exec=await Mother.requestSystem('http://172.30.1.6:3000/proposalMake', { proid: '" + proid + "' });return 0;&func=/*nothing*/");
         await Genemongo.ajax("/slack", "linkmake=true&link=/mongo/proposal&query=" + Genemongo.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + Genemongo.queryFilter(message) + "&channel=#403_proposal");
         await mother_name(obj);
         reset_event(this);
