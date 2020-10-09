@@ -253,7 +253,7 @@ OfficePolling.prototype.routingOffice = function () {
           let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
           if (OfficePolling.doIt) {
             for (let i of tongDir) {
-              shell.exec(`rm -rf ${shellLink(instance.tong)}/i`);
+              shell.exec(`rm -rf ${shellLink(instance.tong)}/${i}`);
             }
           }
           await fileSystem(`write`, [ instance.tong + "/" + proid + ".js", "module_exports = function () { return '" + proid + "' }" ]);
@@ -275,7 +275,10 @@ OfficePolling.prototype.routingOffice = function () {
             }}
             OfficePolling.doIt = true;
             OfficePolling.timeout = null;
-          }, 3000);
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(instance.tong)}/${i}`);
+            }
+          }, 5000);
 
           res.set({
             "Content-Type": "text/plain",
