@@ -13,6 +13,7 @@ const OfficePolling = function () {
   this.bridge = { home: address.homeinfo.polling.inner, office: address.officeinfo.polling.inner, cloud: this.cloudHost.inner };
   this.server = null;
   this.stack = 0;
+  this.formidable = require('formidable');
 }
 
 OfficePolling.prototype.execParser = function (str) {
@@ -66,7 +67,6 @@ OfficePolling.prototype.setInjection = async function () {
 
 OfficePolling.prototype.pollingInjection = async function () {
   const instance = this;
-  let from;
   try {
     let options = {}
     this.injectionDir = `${this.dir}/exec`;
@@ -75,8 +75,8 @@ OfficePolling.prototype.pollingInjection = async function () {
     this.injectionDir = `${this.dir}/injection`;
     options.func = this.execFilter(await this.setInjection());
     console.log(options);
-    const { body } = await this.mother.rawRequestSystem(this.cloudHost.outer + "/writeInjection", this.cloudHost.port, {}, options);
-    console.log(body);
+    const { data } = await this.mother.requestSystem("http://" + this.cloudHost.outer + ":" + this.cloudHost.port + "/writeInjection", options);
+    console.log(data);
   } catch (e) {
     console.log(e);
   }
@@ -86,11 +86,8 @@ OfficePolling.prototype.requestPolling = function () {
   const instance = this;
   return async function () {
     try {
-      const { body } = await instance.mother.rawRequestSystem(instance.cloudHost.outer + "/polling", instance.cloudHost.port);
-      const { exec, func } = JSON.parse(body);
-
-      console.log(exec);
-      console.log(func);
+      const { data } = await instance.mother.requestSystem("http://" + this.cloudHost.outer + ":" + this.cloudHost.port + "/polling");
+      const { exec, func } = JSON.parse(data);
 
       let execfunc, execfuncReturn;
       let tong = await instance.mother.fileSystem('readDir', [ instance.dir + "/tong" ]);
@@ -194,37 +191,43 @@ OfficePolling.prototype.routingCloud = function () {
   //POST - write injection files
   funcObj.post_writeInjection = async function (req, res) {
     try {
-      const resultObj = req.body;
-      let stackFolder;
-      let execArr, stackArr;
-      let tempRegexp;
-      console.log(req)
-      console.log(resultObj)
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
+          const resultObj = fields;
+          let stackFolder;
+          let execArr, stackArr;
+          let tempRegexp;
+          console.log(req)
+          console.log(resultObj)
 
-      stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
-      execArr = [];
-      stackArr = [];
+          stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
+          execArr = [];
+          stackArr = [];
 
-      tempRegexp = new RegExp('^exec_');
-      for (let i of stackFolder) { if (tempRegexp.test(i)) {
-        execArr.push(i);
-      }}
-      tempRegexp = new RegExp('^func_');
-      for (let i of stackFolder) { if (tempRegexp.test(i)) {
-        stackArr.push(i);
-      }}
+          tempRegexp = new RegExp('^exec_');
+          for (let i of stackFolder) { if (tempRegexp.test(i)) {
+            execArr.push(i);
+          }}
+          tempRegexp = new RegExp('^func_');
+          for (let i of stackFolder) { if (tempRegexp.test(i)) {
+            stackArr.push(i);
+          }}
 
-      await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec ]);
-      await fileSystem('write', [ instance.dir + "/stack/" + "func_" + String(stackArr.length) + ".js", resultObj.func ]);
+          await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec ]);
+          await fileSystem('write', [ instance.dir + "/stack/" + "func_" + String(stackArr.length) + ".js", resultObj.func ]);
 
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send("done");
+        } else {
+          console.log(err);
+        }
       });
-      res.send("done");
-
     } catch (e) {
       console.log(e);
     }

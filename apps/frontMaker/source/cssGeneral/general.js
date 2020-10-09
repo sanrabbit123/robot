@@ -35,8 +35,8 @@ module.exports = function () {
   input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
   svg{shape-rendering:geometricPrecision}
 
-  @keyframes fadeInmain0821 {from { opacity: 0; } 60% { opacity: 0; } to { opacity: 1; }}
-  @keyframes fadeInmainout0821 {from { opacity: 1; } 60% { opacity: 1; } to { opacity: 0; }}
+  @keyframes fadeInmain0821 {from { opacity: 0; } 50% { opacity: 0; } to { opacity: 1; }}
+  @keyframes fadeInmainout0821 {from { opacity: 1; } 50% { opacity: 1; } to { opacity: 0; }}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   @keyframes justfadein {from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeout {from{opacity:1;}to{opacity:0;}}
@@ -51,9 +51,9 @@ module.exports = function () {
   @keyframes fadeup{from,30%{opacity:0;transform: translateY(9px);}to{opacity:1;transform:translateY(0px);}}
 
   .fadeInmaininit{opacity:0;}
-  .fadeInmainclass{animation:fadeInmain0821 1.2s ease forwards;}
+  .fadeInmainclass{animation:fadeInmain0821 1.1s ease forwards;}
   #loader{position:fixed;width:100%;height:100vh;top:0;left:0;}
-  .loaderfadeout{animation:fadeInmainout0821 1.2s ease forwards;}
+  .loaderfadeout{animation:fadeInmainout0821 1.1s ease forwards;}
   .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear 20;}
   @media (min-width:1611px) {.loaderc{width:60px;height:60px;margin-left:-30px;top:46vh;}}
   @media (min-width:901px) and (max-width:1610px) {.loaderc{width:50px;height:50px;margin-left:-25px;top:46vh;}}
