@@ -169,8 +169,6 @@ OfficePolling.prototype.routingCloud = function () {
 
       finalResult = JSON.stringify(resultObj);
 
-      console.log(finalResult)
-
       for (let i of stackFolder) {
         shell.exec("rm -rf " + shellLink(instance.dir) + "/stack/" + i);
       }
@@ -198,8 +196,6 @@ OfficePolling.prototype.routingCloud = function () {
           let stackFolder;
           let execArr, stackArr;
           let tempRegexp;
-          console.log(req)
-          console.log(resultObj)
 
           stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
           execArr = [];
