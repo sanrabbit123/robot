@@ -401,7 +401,6 @@ Router.prototype.rou_post_slackBot = function () {
 Router.prototype.rou_post_sendMail = function () {
   let instance = this;
   let gmail = this.mother.googleSystem("gmail");
-  let url = require('url');
   let obj = { link: '/gmail' }
   obj.func = async function (req, res) {
     try {
@@ -413,6 +412,32 @@ Router.prototype.rou_post_sendMail = function () {
       }
       let statusCode = await gmail.send_mail(to, req.body.subject, req.body.message);
       res.sendStatus(statusCode);
+      res.send('');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+Router.prototype.rou_post_polling = function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const execFolder = `${process.cwd()}/apps/officePolling/exec`;
+  const OfficePolling = require(`${process.cwd()}/apps/officePolling/officePolling.js`);
+  let obj = { link: '/polling' }
+  obj.func = async function (req, res) {
+    try {
+      let execFolderList = await fileSystem(`readDir`, execFolder);
+      for (let i of execFolderList) {
+        shell.exec(`rm -rf ${shellLink(execFolder)}/i`);
+      }
+      await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://172.30.1.6:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
+      const app = new OfficePolling();
+      await app.injectionLaunching();
+
+      res.sendStatus(200);
+      res.send('done');
     } catch (e) {
       console.log(e);
     }
