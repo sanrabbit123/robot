@@ -235,9 +235,10 @@ OfficePolling.prototype.routingCloud = function () {
   return resultObj;
 }
 
+OfficePolling.doIt = true;
+OfficePolling.timeout = null;
 OfficePolling.prototype.routingOffice = function () {
   const instance = this;
-  const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
   const { fileSystem, shell, slack_bot, shellLink } = this.mother;
   let funcObj = {};
 
@@ -248,8 +249,34 @@ OfficePolling.prototype.routingOffice = function () {
       form.parse(req, async function (err, fields, files) {
         if (!err) {
           const { proid } = fields;
-          const app = new AiProposal(proid);
-          await app.proposalLaunching();
+
+          let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          if (OfficePolling.doIt) {
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(instance.tong)}/i`);
+            }
+          }
+          await fileSystem(`write`, [ instance.tong + "/" + proid + ".js", "module_exports = function () { return '" + proid + "' }" ]);
+          OfficePolling.doIt = false;
+
+          if (OfficePolling.timeout !== null) {
+            clearTimeout(OfficePolling.timeout);
+            OfficePolling.timeout = null;
+          }
+
+          OfficePolling.timeout = setTimeout(function () {
+            const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
+            let app;
+
+            let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+            for (let i of tongDir) {
+              app = new AiProposal(i.replace(/\.js$/, ''));
+              await app.proposalLaunching();
+            }
+            OfficePolling.doIt = true;
+            OfficePolling.timeout = null;
+          }, 3000);
+
 
           res.set({
             "Content-Type": "text/plain",
