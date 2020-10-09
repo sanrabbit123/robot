@@ -89,7 +89,7 @@ Robot.prototype.frontUpdate = function () {
   fobot.totalUpdate();
 }
 
-Robot.prototype.getConsulting = async function (sw = "1") {
+Robot.prototype.getConsulting = async function (sw = "1", cliid = "latest") {
   try {
     const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
     const GetConsulting = require(`${process.cwd()}/apps/getConsulting/getConsulting.js`);
@@ -98,7 +98,7 @@ Robot.prototype.getConsulting = async function (sw = "1") {
 
     if (sw === "notion" || sw === "1") {
       app = new NotionAPIs();
-      await app.launching();
+      await app.launching(cliid);
     } else {
       app = new GetConsulting();
       await app.launching(false);
@@ -225,7 +225,16 @@ Robot.prototype.launching = async function () {
       //consulting
       } else if (re === "consulting" || re === "7") {
         re2 = await this.consoleQ(`Choose commands : 1.notion 2.junk\n`);
-        await this.getConsulting(re2);
+        if (re2 === "notion" || re2 === "1") {
+          re3 = await this.consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
+          if (re3 === "none" || re3 === "latest" || re3 === "") {
+            await this.getConsulting(re2, "latest");
+          } else {
+            await this.getConsulting(re2, re3);
+          }
+        } else {
+          await this.getConsulting(re2);
+        }
 
       //exit
       } else if (re === "exit" || re === "8") {

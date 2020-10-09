@@ -235,8 +235,16 @@ OfficePolling.prototype.routingCloud = function () {
   return resultObj;
 }
 
-OfficePolling.doIt = true;
-OfficePolling.timeout = null;
+OfficePolling.firstDo = {
+  proposal: true,
+  notion: true,
+};
+
+OfficePolling.timeout = {
+  proposal: null,
+  notion: null,
+};
+
 OfficePolling.prototype.routingOffice = function () {
   const instance = this;
   const { fileSystem, shell, slack_bot, shellLink } = this.mother;
@@ -249,37 +257,58 @@ OfficePolling.prototype.routingOffice = function () {
       form.parse(req, async function (err, fields, files) {
         if (!err) {
           const { proid } = fields;
+          const tongName = `proposalTong`;
+          const targetTong = `${instance.tong}/${tongName}`;
+          let tongDir, tongDetailDir, tongBoo;
 
-          let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-          if (OfficePolling.doIt) {
-            for (let i of tongDir) {
-              shell.exec(`rm -rf ${shellLink(instance.tong)}/${i}`);
+          //make tong
+          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          tongBoo = false;
+          for (let i of tongDir) {
+            if (i === tongName) {
+              tongBoo = true;
             }
           }
-          await fileSystem(`write`, [ instance.tong + "/" + proid + ".js", "module_exports = function () { return '" + proid + "' }" ]);
-          OfficePolling.doIt = false;
-
-          if (OfficePolling.timeout !== null) {
-            clearTimeout(OfficePolling.timeout);
-            OfficePolling.timeout = null;
+          if (!tongBoo) {
+            shell.exec(`mkdir ${shellLink(targetTong)};`);
           }
 
-          OfficePolling.timeout = setTimeout(async function () {
+          //clean target tong
+          const targetTongList = await fileSystem(`readDir`, [ targetTong ]);
+          if (OfficePolling.firstDo.proposal) {
+            for (let i of targetTongList) {
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
+            }
+          }
+
+          //write stack
+          await fileSystem(`write`, [ targetTong + "/" + proid + ".js", "module_exports = function () { return '" + proid + "' }" ]);
+          OfficePolling.firstDo.proposal = false;
+
+          //debounce clean
+          if (OfficePolling.timeout.proposal !== null) {
+            clearTimeout(OfficePolling.timeout.proposal);
+            OfficePolling.timeout.proposal = null;
+          }
+
+          //debounce timeout
+          OfficePolling.timeout.proposal = setTimeout(async function () {
             const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
             let app;
             let temp;
-            let tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+            let tongDir = await fileSystem(`readDir`, [ targetTong ]);
             for (let i of tongDir) { if (i !== `.DS_Store`) {
               app = new AiProposal(i.replace(/\.js$/, ''));
               await app.proposalLaunching();
             }}
-            OfficePolling.doIt = true;
-            OfficePolling.timeout = null;
+            OfficePolling.firstDo.proposal = true;
+            OfficePolling.timeout.proposal = null;
             for (let i of tongDir) {
-              shell.exec(`rm -rf ${shellLink(instance.tong)}/${i}`);
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
             }
-          }, 5000);
+          }, 4000);
 
+          //end
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": '*',
@@ -287,6 +316,97 @@ OfficePolling.prototype.routingOffice = function () {
             "Access-Control-Allow-Headers": '*',
           });
           res.send("done");
+
+        } else {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  //POST - mongo to notion
+  funcObj.post_toNotion = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
+          const { cliid } = fields;
+          const tongName = `notionTong`;
+          const targetTong = `${instance.tong}/${tongName}`;
+          let tongDir, tongDetailDir, tongBoo;
+
+          //make tong
+          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          tongBoo = false;
+          for (let i of tongDir) {
+            if (i === tongName) {
+              tongBoo = true;
+            }
+          }
+          if (!tongBoo) {
+            shell.exec(`mkdir ${shellLink(targetTong)};`);
+          }
+
+          //clean target tong
+          const targetTongList = await fileSystem(`readDir`, [ targetTong ]);
+          if (OfficePolling.firstDo.notion) {
+            for (let i of targetTongList) {
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
+            }
+          }
+
+          //write stack
+          await fileSystem(`write`, [ targetTong + "/" + cliid + ".js", "module_exports = function () { return '" + cliid + "' }" ]);
+          OfficePolling.firstDo.notion = false;
+
+          //debounce clean
+          if (OfficePolling.timeout.notion !== null) {
+            clearTimeout(OfficePolling.timeout.notion);
+            OfficePolling.timeout.notion = null;
+          }
+
+          //debounce timeout
+          OfficePolling.timeout.notion = setTimeout(async function () {
+            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+            let app = new NotionAPIs();
+            let temp;
+            let tongDir = await fileSystem(`readDir`, [ targetTong ]);
+            for (let i of tongDir) { if (i !== `.DS_Store`) {
+              await app.launching(i.replace(/\.js$/, ''));
+            }}
+            OfficePolling.firstDo.notion = true;
+            OfficePolling.timeout.notion = null;
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
+            }
+          }, 4000);
+
+          //end
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send("done");
+
+        } else {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  //POST - parsing analytics
+  funcObj.post_parsingAnalytics = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
 
         } else {
           console.log(err);

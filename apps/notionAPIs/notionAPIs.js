@@ -240,7 +240,6 @@ NotionAPIs.prototype.clientFilter = async function () {
       if (obj.movein === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.movein)) { obj.movein = "9999-09-09" }
       if (obj.precheck === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.precheck)) { obj.precheck = "9999-09-09" }
       if (obj.empty === "" || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(obj.empty)) { obj.empty = "9999-09-09" }
-
     }
 
     await fileSystem(`write`, [ this.jsonDir + "/client.json", JSON.stringify(tong, null, 2) ]);
@@ -259,19 +258,19 @@ NotionAPIs.prototype.clientFilter = async function () {
 }
 
 
-NotionAPIs.prototype.launching = async function () {
+NotionAPIs.prototype.launching = async function (cliid = "latest") {
   const instance = this;
   const { fileSystem, mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-
   try {
-
     let latestObj, newObj, tempArr;
-
     await MONGOC.connect();
 
-    latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray())[0];
-    // latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: "c2010_aa15s" }).limit(1).toArray())[0];
+    if (cliid === "latest") {
+      latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray())[0];
+    } else {
+      latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: cliid }).limit(1).toArray())[0];
+    }
 
     newObj = {};
     newObj["title"] = latestObj.a19_name;
@@ -321,18 +320,15 @@ NotionAPIs.dateFilter = function (raw, mother) {
     if (/거주/g.test(raw.trim())) {
       return a18_timeline.slice(0, 10);
 
-
     //six-wording
     } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(raw.trim())) {
       console.log("fix : (six-wording) " + raw + " => " + "20" + raw)
       return "20" + raw.trim();
 
-
     //first-month-error
     } else if (/^[0-9]+월[초]/.test(raw.trim())) {
 
       temp = Number(raw.trim().replace(/[^0-9]/g, ''));
-
       if (temp >= currentDate[1]) {
         result = String(currentDate[0]) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '01';
       } else {
@@ -341,7 +337,6 @@ NotionAPIs.dateFilter = function (raw, mother) {
 
       console.log("fix : (first-month-error) " + raw + " => " + result);
       return result;
-
 
     //first-hangul-error
     } else if (/\-[초]/.test(raw.trim())) {
@@ -361,7 +356,6 @@ NotionAPIs.dateFilter = function (raw, mother) {
       console.log("fix : (first-hangul-error) " + raw + " => " + result);
       return result;
 
-
     //last-month-error
     } else if (/^[0-9]+월[말]/.test(raw.trim())) {
 
@@ -375,7 +369,6 @@ NotionAPIs.dateFilter = function (raw, mother) {
 
       console.log("fix : (last-month-error) " + raw + " => " + result);
       return result;
-
 
     //last-hangul-error
     } else if (/\-[말]/.test(raw.trim())) {
@@ -395,7 +388,6 @@ NotionAPIs.dateFilter = function (raw, mother) {
       console.log("fix : (last-hangul-error) " + raw + " => " + result);
       return result;
 
-
     //middle-month-error
     } else if (/^[0-9]+월[중]/.test(raw.trim())) {
 
@@ -409,7 +401,6 @@ NotionAPIs.dateFilter = function (raw, mother) {
 
         console.log("fix : (middle-month-error) " + raw + " => " + result);
         return result;
-
 
     //middle-hangul-error
     } else if (/\-[중]/.test(raw.trim())) {
@@ -429,20 +420,17 @@ NotionAPIs.dateFilter = function (raw, mother) {
       console.log("fix : (middle-hangul-error) " + raw + " => " + result);
       return result;
 
-
     //wait error
     } else if (/wait/g.test(raw.trim()) || /대기/g.test(raw.trim()) || /피드백/g.test(raw.trim()) || /여유/g.test(raw.trim()) || /미정/g.test(raw.trim())) {
 
         console.log("fix : (wait error) " + raw + " => " + EMPTYDATE);
         return EMPTYDATE;
 
-
     //leave error
     } else if (/지남/g.test(raw.trim()) || /이미/g.test(raw.trim()) || /비어/g.test(raw.trim()) || /asap/g.test(raw.trim())) {
 
         console.log("fix : (leave error) " + raw + " => " + a18_timeline.slice(0, 10));
         return a18_timeline.slice(0, 10);
-
 
     } else {
       console.log(raw);
