@@ -99,7 +99,6 @@ AiProposal.prototype.proposalLaunching = async function () {
     console.log(e);
   } finally {
     MONGOC.close();
-    process.exit();
   }
 }
 
