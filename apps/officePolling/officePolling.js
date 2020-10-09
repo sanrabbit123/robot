@@ -74,7 +74,6 @@ OfficePolling.prototype.pollingInjection = async function () {
     this.injections = [];
     this.injectionDir = `${this.dir}/injection`;
     options.func = this.execFilter(await this.setInjection());
-    options.method = "post";
     console.log(options);
     const { body } = await this.mother.rawRequestSystem(this.cloudHost.outer + "/writeInjection", this.cloudHost.port, {}, options);
     console.log(body);
@@ -199,7 +198,7 @@ OfficePolling.prototype.routingCloud = function () {
       let stackFolder;
       let execArr, stackArr;
       let tempRegexp;
-
+      console.log(req)
       console.log(resultObj)
 
       stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
