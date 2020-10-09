@@ -267,7 +267,7 @@ OfficePolling.prototype.serverLaunching = async function () {
     for (let obj of post) { app.post(obj.link, obj.func); }
 
     //server on
-    https.createServer(app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
+    http.createServer(app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
       console.log(`Server running`);
     });
   } catch (e) {
