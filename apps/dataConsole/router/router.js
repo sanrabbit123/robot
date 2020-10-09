@@ -425,6 +425,7 @@ Router.prototype.rou_post_polling = function () {
   const { fileSystem, shell, shellLink } = this.mother;
   const execFolder = `${process.cwd()}/apps/officePolling/exec`;
   const OfficePolling = require(`${process.cwd()}/apps/officePolling/officePolling.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let obj = { link: '/polling' }
   obj.func = async function (req, res) {
     try {
