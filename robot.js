@@ -109,13 +109,13 @@ Robot.prototype.getConsulting = async function (sw = "1") {
   }
 }
 
-Robot.prototype.officePolling = async function (sw) {
+Robot.prototype.officePolling = async function (sw, boo = true) {
   try {
     const OfficePolling = require(`${process.cwd()}/apps/officePolling/officePolling.js`);
     const app = new OfficePolling();
     switch (sw) {
       case "server":
-        await app.serverLaunching();
+        await app.serverLaunching(boo);
         break;
       case "receive":
         await app.receiveLaunching();
@@ -163,7 +163,10 @@ Robot.prototype.launching = async function () {
       }
 
     } else if (/pollingserver/gi.test(process.argv[2])) {
-      await this.officePolling("server");
+      await this.officePolling("server", true);
+
+    } else if (/pollingoffice/gi.test(process.argv[2])) {
+      await this.officePolling("server", false);
 
     } else if (/pollingreceive/gi.test(process.argv[2])) {
       await this.officePolling("receive");

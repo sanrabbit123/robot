@@ -235,7 +235,39 @@ OfficePolling.prototype.routingCloud = function () {
   return resultObj;
 }
 
-OfficePolling.prototype.serverLaunching = async function () {
+OfficePolling.prototype.routingOffice = function () {
+  const instance = this;
+  const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
+  const { fileSystem, shell, slack_bot, shellLink } = this.mother;
+  let funcObj = {};
+
+  //POST - execute proposal make
+  funcObj.post_proposalMake = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
+          const { proid } = fields;
+          const app = new AiProposal(proid);
+          app.proposalLaunching();
+        } else {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    resultObj[i.split('_')[0]].push({ link: "/" + i.split('_')[1], func: funcObj[i] });
+  }
+  return resultObj;
+}
+
+OfficePolling.prototype.serverLaunching = async function (cloud = true) {
   const instance = this;
   const http = require("http");
   const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
@@ -252,9 +284,13 @@ OfficePolling.prototype.serverLaunching = async function () {
 
   try {
     //set router
-    let get, post, router;
-    if (true) {
+    let get, post, router, inner;
+    if (cloud) {
       router = this.routingCloud();
+      inner = this.cloudHost.inner;
+    } else {
+      router = this.routingOffice();
+      inner = '172.30.1.6';
     }
     get = router.get;
     post = router.post;
@@ -262,7 +298,7 @@ OfficePolling.prototype.serverLaunching = async function () {
     for (let obj of post) { app.post(obj.link, obj.func); }
 
     //server on
-    http.createServer(app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
+    http.createServer(app).listen(this.cloudHost.port, inner, () => {
       console.log(`Server running`);
     });
   } catch (e) {
