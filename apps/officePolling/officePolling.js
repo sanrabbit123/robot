@@ -264,7 +264,7 @@ OfficePolling.prototype.routingOffice = function () {
             OfficePolling.timeout = null;
           }
 
-          OfficePolling.timeout = setTimeout(function () {
+          OfficePolling.timeout = setTimeout(async function () {
             const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
             let app;
 
@@ -276,7 +276,6 @@ OfficePolling.prototype.routingOffice = function () {
             OfficePolling.doIt = true;
             OfficePolling.timeout = null;
           }, 3000);
-
 
           res.set({
             "Content-Type": "text/plain",
