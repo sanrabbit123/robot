@@ -173,6 +173,8 @@ OfficePolling.prototype.routingCloud = function () {
 
       finalResult = JSON.stringify(resultObj);
 
+      console.log(finalResult)
+
       for (let i of stackFolder) {
         shell.exec("rm -rf " + shellLink(instance.dir) + "/stack/" + i);
       }
@@ -198,6 +200,8 @@ OfficePolling.prototype.routingCloud = function () {
       let execArr, stackArr;
       let tempRegexp;
 
+      console.log(resultObj)
+
       stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
       execArr = [];
       stackArr = [];
@@ -206,21 +210,13 @@ OfficePolling.prototype.routingCloud = function () {
       for (let i of stackFolder) { if (tempRegexp.test(i)) {
         execArr.push(i);
       }}
-
       tempRegexp = new RegExp('^func_');
       for (let i of stackFolder) { if (tempRegexp.test(i)) {
         stackArr.push(i);
       }}
 
-      execArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
-      stackArr.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
-
-      if (resultObj.exec !== undefined) {
-        await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec ]);
-      }
-      if (resultObj.func !== undefined) {
-        await fileSystem('write', [ instance.dir + "/stack/" + "func_" + String(stackArr.length) + ".js", resultObj.func ]);
-      }
+      await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec ]);
+      await fileSystem('write', [ instance.dir + "/stack/" + "func_" + String(stackArr.length) + ".js", resultObj.func ]);
 
       res.set({
         "Content-Type": "text/plain",
