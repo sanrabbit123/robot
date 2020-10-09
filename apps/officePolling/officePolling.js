@@ -249,7 +249,16 @@ OfficePolling.prototype.routingOffice = function () {
         if (!err) {
           const { proid } = fields;
           const app = new AiProposal(proid);
-          app.proposalLaunching();
+          await app.proposalLaunching();
+
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send("done");
+
         } else {
           console.log(err);
         }
