@@ -354,17 +354,16 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
     console.log(`alimtalk success`);
 
     //set alphasector
-    let infoBoo = true;
-    if (/real/gi.test(process.argv[3]) || /server/gi.test(process.argv[3]) || /www/gi.test(process.argv[3])) { infoBoo = false; }
-    let alpha = {}
+    const whereis = this.mother.ipCheck();
+    let alpha = {};
     alpha.name = `Alphasector`;
     alpha.code = `<?php\n`;
     alpha.code += `class Alphasector {\n\n`;
     alpha.code += `\tprotected $dbarr = array(\n`;
-    alpha.code += `\t\t"dbhost" => "${(infoBoo ? infoObj.myinfo.host : 'localhost')}",\n`;
-    alpha.code += `\t\t"dbid" => "${(infoBoo ? infoObj.myinfo.user : infoObj.frontinfo.user)}",\n`;
-    alpha.code += `\t\t"dbpw" => "${(infoBoo ? infoObj.myinfo.password : infoObj.frontinfo.password)}",\n`;
-    alpha.code += `\t\t"dbname" => "miro81",\n`;
+    alpha.code += `\t\t"dbhost" => "${whereis.rawObj.mysql.inner}",\n`;
+    alpha.code += `\t\t"dbid" => "${whereis.rawObj.user}",\n`;
+    alpha.code += `\t\t"dbpw" => "${whereis.rawObj.password}",\n`;
+    alpha.code += `\t\t"dbname" => "${whereis.rawObj.database}",\n`;
     alpha.code += `\t);\n\n`;
     alpha.code += `\tfunction __construct() {}\n\n`;
     alpha.code += `}\n`;

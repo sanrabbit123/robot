@@ -9,13 +9,6 @@ const Mother = function () {
   this.mongo = require("mongodb").MongoClient;
 
   //mysql
-  this.myinfo = {
-    host: infoObj.myinfo.host,
-    user: infoObj.myinfo.user,
-    password: infoObj.myinfo.password,
-    port: infoObj.myinfo.port,
-    database: infoObj.myinfo.database
-  };
   this.frontinfo = {
     host: infoObj.frontinfo.host,
     user: infoObj.frontinfo.user,
@@ -595,6 +588,33 @@ Mother.prototype.sendJandi = function (mode, msg) {
   return new Promise(function (resolve, reject) {
     axios.post(url, { body: msg }, { headers: { "Accept": "application/vnd.tosslab.jandi-v2+json", "Content-Type": "application/json" } }).then(function (response) {
       resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+}
+
+Mother.prototype.ipCheck = function () {
+  const axios = require(`axios`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const keys = Object.keys(ADDRESS);
+  const values = Object.values(ADDRESS);
+  return new Promise(function(resolve, reject) {
+    axios.get("https://icanhazip.com").then(function (response) {
+      const ip = response.data.replace(/[^0-9\.]/g, '');
+      let obj = { ip };
+      let target = "unknown", targetNum = 0;
+      let number = 0;
+      for (let { ip: { outer } } of values) {
+        if (outer === ip) {
+          target = keys[number].replace(/info$/, '');
+          targetNum = number;
+        }
+        number++;
+      }
+      obj.name = target;
+      obj.rawObj = values[targetNum];
+      resolve(obj);
     }).catch(function (error) {
       reject(error);
     });

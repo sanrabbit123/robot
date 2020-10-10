@@ -155,11 +155,14 @@ if sys.argv[1] == 'local':
         targetRobotPath = "/home/centos/robot"
 
     if not targetPassword:
-        print("scp -i " + targetPemKey + " -r ./pems " + targetIdHost + ":" + targetRobotPath)
+        print("scp -i ./pems/" + targetPemKey + " -r ./pems " + targetIdHost + ":" + targetRobotPath)
     else:
         print("scp -r ./pems " + targetIdHost + ":" + targetRobotPath)
 
 elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
+    if sys.argv[1] == 'refresh':
+        subprocess.run([ "rm", "-rf", pemsName["infoObj"] ], shell=False, encoding='utf8')
+
     with open(pemsName["key"], 'rb') as keyFile:
         infoObjKey = keyFile.read()
     with open(pemsName["token"], 'rb') as tokenFile:
@@ -170,3 +173,7 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
 
     with open(pemsName["infoObj"], 'w') as newInfoObj:
         newInfoObj.write(infoObjString)
+
+    if sys.argv[1] == 'install':
+        print("npm install")
+        print("npm install -g pm2")

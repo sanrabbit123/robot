@@ -246,8 +246,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
 
@@ -276,3 +276,13 @@ async function main6() {
 }
 
 // main6();
+
+async function main7() {
+  const Mother = require(process.cwd() + "/apps/mother.js");
+  const mother = new Mother();
+
+  console.log(await mother.ipCheck());
+
+}
+
+main7();
