@@ -29,12 +29,12 @@ class Blockstyle {
       $html .= '<script type="application/ld+json">{"@context": "http:\\/\\/schema.org","@id": "http:\\/\\/home-liaison.com#","@type": "ProfessionalService","url": "https:\\/\\/home-liaison.com","name": "홈리에종 | 디자이너와 함께하는 홈스타일링 플랫폼","description": "홈리에종은 홈스타일링 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.","sameAs": ["https:\\/\\/www.facebook.com\\/homeliaison","https:\\/\\/blog.naver.com\\/homeliaison","https:\\/\\/www.instagram.com\\/homeliaison"],"address": {"@type": "PostalAddress","streetAddress": "279, Dongmak-ro","addressLocality": "Seoul","addressRegion": "Mapo-gu","postalCode": "04151","addressCountry": "KR"},"telephone": "02-2039-2252","image": "https:\\/\\/home-liaison.com\\/share\\/lb-image-0.jpg","openingHoursSpecification": {"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}}</script>';
     }
     $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-97880990-1"></script>';
-    $html .= '<script>\\n';
-    $html .= 'window.dataLayer = window.dataLayer || [];\\n';
-    $html .= 'function gtag(){dataLayer.push(arguments);}\\n';
-    $html .= 'gtag('js', new Date());\\n';
-    $html .= 'gtag('config', 'UA-97880990-1');\\n';
-    $html .= '</script>\\n';
+    $html .= "<script>\\n";
+    $html .= "window.dataLayer = window.dataLayer || [];\\n";
+    $html .= "function gtag(){dataLayer.push(arguments);}\\n";
+    $html .= "gtag('js', new Date());\\n";
+    $html .= "gtag('config', 'UA-97880990-1');\\n";
+    $html .= "</script>\\n";
     return $html;
   }
 

@@ -185,6 +185,8 @@ ConsultingJs.prototype.submitEvent = function (boo) {
   const mother = document.getElementById(flatform);
 
   return function (e) {
+    window.gtag('event', 'login');
+
     let ajaxList = [ "pretext", "cellphone", "dwelling", "folk", "email", "money", "area", "movingdate", "myhomeboo", "spotspec", "description", "wayto" ];
     let ajaxdata = '';
     let submitNamePhone = [];
@@ -1212,16 +1214,6 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       return false;
     } else {
       history.pushState({}, "", "?submit=true");
-
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'UA-97880990-1', {
-        'page_path': '/consulting.php?submit=true'
-      });
-
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       document.getElementById("consultinggrayback").style.cssText = "height:1600px";

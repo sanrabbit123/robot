@@ -108,14 +108,14 @@ class GoogleAnalytics:
                             {
                                 "filters": [
                                     {
-                                        "dimensionName": "ga:pagePath",
-                                        "expressions": [ "consulting" ],
+                                        "dimensionName": "ga:eventAction",
+                                        "expressions": [ "login" ],
                                     }
                                 ]
                             }
                         ],
                         "metrics": [
-                            { "expression": "ga:users" },
+                            { "expression": "ga:pageviews" },
                         ]
                     }
                 ]
@@ -157,7 +157,7 @@ class GoogleAnalytics:
                             }
                         ],
                         "metrics": [
-                            { "expression": "ga:users" },
+                            { "expression": "ga:pageviews" },
                         ]
                     }
                 ]
