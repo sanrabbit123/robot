@@ -311,9 +311,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         //to notion
-        const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
-        if (notionStatus !== 200) {
-          message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+        if (clientObj["a20_phone"] !== "010-2747-3403") {
+          const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
+          if (notionStatus !== 200) {
+            message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+          }
         }
 
         slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
