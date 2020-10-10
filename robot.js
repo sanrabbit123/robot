@@ -129,6 +129,16 @@ Robot.prototype.officePolling = async function (sw, boo = true) {
   }
 }
 
+Robot.prototype.pythonCloud = async function () {
+  try {
+    const PythonCloud = require(`${process.cwd()}/apps/pythonCloud/pythonCloud.js`);
+    const app = new PythonCloud();
+    app.serverLaunching();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4;
@@ -173,6 +183,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/pollinginjection/gi.test(process.argv[2])) {
       await this.officePolling("injection");
+
+    } else if (/pythoncloud/gi.test(process.argv[2]) || /pythonserver/gi.test(process.argv[2])) {
+      await this.pythonCloud();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);
@@ -246,8 +259,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 //development
 
@@ -270,19 +283,7 @@ async function main5() {
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-
   console.log(await analytics.getLatestClient());
-
 }
 
 // main6();
-
-async function main7() {
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  const mother = new Mother();
-
-  console.log(await mother.ipCheck());
-
-}
-
-main7();

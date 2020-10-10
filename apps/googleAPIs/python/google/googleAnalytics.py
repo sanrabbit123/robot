@@ -109,7 +109,7 @@ class GoogleAnalytics:
                                 "filters": [
                                     {
                                         "dimensionName": "ga:pagePath",
-                                        "expressions": [ "servicesubmit" ],
+                                        "expressions": [ "consulting" ],
                                     }
                                 ]
                             }

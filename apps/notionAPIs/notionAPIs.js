@@ -294,6 +294,7 @@ NotionAPIs.prototype.launching = async function (cliid = "latest") {
     newObj["etc"] = latestObj.a29_etc;
 
     console.log(await this.addNewRow(newObj));
+    await this.mother.slack_bot.chat.postMessage({ text: `${latestObj.a19_name} 고객님의 정보가 노션으로 옮겨졌습니다!`, channel: `#401_consulting` });
 
   } catch (e) {
     console.log(e);
