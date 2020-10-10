@@ -462,9 +462,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
 BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const instance = this;
-  // const https = require("https");
-  const https = require("http");
-
+  const https = require("https");
   const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
@@ -516,11 +514,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     for (let obj of post) { app.post(obj.link, obj.func); }
 
     //server on
-    // https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
-    //   console.log(`Server running`);
-    // });
-
-    https.createServer(app).listen(this.cloudHost.port, "127.0.0.1", () => {
+    https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
       console.log(`Server running`);
     });
 
