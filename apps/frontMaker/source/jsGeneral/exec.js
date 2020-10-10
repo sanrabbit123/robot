@@ -1,9 +1,9 @@
 window.dataLayer = window.dataLayer || [];
-window.gtag = function () {
+function gtag() {
   dataLayer.push(arguments);
 }
-window.gtag('js', new Date());
-window.gtag('config', 'UA-97880990-1');
+gtag('js', new Date());
+gtag('config', 'UA-97880990-1');
 
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

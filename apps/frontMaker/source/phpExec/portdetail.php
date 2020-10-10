@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__.'/engine/Blockstyle.php';
 require_once __DIR__.'/engine/functions/portdetail_f.php';
-require_once __DIR__.'/engine/Sessions.php';
-$sessionHandler = new SessionExec();
+// require_once __DIR__.'/engine/Sessions.php';
+// $sessionHandler = new SessionExec();
 
 $htmlhtml = new Blockstyle();
 $headhtml = '';
@@ -101,5 +101,5 @@ echo $htmlindex->hookBox("mobile");
 //mobile footer
 echo $htmlhtml->mofootfoot('portdetail');
 echo $htmlhtml->htmlend();
-$sessionHandler->closeSession();
+// $sessionHandler->closeSession();
 ?>

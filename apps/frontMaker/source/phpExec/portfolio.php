@@ -1,16 +1,16 @@
 <?php
 require_once __DIR__.'/engine/Blockstyle.php';
 require_once __DIR__.'/engine/functions/portfolio_f.php';
-require_once __DIR__.'/engine/Sessions.php';
-$sessionHandler = new SessionExec();
+// require_once __DIR__.'/engine/Sessions.php';
+// $sessionHandler = new SessionExec();
 
-if (!isset($_SESSION['from'])) {
-  if (isset($_SERVER['HTTP_REFERER'])) {
-    $sessionHandler->intoSession(array("from" => $_SERVER['HTTP_REFERER']));
-  } else {
-    $sessionHandler->intoSession(array("from" => "null"));
-  }
-}
+// if (!isset($_SESSION['from'])) {
+//   if (isset($_SERVER['HTTP_REFERER'])) {
+//     $sessionHandler->intoSession(array("from" => $_SERVER['HTTP_REFERER']));
+//   } else {
+//     $sessionHandler->intoSession(array("from" => "null"));
+//   }
+// }
 
 $htmlhtml = new Blockstyle();
 $headhtml = '';
@@ -31,5 +31,5 @@ $pluginjs = [];
 $headhtml .= $htmlhtml->totaljavascript('portfolio', $pluginjs);
 
 echo $headhtml;
-$sessionHandler->closeSession();
+// $sessionHandler->closeSession();
 ?>

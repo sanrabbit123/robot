@@ -1212,10 +1212,16 @@ ConsultingJs.prototype.thankyouPage = function (boo, valuesTong) {
       return false;
     } else {
       history.pushState({}, "", "?submit=true");
-      window.gtag('config', "UA-97880990-1", {
-        page_title: '서비스 신청 완료',
-        page_path: '/servicesubmit'
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-97880990-1', {
+        'page_path': '/consulting.php?submit=true'
       });
+
       instance.pendingBox(document.getElementById((boo === "desktop") ? "consultingbox" : "moconsultingbox"), boo, true);
       window.scrollTo({ top: 0, behavior: "smooth" });
       document.getElementById("consultinggrayback").style.cssText = "height:1600px";

@@ -1,8 +1,8 @@
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 const BridgeCloud = function () {
-  const GrandMother = require(`${process.cwd()}/apps/grandMother.js`);
-  this.mother = new GrandMother();
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
+  this.mother = new Mother();
 
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/bridgeCloud";
@@ -114,7 +114,7 @@ BridgeCloud.returnTimeline = function () {
 
 BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   const instance = this;
-  const { shell, slack_bot, shellLink, googleSystem, sendJandi } = this.mother;
+  const { shell, slack_bot, shellLink, googleSystem } = this.mother;
   try {
     const { tong, name } = obj;
     let tongKeys = Object.keys(tong);
@@ -138,17 +138,15 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
     }
 
     slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#400_customer" });
-    sendJandi("file", "파일 전송을 완료하였습니다! : " + name);
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
-    sendJandi("error", "파일 서버 문제 생김 : " + e);
   }
 }
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, sendJandi } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, KAKAO ] = needs;
   let funcObj = {};
@@ -165,7 +163,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext)) {
 
         slack_bot.chat.postMessage({ text: "불량 데이터 확인, 직접 확인해주세요. : " + resultObj.pretext + ' ' + resultObj.cellphone, channel: "#401_consulting" });
-        sendJandi("request", ("불량 데이터 확인, 직접 확인해주세요. : " + resultObj.pretext + ' ' + resultObj.cellphone));
 
       } else {
 
@@ -249,6 +246,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           for (let i in additionColumns) {
             clientObj[i] = ifOverlap[0][i];
           }
+          clientObj["a12_history"] = clientObj["a12_history"] + " " + pastInfos;
           clientObj["a18_timeline"] = additionColumns["a18_timeline"];
           clientObj["a1_class1"] = additionColumns["a1_class1"];
         }
@@ -305,14 +303,20 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         for (let i in toGoogle) {
           googleObj[toGoogle[i]] = clientObj[i];
         }
-        const { status } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", googleObj);
-        if (status === 200) {
+        const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", googleObj);
+        if (googleStatus === 200) {
           message = message + "\n" + "구글 설문지로 옮겨졌습니다. 출력해주세요!\nhttps://docs.google.com/forms/d/1D8CNQFtRr_hiuUXdMXYAgYCk6nFC5cAdkezzp-3mlcw/edit";
         } else {
           message = message + "\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
         }
+
+        //to notion
+        const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
+        if (notionStatus !== 200) {
+          message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+        }
+
         slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-        sendJandi("request", message);
       }
 
       //end
@@ -326,7 +330,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
     } catch (e) {
       slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
-      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -362,7 +365,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
     } catch (e) {
       slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
-      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -423,7 +425,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //kakao and slack
           KAKAO.sendTalk("photo", name, phone);
           slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#400_customer" });
-          sendJandi("file", name + "님이 파일 전송을 시도중입니다!");
 
           //end
           res.set({
@@ -436,7 +437,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         } else {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
-          sendJandi("error", "Bridge 서버 문제 생김 : " + e);
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": '*',
@@ -448,7 +448,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
     } catch (e) {
       slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
-      sendJandi("error", "Bridge 서버 문제 생김 : " + e);
       console.log(e);
     }
   }
@@ -463,7 +462,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
 BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const instance = this;
-  const https = require("https");
+  // const https = require("https");
+  const https = require("http");
+
   const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
@@ -515,7 +516,11 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     for (let obj of post) { app.post(obj.link, obj.func); }
 
     //server on
-    https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
+    // https.createServer(pems, app).listen(this.cloudHost.port, this.cloudHost.inner, () => {
+    //   console.log(`Server running`);
+    // });
+
+    https.createServer(app).listen(this.cloudHost.port, "127.0.0.1", () => {
       console.log(`Server running`);
     });
 

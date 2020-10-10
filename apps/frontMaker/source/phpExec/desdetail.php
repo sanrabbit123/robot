@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__.'/engine/Blockstyle.php';
 require_once __DIR__.'/engine/functions/desdetail_f.php';
-require_once __DIR__.'/engine/Sessions.php';
-$sessionHandler = new SessionExec();
+// require_once __DIR__.'/engine/Sessions.php';
+// $sessionHandler = new SessionExec();
 
 $htmlhtml = new Blockstyle();
 $headhtml = '';
@@ -93,5 +93,5 @@ echo $htmlhtml->footfoot();
 //mobile footer
 echo $htmlhtml->mofootfoot('desdetail');
 echo $htmlhtml->htmlend();
-$sessionHandler->closeSession();
+// $sessionHandler->closeSession();
 ?>

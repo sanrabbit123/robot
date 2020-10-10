@@ -9,27 +9,27 @@ class MysqlSessionHandler extends Alphasector implements SessionHandlerInterface
     public function __construct() {
       $this->database = new mysqli($this->dbarr["dbhost"], $this->dbarr["dbid"], $this->dbarr["dbpw"], $this->dbarr["dbname"]);
       if ($this->database->connect_errno) {
-				$_SESSION = array("error" => "occur");
-			} else {
-				$this->database->set_charset("utf8");
-	      if (session_set_save_handler(
-	          array($this, "open"),
-	          array($this, "close"),
-	          array($this, "read"),
-	          array($this, "write"),
-	          array($this, "destroy"),
-	          array($this, "gc")
-	      )) {
-					register_shutdown_function('session_write_close');
-		      if (session_start()) {
-						//success
-					} else {
-						$_SESSION = array("error" => "occur");
-					}
-				} else {
-					$_SESSION = array("error" => "occur");
-				}
-			}
+        $_SESSION = array("error" => "occur");
+      } else {
+        $this->database->set_charset("utf8");
+        if (session_set_save_handler(
+            array($this, "open"),
+            array($this, "close"),
+            array($this, "read"),
+            array($this, "write"),
+            array($this, "destroy"),
+            array($this, "gc")
+        )) {
+          register_shutdown_function('session_write_close');
+          if (session_start()) {
+            //success
+          } else {
+            $_SESSION = array("error" => "occur");
+          }
+        } else {
+          $_SESSION = array("error" => "occur");
+        }
+      }
     }
 
     public function open($savepath, $id) {
@@ -89,7 +89,7 @@ class MysqlSessionHandler extends Alphasector implements SessionHandlerInterface
 }
 
 class SessionExec {
-	private $sessionH;
+  private $sessionH;
 
   function __construct() {
     $this->sessionH = new MysqlSessionHandler();
@@ -105,18 +105,18 @@ class SessionExec {
     array_push($_SESSION[$target], $value);
   }
 
-	public function errorHandler() {
-		if (isset($_SESSION["error"])) {
-			echo "error occur";
-		} else {
-			//sucess
-		}
-	}
+  public function errorHandler() {
+    if (isset($_SESSION["error"])) {
+      echo "error occur";
+    } else {
+      //sucess
+    }
+  }
 
-	public function closeSession() {
+  public function closeSession() {
     session_write_close();
-		$this->errorHandler();
-	}
+    $this->errorHandler();
+  }
 }
 ?>`;
 }

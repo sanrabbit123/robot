@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__.'/engine/Blockstyle.php';
 require_once __DIR__.'/engine/functions/payment_f.php';
-require_once __DIR__.'/engine/Sessions.php';
-$sessionHandler = new SessionExec();
+// require_once __DIR__.'/engine/Sessions.php';
+// $sessionHandler = new SessionExec();
 $htmlhtml = new Blockstyle();
 $headhtml = '';
 $htmlindex = new Paymentf();
@@ -42,5 +42,5 @@ $pluginjs = [
 $headhtml .= $htmlhtml->totaljavascript('payment', $pluginjs);
 
 echo $headhtml;
-$sessionHandler->closeSession();
+// $sessionHandler->closeSession();
 ?>

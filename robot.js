@@ -139,6 +139,16 @@ Robot.prototype.pythonCloud = async function () {
   }
 }
 
+Robot.prototype.bridgeCloud = async function (sw) {
+  try {
+    const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`);
+    const app = new BridgeCloud();
+    await app.serverLaunching();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4;
@@ -186,6 +196,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/pythoncloud/gi.test(process.argv[2]) || /pythonserver/gi.test(process.argv[2])) {
       await this.pythonCloud();
+
+    } else if (/bridgeserver/gi.test(process.argv[2])) {
+      await this.bridgeCloud();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);

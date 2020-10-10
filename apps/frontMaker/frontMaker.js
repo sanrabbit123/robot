@@ -354,7 +354,7 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
     console.log(`alimtalk success`);
 
     //set alphasector
-    const whereis = this.mother.ipCheck();
+    const whereis = await this.mother.ipCheck();
     let alpha = {};
     alpha.name = `Alphasector`;
     alpha.code = `<?php\n`;

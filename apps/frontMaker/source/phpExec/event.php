@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__.'/engine/Blockstyle.php';
 require_once __DIR__.'/engine/functions/event_f.php';
-require_once __DIR__.'/engine/Sessions.php';
-$sessionHandler = new SessionExec();
+// require_once __DIR__.'/engine/Sessions.php';
+// $sessionHandler = new SessionExec();
 
 $ranran = rand(0,20);
 $ranlink = (($ranran < 10) ? 'o' : 's');
@@ -149,5 +149,5 @@ echo $htmlhtml->footfoot();
 //mobile footer
 echo $htmlhtml->mofootfoot('event');
 echo $htmlhtml->htmlend();
-$sessionHandler->closeSession();
+// $sessionHandler->closeSession();
 ?>
