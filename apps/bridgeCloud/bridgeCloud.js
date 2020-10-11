@@ -266,7 +266,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         //send slack message
         let message = '';
         message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!  |  " + clientObj["a18_timeline"] + "\n";
-        message += "성함 : " + clientObj["a19_name"] + " ( 고객 아이디 : " + this_id + " )" + "\n";
+        message += "성함 : " + clientObj["a19_name"] + " ( 고객 아이디 : " + (pastInfo_boo ? ifOverlap[0]["a4_customernumber"] : this_id) + " )" + "\n";
         message += "연락처 : " + clientObj["a20_phone"] + "\n";
         message += "이메일 : " + clientObj["a35_aboutetc"] + "\n";
         message += "주소 : " + clientObj["a21_address"] + "\n";
@@ -312,9 +312,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //to notion
         if (clientObj["a20_phone"] !== "010-2747-3403") {
-          const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
-          if (notionStatus !== 200) {
-            message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+          if (!pastInfo_boo) {
+            const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
+            if (notionStatus !== 200) {
+              message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+            }
           }
         }
 
