@@ -263,38 +263,41 @@ NotionAPIs.prototype.launching = async function (cliid = "latest") {
   const { fileSystem, mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   try {
-    let latestObj, newObj, tempArr;
+    let latestObj_arr, latestObj, newObj, tempArr;
     await MONGOC.connect();
 
     if (cliid === "latest") {
-      latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray())[0];
+      latestObj_arr = await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({'a18_timeline': -1}).limit(1).toArray();
     } else {
-      latestObj = (await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: cliid }).limit(1).toArray())[0];
+      latestObj_arr = await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: cliid }).limit(1).toArray();
     }
 
-    newObj = {};
-    newObj["title"] = latestObj.a19_name;
-    newObj["cliid"] = latestObj.a4_customernumber;
-    newObj["phone"] = latestObj.a20_phone;
-    newObj["email"] = latestObj.a35_aboutetc;
-    newObj["address"] = latestObj.a21_address;
-    newObj["budget"] = latestObj.a23_budget.replace(/,/g, '');
-    newObj["pyeong"] = Math.round(Number(latestObj.a24_pyeong.replace(/평/g, '')));
-    newObj["contract"] = latestObj.a27_contract;
-    newObj["family"] = latestObj.a22_family;
-    if (latestObj.a25_due_date === "거주중") {
-      newObj["movein"] = latestObj.a18_timeline.slice(0, 10);
-    } else {
-      newObj["movein"] = latestObj.a25_due_date;
-    }
-    tempArr = latestObj.a28_space.split(' / ');
-    newObj["room"] = tempArr[0];
-    newObj["bathroom"] = tempArr[1];
-    newObj["valcony"] = tempArr[2];
-    newObj["etc"] = latestObj.a29_etc;
+    if (latestObj_arr.length > 0) {
+      latestObj = latestObj_arr[0];
+      newObj = {};
+      newObj["title"] = latestObj.a19_name;
+      newObj["cliid"] = latestObj.a4_customernumber;
+      newObj["phone"] = latestObj.a20_phone;
+      newObj["email"] = latestObj.a35_aboutetc;
+      newObj["address"] = latestObj.a21_address;
+      newObj["budget"] = latestObj.a23_budget.replace(/,/g, '');
+      newObj["pyeong"] = Math.round(Number(latestObj.a24_pyeong.replace(/평/g, '')));
+      newObj["contract"] = latestObj.a27_contract;
+      newObj["family"] = latestObj.a22_family;
+      if (latestObj.a25_due_date === "거주중") {
+        newObj["movein"] = latestObj.a18_timeline.slice(0, 10);
+      } else {
+        newObj["movein"] = latestObj.a25_due_date;
+      }
+      tempArr = latestObj.a28_space.split(' / ');
+      newObj["room"] = tempArr[0];
+      newObj["bathroom"] = tempArr[1];
+      newObj["valcony"] = tempArr[2];
+      newObj["etc"] = latestObj.a29_etc;
 
-    console.log(await this.addNewRow(newObj));
-    await this.mother.slack_bot.chat.postMessage({ text: `${latestObj.a19_name} 고객님의 정보가 노션으로 옮겨졌습니다!`, channel: `#401_consulting` });
+      console.log(await this.addNewRow(newObj));
+      await this.mother.slack_bot.chat.postMessage({ text: `${latestObj.a19_name} 고객님의 정보가 노션으로 옮겨졌습니다!`, channel: `#401_consulting` });
+    }
 
   } catch (e) {
     console.log(e);
