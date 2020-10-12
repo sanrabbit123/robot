@@ -448,7 +448,7 @@ OfficePolling.prototype.serverLaunching = async function (cloud = true) {
       inner = this.cloudHost.inner;
     } else {
       router = this.routingOffice();
-      inner = '172.30.1.6';
+      inner = '172.30.1.55';
     }
     get = router.get;
     post = router.post;
