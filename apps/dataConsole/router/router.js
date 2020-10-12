@@ -433,7 +433,7 @@ Router.prototype.rou_post_polling = function () {
       for (let i of execFolderList) {
         shell.exec(`rm -rf ${shellLink(execFolder)}/i`);
       }
-      await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://172.30.1.6:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
+      await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://172.30.1.55:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
       const app = new OfficePolling();
       await app.injectionLaunching();
 
