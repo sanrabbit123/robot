@@ -39,7 +39,7 @@ class GoogleAnalytics:
     def getAMonthAgo(self):
         dic = {}
         now = time.localtime(time.time())
-        monthAgo = time.localtime(time.time() - (60 * 60 * 24 * 30))
+        monthAgo = time.localtime(time.time() - (60 * 60 * 24 * 30 * 3))
 
         now_year = str(now.tm_year)
         if now.tm_mon < 10:
@@ -98,7 +98,7 @@ class GoogleAnalytics:
                         "viewId": self.viewId,
                         "pageSize": 100000,
                         "dateRanges": [
-                            { "startDate": "today", "endDate": "today" }
+                            { "startDate": "yesterday", "endDate": "today" }
                         ],
                         "dimensions": [
                             { "name": "ga:clientId" },

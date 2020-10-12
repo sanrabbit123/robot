@@ -12,6 +12,14 @@ const BackMaker = function () {
   this.resourceDir = this.dir + "/resource";
 }
 
+BackMaker.prototype.pastMap = function () {
+  switch (this.button) {
+    case "client":
+      return "BC1_conlist";
+      break;
+  }
+}
+
 BackMaker.prototype.jsonStructure = function () {
   const instance = this;
   const map = require(this.mapDir + "/" + this.button + ".js");
@@ -34,7 +42,7 @@ BackMaker.prototype.pastToJson = async function () {
   const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: this.notion });
   try {
     await MONGOC.connect();
-    const row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).toArray();
+    const row = await MONGOC.db("miro81").collection(this.pastMap()).find({}).toArray();
     return (await filter(row));
   } catch (e) {
     console.log(e);
@@ -50,7 +58,6 @@ BackMaker.prototype.subLogicToJson = async function (tong) {
   try {
     const targetDir = this.pastDir + "/" + this.button;
     const targetDirArr = await fileSystem(`readDir`, [ targetDir ]);
-
     let tempFunc, funcs;
 
     funcs = [];

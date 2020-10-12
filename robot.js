@@ -272,8 +272,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
 
@@ -299,4 +299,4 @@ async function main6() {
   console.log(await analytics.getLatestClient());
 }
 
-// main6();
+main6();

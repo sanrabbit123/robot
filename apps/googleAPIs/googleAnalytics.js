@@ -78,15 +78,30 @@ GoogleAnalytics.prototype.getLatestClientId = async function () {
   const mother = this.mother;
   try {
     const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClientId" ], {});
-    // for (let { dimensions } of result.rows) {
-    //   console.log(dimensions);
-    // }
-    let users = [];
+    let users_raw = [];
     for (let { dimensions } of result.rows) {
-      users.push(dimensions);
+      users_raw.push(dimensions);
     }
-    users.sort((a, b) => { return Number(b[1]) - Number(a[1]); });
-    return users[0][0];
+    users_raw.sort((a, b) => { return Number(b[1]) - Number(a[1]); });
+    console.log(users_raw);
+
+    let users = [];
+    let users_boo = false;
+    for (let [ user, time ] of users_raw) {
+      users_boo = false;
+      for (let i of users) {
+        if (i.user === user) {
+          users_boo = true;
+        }
+      }
+      if (!users_boo) {
+        users.push({ user, time });
+      }
+    }
+    console.log(users);
+
+
+    return users_raw[1][0];
   } catch (e) {
     console.log(e);
   }
@@ -100,7 +115,6 @@ GoogleAnalytics.prototype.getLatestClient = async function () {
     const latestId = await this.getLatestClientId();
     const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClient" ], { clientId: latestId });
     let users = [];
-
 
     for (let { dimensions } of result.rows) {
       users.push(dimensions);
