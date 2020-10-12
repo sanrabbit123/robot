@@ -185,8 +185,6 @@ ConsultingJs.prototype.submitEvent = function (boo) {
   const mother = document.getElementById(flatform);
 
   return function (e) {
-    window.gtag('event', 'login');
-
     let ajaxList = [ "pretext", "cellphone", "dwelling", "folk", "email", "money", "area", "movingdate", "myhomeboo", "spotspec", "description", "wayto" ];
     let ajaxdata = '';
     let submitNamePhone = [];
@@ -294,6 +292,11 @@ ConsultingJs.prototype.submitEvent = function (boo) {
 
       //view pendingBox
       instance.pendingBox(mother, boo);
+
+      //send google analytics
+      if (obj.cellphone !== "010-2747-3403") {
+        window.gtag('event', 'login');
+      }
 
       //submit
       GeneralJs.ajax(ajaxdata, "/engine/Submit.php", function (data) {});
