@@ -1,10 +1,9 @@
 module.exports = {
   structure: {
     proid: "",
-    client: "",
     cliid: "",
     desid: "",
-    service: "",
+    serid: "",
     proposal: {
       status: "",
       detail: [
@@ -14,7 +13,7 @@ module.exports = {
             {
               method: "offline",
               partial: false,
-              money: 0
+              amount: 0
             }
           ],
           pictureSettings: [
@@ -36,29 +35,17 @@ module.exports = {
     process: {
       status: "진행중", // [ '드랍', '진행', '응대중', '완료' ]
       contract: {
-        guide: "9999-09-09", // alimtalk api in button in notion (to mongo / to notion)
-        date: "9999-09-09", // bank api in button in notion (to mongo / to notion)
-        calculation: {
-          amount: 0, // from contract
-          info: {
-            account: "", // from contract
-            proof: "", // from contract
-            to: "", // from contract
-          }
-        },
-        form: {
-          id: "", // eform api in button in notion (to mongo / to notion)
+        first: {
           guide: "9999-09-09", // alimtalk api in button in notion (to mongo / to notion)
-          date: {
-            from: "9999-09-09", // from contract
-            to: "9999-09-09", // from contract
-          }
-        },
-        meeting: {
-          date: "9999-09-09", // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
-          pastDesigners: [
-            { desid: "" }
-          ]
+          date: "9999-09-09", // bank api in button in notion (to mongo / to notion)
+          calculation: {
+            amount: 0, // from contract
+            info: {
+              account: "", // from contract
+              proof: "", // from contract
+              to: "", // from contract
+            }
+          },
         },
         remain: {
           guide: "9999-09-09", // alimtalk api in button in notion (to mongo / to notion)
@@ -76,13 +63,27 @@ module.exports = {
             }
           },
         },
+        form: {
+          id: "", // eform api in button in notion (to mongo / to notion)
+          guide: "9999-09-09", // alimtalk api in button in notion (to mongo / to notion)
+          date: {
+            from: "9999-09-09", // from contract
+            to: "9999-09-09", // from contract
+          }
+        },
+        meeting: {
+          date: "9999-09-09", // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
+          pastDesigners: [
+            { desid: "" },
+          ]
+        },
       },
       design: {
         proposal: {
           limit: null,
           detail: [
             {
-              date: "9999-09-09", // ?
+              date: "9999-09-09",
             }
           ]
         },
@@ -157,6 +158,26 @@ module.exports = {
           ],
         },
       },
+      calculation: {
+        method: "",
+        percentage: 0,
+        info: {
+          account: "", // from contract
+          proof: "", // from contract
+          to: "", // from contract
+        },
+        payments: {
+          totalAmount: 0,
+          first: {
+            amount: 0,
+            date: "9999-09-09",
+          },
+          remain: {
+            amount: 0,
+            date: "9999-09-09",
+          }
+        }
+      },
     },
     contents: {
       photo: {
@@ -166,10 +187,6 @@ module.exports = {
           interviewer: "",
         }
       },
-      space: {
-        region: "",
-        method: "",
-      },
       portfolio: {
         pid: "",
         date: "9999-09-09",
@@ -177,6 +194,8 @@ module.exports = {
           main: "",
           sub: "",
           simple: "",
+          region: "",
+          method: "",
         },
         color: {
           main: "",
@@ -191,8 +210,10 @@ module.exports = {
           },
           slide: [],
           tag: [],
-          key8: 0,
-          key9: 0,
+          sort: {
+            key8: 0,
+            key9: 0,
+          },
         },
         contents: {
           suggestion: "Designer's\nSuggestion",
@@ -223,7 +244,7 @@ module.exports = {
         contents: {
           detail: [
             {
-              type: 0,
+              type: "",
               photo: [],
               contents: [
                 {
