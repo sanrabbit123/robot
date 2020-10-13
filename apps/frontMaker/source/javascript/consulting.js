@@ -299,8 +299,8 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       }
 
       //submit
-      GeneralJs.ajax(ajaxdata, "/engine/Submit.php", function (data) {});
-      GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", instance.thankyouPage(boo, submitNamePhone));
+      GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
+      GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
 
       //test
       /*

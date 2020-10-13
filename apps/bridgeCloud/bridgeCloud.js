@@ -156,9 +156,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     try {
       //request
       const resultObj = req.body;
-      const requestMessage = "request get : " + JSON.stringify(resultObj, null, 2);
-      slack_bot.chat.postMessage({ text: requestMessage, channel: "#error_log" });
-      console.log(requestMessage);
+      console.log("request get : " + JSON.stringify(resultObj, null, 2));
 
       //ban bad data
       const ifOverlap = await MONGOC.db("miro81").collection("BC1_conlist").find({ a20_phone: filterAll(resultObj.cellphone) }).toArray();
