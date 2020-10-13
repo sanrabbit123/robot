@@ -154,10 +154,15 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - submit
   funcObj.post_submit = async function (req, res) {
     try {
+      //request
+      const resultObj = req.body;
+      const requestMessage = "request get : " + JSON.stringify(resultObj, null, 2);
+      slack_bot.chat.postMessage({ text: requestMessage, channel: "#error_log" });
+      console.log(requestMessage);
 
       //ban bad data
-      const resultObj = req.body;
       const ifOverlap = await MONGOC.db("miro81").collection("BC1_conlist").find({ a20_phone: filterAll(resultObj.cellphone) }).toArray();
+      console.log("if overlap test success");
       let pastInfos = "no", pastInfo_boo = false;
 
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext)) {
@@ -214,6 +219,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //id and add column
         let rows = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).sort({ a4_customernumber: -1 }).limit(1).toArray();
+        console.log("latest rows get success");
         let this_id = BridgeCloud.makeId(rows[0].a4_customernumber);
         const additionColumns = {
           "a18_timeline": BridgeCloud.returnTimeline(),
