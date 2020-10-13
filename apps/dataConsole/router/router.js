@@ -43,7 +43,7 @@ Router.prototype.rou_get_Second = function () {
   let obj = { link: '/second/:id' }
   obj.func = async function (req, res) {
     try {
-      let sort_obj = {}
+      let sort_obj = {};
       sort_obj[instance.data[req.params.id].standard] = -1;
       let rows = await instance.mongo.db("miro81").collection(req.params.id).find({}).project({}).sort(sort_obj).toArray();
       res.set('Content-Type', 'text/html');
@@ -433,7 +433,7 @@ Router.prototype.rou_post_polling = function () {
       for (let i of execFolderList) {
         shell.exec(`rm -rf ${shellLink(execFolder)}/i`);
       }
-      await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://172.30.1.55:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
+      await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://172.30.1.40:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
       const app = new OfficePolling();
       await app.injectionLaunching();
 
