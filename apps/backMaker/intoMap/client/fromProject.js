@@ -19,7 +19,6 @@ module.exports = function (tools) {
       console.log(e);
     } finally {
       await MONGOC.close();
-      console.log("from project done");
     }
   }
 }

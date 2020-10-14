@@ -10,8 +10,6 @@ module.exports = function (tools) {
 
     } catch (e) {
       console.log(e);
-    } finally {
-      console.log("from notion done");
     }
   }
 }

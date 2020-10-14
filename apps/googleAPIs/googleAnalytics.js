@@ -33,6 +33,17 @@ GoogleAnalytics.prototype.returnMonthBox = function (startDate = "2019-03-01") {
   return result;
 }
 
+GoogleAnalytics.prototype.returnTimeline = function (str) {
+  str = String(str);
+  const year = str.slice(0, 4);
+  const month = str.slice(4, 6);
+  const date = str.slice(6, 8);
+  const hour = str.slice(8, 10);
+  const minute = str.slice(10, 12);
+  const second = "00";
+  return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+}
+
 GoogleAnalytics.prototype.getAgeGender = async function () {
   const instance = this;
   const mother = this.mother;
@@ -135,6 +146,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
       { name: "ga:deviceCategory" },
       { name: "ga:operatingSystem" },
       { name: "ga:campaign" },
+      { name: "ga:mobileDeviceModel" },
     ];
     result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
     if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
@@ -164,6 +176,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     resultObj.device = {};
     resultObj.device.type = users[0][5];
     resultObj.device.os = users[0][6];
+    resultObj.device.mobileDevice = users[0][8];
 
     resultObj.campaign = users[0][7];
     resultObj.history = [];
@@ -172,7 +185,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     users.sort((a, b) => { return Number(a[0]) - Number(b[0]); });
     for (let i = 0; i < users.length; i++) {
       temp = {};
-      temp.time = users[i][0].slice(4, 6) + "-" + users[i][0].slice(6, 8) + " " + users[i][0].slice(8, 10) + ":" + users[i][0].slice(10, 12);
+      temp.time = users[i][0].slice(0, 4) + "-" + users[i][0].slice(4, 6) + "-" + users[i][0].slice(6, 8) + " " + users[i][0].slice(8, 10) + ":" + users[i][0].slice(10, 12) + ":00";
       temp.page = users[i][2];
       temp.page_raw = users[i][1];
       resultObj.history.push(temp);
@@ -199,17 +212,6 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     resultObj.region.latitude = Number(users[0][3]);
     resultObj.region.longitude = Number(users[0][4]);
 
-    // 3
-    dimensions = [
-      { name: "ga:dateHourMinute" },
-      { name: "ga:mobileDeviceModel" },
-    ];
-    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
-    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
-      users = userSort(result.reports[0].data);
-      resultObj.device.mobileDevice = users[0][1];
-    }
-
     // 4
     dimensions = [
       { name: "ga:userAgeBracket" },
@@ -235,29 +237,30 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
 GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 1) {
   const instance = this;
   const mother = this.mother;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   try {
-    await MONGOC.connect();
-
+    const back = new BackMaker();
     const usersObj = await this.getTodayClients();
+    let tempObj;
+
     if (number > usersObj.length) {
       throw new Error("over num");
     }
 
-    let mongoArr = await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({ a4_customernumber: -1 }).limit(number).toArray();
-    let resultArr = new Array(number);
-    for (let i = 0; i < number; i++) {
-      resultArr[i] = mongoArr[i];
-      resultArr[i].analytics = await this.getClientById(usersObj[i].id);
-      resultArr[i].analytics.timeline = usersObj[i].time;
+    let clients = await back.getLatestClients(number);
+    for (let i = 0; i < clients.length; i++) {
+      tempObj = await this.getClientById(usersObj[i].id);
+      tempObj.timeline = this.returnTimeline(usersObj[i].time);
+      clients[i].googleAnalyticsUpdate(tempObj);
     }
 
-    return resultArr;
+    for (let i of clients) {
+      console.log(i.google);
+    }
+
+    return clients;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 

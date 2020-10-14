@@ -5,43 +5,36 @@ const RequestsMaker = require(CLIENT_DIR + "/requestsMaker.js");
 class Client {
 
   constructor(json) {
-    this.rawJson = json;
-    this.alive = false;
+    const clientId = function (rawId) {
+      let newId;
+      if (!/^c/.test(rawId) || rawId.length !== 11) {
+        throw new Error("invaild client id");
+      }
+      newId = rawId;
+      return newId;
+    }
+    let requestsInstance;
+
+    this.name = json.name;
+    this.phone = json.phone;
+    this.email = json.email;
+    this.cliid = clientId(json.cliid);
+    requestsInstance = new RequestsMaker(json.requests);
+    this.requests = requestsInstance.output();
   }
 
   get latestRequest() {
     return this.requests[this.requests.length - 1];
   }
 
-  clientId(rawId) {
-    let newId;
-    if (!/^c/.test(rawId) || rawId.length !== 11) {
-      throw new Error("invaild client id");
-    }
-    newId = rawId;
-    return newId;
-  }
-
-  toAlive() {
-    let requestsInstance;
-
-    this.name = this.rawJson.name;
-    this.phone = this.rawJson.phone;
-    this.email = this.rawJson.email;
-    this.cliid = this.clientId(this.rawJson.cliid);
-
-    requestsInstance = new RequestsMaker(this.rawJson.requests);
-    this.requests = requestsInstance.output();
-
-    this.alive = true;
-    delete this.rawJson;
+  googleAnalyticsUpdate(obj) {
+    const request = this.requests[this.requests.length - 1];
+    request.google.jsonUpdate(obj);
+    return this;
   }
 
   toJson() {
     let obj = {};
-    if (!this.alive) {
-      this.toAlive();
-    }
     obj.name = this.name;
     obj.phone = this.phone;
     obj.email = this.email;
@@ -71,8 +64,17 @@ class Client {
     return this.toJson();
   }
 
+  get normal() {
+    return this.toJson();
+  }
+
   get death() {
     return this.toDeath();
+  }
+
+  get google() {
+    const request = this.requests[this.requests.length - 1];
+    return request.google;
   }
 
 }

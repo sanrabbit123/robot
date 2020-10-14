@@ -280,10 +280,19 @@ Robot.prototype.launching = async function () {
 async function main3() {
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   let back = new BackMaker();
-  await back.launching("client");
+  // let client = await back.getClientById("c2010_aa35s");
+  // console.log(client);
+  // console.log(client.google);
+
+  let tong = await back.getLatestClients(5);
+  console.log(tong);
+  for (let i of tong) {
+    console.log(i.google)
+  }
+
 }
 
-main3();
+// main3();
 
 async function main5() {
   const AiGraph = require(process.cwd() + "/apps/contentsMaker/aiGraph.js");
@@ -296,7 +305,7 @@ async function main5() {
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-  console.log(await analytics.getClientsInfoByNumber(5));
+  console.log(await analytics.getClientsInfoByNumber(3));
 }
 
-// main6();
+main6();

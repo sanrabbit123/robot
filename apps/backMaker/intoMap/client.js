@@ -28,7 +28,7 @@ module.exports = function (tools) {
 
       //six-wording
       if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(raw.trim())) {
-        console.log("fix : (six-wording) " + raw + " => " + "20" + raw)
+        // console.log("fix : (six-wording) " + raw + " => " + "20" + raw)
         return "20" + raw.trim();
 
 
@@ -43,7 +43,7 @@ module.exports = function (tools) {
           result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '01';
         }
 
-        console.log("fix : (first-month-error) " + raw + " => " + result);
+        // console.log("fix : (first-month-error) " + raw + " => " + result);
         return result;
 
 
@@ -62,7 +62,7 @@ module.exports = function (tools) {
           result += temp[1] + '-';
         }
         result += '01';
-        console.log("fix : (first-hangul-error) " + raw + " => " + result);
+        // console.log("fix : (first-hangul-error) " + raw + " => " + result);
         return result;
 
 
@@ -77,7 +77,7 @@ module.exports = function (tools) {
           result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '28';
         }
 
-        console.log("fix : (last-month-error) " + raw + " => " + result);
+        // console.log("fix : (last-month-error) " + raw + " => " + result);
         return result;
 
 
@@ -96,7 +96,7 @@ module.exports = function (tools) {
           result += temp[1] + '-';
         }
         result += '28';
-        console.log("fix : (last-hangul-error) " + raw + " => " + result);
+        // console.log("fix : (last-hangul-error) " + raw + " => " + result);
         return result;
 
 
@@ -111,7 +111,7 @@ module.exports = function (tools) {
             result = String(currentDate[0] + 1) + '-' + String(((temp < 10) ? '0' + String(temp) : String(temp))) + '-' + '15';
           }
 
-          console.log("fix : (middle-month-error) " + raw + " => " + result);
+          // console.log("fix : (middle-month-error) " + raw + " => " + result);
           return result;
 
 
@@ -130,26 +130,26 @@ module.exports = function (tools) {
           result += temp[1] + '-';
         }
         result += '15';
-        console.log("fix : (middle-hangul-error) " + raw + " => " + result);
+        // console.log("fix : (middle-hangul-error) " + raw + " => " + result);
         return result;
 
 
       //wait error
       } else if (/wait/g.test(raw.trim()) || /대기/g.test(raw.trim()) || /피드백/g.test(raw.trim()) || /여유/g.test(raw.trim()) || /미정/g.test(raw.trim())) {
 
-          console.log("fix : (wait error) " + raw + " => " + EMPTYDATE);
+          // console.log("fix : (wait error) " + raw + " => " + EMPTYDATE);
           return EMPTYDATE;
 
 
       //leave error
       } else if (/지남/g.test(raw.trim()) || /이미/g.test(raw.trim()) || /비어/g.test(raw.trim()) || /asap/g.test(raw.trim())) {
 
-          console.log("fix : (leave error) " + raw + " => " + a18_timeline.slice(0, 10));
+          // console.log("fix : (leave error) " + raw + " => " + a18_timeline.slice(0, 10));
           return a18_timeline.slice(0, 10);
 
 
       } else {
-        console.log(raw);
+        // console.log(raw);
         return raw.replace(/\?/, '').trim();
       }
     } else {
@@ -282,7 +282,6 @@ module.exports = function (tools) {
 
         tempObj.requests = [];
         tempObj.requests.push(tempObjDetail);
-        console.log("success");
         totalTong.push(tempObj);
       }
 

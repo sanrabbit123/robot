@@ -27,6 +27,10 @@ class Request extends Array {
     return this.request.space;
   }
 
+  get google() {
+    return this.analytics.googleAnalytics;
+  }
+
   toNormal() {
     let obj = {};
     obj.request = this.request.toNormal();
@@ -39,15 +43,10 @@ class Request extends Array {
 
 class Requests extends Array {
 
-  constructor() {
-    super();
-    this.children = [];
-  }
-
   toNormal() {
     let arr = [];
-    for (let i of this.children) {
-      arr.push(i.toNormal());
+    for (let i = 0; i < this.length; i++) {
+      arr.push(this[i].toNormal());
     }
     return arr;
   }
@@ -66,7 +65,6 @@ RequestsMaker.prototype.output = function () {
     requestInstance = new Request();
     requestInstance.toAlive(i);
     result.push(requestInstance);
-    result.children.push(requestInstance);
   }
   return result;
 }

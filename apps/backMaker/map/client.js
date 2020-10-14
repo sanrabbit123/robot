@@ -32,7 +32,7 @@ module.exports = {
         },
         analytics: {
           googleAnalytics: {
-            timeline: 0,
+            timeline: "9999-09-09",
             referrer: {
               name: "",
               detail: {
@@ -57,7 +57,7 @@ module.exports = {
             },
             campaign: "",
             history: [
-              { time: "", page: "", page_raw: "" },
+              { time: "9999-09-09", page: "", page_raw: "" },
             ],
           },
           response: {
