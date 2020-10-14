@@ -11,11 +11,13 @@ const PythonCloud = function () {
 PythonCloud.firstDo = {
   proposal: true,
   notion: true,
+  analytics: true,
 };
 
 PythonCloud.timeout = {
   proposal: null,
   notion: null,
+  analytics: null,
 };
 
 PythonCloud.prototype.routingCloud = function () {
@@ -30,9 +32,95 @@ PythonCloud.prototype.routingCloud = function () {
       form.parse(req, async function (err, fields, files) {
         if (!err) {
           const { cliid } = fields;
+          const tongNames = [
+            "notionTong",
+            "analyticsTong",
+          ];
+          let targetTongs = [], tongBoo = [];
+          let tongDir;
+          let targetTongList;
+
+          for (let i of tongNames) {
+            targetTongs.push(`${instance.tong}/${i}`);
+            tongBoo.push(false);
+          }
+
+          //make tong
+          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          for (let i = 0; i < tongDir.length; i++) {
+            if (tongNames.includes(tongDir[i])) {
+              tongBoo[i] = true;
+            }
+          }
+          for (let i = 0; i < targetTongs.length; i++) {
+            if (!tongBoo[i]) {
+              shell.exec(`mkdir ${shellLink(targetTongs[i])};`);
+            }
+          }
+
+          //clean target tong
+          for (let i = 0; i < targetTongs.length; i++) {
+            targetTongList = await fileSystem(`readDir`, [ targetTongs[i] ]);
+            if (PythonCloud.firstDo[tongNames[i].replace(/Tong$/, '')]) {
+              for (let j of targetTongList) {
+                shell.exec(`rm -rf ${shellLink(targetTongs[i])}/${j}`);
+              }
+            }
+          }
+
+          //write stack
+          for (let i = 0; i < targetTongs.length; i++) {
+            await fileSystem(`write`, [ targetTongs[i] + "/" + cliid + ".js", "module_exports = function () { return '" + cliid + "' }" ]);
+            PythonCloud.firstDo[tongNames[i].replace(/Tong$/, '')] = false;
+          }
+
+          //debounce clean
+          for (let i = 0; i < targetTongs.length; i++) {
+            if (PythonCloud.timeout[tongNames[i].replace(/Tong$/, '')] !== null) {
+              clearTimeout(PythonCloud.timeout[tongNames[i].replace(/Tong$/, '')]);
+              PythonCloud.timeout[tongNames[i].replace(/Tong$/, '')] = null;
+            }
+          }
+
+          //debounce timeout : notion
+          PythonCloud.timeout.notion = setTimeout(async function () {
+            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+            let app = new NotionAPIs();
+            let temp;
+            let tongDir = await fileSystem(`readDir`, [ targetTongs[0] ]);
+            for (let i of tongDir) { if (i !== `.DS_Store`) {
+              await app.launching(i.replace(/\.js$/, ''));
+            }}
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(targetTongs[0])}/${i}`);
+            }
+            PythonCloud.firstDo.notion = true;
+            PythonCloud.timeout.notion = null;
+          }, 4000);
+
+          //debounce timeout : analytics
+          PythonCloud.timeout.analytics = setTimeout(async function () {
+            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+            let app = new NotionAPIs();
+            let temp;
+            let tongDir = await fileSystem(`readDir`, [ targetTongs[1] ]);
+            for (let i of tongDir) { if (i !== `.DS_Store`) {
+              await app.launching(i.replace(/\.js$/, ''));
+            }}
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(targetTongs[1])}/${i}`);
+            }
+            PythonCloud.firstDo.analytics = true;
+            PythonCloud.timeout.analytics = null;
+          }, (1000 * 60 * 20));
+
+
+
+          /*
+
           const tongName = `notionTong`;
           const targetTong = `${instance.tong}/${tongName}`;
-          let tongDir, tongDetailDir, tongBoo;
+          let tongDir, tongBoo;
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
@@ -80,6 +168,8 @@ PythonCloud.prototype.routingCloud = function () {
             }
           }, 4000);
 
+          */
+
           //end
           res.set({
             "Content-Type": "text/plain",
@@ -88,22 +178,6 @@ PythonCloud.prototype.routingCloud = function () {
             "Access-Control-Allow-Headers": '*',
           });
           res.send("done");
-
-        } else {
-          console.log(err);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  //POST - parsing analytics
-  funcObj.post_parsingAnalytics = async function (req, res) {
-    try {
-      const form = instance.formidable({ multiples: true });
-      form.parse(req, async function (err, fields, files) {
-        if (!err) {
 
         } else {
           console.log(err);

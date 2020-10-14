@@ -532,22 +532,20 @@ Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
     fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
       if (err) { reject(err); }
       let order, child;
+      let result, jsonRaw, json;
       order = `python3 ${targetLink}`;
       if (args.length > 0) {
         order += ` ${args.join(' ')}`;
       }
-      child = shell.exec(order, { async: true, silent: true });
-      child.stdout.on('data', function (output) {
-        let result, jsonRaw, json;
-        jsonRaw = output.replace(/\n$/, '');
-        try {
-          json = JSON.parse(jsonRaw);
-          result = json;
-        } catch (e) {
-          result = jsonRaw;
-        }
-        resolve(result);
-      });
+      child = shell.exec(order, { silent: true });
+      jsonRaw = child.stdout.replace(/\n$/, '');
+      try {
+        json = JSON.parse(jsonRaw);
+        result = json;
+      } catch (e) {
+        result = jsonRaw;
+      }
+      resolve(result);
     });
   });
 }

@@ -23,14 +23,8 @@ BackMaker.prototype.pastMap = function () {
 BackMaker.prototype.jsonStructure = function () {
   const instance = this;
   const map = require(this.mapDir + "/" + this.button + ".js");
-  const { main, sub } = map;
-  return {
-    main: function () {
-      return JSON.parse(JSON.stringify(main));
-    },
-    sub: function () {
-      return JSON.parse(JSON.stringify(sub));
-    }
+  return function () {
+    return JSON.parse(JSON.stringify(map));
   }
 }
 
@@ -83,9 +77,26 @@ BackMaker.prototype.launching = async function (button) {
   const { fileSystem } = this.mother;
   this.button = button;
   try {
+    /*
+
     const tong = await this.pastToJson();
     const finalTong = await this.subLogicToJson(tong);
     await fileSystem(`write`, [ `${this.resourceDir}/${this.button}.json`, JSON.stringify(finalTong, null, 2) ]);
+
+    */
+
+    const aliveDir = this.dir + "/alive";
+    const Client = require(aliveDir + "/client/client.js");
+
+    let clientInstance, clientJson;
+
+    clientJson = JSON.parse(await fileSystem(`readString`, [ `${this.resourceDir}/${this.button}.json` ]));
+    clientInstance = new Client(clientJson[clientJson.length - 1]);
+    clientInstance.toAlive();
+
+    console.log(clientInstance);
+    console.log(clientInstance.death);
+
   } catch (e) {
     console.log(e);
   }

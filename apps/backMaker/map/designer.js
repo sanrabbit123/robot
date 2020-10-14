@@ -28,7 +28,7 @@ module.exports = {
           businessNumber: "",
           files: {
             businessRegistration: false,
-            bnakBook: false,
+            bankBook: false,
             registrationCard: false
           },
         },

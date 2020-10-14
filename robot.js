@@ -272,8 +272,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 //development
 
@@ -283,7 +283,7 @@ async function main3() {
   await back.launching("client");
 }
 
-// main3();
+main3();
 
 async function main5() {
   const AiGraph = require(process.cwd() + "/apps/contentsMaker/aiGraph.js");
@@ -296,7 +296,7 @@ async function main5() {
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
   const analytics = new GoogleAnalytics();
-  console.log(await analytics.getLatestClient());
+  console.log(await analytics.getClientsInfoByNumber(5));
 }
 
 // main6();

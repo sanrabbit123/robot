@@ -90,7 +90,7 @@ class GoogleAnalytics:
         return dumps({ "totalNum": int(total["reports"][0]["data"]["totals"][0]["values"][0]), "data": result["reports"][0]["data"] })
 
 
-    def getLatestClientId(self):
+    def getTodayClients(self):
         result = self.app.reports().batchGet(
             body={
                 "reportRequests": [
@@ -124,7 +124,7 @@ class GoogleAnalytics:
         return dumps(result)
 
 
-    def getLatestClient(self, clientId):
+    def getClientById(self, clientId, dimensions):
         aMonthAgo = self.getAMonthAgo()
         result = self.app.reports().batchGet(
             body={
@@ -135,17 +135,7 @@ class GoogleAnalytics:
                         "dateRanges": [
                             { "startDate": aMonthAgo["startDate"], "endDate": aMonthAgo["endDate"] }
                         ],
-                        "dimensions": [
-                            { "name": "ga:dateHourMinute" },
-                            { "name": "ga:pagePath" },
-                            { "name": "ga:pageTitle" },
-                            { "name": "ga:userDefinedValue" },
-                            { "name": "ga:source" },
-                            { "name": "ga:deviceCategory" },
-                            { "name": "ga:operatingSystem" },
-                            { "name": "ga:city" },
-                            { "name": "ga:campaign" },
-                        ],
+                        "dimensions": dimensions,
                         "dimensionFilterClauses": [
                             {
                                 "filters": [

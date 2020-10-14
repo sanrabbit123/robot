@@ -73,59 +73,99 @@ GoogleAnalytics.prototype.getAgeGender = async function () {
   }
 }
 
-GoogleAnalytics.prototype.getLatestClientId = async function () {
+GoogleAnalytics.prototype.getTodayClients = async function () {
   const instance = this;
   const mother = this.mother;
   try {
-    const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClientId" ], {});
+    const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getTodayClients" ], {});
     let users_raw = [];
     for (let { dimensions } of result.rows) {
       users_raw.push(dimensions);
     }
     users_raw.sort((a, b) => { return Number(b[1]) - Number(a[1]); });
-    console.log(users_raw);
 
     let users = [];
     let users_boo = false;
-    for (let [ user, time ] of users_raw) {
+    for (let [ id, time ] of users_raw) {
       users_boo = false;
       for (let i of users) {
-        if (i.user === user) {
+        if (i.user === id) {
           users_boo = true;
         }
       }
       if (!users_boo) {
-        users.push({ user, time });
+        users.push({ id, time });
       }
     }
-    console.log(users);
 
-
-    return users_raw[1][0];
+    return users;
   } catch (e) {
     console.log(e);
   }
 }
 
-
-GoogleAnalytics.prototype.getLatestClient = async function () {
+GoogleAnalytics.prototype.getClientById = async function (clientId) {
+  if (clientId === undefined) {
+    throw new Error("invaild arguments");
+  }
   const instance = this;
   const mother = this.mother;
-  try {
-    const latestId = await this.getLatestClientId();
-    const { reports: [ { data: result } ] } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getLatestClient" ], { clientId: latestId });
+  const queryString = require('querystring');
+  const userSort = function (result) {
     let users = [];
-
     for (let { dimensions } of result.rows) {
       users.push(dimensions);
     }
     users.sort((a, b) => { return Number(b[0]) - Number(a[0]); });
+    return users;
+  }
 
+  try {
+    let users, dimensions, result;
     let resultObj = {};
-    resultObj.referrer = users[0][4] + " / " + users[0][3];
-    resultObj.device = users[0][5] + "(" + users[0][6] + ")";
-    resultObj.city = users[0][7];
-    resultObj.campaign = users[0][8];
+    let questionIndex;
+
+    // 1
+    dimensions = [
+      { name: "ga:dateHourMinute" },
+      { name: "ga:pagePath" },
+      { name: "ga:pageTitle" },
+      { name: "ga:userDefinedValue" },
+      { name: "ga:source" },
+      { name: "ga:deviceCategory" },
+      { name: "ga:operatingSystem" },
+      { name: "ga:campaign" },
+    ];
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
+    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
+      users = userSort(result.reports[0].data);
+    } else {
+      throw new Error("invaild data in first");
+    }
+
+    resultObj = {};
+    resultObj.referrer = {};
+    resultObj.referrer.name = users[0][4];
+    resultObj.referrer.detail = {};
+    resultObj.referrer.detail.host = null;
+    resultObj.referrer.detail.queryString = {};
+
+    if (/^http/.test(users[0][3])) {
+      if (/\?/.test(users[0][3])) {
+        questionIndex = users[0][3].search(/\?/);
+        resultObj.referrer.detail.host = users[0][3].slice(0, questionIndex);
+        resultObj.referrer.detail.queryString = queryString.parse(users[0][3].slice(questionIndex + 1));
+      } else {
+        resultObj.referrer.detail.host = users[0][3];
+        resultObj.referrer.detail.queryString = {};
+      }
+    }
+
+    resultObj.device = {};
+    resultObj.device.type = users[0][5];
+    resultObj.device.os = users[0][6];
+
+    resultObj.campaign = users[0][7];
     resultObj.history = [];
 
     let temp;
@@ -138,215 +178,86 @@ GoogleAnalytics.prototype.getLatestClient = async function () {
       resultObj.history.push(temp);
     }
 
+    // 2
+    dimensions = [
+      { name: "ga:dateHourMinute" },
+      { name: "ga:country" },
+      { name: "ga:city" },
+      { name: "ga:latitude" },
+      { name: "ga:longitude" },
+    ];
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
+    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
+      users = userSort(result.reports[0].data);
+    } else {
+      throw new Error("invaild data in second");
+    }
+
+    resultObj.region = {};
+    resultObj.region.country = users[0][1];
+    resultObj.region.city = users[0][2];
+    resultObj.region.latitude = Number(users[0][3]);
+    resultObj.region.longitude = Number(users[0][4]);
+
+    // 3
+    dimensions = [
+      { name: "ga:dateHourMinute" },
+      { name: "ga:mobileDeviceModel" },
+    ];
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
+    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
+      users = userSort(result.reports[0].data);
+      resultObj.device.mobileDevice = users[0][1];
+    }
+
+    // 4
+    dimensions = [
+      { name: "ga:userAgeBracket" },
+      { name: "ga:userGender" },
+    ];
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
+    resultObj.personalInfo = {};
+    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
+      resultObj.personalInfo.age = result.reports[0].data.rows[0][1];
+      resultObj.personalInfo.gender = result.reports[0].data.rows[0][2];
+    } else {
+      resultObj.personalInfo.age = null;
+      resultObj.personalInfo.gender = null;
+    }
+
     return resultObj;
+
   } catch (e) {
     console.log(e);
   }
 }
 
-//this is problem
-GoogleAnalytics.prototype.getClients = async function () {
+GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 1) {
   const instance = this;
   const mother = this.mother;
-  const sheet = this.mother.googleSystem("sheets");
-  const sheetInfo = {
-    id: "1Z940pTUwFo9kyY_UjgzXnWm9bbX88bRNLuCEtym6zzA",
-    sheet: "sheet1",
-    startPoint: [ 0, 1 ],
-  }
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   try {
-    let result, obj, finalArr;
-    let sheetRow;
-    let tempArr, tempString;
+    await MONGOC.connect();
 
-    const dimensions = [
-        { name: "ga:dateHourMinute" }, // 시간
-        { name: "ga:country" }, // 국가
-        { name: "ga:city" }, // 도시
-        { name: "ga:browser" }, // 브라우저
-        { name: "ga:operatingSystem" }, // OS
-        { name: "ga:keyword" }, // 검색어
-        { name: "ga:userDefinedValue" }, // 레퍼럴 1
-        { name: "ga:source" }, // 전 페이지
-        { name: "ga:deviceCategory" }, // 모바일 / 데스크탑
-        // { name: "ga:pagePath" }, // 진입 경로
-        // { name: "ga:pageTitle" }, // 검색어
-        // { name: "ga:campaign" }, // 광고 캠패인
-    ];
-
-    const users = [
-        { name: "ga:userAgeBracket" }, // 나이대
-        { name: "ga:userGender" }, // 성별
-        { name: "ga:interestOtherCategory" }, // 관심사 1
-        { name: "ga:interestInMarketCategory" }, // 관심사 2
-        { name: "ga:mobileDeviceInfo" }, // 핸드폰 기종
-    ];
-
-    let dimensionsKeys = [];
-    for (let obj of dimensions) {
-      dimensionsKeys.push(obj.name.replace(/^ga:/, ''));
+    const usersObj = await this.getTodayClients();
+    if (number > usersObj.length) {
+      throw new Error("over num");
     }
 
-    //write objects
-    let clientsBox = [];
-    let client;
-    let totalTong = [];
-
-
-    //testing
-    let monthBox = this.returnMonthBox("2020-09-01");
-    for (let i = 0; i < monthBox.length; i++) {
-      result = await mother.pythonExecute(this.pythonApp, [ "analytics", "clientsIdTesting" ], { startDate: monthBox[i].startDate, endDate: monthBox[i].endDate });
-      if (Number(result.totalNum) !== result.data.rows.length) { throw new Error("invaild ID"); process.exit(); return; }
-      if (Number(result.totalNum) !== Number(result.data.totals[0].values[0])) { throw new Error("invaild ID"); process.exit(); return; }
-      if (result.data.rows.length !== Number(result.data.totals[0].values[0])) { throw new Error("invaild ID"); process.exit(); return; }
-
-      client = [];
-      for (let obj of result.data.rows) {
-        client.push(obj.dimensions[0]);
-      }
-
-      clientsBox.push(client);
-      console.log(monthBox[i].startDate + " success");
-    }
-    console.log("testing success");
-
-    for (let i = 0; i < monthBox.length; i++) {
-      result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAllClients" ], { startDate: monthBox[i].startDate, endDate: monthBox[i].endDate, dimensionsList: dimensions, clientsBox: clientsBox[i] });
-      totalTong.push(result);
-      console.log(monthBox[i].startDate + " success");
+    let mongoArr = await MONGOC.db("miro81").collection("BC1_conlist").find({}).sort({ a4_customernumber: -1 }).limit(number).toArray();
+    let resultArr = new Array(number);
+    for (let i = 0; i < number; i++) {
+      resultArr[i] = mongoArr[i];
+      resultArr[i].analytics = await this.getClientById(usersObj[i].id);
+      resultArr[i].analytics.timeline = usersObj[i].time;
     }
 
-    await mother.fileSystem(`write`, [ process.cwd() + "/temp/ana.json", JSON.stringify(totalTong, null, 2) ]);
-
-
-    /*
-    //merge objects
-    for (let i = 1; i < totalTong.length; i++) {
-      for (let obj of totalTong[0]) {
-
-        for (let obj2 of totalTong[i]) {
-          if (obj[dimensionsKeys[i]] === obj2[dimensionsKeys[i]] && obj[dimensionsKeys[dimensionsKeys.length - 1]] === obj2[dimensionsKeys[dimensionsKeys.length - 1]]) {
-            obj[dimensionsKeys[i + 1]] = obj2[dimensionsKeys[i + 1]];
-          }
-        }
-
-      }
-    }
-    let [ mergeTong ] = totalTong;
-    await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(mergeTong, null, 2) ]);
-    console.log("merge done");
-    */
-
-    /*
-    //to object
-    obj = {};
-    for (let i of result) {
-      if (!obj.hasOwnProperty(i.clientId)) {
-        obj[i.clientId] = {};
-        if (/^\(not/.test(i.city)) {
-          obj[i.clientId].city = null;
-        } else {
-          obj[i.clientId].city = i.city;
-        }
-        obj[i.clientId].browser = i.browser;
-        if (/^\(not/.test(i.keyword)) {
-          obj[i.clientId].keyword = null;
-        } else {
-          obj[i.clientId].keyword = i.keyword;
-        }
-        if (i.sourceMedium === '(direct) / (none)') {
-          obj[i.clientId].sourceMedium = null;
-        } else {
-          obj[i.clientId].sourceMedium = i.sourceMedium;
-        }
-        if (i.deviceCategory === "mobile") {
-          obj[i.clientId].deviceCategory = "모바일";
-        } else if (i.deviceCategory === "desktop") {
-          obj[i.clientId].deviceCategory = "데스크탑";
-        } else {
-          obj[i.clientId].deviceCategory = "태블릿";
-        }
-        obj[i.clientId].pageHistory = [ { page: i.pagePath, date: Number(i.dateHourMinute) } ];
-        if (/^\(not/.test(i.campaign)) {
-          obj[i.clientId].campaign = null;
-        } else {
-          obj[i.clientId].campaign = i.campaign;
-        }
-      } else {
-        obj[i.clientId].pageHistory.push({ page: i.pagePath, date: Number(i.dateHourMinute) });
-      }
-    }
-    for (let key in obj) {
-      obj[key].pageHistory.sort((a, b) => { return a.date - b.date; });
-    }
-    finalArr = [];
-    for (let key in obj) {
-      finalArr.push({ clientId: key, info: obj[key] });
-    }
-    finalArr.sort((a, b) => { return a.info.pageHistory[0].date - b.info.pageHistory[0].date; });
-
-    for (let i of finalArr) {
-      for (let j = 0; j < i.info.pageHistory.length; j++) {
-        i.info.pageHistory[j].date = String(i.info.pageHistory[j].date).slice(0, 4) + "-" + String(i.info.pageHistory[j].date).slice(4, 6) + "-" + String(i.info.pageHistory[j].date).slice(6, 8) + " " + String(i.info.pageHistory[j].date).slice(8, 10) + ":" + String(i.info.pageHistory[j].date).slice(10, 12)
-      }
-    }
-    */
-    //write json file
-    // await mother.fileSystem(`write`, [ this.tempDir + "/analytics.json", JSON.stringify(result, null, 2) ]);
-    /*
-    //to sheet
-    sheetRow = [];
-
-    for (let z of finalArr) {
-      tempArr = [];
-      tempArr.push(z.clientId);
-      if (z.info.city !== null) {
-        tempArr.push(z.info.city);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      if (z.info.browser !== null) {
-        tempArr.push(z.info.browser);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      if (z.info.keyword !== null) {
-        tempArr.push(z.info.keyword);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      if (z.info.sourceMedium !== null) {
-        tempArr.push(z.info.sourceMedium);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      if (z.info.deviceCategory !== null) {
-        tempArr.push(z.info.deviceCategory);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      if (z.info.campaign !== null) {
-        tempArr.push(z.info.campaign);
-      } else {
-        tempArr.push("알 수 없음");
-      }
-      tempString = '';
-      for (let i = 0; i < z.info.pageHistory.length; i++) {
-        tempString += "시점 : " + z.info.pageHistory[i].date + " / ";
-        tempString += "경로 : " + z.info.pageHistory[i].page + " | ";
-      }
-      tempString = tempString.slice(0, -3);
-      tempArr.push(tempString);
-      sheetRow.push(tempArr);
-    }
-
-    await sheet.update_value(sheetInfo.id, sheetInfo.sheet, sheetRow, sheetInfo.startPoint);
-    */
+    return resultArr;
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   } finally {
-    console.log("done");
+    MONGOC.close();
   }
 }
 

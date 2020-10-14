@@ -61,14 +61,14 @@ try:
         result = analyticsApp.clientsIdTesting(data["startDate"], data["endDate"])
         print(result)
 
-    elif argv[1] == 'analytics' and argv[2] == 'getLatestClientId':
+    elif argv[1] == 'analytics' and argv[2] == 'getTodayClients':
         analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getLatestClientId()
+        result = analyticsApp.getTodayClients()
         print(result)
 
-    elif argv[1] == 'analytics' and argv[2] == 'getLatestClient':
+    elif argv[1] == 'analytics' and argv[2] == 'getClientById':
         analyticsApp = GoogleAnalytics()
-        result = analyticsApp.getLatestClient(data["clientId"])
+        result = analyticsApp.getClientById(data["clientId"], data["dimensions"])
         print(result)
 
     elif argv[1] == 'analytics' and argv[2] == 'getUsers':

@@ -30,7 +30,36 @@ module.exports = {
             channel: "",
           },
         },
-        analysis: {
+        analytics: {
+          googleAnalytics: {
+            timeline: 0,
+            referrer: {
+              name: "",
+              detail: {
+                host: null,
+                queryString: {},
+              },
+            },
+            device: {
+              type: "",
+              os: "",
+              mobileDevice: "",
+            },
+            region: {
+              country: "",
+              city: "",
+              latitude: 0,
+              longitude: 0,
+            },
+            personalInfo: {
+              age: null,
+              gender: null
+            },
+            campaign: "",
+            history: [
+              { time: "", page: "", page_raw: "" },
+            ],
+          },
           response: {
             status: "응대중", // [ '드랍', '진행', '응대중', '완료' ]
             outreason: [], // [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ]

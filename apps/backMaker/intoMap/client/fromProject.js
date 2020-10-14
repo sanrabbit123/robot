@@ -10,7 +10,7 @@ module.exports = function (tools) {
       for (let i = 0; i < tong.length; i++) {
         row = await MONGOC.db("miro81").collection("Project").find({ cliid: tong[i].cliid }).toArray();
         if (row.length > 0) {
-          tong[i].request[0].thirdProposal.proid = row[0].proid;
+          tong[i].requests[0].proposal.proid = row[0].proid;
         }
         totalTong.push(tong[i]);
       }
