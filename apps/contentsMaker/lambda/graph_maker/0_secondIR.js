@@ -20,7 +20,8 @@ module.exports = async function (Mother) {
   }
   const sheetIds = {
     get: [
-      { id: "152PKTPNhEfRX31JiKmDqUSaiburcXBcwGdK3lYHOQWg", sheet: "시트1", xyz: "B1:V12" }
+      { id: "152PKTPNhEfRX31JiKmDqUSaiburcXBcwGdK3lYHOQWg", sheet: "시트1", xyz: "B1:V12" },
+      { id: "1OoUJ79hmOziq38MHPk3hh2ker9EmsA5cVdKQbMCGqlg", sheet: "시트1", xyz: "A2:D21" }
     ],
     update: [
       { id: "1ygfQKHwigARiTh1sBaP4eRxNH8gOtsQYDnlAjQ0xKvg", sheet: "지표", xyz: [ 0, 0 ] }
@@ -121,6 +122,40 @@ module.exports = async function (Mother) {
       tempObj2.add.push(rawObj[i].values.consulting);
       tempObj2.add.push(rawObj[i].values.request);
       tempObj2.add.push(rawObj[i].values.contract);
+      tempObj2.subtract = [];
+      tempObj.values.push({ name: dateFilter(rawObj[i].name), value: tempObj2 });
+    }
+    resultObj.lines.push(tempObj);
+
+
+    tempObj = {};
+    tempObj.name = "usersIn";
+    tempObj.ea = "명";
+    tempObj.columns = {
+      add: [
+        "총 인원",
+        "서비스 계약",
+        "서비스 신청",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.display = {
+      add: [
+        "graph_0-entire_0-color_#ffffff-guide_#dddddd-ratio_0.8-fontSize_28",
+        "graph_0-order_0-color_#f7e1a6",
+        "graph_0-order_1-color_#2fa678",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.values = [];
+    for (let i = 0; i < rawObj.length - 1; i++) {
+      tempObj2 = {};
+      tempObj2.add = [];
+      tempObj2.add.push(rawObj[i].values.request + rawObj[i].values.contract);
+      tempObj2.add.push(rawObj[i].values.contract);
+      tempObj2.add.push(rawObj[i].values.request);
       tempObj2.subtract = [];
       tempObj.values.push({ name: dateFilter(rawObj[i].name), value: tempObj2 });
     }
@@ -427,6 +462,99 @@ module.exports = async function (Mother) {
     }
 
     console.log(itemsCount);
+
+
+    //addtional graph
+    let addtionalRaw = await sheet.get_value_inPython(sheetIds.get[1].id, sheetIds.get[1].sheet + '!' + sheetIds.get[1].xyz);
+    let addtionalNames, addtionalDesigner, addtionalConstruct, addtionalConstructSelf, addtionalTotal;
+
+    addtionalNames = [];
+    addtionalDesigner = [];
+    addtionalConstruct = [];
+    addtionalConstructSelf = [];
+    addtionalTotal = [];
+
+    for (let [ n, d, c, cs ] of addtionalRaw) {
+      addtionalNames.push(n);
+      addtionalDesigner.push(numberFilter(d));
+      addtionalConstruct.push(numberFilter(c));
+      addtionalConstructSelf.push(numberFilter(cs));
+      addtionalTotal.push(numberFilter(d) + numberFilter(c) + numberFilter(cs));
+    }
+
+    tempObj = {};
+    tempObj.name = "futureRevenue";
+    tempObj.ea = "원";
+    tempObj.columns = {
+      add: [
+        "총 매출",
+        "디자이너 연계",
+        "시공 연계",
+        "직접 시공",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.display = {
+      add: [
+        "graph_0-entire_0-color_#ffffff-guide_#dddddd-ratio_1-fontSize_28",
+        "graph_0-order_0-color_#2fa678",
+        "graph_0-order_1-color_#f7e1a6",
+        "graph_0-order_2-color_#c10d23",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.values = [];
+    for (let i = 0; i < addtionalNames.length; i++) {
+      tempObj2 = {};
+      tempObj2.add = [];
+      tempObj2.add.push(addtionalTotal[i]);
+      tempObj2.add.push(addtionalDesigner[i]);
+      tempObj2.add.push(addtionalConstruct[i]);
+      tempObj2.add.push(addtionalConstructSelf[i]);
+      tempObj2.subtract = [];
+      tempObj.values.push({ name: addtionalNames[i], value: tempObj2 });
+    }
+    resultObj.lines.push(tempObj);
+
+
+    tempObj = {};
+    tempObj.name = "futureRevenueRatio";
+    tempObj.ea = "%";
+    tempObj.columns = {
+      add: [
+        "총 비율",
+        "디자이너 연계 비율",
+        "시공 연계 비율",
+        "직접 시공 비율",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.display = {
+      add: [
+        "graph_0-entire_0-color_#ffffff-guide_#dddddd-ratio_0.8-fontSize_28",
+        "graph_0-order_0-color_#2fa678",
+        "graph_0-order_1-color_#f7e1a6",
+        "graph_0-order_2-color_#c10d23",
+      ],
+      subtract: [
+      ]
+    };
+    tempObj.values = [];
+    for (let i = 0; i < addtionalNames.length; i++) {
+      tempObj2 = {};
+      tempObj2.add = [];
+      tempObj2.add.push(100);
+      tempObj2.add.push(Math.round((addtionalDesigner[i] / addtionalTotal[i]) * 100));
+      tempObj2.add.push(Math.round((addtionalConstruct[i] / addtionalTotal[i]) * 100));
+      tempObj2.add.push(Math.round((addtionalConstructSelf[i] / addtionalTotal[i]) * 100));
+      tempObj2.subtract = [];
+      tempObj.values.push({ name: addtionalNames[i], value: tempObj2 });
+    }
+    resultObj.lines.push(tempObj);
+
 
     //end
     await fileSystem(`write`, [ `${process.cwd()}/temp/0_secondIR.js`, JSON.stringify(resultObj, null, 2) ]);

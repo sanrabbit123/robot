@@ -6,6 +6,11 @@ class Pyeong {
   toNormal() {
     return this.value;
   }
+
+  toMessage() {
+    return String(this.value) + "평";
+  }
+
 }
 
 module.exports = Pyeong;

@@ -12,6 +12,11 @@ class SpaceSpec {
     obj.valcony = this.valcony;
     return obj;
   }
+
+  toMessage() {
+    return `방 ${this.room}개${this.room === 4 ? " 이상" : ""} / 화장실 ${this.bathroom}개${this.bathroom === 3 ? " 이상" : ""} / 발코니 확장${(this.valcony ? "" : " 없음")}`;
+  }
+
 }
 
 module.exports = SpaceSpec;

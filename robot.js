@@ -275,7 +275,7 @@ Robot.prototype.launching = async function () {
 // const app = new Robot();
 // app.launching();
 
-//development
+// DEV --------------------------------------------------------------------------------------
 
 async function main3() {
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -283,13 +283,8 @@ async function main3() {
   // let client = await back.getClientById("c2010_aa35s");
   // console.log(client);
   // console.log(client.google);
-
-  let tong = await back.getLatestClients(5);
-  console.log(tong);
-  for (let i of tong) {
-    console.log(i.google)
-  }
-
+  let tong = await back.getLatestClients(5, { withTools: true });
+  console.log(tong.toMessage());
 }
 
 // main3();
@@ -300,7 +295,7 @@ async function main5() {
   fobot.launching();
 }
 
-// main5();
+main5();
 
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
@@ -308,4 +303,4 @@ async function main6() {
   console.log(await analytics.getClientsInfoByNumber(3));
 }
 
-main6();
+// main6();

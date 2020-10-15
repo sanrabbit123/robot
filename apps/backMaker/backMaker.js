@@ -96,57 +96,72 @@ BackMaker.prototype.launching = async function (button) {
   this.button = button;
   try {
 
-    const Client = require(this.aliveDir + "/client/client.js");
-
-    let clientInstance, clientJson;
-
-    clientJson = JSON.parse(await fileSystem(`readString`, [ `${this.resourceDir}/${this.button}.json` ]));
-    clientInstance = new Client(clientJson[clientJson.length - 1]);
-
-    console.log(clientInstance);
-    console.log(clientInstance.death);
-    console.log(clientInstance.google);
 
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getClientById = async function (cliid) {
+// GET Client --------------------------------------------------------------------------------
+
+BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  const Client = require(`${this.aliveDir}/${this.button}/${this.button}.js`);
+  const { Client, Clients, WithTools, WithToolsArr } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong = await this.getTong(cliid);
-    return new Client(tong[0]);
+    if (!option.withTools) {
+      return new Client(tong[0]);
+    } else {
+      return new WithTools(tong[0]);
+    }
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getLatestClients = async function (number = 1) {
+BackMaker.prototype.getLatestClient = async function (option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  const Client = require(`${this.aliveDir}/${this.button}/${this.button}.js`);
-  class Clients extends Array {
-    get latestRequests() {
-      let arr = [];
-      for (let i of this) {
-        arr.push(i.latestRequest);
-      }
-      return arr;
-    }
-  }
+  const { Client, Clients, WithTools, WithToolsArr } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
-    let tong = await this.getTong("latest_" + String(number));
-    let result = new Clients();
-    for (let i of tong) {
-      result.push(new Client(i));
+    let tong = await this.getTong("latest_1");
+    if (!option.withTools) {
+      return new Client(tong[0]);
+    } else {
+      return new WithTools(tong[0]);
     }
-    return result;
   } catch (e) {
     console.log(e);
   }
 }
+
+BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false }) {
+  const instance = this;
+  this.button = "client";
+  const { Client, Clients, WithTools, WithToolsArr } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let tong, clientsArr;
+
+    tong = await this.getTong("latest_" + String(number));
+
+    if (!option.withTools) {
+      clientsArr = new Clients();
+      for (let i of tong) {
+        clientsArr.push(new Client(i));
+      }
+    } else {
+      clientsArr = new WithToolsArr();
+      for (let i of tong) {
+        clientsArr.push(new WithTools(i));
+      }
+    }
+    return clientsArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 
 module.exports = BackMaker;
