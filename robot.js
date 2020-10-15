@@ -272,8 +272,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 // DEV --------------------------------------------------------------------------------------
 
@@ -295,7 +295,7 @@ async function main5() {
   fobot.launching();
 }
 
-main5();
+// main5();
 
 async function main6() {
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
