@@ -33,6 +33,7 @@ module.exports = {
         analytics: {
           googleAnalytics: {
             timeline: "9999-09-09",
+            userType: "",
             referrer: {
               name: "",
               detail: {

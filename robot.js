@@ -284,7 +284,7 @@ async function main3() {
   // console.log(client);
   // console.log(client.google);
   let tong = await back.getLatestClients(5, { withTools: true });
-  console.log(tong.toMessage());
+  console.log(tong.toSheet());
 }
 
 // main3();
@@ -298,9 +298,27 @@ async function main5() {
 // main5();
 
 async function main6() {
+  const Mother = require(process.cwd() + "/apps/mother.js");
+  const mother = new Mother();
+
   const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
   const analytics = new GoogleAnalytics();
-  console.log(await analytics.getClientsInfoByNumber(3));
+  const sheet = new GoogleSheet();
+  const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
+
+  const clients = await analytics.getClientsInfoByNumber(5);
+  console.log(clients.toGoogleAnalyticsSheet());
+
+  const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
+  const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
+  await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
+
+  for (let client of clients) {
+    await mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${mother.todayMaker()}.json`, client.death ]);
+  }
+
+  console.log("success");
 }
 
 // main6();

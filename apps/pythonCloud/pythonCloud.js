@@ -22,7 +22,7 @@ PythonCloud.timeout = {
 
 PythonCloud.prototype.routingCloud = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink } = this.mother;
+  const { fileSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
   let funcObj = {};
 
   //POST - mongo to notion
@@ -36,7 +36,8 @@ PythonCloud.prototype.routingCloud = function () {
             "notionTong",
             "analyticsTong",
           ];
-          let targetTongs = [], tongBoo = [];
+          let targetTongs = [];
+          let tongBoo = [];
           let tongDir;
           let targetTongList;
 
@@ -47,9 +48,11 @@ PythonCloud.prototype.routingCloud = function () {
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-          for (let i = 0; i < tongDir.length; i++) {
-            if (tongNames.includes(tongDir[i])) {
-              tongBoo[i] = true;
+          for (let j = 0; j < tongNames.length; j++) {
+            for (let i = 0; i < tongDir.length; i++) {
+              if (tongNames[j].includes(tongDir[i])) {
+                tongBoo[j] = true;
+              }
             }
           }
           for (let i = 0; i < targetTongs.length; i++) {
@@ -100,75 +103,30 @@ PythonCloud.prototype.routingCloud = function () {
 
           //debounce timeout : analytics
           PythonCloud.timeout.analytics = setTimeout(async function () {
-            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
-            let app = new NotionAPIs();
-            let temp;
+            const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
+            const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+            const analytics = new GoogleAnalytics();
+            const sheet = new GoogleSheet();
+            const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
+
             let tongDir = await fileSystem(`readDir`, [ targetTongs[1] ]);
-            for (let i of tongDir) { if (i !== `.DS_Store`) {
-              await app.launching(i.replace(/\.js$/, ''));
-            }}
+
+            const clients = await analytics.getClientsInfoByNumber(tongDir.length);
+            const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
+            const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
+            await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
+            for (let client of clients) {
+              await fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${todayMaker()}.json`, client.death ]);
+            }
+
+            slack_bot.chat.postMessage({ text: `${clients.name} 고객님의 Google analytics 정보를 업데이트하였습니다! : https://docs.google.com/spreadsheets/d/1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc/edit?usp=sharing`, channel: `#401_consulting` });
+
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTongs[1])}/${i}`);
             }
             PythonCloud.firstDo.analytics = true;
             PythonCloud.timeout.analytics = null;
-          }, (1000 * 60 * 20));
-
-
-
-          /*
-
-          const tongName = `notionTong`;
-          const targetTong = `${instance.tong}/${tongName}`;
-          let tongDir, tongBoo;
-
-          //make tong
-          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-          tongBoo = false;
-          for (let i of tongDir) {
-            if (i === tongName) {
-              tongBoo = true;
-            }
-          }
-          if (!tongBoo) {
-            shell.exec(`mkdir ${shellLink(targetTong)};`);
-          }
-
-          //clean target tong
-          const targetTongList = await fileSystem(`readDir`, [ targetTong ]);
-          if (PythonCloud.firstDo.notion) {
-            for (let i of targetTongList) {
-              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
-            }
-          }
-
-          //write stack
-          await fileSystem(`write`, [ targetTong + "/" + cliid + ".js", "module_exports = function () { return '" + cliid + "' }" ]);
-          PythonCloud.firstDo.notion = false;
-
-          //debounce clean
-          if (PythonCloud.timeout.notion !== null) {
-            clearTimeout(PythonCloud.timeout.notion);
-            PythonCloud.timeout.notion = null;
-          }
-
-          //debounce timeout
-          PythonCloud.timeout.notion = setTimeout(async function () {
-            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
-            let app = new NotionAPIs();
-            let temp;
-            let tongDir = await fileSystem(`readDir`, [ targetTong ]);
-            for (let i of tongDir) { if (i !== `.DS_Store`) {
-              await app.launching(i.replace(/\.js$/, ''));
-            }}
-            PythonCloud.firstDo.notion = true;
-            PythonCloud.timeout.notion = null;
-            for (let i of tongDir) {
-              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
-            }
-          }, 4000);
-
-          */
+          }, (1000 * 60 * 15));
 
           //end
           res.set({
@@ -180,10 +138,12 @@ PythonCloud.prototype.routingCloud = function () {
           res.send("done");
 
         } else {
+          slack_bot.chat.postMessage({ text: `파이선 클라우드 문제 생김 ${err}`, channel: `#error_log` });
           console.log(err);
         }
       });
     } catch (e) {
+      slack_bot.chat.postMessage({ text: `파이선 클라우드 문제 생김 ${e}`, channel: `#error_log` });
       console.log(e);
     }
   }

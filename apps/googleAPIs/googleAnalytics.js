@@ -227,6 +227,20 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
       resultObj.personalInfo.gender = null;
     }
 
+    // 5
+    dimensions = [
+      { name: "ga:dateHourMinute" },
+      { name: "ga:userType" },
+    ];
+    result = await mother.pythonExecute(this.pythonApp, [ "analytics", "getClientById" ], { clientId, dimensions });
+    if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
+      users = userSort(result.reports[0].data);
+    } else {
+      throw new Error("invaild data in fifth");
+    }
+
+    resultObj.userType = users[0][1];
+
     return resultObj;
 
   } catch (e) {
@@ -247,15 +261,11 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 1) {
       throw new Error("over num");
     }
 
-    let clients = await back.getLatestClients(number);
+    let clients = await back.getLatestClients(number, { withTools: true });
     for (let i = 0; i < clients.length; i++) {
       tempObj = await this.getClientById(usersObj[i].id);
       tempObj.timeline = this.returnTimeline(usersObj[i].time);
       clients[i].googleAnalyticsUpdate(tempObj);
-    }
-
-    for (let i of clients) {
-      console.log(i.google);
     }
 
     return clients;

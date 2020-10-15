@@ -33,6 +33,14 @@ class Referrer {
     this.detail = new ReferrerDetail(referrer.detail);
   }
 
+  get host() {
+    if (this.detail.host === null) {
+      return null;
+    } else {
+      return this.detail.host;
+    }
+  }
+
   toNormal() {
     let obj = {};
     obj.name = this.name;

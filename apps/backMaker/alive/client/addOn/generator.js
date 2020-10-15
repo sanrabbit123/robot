@@ -9,6 +9,15 @@ class Clients extends Array {
     }
     return arr;
   }
+
+  get name() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.name);
+    }
+    return arr.join(',');
+  }
+
 }
 
 class WithTools extends Client {
@@ -35,8 +44,8 @@ class WithTools extends Client {
     return message.replace(/\n$/, '');
   }
 
-  toSheet() {
-    const { request } = this.requests[this.requests.length - 1];
+  toGoogleAnalyticsSheet() {
+    const { request, analytics: { googleAnalytics } } = this.requests[this.requests.length - 1];
     let sheet = [];
 
     sheet.push(request.timeline.toNormal(true));
@@ -54,6 +63,13 @@ class WithTools extends Client {
     sheet.push(request.etc.comment);
     sheet.push(request.etc.channel);
 
+    sheet.push(googleAnalytics.userType);
+    sheet.push(googleAnalytics.referrerString);
+    sheet.push(googleAnalytics.deviceString);
+    sheet.push(googleAnalytics.regionString);
+    sheet.push(googleAnalytics.campaign);
+    sheet.push(googleAnalytics.historyString);
+
     return sheet;
   }
 
@@ -69,10 +85,10 @@ class WithToolsArr extends Clients {
     return arr;
   }
 
-  toSheet() {
+  toGoogleAnalyticsSheet() {
     let arr = [];
     for (let i of this) {
-      arr.push(i.toSheet());
+      arr.push(i.toGoogleAnalyticsSheet());
     }
     return arr;
   }
