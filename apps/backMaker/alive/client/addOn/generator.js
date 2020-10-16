@@ -20,9 +20,9 @@ class Clients extends Array {
 
 }
 
-class WithTools extends Client {
+const widthTools = function (Client) {
 
-  toMessage() {
+  Client.prototype.toMessage = function () {
     const { request } = this.requests[this.requests.length - 1];
     let message = "";
 
@@ -44,7 +44,7 @@ class WithTools extends Client {
     return message.replace(/\n$/, '');
   }
 
-  toGoogleAnalyticsSheet() {
+  Client.prototype.toGoogleAnalyticsSheet = function () {
     const { request, analytics: { googleAnalytics } } = this.requests[this.requests.length - 1];
     let sheet = [];
 
@@ -73,11 +73,12 @@ class WithTools extends Client {
     return sheet;
   }
 
+  return Client;
 }
 
-class WithToolsArr extends Clients {
+const widthToolsArr = function (Clients) {
 
-  toMessage() {
+  Clients.prototype.toMessage = function () {
     let arr = [];
     for (let i of this) {
       arr.push(i.toMessage());
@@ -85,7 +86,7 @@ class WithToolsArr extends Clients {
     return arr;
   }
 
-  toGoogleAnalyticsSheet() {
+  Clients.prototype.toGoogleAnalyticsSheet = function () {
     let arr = [];
     for (let i of this) {
       arr.push(i.toGoogleAnalyticsSheet());
@@ -93,7 +94,11 @@ class WithToolsArr extends Clients {
     return arr;
   }
 
+  return Clients;
 }
 
+const Tools = function () {}
+Tools.widthTools = widthTools;
+Tools.widthToolsArr = widthToolsArr;
 
-module.exports = { Client, Clients, WithTools, WithToolsArr };
+module.exports = { Client, Clients, Tools };

@@ -272,8 +272,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// const app = new Robot();
+// app.launching();
 
 // DEV --------------------------------------------------------------------------------------
 
@@ -283,8 +283,12 @@ async function main3() {
   // let client = await back.getClientById("c2010_aa35s");
   // console.log(client);
   // console.log(client.google);
+
   let tong = await back.getLatestClients(5, { withTools: true });
-  console.log(tong.toSheet());
+  console.log(tong);
+
+  // console.log(await back.launching("project"));
+
 }
 
 // main3();
@@ -307,18 +311,40 @@ async function main6() {
   const sheet = new GoogleSheet();
   const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
 
-  const clients = await analytics.getClientsInfoByNumber(5);
-  console.log(clients.toGoogleAnalyticsSheet());
+  const clients = await analytics.getClientsInfoByNumber(1);
+  console.log(clients);
 
-  const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
-  const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-  await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
-
-  for (let client of clients) {
-    await mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${mother.todayMaker()}.json`, client.death ]);
-  }
-
-  console.log("success");
+  // console.log(clients.toGoogleAnalyticsSheet());
+  //
+  // const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
+  // const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
+  // await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
+  //
+  // for (let client of clients) {
+  //   await mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${mother.todayMaker()}.json`, client.death ]);
+  // }
+  //
+  // console.log("success");
 }
 
-// main6();
+main6();
+
+
+async function main7() {
+  const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
+  let note, note2, output;
+  let temp;
+
+  note = new AppleAPIs({ folder: "portfolio", subject: "p61" });
+  note2 = new AppleAPIs({ folder: "portfolio", subject: "p62" });
+
+  temp = await note.readNote();
+  temp.shift();
+
+  output = await note2.updateNote(temp.join('<br><br><br>'));
+
+  console.log(output);
+
+}
+
+// main7();

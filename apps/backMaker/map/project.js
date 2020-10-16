@@ -80,6 +80,7 @@ module.exports = {
       },
       design: {
         proposal: {
+          provided: false,
           limit: null,
           detail: [
             {
@@ -88,7 +89,7 @@ module.exports = {
           ]
         },
         construct: {
-          provided: true,
+          provided: false,
           detail: [
             {
               name: "",
@@ -121,32 +122,8 @@ module.exports = {
           ],
         },
         purchase: {
-          provided: true,
+          provided: false,
           detail: [
-            /<%if(fabrication === true)%>/
-            {
-              name: "",
-              provider: "HomeLiaison",
-              form: {
-                id: "",
-                date: {
-                  from: "9999-09-09",
-                  to: "9999-09-09",
-                }
-              },
-              calculation: {
-                amount: {
-                  detail: [
-                    {
-                      name: "",
-                      amount: 0,
-                    }
-                  ],
-                  total: 0,
-                },
-              }
-            },
-            /<%else%>/
             {
               name: "",
               provider: "HomeLiaison",
@@ -187,75 +164,7 @@ module.exports = {
           interviewer: "",
         }
       },
-      portfolio: {
-        pid: "",
-        date: "9999-09-09",
-        title: {
-          main: "",
-          sub: "",
-          simple: "",
-          region: "",
-          method: "",
-        },
-        color: {
-          main: "",
-          sub: "",
-          title: "",
-        },
-        detailInfo: {
-          photodae: [],
-          photosg: {
-            first: 0,
-            last: 0,
-          },
-          slide: [],
-          tag: [],
-          sort: {
-            key8: 0,
-            key9: 0,
-          },
-        },
-        contents: {
-          suggestion: "Designer's\nSuggestion",
-          detail: [
-            {
-              photoKey: 0,
-              title: "",
-              contents: "",
-              smallTalk: {
-                title: "",
-                contents: "",
-              },
-            },
-          ],
-        }
-      },
-      review: {
-        rid: "",
-        date: "9999-09-09",
-        title: {
-          main: "",
-          sub: "",
-        },
-        detailInfo: {
-          photodae: [],
-          order: 0,
-        },
-        contents: {
-          detail: [
-            {
-              type: "",
-              photo: [],
-              contents: [
-                {
-                  quest: "",
-                  answer: "",
-                }
-              ]
-            },
-          ],
-        }
-      }
+      conid: "",
     },
   }
 }

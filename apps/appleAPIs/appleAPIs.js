@@ -38,6 +38,30 @@ AppleAPIs.prototype.readNoteScript = function () {
   return { name: "readNote", contents: text }
 }
 
+AppleAPIs.prototype.updateNoteScript = function (body = "new") {
+  let text;
+  text = 'tell application "Notes"\n';
+  text += '\ttell account "iCloud"\n';
+  text += '\t\ttell folder "' + this.folder + '"\n';
+  text += `\t\t\tset body of note "${this.subject}" to "${this.subject}<br>${body}}"\n`;
+  text += '\t\tend tell\n';
+  text += '\tend tell\n';
+  text += 'end tell';
+  return { name: "writeNote", contents: text }
+}
+
+AppleAPIs.prototype.createNoteScript = function (body = "new") {
+  let text;
+  text = 'tell application "Notes"\n';
+  text += '\ttell account "iCloud"\n';
+  text += '\t\ttell folder "' + this.folder + '"\n';
+  text += `\t\t\tmake new note with properties {name:"${this.subject}", body:"${body}"}\n`;
+  text += '\t\tend tell\n';
+  text += '\tend tell\n';
+  text += 'end tell';
+  return { name: "createNote", contents: text }
+}
+
 AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
   try {
     let { name, contents } = this.readNoteScript();
@@ -46,11 +70,31 @@ AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
     let arr = temp_string.split("__split__");
     let resultArr = [];
     for (let i of arr) {
-      if (i !== '') {
+      if (i !== '' && i !== ' ' && i !== '  ' && i !== '   ' && i !== '    ' && i !== '     ') {
         resultArr.push(this.text_filter_lite(i));
       }
     }
     return resultArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AppleAPIs.prototype.createNote = async function (newBody = "new", dir = null, clean = true) {
+  try {
+    let { name, contents } = this.createNoteScript(newBody);
+    await this.mother.appleScript(name, contents, dir, clean);
+    return "done";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AppleAPIs.prototype.updateNote = async function (newBody = "new", dir = null, clean = true) {
+  try {
+    let { name, contents } = this.updateNoteScript(newBody);
+    await this.mother.appleScript(name, contents, dir, clean);
+    return "done";
   } catch (e) {
     console.log(e);
   }

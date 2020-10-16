@@ -107,51 +107,7 @@ module.exports = {
           sgTrue: ""
         },
       ],
-      portfolio: [
-        {
-          aid: "",
-          date: "9999-09-09",
-          title: {
-            main: "",
-            sub: "",
-            simple: "",
-            region: "",
-            method: "",
-          },
-          color: {
-            main: "",
-            sub: "",
-            title: "",
-          },
-          detailInfo: {
-            photodae: [],
-            photosg: {
-              first: 0,
-              last: 0,
-            },
-            slide: [],
-            tag: [],
-            sort: {
-              key8: 0,
-              key9: 0,
-            },
-          },
-          contents: {
-            suggestion: "Designer's\nSuggestion",
-            detail: [
-              {
-                photoKey: 0,
-                title: "",
-                contents: "",
-                smallTalk: {
-                  title: "",
-                  contents: "",
-                },
-              },
-            ],
-          }
-        },
-      ],
+      contents: [],
     },
   },
 }
