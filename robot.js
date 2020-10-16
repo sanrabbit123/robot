@@ -272,77 +272,13 @@ Robot.prototype.launching = async function () {
   }
 }
 
-const app = new Robot();
-app.launching();
+// EXE --------------------------------------------------------------------------------------
 
-// DEV --------------------------------------------------------------------------------------
-
-async function main3() {
-  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-  let back = new BackMaker();
-  // let client = await back.getClientById("c2010_aa35s");
-  // console.log(client);
-  // console.log(client.google);
-
-  let tong = await back.getLatestClients(5, { withTools: true });
-  console.log(tong);
-
-  // console.log(await back.launching("project"));
-
+if (process.argv[2] !== "dev") {
+  const app = new Robot();
+  app.launching();
+} else {
+  const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
+  const dev = new DevContext();
+  dev.launching();
 }
-
-// main3();
-
-async function main5() {
-  const AiGraph = require(process.cwd() + "/apps/contentsMaker/aiGraph.js");
-  const fobot = new AiGraph();
-  fobot.launching();
-}
-
-// main5();
-
-async function main6() {
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  const mother = new Mother();
-
-  const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
-  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
-  const analytics = new GoogleAnalytics();
-  const sheet = new GoogleSheet();
-  const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
-
-  const clients = await analytics.getClientsInfoByNumber(1);
-  console.log(clients);
-
-
-  const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
-  const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-  console.log(await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz));
-
-  for (let client of clients) {
-    await mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${mother.todayMaker()}.json`, client.death ]);
-  }
-
-  console.log("success");
-}
-
-// main6();
-
-async function main7() {
-  const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
-  let note, note2, output;
-  let temp;
-
-  note = new AppleAPIs({ folder: "portfolio", subject: "p61" });
-  note2 = new AppleAPIs({ folder: "portfolio", subject: "p62" });
-
-  temp = await note.readNote();
-  temp.shift();
-
-  output = await note2.updateNote(temp.join('<br><br><br>'));
-
-  console.log(output);
-
-}
-
-// main7();

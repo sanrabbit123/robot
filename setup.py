@@ -78,20 +78,28 @@ class RobotInstall:
     def returnPath(self):
         return { "robotPath": self.robotPath, "modulePath": self.modulePath }
 
-    def installServer(self):
+    def installLocal(self):
         self.setTempDir()
         self.ignoreDirs()
         self.moduleInstall(local=True)
         self.moveModules()
+
+    def installServer(self):
+        self.installLocal()
         self.moduleInstall(local=False)
 
 try:
     if sys.argv.__len__() == 1:
-        raise Exception("invaild arguments : 'install' or 'local' or 'refresh'")
+        raise Exception("invaild arguments : 'install --local' or 'install --server' or 'local' or 'refresh'")
     else:
         installApps = RobotInstall()
+
         if sys.argv[1] == 'install':
-            installApps.installServer()
+            if sys.argv[2] == 'local' or sys.argv[2] == '--local':
+                installApps.installLocal()
+            elif sys.argv[2] == 'server' or sys.argv[2] == '--server':
+                installApps.installServer()
+
         pathDic = installApps.returnPath()
         robotPath = pathDic["robotPath"]
         modulePath = pathDic["modulePath"]

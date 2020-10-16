@@ -66,18 +66,25 @@ OfficePolling.prototype.setInjection = async function () {
   }
 }
 
-OfficePolling.prototype.pollingInjection = async function () {
+OfficePolling.prototype.pollingInjection = async function (button = "none") {
   const instance = this;
   try {
-    let options = {}
+    let options = {};
+    let response;
+
     this.injectionDir = `${this.dir}/exec`;
     options.exec = this.execFilter(await this.setInjection());
     this.injections = [];
     this.injectionDir = `${this.dir}/injection`;
     options.func = this.execFilter(await this.setInjection());
     console.log(options);
-    const { data } = await this.mother.requestSystem("http://" + this.cloudHost.outer + ":" + this.cloudHost.port + "/writeInjection", options);
-    console.log(data);
+
+    if (button === "none") {
+      response = await this.mother.requestSystem("http://" + this.cloudHost.outer + ":" + this.cloudHost.port + "/writeInjection", options);
+    } else if (button === "proposal") {
+      response = await this.mother.requestSystem("http://" + this.cloudHost.outer + ":" + this.cloudHost.port + "/proposalInjection", options);
+    }
+    console.log(response.data);
   } catch (e) {
     console.log(e);
   }
@@ -418,9 +425,9 @@ OfficePolling.prototype.receiveLaunching = async function () {
   }
 }
 
-OfficePolling.prototype.injectionLaunching = async function () {
+OfficePolling.prototype.injectionLaunching = async function (button = "none") {
   try {
-    await this.pollingInjection();
+    await this.pollingInjection(button);
   } catch (e) {
     console.log(e);
   }

@@ -41,7 +41,7 @@ module.exports = {
           calculation: {
             amount: 0, // from contract
             info: {
-              account: "", // from contract
+              method: "", // from contract
               proof: "", // from contract
               to: "", // from contract
             }
@@ -57,7 +57,7 @@ module.exports = {
               consumer: 0, // from contract
             },
             info: {
-              account: "", // from contract
+              method: "", // from contract
               proof: "", // from contract
               to: "", // from contract
             }

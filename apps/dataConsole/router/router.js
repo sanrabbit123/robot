@@ -435,7 +435,7 @@ Router.prototype.rou_post_polling = function () {
       }
       await fileSystem(`write`, [ `${execFolder}/0_proposal.js`, `await Mother.requestSystem("http://<%macIp%>:3000/proposalMake", { proid: "${req.body.proid}" });return 0;` ]);
       const app = new OfficePolling();
-      await app.injectionLaunching();
+      await app.injectionLaunching("proposal");
 
       res.sendStatus(200);
       res.send('done');
