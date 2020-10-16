@@ -272,8 +272,8 @@ Robot.prototype.launching = async function () {
   }
 }
 
-// const app = new Robot();
-// app.launching();
+const app = new Robot();
+app.launching();
 
 // DEV --------------------------------------------------------------------------------------
 
@@ -326,8 +326,7 @@ async function main6() {
   console.log("success");
 }
 
-main6();
-
+// main6();
 
 async function main7() {
   const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
