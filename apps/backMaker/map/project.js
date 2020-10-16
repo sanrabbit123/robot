@@ -33,7 +33,7 @@ module.exports = {
       ]
     },
     process: {
-      status: "진행중", // [ '드랍', '진행', '응대중', '완료' ]
+      status: "대기", // [ '드랍', '진행', '응대중', '완료' ]
       contract: {
         first: {
           guide: "9999-09-09", // alimtalk api in button in notion (to mongo / to notion)

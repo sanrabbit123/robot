@@ -291,10 +291,13 @@ BackMaker.prototype.launching = async function (button) {
   const { fileSystem } = this.mother;
   this.button = button;
   try {
-    let result = await this.pastToJson();
-    await fileSystem(`write`, [ `${process.cwd()}/temp/project.json`, JSON.stringify(result, null, 2) ]);
+    const tong = await this.pastToJson();
+    const finalTong = await this.subLogicToJson(tong);
+    console.log(finalTong);
 
-    return result;
+    await fileSystem(`write`, [ `${process.cwd()}/temp/project2.json`, JSON.stringify(finalTong, null, 2) ]);
+
+    return finalTong;
   } catch (e) {
     console.log(e);
   }
