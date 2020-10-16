@@ -39,6 +39,8 @@ class RobotInstall:
         target = "--target=" + self.tempDir
         for module in self.install:
             commandList = []
+            if not local:
+                commandList.append("sudo")
             commandList.append("pip3")
             commandList.append("install")
             for m in module:
@@ -48,6 +50,8 @@ class RobotInstall:
             subprocess.run(commandList, shell=False, encoding='utf8')
         for module in self.upgrade:
             commandList = []
+            if not local:
+                commandList.append("sudo")
             commandList.append("pip3")
             commandList.append("install")
             commandList.append("--upgrade")
