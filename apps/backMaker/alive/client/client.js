@@ -40,7 +40,6 @@ class Client {
     obj.email = this.email;
     obj.cliid = this.cliid;
     obj.requests = this.requests.toNormal();
-
     return obj;
   }
 

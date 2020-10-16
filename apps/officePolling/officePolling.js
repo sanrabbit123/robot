@@ -14,6 +14,7 @@ const OfficePolling = function () {
   this.server = null;
   this.stack = 0;
   this.formidable = require('formidable');
+  this.macIp = '172.30.1.45';
 }
 
 OfficePolling.prototype.execParser = function (str) {
@@ -227,6 +228,41 @@ OfficePolling.prototype.routingCloud = function () {
     }
   }
 
+  //POST - write injection files
+  funcObj.post_proposalInjection = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
+          const resultObj = fields;
+          let stackFolder;
+          let execArr;
+
+          stackFolder = await fileSystem('readDir', [ instance.dir + "/stack" ]);
+          execArr = [];
+
+          for (let i of stackFolder) { if (/^exec_/.test(i)) {
+            execArr.push(i);
+          }}
+
+          await fileSystem('write', [ instance.dir + "/stack/" + "exec_" + String(execArr.length) + ".js", resultObj.exec.replace(/<%macIp%>/, instance.macIp) ]);
+
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send("done");
+        } else {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -326,97 +362,6 @@ OfficePolling.prototype.routingOffice = function () {
     }
   }
 
-  //POST - mongo to notion
-  funcObj.post_toNotion = async function (req, res) {
-    try {
-      const form = instance.formidable({ multiples: true });
-      form.parse(req, async function (err, fields, files) {
-        if (!err) {
-          const { cliid } = fields;
-          const tongName = `notionTong`;
-          const targetTong = `${instance.tong}/${tongName}`;
-          let tongDir, tongDetailDir, tongBoo;
-
-          //make tong
-          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-          tongBoo = false;
-          for (let i of tongDir) {
-            if (i === tongName) {
-              tongBoo = true;
-            }
-          }
-          if (!tongBoo) {
-            shell.exec(`mkdir ${shellLink(targetTong)};`);
-          }
-
-          //clean target tong
-          const targetTongList = await fileSystem(`readDir`, [ targetTong ]);
-          if (OfficePolling.firstDo.notion) {
-            for (let i of targetTongList) {
-              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
-            }
-          }
-
-          //write stack
-          await fileSystem(`write`, [ targetTong + "/" + cliid + ".js", "module_exports = function () { return '" + cliid + "' }" ]);
-          OfficePolling.firstDo.notion = false;
-
-          //debounce clean
-          if (OfficePolling.timeout.notion !== null) {
-            clearTimeout(OfficePolling.timeout.notion);
-            OfficePolling.timeout.notion = null;
-          }
-
-          //debounce timeout
-          OfficePolling.timeout.notion = setTimeout(async function () {
-            const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
-            let app = new NotionAPIs();
-            let temp;
-            let tongDir = await fileSystem(`readDir`, [ targetTong ]);
-            for (let i of tongDir) { if (i !== `.DS_Store`) {
-              await app.launching(i.replace(/\.js$/, ''));
-            }}
-            OfficePolling.firstDo.notion = true;
-            OfficePolling.timeout.notion = null;
-            for (let i of tongDir) {
-              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
-            }
-          }, 4000);
-
-          //end
-          res.set({
-            "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
-          });
-          res.send("done");
-
-        } else {
-          console.log(err);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  //POST - parsing analytics
-  funcObj.post_parsingAnalytics = async function (req, res) {
-    try {
-      const form = instance.formidable({ multiples: true });
-      form.parse(req, async function (err, fields, files) {
-        if (!err) {
-
-        } else {
-          console.log(err);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -448,7 +393,7 @@ OfficePolling.prototype.serverLaunching = async function (cloud = true) {
       inner = this.cloudHost.inner;
     } else {
       router = this.routingOffice();
-      inner = '172.30.1.50';
+      inner = this.macIp;
     }
     get = router.get;
     post = router.post;
