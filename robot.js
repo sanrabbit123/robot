@@ -314,11 +314,10 @@ async function main6() {
   const clients = await analytics.getClientsInfoByNumber(1);
   console.log(clients);
 
-  console.log(clients.toGoogleAnalyticsSheet());
 
   const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
   const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-  await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
+  console.log(await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz));
 
   for (let client of clients) {
     await mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${mother.todayMaker()}.json`, client.death ]);
