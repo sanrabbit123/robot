@@ -15,6 +15,7 @@ class RobotInstall:
             [ "cryptography" ],
         ]
         self.upgrade = [
+            [ "google-api-core" ],
             [ "google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib" ],
             [ "oauth2client" ],
         ]
@@ -34,7 +35,7 @@ class RobotInstall:
     def setTempDir(self):
         subprocess.run([ "mkdir", self.tempDir ], shell=False, encoding='utf8')
 
-    def moduleInstall(self):
+    def moduleInstall(self, local=True):
         target = "--target=" + self.tempDir
         for module in self.install:
             commandList = []
@@ -42,7 +43,8 @@ class RobotInstall:
             commandList.append("install")
             for m in module:
                 commandList.append(m)
-            commandList.append(target)
+            if local:
+                commandList.append(target)
             subprocess.run(commandList, shell=False, encoding='utf8')
         for module in self.upgrade:
             commandList = []
@@ -51,7 +53,8 @@ class RobotInstall:
             commandList.append("--upgrade")
             for m in module:
                 commandList.append(m)
-            commandList.append(target)
+            if local:
+                commandList.append(target)
             subprocess.run(commandList, shell=False, encoding='utf8')
 
     def moveModules(self):
@@ -66,7 +69,7 @@ class RobotInstall:
             "/apps/mapMaker/svgTong",
         ]
         for dir in targetList:
-            subprocess.run([ "mkdir", (self.robotPath + "/" + dir) ], shell=False, encoding='utf8')
+            subprocess.run([ "mkdir", (self.robotPath + dir) ], shell=False, encoding='utf8')
 
     def returnPath(self):
         return { "robotPath": self.robotPath, "modulePath": self.modulePath }
@@ -74,8 +77,9 @@ class RobotInstall:
     def installServer(self):
         self.setTempDir()
         self.ignoreDirs()
-        self.moduleInstall()
+        self.moduleInstall(local=True)
         self.moveModules()
+        self.moduleInstall(local=False)
 
 try:
     if sys.argv.__len__() == 1:
@@ -93,6 +97,7 @@ except Exception as e:
     sys.exit()
 
 from cryptography.fernet import Fernet
+
 class EnDecrypt:
     def __init__(self, key=None):
         if key is None:
