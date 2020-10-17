@@ -6,6 +6,7 @@ const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
+const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 
 class DevContext extends Array {
 
@@ -57,7 +58,7 @@ class DevContext extends Array {
   }
 
 
-  async main3(subject) {
+  async reviewUpdate(subject) {
     const MONGOC = this.MONGOC;
     const queryObj = { porlid: subject };
     const collections = [
@@ -66,25 +67,129 @@ class DevContext extends Array {
       "FR1_revlist",
       "FR2_revdeta",
     ];
-    let rows, note, arr;
+    let rows, note, note2, arr;
+    let portfolioArr, reviewArr;
+    let updateArr;
+    let output;
+    let revid;
+    let tempArr;
 
     rows = [];
     for (let i of collections) {
       rows.push(await MONGOC.db("miro81").collection(i).find(queryObj).toArray());
     }
-    const [ porlist, pordeta, revlist, revdeta ] = rows;
+    const [ [ porlist ], [ pordeta ], [ revlist ], [ revdeta ] ] = rows;
+    note = new AppleAPIs({ folder: "portfolio", subject: subject });
+    portfolioArr = await note.readNote();
 
-    note = new AppleAPIs({ folder: "portfolio", subject });
+    if (revlist !== undefined) {
+      revid = revlist.revid;
+      note2 = new AppleAPIs({ folder: "review", subject: revid });
+      reviewArr = await note2.readNote();
+    }
 
-    arr = await note.readNote();
-
-    console.log(arr);
-    console.log(rows);
-
-
-    // arr.shift();
-    // output = await note2.updateNote(temp.join('<br><br><br>'));
+    if (Array.isArray(reviewArr) && reviewArr.length > 0) {
+      updateArr = portfolioArr.concat(reviewArr);
+      updateArr.shift();
+      await note.updateNote(updateArr.join('<br><br><br>'));
+      console.log(`porfolio ${subject} success`);
+    } else {
+      if (revlist !== undefined) {
+        console.log(`porfolio ${subject} needs ${revid}`);
+        tempArr = this.getFromReviewJson(subject);
+        updateArr = portfolioArr.concat(tempArr);
+        updateArr.shift();
+        await note.updateNote(updateArr.join('<br><br><br>'));
+      } else {
+        console.log(`porfolio ${subject} no review`);
+        console.log(porlist)
+      }
+    }
   }
+
+  async getFromAi(subject) {
+    const app = new ContentsMaker();
+    const { fileSystem, appleScript } = this.mother;
+    try {
+      let tempArr;
+      let newWebLink, targetLink;
+      let targetDetail, targetAis;
+      let getTextScript;
+      let response, responseArr;
+      let finalTong = [];
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.pop();
+
+      newWebLink = tempArr.join("/") + "/_NewWeb";
+
+      if (/^[ap]/i.test(subject)) {
+        targetLink = `${newWebLink}/_PortfolioDetail/${subject}code/portp${subject}/svg`;
+      } else {
+        targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
+      }
+
+      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
+
+      targetAis = [];
+      for (let i of targetDetail) {
+        if (/\.ai$/.test(i)) {
+          targetAis.push(i);
+        }
+      }
+
+      for (let i = 0; i < targetAis.length; i++) {
+        responseArr = await app.getTextFromAi(targetAis[i]);
+        finalTong.push(responseArr);
+      }
+
+      return finalTong;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  getFromReviewJson (subject) {
+    const resourceLink = `${process.cwd()}/apps/contentsMaker/resource`;
+    const { sub_titles: { rev_main_title }, r_id, reviews } = require(resourceLink + "/" + subject + ".js");
+    let finalArr = [];
+
+    for (let { photos, contents } of reviews) {
+      finalArr.push(String(photos.join(" ")));
+      for (let { quest, answer } of contents) {
+        if (!/^Q\. /.test(quest)) {
+          finalArr.push("Q. " + quest);
+        } else {
+          finalArr.push(quest);
+        }
+        finalArr.push(answer);
+      }
+    }
+
+    finalArr.shift();
+    finalArr.shift();
+    finalArr.unshift(rev_main_title.replace(/\n/, ", "));
+    finalArr.unshift(r_id);
+
+    return finalArr;
+  }
+
+
+  async main3() {
+    const exception = [ "a28", "a42" ]
+    const list = [
+      // "p06",
+      "p07",
+      "p08",
+      "p09",
+    ];
+
+    for (let i of list) {
+      await this.reviewUpdate(i);
+    }
+  }
+
 
   async intoDesigner() {
     const MONGOC = this.MONGOC;
@@ -405,17 +510,18 @@ class DevContext extends Array {
 
   async launching() {
     try {
-      // await this.MONGOC.connect();
+      await this.MONGOC.connect();
       // await this.intoDesigner();
 
-      await this.main0();
+      // await this.main0();
       // await this.main1();
       // await this.main2();
-      // await this.main3("p42");
+      await this.main3();
+
     } catch (e) {
       console.log(e);
     } finally {
-      // this.MONGOC.close();
+      this.MONGOC.close();
     }
   }
 

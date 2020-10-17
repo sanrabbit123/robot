@@ -65,7 +65,7 @@ AppleAPIs.prototype.createNoteScript = function (body = "new") {
 AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
   try {
     let { name, contents } = this.readNoteScript();
-    let output = await this.mother.appleScript(name, contents, dir, clean);
+    let output = await this.mother.appleScript(name, contents, dir, clean, true);
     let temp_string = output.replace(/<div>/gi, "__split__").replace(/<[^>]+>/gi, '').replace(/\n/g, "");
     let arr = temp_string.split("__split__");
     let resultArr = [];
@@ -83,7 +83,7 @@ AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
 AppleAPIs.prototype.createNote = async function (newBody = "new", dir = null, clean = true) {
   try {
     let { name, contents } = this.createNoteScript(newBody);
-    await this.mother.appleScript(name, contents, dir, clean);
+    await this.mother.appleScript(name, contents, dir, clean, true);
     return "done";
   } catch (e) {
     console.log(e);
@@ -93,7 +93,7 @@ AppleAPIs.prototype.createNote = async function (newBody = "new", dir = null, cl
 AppleAPIs.prototype.updateNote = async function (newBody = "new", dir = null, clean = true) {
   try {
     let { name, contents } = this.updateNoteScript(newBody);
-    await this.mother.appleScript(name, contents, dir, clean);
+    await this.mother.appleScript(name, contents, dir, clean, true);
     return "done";
   } catch (e) {
     console.log(e);

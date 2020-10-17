@@ -168,4 +168,36 @@ ContentsMaker.prototype.lambdaLatest = async function (target) {
   }
 }
 
+ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
+  const instance = this;
+  const { appleScript } = this.mother;
+  try {
+    let getTextScript;
+    let response, responseArr;
+    let name;
+
+    name = fileFullPath.split('/').pop().replace(/\.ai$/, '');
+
+    getTextScript = `tell application "Adobe Illustrator"\n`;
+    getTextScript += `\topen POSIX file "${fileFullPath}" without dialogs\n`;
+    getTextScript += `\tset textArtItemCount to count text frames in document 1\n`;
+    getTextScript += `\tset finalResult to ""\n`;
+    getTextScript += `\trepeat with x from 1 to textArtItemCount\n`;
+    getTextScript += `\t\tset target to text frame x of document 1\n`;
+    getTextScript += `\t\tset finalResult to finalResult & "_____split_____" & the contents of target\n`;
+    getTextScript += `\tend repeat\n`;
+    getTextScript += `\tclose current document saving no\n`;
+    getTextScript += `\treturn finalResult\n`;
+    getTextScript += `end tell`;
+    response = await appleScript(name, getTextScript, null, true, true);
+    responseArr = response.replace(/\n$/, '').replace(/\r/g, "\n").split("_____split_____");
+    responseArr.shift();
+
+    return responseArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 module.exports = ContentsMaker;
