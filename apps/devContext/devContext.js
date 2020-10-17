@@ -17,7 +17,6 @@ class DevContext extends Array {
     this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
 
-
   async main0() {
     let back = new BackMaker();
     // let client = await back.getClientById("c2010_aa35s");
@@ -30,166 +29,10 @@ class DevContext extends Array {
     await back.launching("project")
   }
 
-
   async main1() {
     const fobot = new AiGraph();
     fobot.launching();
   }
-
-
-  async main2() {
-    const analytics = new GoogleAnalytics();
-    const sheet = new GoogleSheet();
-    const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
-
-    const clients = await analytics.getClientsInfoByNumber(1);
-    console.log(clients);
-
-
-    const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
-    const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-    console.log(await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz));
-
-    for (let client of clients) {
-      await this.mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${this.mother.todayMaker()}.json`, client.death ]);
-    }
-
-    console.log("success");
-  }
-
-
-  async reviewUpdate(subject) {
-    const MONGOC = this.MONGOC;
-    const queryObj = { porlid: subject };
-    const collections = [
-      "FP1_porlist",
-      "FP2_pordeta",
-      "FR1_revlist",
-      "FR2_revdeta",
-    ];
-    let rows, note, note2, arr;
-    let portfolioArr, reviewArr;
-    let updateArr;
-    let output;
-    let revid;
-    let tempArr;
-
-    rows = [];
-    for (let i of collections) {
-      rows.push(await MONGOC.db("miro81").collection(i).find(queryObj).toArray());
-    }
-    const [ [ porlist ], [ pordeta ], [ revlist ], [ revdeta ] ] = rows;
-    note = new AppleAPIs({ folder: "portfolio", subject: subject });
-    portfolioArr = await note.readNote();
-
-    if (revlist !== undefined) {
-      revid = revlist.revid;
-      note2 = new AppleAPIs({ folder: "review", subject: revid });
-      reviewArr = await note2.readNote();
-    }
-
-    if (Array.isArray(reviewArr) && reviewArr.length > 0) {
-      updateArr = portfolioArr.concat(reviewArr);
-      updateArr.shift();
-      await note.updateNote(updateArr.join('<br><br><br>'));
-      console.log(`porfolio ${subject} success`);
-    } else {
-      if (revlist !== undefined) {
-        console.log(`porfolio ${subject} needs ${revid}`);
-        tempArr = this.getFromReviewJson(subject);
-        updateArr = portfolioArr.concat(tempArr);
-        updateArr.shift();
-        await note.updateNote(updateArr.join('<br><br><br>'));
-      } else {
-        console.log(`porfolio ${subject} no review`);
-        console.log(porlist)
-      }
-    }
-  }
-
-  async getFromAi(subject) {
-    const app = new ContentsMaker();
-    const { fileSystem, appleScript } = this.mother;
-    try {
-      let tempArr;
-      let newWebLink, targetLink;
-      let targetDetail, targetAis;
-      let getTextScript;
-      let response, responseArr;
-      let finalTong = [];
-
-      tempArr = process.cwd().split("/");
-      tempArr.pop();
-      tempArr.pop();
-
-      newWebLink = tempArr.join("/") + "/_NewWeb";
-
-      if (/^[ap]/i.test(subject)) {
-        targetLink = `${newWebLink}/_PortfolioDetail/${subject}code/portp${subject}/svg`;
-      } else {
-        targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
-      }
-
-      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
-
-      targetAis = [];
-      for (let i of targetDetail) {
-        if (/\.ai$/.test(i)) {
-          targetAis.push(i);
-        }
-      }
-
-      for (let i = 0; i < targetAis.length; i++) {
-        responseArr = await app.getTextFromAi(targetAis[i]);
-        finalTong.push(responseArr);
-      }
-
-      return finalTong;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  getFromReviewJson (subject) {
-    const resourceLink = `${process.cwd()}/apps/contentsMaker/resource`;
-    const { sub_titles: { rev_main_title }, r_id, reviews } = require(resourceLink + "/" + subject + ".js");
-    let finalArr = [];
-
-    for (let { photos, contents } of reviews) {
-      finalArr.push(String(photos.join(" ")));
-      for (let { quest, answer } of contents) {
-        if (!/^Q\. /.test(quest)) {
-          finalArr.push("Q. " + quest);
-        } else {
-          finalArr.push(quest);
-        }
-        finalArr.push(answer);
-      }
-    }
-
-    finalArr.shift();
-    finalArr.shift();
-    finalArr.unshift(rev_main_title.replace(/\n/, ", "));
-    finalArr.unshift(r_id);
-
-    return finalArr;
-  }
-
-
-  async main3() {
-    const exception = [ "a28", "a42" ]
-    const list = [
-      // "p06",
-      "p07",
-      "p08",
-      "p09",
-    ];
-
-    for (let i of list) {
-      await this.reviewUpdate(i);
-    }
-  }
-
 
   async intoDesigner() {
     const MONGOC = this.MONGOC;
@@ -507,16 +350,30 @@ class DevContext extends Array {
     await MONGOC.db(`miro81`).collection(`BD2_deslist`).insertOne(obj);
   }
 
+  async getGoogleWriteJson() {
+    const analytics = new GoogleAnalytics();
+    const sheet = new GoogleSheet();
+    const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
+
+    const clients = await analytics.getClientsInfoByNumber();
+    console.log(clients);
+
+    for (let client of clients) {
+      await this.mother.fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.cliid}_${this.mother.todayMaker()}.json`, client.death ]);
+    }
+
+    console.log("success");
+  }
 
   async launching() {
     try {
       await this.MONGOC.connect();
-      // await this.intoDesigner();
 
       // await this.main0();
       // await this.main1();
-      // await this.main2();
-      await this.main3();
+
+      // await this.intoDesigner();
+      // await this.getGoogleWriteJson();
 
     } catch (e) {
       console.log(e);

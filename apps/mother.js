@@ -107,6 +107,7 @@ Mother.prototype.todayMaker = function () {
 
 Mother.prototype.fileSystem = function (sw, arr) {
   const fs = require('fs');
+  if (!Array.isArray(arr)) { throw new Error("second argument must be array"); return; }
   switch (sw) {
     case "read":
       return new Promise(function (resolve, reject) {

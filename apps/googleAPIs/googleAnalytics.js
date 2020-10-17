@@ -248,7 +248,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
   }
 }
 
-GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 1) {
+GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
   const instance = this;
   const mother = this.mother;
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -259,6 +259,10 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 1) {
 
     if (number > usersObj.length) {
       throw new Error("over num");
+    }
+
+    if (number === 0) {
+      number = usersObj.length;
     }
 
     let clients = await back.getLatestClients(number, { withTools: true });

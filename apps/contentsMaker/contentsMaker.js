@@ -170,16 +170,25 @@ ContentsMaker.prototype.lambdaLatest = async function (target) {
 
 ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
   const instance = this;
-  const { appleScript } = this.mother;
+  const { fileSystem, appleScript, todayMaker } = this.mother;
+  const orderFunc = `
+  var targets = app.activeDocument.textFrames;
+  var arr = [];
+  for (var i = 0; i < targets.length; i++) { arr.push({ dom: targets[i], top: targets[i].top }); }
+  arr.sort(function (a, b) { return b.top - a.top });
+  for (var i = 0; i < arr.length; i++) { arr[i].dom.zOrder(ZOrderMethod.SENDTOBACK); }`;
   try {
     let getTextScript;
     let response, responseArr;
-    let name;
+    let name, orderFuncName;
 
+    orderFuncName = "getTextFromAiJavascriptTempFile.js";
+    await fileSystem(`write`, [ process.env.HOME + "/" + orderFuncName, orderFunc ]);
     name = fileFullPath.split('/').pop().replace(/\.ai$/, '');
 
     getTextScript = `tell application "Adobe Illustrator"\n`;
     getTextScript += `\topen POSIX file "${fileFullPath}" without dialogs\n`;
+    getTextScript += `\tdo javascript "#include ~/${orderFuncName}"\n`;
     getTextScript += `\tset textArtItemCount to count text frames in document 1\n`;
     getTextScript += `\tset finalResult to ""\n`;
     getTextScript += `\trepeat with x from 1 to textArtItemCount\n`;
