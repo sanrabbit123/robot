@@ -7,6 +7,8 @@ const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
+const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
+
 
 class DevContext extends Array {
 
@@ -26,12 +28,20 @@ class DevContext extends Array {
     // let tong = await back.getLatestClients(5, { withTools: true });
     // console.log(tong);
     // console.log(await back.launching("project"));
-    await back.launching("project")
+    await back.launching("project");
   }
 
   async main1() {
     const fobot = new AiGraph();
     fobot.launching();
+  }
+
+  async grammerCheck() {
+    const { requestSystem } = this.mother;
+    const app = new NaverAPIs();
+    console.log(await app.spellChecker());
+
+
   }
 
   async intoDesigner() {
@@ -367,10 +377,12 @@ class DevContext extends Array {
 
   async launching() {
     try {
-      await this.MONGOC.connect();
+      // await this.MONGOC.connect();
 
       // await this.main0();
       // await this.main1();
+
+      await this.grammerCheck();
 
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
@@ -378,7 +390,7 @@ class DevContext extends Array {
     } catch (e) {
       console.log(e);
     } finally {
-      this.MONGOC.close();
+      // this.MONGOC.close();
     }
   }
 

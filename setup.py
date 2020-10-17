@@ -13,6 +13,7 @@ class RobotInstall:
             [ "pymongo" ],
             [ "argparse" ],
             [ "cryptography" ],
+            [ "requests" ],
         ]
         self.upgrade = [
             [ "google-api-core" ],
