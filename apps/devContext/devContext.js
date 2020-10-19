@@ -36,12 +36,244 @@ class DevContext extends Array {
     fobot.launching();
   }
 
-  async grammerCheck() {
-    const { requestSystem } = this.mother;
-    const app = new NaverAPIs();
-    console.log(await app.spellChecker());
+  async injectPhotos(target) {
+    const MONGOC = this.MONGOC;
+    const collections = [
+      "FP2_pordeta",
+      "FR2_revdeta",
+    ];
+
+    let row, targetRow;
+    let titles, keys;
+    let keyStrings;
+    let note, noteArr, updateArr;
+    let number;
+    let ifReview = false;
+    let reviewMatrix;
+    let qArr, aArr, qNumber, aNumber;
+    let phototnumArr, reviewWordingkeyArr, reviewKeyStrings, reviewFinal;
+    let reviewStartPoint, integration;
+
+    row = await MONGOC.db("miro81").collection(collections[0]).find({ porlid: target }).toArray();
+    targetRow = row[0];
+
+    const { wordingtitle, wordingkey } = targetRow;
+
+    titles = wordingtitle.split(' ');
+    keys = wordingkey.split(' ');
+
+    keyStrings = [ "1 - " + keys[0] ];
+    for (let i = 1; i < keys.length; i++) {
+      keyStrings.push(String(Number(keys[i - 1]) + 1) + " - " + keys[i]);
+    }
+
+    note = new AppleAPIs({ folder: "portfolio", subject: target });
+    noteArr = await note.readNote();
+
+    updateArr = [];
+    number = 0;
+
+    for (let i = 0; i < noteArr.length; i++) {
+
+      if (noteArr[i] === "{photo}") {
+        updateArr.push(keyStrings[number]);
+        updateArr.push(titles[number]);
+        number++;
+      } else {
+        updateArr.push(noteArr[i]);
+      }
+
+      if (/^re/.test(noteArr[i])) {
+        ifReview = true;
+      }
+
+    }
+
+    /* if review  */
+    if (ifReview) {
+
+      row = await MONGOC.db("miro81").collection(collections[1]).find({ porlid: target }).toArray();
+      targetRow = row[0];
+
+      const { revid, phototnum, wordingkey: reviewWordingkey } = targetRow;
+
+      reviewMatrix = await this.getFromAiReview(revid);
+
+      qArr = [];
+      aArr = [];
+      for (let i of reviewMatrix) {
+        qNumber = 0;
+        aNumber = 0;
+        for (let j of i) {
+          if (/^Q\./i.test(j)) {
+            qNumber++;
+          } else if (/\n\n/g.test(j)) {
+            aNumber = ([ ...j.matchAll(/\n/g) ]).length / 2;
+          }
+        }
+        qArr.push(qNumber);
+        aArr.push(qNumber + Math.floor(aNumber));
+      }
+
+      phototnumArr = phototnum.split(' ');
+      reviewWordingkeyArr = reviewWordingkey.split(' ');
+      reviewKeyStrings = new Array(reviewWordingkeyArr.length);
+
+      reviewFinal = [];
+
+      for (let i = 0; i < reviewWordingkeyArr.length; i++) {
+        reviewKeyStrings[i] = '';
+        if (i === 0) {
+          for (let j = 0; j < Number(reviewWordingkeyArr[i]); j++) {
+            reviewKeyStrings[i] += phototnumArr[j] + ' ';
+          }
+        } else {
+          for (let j = Number(reviewWordingkeyArr[i - 1]); j < Number(reviewWordingkeyArr[i]); j++) {
+            reviewKeyStrings[i] += phototnumArr[j] + ' ';
+          }
+        }
+        reviewKeyStrings[i] = reviewKeyStrings[i].slice(0, -1);
+        reviewFinal.push(reviewKeyStrings[i]);
+      }
+
+      for (let i = 0; i < updateArr.length; i++) {
+        if (/^re[0-9]/.test(updateArr[i])) {
+          reviewStartPoint = i;
+        }
+      }
+
+      integration = reviewStartPoint + 3;
+
+      for (let i = 0; i < reviewFinal.length; i++) {
+        updateArr.splice(integration, 0, reviewFinal[i]);
+        integration = integration + (qArr[i] + aArr[i]) + 1;
+      }
+
+    }
+
+    console.log(updateArr);
+    updateArr.shift();
+    await note.updateNote(updateArr.join('<br><br><br>'));
+
+  }
+
+  async getFromAiReview(subject) {
+    const app = new ContentsMaker();
+    const { fileSystem, appleScript } = this.mother;
+    try {
+      let tempArr;
+      let newWebLink, targetLink;
+      let targetDetail, targetAis;
+      let getTextScript;
+      let response, responseArr;
+      let finalTong = [];
+      let titleName = "";
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.pop();
+      newWebLink = tempArr.join("/") + "/_NewWeb";
+
+      targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
+
+      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
+
+      targetAis = [];
+      for (let i of targetDetail) {
+        if (/\.ai$/.test(i)) {
+          if (!/^mo/.test(i)) {
+            if (!/00\.ai$/.test(i)) {
+              if (!/^title/.test(i)) {
+                if (/word/.test(i)) {
+                  targetAis.push(i);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      targetAis.sort((a, b) => { return Number(a.split('_')[1].replace(/\.ai$/, '')) - Number(b.split('_')[1].replace(/\.ai$/, '')) });
+
+      for (let i = 0; i < targetAis.length; i++) {
+        responseArr = await app.getTextFromAi(targetLink + "/" + targetAis[i]);
+        finalTong.push(responseArr);
+      }
+
+      finalTong.shift();
+
+      return finalTong;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
 
+
+  async getFromAi(subject) {
+    const app = new ContentsMaker();
+    const { fileSystem, appleScript } = this.mother;
+    try {
+      let tempArr;
+      let newWebLink, targetLink;
+      let targetDetail, targetAis;
+      let getTextScript;
+      let response, responseArr;
+      let finalTong = [];
+      let titleName = "";
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.pop();
+      newWebLink = tempArr.join("/") + "/_NewWeb";
+
+      if (/^[ap]/i.test(subject)) {
+        targetLink = `${newWebLink}/_PortfolioDetail/${subject}code/portp${subject}/svg`;
+      } else {
+        targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
+      }
+
+      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
+
+      targetAis = [];
+      for (let i of targetDetail) {
+        if (/\.ai$/.test(i)) {
+          if (!/^mo/.test(i)) {
+            if (!/00\.ai$/.test(i)) {
+              if (!/^title/.test(i)) {
+                if (/word/.test(i)) {
+                  targetAis.push(i);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      targetAis.sort((a, b) => { return Number(a.split('_')[1].replace(/\.ai$/, '')) - Number(b.split('_')[1].replace(/\.ai$/, '')) });
+
+      if (/^[ap]/i.test(subject)) {
+        titleName = "title" + subject + ".ai";
+      } else {
+        titleName = "retitle" + subject + ".ai";
+      }
+
+      targetAis.unshift(titleName);
+      console.log(targetAis);
+
+      for (let i = 0; i < targetAis.length; i++) {
+        responseArr = await app.getTextFromAi(targetLink + "/" + targetAis[i]);
+        for (let j of responseArr) {
+          finalTong.push(j.replace(/\n/g, '<br>'));
+        }
+      }
+
+      finalTong.unshift(subject);
+
+      return finalTong;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async intoDesigner() {
@@ -377,12 +609,61 @@ class DevContext extends Array {
 
   async launching() {
     try {
-      // await this.MONGOC.connect();
+      await this.MONGOC.connect();
 
       // await this.main0();
       // await this.main1();
 
-      await this.grammerCheck();
+      let targets = [
+        "a72",
+        "a71",
+        "a70",
+        "a69",
+        "a68",
+        "a67",
+        "a66",
+        "a64",
+        "a62",
+        "a61",
+        "a60",
+        "a59",
+        "a58",
+        "a57",
+        "a56",
+        "a55",
+        "a54",
+        "a53",
+        "a51",
+        "a49",
+        "a47",
+        "a45",
+        "a44",
+        "a43",
+        "a41",
+        "a39",
+        "a38",
+        "a37",
+        "a36",
+        "a35",
+        "a34",
+        "a33",
+        "a32",
+        "a31",
+        "a30",
+        "a27",
+        "a26",
+        "a25",
+        "a24",
+        "a22",
+        "a20",
+        "a18",
+        "a17",
+        "a16",
+      ];
+
+      for (let i of targets) {
+        await this.injectPhotos(i);
+      }
 
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
@@ -390,7 +671,7 @@ class DevContext extends Array {
     } catch (e) {
       console.log(e);
     } finally {
-      // this.MONGOC.close();
+      this.MONGOC.close();
     }
   }
 

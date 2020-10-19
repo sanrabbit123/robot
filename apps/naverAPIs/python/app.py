@@ -45,7 +45,6 @@ try:
 except Exception as e:
     print(e)
 
-
 # python start --------------------------------------------------------------------------------------------------------
 
 from naver.spellChecker import SpellChecker
@@ -53,7 +52,6 @@ from naver.spellChecker import SpellChecker
 if __name__ == '__main__':
     try:
         data = getBridge()
-
         if argv[1] == 'spell':
             app = SpellChecker(data["target"])
             app.printCheckedJson()

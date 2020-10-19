@@ -74,7 +74,13 @@ AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
         resultArr.push(this.text_filter_lite(i));
       }
     }
-    return resultArr;
+    let final = [];
+    for (let i of resultArr) {
+      if (i.length !== 0) {
+        final.push(i);
+      }
+    }
+    return final;
   } catch (e) {
     console.log(e);
   }
