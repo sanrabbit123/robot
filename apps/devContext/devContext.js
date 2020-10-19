@@ -157,6 +157,89 @@ class DevContext extends Array {
 
   }
 
+  async appendOptions(target) {
+    const MONGOC = this.MONGOC;
+    const collections = [
+      "FP1_porlist",
+      "FP2_pordeta",
+      "FR1_revlist",
+      "FR2_revdeta",
+    ];
+
+    let row, targetRow;
+    let model;
+    let portfolioModel, reviewModel;
+    let note, noteArr;
+    let ifReview = false;
+
+    row = await MONGOC.db("miro81").collection(collections[0]).find({ porlid: target }).toArray();
+    targetRow = row[0];
+
+    row = await MONGOC.db("miro81").collection(collections[1]).find({ porlid: target }).toArray();
+    targetRow = row[0];
+
+    note = new AppleAPIs({ folder: "portfolio", subject: target });
+    noteArr = await note.readNote();
+
+    portfolioModel = [
+      "_info",
+      "de037",
+      "_portfolio",
+      "_1",
+      "나만을 위한 공간, 남가좌동 더아무르 홈스타일링",
+      "서울 마포구",
+      "아파트 홈스타일링",
+      "_2",
+      "세로 / 가로",
+      "11 1",
+      "슬라이드",
+      "1 2 3 4 5 6 7 8 10",
+      "태그",
+      "all,화이트,싱글,혼남,각방,쓰리룸,원룸,남자,1인가구,패브릭,감성적인,깔끔,10평대인테리어,오피스텔",
+      "서비스",
+      "홈퍼니싱",
+      "Key8",
+      "785",
+      "Key9",
+      "200905",
+    ];
+
+    for (let i = 0; i < noteArr.length; i++) {
+      if (/^re/.test(noteArr[i])) {
+        ifReview = true;
+      }
+    }
+
+    if (ifReview) {
+
+      row = await MONGOC.db("miro81").collection(collections[2]).find({ porlid: target }).toArray();
+      targetRow = row[0];
+
+      row = await MONGOC.db("miro81").collection(collections[3]).find({ porlid: target }).toArray();
+      targetRow = row[0];
+
+      reviewModel = [
+        "_review",
+        "_1",
+        "오직 나만을 위한, 공간이에요.",
+        "_2",
+        "세로 / 가로",
+        "4 9",
+        "순서",
+        "152",
+      ];
+      model = portfolioModel.concat(reviewModel);
+    } else {
+      model = portfolioModel;
+    }
+
+    updateArr = noteArr.concat(model);
+
+    console.log(updateArr);
+    updateArr.shift();
+    await note.updateNote(updateArr.join('<br><br><br>'));
+  }
+
   async getFromAiReview(subject) {
     const app = new ContentsMaker();
     const { fileSystem, appleScript } = this.mother;
@@ -207,8 +290,6 @@ class DevContext extends Array {
       console.log(e);
     }
   }
-
-
 
   async getFromAi(subject) {
     const app = new ContentsMaker();
@@ -275,6 +356,74 @@ class DevContext extends Array {
       console.log(e);
     }
   }
+
+  async getFromAiTitle(subject) {
+    const app = new ContentsMaker();
+    const { fileSystem, appleScript } = this.mother;
+    try {
+      let tempArr;
+      let newWebLink, targetLink;
+      let targetDetail, targetAis;
+      let getTextScript;
+      let response, responseArr;
+      let finalTong = [];
+      let titleName = "";
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.pop();
+      newWebLink = tempArr.join("/") + "/_NewWeb";
+
+      if (/^[ap]/i.test(subject)) {
+        targetLink = `${newWebLink}/_PortfolioDetail/${subject}code/portp${subject}/svg`;
+      } else {
+        targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
+      }
+
+      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
+
+      targetAis = [];
+      for (let i of targetDetail) {
+        if (/\.ai$/.test(i)) {
+          if (!/^mo/.test(i)) {
+            if (!/00\.ai$/.test(i)) {
+              if (!/^title/.test(i)) {
+                if (/word/.test(i)) {
+                  targetAis.push(i);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      targetAis.sort((a, b) => { return Number(a.split('_')[1].replace(/\.ai$/, '')) - Number(b.split('_')[1].replace(/\.ai$/, '')) });
+
+      if (/^[ap]/i.test(subject)) {
+        titleName = "title" + subject + ".ai";
+      } else {
+        titleName = "retitle" + subject + ".ai";
+      }
+
+      targetAis.unshift(titleName);
+      console.log(targetAis);
+
+      for (let i = 0; i < targetAis.length; i++) {
+        responseArr = await app.getTextFromAi(targetLink + "/" + targetAis[i]);
+        for (let j of responseArr) {
+          finalTong.push(j.replace(/\n/g, '<br>'));
+        }
+      }
+
+      finalTong.unshift(subject);
+
+      return finalTong;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+
 
   async intoDesigner() {
     const MONGOC = this.MONGOC;
