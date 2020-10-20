@@ -43,7 +43,7 @@ AppleAPIs.prototype.updateNoteScript = function (body = "new") {
   text = 'tell application "Notes"\n';
   text += '\ttell account "iCloud"\n';
   text += '\t\ttell folder "' + this.folder + '"\n';
-  text += `\t\t\tset body of note "${this.subject}" to "${this.subject}<br>${body}}"\n`;
+  text += `\t\t\tset body of note "${this.subject}" to "${this.subject}<br>${body}"\n`;
   text += '\t\tend tell\n';
   text += '\tend tell\n';
   text += 'end tell';

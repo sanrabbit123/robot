@@ -8,7 +8,7 @@ const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
-
+const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
 
 class DevContext extends Array {
 
@@ -170,63 +170,118 @@ class DevContext extends Array {
     let model;
     let portfolioModel, reviewModel;
     let note, noteArr;
-    let ifReview = false;
+    let ifReview = false, reviewIndex = 0, reviewTitle = '';
+    let apartMethod = "아파트 홈스타일링";
+    let title;
+    let apartArr, apartText, pyIndex;
+    let updateArr, finalArr;
+    let regionString, regionArr;
+
 
     row = await MONGOC.db("miro81").collection(collections[0]).find({ porlid: target }).toArray();
     targetRow = row[0];
 
+    const { photodae_s, photodae_d, desid, region, method, key8, key9, tag } = targetRow;
+
+
+    if (!/[시구]$/.test(region)) {
+      regionArr = region.split(' ');
+      if (/서울/.test(regionArr[0]) || /인천/.test(regionArr[0]) || /대전/.test(regionArr[0]) || /부산/.test(regionArr[0]) || /광주/.test(regionArr[0]) || /대구/.test(regionArr[0]) || /울산/.test(regionArr[0])) {
+        regionString = region + "구";
+      } else {
+        regionString = region + "시";
+      }
+    } else {
+      regionString = region;
+    }
+
     row = await MONGOC.db("miro81").collection(collections[1]).find({ porlid: target }).toArray();
     targetRow = row[0];
 
+    const { slide } = targetRow;
+
     note = new AppleAPIs({ folder: "portfolio", subject: target });
     noteArr = await note.readNote();
+    title = noteArr[2];
+
+    let [ subject, apart ] = title.split(", ");
+
+    apartArr = apart.split(' ');
+    for (let i = 0; i < apartArr.length; i++) {
+      if (/py/gi.test(apartArr[i])) {
+        pyIndex = i;
+      }
+    }
+
+    apartText = '';
+    for (let i = 0; i < pyIndex; i++) {
+      apartText += apartArr[i] + ' ';
+    }
+    apartText = apartText.slice(0, -1);
+
+    if (/빌라/g.test(apartText)) {
+       apartMethod = "빌라 홈스타일링";
+    } else if (/타운하우스/g.test(apartText)) {
+      apartMethod = "타운하우스 홈스타일링";
+    } else if (/오피스텔/g.test(apartText)) {
+      apartMethod = "오피스텔 홈스타일링";
+    } else if (/주택/g.test(apartText)) {
+      apartMethod = "주택 홈스타일링";
+    }
 
     portfolioModel = [
       "_info",
-      "de037",
+      desid,
       "_portfolio",
       "_1",
-      "나만을 위한 공간, 남가좌동 더아무르 홈스타일링",
-      "서울 마포구",
-      "아파트 홈스타일링",
+      (subject + ", " + apartText + " " + "홈스타일링"),
+      regionString,
+      apartMethod,
       "_2",
       "세로 / 가로",
-      "11 1",
+      (photodae_s + " " + photodae_d),
       "슬라이드",
-      "1 2 3 4 5 6 7 8 10",
+      slide,
       "태그",
-      "all,화이트,싱글,혼남,각방,쓰리룸,원룸,남자,1인가구,패브릭,감성적인,깔끔,10평대인테리어,오피스텔",
+      tag,
       "서비스",
-      "홈퍼니싱",
+      method,
       "Key8",
-      "785",
+      key8,
       "Key9",
-      "200905",
+      key9,
     ];
 
     for (let i = 0; i < noteArr.length; i++) {
-      if (/^re/.test(noteArr[i])) {
+      if (/^re[0-9]/.test(noteArr[i])) {
         ifReview = true;
+        reviewIndex = i;
       }
     }
 
     if (ifReview) {
 
+      reviewTitle = noteArr[reviewIndex + 1];
+
       row = await MONGOC.db("miro81").collection(collections[2]).find({ porlid: target }).toArray();
       targetRow = row[0];
+
+      const { order_function } = targetRow;
 
       row = await MONGOC.db("miro81").collection(collections[3]).find({ porlid: target }).toArray();
       targetRow = row[0];
 
+      const { photodae } = targetRow;
+
       reviewModel = [
         "_review",
         "_1",
-        "오직 나만을 위한, 공간이에요.",
+        reviewTitle.split(', ')[1],
         "_2",
         "세로 / 가로",
-        "4 9",
+        photodae,
         "순서",
-        "152",
+        order_function,
       ];
       model = portfolioModel.concat(reviewModel);
     } else {
@@ -235,9 +290,15 @@ class DevContext extends Array {
 
     updateArr = noteArr.concat(model);
 
-    console.log(updateArr);
-    updateArr.shift();
-    await note.updateNote(updateArr.join('<br><br><br>'));
+    finalArr = [];
+
+    for (let i of updateArr) {
+      finalArr.push(i.replace(/\}$/g, ''));
+    }
+
+    console.log(finalArr);
+    finalArr.shift();
+    await note.updateNote(finalArr.join('<br><br><br>'));
   }
 
   async getFromAiReview(subject) {
@@ -363,6 +424,7 @@ class DevContext extends Array {
     try {
       let tempArr;
       let newWebLink, targetLink;
+      let target;
       let targetDetail, targetAis;
       let getTextScript;
       let response, responseArr;
@@ -375,55 +437,20 @@ class DevContext extends Array {
       newWebLink = tempArr.join("/") + "/_NewWeb";
 
       if (/^[ap]/i.test(subject)) {
-        targetLink = `${newWebLink}/_PortfolioDetail/${subject}code/portp${subject}/svg`;
+        target = `${newWebLink}/_PortfolioDetail/${subject}code/portivec${subject}.ai`;
       } else {
-        targetLink = `${newWebLink}/_Review/${subject}code/${subject}`;
+        target = `${newWebLink}/_Review/${subject}code/${subject}/name2${subject}.ai`;
       }
 
-      targetDetail = await fileSystem(`readDir`, [ targetLink ]);
+      console.log(target)
 
-      targetAis = [];
-      for (let i of targetDetail) {
-        if (/\.ai$/.test(i)) {
-          if (!/^mo/.test(i)) {
-            if (!/00\.ai$/.test(i)) {
-              if (!/^title/.test(i)) {
-                if (/word/.test(i)) {
-                  targetAis.push(i);
-                }
-              }
-            }
-          }
-        }
-      }
+      responseArr = await app.getTextFromAi(target);
 
-      targetAis.sort((a, b) => { return Number(a.split('_')[1].replace(/\.ai$/, '')) - Number(b.split('_')[1].replace(/\.ai$/, '')) });
-
-      if (/^[ap]/i.test(subject)) {
-        titleName = "title" + subject + ".ai";
-      } else {
-        titleName = "retitle" + subject + ".ai";
-      }
-
-      targetAis.unshift(titleName);
-      console.log(targetAis);
-
-      for (let i = 0; i < targetAis.length; i++) {
-        responseArr = await app.getTextFromAi(targetLink + "/" + targetAis[i]);
-        for (let j of responseArr) {
-          finalTong.push(j.replace(/\n/g, '<br>'));
-        }
-      }
-
-      finalTong.unshift(subject);
-
-      return finalTong;
+      return responseArr;
     } catch (e) {
       console.log(e);
     }
   }
-
-
 
   async intoDesigner() {
     const MONGOC = this.MONGOC;
@@ -756,18 +783,267 @@ class DevContext extends Array {
     console.log("success");
   }
 
+  async spellCheck(porlid) {
+    const app = new NaverAPIs();
+    let note, targetArr, temp;
+    let updateArr = [];
+    note = new AppleAPIs({ folder: "portfolio", subject: porlid });
+    targetArr = await note.readNote();
+    for (let i of targetArr) {
+      temp = await app.paragraphChecker(i);
+      updateArr.push(temp);
+    }
+    console.log(updateArr);
+    updateArr.shift();
+    await note.updateNote(updateArr.join('<br><br><br>'));
+  }
+
+  async titleVerification(target) {
+    let note, noteArr;
+    let title;
+    let apartArr, apartText, pyIndex;
+    let resultObj = {};
+
+    note = new AppleAPIs({ folder: "portfolio", subject: target });
+    noteArr = await note.readNote();
+    title = noteArr[2];
+
+    let [ subject, apart ] = title.split(", ");
+
+    apartArr = apart.split(' ');
+    for (let i = 0; i < apartArr.length; i++) {
+      if (/py/gi.test(apartArr[i])) {
+        pyIndex = i;
+      }
+    }
+
+    apartText = '';
+    for (let i = 0; i < pyIndex; i++) {
+      apartText += apartArr[i] + ' ';
+    }
+    apartText = apartText.slice(0, -1);
+
+    resultObj.porlid = target;
+
+    resultObj.raw = {};
+    resultObj.raw.apart = { text: apartText, length: apartText.length };
+    resultObj.raw.subject = { text: subject, length: subject.length };
+    resultObj.raw.apartTitle = { text: apart, length: apart.length };
+
+    resultObj.boo = {};
+    resultObj.boo.apart = (apartText.length < 10);
+    resultObj.boo.subject = (subject.length < 19);
+    resultObj.boo.apartTitle = (apart.length < 21);
+    resultObj.boo.subjectTitle = (subject.length + apartText.length < 27);
+
+    return resultObj;
+  }
+
+  async reviveText(porlid) {
+    const dir = `${process.cwd()}/apps/contentsMaker/resource`;
+    const target = dir + "/" + porlid + ".js";
+    const targetJson = require(target);
+    let newArr = [];
+    let note, noteArr;
+    let photoKeyNum;
+    let photoString;
+
+    note = new AppleAPIs({ folder: "portfolio", subject: porlid });
+    noteArr = await note.readNote();
+
+    const { contents } = targetJson;
+
+    newArr.push(porlid);
+    newArr.push(noteArr[1]);
+    newArr.push(targetJson.title);
+
+    photoKeyNum = 1;
+    for (let { photo_key, title, main_contents, smalltalk_yn, smalltalk_contents } of contents) {
+      if (title === "init") {
+        newArr.push(main_contents.replace(/\n/g, "<br>"));
+        if (smalltalk_yn !== "") {
+          newArr.push(smalltalk_yn);
+          newArr.push(smalltalk_contents.replace(/\n/g, "<br>"));
+        }
+      } else {
+        newArr.push(String(photoKeyNum) + " - " + String(photo_key));
+        photoKeyNum = photo_key + 1;
+
+        newArr.push(title);
+        newArr.push(main_contents.replace(/\n/g, "<br>"));
+        if (smalltalk_yn !== "") {
+          newArr.push(smalltalk_yn);
+          newArr.push(smalltalk_contents.replace(/\n/g, "<br>"));
+        }
+
+      }
+    }
+
+    const { sub_titles: { rev_main_title }, r_id, reviews } = targetJson;
+    if (r_id !== "re999") {
+
+      newArr.push(r_id);
+      newArr.push(rev_main_title.replace(/\n/g, ", "));
+
+      for (let { type, photos, contents } of reviews) {
+        if (type === "init") {
+          for (let { quest, answer } of contents) {
+            newArr.push(answer.replace(/\n/g, "<br>"))
+          }
+        } else {
+          photoString = '';
+          for (let i of photos) {
+            photoString += String(i) + ' ';
+          }
+          photoString = photoString.slice(0, -1);
+
+          newArr.push(photoString);
+          for (let { quest, answer } of contents) {
+            newArr.push("Q. " + quest.replace(/\n/g, "<br>"))
+            newArr.push(answer.replace(/\n/g, "<br>"))
+          }
+        }
+      }
+
+    }
+
+    const { sub_titles: { portivec: { sub, region, method } }, designer, p_info: { photodae, slide, tag, service, key8, key9 } } = targetJson;
+
+    newArr.push("_info");
+    newArr.push(designer);
+    newArr.push("_portfolio");
+    newArr.push("_1");
+    newArr.push(sub);
+    newArr.push(region);
+    newArr.push(method);
+    newArr.push("_2");
+    newArr.push("세로 / 가로");
+    newArr.push(String(photodae[0]) + " " + String(photodae[1]));
+    newArr.push("슬라이드");
+    newArr.push(slide);
+    newArr.push("태그");
+    newArr.push(tag);
+    newArr.push("서비스");
+    newArr.push(service);
+    newArr.push("Key8");
+    newArr.push(key8);
+    newArr.push("Key9");
+    newArr.push(key9);
+
+    if (r_id !== "re999") {
+
+      const { sub_titles: { rev_name_card: { main: reviewSubTitle } }, r_info: { photodae: reviewPhotodae, order } } = targetJson;
+      newArr.push("_review");
+      newArr.push("_1");
+      newArr.push(reviewSubTitle.replace(/\n/g, ", "));
+      newArr.push("_2");
+      newArr.push("세로 / 가로");
+      newArr.push(String(reviewPhotodae[0]) + " " + String(reviewPhotodae[1]));
+      newArr.push("순서");
+      newArr.push(String(order));
+
+    }
+
+    console.log(newArr);
+    newArr.shift();
+    await note.updateNote(newArr.join('<br><br><br>'));
+
+  }
+
+  async reviewVerification(target) {
+    let note, noteArr;
+    let reviewTitleIndex, reviewTitleArr;
+    let noReview = true;
+    let booResults = [];
+
+    note = new AppleAPIs({ folder: "portfolio", subject: target });
+    noteArr = await note.readNote();
+
+    for (let i = 0; i < noteArr.length; i++) {
+      if (/^_review/.test(noteArr[i])) {
+        reviewTitleIndex = i + 2;
+        noReview = false;
+      }
+    }
+
+    if (!noReview) {
+
+      reviewTitleArr = noteArr[reviewTitleIndex].split(", ");
+
+      booResults.push(reviewTitleArr[0].length < 10);
+      booResults.push(reviewTitleArr[1].length < 10);
+
+      if (!booResults[0] || !booResults[1]) {
+        console.log(target, booResults);
+      }
+
+    }
+  }
+
+
   async launching() {
+    const instance = this;
     try {
+      let temp, temp2;
+
       await this.MONGOC.connect();
 
       // await this.main0();
       // await this.main1();
 
-      let targets = [
+      // {
+      //   let targets = [
+      //     "p39",
+      //   ];
+      //
+      //   for (let i of targets) {
+      //     await this.injectPhotos(i);
+      //   }
+      // }
+
+      async function a(targets) {
+        let exceptions = [
+          "p11",
+          "a71",
+          "a18",
+        ];
+        for (let i of targets) {
+          temp2 = false;
+          temp = await instance.titleVerification(i);
+          for (let j in temp.boo) {
+            if(!temp.boo[j]) { temp2 = true; }
+          }
+          if (temp2) {
+            if (!exceptions.includes(temp.porlid)) {
+              console.log(temp);
+            }
+          }
+        }
+      }
+
+      let pReturnTargets = [
+        "p33",
+        "p34",
+        "p35",
+        "p36",
+        "p37",
+        "p38",
+        "p39",
+        "p40",
+        "p41",
+        "p42",
+        "p43",
+      ];
+      let aReturnTargets = [
+        "a75",
+        "a74",
+        "a73",
         "a72",
         "a71",
         "a70",
         "a69",
+      ];
+      let aTargets = [
         "a68",
         "a67",
         "a66",
@@ -808,12 +1084,68 @@ class DevContext extends Array {
         "a18",
         "a17",
         "a16",
+        "a14",
+        "a13",
+        "a12",
+        "a10",
+        "a09",
+        "a08",
+        "a05",
+        "a04",
+        "a01",
+      ];
+      let pTargets = [
+        "p32",
+        "p31",
+        "p30",
+        "p29",
+        "p27",
+        "p26",
+        "p25",
+        "p24",
+        "p23",
+        "p22",
+        "p21",
+        "p20",
+        "p19",
+        "p18",
+        "p17",
+        "p16",
+        "p15",
+        "p14",
+        "p13",
+        "p12",
+        "p11",
+        "p10",
+        "p09",
+        "p08",
+        "p07",
+        "p06",
       ];
 
-      for (let i of targets) {
-        await this.injectPhotos(i);
+      // await a(pTargets);
+
+
+      let app;
+
+      for (let i of aTargets) {
+        app = new ResourceMaker(i);
+        await app.launching();
       }
 
+      for (let i of pTargets) {
+        app = new ResourceMaker(i);
+        await app.launching();
+      }
+
+
+
+
+      // for (let i of pTargets) {
+      //   await this.reviewVerification(i);
+      // }
+
+      // await this.spellCheck("p57");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
 

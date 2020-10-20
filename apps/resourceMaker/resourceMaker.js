@@ -135,7 +135,7 @@ ResourceMaker.prototype.infoMaker = function () {
 }
 
 ResourceMaker.prototype.portfolio_maker = async function () {
-  let instance = this;
+  const instance = this;
   try {
     let result = new Map();
     let reviewBoo = false;
@@ -172,7 +172,7 @@ ResourceMaker.prototype.portfolio_maker = async function () {
     console.log(portfolio_keys);
     console.log(portfolioContent_end);
 
-    let temp_obj, temp_obj2, temp_obj3, temp_arr, temp_arr2, temp_arr3, temp_num, temp_string;
+    let temp_obj, temp_obj2, temp_obj3, temp_arr, temp_arr2, temp_arr3, temp_num, temp_string, temp_boo;
 
     //portfolio
     result.set("p_id", this.p_id);
@@ -187,9 +187,32 @@ ResourceMaker.prototype.portfolio_maker = async function () {
       smalltalk_yn: "",
       smalltalk_contents: "",
     }
+    temp_boo = false;
     for (let i = 0; i < portfolio_keys[0] - 4; i++) {
-      temp_obj.main_contents += "\n\n";
-      temp_obj.main_contents += this.arr[4 + i];
+      if (/^\+/.test(this.arr[4 + i])) {
+        temp_obj.smalltalk_yn = "+ HomeLiaison's small talk";
+        temp_boo = true;
+      } else {
+        if (!temp_boo) {
+          temp_obj.main_contents += "\n\n";
+          temp_obj.main_contents += this.arr[4 + i];
+        } else {
+          if (temp_obj.smalltalk_contents !== "") {
+            temp_obj.smalltalk_contents += "\n\n";
+          }
+          temp_obj.smalltalk_contents += this.arr[4 + i];
+        }
+      }
+    }
+
+    for (let i = 0; i < 4; i++) {
+      temp_obj.main_contents = temp_obj.main_contents.replace(/^\n/, '');
+      temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/^\n/, '');
+    }
+
+    for (let i = 0; i < 4; i++) {
+      temp_obj.main_contents = temp_obj.main_contents.replace(/\n$/, '');
+      temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/\n$/, '');
     }
 
     result.set("portfolio_init", temp_obj);
@@ -227,6 +250,17 @@ ResourceMaker.prototype.portfolio_maker = async function () {
         }
         temp_obj.main_contents = temp_obj.main_contents.slice(0, -2);
       }
+
+      for (let i = 0; i < 4; i++) {
+        temp_obj.main_contents = temp_obj.main_contents.replace(/^\n/, '');
+        temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/^\n/, '');
+      }
+
+      for (let i = 0; i < 4; i++) {
+        temp_obj.main_contents = temp_obj.main_contents.replace(/\n$/, '');
+        temp_obj.smalltalk_contents = temp_obj.smalltalk_contents.replace(/\n$/, '');
+      }
+
       result.get("portfolio_contents").set("portfolio_content" + String(i), temp_obj);
     }
     temp_arr = [ result.get("portfolio_init") ];
@@ -245,15 +279,15 @@ ResourceMaker.prototype.portfolio_maker = async function () {
         contents: [
             {
               quest: "",
-              answer: this.arr[r_key + 2],
+              answer: this.arr[r_key + 2].replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
             },
         ],
         photos: [],
-      }
+      };
       for (let i = 0; i < review_keys[0] - (3 + r_key); i++) {
         temp_obj.contents.push({
           quest: "",
-          answer: this.arr[r_key + 3 + i],
+          answer: this.arr[r_key + 3 + i].replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
         });
       }
       result.set("reviews_init", temp_obj);
@@ -284,6 +318,7 @@ ResourceMaker.prototype.portfolio_maker = async function () {
             temp_obj3.answer += "\n\n";
             temp_obj3.answer += this.arr[temp_arr3[j] + 2 + k];
           }
+          temp_obj3.answer = temp_obj3.answer.replace(/^\n/, '').replace(/^\n/, '').replace(/\n$/, '').replace(/\n$/, ''),
           temp_obj.contents.push(temp_obj3);
         }
         result.get("reviews_contents").set("reviews_content" + String(i), temp_obj);
@@ -412,8 +447,6 @@ ResourceMaker.prototype.launching = async function () {
     await this.portfolio_maker();
   } catch (e) {
     console.log(e);
-  } finally {
-    process.exit();
   }
 }
 
