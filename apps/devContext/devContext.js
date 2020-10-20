@@ -980,6 +980,45 @@ class DevContext extends Array {
     }
   }
 
+  async aPicture(target) {
+    const { fileSystem, shell, shellLink } = this.mother;
+    const MONGOC = this.MONGOC;
+    let pathArr, path, pathDir, photoPath;
+    let order;
+    let row;
+
+    row = await MONGOC.db("miro81").collection("FP1_porlist").find({ porlid: target }).toArray();
+
+    pathArr = process.cwd().split("/");
+    pathArr.pop();
+    pathArr.pop();
+    pathArr.push("_NewWeb");
+    pathArr.push("_PortfolioDetail");
+    pathArr.push(target + "code");
+
+    path = pathArr.join("/");
+
+    pathDir = await fileSystem(`readDir`, [ path ]);
+
+    pathArr = process.cwd().split("/");
+    pathArr.pop();
+    pathArr.pop();
+    pathArr.push("_Portfolio");
+    pathArr.push("_A");
+
+    photoPath = pathArr.join("/");
+
+    if (pathDir.includes("image")) {
+      order = `cp -r ${shellLink(path + "/image")} ${shellLink(photoPath)}/${String(target.replace(/[^0-9]/g, ''))}_${row[0].designer}_${row[0].key9};`;
+      shell.exec(order);
+      return "done";
+    } else {
+      return "pass";
+    }
+
+
+  }
+
 
   async launching() {
     const instance = this;
@@ -1125,18 +1164,25 @@ class DevContext extends Array {
 
       // await a(pTargets);
 
-
-      let app;
-
       for (let i of aTargets) {
-        app = new ResourceMaker(i);
-        await app.launching();
+        console.log(i, (await this.aPicture(i)));
       }
 
-      for (let i of pTargets) {
-        app = new ResourceMaker(i);
-        await app.launching();
-      }
+
+
+      // let app;
+      //
+      // for (let i of aTargets) {
+      //   app = new ResourceMaker(i);
+      //   await app.launching();
+      // }
+      //
+      // for (let i of pTargets) {
+      //   app = new ResourceMaker(i);
+      //   await app.launching();
+      // }
+
+
 
 
 
