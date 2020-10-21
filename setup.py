@@ -14,6 +14,7 @@ class RobotInstall:
             [ "argparse" ],
             [ "cryptography" ],
             [ "requests" ],
+            [ "boto3" ],
         ]
         self.upgrade = [
             [ "google-api-core" ],
