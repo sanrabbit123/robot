@@ -992,36 +992,57 @@ class DevContext extends Array {
     pathArr = process.cwd().split("/");
     pathArr.pop();
     pathArr.pop();
-    pathArr.push("_NewWeb");
-    pathArr.push("_PortfolioDetail");
-    pathArr.push(target + "code");
-
-    path = pathArr.join("/");
-
-    pathDir = await fileSystem(`readDir`, [ path ]);
-
-    pathArr = process.cwd().split("/");
-    pathArr.pop();
-    pathArr.pop();
     pathArr.push("_Portfolio");
     pathArr.push("_A");
 
-    photoPath = pathArr.join("/");
+    photoPath = pathArr.join("/") + "/" + `${String(target.replace(/[^0-9]/g, ''))}_${row[0].designer}_${row[0].key9}`;
 
-    if (pathDir.includes("image")) {
-      order = `cp -r ${shellLink(path + "/image")} ${shellLink(photoPath)}/${String(target.replace(/[^0-9]/g, ''))}_${row[0].designer}_${row[0].key9};`;
+    pathDir = await fileSystem(`readDir`, [ photoPath ]);
+
+    shell.exec(`mkdir ${shellLink(photoPath)}/원본`);
+    for (let i of pathDir) { if (i !== `.DS_Store`) {
+      order = `mv ${shellLink(photoPath)}/${i} ${shellLink(photoPath)}/원본/${i};`;
       shell.exec(order);
-      return "done";
-    } else {
-      return "pass";
-    }
+    }}
+    return `done`;
+  }
 
 
+  async deletePorfolio(porlid) {
+    let a, b;
+
+    a = `DELETE FROM porlist WHERE porlid = '${porlid}';`;
+    await this.MONGOC.db("miro81").collection("FP1_porlist").deleteOne({ porlid: porlid });
+
+    b = `DELETE FROM pordeta WHERE porlid = '${porlid}';`;
+    await this.MONGOC.db("miro81").collection("FP2_pordeta").deleteOne({ porlid: porlid });
+
+    return (a + b);
+  }
+
+
+  async deletePorfolioWithReview(porlid, revid) {
+    let a, b, c, d;
+
+    a = `DELETE FROM porlist WHERE porlid = '${porlid}';`;
+    await this.MONGOC.db("miro81").collection("FP1_porlist").deleteOne({ porlid: porlid });
+
+    b = `DELETE FROM pordeta WHERE porlid = '${porlid}';`;
+    await this.MONGOC.db("miro81").collection("FP2_pordeta").deleteOne({ porlid: porlid });
+
+    c = `DELETE FROM revlist WHERE revid = '${revid}';`;
+    await this.MONGOC.db("miro81").collection("FR1_revlist").deleteOne({ revid: revid });
+
+    d = `DELETE FROM revdeta WHERE revid = '${revid}';`;
+    await this.MONGOC.db("miro81").collection("FR2_revdeta").deleteOne({ revid: revid });
+
+    return (a + b + c + d);
   }
 
 
   async launching() {
     const instance = this;
+    const { fileSystem, shell, shellLink } = this.mother;
     try {
       let temp, temp2;
 
@@ -1060,28 +1081,6 @@ class DevContext extends Array {
         }
       }
 
-      let pReturnTargets = [
-        "p33",
-        "p34",
-        "p35",
-        "p36",
-        "p37",
-        "p38",
-        "p39",
-        "p40",
-        "p41",
-        "p42",
-        "p43",
-      ];
-      let aReturnTargets = [
-        "a75",
-        "a74",
-        "a73",
-        "a72",
-        "a71",
-        "a70",
-        "a69",
-      ];
       let aTargets = [
         "a68",
         "a67",
@@ -1101,8 +1100,6 @@ class DevContext extends Array {
         "a49",
         "a47",
         "a45",
-        "a44",
-        "a43",
         "a41",
         "a39",
         "a38",
@@ -1112,7 +1109,6 @@ class DevContext extends Array {
         "a34",
         "a33",
         "a32",
-        "a31",
         "a30",
         "a27",
         "a26",
@@ -1125,13 +1121,7 @@ class DevContext extends Array {
         "a16",
         "a14",
         "a13",
-        "a12",
         "a10",
-        "a09",
-        "a08",
-        "a05",
-        "a04",
-        "a01",
       ];
       let pTargets = [
         "p32",
@@ -1156,19 +1146,9 @@ class DevContext extends Array {
         "p12",
         "p11",
         "p10",
-        "p09",
-        "p08",
-        "p07",
-        "p06",
       ];
 
       // await a(pTargets);
-
-      for (let i of aTargets) {
-        console.log(i, (await this.aPicture(i)));
-      }
-
-
 
       // let app;
       //
@@ -1183,7 +1163,31 @@ class DevContext extends Array {
       // }
 
 
+      let target1 = [
+        // [ "a05" ],
+        // [ "a08" ],
+        // [ "a09" ],
+        // [ "a12" ],
+      ];
 
+      let target2 = [
+        // [ "a01", "re003" ],
+        // [ "a31", "re004" ],
+        // [ "a43", "re006" ],
+        // [ "a44", "re005" ],
+        // [ "p06", "re008" ],
+        // [ "p07", "re009" ],
+        // [ "p08", "re010" ],
+        // [ "p9", "re007" ],
+      ];
+
+      // for (let [ porlid ] of target1) {
+      //   console.log(await this.deletePorfolio(porlid));
+      // }
+
+      // for (let [ porlid, revid ] of target2) {
+      //   console.log(await this.deletePorfolioWithReview(porlid, revid));
+      // }
 
 
 

@@ -34,7 +34,7 @@ module.exports = {
       }
    },
    "designer": "de014",
-   "p_id": "a43",
+   "p_id": "p4",
    "p_info": {
       "photodae": [
          2,
@@ -78,7 +78,7 @@ module.exports = {
          "title": "bathroom",
          "smalltalk_contents": "",
          "smalltalk_yn": "",
-         "main_contents": "공용 공간에서 가장 중요한 곳은 아무래도 화장실이죠."
+         "main_contents": "공용 공간에서 가장 중요한 곳은 아무래도 화장실이죠. 관리가 편하고 깔끔히 보일 수 있도록 화이트를 바탕으로 블랙 포인트를 더하여 화장실을 스타일링 했어요. 고객님께서도 만족스러워 해주셨던 공간입니다.\n\n스타일링을 통해 잘 만들어진 고객님의 셰어하우스가 언제나 활기찬 분위기로 가득 차 있기를 기원할게요 :)"
       }
    ],
    "r_id": "re006",

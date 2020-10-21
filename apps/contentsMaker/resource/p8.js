@@ -34,7 +34,7 @@ module.exports = {
       }
    },
    "designer": "de000",
-   "p_id": "p08",
+   "p_id": "p8",
    "p_info": {
       "photodae": [
          4,

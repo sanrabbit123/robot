@@ -5,7 +5,7 @@ const ContentsMaker = function () {
   this.motherLink = {
     mainBinary: `${this.mother.returnUragenPath()}/_NewWeb/poo`,
     webPath: `${this.mother.returnUragenPath()}/_NewWeb`,
-    portfoiloBinary: `${this.mother.returnUragenPath()}/_Portfolio`,
+    portfoiloBinary: `${process.cwd()}/binary/corePortfolio/original`,
     proposalBinary: `${process.env.HOME}/static`,
   };
 

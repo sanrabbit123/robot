@@ -61,20 +61,20 @@ AiContents.prototype.photo_search = async function () {
     if (/^p/.test(this.portfolioNum)) {
       portfolio_rawList = await fileSystem(`readDir`, [ this.motherLink.portfoiloBinary ]);
       for (let i of portfolio_rawList) { if (i !== ".DS_Store" && i !== "_A") {
-        if (this.image_filter(i) === this.portfolioNum.replace(/[^0-9]/g, '')) {
+        if (Number(this.image_filter(i)) === Number(this.portfolioNum.replace(/[^0-9]/g, ''))) {
           target = i;
         }
       }}
-      portfolio_target = `${this.motherLink.portfoiloBinary}/${target}/원본`;
+      portfolio_target = `${this.motherLink.portfoiloBinary}/${target}/target`;
 
     } else if (/^a/.test(this.portfolioNum)) {
       portfolio_rawList = await fileSystem(`readDir`, [ this.motherLink.portfoiloBinary + "/_A" ]);
       for (let i of portfolio_rawList) { if (i !== ".DS_Store") {
-        if (this.image_filter(i) === this.portfolioNum.replace(/[^0-9]/g, '')) {
+        if (Number(this.image_filter(i)) === Number(this.portfolioNum.replace(/[^0-9]/g, ''))) {
           target = i;
         }
       }}
-      portfolio_target = `${this.motherLink.portfoiloBinary}/_A/${target}/원본`;
+      portfolio_target = `${this.motherLink.portfoiloBinary}/_A/${target}/target`;
 
     } else {
       throw new Error("photo error");
@@ -311,7 +311,7 @@ AiContents.prototype.total_make = async function () {
     this.text = require(`${this.general.links.app}/resource/${this.portfolioNum}.js`);
 
     await MONGOC.connect();
-    
+
     await this.general.static_setting();
     await this.photo_search();
     await this.photo_list();

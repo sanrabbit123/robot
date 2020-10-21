@@ -19,7 +19,7 @@ Mileo.prototype.text_infoarray = function (str) {
       objs = {};
       objs["index"] = i;
       objs["value"] = str[i];
-      if (str[i] !== " " && str[i] !== "  " && str[i] !== "​" && str[i] !== "\\s" && str[i] !== " " && str[i] !== "\\t" && str[i] !== "\\n") {
+      if (str[i] !== " " && str[i] !== "  " && str[i] !== "​" && str[i] !== " " && str[i] !== "\\t" && str[i] !== "\\n") {
         a_arr.push(objs);
       }
     }
@@ -49,7 +49,15 @@ Mileo.prototype.get_points = function () {
     outline_group_array_graphic[outline_group.pageItems.length - 1 - i] = outline_group.pageItems[i];
   }
 
-  if (text_array.string.length !== outline_group_array_graphic.length) { alert("stop! white space error") }
+  if (text_array.string.length !== outline_group_array_graphic.length) {
+    alert("stop! white space error");
+    alert("text : " + String(text_array.string.length));
+    alert("graphic : " + String(outline_group_array_graphic.length));
+    for (let i = 0; i < text_array.string.length; i++) {
+      alert(text_array.string[i].value);
+    }
+  }
+
   let heights;
   if (text_array.string[0].value !== '.' && text_array.string[0].value !== ',' && text_array.string[0].value !== '_') {
     heights = Math.floor(outline_group_array_graphic[0].height);
