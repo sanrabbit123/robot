@@ -620,4 +620,13 @@ Mother.prototype.ipCheck = function () {
   });
 }
 
+Mother.prototype.ghostPath = function () {
+  let robotPath, robotPathArr;
+  robotPath = process.cwd();
+  robotPathArr = robotPath.split("/");
+  robotPathArr.pop();
+  robotPathArr.push("ghost");
+  return robotPathArr.join("/");
+}
+
 module.exports = Mother;
