@@ -220,27 +220,50 @@ BackMaker.prototype.jsonStructure = function () {
 
 BackMaker.prototype.pastToJson = async function (cliid = "entire") {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
+  const { fileSystem, mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const map = require(`${this.pastDir}/${this.button}/${this.button}.js`);
   const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: this.notion, Filters: BackMaker.filters });
   try {
     let row, tempArr, queryObj;
-    const { collection, id } = this.pastMap();
-    queryObj = {};
-    queryObj[id] = 0;
 
-    await MONGOC.connect();
+    if (this.button !== "contents") {
 
-    if (cliid === "entire") {
-      row = await MONGOC.db("miro81").collection(collection).find({}).toArray();
-    } else if (/^latest/.test(cliid)) {
-      tempArr = cliid.split("_");
-      queryObj[id] = -1;
-      row = await MONGOC.db("miro81").collection(collection).find({}).sort(queryObj).limit(Number(tempArr[1].replace(/[^0-9]/g, ''))).toArray();
-    } else {
-      queryObj[id] = cliid;
-      row = await MONGOC.db("miro81").collection(collection).find(queryObj).limit(1).toArray();
+      const { collection, id } = this.pastMap();
+      queryObj = {};
+      queryObj[id] = 0;
+
+      await MONGOC.connect();
+
+      if (cliid === "entire") {
+        row = await MONGOC.db("miro81").collection(collection).find({}).toArray();
+      } else if (/^latest/.test(cliid)) {
+        tempArr = cliid.split("_");
+        queryObj[id] = -1;
+        row = await MONGOC.db("miro81").collection(collection).find({}).sort(queryObj).limit(Number(tempArr[1].replace(/[^0-9]/g, ''))).toArray();
+      } else {
+        queryObj[id] = cliid;
+        row = await MONGOC.db("miro81").collection(collection).find(queryObj).limit(1).toArray();
+      }
+
+    } else if (this.button === "contents") {
+
+      let contentsResourceDir, contentsResourceDirRaw, contentsResourceArr;
+      let contentsJson;
+
+      contentsResourceDir = `${process.cwd()}/apps/contentsMaker/resource`;
+      contentsResourceDirRaw = await fileSystem(`readDir`, [ contentsResourceDir ]);
+
+      contentsResourceArr = [];
+      for (let i of contentsResourceDirRaw) { if (i !== `.DS_Store`) {
+        contentsResourceArr.push(i);
+      }}
+
+      row = [];
+      for (let i of contentsResourceArr) {
+        contentsJson = require(`${contentsResourceDir}/${i}`);
+        row.push(contentsJson);
+      }
     }
 
     return (await filter(row));

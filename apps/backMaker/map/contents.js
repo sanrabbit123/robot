@@ -1,18 +1,20 @@
 module.exports = {
   structure: {
     conid: "",
-    proid: "",
     desid: "",
     contents: {
       portfolio: {
         pid: "",
         date: "9999-09-09",
+        spaceInfo: {
+          space: "",
+          pyeong: "",
+          region: "",
+          method: "",
+        },
         title: {
           main: "",
           sub: "",
-          simple: "",
-          region: "",
-          method: "",
         },
         color: {
           main: "",
@@ -27,6 +29,7 @@ module.exports = {
           },
           slide: [],
           tag: [],
+          service: "",
           sort: {
             key8: 0,
             key9: 0,
