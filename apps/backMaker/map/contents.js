@@ -65,7 +65,7 @@ module.exports = {
           detail: [
             {
               type: "",
-              photo: [],
+              photos: [],
               contents: [
                 {
                   quest: "",

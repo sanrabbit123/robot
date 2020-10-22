@@ -612,13 +612,17 @@ class DevContext extends Array {
       //   await this.reviewVerification(i);
       // }
 
+      const app = new BackMaker();
+      app.launching("contents");
+
+
+
+      // TOOLS ----------------------------------------------------
+
       // await this.spellCheck("p57");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
-
-      // console.log(this.mother.ghostPath());
-
-      await this.googlePythonTest();
+      // await this.googlePythonTest();
 
     } catch (e) {
       console.log(e);

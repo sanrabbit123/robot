@@ -264,6 +264,9 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
         contentsJson = require(`${contentsResourceDir}/${i}`);
         row.push(contentsJson);
       }
+
+      console.log(row);
+
     }
 
     return (await filter(row));
@@ -316,9 +319,8 @@ BackMaker.prototype.launching = async function (button) {
   try {
     const tong = await this.pastToJson();
     const finalTong = await this.subLogicToJson(tong);
-    console.log(finalTong);
 
-    await fileSystem(`write`, [ `${process.cwd()}/temp/project2.json`, JSON.stringify(finalTong, null, 2) ]);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching.json`, JSON.stringify(finalTong, null, 2) ]);
 
     return finalTong;
   } catch (e) {
