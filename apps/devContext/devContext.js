@@ -512,6 +512,11 @@ class DevContext extends Array {
     return "done";
   }
 
+  async googlePythonTest() {
+    const analytics = new GoogleAnalytics();
+    const clients = await analytics.getClientsInfoByNumber(1);
+    console.log(clients);
+  }
 
   async launching() {
     const instance = this;
@@ -613,13 +618,7 @@ class DevContext extends Array {
 
       // console.log(this.mother.ghostPath());
 
-
-
-
-
-
-
-
+      await this.googlePythonTest();
 
     } catch (e) {
       console.log(e);
