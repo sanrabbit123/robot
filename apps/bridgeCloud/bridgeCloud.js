@@ -322,7 +322,14 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
         }
 
-        slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+
+        //to slack
+        if (clientObj["a20_phone"] !== "010-2747-3403") {
+          slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+        } else {
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        }
+
       }
 
       //end

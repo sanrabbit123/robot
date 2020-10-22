@@ -266,7 +266,7 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
     }
 
     let clients = await back.getLatestClients(number, { withTools: true });
-    for (let i = 0; i < clients.length; i++) {
+    for (let i = 0; i < number; i++) {
       tempObj = await this.getClientById(usersObj[i].id);
       tempObj.timeline = this.returnTimeline(usersObj[i].time);
       clients[i].googleAnalyticsUpdate(tempObj);

@@ -583,7 +583,23 @@ class DevContext extends Array {
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
 
-      console.log(this.mother.ghostPath());
+      // console.log(this.mother.ghostPath());
+
+      const analytics = new GoogleAnalytics();
+      const sheet = new GoogleSheet();
+      const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
+
+      const clients = await analytics.getClientsInfoByNumber(1);
+
+      console.log(clients);
+
+      // const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
+      // const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
+      // await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
+
+
+
+
 
     } catch (e) {
       console.log(e);

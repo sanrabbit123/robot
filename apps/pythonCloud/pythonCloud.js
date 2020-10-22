@@ -126,7 +126,7 @@ PythonCloud.prototype.routingCloud = function () {
             }
             PythonCloud.firstDo.analytics = true;
             PythonCloud.timeout.analytics = null;
-          }, (1000 * 60 * 15));
+          }, (1000 * 60 * 20));
 
           //end
           res.set({
