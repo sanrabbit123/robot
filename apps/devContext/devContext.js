@@ -9,6 +9,7 @@ const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
+const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
 
 class DevContext extends Array {
 
@@ -485,6 +486,32 @@ class DevContext extends Array {
     return (a + b + c + d);
   }
 
+  async getProposalEa() {
+    const MONGOC = this.MONGOC;
+
+    let p = await MONGOC.db(`miro81`).collection(`Project`).find({}).toArray();
+
+    let finalTong = [];
+    let client, designer;
+
+    for (let { cliid, service, proposal } of p) {
+      client = (await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({ a4_customernumber: cliid }).toArray())[0];
+      for (let i of proposal) {
+        designer = (await MONGOC.db(`miro81`).collection(`Designer`).find({ past_desid: i.desid }).toArray())[0];
+        for (let j of i.fee) {
+          finalTong.push([ designer.designer, service, String(j.money) + "원", client.a24_pyeong, String(Math.round(Number(j.money) / Number(client.a24_pyeong.replace(/[^0-9\.]/g, '')))) + "원", client.a19_name ]);
+        }
+      }
+    }
+
+    const sheet = new GoogleSheet();
+    const sheetTarget = { id: "1ORC0CAcKn0y7VoEwR1S2_gLoyaO5p_cwX-YLuRqexco", sheet: "1022", xyz: [ 0, 1 ] };
+    await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalTong, sheetTarget.xyz);
+
+
+    return "done";
+  }
+
 
   async launching() {
     const instance = this;
@@ -585,21 +612,6 @@ class DevContext extends Array {
       // await this.getGoogleWriteJson();
 
       // console.log(this.mother.ghostPath());
-
-      const analytics = new GoogleAnalytics();
-      const sheet = new GoogleSheet();
-      const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
-
-      const clients = await analytics.getClientsInfoByNumber(1);
-
-      console.log(clients);
-
-      // const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
-      // const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-      // await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
-
-
-
 
 
     } catch (e) {

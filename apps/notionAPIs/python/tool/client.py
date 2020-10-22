@@ -28,6 +28,7 @@ class Client:
         row.bathroom = dic["bathroom"]
         row.valcony = dic["valcony"]
         row.etc = dic["etc"]
+        row.channel = dic["channel"]
         row.manager = self.client.current_user
         return row.id
 
@@ -57,6 +58,7 @@ class Client:
         row.bathroom = dic["bathroom"]
         row.valcony = dic["valcony"]
         row.etc = dic["etc"]
+        row.channel = dic["channel"]
         row.service = dic["service"]
         dayArr1 = dic["precheck"].split('-')
         row.precheck = NotionDate(date(int(dayArr1[0]), int(dayArr1[1]), int(dayArr1[2])))
@@ -99,6 +101,7 @@ class Client:
         # dic["manager"] = element.manager
         dic["notionId"] = element.id
         dic["family"] = element.family
+        dic["channel"] = element.channel
 
         if element.movein != None and isinstance(element.movein, NotionDate):
             dic["movein"] = str(element.movein.start)
