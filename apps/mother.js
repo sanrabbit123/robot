@@ -561,6 +561,15 @@ Mother.prototype.returnUragenPath = function () {
   return uragenPath;
 }
 
+Mother.prototype.ghostPath = function () {
+  let robotPath, robotPathArr;
+  robotPath = process.cwd();
+  robotPathArr = robotPath.split("/");
+  robotPathArr.pop();
+  robotPathArr.push("ghost");
+  return robotPathArr.join("/");
+}
+
 Mother.prototype.sendJandi = function (mode, msg) {
   if (mode === undefined && msg === undefined) {
     mode = "request";
@@ -618,15 +627,6 @@ Mother.prototype.ipCheck = function () {
       reject(error);
     });
   });
-}
-
-Mother.prototype.ghostPath = function () {
-  let robotPath, robotPathArr;
-  robotPath = process.cwd();
-  robotPathArr = robotPath.split("/");
-  robotPathArr.pop();
-  robotPathArr.push("ghost");
-  return robotPathArr.join("/");
 }
 
 module.exports = Mother;

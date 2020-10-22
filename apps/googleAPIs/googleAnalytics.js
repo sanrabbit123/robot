@@ -152,6 +152,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
       users = userSort(result.reports[0].data);
     } else {
+      console.log(clientId);
       throw new Error("invaild data in first");
     }
 
@@ -203,6 +204,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
       users = userSort(result.reports[0].data);
     } else {
+      console.log(clientId);
       throw new Error("invaild data in second");
     }
 
@@ -236,6 +238,7 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
     if (Number(result.reports[0].data.totals[0].values[0]) !== 0) {
       users = userSort(result.reports[0].data);
     } else {
+      console.log(clientId);
       throw new Error("invaild data in fifth");
     }
 
@@ -267,9 +270,14 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
 
     let clients = await back.getLatestClients(number, { withTools: true });
     for (let i = 0; i < number; i++) {
-      tempObj = await this.getClientById(usersObj[i].id);
-      tempObj.timeline = this.returnTimeline(usersObj[i].time);
-      clients[i].googleAnalyticsUpdate(tempObj);
+      try {
+        tempObj = await this.getClientById(usersObj[i].id);
+        tempObj.timeline = this.returnTimeline(usersObj[i].time);
+        clients[i].googleAnalyticsUpdate(tempObj);
+      } catch (e) {
+        console.log(usersObj);
+        console.log(usersObj[i]);
+      }
     }
 
     return clients;

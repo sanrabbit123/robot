@@ -211,9 +211,8 @@ PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   const get_num = function (obj) { return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,'')); }
-  const cloud_folder = this.mother.returnUragenPath();
+  const cloud_folder = this.mother.ghostPath() + "/binary/rawDesigner";
   const static_folder = `${process.env.HOME}/static`;
-  const google_folder = `${process.env.HOME}/google/static`;
 
   try {
     await MONGOC.connect();
@@ -247,7 +246,6 @@ PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
     let result_files, dimensions, to_server;
     let cloud_folder_ghost, cloud_folder_boo;
     let static_folder_ghost, static_folder_boo;
-    let google_folder_ghost, google_folder_boo;
 
     //find start number of ghost-picture
     if (ghost_arr.length === 0) {
@@ -264,27 +262,22 @@ PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
     console.log(result_files);
 
     //set ghost folders
-    cloud_folder_ghost = await this.mother.fileSystem(`readDir`, `${cloud_folder}/ghost`);
+    cloud_folder_ghost = await this.mother.fileSystem(`readDir`, [ `${cloud_folder}/ghost` ]);
     cloud_folder_boo = false;
-    static_folder_ghost = await this.mother.fileSystem(`readDir`, `${static_folder}/ghost`);
+    static_folder_ghost = await this.mother.fileSystem(`readDir`, [ `${static_folder}/ghost` ]);
     static_folder_boo = false;
-    google_folder_ghost = await this.mother.fileSystem(`readDir`, `${google_folder}/ghost`);
-    google_folder_boo = false;
 
     //mkdir designer folder
     for (let dir of cloud_folder_ghost) { if (dir === target_obj.past_desid) { cloud_folder_boo = true; } }
     for (let dir of static_folder_ghost) { if (dir === target_obj.past_desid) { static_folder_boo = true; } }
-    for (let dir of google_folder_ghost) { if (dir === target_obj.past_desid) { google_folder_boo = true; } }
     if (!cloud_folder_boo) { shell.exec(`mkdir ${shellLink(cloud_folder)}/ghost/${target_obj.past_desid}`); }
     if (!static_folder_boo) { shell.exec(`mkdir ${shellLink(static_folder)}/ghost/${target_obj.past_desid}`); }
-    if (!google_folder_boo) { shell.exec(`mkdir ${shellLink(google_folder)}/ghost/${target_obj.past_desid}`); }
 
     //copy image to ghost folder
     for (let file of result_files) { if (file !== ".DS_Store") {
       //copy image
       shell.exec(`cp ${shellLink(result_folder)}/${file} ${shellLink(static_folder)}/ghost/${target_obj.past_desid}`);
       shell.exec(`cp ${shellLink(result_folder)}/${file} ${shellLink(cloud_folder)}/ghost/${target_obj.past_desid}`);
-      shell.exec(`cp ${shellLink(result_folder)}/${file} ${shellLink(google_folder)}/ghost/${target_obj.past_desid}`);
 
       //find sero / garo
       dimensions = shell.exec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ~/static/ghost/${target_obj.past_desid}/${file}`);
