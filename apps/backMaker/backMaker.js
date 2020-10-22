@@ -202,10 +202,10 @@ BackMaker.filters = {
 BackMaker.prototype.pastMap = function () {
   switch (this.button) {
     case "client":
-      return { collection: "BC1_conlist", id: "a4_customernumber" };
+      return { collection: "BC1_conlist", id: "a4_customernumber", time: "a18_timeline" };
       break;
     case "project":
-      return { collection: "Project", id: "proid" };
+      return { collection: "Project", id: "proid", time: "proid" };
       break;
   }
 }
@@ -229,9 +229,9 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
 
     if (this.button !== "contents") {
 
-      const { collection, id } = this.pastMap();
+      const { collection, id, time } = this.pastMap();
       queryObj = {};
-      queryObj[id] = 0;
+      queryObj[time] = 1;
 
       await MONGOC.connect();
 
@@ -239,7 +239,7 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
         row = await MONGOC.db("miro81").collection(collection).find({}).toArray();
       } else if (/^latest/.test(cliid)) {
         tempArr = cliid.split("_");
-        queryObj[id] = -1;
+        queryObj[time] = -1;
         row = await MONGOC.db("miro81").collection(collection).find({}).sort(queryObj).limit(Number(tempArr[1].replace(/[^0-9]/g, ''))).toArray();
       } else {
         queryObj[id] = cliid;
