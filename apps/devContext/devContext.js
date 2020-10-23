@@ -670,7 +670,10 @@ class DevContext extends Array {
       // }
 
       const app = new BackMaker();
-      app.launching("contents");
+      console.log((await app.getContentsByPid("p10")).toAiState());
+
+
+
 
       // TOOLS ----------------------------------------------------
 

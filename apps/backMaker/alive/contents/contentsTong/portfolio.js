@@ -36,7 +36,8 @@ Title.prototype.toNormal = function () {
 
 Title.prototype.getAllCases = function () {
   let obj = {};
-  let tempArr, temp;
+  let tempArr, tempArr2, temp, tempResult;
+  let pyIndex;
 
   obj.main = [];
   obj.main.push(this.main);
@@ -44,12 +45,32 @@ Title.prototype.getAllCases = function () {
 
   tempArr = this.main.split(", ");
   obj.main.push(tempArr[1]);
-  
+
+  tempArr2 = tempArr[1].split(" ");
+  pyIndex = 0;
+  for (let i = 0; i < tempArr2.length; i++) {
+    if (/py/gi.test(tempArr2[i])) {
+      pyIndex = i;
+    }
+  }
+
+  tempResult = '';
+  temp = '';
+  for (let i = 0; i < pyIndex; i++) {
+    temp += tempArr2[i] + ' ';
+  }
+  tempResult = temp.slice(0, -1);
+
+  temp = '';
+  for (let i = pyIndex; i < tempArr2.length; i++) {
+    temp += tempArr2[i] + ' ';
+  }
+  tempResult = tempResult + "\n" + temp.slice(0, -1);
+  obj.main.push(tempResult);
 
   obj.sub = [];
-
-
-
+  obj.sub.push(this.sub);
+  obj.sub.push(this.sub.replace(/, /, "\n"));
 
   return obj;
 }

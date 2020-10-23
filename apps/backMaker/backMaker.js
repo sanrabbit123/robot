@@ -319,7 +319,6 @@ BackMaker.prototype.launching = async function (button) {
   try {
     // const tong = await this.pastToJson();
     // const finalTong = await this.subLogicToJson(tong);
-
     const Contents = require(`${this.aliveDir}/${this.button}/contents.js`);
 
     let json = JSON.parse(await fileSystem(`read`, [ `${process.cwd()}/temp/backMakerLaunching.json` ]));
@@ -327,9 +326,8 @@ BackMaker.prototype.launching = async function (button) {
 
     console.log(temp);
     console.log(temp.toNormal());
-    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching2.json`, JSON.stringify(temp.toNormal(), null, 2) ]);
-
-    // await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching.json`, JSON.stringify(finalTong, null, 2) ]);
+    console.log(temp.toAiState());
+    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching3.json`, JSON.stringify(temp.toAiState(), null, 2) ]);
 
     // return finalTong;
   } catch (e) {
@@ -342,7 +340,7 @@ BackMaker.prototype.launching = async function (button) {
 BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong = await this.getTong(cliid);
     if (!option.withTools) {
@@ -359,7 +357,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
 BackMaker.prototype.getLatestClient = async function (option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong = await this.getTong("latest_1");
     if (!option.withTools) {
@@ -376,7 +374,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
 BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 
@@ -401,6 +399,45 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   }
 }
 
+// GET Contents --------------------------------------------------------------------------------
+
+BackMaker.prototype.getContentsById = async function (conid) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "contents";
+  const { Contents } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let arr, target;
+    await MONGOC.connect();
+    arr = await MONGOC.db(`miro81`).collection(`contents`).find({ conid }).toArray();
+    target = new Contents(arr[0]);
+    return target;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+  }
+}
+
+BackMaker.prototype.getContentsByPid = async function (pid) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "contents";
+  const { Contents } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let arr, target;
+    await MONGOC.connect();
+    arr = await MONGOC.db(`miro81`).collection(`contents`).find({ "contents.portfolio.pid": pid }).toArray();
+    target = new Contents(arr[0]);
+    return target;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+  }
+}
 
 
 module.exports = BackMaker;

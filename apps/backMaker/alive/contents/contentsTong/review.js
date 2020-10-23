@@ -17,6 +17,20 @@ Title.prototype.toNormal = function () {
   return obj;
 }
 
+Title.prototype.getAllCases = function () {
+  let obj = {};
+
+  obj.main = [];
+  obj.main.push(this.main);
+  obj.main.push(this.main.replace(/, /, "\n"));
+
+  obj.sub = [];
+  obj.sub.push(this.sub.replace(/, /, " "));
+  obj.sub.push(this.sub.replace(/, /, "\n"));
+
+  return obj;
+}
+
 const Review = function (json) {
   this.rid = json.rid;
   this.date = new DateParse(json.date);

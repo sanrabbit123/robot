@@ -59,6 +59,7 @@ Contents.prototype.returnTitleObject = function () {
   let obj = {};
   obj.portfolio = portfolioTitle.getAllCases();
   obj.review = reviewTitle.getAllCases();
+  return obj;
 }
 
 Contents.prototype.getSpace = function () {
@@ -81,32 +82,93 @@ Contents.prototype.getMethod = function () {
   return spaceInfo.method;
 }
 
-Contents.prototype.toAiState = function () {
+Contents.prototype.getPid = function () {
+  return this.contents.portfolio.pid;
+}
+
+Contents.prototype.getRid = function () {
+  return this.contents.review.rid;
+}
+
+Contents.prototype.toAiState = function (jsonBoo = false) {
   let obj = {};
-  let tempSubject0;
+  let tempSubject0, tempObj;
   const { portfolio: portfolioTitle, review: reviewTitle } = this.returnTitleObject();
+  const json = this.toNormal();
+  const { contents: { portfolio, review } } = json;
 
   obj.title = portfolioTitle.main[0];
   obj.space = this.getSpace();
-  obj.pyeong = this.getPyeong();
+  obj.pyeong = String(this.getPyeong());
   obj.sub_titles = {};
   obj.sub_titles.main_title = portfolioTitle.main[1];
   obj.sub_titles.main_color_title = portfolioTitle.main[3];
 
+  obj.sub_titles.main_color_object = {};
+  obj.sub_titles.main_color_object.main = portfolio.color.main;
+  obj.sub_titles.main_color_object.sub = portfolio.color.sub;
+  obj.sub_titles.main_color_object.title = portfolio.color.title;
 
+  obj.sub_titles.portivec = {};
+  obj.sub_titles.portivec.main = portfolioTitle.main[2];
+  obj.sub_titles.portivec.sub = portfolioTitle.sub[0];
+  obj.sub_titles.portivec.region = this.getRegion();
+  obj.sub_titles.portivec.method = this.getMethod();
 
+  obj.sub_titles.name_card = {};
+  obj.sub_titles.name_card.main = portfolioTitle.main[3];
+  obj.sub_titles.name_card.sub = portfolioTitle.sub[1];
 
+  obj.sub_titles.rev_main_title = reviewTitle.main[1];
 
-  obj.designer
-  obj.p_id
-  obj.p_info
-  obj.suggestion
-  obj.contents
-  obj.r_id
-  obj.r_info
-  obj.reviews
+  obj.sub_titles.revivec = {};
+  obj.sub_titles.revivec.main = reviewTitle.sub[0];
+  obj.sub_titles.revivec.sub = portfolioTitle.main[2] + " 후기";
+  obj.sub_titles.revivec.hover = reviewTitle.sub[0];
+  obj.sub_titles.revivec.mobile = reviewTitle.sub[1];
 
-  return obj;
+  obj.sub_titles.rev_name_card = {};
+  obj.sub_titles.rev_name_card.main = reviewTitle.sub[1];
+  obj.sub_titles.rev_name_card.sub = portfolioTitle.main[3] + " 후기";
+  obj.sub_titles.rev_name_card.subsub = this.getSpace() + "\n" + "홈스타일링 후기";
+
+  obj.designer = this.desid;
+  obj.p_id = this.getPid();
+  obj.p_info = {};
+  obj.p_info.photodae = portfolio.detailInfo.photodae;
+  obj.p_info.photosg = portfolio.detailInfo.photosg;
+  obj.p_info.slide = portfolio.detailInfo.slide.join(' ');
+  obj.p_info.tag = portfolio.detailInfo.tag.join(',');
+  obj.p_info.service = portfolio.detailInfo.service;
+  obj.p_info.key8 = portfolio.detailInfo.sort.key8;
+  obj.p_info.key9 = portfolio.detailInfo.sort.key9;
+
+  obj.suggestion = portfolio.contents.suggestion;
+  obj.contents = [];
+  for (let { photoKey, title, contents, smallTalk } of portfolio.contents.detail) {
+    obj.contents.push({ photoKey, title, main_contents: contents, smalltalk_yn: smallTalk.title, smalltalk_contents: smallTalk.contents });
+  }
+
+  obj.r_id = this.getRid();
+  obj.r_info = {};
+  obj.r_info.photodae = review.detailInfo.photodae;
+  obj.r_info.order = review.detailInfo.order;
+
+  obj.reviews = [];
+  for (let { type, photos, contents } of review.contents.detail) {
+    tempObj = { type, photos };
+    tempObj.contents = [];
+    for (let { question, answer } of contents) {
+      tempObj.contents.push({ quest: question, answer: answer });
+    }
+    obj.reviews.push(tempObj);
+  }
+
+  if (jsonBoo) {
+    return JSON.stringify(obj, null, 2);
+  } else {
+    return obj;
+  }
 }
 
 module.exports = Contents;
