@@ -34,6 +34,26 @@ Title.prototype.toNormal = function () {
   return obj;
 }
 
+Title.prototype.getAllCases = function () {
+  let obj = {};
+  let tempArr, temp;
+
+  obj.main = [];
+  obj.main.push(this.main);
+  obj.main.push(this.main.replace(/, /, "\n"));
+
+  tempArr = this.main.split(", ");
+  obj.main.push(tempArr[1]);
+  
+
+  obj.sub = [];
+
+
+
+
+  return obj;
+}
+
 const Color = function (json) {
   this.main = json.main;
   this.sub = json.sub;
