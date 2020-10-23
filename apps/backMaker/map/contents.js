@@ -8,7 +8,7 @@ module.exports = {
         date: "9999-09-09",
         spaceInfo: {
           space: "",
-          pyeong: "",
+          pyeong: 0,
           region: "",
           method: "",
         },
@@ -68,7 +68,7 @@ module.exports = {
               photos: [],
               contents: [
                 {
-                  quest: "",
+                  question: "",
                   answer: "",
                 }
               ]
@@ -77,5 +77,12 @@ module.exports = {
         }
       }
     },
+    photos: {
+      first: 0,
+      last: 0,
+      detail: [
+        { index: 0, gs: 'g' },
+      ],
+    }
   }
 }

@@ -317,12 +317,21 @@ BackMaker.prototype.launching = async function (button) {
   const { fileSystem } = this.mother;
   this.button = button;
   try {
-    const tong = await this.pastToJson();
-    const finalTong = await this.subLogicToJson(tong);
+    // const tong = await this.pastToJson();
+    // const finalTong = await this.subLogicToJson(tong);
 
-    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching.json`, JSON.stringify(finalTong, null, 2) ]);
+    const Contents = require(`${this.aliveDir}/${this.button}/contents.js`);
 
-    return finalTong;
+    let json = JSON.parse(await fileSystem(`read`, [ `${process.cwd()}/temp/backMakerLaunching.json` ]));
+    let temp = new Contents(json[0]);
+
+    console.log(temp);
+    console.log(temp.toNormal());
+    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching2.json`, JSON.stringify(temp.toNormal(), null, 2) ]);
+
+    // await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching.json`, JSON.stringify(finalTong, null, 2) ]);
+
+    // return finalTong;
   } catch (e) {
     console.log(e);
   }

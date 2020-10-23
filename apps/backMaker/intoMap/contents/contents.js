@@ -1,4 +1,6 @@
 module.exports = function (tools) {
+  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
+  const garoseroParser = new GaroseroParser();
   const { map, Mother, Notion, Filters } = tools;
   const { fileSystem, orderSystem } = Mother;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
@@ -22,10 +24,21 @@ module.exports = function (tools) {
   }
 
   const dateMaker = function (dateRaw) {
-    let date;
-    date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
+    let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
     return date;
   }
+
+  const contentsSort = function (obj) {
+    const { contents: { portfolio: { pid, date } } } = obj;
+    const pidNumber = Number(pid.replace(/[^0-9]/g, ''));
+    let order;
+
+    order = date.replace(/[^0-9]/g, '') + ((pidNumber < 10) ? '0' + pid.replace(/[^0-9]/g, '') : pid.replace(/[^0-9]/g, ''));
+    order = Number(order);
+
+    return order;
+  }
+
 
   const resourceDir_P = `${Mother.ghostPath()}/binary/corePortfolio/original`;
   const resourceDir_A = `${Mother.ghostPath()}/binary/corePortfolio/original/_A`;
@@ -48,6 +61,9 @@ module.exports = function (tools) {
       let resourceDirArr = [];
       let resourceTemp;
 
+      let tempWidth, tempHeight, tempDimension;
+      let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir;
+
       for (let name of resourceDirArr_P_raw) {
         if (name !== "_A" && name !== "_D" && name !== ".DS_Store") {
           resourceTemp = name.split("_");
@@ -67,7 +83,7 @@ module.exports = function (tools) {
       for (let past of row) {
         tempObj = map().structure;
 
-        tempObj.conid = conidMaker(past);
+        tempObj.conid = "";
         tempObj.desid = past.designer;
 
         portfolio = tempObj.contents.portfolio;
@@ -152,7 +168,7 @@ module.exports = function (tools) {
             tempObjDetail.photos = photos;
             tempObjDetail.contents = [];
             for (let obj of contents) {
-              tempObjDetail.contents.push({ quest: obj.quest, answer: obj.answer });
+              tempObjDetail.contents.push({ question: obj.quest, answer: obj.answer });
             }
 
             review.contents.detail.push(tempObjDetail);
@@ -170,7 +186,29 @@ module.exports = function (tools) {
           }
         }
 
+        targetPhotoDirArr = [];
+        targetPhotoDirRaw = await fileSystem(`readDir`, [ (process.env.HOME + "/original/" + portfolio.pid + "/target") ]);
+        targetPhotoDir = await garoseroParser.queryDirectory(process.env.HOME + "/original/" + portfolio.pid + "/target");
+        for (let z of targetPhotoDirRaw) {
+          if (z !== `.DS_Store`) {
+            targetPhotoDirArr.push(z);
+          }
+        }
+        console.log(targetPhotoDirArr);
+
+        tempObj.photos.first = 1;
+        tempObj.photos.last = targetPhotoDirArr.length;
+        tempObj.photos.detail = targetPhotoDir;
+
         totalTong.push(tempObj);
+
+      }
+
+      totalTong.sort((a, b) => { return contentsSort(a) - contentsSort(b); });
+
+      for (let obj of totalTong) {
+        portfolio = obj.contents.portfolio;
+        obj.conid = conidMaker(portfolio.date);
       }
 
       return totalTong;

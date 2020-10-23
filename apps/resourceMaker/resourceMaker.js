@@ -1,10 +1,10 @@
 const ResourceMaker = function (p_id) {
+  const Mother = require(process.cwd() + "/apps/mother.js");
+  this.mother = new Mother();
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
   this.p_id = p_id;
-  const Mother = require("../mother.js");
-  this.mother = new Mother();
   this.arr = [];
   this.result = {}
 }

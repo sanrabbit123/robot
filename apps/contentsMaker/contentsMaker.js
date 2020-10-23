@@ -37,7 +37,7 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
     }
     let adobe = `Adobe Illustrator`;
     if (/photo/gi.test(obj.app)) {
-      adobe = `Adobe Photoshop 2020`;
+      adobe = `Adobe Photoshop 2021`;
     }
     let targetJs = `${this.options.home_dir}/script/${obj.name}.js`;
     let appleScript = `tell application "${adobe}"`;

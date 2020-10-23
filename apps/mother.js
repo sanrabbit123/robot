@@ -629,4 +629,17 @@ Mother.prototype.ipCheck = function () {
   });
 }
 
+Mother.prototype.orderSystem = function (number) {
+  const abc = `[ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]`;
+  const ABC = JSON.parse(abc);
+  let text = '', func;
+  for (let i = 0; i < ABC.length; i++) {
+    for (let j = 0; j < ABC.length; j++) {
+      text += `} else if (number < (100 * ((${ABC.length} * ${i}) + (${j} + 1)))) {\nreturn ABC[${i}] + ABC[${j}] + (number - (100 * ((${ABC.length} * ${i}) + ${j})) < 10 ? '0' + String(number - (100 * ((${ABC.length} * ${i}) + ${j}))) : String(number - (100 * ((${ABC.length} * ${i}) + ${j}))));\n`;
+    }
+  }
+  func = new Function("number", `const ABC = ${abc};\n${text.slice(7)}}`);
+  return func(number);
+}
+
 module.exports = Mother;
