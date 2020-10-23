@@ -30,9 +30,8 @@ Contents.prototype.toDeath = function () {
 
 Contents.prototype.toAiState = function () {
   let obj = {};
-
-
   
+
 
 
   return obj;
