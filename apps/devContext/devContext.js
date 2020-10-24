@@ -670,9 +670,20 @@ class DevContext extends Array {
       // }
 
       const app = new BackMaker();
-      console.log((await app.getContentsByPid("p10")).toAiState());
+      console.log((await app.getContentsByPid("p59")).toAiState());
 
-
+      // let num, boo;
+      //
+      // for (let i = 0; i < 26 * 26 * 10 * 10; i++) {
+      //   num = i;
+      //   // console.log(this.mother.orderSystem("encode", num))
+      //   boo = (num === this.mother.orderSystem("decode", (this.mother.orderSystem("encode", num))))
+      //   if (!boo) {
+      //     console.log(num);
+      //     console.log(this.mother.orderSystem("encode", num))
+      //     console.log(this.mother.orderSystem("decode", (this.mother.orderSystem("encode", num))))
+      //   }
+      // }
 
 
       // TOOLS ----------------------------------------------------

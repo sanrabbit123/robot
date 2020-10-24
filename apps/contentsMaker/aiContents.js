@@ -1,8 +1,10 @@
 const AiContents = function (arg = "g00") {
   const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.general = new ContentsMaker();
   this.mother = new Mother();
+  this.back = new BackMaker();
 
   this.text = {};
   this.portfolioNum = arg;
@@ -308,7 +310,8 @@ AiContents.prototype.total_make = async function () {
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   try {
-    this.text = require(`${this.general.links.app}/resource/${this.portfolioNum}.js`);
+    let targetContents = await this.back.getContentsByPid(this.portfolioNum);
+    this.text = targetContents.toAiState();
 
     await MONGOC.connect();
 

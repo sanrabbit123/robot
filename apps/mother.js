@@ -629,17 +629,53 @@ Mother.prototype.ipCheck = function () {
   });
 }
 
-Mother.prototype.orderSystem = function (number) {
+Mother.prototype.orderSystem = function (type, number) {
+  if (number === undefined) {
+    number = type;
+    type = "encode";
+  }
   const abc = `[ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]`;
   const ABC = JSON.parse(abc);
-  let text = '', func;
-  for (let i = 0; i < ABC.length; i++) {
-    for (let j = 0; j < ABC.length; j++) {
-      text += `} else if (number < (100 * ((${ABC.length} * ${i}) + (${j} + 1)))) {\nreturn ABC[${i}] + ABC[${j}] + (number - (100 * ((${ABC.length} * ${i}) + ${j})) < 10 ? '0' + String(number - (100 * ((${ABC.length} * ${i}) + ${j}))) : String(number - (100 * ((${ABC.length} * ${i}) + ${j}))));\n`;
+  let text = '', func
+  let target, index0, index1, result;
+
+  if (type === "encode") {
+
+    for (let i = 0; i < ABC.length; i++) {
+      for (let j = 0; j < ABC.length; j++) {
+        text += `} else if (number < (100 * ((${ABC.length} * ${i}) + (${j} + 1)))) {\nreturn ABC[${i}] + ABC[${j}] + (number - (100 * ((${ABC.length} * ${i}) + ${j})) < 10 ? '0' + String(number - (100 * ((${ABC.length} * ${i}) + ${j}))) : String(number - (100 * ((${ABC.length} * ${i}) + ${j}))));\n`;
+      }
     }
+    func = new Function("number", `const ABC = ${abc};\n${text.slice(7)}}`);
+    return func(number);
+
+  } else if (type === "decode") {
+
+    if (number.length > 4) {
+      target = number.replace(/[a-z]$/, '').split("_")[1];
+    } else if (number.length === 4) {
+      target = number;
+    } else {
+      throw new Error("invaild number");
+    }
+
+    index0 = 0;
+    index1 = 0;
+    for (let i = 0; i < ABC.length; i++) {
+      if (ABC[i] === target[0]) {
+        index0 = i;
+      }
+      if (ABC[i] === target[1]) {
+        index1 = i;
+      }
+    }
+    result = (index0 * 100 * 26) + (index1 * 100) + (Number(target[2]) * 10) + (Number(target[3]) * 1);
+
+    return result;
+
+  } else {
+    throw new Error("orderSystem type must be 'encode' or 'decode'");
   }
-  func = new Function("number", `const ABC = ${abc};\n${text.slice(7)}}`);
-  return func(number);
 }
 
 module.exports = Mother;

@@ -146,7 +146,7 @@ Contents.prototype.toAiState = function (jsonBoo = false) {
   obj.suggestion = portfolio.contents.suggestion;
   obj.contents = [];
   for (let { photoKey, title, contents, smallTalk } of portfolio.contents.detail) {
-    obj.contents.push({ photoKey, title, main_contents: contents, smalltalk_yn: smallTalk.title, smalltalk_contents: smallTalk.contents });
+    obj.contents.push({ photo_key: photoKey, title, main_contents: contents, smalltalk_yn: smallTalk.title, smalltalk_contents: smallTalk.contents });
   }
 
   obj.r_id = this.getRid();

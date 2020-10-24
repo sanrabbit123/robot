@@ -15,7 +15,7 @@ module.exports = function (tools) {
     } else {
       ORDER[thisDate] = ORDER[thisDate] + 1;
     }
-    return orderSystem(ORDER[thisDate]);
+    return orderSystem("encode", ORDER[thisDate]);
   }
 
   const conidMaker = function (date) {

@@ -12,6 +12,17 @@ const ResourceMaker = function (p_id) {
   this.targetFolder;
 }
 
+ResourceMaker.prototype.consoleQ = function (question) {
+  const readline = require(`readline`);
+  const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
+  return new Promise(function(resolve, reject) {
+    rL.question(question, function (input) {
+      resolve(input);
+      rL.close();
+    });
+  });
+}
+
 ResourceMaker.prototype.lowerCase = function (str) {
   str = str.trim();
   str = str.replace(/“/g, '').replace(/”/g, '').replace(/"/g, '').replace(/‘/g, '').replace(/’/g, '').replace(/'/g, '').replace(/\n/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/=/g, '').replace(/ /g, '').replace(/  /g, '').replace(/ /g, '').replace(/\t/g, '')
@@ -114,7 +125,6 @@ ResourceMaker.prototype.infoMaker = function () {
     temp_string = (result.portfolio.portivec.sub.split(", ")[1] + " 후기");
     for (let i of temp_arr) {
       temp_obj = (new RegExp(i, "g")).exec(temp_string);
-      console.log(temp_obj);
       if (temp_obj !== null) {
         middleIndex = temp_obj.index;
       }
@@ -134,7 +144,6 @@ ResourceMaker.prototype.infoMaker = function () {
 
   }
   this.result = result;
-  console.log(this.result);
 }
 
 ResourceMaker.prototype.portfolio_maker = function () {
@@ -169,9 +178,6 @@ ResourceMaker.prototype.portfolio_maker = function () {
     if (/^[0-9]/.exec(this.arr[i]) !== null && /[0-9]$/.exec(this.arr[i]) !== null && /-/g.exec(this.arr[i]) !== null) { portfolio_keys.push(i); }
     else if (/^[0-9]/.exec(this.arr[i]) !== null && /[0-9]$/.exec(this.arr[i]) !== null && /-/g.exec(this.arr[i]) === null) {review_keys.push(i);}
   }
-  console.log(review_keys);
-  console.log(portfolio_keys);
-  console.log(portfolioContent_end);
 
   let temp_obj, temp_obj2, temp_obj3, temp_arr, temp_arr2, temp_arr3, temp_num, temp_string, temp_boo;
 
@@ -430,7 +436,7 @@ ResourceMaker.prototype.portfolio_maker = function () {
     result_obj.r_info.order = this.result.review.r_info.order;
     result_obj.reviews = result.get("reviews");
   }
-  console.log(result_obj);
+
   this.final = result_obj;
 }
 
@@ -480,15 +486,15 @@ ResourceMaker.prototype.portfolio_verification = function () {
   }
 
   //review
-  for (let i = 0; i < noteArr.length; i++) {
-    if (/^_review/.test(noteArr[i])) {
+  for (let i = 0; i < this.arr.length; i++) {
+    if (/^_review/.test(this.arr[i])) {
       reviewTitleIndex = i + 2;
       noReview = false;
     }
   }
 
   if (!noReview) {
-    reviewTitleArr = noteArr[reviewTitleIndex].split(", ");
+    reviewTitleArr = this.arr[reviewTitleIndex].split(", ");
     booResults.push(reviewTitleArr[0].length < 10);
     booResults.push(reviewTitleArr[1].length < 10);
     if (!booResults[0] || !booResults[1]) {
@@ -589,17 +595,22 @@ ResourceMaker.prototype.modelingMap = function () {
   return JSON.parse(JSON.stringify(model));
 }
 
-ResourceMaker.prototype.portfolio_modeling = async function () {
+ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, orderSystem } = this.mother;
   const past = this.final;
-  let tempObj, tempObjDetail, portfolio, review;
-  let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir
   const dateMaker = function (dateRaw) {
     let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
     return date;
   }
+  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
+  const garoseroParser = new GaroseroParser();
   try {
+
+    let tempObj, tempObjDetail, portfolio, review;
+    let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir
+    let tempReg, conidTargetArr;
+
     tempObj = this.modelingMap().structure;
 
     tempObj.conid = "";
@@ -695,28 +706,31 @@ ResourceMaker.prototype.portfolio_modeling = async function () {
       review.contents.detail = [];
     }
 
-
-
-    for (let { pid, date } of resourceDirArr) {
-      if (portfolio.pid === pid) {
-        portfolio.date = dateMaker(date);
-        review.date = dateMaker(date);
-      }
-    }
+    portfolio.date = dateMaker((this.originalTargetFolder.split("_"))[this.originalTargetFolder.split("_").length - 1]);
+    review.date = portfolio.date;
 
     targetPhotoDirArr = [];
-    targetPhotoDirRaw = await fileSystem(`readDir`, [ (process.env.HOME + "/original/" + portfolio.pid + "/target") ]);
-    targetPhotoDir = await garoseroParser.queryDirectory(process.env.HOME + "/original/" + portfolio.pid + "/target");
+    targetPhotoDirRaw = await fileSystem(`readDir`, [ this.targetFolder ]);
+    targetPhotoDir = await garoseroParser.queryDirectory(this.targetFolder);
     for (let z of targetPhotoDirRaw) {
       if (z !== `.DS_Store`) {
         targetPhotoDirArr.push(z);
       }
     }
-    console.log(targetPhotoDirArr);
 
     tempObj.photos.first = 1;
     tempObj.photos.last = targetPhotoDirArr.length;
     tempObj.photos.detail = targetPhotoDir;
+
+    conidTargetArr = [];
+    tempReg = new RegExp('^t' + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7));
+    for (let { conid } of conidArr) {
+      if (tempReg.test(conid)) {
+        conidTargetArr.push(conid);
+      }
+    }
+    conidTargetArr.sort((a, b) => { return orderSystem("decode", b) - orderSystem("decode", a) });
+    tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
 
     this.final = tempObj;
 
@@ -733,8 +747,9 @@ ResourceMaker.prototype.launching = async function () {
   try {
     let targetMotherPath, targetFolderDirList, targetFolder, targetFolderRaw;
     let tempFolderName, homeFolderList, tempHome;
-    let tempReg;
+    let temp, tempReg;
     let note;
+    let input;
 
     //set target folder
     if (/^p/.test(this.p_id)) {
@@ -754,17 +769,17 @@ ResourceMaker.prototype.launching = async function () {
     tempFolderName = "tempResourcMakerFolder";
     homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
     if (!homeFolderList.includes(tempFolderName)) {
-      shell.exec(`mkdir ${process.env.HOME}/${tempFolderName}`);
+      shell.exec(`mkdir ${shellLink(process.env.HOME)}/${tempFolderName}`);
     }
     tempHome = process.env.HOME + "/" + tempFolderName;
 
-    targetFolderRaw = await fileSystem(`readDir`, [ targetMotherPath + "/" + targetFolder ]);
+    targetFolderRaw = await fileSystem(`readDir`, [ targetMotherPath + "/" + targetFolder + "/target" ]);
     for (let i of targetFolderRaw) {
       if (i !== `.DS_Store`) {
-        shell.exec(`cp ${shellLink(targetMotherPath + "/" + targetFolder)}/${i} ${shellLink(tempHome)}/${i}`);
+        shell.exec(`cp ${shellLink(targetMotherPath + "/" + targetFolder)}/target/${i} ${shellLink(tempHome)}/${i}`);
       }
     }
-    this.originalTargetFolder = tempHome;
+    this.originalTargetFolder = targetFolder;
     this.targetFolder = tempHome;
 
     note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });
@@ -774,12 +789,24 @@ ResourceMaker.prototype.launching = async function () {
     this.portfolio_verification();
     this.portfolio_maker();
 
-    await this.portfolio_modeling();
+    await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}_raw.js`, JSON.stringify(this.final, null, 2) ]);
 
     await MONGOC.connect();
-    await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+    temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).toArray();
+    await this.portfolio_modeling(temp);
 
-    // console.log(await fileSystem("write", [ `${process.cwd()}/apps/contentsMaker/resource/${result.get("p_id")}.js`, this.resultString ]));
+    await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
+
+    shell.exec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
+    shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
+    shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
+
+    console.log(this.final);
+
+    input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+    if (input === "done" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "Y") {
+      await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+    }
 
   } catch (e) {
     console.log(e);
