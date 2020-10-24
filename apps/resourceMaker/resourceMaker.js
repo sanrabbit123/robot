@@ -8,6 +8,8 @@ const ResourceMaker = function (p_id) {
   this.arr = [];
   this.result = {};
   this.final = {};
+  this.originalFolder = this.mother.ghostPath() + "/binary/corePortfolio/original";
+  this.targetFolder;
 }
 
 ResourceMaker.prototype.lowerCase = function (str) {
@@ -495,25 +497,284 @@ ResourceMaker.prototype.portfolio_verification = function () {
   }
 }
 
-ResourceMaker.prototype.portfolio_modeling = function () {
+ResourceMaker.prototype.modelingMap = function () {
+  let model = {
+    structure: {
+      conid: "",
+      desid: "",
+      contents: {
+        portfolio: {
+          pid: "",
+          date: "9999-09-09",
+          spaceInfo: {
+            space: "",
+            pyeong: 0,
+            region: "",
+            method: "",
+          },
+          title: {
+            main: "",
+            sub: "",
+          },
+          color: {
+            main: "",
+            sub: "",
+            title: "",
+          },
+          detailInfo: {
+            photodae: [],
+            photosg: {
+              first: 0,
+              last: 0,
+            },
+            slide: [],
+            tag: [],
+            service: "",
+            sort: {
+              key8: 0,
+              key9: 0,
+            },
+          },
+          contents: {
+            suggestion: "Designer's\nSuggestion",
+            detail: [
+              {
+                photoKey: 0,
+                title: "",
+                contents: "",
+                smallTalk: {
+                  title: "",
+                  contents: "",
+                },
+              },
+            ],
+          }
+        },
+        review: {
+          rid: "",
+          date: "9999-09-09",
+          title: {
+            main: "",
+            sub: "",
+          },
+          detailInfo: {
+            photodae: [],
+            order: 0,
+          },
+          contents: {
+            detail: [
+              {
+                type: "",
+                photos: [],
+                contents: [
+                  {
+                    question: "",
+                    answer: "",
+                  }
+                ]
+              },
+            ],
+          }
+        }
+      },
+      photos: {
+        first: 0,
+        last: 0,
+        detail: [
+          { index: 0, gs: 'g' },
+        ],
+      }
+    }
+  };
+  return JSON.parse(JSON.stringify(model));
+}
 
+ResourceMaker.prototype.portfolio_modeling = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const past = this.final;
+  let tempObj, tempObjDetail, portfolio, review;
+  let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir
+  const dateMaker = function (dateRaw) {
+    let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
+    return date;
+  }
+  try {
+    tempObj = this.modelingMap().structure;
+
+    tempObj.conid = "";
+    tempObj.desid = past.designer;
+
+    portfolio = tempObj.contents.portfolio;
+
+    portfolio.pid = past.p_id;
+
+    portfolio.spaceInfo.space = past.space;
+    portfolio.spaceInfo.pyeong = Number(past.pyeong);
+    portfolio.spaceInfo.region = past.sub_titles.portivec.region;
+    portfolio.spaceInfo.method = past.sub_titles.portivec.method;
+
+    portfolio.title.main = past.title;
+    portfolio.title.sub = past.sub_titles.portivec.sub;
+
+    portfolio.color.main = past.sub_titles.main_color_object.main;
+    portfolio.color.sub = past.sub_titles.main_color_object.sub;
+    portfolio.color.title = past.sub_titles.main_color_object.title;
+
+    portfolio.detailInfo.photodae = past.p_info.photodae;
+    portfolio.detailInfo.photosg = past.p_info.photosg;
+
+    portfolio.detailInfo.slide = [];
+    for (let i of past.p_info.slide.split(" ")) {
+      portfolio.detailInfo.slide.push(Number(i));
+    }
+
+    portfolio.detailInfo.tag = past.p_info.tag.split(",");
+    portfolio.detailInfo.service = past.p_info.service;
+    portfolio.detailInfo.sort.key8 = past.p_info.key8;
+    portfolio.detailInfo.sort.key9 = past.p_info.key9;
+
+    portfolio.contents.suggestion = past.suggestion;
+    portfolio.contents.detail = [];
+
+    for (let { title, main_contents, smalltalk_yn, smalltalk_contents, photo_key } of past.contents) {
+      tempObjDetail = {
+        photoKey: 0,
+        title: "",
+        contents: "",
+        smallTalk: {
+          title: "",
+          contents: "",
+        },
+      };
+
+      tempObjDetail.photoKey = photo_key;
+      tempObjDetail.title = title;
+      tempObjDetail.contents = main_contents;
+      tempObjDetail.smallTalk.title = smalltalk_yn;
+      tempObjDetail.smallTalk.contents = smalltalk_contents;
+
+      portfolio.contents.detail.push(tempObjDetail);
+    }
+
+    review = tempObj.contents.review;
+
+    if (past.r_id !== "re999") {
+
+      review.rid = past.r_id;
+
+      review.title.main = past.sub_titles.rev_main_title.replace(/\n/, ", ");
+      review.title.sub = past.sub_titles.rev_name_card.main.replace(/\n/, ", ");
+
+      review.detailInfo.photodae = past.r_info.photodae;
+      review.detailInfo.order = past.r_info.order;
+
+      review.contents.detail = [];
+      for (let { type, photos, contents } of past.reviews) {
+        tempObjDetail = {
+          type: "",
+          photos: [],
+          contents: [
+            {
+              quest: "",
+              answer: "",
+            }
+          ]
+        };
+        tempObjDetail.type = type;
+        tempObjDetail.photos = photos;
+        tempObjDetail.contents = [];
+        for (let obj of contents) {
+          tempObjDetail.contents.push({ question: obj.quest, answer: obj.answer });
+        }
+        review.contents.detail.push(tempObjDetail);
+      }
+
+    } else {
+      review.rid = "re999";
+      review.contents.detail = [];
+    }
+
+
+
+    for (let { pid, date } of resourceDirArr) {
+      if (portfolio.pid === pid) {
+        portfolio.date = dateMaker(date);
+        review.date = dateMaker(date);
+      }
+    }
+
+    targetPhotoDirArr = [];
+    targetPhotoDirRaw = await fileSystem(`readDir`, [ (process.env.HOME + "/original/" + portfolio.pid + "/target") ]);
+    targetPhotoDir = await garoseroParser.queryDirectory(process.env.HOME + "/original/" + portfolio.pid + "/target");
+    for (let z of targetPhotoDirRaw) {
+      if (z !== `.DS_Store`) {
+        targetPhotoDirArr.push(z);
+      }
+    }
+    console.log(targetPhotoDirArr);
+
+    tempObj.photos.first = 1;
+    tempObj.photos.last = targetPhotoDirArr.length;
+    tempObj.photos.detail = targetPhotoDir;
+
+    this.final = tempObj;
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
-  const { fileSystem, mongo, mongoinfo } = this.mother;
+  const { fileSystem, mongo, mongoinfo, shell, shellLink } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
   try {
+    let targetMotherPath, targetFolderDirList, targetFolder, targetFolderRaw;
+    let tempFolderName, homeFolderList, tempHome;
+    let tempReg;
     let note;
+
+    //set target folder
+    if (/^p/.test(this.p_id)) {
+      targetMotherPath = this.originalFolder;
+    } else {
+      targetMotherPath = this.originalFolder + "/_A";
+    }
+
+    targetFolderDirList = await fileSystem(`readDir`, [ targetMotherPath ]);
+    tempReg = new RegExp("^" + this.p_id);
+    for (let i of targetFolderDirList) {
+      if (tempReg.test(i)) {
+        targetFolder = i;
+      }
+    }
+
+    tempFolderName = "tempResourcMakerFolder";
+    homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (!homeFolderList.includes(tempFolderName)) {
+      shell.exec(`mkdir ${process.env.HOME}/${tempFolderName}`);
+    }
+    tempHome = process.env.HOME + "/" + tempFolderName;
+
+    targetFolderRaw = await fileSystem(`readDir`, [ targetMotherPath + "/" + targetFolder ]);
+    for (let i of targetFolderRaw) {
+      if (i !== `.DS_Store`) {
+        shell.exec(`cp ${shellLink(targetMotherPath + "/" + targetFolder)}/${i} ${shellLink(tempHome)}/${i}`);
+      }
+    }
+    this.originalTargetFolder = tempHome;
+    this.targetFolder = tempHome;
 
     note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });
     this.arr = await note.readNote();
 
     this.infoMaker();
-    this.portfolio_maker();
     this.portfolio_verification();
-    this.portfolio_modeling();
+    this.portfolio_maker();
+
+    await this.portfolio_modeling();
 
     await MONGOC.connect();
     await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
