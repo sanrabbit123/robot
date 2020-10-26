@@ -84,23 +84,39 @@ Mother.prototype.tempDelete = function (dir = null) {
   });
 }
 
-Mother.prototype.todayMaker = function () {
+Mother.prototype.todayMaker = function (startPoint = "month") {
   const today = new Date();
   let dayString = '';
-  if (today.getMonth() + 1 < 10) {
-    dayString += '0' + String(today.getMonth() + 1);
+  if (startPoint === "month") {
+    if (today.getMonth() + 1 < 10) {
+      dayString += '0' + String(today.getMonth() + 1);
+    } else {
+      dayString += String(today.getMonth() + 1);
+    }
+    if (today.getDate() < 10) {
+      dayString += '0' + String(today.getDate());
+    } else {
+      dayString += String(today.getDate());
+    }
+    if (today.getHours() < 10) {
+      dayString += '0' + String(today.getHours());
+    } else {
+      dayString += String(today.getHours());
+    }
+  } else if (startPoint === "year") {
+    dayString += String(today.getFullYear()).slice(2, 4);
+    if (today.getMonth() + 1 < 10) {
+      dayString += '0' + String(today.getMonth() + 1);
+    } else {
+      dayString += String(today.getMonth() + 1);
+    }
+    if (today.getDate() < 10) {
+      dayString += '0' + String(today.getDate());
+    } else {
+      dayString += String(today.getDate());
+    }
   } else {
-    dayString += String(today.getMonth() + 1);
-  }
-  if (today.getDate() < 10) {
-    dayString += '0' + String(today.getDate());
-  } else {
-    dayString += String(today.getDate());
-  }
-  if (today.getHours() < 10) {
-    dayString += '0' + String(today.getHours());
-  } else {
-    dayString += String(today.getHours());
+    throw new Error("invaild option");
   }
   return dayString;
 }
@@ -339,7 +355,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
 }
 
 
-Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postData = {}) {
+Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postData = {}, customMethod = "GET") {
   let meth = "GET";
   let postKeys = Object.keys(postData);
   if (postKeys.length > 0) {
@@ -360,6 +376,9 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
     pathString += pathArr[i] + '/';
   }}
   pathString = pathString.slice(0, -1);
+  if (customMethod !== "GET") {
+    meth = customMethod;
+  }
   let options = {
     hostname: pathArr[0],
     port: port,
@@ -400,6 +419,51 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
     if (/POST/gi.test(meth)) {
       req.write(postString);
     }
+    req.end();
+  });
+}
+
+Mother.prototype.headRequest = function (to, port = 80, header = {}) {
+  let target;
+  const http = require("http");
+  if (/^https:\/\//.test(to)) {
+    target = to.slice(8);
+  } else if (/^http:\/\//.test(to)) {
+    target = to.slice(7);
+  } else {
+    target = to;
+  }
+  let pathArr = target.split('/');
+  let pathString = '/';
+  for (let i = 0; i < pathArr.length; i++) { if (i !== 0) {
+    pathString += pathArr[i] + '/';
+  }}
+  pathString = pathString.slice(0, -1);
+  let options = {
+    hostname: pathArr[0],
+    port: port,
+    path: pathString,
+    method: "HEAD"
+  }
+  options.header = {};
+  for (let i in header) {
+    options.header[i] = header[i];
+  }
+  return new Promise(function (resolve, reject) {
+    let req = http.request(options, function (res) {
+      res.setEncoding('utf8');
+      let resultObj = {}
+      resultObj.headers = res.headers;
+      resultObj.statusCode = res.statusCode;
+      resultObj.body = '';
+      res.on('data', function (chunk) {
+        resultObj.body += chunk.toString();
+      });
+      res.on('end', function () {
+        resolve(resultObj);
+      });
+    });
+    req.on('error', function (e) { reject(e); });
     req.end();
   });
 }

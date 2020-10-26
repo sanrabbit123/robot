@@ -669,8 +669,22 @@ class DevContext extends Array {
       //   await this.reviewVerification(i);
       // }
 
-      const app = new BackMaker();
-      console.log((await app.getContentsByPid("p59")).toAiState());
+      // const app = new BackMaker();
+      // console.log((await app.getContentsByPid("p59")).toAiState());
+      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      let tempResponse, index, endPoint;
+      tempResponse = 200;
+      index = -1;
+      while (tempResponse === 200) {
+        index++;
+        tempResponse = await this.mother.headRequest(ADDRESS.s3info.host + "/corePortfolio/original/p61/i" + String(index) + "p61.jpg");
+        tempResponse = tempResponse.statusCode;
+      }
+      endPoint = index - 1;
+      console.log(endPoint);
+
+
+
 
       // let num, boo;
       //

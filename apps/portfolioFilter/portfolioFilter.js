@@ -1,11 +1,13 @@
-const PorfolioFilter = function (clientName, apartName) {
-  const Mother = require("../mother.js");
+const PortfolioFilter = function (clientName, apartName, designer, pid = "g0") {
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
+
+  this.dir = `${process.cwd()}/apps/portfolioFilter`;
   this.generator = {
-    factory: require("./factory/generator.js"),
+    factory: require(this.dir + "/factory/generator.js"),
   }
   this.clientName = clientName;
-
+  this.designer = designer;
   function apart(str) {
     let arr = str.split(' ');
     let new_string = '';
@@ -16,55 +18,80 @@ const PorfolioFilter = function (clientName, apartName) {
     return new_string;
   }
   this.apartName = apart(apartName);
+  this.pid = pid;
+  this.options = {
+    home_dir: `${process.env.HOME}/portfolioFilter`,
+    photo_dir: `${process.env.HOME}/portfolioFilter/resource`,
+    result_dir: `${process.env.HOME}/portfolioFilter/result`,
+  }
 }
 
-PorfolioFilter.prototype.options = {
-  home_dir: `${process.env.HOME}/porfolioFilter/`,
-  photo_dir: `${process.env.HOME}/porfolioFilter/resource/`,
-  result_dir: `${process.env.HOME}/porfolioFilter/result/`,
-}
-
-PorfolioFilter.prototype.static_setting = async function () {
+PortfolioFilter.prototype.static_setting = async function () {
   const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
-    let staticFolderBoo = await this.mother.fileSystem(`readDir`, [ process.env.HOME ]);
-    let staticFolderBootr = false;
+    let staticFolderBoo, staticFolderBootr;
+    let order;
+    let staticFolderscriptBoo, staticFolderscriptBootr;
+    let staticFolderresultBootr, staticFolderresourceBootr;
+    let folderList;
+
+    staticFolderBoo = await this.mother.fileSystem(`readDir`, [ process.env.HOME ]);
+    staticFolderBootr = false;
     for (let i of staticFolderBoo) {
-      if (/^porfolioFilter/.test(i)) { staticFolderBootr = true; }
+      if (/^portfolioFilter/.test(i)) {
+        staticFolderBootr = true;
+      }
     }
     if (!staticFolderBootr) {
-      this.mother.shell.exec(`mkdir ${this.options.home_dir};mkdir ${this.options.home_dir}script;mkdir ${this.options.home_dir}result;mkdir ${this.options.home_dir}resource`);
+      order = ``;
+      order += `mkdir ${shellLink(this.options.home_dir)};`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/script;`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/result;`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/resource;`;
+      shell.exec(order);
     } else {
-      let staticFolderscriptBoo = await this.mother.fileSystem(`readDir`, [ this.options.home_dir ]);
-      let staticFolderscriptBootr = false;
+      staticFolderscriptBoo = await fileSystem(`readDir`, [ this.options.home_dir ]);
+      staticFolderscriptBootr = false;
       for (let i of staticFolderscriptBoo) {
-        if (/^script$/.test(i)) { staticFolderscriptBootr = true; }
+        if (/^script$/.test(i)) {
+          staticFolderscriptBootr = true;
+        }
       }
-      if (!staticFolderscriptBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}script`); }
-
-      let staticFolderresultBootr = false;
+      if (!staticFolderscriptBootr) {
+        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/script`);
+      }
+      staticFolderresultBootr = false;
       for (let i of staticFolderscriptBoo) {
-        if (/^result$/.test(i)) { staticFolderresultBootr = true; }
+        if (/^result$/.test(i)) {
+          staticFolderresultBootr = true;
+        }
       }
-      if (!staticFolderresultBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}result`); }
-
-      let staticFolderresourceBootr = false;
+      if (!staticFolderresultBootr) {
+        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result`);
+      }
+      staticFolderresourceBootr = false;
       for (let i of staticFolderscriptBoo) {
-        if (/^resource$/.test(i)) { staticFolderresourceBootr = true; }
+        if (/^resource$/.test(i)) {
+          staticFolderresourceBootr = true;
+        }
       }
-      if (!staticFolderresourceBootr) { this.mother.shell.exec(`mkdir ${this.options.home_dir}resource`); }
+      if (!staticFolderresourceBootr) {
+        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/resource`);
+      }
     }
 
-    let folderList = [ "factory" ];
+    folderList = [ "factory" ];
     for (let f of folderList) {
-      this.mother.shell.exec(`cp -r ./apps/porfolioFilter/${f} ${this.options.home_dir}`);
+      shell.exec(`cp -r ${shellLink(process.cwd())}/apps/portfolioFilter/${f} ${shellLink(this.options.home_dir)}`);
     }
+
   } catch (e) {
     console.log(e.message);
   }
 }
 
-PorfolioFilter.prototype.image_filter = function (str, size) {
+PortfolioFilter.prototype.image_filter = function (str, size) {
   let date = new Date();
   let datestring = String(date.getFullYear()).slice(2);
   if (date.getMonth() + 1 < 10) {
@@ -87,114 +114,137 @@ PorfolioFilter.prototype.image_filter = function (str, size) {
   return str;
 }
 
-PorfolioFilter.prototype.just_filter = function (str) {
+PortfolioFilter.prototype.just_filter = function (str) {
   str = str.replace(/\_([0-9][0-9][0-9][0-9][0-9][0-9])/gi, '');
   str = str.replace(/[^0-9]/g, '');
   str = str.replace(/^0/g, '');
   return str;
 }
 
-PorfolioFilter.prototype.to_portfolio = async function () {
+PortfolioFilter.prototype.to_portfolio = async function () {
   const instance = this;
-  try {
-    let options = {
-      home_dir: this.options.home_dir,
-      apart_name: this.apartName,
-      photo_dir: this.options.photo_dir,
-      result_dir: this.options.result_dir,
-      photo_list: [],
-    };
+  const { fileSystem, shell, shellLink, todayMaker } = this.mother;
+  let options = {
+    home_dir: this.options.home_dir,
+    apart_name: this.apartName,
+    photo_dir: this.options.photo_dir,
+    result_dir: this.options.result_dir,
+    photo_list: [],
+  };
 
-    let file_list = await this.mother.fileSystem(`readDir`, [ this.options.photo_dir ]);
-    let resultFolderBoo = await this.mother.fileSystem(`readDir`, [ this.options.result_dir ]);
-    for (let i = 0; i < file_list.length; i++) { if (file_list[i] === '.DS_Store') { file_list.splice(i, 1); } }
+  try {
+    let file_list, resultFolderBoo;
+    let new_photo_name, new_photo_name_list;
+    let photo_sizes;
+    let resultFolder;
+
+    file_list = await fileSystem(`readDir`, [ this.options.photo_dir ]);
+    resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
+    for (let i = 0; i < file_list.length; i++) {
+      if (file_list[i] === '.DS_Store') {
+        file_list.splice(i, 1);
+      }
+    }
+
     if (file_list.length === 0) {
-      console.log(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
+      throw new Error(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
       process.exit();
     }
-    file_list.sort(function (a, b) {
-      return Number(instance.just_filter(a)) - Number(instance.just_filter(b));
-    });
+
+    file_list.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
     for (let i = 0; i < file_list.length; i++) {
-      this.mother.shell.exec(`mv ${this.options.home_dir}resource/${file_list[i]} ${this.options.home_dir}resource/photo${String(i + 1)}.jpg`);
+      shell.exec(`mv ${shellLink(this.options.home_dir)}/resource/${file_list[i]} ${shellLink(this.options.home_dir)}/resource/photo${String(i + 1)}.jpg`);
       file_list[i] = "photo" + String(i + 1) + ".jpg";
     }
     console.log(file_list);
     options.photo_list = file_list;
 
-    let new_photo_name, new_photo_name_list;
-    let photo_sizes = [ "780", "원본" ];
-    let photo_sizes_reg = [ /780/g, /원본/g ];
-    for (let re of resultFolderBoo) {
-      this.mother.shell.exec(`rm -rf ${this.options.home_dir}result/${re};`);
+    photo_sizes = [ "780", "원본" ];
+
+    for (let i of resultFolderBoo) {
+      shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
     }
-    for (let j = 0; j < photo_sizes.length; j++) {
+
+    resultFolder = `${this.options.result_dir}/${this.pid}_${this.designer}_${this.clientName}_${todayMaker("year")}`;
+    shell.exec(`mkdir ${shellLink(resultFolder)}`);
+
+    for (let i of photo_sizes) {
       new_photo_name_list = [];
-      this.mother.shell.exec(`mkdir ${this.options.result_dir}${photo_sizes[j]}`);
+      shell.exec(`mkdir ${shellLink(resultFolder)}/${i}`);
       for (let photo of file_list) {
-        new_photo_name = this.image_filter(photo, photo_sizes[j]);
-        this.mother.shell.exec(`cp ${this.options.photo_dir}${photo} ${this.options.result_dir}${photo_sizes[j] + '/'}${new_photo_name}`);
-        new_photo_name_list.push(`${this.options.result_dir}${photo_sizes[j]}/${new_photo_name}`);
+        new_photo_name = this.image_filter(photo, i);
+        shell.exec(`cp ${shellLink(this.options.photo_dir)}/${photo} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
+        new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }
-      options.size = photo_sizes[j];
-      await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/to_portfolio.js`, this.generator.factory.to_portfolio(new_photo_name_list, options) ]);
-      this.mother.shell.exec(`osascript ${this.options.home_dir}factory/applescript/to_portfolio.scpt`);
+      options.size = i;
+      await fileSystem(`write`, [ `${this.options.home_dir}/script/to_portfolio.js`, this.generator.factory.to_portfolio(new_photo_name_list, options) ]);
+      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_portfolio.scpt`);
     }
-    await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/to_png.js`, this.generator.factory.to_png({}, options) ]);
-    this.mother.shell.exec(`osascript ${this.options.home_dir}factory/applescript/to_png.scpt`);
+
+    await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
+    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
 
   } catch (e) {
     console.log(e.message);
   }
 }
 
-PorfolioFilter.prototype.ghost_filter = async function (start_num) {
+PortfolioFilter.prototype.ghost_filter = async function (start_num) {
   const instance = this;
-  try {
-    let options = {
-      home_dir: this.options.home_dir,
-      photo_dir: this.options.photo_dir,
-      result_dir: this.options.result_dir,
-      photo_list: [],
-      start_num: start_num,
-    };
+  const { fileSystem, shell, shellLink } = this.mother;
+  let options = {
+    home_dir: this.options.home_dir,
+    photo_dir: this.options.photo_dir,
+    result_dir: this.options.result_dir,
+    photo_list: [],
+    start_num: start_num,
+  };
 
-    let past_list = await this.mother.fileSystem(`readDir`, [ this.options.result_dir ]);
+  try {
+    let past_list, file_list;
+
+    past_list = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of past_list) {
-      this.mother.shell.exec(`rm -rf ${this.options.result_dir}${i};`)
+      shell.exec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`)
     }
 
-    let file_list = await this.mother.fileSystem(`readDir`, [ this.options.photo_dir ]);
-    for (let i = 0; i < file_list.length; i++) { if (file_list[i] === '.DS_Store') { file_list.splice(i, 1); } }
+    file_list = await fileSystem(`readDir`, [ this.options.photo_dir ]);
+    for (let i = 0; i < file_list.length; i++) {
+      if (file_list[i] === '.DS_Store') {
+        file_list.splice(i, 1);
+      }
+    }
+
     if (file_list.length === 0) {
-      console.log(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
+      throw new Error(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
       process.exit();
     }
 
-    file_list.sort(function (a, b) {
-      return Number(a.replace(/^g/g, '').replace(/\.jpg$/, '')) - Number(b.replace(/^g/g, '').replace(/\.jpg$/, ''));
-    });
+    file_list.sort((a, b) => { return Number(a.replace(/^g/g, '').replace(/\.jpg$/, '')) - Number(b.replace(/^g/g, '').replace(/\.jpg$/, '')); });
     console.log(file_list);
 
     options.photo_list = file_list;
-    await this.mother.fileSystem(`write`, [ `${this.options.home_dir}script/ghostFilter.js`, this.generator.factory.ghostFilter({}, options) ]);
-    this.mother.shell.exec(`osascript ${this.options.home_dir}factory/applescript/ghostFilter.scpt`);
+    await fileSystem(`write`, [ `${shellLink(this.options.home_dir)}/script/ghostFilter.js`, this.generator.factory.ghostFilter({}, options) ]);
+    shell.exec(`osascript ${shellLink(this.options.home_dir)}/factory/applescript/ghostFilter.scpt`);
 
-    return { result_folder: `${this.options.home_dir}result`, script_folder: `${this.options.home_dir}factory/applescript` };
+    return { result_folder: `${this.options.home_dir}/result`, script_folder: `${this.options.home_dir}/factory/applescript` };
 
   } catch (e) {
     console.log(e.message);
   }
 }
 
-PorfolioFilter.prototype.total_make = async function () {
-  let instance = this;
+PortfolioFilter.prototype.total_make = async function () {
+  const instance = this;
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   try {
     await MONGOC.connect();
     await this.static_setting();
     await this.to_portfolio();
+
+    
+
     console.log(`done`);
   } catch (e) {
     console.log(e.message);
@@ -204,7 +254,7 @@ PorfolioFilter.prototype.total_make = async function () {
   }
 }
 
-PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
+PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
   //this.clientName => designer;
   const instance = this;
   const { shell, shellLink } = this.mother;
@@ -217,7 +267,6 @@ PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
   try {
     await MONGOC.connect();
     await this.static_setting();
-
 
     //Designer --------------------------------------------------------------------------------------------------
     let target_obj, ghost_arr, designer_arr;
@@ -303,4 +352,4 @@ PorfolioFilter.prototype.ghost_make = async function (exceptionId) {
 }
 
 
-module.exports = PorfolioFilter;
+module.exports = PortfolioFilter;

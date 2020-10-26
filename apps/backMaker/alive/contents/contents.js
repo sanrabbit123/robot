@@ -171,4 +171,12 @@ Contents.prototype.toAiState = function (jsonBoo = false) {
   }
 }
 
+Contents.prototype.toOriginalPath = function () {
+  let arr = [];
+  for (let i = 0; i < this.photos.detail.length; i++) {
+    arr.push(`/corePortfolio/original/${this.contents.portfolio.pid}/i${String(i)}${this.contents.portfolio.pid}.jpg`);
+  }
+  return arr;
+}
+
 module.exports = Contents;

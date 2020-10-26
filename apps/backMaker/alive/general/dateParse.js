@@ -37,6 +37,13 @@ class DateParse extends Date {
     }
   }
 
+  toSixString() {
+    let date = this.toNormal(false);
+    return (date.slice(2, 4) + date.slice(5, 7) + date.slice(8, 10));
+  }
+
+
+
 }
 
 module.exports = DateParse;

@@ -48,9 +48,9 @@ Robot.prototype.proposalMaker = function (button, arg) {
   }
 }
 
-Robot.prototype.porfolioFilter = function (boo, clientName, apartName, exceptionId = 0) {
-  const PorfolioFilter = require(process.cwd() + "/apps/porfolioFilter/porfolioFilter.js");
-  let app = new PorfolioFilter(clientName, apartName);
+Robot.prototype.portfolioFilter = function (boo, clientName, apartName, exceptionId = 0, pid = null) {
+  const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
+  let app = new PortfolioFilter(clientName, apartName, exceptionId, pid);
   if (boo === "portfolio") {
     app.total_make();
   } else if (boo === "ghost") {
@@ -151,7 +151,7 @@ Robot.prototype.bridgeCloud = async function (sw) {
 
 Robot.prototype.launching = async function () {
   try {
-    let re, re2, re3, re4;
+    let re, re2, re3, re4, re5, re6;
     if (process.argv[2] === "proposal" && process.argv[3] !== undefined) {
       this.proposalMaker("make", process.argv[3]);
 
@@ -227,11 +227,13 @@ Robot.prototype.launching = async function () {
         if (re2 === "portfolio" || re2 === "1") {
           re3 = await this.consoleQ(`Client name what?\n`);
           re4 = await this.consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
-          this.porfolioFilter("portfolio", re3, re4, 0);
+          re5 = await this.consoleQ(`Designer name what?\n`);
+          re6 = await this.consoleQ(`Project number what?\n`);
+          this.portfolioFilter("portfolio", re3, re4, re5, re6);
         } else if (re2 === "ghost" || re2 === "2") {
           re3 = await this.consoleQ(`Designer name what?\n`);
           re4 = await this.consoleQ(`Exception id what? (must be Number, ex : 1, default: 0)\n`);
-          this.porfolioFilter("ghost", re3, "", Number(re4));
+          this.portfolioFilter("ghost", re3, "", Number(re4), null);
         }
 
       //proposal

@@ -54,40 +54,23 @@ AiContents.prototype.photo_clean = async function () {
 }
 
 AiContents.prototype.photo_search = async function () {
-  const { fileSystem, shell, shellLink } = this.mother;
+  const instance = this;
+  const { fileSystem, shell, shellLink, binaryRequest } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   try {
     await this.photo_clean();
-    let portfolio_rawList, portfolio_target, portfolio_targetList;
-    let target = "none";
+    let targetContents, targetPathArr;
+    let tempObject, tempName;
 
-    if (/^p/.test(this.portfolioNum)) {
-      portfolio_rawList = await fileSystem(`readDir`, [ this.motherLink.portfoiloBinary ]);
-      for (let i of portfolio_rawList) { if (i !== ".DS_Store" && i !== "_A") {
-        if (Number(this.image_filter(i)) === Number(this.portfolioNum.replace(/[^0-9]/g, ''))) {
-          target = i;
-        }
-      }}
-      portfolio_target = `${this.motherLink.portfoiloBinary}/${target}/target`;
-
-    } else if (/^a/.test(this.portfolioNum)) {
-      portfolio_rawList = await fileSystem(`readDir`, [ this.motherLink.portfoiloBinary + "/_A" ]);
-      for (let i of portfolio_rawList) { if (i !== ".DS_Store") {
-        if (Number(this.image_filter(i)) === Number(this.portfolioNum.replace(/[^0-9]/g, ''))) {
-          target = i;
-        }
-      }}
-      portfolio_target = `${this.motherLink.portfoiloBinary}/_A/${target}/target`;
-
-    } else {
-      throw new Error("photo error");
-      process.exit();
+    targetContents = await this.back.getContentsByPid(this.portfolioNum);
+    targetPathArr = targetContents.toOriginalPath();
+    for (let i of targetPathArr) {
+      tempName = (i.split('/'))[i.split('/').length - 1];
+      tempObject = await binaryRequest(ADDRESS.s3info.host + i);
+      await fileSystem(`writeBinary`, [ this.options.photo_dir + "/" + tempName, tempObject ]);
+      console.log(`download success`);
     }
 
-    portfolio_targetList = await fileSystem(`readDir`, [ portfolio_target ]);
-    for (let i of portfolio_targetList) { if (i !== ".DS_Store") {
-      shell.exec(`cp ${shellLink(portfolio_target)}/${i} ${shellLink(this.options.photo_dir)};`);
-      console.log(`copy success`);
-    }}
   } catch (e) {
     console.log(e);
   }

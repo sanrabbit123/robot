@@ -1,6 +1,8 @@
 const ResourceMaker = function (p_id) {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
+  this.s3Host = ADDRESS.s3info.host;
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
@@ -8,7 +10,6 @@ const ResourceMaker = function (p_id) {
   this.arr = [];
   this.result = {};
   this.final = {};
-  this.originalFolder = this.mother.ghostPath() + "/binary/corePortfolio/original";
   this.targetFolder;
 }
 
@@ -34,7 +35,7 @@ ResourceMaker.prototype.infoMaker = function () {
   let temp_arr, temp_string, temp_obj;
   let key = 0;
   let totalInfo = [];
-  let result = {}
+  let result = {};
   let count = this.arr.length;
   for (let i = 0; i < count; i++) {
     if (this.arr[i] === "_info") {
@@ -706,7 +707,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
       review.contents.detail = [];
     }
 
-    portfolio.date = dateMaker((this.originalTargetFolder.split("_"))[this.originalTargetFolder.split("_").length - 1]);
+    portfolio.date = dateMaker(this.mother.todayMaker("year"));
     review.date = portfolio.date;
 
     targetPhotoDirArr = [];
@@ -741,45 +742,43 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
 
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
-  const { fileSystem, mongo, mongoinfo, shell, shellLink } = this.mother;
+  const { fileSystem, mongo, mongoinfo, shell, shellLink, headRequest, binaryRequest } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
   try {
-    let targetMotherPath, targetFolderDirList, targetFolder, targetFolderRaw;
+    let targetFolder;
     let tempFolderName, homeFolderList, tempHome;
     let temp, tempReg;
     let note;
     let input;
+    let tempResponse, index;
+    let tempObject;
 
-    //set target folder
-    if (/^p/.test(this.p_id)) {
-      targetMotherPath = this.originalFolder;
-    } else {
-      targetMotherPath = this.originalFolder + "/_A";
-    }
-
-    targetFolderDirList = await fileSystem(`readDir`, [ targetMotherPath ]);
-    tempReg = new RegExp("^" + this.p_id);
-    for (let i of targetFolderDirList) {
-      if (tempReg.test(i)) {
-        targetFolder = i;
-      }
-    }
-
+    //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
-    homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
-    if (!homeFolderList.includes(tempFolderName)) {
-      shell.exec(`mkdir ${shellLink(process.env.HOME)}/${tempFolderName}`);
-    }
     tempHome = process.env.HOME + "/" + tempFolderName;
-
-    targetFolderRaw = await fileSystem(`readDir`, [ targetMotherPath + "/" + targetFolder + "/target" ]);
-    for (let i of targetFolderRaw) {
-      if (i !== `.DS_Store`) {
-        shell.exec(`cp ${shellLink(targetMotherPath + "/" + targetFolder)}/target/${i} ${shellLink(tempHome)}/${i}`);
-      }
+    homeFolderList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (homeFolderList.includes(tempFolderName)) {
+      shell.exec(`rm -rf ${shellLink(tempHome)}`);
     }
-    this.originalTargetFolder = targetFolder;
+    shell.exec(`mkdir ${shellLink(tempHome)}`);
+
+    //parsing portfolio number
+    tempResponse = 200;
+    index = -1;
+    while (tempResponse === 200) {
+      index++;
+      tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(index) + this.p_id + ".jpg");
+      tempResponse = tempResponse.statusCode;
+    }
+
+    //download images
+    for (let i = 0; i < index; i++) {
+      tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(i) + this.p_id + ".jpg");
+      await fileSystem(`writeBinary`, [ tempHome + "/i" + String(i) + this.p_id + ".jpg", tempObject ]);
+      console.log(`download success`);
+    }
+
     this.targetFolder = tempHome;
 
     note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });

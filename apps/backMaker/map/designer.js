@@ -11,12 +11,10 @@ module.exports = {
       email: "",
       address: [],
       personalSystem: {
-        showRoom: [
-          { name: "", address: "" },
-        ],
+        showRoom: false,
         webPage: [],
         sns: [
-          { kinds: "", link: "" },
+          { kind: "", href: "" },
         ],
       },
       business: {
