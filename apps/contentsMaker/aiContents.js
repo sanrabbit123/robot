@@ -111,11 +111,19 @@ AiContents.prototype.photo_sort = async function () {
 
 AiContents.prototype.photo_list = async function () {
   const instance = this;
+  const { fileSystem } = this.mother;
   try {
+    let adobe, tempAppList;
+    tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+    for (let i of tempAppList) {
+      if (/Photoshop/gi.test(i)) {
+        adobe = i;
+      }
+    }
     const photo_list = await this.photo_sort();
-    const photoshopScript = function (argv) {
+    const photoshopScript = function (argv, app) {
       let text = '';
-      text += 'tell application "Adobe Photoshop 2021"\n';
+      text += 'tell application "' + app + '"\n';
       text += '\tactivate\n';
       text += '\topen file "' + argv + '"\n';
       text += '\tset docheight to height of document 1\n';
@@ -133,7 +141,7 @@ AiContents.prototype.photo_list = async function () {
 
     this.options.photo_list = photo_list;
     for (let item of photo_list) {
-      dimensions = await this.mother.appleScript(`photosg_${item.replace(/[^0-9]/g, '')}`, photoshopScript(`${this.options.photo_dir}/${item}`), `${this.options.home_dir}/temp`, false);
+      dimensions = await this.mother.appleScript(`photosg_${item.replace(/[^0-9]/g, '')}`, photoshopScript(`${this.options.photo_dir}/${item}`, adobe), `${this.options.home_dir}/temp`, false);
       new_item = item;
       new_item = this.image_filter(new_item);
       new_item = 't' + new_item + this.text.p_id + ".jpg";

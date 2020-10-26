@@ -30,13 +30,25 @@ const ContentsMaker = function () {
 }
 
 ContentsMaker.prototype.startAdobe = async function (obj) {
+  const instance = this;
+  const { fileSystem, babelSystem, appleScript } = this.mother;
   try {
     if (obj.app === undefined) {
       obj.app = `Adobe Illustrator`;
     }
-    let adobe = `Adobe Illustrator`;
+    let adobe, tempAppList;
+    tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+    for (let i of tempAppList) {
+      if (/Illustrator/gi.test(i)) {
+        adobe = i;
+      }
+    }
     if (/photo/gi.test(obj.app)) {
-      adobe = `Adobe Photoshop 2021`;
+      for (let i of tempAppList) {
+        if (/Photoshop/gi.test(i)) {
+          adobe = i;
+        }
+      }
     }
     let targetJs = `${this.options.home_dir}/script/${obj.name}.js`;
     let appleScript = `tell application "${adobe}"`;
@@ -52,11 +64,11 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
     appleScript += `end tell`;
 
     let temp_scriptString = `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
-    temp_scriptString += await this.mother.fileSystem(`readString`, [ `${this.options.home_dir}/factory/script/polyfill.js` ]);
+    temp_scriptString += await fileSystem(`readString`, [ `${this.options.home_dir}/factory/script/polyfill.js` ]);
     temp_scriptString += `\n`;
-    temp_scriptString += await this.mother.babelSystem(obj.script);
+    temp_scriptString += await babelSystem(obj.script);
 
-    await this.mother.fileSystem(`write`, [ targetJs, temp_scriptString ]);
+    await fileSystem(`write`, [ targetJs, temp_scriptString ]);
     let boo, boo2;
     if (obj.end === undefined && obj.noclean === undefined) {
       boo = false;
@@ -77,14 +89,14 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
       boo = !obj.end;
       boo2 = !obj.noclean;
     }
-    await this.mother.appleScript(obj.name, appleScript, `${this.options.home_dir}/temp`, boo);
+    await appleScript(obj.name, appleScript, `${this.options.home_dir}/temp`, boo);
     if (!boo) {
       let endScript = `tell application "${adobe}"`;
       endScript += `\n`;
       endScript += `\tquit`;
       endScript += `\n`;
       endScript += `end tell`;
-      await this.mother.appleScript(`${obj.name}_end`, endScript, `${this.options.home_dir}/temp`, boo2);
+      await appleScript(`${obj.name}_end`, endScript, `${this.options.home_dir}/temp`, boo2);
     }
 
   } catch (e) {
@@ -100,6 +112,7 @@ ContentsMaker.prototype.static_setting = async function () {
   try {
     let staticFolderBoo, staticFolderBootr;
     let staticFolderscriptBoo, staticFolderscriptBootr, staticFolderresultBootr, staticFoldertempBootr;
+    let order;
 
     staticFolderBoo = await fileSystem(`readDir`, [ process.env.HOME ]);
     staticFolderBootr = false;
@@ -109,7 +122,11 @@ ContentsMaker.prototype.static_setting = async function () {
 
     if (!staticFolderBootr) {
 
-      shell.exec(`mkdir ${shellLink(this.options.home_dir)};mkdir ${shellLink(this.options.home_dir)}/script;mkdir ${shellLink(this.options.home_dir)}/result;mkdir ${shellLink(this.options.home_dir)}/temp`);
+      order = `mkdir ${shellLink(this.options.home_dir)};`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/script;`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/result;`;
+      order += `mkdir ${shellLink(this.options.home_dir)}/temp;`;
+      shell.exec(order);
 
     } else {
 
@@ -135,6 +152,17 @@ ContentsMaker.prototype.static_setting = async function () {
     let folderList = [ "factory", "resource" ];
     for (let f of folderList) {
       shell.exec(`cp -r ${shellLink(this.links.app)}/${f} ${shellLink(this.options.home_dir)}`);
+    }
+
+    let resourceFolderBoo, resourceFolderBootr;
+
+    resourceFolderBoo = await fileSystem(`readDir`, [ this.options.home_dir + "/resource" ]);
+    resourceFolderBootr = false;
+    for (let i of resourceFolderBoo) {
+      if (/^photo/.test(i)) { resourceFolderBootr = true; }
+    }
+    if (!resourceFolderBootr) {
+      shell.exec(`mkdir ${shellLink(this.options.home_dir)}/resource/photo`);
     }
 
   } catch (e) {

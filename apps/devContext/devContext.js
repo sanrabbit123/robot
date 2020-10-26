@@ -671,20 +671,29 @@ class DevContext extends Array {
 
       // const app = new BackMaker();
       // console.log((await app.getContentsByPid("p59")).toAiState());
-      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-      let tempResponse, index, endPoint;
-      tempResponse = 200;
-      index = -1;
-      while (tempResponse === 200) {
-        index++;
-        tempResponse = await this.mother.headRequest(ADDRESS.s3info.host + "/corePortfolio/original/p61/i" + String(index) + "p61.jpg");
-        tempResponse = tempResponse.statusCode;
+      // const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      // let tempResponse, index, endPoint;
+      // tempResponse = 200;
+      // index = -1;
+      // while (tempResponse === 200) {
+      //   index++;
+      //   tempResponse = await this.mother.headRequest(ADDRESS.s3info.host + "/corePortfolio/original/p61/i" + String(index) + "p61.jpg");
+      //   tempResponse = tempResponse.statusCode;
+      // }
+      // endPoint = index - 1;
+      // console.log(endPoint);
+
+
+      let adobe;
+
+      let tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+      for (let i of tempAppList) {
+        if (/Photoshop/gi.test(i)) {
+          adobe = i;
+        }
       }
-      endPoint = index - 1;
-      console.log(endPoint);
 
-
-
+      console.log(adobe);
 
       // let num, boo;
       //
