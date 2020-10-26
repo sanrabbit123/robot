@@ -165,7 +165,9 @@ PortfolioFilter.prototype.to_portfolio = async function () {
       shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
     }
 
-    resultFolder = `${this.options.result_dir}/${this.pid}_${this.designer}_${this.clientName}_${todayMaker("year")}`;
+    this.folderName = `${this.pid}_${this.designer}_${this.clientName}_${todayMaker("year")}`;
+    resultFolder = `${this.options.result_dir}/${this.folderName}`;
+    this.resultFolder = resultFolder;
     shell.exec(`mkdir ${shellLink(resultFolder)}`);
 
     for (let i of photo_sizes) {
@@ -183,6 +185,32 @@ PortfolioFilter.prototype.to_portfolio = async function () {
 
     await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
+
+    let fileList_780_raw, fileList_original_raw, fileList_png_raw;
+    let fileList_780, fileList_original, fileList_png;
+    fileList_780 = [];
+    fileList_original = [];
+    fileList_png = [];
+    fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
+    fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
+    fileList_png_raw = await fileSystem(`readDir`, [ resultFolder ]);
+    for (let i of fileList_780_raw) {
+      if (i !== `.DS_Store`) {
+        fileList_780.push(i);
+      }
+    }
+    for (let i of fileList_original_raw) {
+      if (i !== `.DS_Store`) {
+        fileList_original.push(i);
+      }
+    }
+    for (let i of fileList_png_raw) {
+      if (i !== `.DS_Store` && i !== `780` && i !== `원본`) {
+        fileList_png_raw.push(i);
+      }
+    }
+
+    return { fileList_780, fileList_original, fileList_png };
 
   } catch (e) {
     console.log(e.message);
@@ -236,14 +264,52 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function () {
   const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
+  const idFilter = function (past) {
+    past = past.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '');
+    past = past.replace(/[^0-9]/g, '');
+    let newNumber = Number(past);
+    return String(newNumber - 1);
+  }
   try {
     await MONGOC.connect();
     await this.static_setting();
-    await this.to_portfolio();
 
-    
+    let thisFolderId, folderId_780, folderId_original;
+
+    const { fileList_780, fileList_original, fileList_png } = await this.to_portfolio();
+    const drive = new GoogleDrive();
+    thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21");
+    folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
+    folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
+    for (let f of fileList_780) {
+      await drive.upload_inPython(folderId_780, f);
+    }
+    for (let f of fileList_original) {
+      await drive.upload_inPython(folderId_original, f);
+    }
+    for (let f of fileList_png) {
+      await drive.upload_inPython(thisFolderId, f);
+    }
+
+    let pidFolder, fromArr, toArr;
+
+    shell.exec(`mv ${shellLink(this.resultFolder)}/원본 ${shellLink(this.resultFolder)}/${this.pid}`);
+    pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
+    fromArr = [];
+    toArr = [];
+    for (let i of pidFolder) {
+      if (i !== `.DS_Store`) {
+        shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/${idFilter(i)}`);
+        fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/${idFilter(i)}`);
+        toArr.push(`corePortfolio/original/${this.pid}/${idFilter(i)}`);
+      }
+    }
+
+    await this.mother.s3FileUpload(fromArr, toArr);
 
     console.log(`done`);
   } catch (e) {

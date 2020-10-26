@@ -9,7 +9,7 @@ ExecMain.prototype.start = function () {
 
   function open_andPaste(doc, fileName) {
     var f;
-    var curr_file = app.open(new File(options.photo_dir + fileName));
+    var curr_file = app.open(new File(options.photo_dir + "/" + fileName));
     if (Number(String(curr_file.width).slice(0, -3)) > Number(String(curr_file.height).slice(0, -3))) {
       f = [ 1500, 1060 ];
     } else {
@@ -26,7 +26,7 @@ ExecMain.prototype.start = function () {
   var j = 0;
   var doc, photo, left_photo, right_photo, this_doc, photo_sg;
   while (i < options.photo_list.length) {
-    this_doc = app.open(new File(options.photo_dir + options.photo_list[i]));
+    this_doc = app.open(new File(options.photo_dir + "/" + options.photo_list[i]));
     photo_sg = (Number(String(this_doc.width).slice(0, -3)) > Number(String(this_doc.height).slice(0, -3))) ? "g" : "s";
     this_doc.close();
     app.documents.add(new UnitValue(1500, "px"), new UnitValue(1060, "px"), 300);
@@ -54,7 +54,7 @@ ExecMain.prototype.start = function () {
       }
     }
     pngSaveOptions = new PNGSaveOptions();
-    fileObj = new File(options.result_dir + options.apart_name + String(j));
+    fileObj = new File(options.result_dir + "/" + options.apart_name + String(j));
     doc.saveAs(fileObj, pngSaveOptions);
     doc.close();
   }

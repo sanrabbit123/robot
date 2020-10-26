@@ -742,4 +742,61 @@ Mother.prototype.orderSystem = function (type, number) {
   }
 }
 
+Mother.prototype.s3FileUpload = function (fromArr, toArr) {
+  const fs = require(`fs`);
+  const shell = require(`shelljs`);
+
+  let target = process.cwd() + "/apps/mother.py";
+  let targetLink, targetArr;
+
+  //shellLink and make target path
+  targetLink = '';
+  targetArr = target.split('/');
+  for (let i of targetArr) {
+    if (!/ /g.test(i)) {
+      targetLink += i + '/';
+    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      targetLink += "'" + i + "'" + '/';
+    } else {
+      targetLink += i + '/';
+    }
+  }
+  targetLink = targetLink.slice(0, -1);
+
+  //set bridge
+  const bridgeFile = process.cwd() + "/temp/motherPythonBridge.json";
+
+  //set data
+  let fromList, toList;
+  if (Array.isArray(fromArr)) {
+    fromList = fromArr;
+    for (let i = 0; i < toArr.length; i++) {
+      if (/^\//.test(toArr[i])) {
+        toArr[i] = toArr[i].slice(1);
+      }
+    }
+    toList = toArr;
+  } else {
+    fromList = [ fromArr ];
+    if (/^\//.test(toArr)) {
+      toArr = toArr.slice(1);
+    }
+    toList = [ toArr ];
+  }
+
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(bridgeFile, JSON.stringify({ fromList, toList }, null, 2), "utf8", function (err) {
+      if (err) { reject(err); }
+      let order, child;
+      let result, jsonRaw, json;
+      order = `python3 ${targetLink} fileUpload`;
+      child = shell.exec(order, { silent: true });
+      jsonRaw = child.stdout.replace(/\n$/, '');
+      json = JSON.parse(jsonRaw);
+      result = json;
+      resolve(result.message);
+    });
+  });
+}
+
 module.exports = Mother;

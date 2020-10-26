@@ -51,6 +51,7 @@ except Exception as e:
 from google.googleAnalytics import GoogleAnalytics
 from google.googleSearchConsole import GoogleSearchConsole
 from google.googleSheet import GoogleSheet
+from google.googleDrive import GoogleDrive
 
 try:
 
@@ -94,6 +95,21 @@ try:
     elif argv[1] == 'sheets' and argv[2] == 'update':
         sheetsApp = GoogleSheet()
         result = sheetsApp.updateValue(data["id"], data["range"], data["values"])
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'fileUpload':
+        driveApp = GoogleDrive()
+        result = driveApp.fileUpload(data["folder_id"], data["file"])
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'makeFolder':
+        driveApp = GoogleDrive()
+        result = driveApp.makeFolder(data["folderName"])
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'moveFolder':
+        driveApp = GoogleDrive()
+        result = driveApp.moveFolder(data["targetId"], data["parent"])
         print(result)
 
 except Exception as e:

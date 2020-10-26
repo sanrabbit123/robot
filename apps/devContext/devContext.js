@@ -4,6 +4,7 @@ const Mother = require(APP_PATH + "/mother.js");
 const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
+const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
@@ -684,16 +685,11 @@ class DevContext extends Array {
       // console.log(endPoint);
 
 
-      let adobe;
+      // await this.mother.s3FileUpload("/Users/baechang-gyu/Desktop/a9.jpg", "test/test.jpg");
 
-      let tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
-      for (let i of tempAppList) {
-        if (/Photoshop/gi.test(i)) {
-          adobe = i;
-        }
-      }
+      const app = new GoogleDrive();
+      await app.makeFolder_andMove_inPython("kkk", "11L22Szfanu0S7AgqPdg0kYT2lkpsHZWM");
 
-      console.log(adobe);
 
       // let num, boo;
       //
