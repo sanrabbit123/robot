@@ -69,6 +69,42 @@ const ExecMain = function (text, dir, etc = {}) {
 
 const Mother = function () {}
 
+Mother.prototype.fontFilter = function (arg) {
+  let str;
+  str = arg;
+  if (str === "Futura-Medium" || /futura/gi.test(str)) {
+    return "Futura-Medium";
+  } else if (str === "SDGothicNeoa-aTh" || (/sandoll/gi.test(str) && /100/gi.test(str))) {
+    return "SDGothicNeoa-aTh";
+  } else if (str === "SDGothicNeoa-bUltLt" || (/sandoll/gi.test(str) && /200/gi.test(str))) {
+    return "SDGothicNeoa-bUltLt";
+  } else if (str === "SDGothicNeoa-cLt" || (/sandoll/gi.test(str) && /300/gi.test(str))) {
+    return "SDGothicNeoa-cLt";
+  } else if (str === "SDGothicNeoa-dRg" || (/sandoll/gi.test(str) && /400/gi.test(str))) {
+    return "SDGothicNeoa-dRg";
+  } else if (str === "SDGothicNeoa-eMd" || (/sandoll/gi.test(str) && /500/gi.test(str))) {
+    return "SDGothicNeoa-eMd";
+  } else if (str === "SDGothicNeoa-fSm" || (/sandoll/gi.test(str) && /600/gi.test(str))) {
+    return "SDGothicNeoa-fSm";
+  } else if (str === "SDGothicNeoa-gBd" || (/sandoll/gi.test(str) && /700/gi.test(str))) {
+    return "SDGothicNeoa-gBd";
+  } else if (str === "SDGothicNeoa-hExBd" || (/sandoll/gi.test(str) && /800/gi.test(str))) {
+    return "SDGothicNeoa-hExBd";
+  } else if (str === "SDGothicNeoa-iHv" || (/sandoll/gi.test(str) && /900/gi.test(str))) {
+    return "SDGothicNeoa-iHv";
+  } else if (str === "Graphik-Light" || (/graphik/gi.test(str) && /100/gi.test(str)) || (/graphik/gi.test(str) && /light/gi.test(str))) {
+    return "Graphik-Light";
+  } else if (str === "Graphik-Medium" || (/graphik/gi.test(str) && /200/gi.test(str)) || (/graphik/gi.test(str) && /medium/gi.test(str))) {
+    return "Graphik-Medium";
+  } else if (str === "Graphik-Regular" || (/graphik/gi.test(str) && /300/gi.test(str)) || (/graphik/gi.test(str) && /regular/gi.test(str))) {
+    return "Graphik-Regular";
+  } else if (str === "Graphik-Semibold" || (/graphik/gi.test(str) && /400/gi.test(str)) || (/graphik/gi.test(str) && /semibold/gi.test(str))) {
+    return "Graphik-Semibold";
+  } else if (str === "Graphik-Bold" || (/graphik/gi.test(str) && /500/gi.test(str)) || (/graphik/gi.test(str) && /bold/gi.test(str))) {
+    return "Graphik-Bold";
+  }
+}
+
 Mother.prototype.convertMillimeters = function (num) {
   let g = 74.0833 / 210;
   return num / g;
@@ -231,6 +267,25 @@ Mother.prototype.return_bottom = function (dom) {
       return bottom;
     }
   }
+}
+
+Mother.prototype.return_englishBottom = function (dom) {
+  let copyItem, outline_group, bottom;
+  let words, wordsCount, wordsArr;
+
+  copyItem = dom.duplicate();
+  outline_group = copyItem.createOutline();
+
+  words = outline_group.pageItems;
+  wordsCount = words.length;
+
+  wordsArr = [];
+  for (let i = 0; i < wordsCount; i++) {
+    wordsArr.push(words[i].top - words[i].height);
+  }
+
+  wordsArr.sort(function (a, b) { return b - a; });
+  return wordsArr[0];
 }
 
 Mother.prototype.return_right = function (dom) {
@@ -640,6 +695,7 @@ Mother.prototype.lineMaker = function (xy, options = {}) {
       line[i] = options[i];
     }
   }
+  return line;
 }
 
 Mother.prototype.deleteWithout = function (itemName) {
@@ -1065,7 +1121,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
     areaTextRef.paragraphs[i].paragraphAttributes.justification = Justification[obj.justification];
   }
   areaTextRef.textRange.characterAttributes.size = obj.fontSize;
-  areaTextRef.textRange.characterAttributes.textFont = textFonts.getByName(obj.font);
+  areaTextRef.textRange.characterAttributes.textFont = textFonts.getByName(this.mother.fontFilter(obj.font));
   areaTextRef.textRange.characterAttributes.fillColor = this.mother.colorpick(obj.color);
   areaTextRef.textRange.characterAttributes.autoLeading = false;
   areaTextRef.textRange.characterAttributes.leading = obj.leading;
@@ -1105,7 +1161,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
   // bold / color execute
   for (let z = 0; z < total_arrBold.length; z++) {
     for (let w = 0; w < total_arrBold[z].length; w++) {
-      areaTextRef.textRanges[total_arrBold[z].start + w].characterAttributes.textFont = textFonts.getByName(obj.bold);
+      areaTextRef.textRanges[total_arrBold[z].start + w].characterAttributes.textFont = textFonts.getByName(this.mother.fontFilter(obj.bold));
     }
   }
   for (let z = 0; z < total_arrColor.length; z++) {
@@ -1129,7 +1185,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
     for (let i = 0; i < mileoBbold.length; i++) {
       for (let j = 0; j < mileoBbold[i].length; j++) {
         if (mileoBbold[i][j] < mileoResult.length) {
-          areaTextRef.textRanges[mileoBbold[i][j]].characterAttributes.textFont = textFonts.getByName(obj.bold);
+          areaTextRef.textRanges[mileoBbold[i][j]].characterAttributes.textFont = textFonts.getByName(this.mother.fontFilter(obj.bold));
         }
       }
     }

@@ -32,17 +32,37 @@ const ContentsMaker = function () {
 ContentsMaker.prototype.startAdobe = async function (obj) {
   const instance = this;
   const { fileSystem, babelSystem, appleScript } = this.mother;
+  let boo, boo2;
+  if (obj.end === undefined && obj.noclean === undefined) {
+    boo = false;
+    boo2 = true;
+  } else if (obj.end === true && obj.noclean === undefined) {
+    boo = false;
+    boo2 = true;
+  } else if (obj.end === false && obj.noclean === undefined) {
+    boo = true;
+    boo2 = true;
+  } else if (obj.end === undefined && obj.noclean === true) {
+    boo = false;
+    boo2 = false;
+  } else if (obj.end === undefined && obj.noclean === false) {
+    boo = false;
+    boo2 = true;
+  } else if (obj.end !== undefined && obj.noclean !== undefined) {
+    boo = !obj.end;
+    boo2 = !obj.noclean;
+  }
+  if (obj.app === undefined || /Illustrator/gi.test(obj.app)) {
+    obj.app = `Adobe Illustrator`;
+  }
   try {
-    if (obj.app === undefined) {
-      obj.app = `Adobe Illustrator`;
-    }
     let adobe, tempAppList;
+    let targetJs, appleScriptText;
+    let temp_scriptString, endScript, consoleScriptStart;
+    let output;
+
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
-    for (let i of tempAppList) {
-      if (/Illustrator/gi.test(i)) {
-        adobe = i;
-      }
-    }
+    adobe = `Adobe Illustrator`;
     if (/photo/gi.test(obj.app)) {
       for (let i of tempAppList) {
         if (/Photoshop/gi.test(i)) {
@@ -50,59 +70,51 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
         }
       }
     }
-    let targetJs = `${this.options.home_dir}/script/${obj.name}.js`;
-    let appleScript = `tell application "${adobe}"`;
-    appleScript += `\n`;
-    appleScript += `\twith timeout of 3000 seconds`;
-    appleScript += `\n`;
-    appleScript += `\t\tactivate`;
-    appleScript += `\n`;
-    appleScript += `\t\tdo javascript "#include ${targetJs}"`;
-    appleScript += `\n`;
-    appleScript += `\tend timeout`;
-    appleScript += `\n`;
-    appleScript += `end tell`;
 
-    let temp_scriptString = `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
+    targetJs = `${this.options.home_dir}/script/${obj.name}.js`;
+    appleScriptText = `tell application "${adobe}"`;
+    appleScriptText += `\n`;
+    appleScriptText += `\twith timeout of 4000 seconds`;
+    appleScriptText += `\n`;
+    appleScriptText += `\t\tactivate`;
+    appleScriptText += `\n`;
+    appleScriptText += `\t\tdo javascript "#include ${targetJs}"`;
+    appleScriptText += `\n`;
+    appleScriptText += `\tend timeout`;
+    appleScriptText += `\n`;
+    appleScriptText += `end tell`;
+
+    consoleScriptStart = await fileSystem(`readString`, [ this.links.factory + "/script/console.js" ]);
+
+    temp_scriptString = '';
+    temp_scriptString += `var safeAppleScriptUniCodeInitialWord = "안녕하세요. 애플 스크립트의 유니코드 안전망입니다."`;
+    temp_scriptString += `\n`;
+    temp_scriptString += `try {\n`;
+    temp_scriptString += `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
     temp_scriptString += await fileSystem(`readString`, [ `${this.options.home_dir}/factory/script/polyfill.js` ]);
     temp_scriptString += `\n`;
+    // temp_scriptString += await babelSystem(consoleScriptStart + obj.script + "\nuragen.echo();\n");
     temp_scriptString += await babelSystem(obj.script);
+    temp_scriptString += `} catch (e) { e; }`;
 
     await fileSystem(`write`, [ targetJs, temp_scriptString ]);
-    let boo, boo2;
-    if (obj.end === undefined && obj.noclean === undefined) {
-      boo = false;
-      boo2 = true;
-    } else if (obj.end === true && obj.noclean === undefined) {
-      boo = false;
-      boo2 = true;
-    } else if (obj.end === false && obj.noclean === undefined) {
-      boo = true;
-      boo2 = true;
-    } else if (obj.end === undefined && obj.noclean === true) {
-      boo = false;
-      boo2 = false;
-    } else if (obj.end === undefined && obj.noclean === false) {
-      boo = false;
-      boo2 = true;
-    } else if (obj.end !== undefined && obj.noclean !== undefined) {
-      boo = !obj.end;
-      boo2 = !obj.noclean;
-    }
-    await appleScript(obj.name, appleScript, `${this.options.home_dir}/temp`, boo);
+    output = await appleScript(obj.name, appleScriptText, `${this.options.home_dir}/temp`, boo, true);
     if (!boo) {
-      let endScript = `tell application "${adobe}"`;
+      endScript = `tell application "${adobe}"`;
       endScript += `\n`;
       endScript += `\tquit`;
       endScript += `\n`;
       endScript += `end tell`;
-      await appleScript(`${obj.name}_end`, endScript, `${this.options.home_dir}/temp`, boo2);
+      await appleScript(`${obj.name}_end`, endScript, `${this.options.home_dir}/temp`, boo2, true);
     }
+
+    if (obj.silent !== true) {
+      console.log(output);
+    }
+    return output;
 
   } catch (e) {
     console.log(e);
-  } finally {
-    console.log(`appleScript done`);
   }
 }
 

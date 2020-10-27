@@ -550,7 +550,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
             } else {
               let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
               shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
-              resolve(output.stdout);
+              resolve(output.stdout.replace(/\n$/, ''));
             }
           });
         }
@@ -563,7 +563,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
           reject(err);
         } else {
           let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-          resolve(output.stdout);
+          resolve(output.stdout.replace(/\n$/, ''));
         }
       });
     });

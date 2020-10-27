@@ -523,7 +523,9 @@ class DevContext extends Array {
     b = `DELETE FROM pordeta WHERE porlid = '${porlid}';`;
     await this.MONGOC.db("miro81").collection("FP2_pordeta").deleteOne({ porlid: porlid });
 
-    return (a + b);
+    let result = (a + b);
+    console.log(result);
+    return result;
   }
 
   async deletePorfolioWithReview(porlid, revid) {
@@ -541,7 +543,9 @@ class DevContext extends Array {
     d = `DELETE FROM revdeta WHERE revid = '${revid}';`;
     await this.MONGOC.db("miro81").collection("FR2_revdeta").deleteOne({ revid: revid });
 
-    return (a + b + c + d);
+    let result = (a + b + c + d);
+    console.log(result);
+    return result;
   }
 
   async getProposalEa() {
@@ -708,10 +712,12 @@ class DevContext extends Array {
 
       // TOOLS ----------------------------------------------------
 
-      // await this.spellCheck("p63");
+      // await this.spellCheck("p60");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
+      // await this.deletePorfolio("p60");
+      // await this.deletePorfolioWithReview("p60");
 
     } catch (e) {
       console.log(e);

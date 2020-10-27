@@ -113,7 +113,7 @@ GeneralJs.portfolioRender = function (rows, garo) {
     dom1.appendChild(div_clone);
   }
 
-  return { desktopDom_portfolio: dom0, mobileDom_portfolio: dom1 }
+  return { desktopDom_portfolio: dom0, mobileDom_portfolio: dom1 };
 }
 
 GeneralJs.reviewRender = function (rows, garo) {

@@ -10,14 +10,15 @@ const AiFront = function () {
 }
 
 AiFront.prototype.renderSvgPng = async function (sw) {
-  if (/\.js$/.test(sw)) { sw = sw.replace(/\.js$/, ''); }
-
+  if (/\.js$/.test(sw)) {
+    sw = sw.replace(/\.js$/, '');
+  }
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
-
-  const binaryTotalPath = process.cwd() + "/binary/frontMaker/ai/" + sw;
-  let binaryTotalDir, targetAIList;
+  const binaryTotalPathParent = process.cwd() + "/binary/frontMaker/ai/";
+  const binaryTotalPath = binaryTotalPathParent + sw;
+  let binaryTotalDirParent, binaryTotalDir, targetAIList;
   try {
 
     //init setting
@@ -30,6 +31,10 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     this.text = await mapMaker.mapGenerator();
 
     //if ai file exist, add ai file info
+    binaryTotalDirParent = await fileSystem("readDir", [ binaryTotalPathParent ]);
+    if (!binaryTotalDirParent.includes(sw)) {
+      shell.exec(`mkdir ${shellLink(binaryTotalPathParent)}/${sw}`);
+    }
     binaryTotalDir = await fileSystem("readDir", [ binaryTotalPath ]);
     targetAIList = [];
     for (let i of binaryTotalDir) { if (/\.ai$/.test(i)) {
@@ -54,8 +59,10 @@ AiFront.prototype.renderSvgPng = async function (sw) {
       data: this.text,
       script: temp_scriptString,
       app: "Illustrator",
-      end: true,
+      end: false,
     });
+
+    /*
 
     //make svgTong files and make map with source written
     await mapMaker.writeMap_makeTong();
@@ -74,6 +81,8 @@ AiFront.prototype.renderSvgPng = async function (sw) {
         shell.exec(`cp ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
       }
     }
+
+    */
 
   } catch (e) {
     console.log(e);
@@ -124,6 +133,5 @@ AiFront.prototype.front_maker = async function (target) {
     process.exit();
   }
 }
-
 
 module.exports = AiFront;
