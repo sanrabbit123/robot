@@ -58,7 +58,7 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
   try {
     let adobe, tempAppList;
     let targetJs, appleScriptText;
-    let temp_scriptString, endScript, consoleScriptStart;
+    let temp_scriptString, endScript;
     let output;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
@@ -84,16 +84,13 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
     appleScriptText += `\n`;
     appleScriptText += `end tell`;
 
-    consoleScriptStart = await fileSystem(`readString`, [ this.links.factory + "/script/console.js" ]);
-
     temp_scriptString = '';
-    temp_scriptString += `var safeAppleScriptUniCodeInitialWord = "안녕하세요. 애플 스크립트의 유니코드 안전망입니다."`;
+    temp_scriptString += `var SAFEAPPLESCRIPTUNICODEINITIALWORD = "유니코드 안전망"`;
     temp_scriptString += `\n`;
     temp_scriptString += `try {\n`;
     temp_scriptString += `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
     temp_scriptString += await fileSystem(`readString`, [ `${this.options.home_dir}/factory/script/polyfill.js` ]);
     temp_scriptString += `\n`;
-    // temp_scriptString += await babelSystem(consoleScriptStart + obj.script + "\nuragen.echo();\n");
     temp_scriptString += await babelSystem(obj.script);
     temp_scriptString += `} catch (e) { e; }`;
 

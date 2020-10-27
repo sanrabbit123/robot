@@ -7,6 +7,7 @@ module.exports = {
       h += require("./script/contents_maker/contents.js").exec(options, 'P');
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     },
     portfolio_titles: function (options) {
@@ -15,6 +16,7 @@ module.exports = {
       h += require("./script/contents_maker/titles.js").exec(options, 'P');
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     },
     portfolio_photo: function (options) {
@@ -23,6 +25,7 @@ module.exports = {
       h += require("./script/contents_maker/photo.js").exec(options);
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     },
     review_contents: function (options) {
@@ -32,6 +35,7 @@ module.exports = {
       h += require("./script/contents_maker/contents.js").exec(options, 'R');
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     },
     review_titles: function (options) {
@@ -40,6 +44,7 @@ module.exports = {
       h += require("./script/contents_maker/titles.js").exec(options, 'R');
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     },
   },
@@ -50,6 +55,7 @@ module.exports = {
       h += require("./script/proposal_maker/proposal.js").exec(options);
       h += "\nlet main = new ExecMain(text, \"" + options.home_dir + "\");";
       h += "\nmain.start();\n";
+      h += "\nmain.echo();\n";
       return h;
     }
   },
@@ -61,6 +67,7 @@ module.exports = {
       h += await options.fileSystem(`readString`, [ `${options.script_dir}/${sw}.js` ]);
       h += "\nconst main = new ExecMain(text, \"" + options.home_dir + "/result/" + sw + "\", " + JSON.stringify(options.etc) + ");";
       h += "\nmain.start(\"" + options.dayString + "\");\n";
+      h += "\nmain.echo();\n";
       return h;
     },
   },
@@ -72,6 +79,7 @@ module.exports = {
       h += await options.fileSystem(`readString`, [ `${options.script_dir}/graph.js` ]);
       h += "\nconst main = new ExecMain(text, \"" + options.home_dir + "/result" + "\");";
       h += "\nmain.start(\"" + options.dayString + "\");\n";
+      h += "\nmain.echo();\n";
       return h;
     },
   },

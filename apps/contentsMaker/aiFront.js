@@ -40,9 +40,9 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     for (let i of binaryTotalDir) { if (/\.ai$/.test(i)) {
       targetAIList.push(i);
     }}
+    this.options.etc = {};
     if (targetAIList.length > 0) {
       targetAIList.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')) });
-      this.options.etc = {};
       this.options.etc.targetFile = [];
       for (let i of targetAIList) {
         this.options.etc.targetFile.push(binaryTotalPath + "/" + i);

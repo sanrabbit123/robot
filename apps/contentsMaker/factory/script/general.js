@@ -32,6 +32,7 @@ const ExecMain = function (text, dir, etc = {}) {
     width: 300,
   }
   this.etc = etc;
+  this.logs = [];
     `;
 
     if (boo === 'P') {
@@ -270,22 +271,25 @@ Mother.prototype.return_bottom = function (dom) {
 }
 
 Mother.prototype.return_englishBottom = function (dom) {
-  let copyItem, outline_group, bottom;
-  let words, wordsCount, wordsArr;
+  let copyItem, outline_group;
+  let words, wordsArr;
 
   copyItem = dom.duplicate();
   outline_group = copyItem.createOutline();
 
   words = outline_group.pageItems;
-  wordsCount = words.length;
 
   wordsArr = [];
-  for (let i = 0; i < wordsCount; i++) {
+  for (let i = 0; i < words.length; i++) {
     wordsArr.push(words[i].top - words[i].height);
   }
 
   wordsArr.sort(function (a, b) { return b - a; });
-  return wordsArr[0];
+
+  let result = wordsArr[0];
+  outline_group.remove();
+
+  return result;
 }
 
 Mother.prototype.return_right = function (dom) {
@@ -695,7 +699,6 @@ Mother.prototype.lineMaker = function (xy, options = {}) {
       line[i] = options[i];
     }
   }
-  return line;
 }
 
 Mother.prototype.deleteWithout = function (itemName) {
@@ -879,7 +882,23 @@ Mother.prototype.upRoundRectangle = function (original_top, original_left, origi
 
 ExecMain.prototype.mother = new Mother();
 
-//execute main only vaild : create and save functions
+//execute main only vaild : create and save and excute functions
+
+ExecMain.prototype.log = function (message) {
+  this.logs.push(message);
+}
+
+ExecMain.prototype.echo = function () {
+  if (this.logs.length > 0) {
+    var result = '';
+    for (var i = 0; i < this.logs.length; i++) {
+      result += String(this.logs[i]) + '\\n';
+    }
+    return result.slice(0, -1);
+  } else {
+    return 'adobe script done';
+  }
+}
 
 ExecMain.prototype.newdoc_setting = function (obj) {
   let newdoc_setting = new DocumentPreset();
