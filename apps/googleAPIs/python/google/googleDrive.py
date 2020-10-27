@@ -65,3 +65,28 @@ class GoogleDrive:
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
         return dumps({ "message": "success" })
+
+
+    def permissionsOn(self, id):
+        def callback(request_id, response, exception):
+            if exception:
+                print(exception)
+            else:
+                print(response.get('id'))
+
+        batch = self.app.new_batch_http_request(callback=callback)
+        user_permission = {
+            'type': 'anyone',
+            'role': 'reader',
+        }
+        batch.add(self.app.permissions().create(
+                fileId=id,
+                body=user_permission,
+                fields='id',
+        ))
+        batch.execute()
+        webViewLink = self.app.files().get(
+                fileId=id,
+                fields='webViewLink',
+        ).execute()
+        return dumps({ "link": webViewLink["webViewLink"] })

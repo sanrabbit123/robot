@@ -170,4 +170,24 @@ GoogleDrive.prototype.makeFolder_andMove_inPython = async function (folderName, 
   }
 }
 
+GoogleDrive.prototype.read_webView_inPython = async function (targetId) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "permissionsOn" ], { targetId });
+    return result.link;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+GoogleDrive.prototype.sleep = function (time) {
+  const instance = this;
+  return new Promise(function (resolve, reject) {
+    setTimeout(function(){
+      resolve('awake');
+    }, time);
+  });
+}
+
 module.exports = GoogleDrive;

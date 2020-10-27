@@ -112,5 +112,10 @@ try:
         result = driveApp.moveFolder(data["targetId"], data["parent"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'permissionsOn':
+        driveApp = GoogleDrive()
+        result = driveApp.permissionsOn(data["targetId"])
+        print(result)
+
 except Exception as e:
     print(e)

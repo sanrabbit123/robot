@@ -64,7 +64,7 @@ GoogleAPIs.prototype.consoleQ = function (question) {
   });
 }
 
-GoogleAPIs.prototype.sleeping = function (time) {
+GoogleAPIs.prototype.sleep = function (time) {
   let instance = this;
   return new Promise(function (resolve, reject) {
     setTimeout(function(){

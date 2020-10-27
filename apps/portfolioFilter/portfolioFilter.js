@@ -188,25 +188,31 @@ PortfolioFilter.prototype.to_portfolio = async function () {
 
     let fileList_780_raw, fileList_original_raw, fileList_png_raw;
     let fileList_780, fileList_original, fileList_png;
+    let resultFolderArr, resultFolderParent;
+
+    resultFolderArr = resultFolder.split('/');
+    resultFolderArr.pop();
+    resultFolderParent = resultFolderArr.join('/');
+
     fileList_780 = [];
     fileList_original = [];
     fileList_png = [];
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
     fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
-    fileList_png_raw = await fileSystem(`readDir`, [ resultFolder ]);
+    fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
     for (let i of fileList_780_raw) {
       if (i !== `.DS_Store`) {
-        fileList_780.push(i);
+        fileList_780.push(resultFolder + "/780/" + i);
       }
     }
     for (let i of fileList_original_raw) {
       if (i !== `.DS_Store`) {
-        fileList_original.push(i);
+        fileList_original.push(resultFolder + "/원본/" + i);
       }
     }
     for (let i of fileList_png_raw) {
       if (i !== `.DS_Store` && i !== `780` && i !== `원본`) {
-        fileList_png_raw.push(i);
+        fileList_png_raw.push(resultFolderParent + "/" + i);
       }
     }
 
@@ -264,54 +270,85 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, slack_bot } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
-  const idFilter = function (past) {
+
+  const idFilterNum = function (past) {
+    past = past.replace(/\.jpg$/, '');
     past = past.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '');
     past = past.replace(/[^0-9]/g, '');
+    past = past.replace(/^0/, '');
     let newNumber = Number(past);
-    return String(newNumber - 1);
+    return (newNumber - 1);
   }
+
+  const idFilter = function (past) {
+    return String(idFilterNum(past));
+  }
+
   try {
     await MONGOC.connect();
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
+    let pidFolder, fromArr, toArr;
+    let webViewLink;
 
     const { fileList_780, fileList_original, fileList_png } = await this.to_portfolio();
+
     const drive = new GoogleDrive();
     thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21");
+    await drive.sleep(1000);
+    console.log(`make folder ${this.folderName} done`);
     folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
+    await drive.sleep(1000);
+    console.log(`make folder ${this.folderName}/780 done`);
     folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
+    await drive.sleep(1000);
+    console.log(`make folder ${this.folderName}/원본 done`);
+
     for (let f of fileList_780) {
       await drive.upload_inPython(folderId_780, f);
+      await drive.sleep(500);
+      console.log(`upload file ${f} done`);
     }
     for (let f of fileList_original) {
       await drive.upload_inPython(folderId_original, f);
+      await drive.sleep(500);
+      console.log(`upload file ${f} done`);
     }
     for (let f of fileList_png) {
       await drive.upload_inPython(thisFolderId, f);
+      await drive.sleep(500);
+      console.log(`upload file ${f} done`);
     }
 
-    let pidFolder, fromArr, toArr;
+    webViewLink = await drive.read_webView_inPython(thisFolderId);
+    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
 
     shell.exec(`mv ${shellLink(this.resultFolder)}/원본 ${shellLink(this.resultFolder)}/${this.pid}`);
     pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
     fromArr = [];
     toArr = [];
+
+    pidFolder.sort((a, b) => { return idFilterNum(a) - idFilterNum(b); });
+
     for (let i of pidFolder) {
       if (i !== `.DS_Store`) {
-        shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/${idFilter(i)}`);
-        fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/${idFilter(i)}`);
-        toArr.push(`corePortfolio/original/${this.pid}/${idFilter(i)}`);
+        shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+        fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+        toArr.push(`corePortfolio/original/${this.pid}/i${idFilter(i)}${this.pid}.jpg`);
       }
     }
 
+    console.log(fromArr);
+    console.log(toArr);
+
     await this.mother.s3FileUpload(fromArr, toArr);
 
-    console.log(`done`);
+    console.log(`s3 upload done`);
   } catch (e) {
     console.log(e.message);
   } finally {

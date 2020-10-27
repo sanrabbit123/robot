@@ -687,8 +687,9 @@ class DevContext extends Array {
 
       // await this.mother.s3FileUpload("/Users/baechang-gyu/Desktop/a9.jpg", "test/test.jpg");
 
-      const app = new GoogleDrive();
-      await app.makeFolder_andMove_inPython("kkk", "11L22Szfanu0S7AgqPdg0kYT2lkpsHZWM");
+      // const app = new GoogleDrive();
+      // await app.makeFolder_andMove_inPython("kkk", "11L22Szfanu0S7AgqPdg0kYT2lkpsHZWM");
+
 
 
       // let num, boo;
@@ -707,7 +708,7 @@ class DevContext extends Array {
 
       // TOOLS ----------------------------------------------------
 
-      // await this.spellCheck("p59");
+      // await this.spellCheck("p63");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
