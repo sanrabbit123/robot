@@ -53,9 +53,6 @@ Mileo.prototype.get_points = function () {
     alert("stop! white space error");
     alert("text : " + String(text_array.string.length));
     alert("graphic : " + String(outline_group_array_graphic.length));
-    for (let i = 0; i < text_array.string.length; i++) {
-      alert(text_array.string[i].value);
-    }
   }
 
   let heights;

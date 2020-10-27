@@ -95,10 +95,10 @@ Mother.prototype.fontFilter = function (arg) {
     return "SDGothicNeoa-iHv";
   } else if (str === "Graphik-Light" || (/graphik/gi.test(str) && /100/gi.test(str)) || (/graphik/gi.test(str) && /light/gi.test(str))) {
     return "Graphik-Light";
-  } else if (str === "Graphik-Medium" || (/graphik/gi.test(str) && /200/gi.test(str)) || (/graphik/gi.test(str) && /medium/gi.test(str))) {
-    return "Graphik-Medium";
-  } else if (str === "Graphik-Regular" || (/graphik/gi.test(str) && /300/gi.test(str)) || (/graphik/gi.test(str) && /regular/gi.test(str))) {
+  } else if (str === "Graphik-Regular" || (/graphik/gi.test(str) && /200/gi.test(str)) || (/graphik/gi.test(str) && /regular/gi.test(str))) {
     return "Graphik-Regular";
+  } else if (str === "Graphik-Medium" || (/graphik/gi.test(str) && /300/gi.test(str)) || (/graphik/gi.test(str) && /medium/gi.test(str))) {
+    return "Graphik-Medium";
   } else if (str === "Graphik-Semibold" || (/graphik/gi.test(str) && /400/gi.test(str)) || (/graphik/gi.test(str) && /semibold/gi.test(str))) {
     return "Graphik-Semibold";
   } else if (str === "Graphik-Bold" || (/graphik/gi.test(str) && /500/gi.test(str)) || (/graphik/gi.test(str) && /bold/gi.test(str))) {
@@ -877,6 +877,50 @@ Mother.prototype.upRoundRectangle = function (original_top, original_left, origi
   }
 
   return newPath;
+}
+
+Mother.prototype.abcFilter = function (font, abc, left, width) {
+
+  if (/futura/gi.test(font)) {
+
+    switch (abc) {
+      case "g":
+        return [ (width * (0.629 / 3.679) * (-1)), (width * (4.417 / 3.679) * (1)) ];
+        break;
+      case "j":
+        return [ (width * (0.943 / 1.087) * (-1)), (width * (1.984 / 1.087) * (1)) ];
+        break;
+      case "p":
+        return [ (width * (0.943 / 3.679) * (-1)), (width * (1.72 / 3.679) * (1)) ];
+        break;
+      case "q":
+        return [ (width * (1.84 / 3.679) * (1)), (width * (4.697 / 3.679) * (1)) ];
+        break;
+      case "y":
+        return [ (width * (0.541 / 4.049) * (-1)), (width * (2.522 / 4.049) * (1)) ];
+        break;
+    }
+
+  } else if (/graphik/gi.test(font)) {
+
+    switch (abc) {
+      case "g":
+        return [ (width * (0.857 / 3.988) * (-1)), (width * (4.849 / 3.988) * (1)) ];
+        break;
+      case "j":
+        return [ (width * (1.14 / 1.571) * (-1)), (width * (2.51 / 1.571) * (1)) ];
+        break;
+      case "p":
+        return [ (width * (1.072 / 3.988) * (-1)), (width * (2.001 / 3.988) * (1)) ];
+        break;
+      case "q":
+        return [ (width * (1.947 / 3.988) * (1)), (width * (5.146 / 3.988) * (1)) ];
+        break;
+      case "y":
+        return [ (width * (0.096 / 3.928) * (-1)), (width * (2.947 / 3.928) * (1)) ];
+        break;
+    }
+  }
 }
 
 
