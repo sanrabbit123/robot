@@ -9,8 +9,9 @@ const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
-const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
-const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
+const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
+const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
 
 class DevContext extends Array {
 
@@ -696,18 +697,8 @@ class DevContext extends Array {
 
 
 
-      // let num, boo;
-      //
-      // for (let i = 0; i < 26 * 26 * 10 * 10; i++) {
-      //   num = i;
-      //   // console.log(this.mother.orderSystem("encode", num))
-      //   boo = (num === this.mother.orderSystem("decode", (this.mother.orderSystem("encode", num))))
-      //   if (!boo) {
-      //     console.log(num);
-      //     console.log(this.mother.orderSystem("encode", num))
-      //     console.log(this.mother.orderSystem("decode", (this.mother.orderSystem("encode", num))))
-      //   }
-      // }
+      const app = new ImmovablesServer();
+      await app.launching();
 
 
       // TOOLS ----------------------------------------------------

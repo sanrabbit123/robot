@@ -15,6 +15,9 @@ class RobotInstall:
             [ "cryptography" ],
             [ "requests" ],
             [ "boto3" ],
+            [ "bs4" ],
+            [ "html5lib" ],
+            [ "lxml" ],
         ]
         self.upgrade = [
             [ "google-api-core" ],
