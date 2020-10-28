@@ -207,7 +207,7 @@ module.exports = {
         "src": "searchFactor_desktop_on_00_2rspot769_100222.svg"
       },
       {
-        "wording": "Sign / Name card",
+        "wording": "Sign + Name card",
         "value": "signandnamecard",
         "src": "searchFactor_desktop_on_00_2rspot769_100222.svg"
       },

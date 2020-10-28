@@ -275,6 +275,7 @@ Mother.prototype.return_englishBottom = function (dom) {
   let words, wordsArr;
 
   copyItem = dom.duplicate();
+  copyItem.contents = dom.contents.replace(/[\\'\\"\\^\\*\\+\\@\\=\\-\\~\`\\{\\}\\[\\]\\(\\)\\#\\!\\$\\%\\&\\:\\;\\?\\/\\\\]/gi, '');
   outline_group = copyItem.createOutline();
 
   words = outline_group.pageItems;
@@ -880,24 +881,23 @@ Mother.prototype.upRoundRectangle = function (original_top, original_left, origi
 }
 
 Mother.prototype.abcFilter = function (font, abc, left, width) {
-
   if (/futura/gi.test(font)) {
 
     switch (abc) {
       case "g":
-        return [ (width * (0.629 / 3.679) * (-1)), (width * (4.417 / 3.679) * (1)) ];
+        return [ left + (width * (0.629 / 3.679) * (-1)), left + (width * (4.417 / 3.679) * (1)) ];
         break;
       case "j":
-        return [ (width * (0.943 / 1.087) * (-1)), (width * (1.984 / 1.087) * (1)) ];
+        return [ left + (width * (0.943 / 1.087) * (-1)), left + (width * (1.984 / 1.087) * (1)) ];
         break;
       case "p":
-        return [ (width * (0.943 / 3.679) * (-1)), (width * (1.72 / 3.679) * (1)) ];
+        return [ left + (width * (0.943 / 3.679) * (-1)), left + (width * (1.72 / 3.679) * (1)) ];
         break;
       case "q":
-        return [ (width * (1.84 / 3.679) * (1)), (width * (4.697 / 3.679) * (1)) ];
+        return [ left + (width * (1.84 / 3.679) * (1)), left + (width * (4.697 / 3.679) * (1)) ];
         break;
       case "y":
-        return [ (width * (0.541 / 4.049) * (-1)), (width * (2.522 / 4.049) * (1)) ];
+        return [ left + (width * (0.541 / 4.049) * (-1)), left + (width * (2.522 / 4.049) * (1)) ];
         break;
     }
 
@@ -905,22 +905,24 @@ Mother.prototype.abcFilter = function (font, abc, left, width) {
 
     switch (abc) {
       case "g":
-        return [ (width * (0.857 / 3.988) * (-1)), (width * (4.849 / 3.988) * (1)) ];
+        return [ left + (width * (0.857 / 3.988) * (-1)), left + (width * (4.849 / 3.988) * (1)) ];
         break;
       case "j":
-        return [ (width * (1.14 / 1.571) * (-1)), (width * (2.51 / 1.571) * (1)) ];
+        return [ left + (width * (1.14 / 1.571) * (-1)), left + (width * (2.51 / 1.571) * (1)) ];
         break;
       case "p":
-        return [ (width * (1.072 / 3.988) * (-1)), (width * (2.001 / 3.988) * (1)) ];
+        return [ left + (width * (1.072 / 3.988) * (-1)), left + (width * (2.001 / 3.988) * (1)) ];
         break;
       case "q":
-        return [ (width * (1.947 / 3.988) * (1)), (width * (5.146 / 3.988) * (1)) ];
+        return [ left + (width * (1.947 / 3.988) * (1)), left + (width * (5.146 / 3.988) * (1)) ];
         break;
       case "y":
-        return [ (width * (0.096 / 3.928) * (-1)), (width * (2.947 / 3.928) * (1)) ];
+        return [ left + (width * (0.096 / 3.928) * (-1)), left + (width * (2.947 / 3.928) * (1)) ];
         break;
     }
   }
+
+  return [];
 }
 
 
