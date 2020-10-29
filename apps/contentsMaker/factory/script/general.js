@@ -103,6 +103,8 @@ Mother.prototype.fontFilter = function (arg) {
     return "Graphik-Semibold";
   } else if (str === "Graphik-Bold" || (/graphik/gi.test(str) && /500/gi.test(str)) || (/graphik/gi.test(str) && /bold/gi.test(str))) {
     return "Graphik-Bold";
+  } else {
+    return arg;
   }
 }
 
@@ -290,6 +292,15 @@ Mother.prototype.return_englishBottom = function (dom) {
   let result = wordsArr[0];
   outline_group.remove();
 
+  return result;
+}
+
+Mother.prototype.return_englishMaxMin = function (dom) {
+  let copyItem_maxMin, result;
+  copyItem_maxMin = dom.duplicate();
+  copyItem_maxMin.contents = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'^,.!?()";
+  result = { max: this.return_top(copyItem_maxMin), min: this.return_bottom(copyItem_maxMin) };
+  copyItem_maxMin.remove();
   return result;
 }
 
@@ -1132,6 +1143,7 @@ ExecMain.prototype.setCreateSetting = function (obj) {
       pointColor: "#2fa678",
       fontSize: 37,
       font: "SDGothicNeoa-gBd",
+      bold: "SDGothicNeoa-gBd",
       leading: 58.7,
       horizontalScale: 98,
       tracking: -25,
