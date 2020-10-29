@@ -51,18 +51,25 @@ class Portdetailf extends Generalf {
   public function slideBox($flatform) {
     $html = '';
     if ($flatform === "desktop") {
+      
       $arr = [ "jari_l2", "jari_l1", "jari_ce", "jari_r2", "jari_r1" ];
+
       $html .= '<div id="pordslibox">';
+
       for ($i = 0; $i < 9; $i++) {
         $html .= '<div id="pordpicture'.(string)($i + 1).'" class="slidemain pordpictureclass'.(string)($i + 1).'" style="background-image: url(./list_image/portp'.$this->row->porlid.'/t'.$this->row->slide[$i].$this->row->porlid.'.jpg);background-size: '.$this->row->photoauto[$this->row->slide[$i]].';background-position: 50% 50%;background-repeat:no-repeat;"></div>';
       }
+
       for ($i = 0; $i < 9; $i++) {
         $html .= '<div id="pordthumb'.(string)($i + 1).'" class="slidethumb" style="background-image: url(./list_image/portp'.$this->row->porlid.'/t'.$this->row->slide[$i].$this->row->porlid.'.jpg);background-size: '.$this->row->photoauto[$this->row->slide[$i]].';background-position: 50% 50%;background-repeat:no-repeat;"></div>';
       }
+
       for ($i = 0; $i < 5; $i++) {
         $html .= '<div id="'.$arr[$i].'" class="slibutton"></div>';
       }
+
       $html .= '</div>';
+
     } else {
       $html .= '<div id="mopordsli1">';
       for ($i = 0; $i < 9; $i++) {

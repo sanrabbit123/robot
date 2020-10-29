@@ -62,15 +62,21 @@ AiFront.prototype.renderSvgPng = async function (sw) {
       end: false,
     });
 
-    /*
-
     //make svgTong files and make map with source written
     await mapMaker.writeMap_makeTong();
 
     //copy binary
-    let resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
-    let resBinaryDirPath = `${process.cwd()}/binary/frontMaker/${sw}`;
-    let resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
+    let resDir;
+    let resBinaryDirPathMother, resBinaryDirPath;
+    let resBinaryDirMother, resBinaryDir;
+    resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
+    resBinaryDirPathMother = `${process.cwd()}/binary/frontMaker/`;
+    resBinaryDirPath = `${resBinaryDirPathMother}/${sw}`;
+    resBinaryDirMother = await fileSystem(`readDir`, [ resBinaryDirPathMother ]);
+    if (!resBinaryDirMother.includes(sw)) {
+      shell.exec(`mkdir ${shellLink(resBinaryDirPathMother)}/${sw};`);
+    }
+    resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
     for (let i of resBinaryDir) {
       if (/\.png$/.test(i)) {
         shell.exec(`rm -rf ${shellLink(resBinaryDirPath)}/${i};`);
@@ -81,8 +87,6 @@ AiFront.prototype.renderSvgPng = async function (sw) {
         shell.exec(`cp ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
       }
     }
-
-    */
 
   } catch (e) {
     console.log(e);

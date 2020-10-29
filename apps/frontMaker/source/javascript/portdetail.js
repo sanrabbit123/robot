@@ -2,6 +2,100 @@ const PortdetailJs = function () {
   this.mother = new GeneralJs();
 }
 
+PortdetailJs.prototype.slideBox = function () {
+  const instance = this;
+  const { slide } = this.contents;
+  const sildeNum = slide.length;
+  let slideBox, div_clone;
+  let style = {};
+  let ea = "px";
+  let position;
+
+  slideBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    top: String(0),
+    left: String(0),
+    width: String(795) + ea,
+    height: "100%",
+    overflow: "hidden",
+  };
+  for (let i in style) {
+    slideBox.style[i] = style[i];
+  }
+
+  //css
+  /<%cssOut%>/ {
+    let h0 = '', h1 = '', h2 = '', h3 = '';
+    h0 = ".slide {position:absolute;top:0px;left:0px;width:795px;height:562px;background-color:#f7f7f7;transition:all 0.4s ease;}";
+    h0 += ".slidethumbnail {position:absolute;top:603px;width:124px;height:124px;background-color:#f7f7f7;transform:translateX(0px);transition:transform 0.2s ease;left:0;}";
+    h0 += ".slidebutton {cursor:pointer;position:absolute;top:603px;width:124px;height:124px;opacity:0;}";
+    return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
+  } %/%/e
+
+  //opacity slide
+  this.slide = [];
+  for (let i = 0; i < sildeNum; i++) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("slide");
+    style = {
+      backgroundImage: ("url('" + this.contents.backgroundImage[i] + "')"),
+      backgroundSize: this.contents.backgroundSize[i],
+      backgroundPosition: "50% 50%",
+      backgroundRepeat: "no-repeat",
+    };
+    for (let j in style) {
+      div_clone.style[j] = style[j];
+    }
+    this.slide.push(div_clone);
+    slideBox.appendChild(div_clone);
+  }
+
+  //thumbnail slide
+  this.thumbnail = [];
+  for (let i = 0; i < sildeNum; i++) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("slidethumbnail");
+    style = {
+      backgroundImage: ("url('" + this.contents.backgroundImage[i] + "')"),
+      backgroundSize: this.contents.backgroundSize[i],
+      backgroundPosition: "50% 50%",
+      backgroundRepeat: "no-repeat",
+    };
+    for (let j in style) {
+      div_clone.style[j] = style[j];
+    }
+    this.thumbnail.push(div_clone);
+    slideBox.appendChild(div_clone);
+  }
+
+  //silde buttons
+  this.slideButtons = [];
+  position = [
+    { direction: "left", value: 57, },
+    { direction: "left", value: 196, },
+    { direction: "left", value: 335, },
+    { direction: "right", value: 197, },
+    { direction: "right", value: 58, },
+  ]
+  for (let i = 0; i < 5; i++) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("slidebutton");
+    div_clone.style[position.direction] = String(position.value) + ea;
+    this.slideButtons.push(div_clone);
+    slideBox.appendChild(div_clone);
+  }
+
+  return slideBox;
+}
+
+
+
+
+
+
+
+
 PortdetailJs.prototype.standard = 0;
 
 PortdetailJs.prototype.slide_arr = function (m) {
@@ -133,6 +227,56 @@ PortdetailJs.prototype.slilaunching = function () {
   },3000);
 }
 
+PortdetailJs.prototype.setContents = async function () {
+  const instance = this;
+  try {
+    const getData = GeneralJs.returnGet();
+    const contentsRAW = await GeneralJs.ajaxPromise(("id=" + getData.qqq), "/engine/ContentsDetail.php");
+    let filteredContents, contents;
+
+    contents = JSON.parse(contentsRAW);
+    filteredContents = { ...contents };
+    const { porlid, slide, photoauto } = contents;
+
+    /*
+    apartname: "호반 써밋플레이스 39py 홈스타일링"
+    description: ""
+    desid: "de044"
+    photoauto: (24) ["auto 100%", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "100% auto", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%"]
+    photodae: (2) ["9", "3"]
+    photonum: 23
+    photosg: (23) ["s", "s", "g", "g", "s", "s", "g", "g", "s", "s", "s", "s", "g", "g", "s", "s", "g", "s", "s", "g", "g", "s", "s"]
+    porlid: "a74"
+    revid: "re999"
+    slide: (9) ["1", "2", "3", "4", "7", "8", "13", "14", "17"]
+    wordingKey: (6) [2, 7, 13, 16, 20, 23]
+    wordingtitle: (6) ["entrance", "livingroom", "diningroom", "bedroom", "kidsroom", "kidsroom"]
+    */
+
+    filteredContents.backgroundImage = [];
+    filteredContents.backgroundSize = [];
+    for (let i = 0; i < slide.length; i++) {
+      filteredContents.backgroundImage.push("/list_image/portp" + porlid + "/t" + slide[i] + porlid + ".jpg");
+      filteredContents.backgroundSize.push(photoauto[Number(slide[i])]);
+    }
+
+    this.contents = filteredContents;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 PortdetailJs.prototype.launching = async function () {
-  this.slilaunching();
+  const instance = this;
+  try {
+    await this.setContents();
+
+    console.log(this.contents);
+
+
+    this.slilaunching();
+
+  } catch (e) {
+    console.log(e);
+  }
 }

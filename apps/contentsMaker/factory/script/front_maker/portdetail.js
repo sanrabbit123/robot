@@ -1,3 +1,53 @@
+ExecMain.prototype.generalBelow = function (obj) {
+  const mother = this.mother;
+  let this_ai, from, to, contents, temp;
+
+  //create doc
+  let upDom = [];
+  let downDom = [];
+  if (obj.text.length > 0) { this_ai = this.createDoc(); }
+  from = "general";
+
+  //set contents
+  for (let i = 0; i < obj.text.length; i++) {
+
+    to = "below" + obj.list + "up";
+    contents = obj.text[i][0];
+    this.setCreateSetting({ from: from, to: to });
+    this.setParagraph({ from: contents, to: to });
+    upDom.push(this.createElements(this_ai, this.createSetting[to]).createOutline());
+
+    to = "below" + obj.list + "down";
+    contents = obj.text[i][1];
+    this.setCreateSetting({ from: from, to: to, exception: { color: "#d3d2d0", font: "Futura-Medium", fontSize: 18 } });
+    this.setParagraph({ from: contents, to: to });
+    downDom.push(this.createElements(this_ai, this.createSetting[to]).createOutline());
+
+  }
+
+  //position
+  if (upDom.length > 2) {
+    upDom[0].left = mother.return_left(upDom[1]) - 200 - upDom[0].width;
+    upDom[2].left = mother.return_right(upDom[1]) + 200;
+
+    for (let i = 0; i < downDom.length; i++) {
+      downDom[i].top = mother.return_bottom(upDom[1]) - 9;
+      downDom[i].left = upDom[i].left + (upDom[i].width / 2) - (downDom[i].width / 2);
+    }
+    mother.lineMaker([ [ mother.return_left(upDom[1]) - 100, mother.return_top(upDom[1]) ], [ mother.return_left(upDom[1]) - 100, mother.return_bottom(downDom[1]) ] ], {
+      strokeColor: mother.colorpick("#d3d2d0"),
+      strokeWidth: 1.5,
+    });
+    mother.lineMaker([ [ mother.return_right(upDom[1]) + 100, mother.return_top(upDom[1]) ], [ mother.return_right(upDom[1]) + 100, mother.return_bottom(downDom[1]) ] ], {
+      strokeColor: mother.colorpick("#d3d2d0"),
+      strokeWidth: 1.5,
+    });
+
+    mother.fit_box(true);
+    this.saveSvg(this_ai, obj.list + "below");
+  }
+}
+
 ExecMain.prototype.roomMaker = function (obj) {
   const { wording, value } = obj;
   let this_ai, from, to, contents, temp;
@@ -116,7 +166,7 @@ ExecMain.prototype.roomMaker = function (obj) {
 
 ExecMain.prototype.roomsMaker = function () {
   const { rooms } = this.text.main;
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < rooms.length; i++) {
     this.roomMaker(rooms[i]);
   }
 }
@@ -143,61 +193,21 @@ ExecMain.prototype.reviewMaker = function () {
 
 }
 
-ExecMain.prototype.generalBelow = function (obj) {
-  const mother = this.mother;
-  let this_ai, from, to, contents, temp;
-
-  //create doc
-  let upDom = [];
-  let downDom = [];
-  if (obj.text.length > 0) { this_ai = this.createDoc(); }
-  from = "general";
-
-  //set contents
-  for (let i = 0; i < obj.text.length; i++) {
-
-    to = "below" + obj.list + "up";
-    contents = obj.text[i][0];
-    this.setCreateSetting({ from: from, to: to });
-    this.setParagraph({ from: contents, to: to });
-    upDom.push(this.createElements(this_ai, this.createSetting[to]).createOutline());
-
-    to = "below" + obj.list + "down";
-    contents = obj.text[i][1];
-    this.setCreateSetting({ from: from, to: to, exception: { color: "#d3d2d0", font: "Futura-Medium", fontSize: 18 } });
-    this.setParagraph({ from: contents, to: to });
-    downDom.push(this.createElements(this_ai, this.createSetting[to]).createOutline());
-
-  }
-
-  //position
-  if (upDom.length > 2) {
-    upDom[0].left = mother.return_left(upDom[1]) - 200 - upDom[0].width;
-    upDom[2].left = mother.return_right(upDom[1]) + 200;
-
-    for (let i = 0; i < downDom.length; i++) {
-      downDom[i].top = mother.return_bottom(upDom[1]) - 9;
-      downDom[i].left = upDom[i].left + (upDom[i].width / 2) - (downDom[i].width / 2);
-    }
-    mother.lineMaker([ [ mother.return_left(upDom[1]) - 100, mother.return_top(upDom[1]) ], [ mother.return_left(upDom[1]) - 100, mother.return_bottom(downDom[1]) ] ], {
-      strokeColor: mother.colorpick("#d3d2d0"),
-      strokeWidth: 1.5,
-    });
-    mother.lineMaker([ [ mother.return_right(upDom[1]) + 100, mother.return_top(upDom[1]) ], [ mother.return_right(upDom[1]) + 100, mother.return_bottom(downDom[1]) ] ], {
-      strokeColor: mother.colorpick("#d3d2d0"),
-      strokeWidth: 1.5,
-    });
-
-    mother.fit_box(true);
-    this.saveSvg(this_ai, obj.list + "below");
-  }
-}
-
 ExecMain.prototype.start = function (dayString) {
+  const list = [ "desktop", "mobile" ];
+  let temp;
+
   this.dayString = dayString;
   this.roomsMaker();
   this.reviewMaker();
 
-
+  // general make
+  const { sub } = this.text;
+  for (let d of list) {
+    temp = {};
+    temp.text = sub.below[d].words.contents;
+    temp.list = d;
+    this.generalBelow(temp);
+  }
 
 }

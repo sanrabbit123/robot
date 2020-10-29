@@ -4,39 +4,39 @@ module.exports = {
       "name": "client",
       "title": "고객 정보",
       "src": {
-        "desktop": "title0_4rspot545_100222.svg",
-        "mobile": "title0_4rspot545_100222.svg"
+        "desktop": "title0_4rspot545_102915.svg",
+        "mobile": "title0_4rspot545_102915.svg"
       },
       "children": [
         {
           "title": "성함",
           "green": true,
           "src": {
-            "desktop": "factorTitle009_2rspot706_100222.svg",
-            "mobile": "factorTitle009_2rspot706_100222.svg"
+            "desktop": "factorTitle009_2rspot706_102915.svg",
+            "mobile": "factorTitle009_2rspot706_102915.svg"
           }
         },
         {
           "title": "연락처",
           "green": true,
           "src": {
-            "desktop": "factorTitle019_3rspot509_100222.svg",
-            "mobile": "factorTitle019_3rspot509_100222.svg"
+            "desktop": "factorTitle019_3rspot509_102915.svg",
+            "mobile": "factorTitle019_3rspot509_102915.svg"
           }
         },
         {
           "title": "주소",
           "green": true,
           "src": {
-            "desktop": "factorTitle029_2rspot796_100222.svg",
-            "mobile": "factorTitle029_2rspot796_100222.svg"
+            "desktop": "factorTitle029_2rspot796_102915.svg",
+            "mobile": "factorTitle029_2rspot796_102915.svg"
           },
           "buttons": [
             {
               "title": "주소 찾기",
               "src": {
-                "desktop": "b_white020_3rspot881_100222.svg",
-                "mobile": "b_white020_3rspot881_100222.svg"
+                "desktop": "b_white020_3rspot881_102915.svg",
+                "mobile": "b_white020_3rspot881_102915.svg"
               },
               "type": {
                 "desktop": "white",
@@ -49,16 +49,16 @@ module.exports = {
           "title": "구성원",
           "green": true,
           "src": {
-            "desktop": "factorTitle039_3rspot555_100222.svg",
-            "mobile": "factorTitle039_3rspot555_100222.svg"
+            "desktop": "factorTitle039_3rspot555_102915.svg",
+            "mobile": "factorTitle039_3rspot555_102915.svg"
           }
         },
         {
           "title": "이메일",
           "green": false,
           "src": {
-            "desktop": "factorTitle049_3rspot528_100222.svg",
-            "mobile": "factorTitle049_3rspot528_100222.svg"
+            "desktop": "factorTitle049_3rspot528_102915.svg",
+            "mobile": "factorTitle049_3rspot528_102915.svg"
           }
         }
       ]
@@ -67,16 +67,16 @@ module.exports = {
       "name": "budget",
       "title": "예산 계획",
       "src": {
-        "desktop": "title1_4rspot622_100222.svg",
-        "mobile": "title1_4rspot622_100222.svg"
+        "desktop": "title1_4rspot622_102915.svg",
+        "mobile": "title1_4rspot622_102915.svg"
       },
       "children": [
         {
           "title": "예산",
           "green": true,
           "src": {
-            "desktop": "factorTitle109_2rspot687_100222.svg",
-            "mobile": "factorTitle109_2rspot687_100222.svg"
+            "desktop": "factorTitle109_2rspot687_102915.svg",
+            "mobile": "factorTitle109_2rspot687_102915.svg"
           },
           "buttons": [
             {
@@ -87,12 +87,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow100_off_5rspot911_100222.svg",
-                  "on": "b_arrow100_on_5rspot911_100222.svg"
+                  "off": "b_arrow100_off_5rspot911_102915.svg",
+                  "on": "b_arrow100_on_5rspot911_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile100_off_6rspot956_100222.svg",
-                  "on": "b_checkmobile100_on_6rspot956_100222.svg"
+                  "off": "b_checkmobile100_off_6rspot956_102915.svg",
+                  "on": "b_checkmobile100_on_6rspot956_102915.svg"
                 }
               }
             },
@@ -104,12 +104,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow101_off_4rspot267_100222.svg",
-                  "on": "b_arrow101_on_4rspot267_100222.svg"
+                  "off": "b_arrow101_off_4rspot267_102915.svg",
+                  "on": "b_arrow101_on_4rspot267_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile101_off_5rspot309_100222.svg",
-                  "on": "b_checkmobile101_on_5rspot309_100222.svg"
+                  "off": "b_checkmobile101_off_5rspot309_102915.svg",
+                  "on": "b_checkmobile101_on_5rspot309_102915.svg"
                 }
               }
             },
@@ -121,12 +121,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow102_off_4rspot166_100222.svg",
-                  "on": "b_arrow102_on_4rspot166_100222.svg"
+                  "off": "b_arrow102_off_4rspot166_102915.svg",
+                  "on": "b_arrow102_on_4rspot166_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile102_off_5rspot209_100222.svg",
-                  "on": "b_checkmobile102_on_5rspot209_100222.svg"
+                  "off": "b_checkmobile102_off_5rspot209_102915.svg",
+                  "on": "b_checkmobile102_on_5rspot209_102915.svg"
                 }
               }
             },
@@ -138,12 +138,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow103_off_4rspot443_100222.svg",
-                  "on": "b_arrow103_on_4rspot443_100222.svg"
+                  "off": "b_arrow103_off_4rspot443_102915.svg",
+                  "on": "b_arrow103_on_4rspot443_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile103_off_5rspot467_100222.svg",
-                  "on": "b_checkmobile103_on_5rspot467_100222.svg"
+                  "off": "b_checkmobile103_off_5rspot467_102915.svg",
+                  "on": "b_checkmobile103_on_5rspot467_102915.svg"
                 }
               }
             },
@@ -155,12 +155,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow104_off_4rspot342_100222.svg",
-                  "on": "b_arrow104_on_4rspot342_100222.svg"
+                  "off": "b_arrow104_off_4rspot342_102915.svg",
+                  "on": "b_arrow104_on_4rspot342_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile104_off_5rspot366_100222.svg",
-                  "on": "b_checkmobile104_on_5rspot366_100222.svg"
+                  "off": "b_checkmobile104_off_5rspot366_102915.svg",
+                  "on": "b_checkmobile104_on_5rspot366_102915.svg"
                 }
               }
             },
@@ -172,12 +172,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow105_off_4rspot437_100222.svg",
-                  "on": "b_arrow105_on_4rspot437_100222.svg"
+                  "off": "b_arrow105_off_4rspot437_102915.svg",
+                  "on": "b_arrow105_on_4rspot437_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile105_off_5rspot461_100222.svg",
-                  "on": "b_checkmobile105_on_5rspot461_100222.svg"
+                  "off": "b_checkmobile105_off_5rspot461_102915.svg",
+                  "on": "b_checkmobile105_on_5rspot461_102915.svg"
                 }
               }
             },
@@ -189,12 +189,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow106_off_4rspot476_100222.svg",
-                  "on": "b_arrow106_on_4rspot476_100222.svg"
+                  "off": "b_arrow106_off_4rspot476_102915.svg",
+                  "on": "b_arrow106_on_4rspot476_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile106_off_5rspot511_100222.svg",
-                  "on": "b_checkmobile106_on_5rspot511_100222.svg"
+                  "off": "b_checkmobile106_off_5rspot511_102915.svg",
+                  "on": "b_checkmobile106_on_5rspot511_102915.svg"
                 }
               }
             },
@@ -206,12 +206,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow107_off_6rspot607_100222.svg",
-                  "on": "b_arrow107_on_6rspot607_100222.svg"
+                  "off": "b_arrow107_off_6rspot607_102915.svg",
+                  "on": "b_arrow107_on_6rspot607_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile107_off_7rspot615_100222.svg",
-                  "on": "b_checkmobile107_on_7rspot615_100222.svg"
+                  "off": "b_checkmobile107_off_7rspot615_102915.svg",
+                  "on": "b_checkmobile107_on_7rspot615_102915.svg"
                 }
               }
             }
@@ -220,8 +220,8 @@ module.exports = {
             "title": "인테리어에 사용 예정인 전체 예산을 알려주세요! ( 최소 예산 기준 )",
             "mobileException": "인테리어에 사용할 전체 예산을 알려주세요! ( 최소 기준 )",
             "src": {
-              "desktop": "notice109_28rspot447_100222.svg",
-              "mobile": "monotice109_24rspot138_100222.svg"
+              "desktop": "notice109_28rspot447_102915.svg",
+              "mobile": "monotice109_24rspot138_102915.svg"
             }
           }
         }
@@ -231,32 +231,32 @@ module.exports = {
       "name": "contract",
       "title": "입주 정보",
       "src": {
-        "desktop": "title2_4rspot726_100222.svg",
-        "mobile": "title2_4rspot726_100222.svg"
+        "desktop": "title2_4rspot726_102915.svg",
+        "mobile": "title2_4rspot726_102915.svg"
       },
       "children": [
         {
           "title": "평수",
           "green": true,
           "src": {
-            "desktop": "factorTitle209_2rspot684_100222.svg",
-            "mobile": "factorTitle209_2rspot684_100222.svg"
+            "desktop": "factorTitle209_2rspot684_102915.svg",
+            "mobile": "factorTitle209_2rspot684_102915.svg"
           },
           "subtitles": [
             {
               "title": "평",
               "mobileLevelUp": false,
               "src": {
-                "desktop": "subTitle200_0rspot799_100222.svg",
-                "mobile": "subTitle200_0rspot799_100222.svg"
+                "desktop": "subTitle200_0rspot799_102915.svg",
+                "mobile": "subTitle200_0rspot799_102915.svg"
               }
             }
           ],
           "notice": {
             "title": "분양 평수",
             "src": {
-              "desktop": "notice209_4rspot362_100222.svg",
-              "mobile": "notice209_4rspot362_100222.svg"
+              "desktop": "notice209_4rspot362_102915.svg",
+              "mobile": "notice209_4rspot362_102915.svg"
             }
           }
         },
@@ -264,24 +264,24 @@ module.exports = {
           "title": "입주일",
           "green": false,
           "src": {
-            "desktop": "factorTitle219_3rspot533_100222.svg",
-            "mobile": "factorTitle219_3rspot533_100222.svg"
+            "desktop": "factorTitle219_3rspot533_102915.svg",
+            "mobile": "factorTitle219_3rspot533_102915.svg"
           },
           "subtitles": [
             {
               "title": "년",
               "mobileLevelUp": false,
               "src": {
-                "desktop": "subTitle210_0rspot797_100222.svg",
-                "mobile": "subTitle210_0rspot797_100222.svg"
+                "desktop": "subTitle210_0rspot797_102915.svg",
+                "mobile": "subTitle210_0rspot797_102915.svg"
               }
             },
             {
               "title": "월",
               "mobileLevelUp": false,
               "src": {
-                "desktop": "subTitle211_0rspot845_100222.svg",
-                "mobile": "subTitle211_0rspot845_100222.svg"
+                "desktop": "subTitle211_0rspot845_102915.svg",
+                "mobile": "subTitle211_0rspot845_102915.svg"
               }
             },
             {
@@ -291,8 +291,8 @@ module.exports = {
                 "title": "일"
               },
               "src": {
-                "desktop": "subTitle212_3rspot009_100222.svg",
-                "mobile": "mosubTitle212_0rspot813_100222.svg"
+                "desktop": "subTitle212_3rspot009_102915.svg",
+                "mobile": "mosubTitle212_0rspot813_102915.svg"
               }
             }
           ],
@@ -305,12 +305,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop210_off_3rspot682_100222.svg",
-                  "on": "b_checkdesktop210_on_3rspot682_100222.svg"
+                  "off": "b_checkdesktop210_off_3rspot682_102915.svg",
+                  "on": "b_checkdesktop210_on_3rspot682_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile210_off_3rspot814_100222.svg",
-                  "on": "b_checkmobile210_on_3rspot814_100222.svg"
+                  "off": "b_checkmobile210_off_3rspot814_102915.svg",
+                  "on": "b_checkmobile210_on_3rspot814_102915.svg"
                 }
               }
             }
@@ -320,8 +320,8 @@ module.exports = {
           "title": "계약 형태",
           "green": false,
           "src": {
-            "desktop": "factorTitle229_4rspot737_100222.svg",
-            "mobile": "factorTitle229_4rspot737_100222.svg"
+            "desktop": "factorTitle229_4rspot737_102915.svg",
+            "mobile": "factorTitle229_4rspot737_102915.svg"
           },
           "buttons": [
             {
@@ -332,12 +332,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop220_off_2rspot788_100222.svg",
-                  "on": "b_checkdesktop220_on_2rspot788_100222.svg"
+                  "off": "b_checkdesktop220_off_2rspot788_102915.svg",
+                  "on": "b_checkdesktop220_on_2rspot788_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile220_off_2rspot92_100222.svg",
-                  "on": "b_checkmobile220_on_2rspot92_100222.svg"
+                  "off": "b_checkmobile220_off_2rspot92_102915.svg",
+                  "on": "b_checkmobile220_on_2rspot92_102915.svg"
                 }
               }
             },
@@ -349,12 +349,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop221_off_3rspot62_100222.svg",
-                  "on": "b_checkdesktop221_on_3rspot62_100222.svg"
+                  "off": "b_checkdesktop221_off_3rspot62_102915.svg",
+                  "on": "b_checkdesktop221_on_3rspot62_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile221_off_3rspot752_100222.svg",
-                  "on": "b_checkmobile221_on_3rspot752_100222.svg"
+                  "off": "b_checkmobile221_off_3rspot752_102915.svg",
+                  "on": "b_checkmobile221_on_3rspot752_102915.svg"
                 }
               }
             }
@@ -366,16 +366,16 @@ module.exports = {
       "name": "space",
       "title": "공간 사양",
       "src": {
-        "desktop": "title3_4rspot781_100222.svg",
-        "mobile": "title3_4rspot781_100222.svg"
+        "desktop": "title3_4rspot781_102915.svg",
+        "mobile": "title3_4rspot781_102915.svg"
       },
       "children": [
         {
           "title": "공간 상태",
           "green": false,
           "src": {
-            "desktop": "factorTitle309_4rspot732_100222.svg",
-            "mobile": "factorTitle309_4rspot732_100222.svg"
+            "desktop": "factorTitle309_4rspot732_102915.svg",
+            "mobile": "factorTitle309_4rspot732_102915.svg"
           },
           "subtitles": [
             {
@@ -383,8 +383,8 @@ module.exports = {
               "mobileLevelUp": true,
               "green": false,
               "src": {
-                "desktop": "subTitle300_2rspot997_100222.svg",
-                "mobile": "mofactorTitle300_3rspot834_100222.svg"
+                "desktop": "subTitle300_2rspot997_102915.svg",
+                "mobile": "mofactorTitle300_3rspot834_102915.svg"
               }
             },
             {
@@ -392,8 +392,8 @@ module.exports = {
               "mobileLevelUp": true,
               "green": false,
               "src": {
-                "desktop": "subTitle301_4rspot933_100222.svg",
-                "mobile": "mofactorTitle301_5rspot733_100222.svg"
+                "desktop": "subTitle301_4rspot933_102915.svg",
+                "mobile": "mofactorTitle301_5rspot733_102915.svg"
               }
             },
             {
@@ -401,8 +401,8 @@ module.exports = {
               "mobileLevelUp": true,
               "green": false,
               "src": {
-                "desktop": "subTitle302_2rspot635_100222.svg",
-                "mobile": "mofactorTitle302_3rspot493_100222.svg"
+                "desktop": "subTitle302_2rspot635_102915.svg",
+                "mobile": "mofactorTitle302_3rspot493_102915.svg"
               }
             }
           ],
@@ -415,12 +415,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow300_off_1rspot203_100222.svg",
-                  "on": "b_arrow300_on_1rspot203_100222.svg"
+                  "off": "b_arrow300_off_1rspot203_102915.svg",
+                  "on": "b_arrow300_on_1rspot203_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green300_off_1rspot223_100222.svg",
-                  "on": "b_green300_on_1rspot223_100222.svg"
+                  "off": "b_green300_off_1rspot223_102915.svg",
+                  "on": "b_green300_on_1rspot223_102915.svg"
                 }
               }
             },
@@ -432,12 +432,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow301_off_1rspot371_100222.svg",
-                  "on": "b_arrow301_on_1rspot371_100222.svg"
+                  "off": "b_arrow301_off_1rspot371_102915.svg",
+                  "on": "b_arrow301_on_1rspot371_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green301_off_1rspot374_100222.svg",
-                  "on": "b_green301_on_1rspot374_100222.svg"
+                  "off": "b_green301_off_1rspot374_102915.svg",
+                  "on": "b_green301_on_1rspot374_102915.svg"
                 }
               }
             },
@@ -449,12 +449,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow302_off_1rspot387_100222.svg",
-                  "on": "b_arrow302_on_1rspot387_100222.svg"
+                  "off": "b_arrow302_off_1rspot387_102915.svg",
+                  "on": "b_arrow302_on_1rspot387_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green302_off_1rspot39_100222.svg",
-                  "on": "b_green302_on_1rspot39_100222.svg"
+                  "off": "b_green302_off_1rspot39_102915.svg",
+                  "on": "b_green302_on_1rspot39_102915.svg"
                 }
               }
             },
@@ -466,12 +466,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow303_off_3rspot617_100222.svg",
-                  "on": "b_arrow303_on_3rspot617_100222.svg"
+                  "off": "b_arrow303_off_3rspot617_102915.svg",
+                  "on": "b_arrow303_on_3rspot617_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green303_off_3rspot619_100222.svg",
-                  "on": "b_green303_on_3rspot619_100222.svg"
+                  "off": "b_green303_off_3rspot619_102915.svg",
+                  "on": "b_green303_on_3rspot619_102915.svg"
                 }
               }
             },
@@ -483,12 +483,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow304_off_3rspot662_100222.svg",
-                  "on": "b_arrow304_on_3rspot662_100222.svg"
+                  "off": "b_arrow304_off_3rspot662_102915.svg",
+                  "on": "b_arrow304_on_3rspot662_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green304_off_3rspot676_100222.svg",
-                  "on": "b_green304_on_3rspot676_100222.svg"
+                  "off": "b_green304_off_3rspot676_102915.svg",
+                  "on": "b_green304_on_3rspot676_102915.svg"
                 }
               }
             },
@@ -500,12 +500,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow305_off_1rspot853_100222.svg",
-                  "on": "b_arrow305_on_1rspot853_100222.svg"
+                  "off": "b_arrow305_off_1rspot853_102915.svg",
+                  "on": "b_arrow305_on_1rspot853_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green305_off_1rspot861_100222.svg",
-                  "on": "b_green305_on_1rspot861_100222.svg"
+                  "off": "b_green305_off_1rspot861_102915.svg",
+                  "on": "b_green305_on_1rspot861_102915.svg"
                 }
               }
             },
@@ -517,12 +517,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_arrow306_off_3rspot974_100222.svg",
-                  "on": "b_arrow306_on_3rspot974_100222.svg"
+                  "off": "b_arrow306_off_3rspot974_102915.svg",
+                  "on": "b_arrow306_on_3rspot974_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_green306_off_3rspot987_100222.svg",
-                  "on": "b_green306_on_3rspot987_100222.svg"
+                  "off": "b_green306_off_3rspot987_102915.svg",
+                  "on": "b_green306_on_3rspot987_102915.svg"
                 }
               }
             }
@@ -532,8 +532,8 @@ module.exports = {
           "title": "요청사항",
           "green": false,
           "src": {
-            "desktop": "factorTitle319_4rspot534_100222.svg",
-            "mobile": "factorTitle319_4rspot534_100222.svg"
+            "desktop": "factorTitle319_4rspot534_102915.svg",
+            "mobile": "factorTitle319_4rspot534_102915.svg"
           }
         }
       ]
@@ -550,7 +550,7 @@ module.exports = {
             "홈리에종 서비스 신청",
             "신청서를 남겨주시면, 확인 후 연락드립니다."
           ],
-          "src": "gt_consulting_desktop_3rspot02_100222.svg"
+          "src": "gt_consulting_desktop_3rspot02_102915.svg"
         }
       },
       "mobile": {
@@ -562,22 +562,22 @@ module.exports = {
             "홈리에종 서비스 신청",
             "신청서를 남겨주시면, 확인 후 연락드립니다."
           ],
-          "src": "gt_consulting_mobile_3rspot02_100222.svg"
+          "src": "gt_consulting_mobile_3rspot02_102915.svg"
         }
       }
     },
     "survey": {
       "title": "설문조사",
       "src": {
-        "desktop": "surveyTitle_3rspot692_100222.svg",
-        "mobile": "surveyTitle_3rspot692_100222.svg"
+        "desktop": "surveyTitle_3rspot692_102915.svg",
+        "mobile": "surveyTitle_3rspot692_102915.svg"
       },
       "children": [
         {
           "title": "어떤 경로로 홈리에종을 알게 되셨나요?",
           "src": {
-            "desktop": "surveyQuestion_17rspot485_100222.svg",
-            "mobile": "surveyQuestion_17rspot485_100222.svg"
+            "desktop": "surveyQuestion_17rspot485_102915.svg",
+            "mobile": "surveyQuestion_17rspot485_102915.svg"
           },
           "buttons": [
             {
@@ -588,12 +588,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop900_off_5rspot688_100222.svg",
-                  "on": "b_checkdesktop900_on_5rspot688_100222.svg"
+                  "off": "b_checkdesktop900_off_5rspot688_102915.svg",
+                  "on": "b_checkdesktop900_on_5rspot688_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile900_off_5rspot819_100222.svg",
-                  "on": "b_checkmobile900_on_5rspot819_100222.svg"
+                  "off": "b_checkmobile900_off_5rspot819_102915.svg",
+                  "on": "b_checkmobile900_on_5rspot819_102915.svg"
                 }
               }
             },
@@ -605,12 +605,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop901_off_3rspot789_100222.svg",
-                  "on": "b_checkdesktop901_on_3rspot789_100222.svg"
+                  "off": "b_checkdesktop901_off_3rspot789_102915.svg",
+                  "on": "b_checkdesktop901_on_3rspot789_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile901_off_3rspot925_100222.svg",
-                  "on": "b_checkmobile901_on_3rspot925_100222.svg"
+                  "off": "b_checkmobile901_off_3rspot925_102915.svg",
+                  "on": "b_checkmobile901_on_3rspot925_102915.svg"
                 }
               }
             },
@@ -622,12 +622,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop902_off_5rspot481_100222.svg",
-                  "on": "b_checkdesktop902_on_5rspot481_100222.svg"
+                  "off": "b_checkdesktop902_off_5rspot481_102915.svg",
+                  "on": "b_checkdesktop902_on_5rspot481_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile902_off_5rspot613_100222.svg",
-                  "on": "b_checkmobile902_on_5rspot613_100222.svg"
+                  "off": "b_checkmobile902_off_5rspot613_102915.svg",
+                  "on": "b_checkmobile902_on_5rspot613_102915.svg"
                 }
               }
             },
@@ -639,12 +639,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop903_off_4rspot545_100222.svg",
-                  "on": "b_checkdesktop903_on_4rspot545_100222.svg"
+                  "off": "b_checkdesktop903_off_4rspot545_102915.svg",
+                  "on": "b_checkdesktop903_on_4rspot545_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile903_off_4rspot677_100222.svg",
-                  "on": "b_checkmobile903_on_4rspot677_100222.svg"
+                  "off": "b_checkmobile903_off_4rspot677_102915.svg",
+                  "on": "b_checkmobile903_on_4rspot677_102915.svg"
                 }
               }
             },
@@ -656,12 +656,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop904_off_4rspot82_100222.svg",
-                  "on": "b_checkdesktop904_on_4rspot82_100222.svg"
+                  "off": "b_checkdesktop904_off_4rspot82_102915.svg",
+                  "on": "b_checkdesktop904_on_4rspot82_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile904_off_4rspot952_100222.svg",
-                  "on": "b_checkmobile904_on_4rspot952_100222.svg"
+                  "off": "b_checkmobile904_off_4rspot952_102915.svg",
+                  "on": "b_checkmobile904_on_4rspot952_102915.svg"
                 }
               }
             },
@@ -673,12 +673,12 @@ module.exports = {
               },
               "src": {
                 "desktop": {
-                  "off": "b_checkdesktop905_off_4rspot834_100222.svg",
-                  "on": "b_checkdesktop905_on_4rspot834_100222.svg"
+                  "off": "b_checkdesktop905_off_4rspot834_102915.svg",
+                  "on": "b_checkdesktop905_on_4rspot834_102915.svg"
                 },
                 "mobile": {
-                  "off": "b_checkmobile905_off_4rspot966_100222.svg",
-                  "on": "b_checkmobile905_on_4rspot966_100222.svg"
+                  "off": "b_checkmobile905_off_4rspot966_102915.svg",
+                  "on": "b_checkmobile905_on_4rspot966_102915.svg"
                 }
               }
             }
@@ -690,12 +690,12 @@ module.exports = {
       "title": "상기 개인정보 취급방침에 동의합니다.",
       "src": {
         "desktop": {
-          "off": "b_checkdesktop999_off_16rspot934_100222.svg",
-          "on": "b_checkdesktop999_on_16rspot934_100222.svg"
+          "off": "b_checkdesktop999_off_16rspot934_102915.svg",
+          "on": "b_checkdesktop999_on_16rspot934_102915.svg"
         },
         "mobile": {
-          "off": "b_checkmobile999_off_17rspot066_100222.svg",
-          "on": "b_checkmobile999_on_17rspot066_100222.svg"
+          "off": "b_checkmobile999_off_17rspot066_102915.svg",
+          "on": "b_checkmobile999_on_17rspot066_102915.svg"
         }
       },
       "type": {
@@ -707,8 +707,8 @@ module.exports = {
       {
         "title": "신청하기",
         "src": {
-          "desktop": "b_white909_3rspot582_100222.svg",
-          "mobile": "b_white909_3rspot582_100222.svg"
+          "desktop": "b_white909_3rspot582_102915.svg",
+          "mobile": "b_white909_3rspot582_102915.svg"
         },
         "type": {
           "desktop": "white",
@@ -718,8 +718,8 @@ module.exports = {
       {
         "title": "채널 열기",
         "src": {
-          "desktop": "b_white919_3rspot866_100222.svg",
-          "mobile": "b_white919_3rspot866_100222.svg"
+          "desktop": "b_white919_3rspot866_102915.svg",
+          "mobile": "b_white919_3rspot866_102915.svg"
         },
         "type": {
           "desktop": "white",
@@ -729,8 +729,8 @@ module.exports = {
       {
         "title": "사진 전송",
         "src": {
-          "desktop": "b_white929_3rspot942_100222.svg",
-          "mobile": "b_white929_3rspot942_100222.svg"
+          "desktop": "b_white929_3rspot942_102915.svg",
+          "mobile": "b_white929_3rspot942_102915.svg"
         },
         "type": {
           "desktop": "white",
@@ -742,12 +742,12 @@ module.exports = {
       "arrow": [
         {
           "name": "arrow0",
-          "src": "arrow_1rspot132_100222.svg"
+          "src": "arrow_1rspot132_102915.svg"
         }
       ],
       "pending": {
         "title": "전송중입니다...",
-        "src": "pending_6rspot228_100222.svg"
+        "src": "pending_6rspot228_102915.svg"
       }
     },
     "thankyou": {
@@ -776,8 +776,8 @@ module.exports = {
             ]
           },
           "src": {
-            "desktop": "thankyou_desktop_0_19rspot237_100222.svg",
-            "mobile": "thankyou_mobile_0_5rspot446_100222.svg"
+            "desktop": "thankyou_desktop_0_19rspot237_102915.svg",
+            "mobile": "thankyou_mobile_0_5rspot446_102915.svg"
           }
         },
         {
@@ -805,8 +805,8 @@ module.exports = {
             ]
           },
           "src": {
-            "desktop": "thankyou_desktop_1_19rspot163_100222.svg",
-            "mobile": "thankyou_mobile_1_5rspot454_100222.svg"
+            "desktop": "thankyou_desktop_1_19rspot163_102915.svg",
+            "mobile": "thankyou_mobile_1_5rspot454_102915.svg"
           }
         }
       ],
@@ -821,7 +821,7 @@ module.exports = {
                 "신청이 완료되었습니다!",
                 "남겨주신 번호로 확인 연락드릴 예정입니다."
               ],
-              "src": "gt_thankyou_desktop_3rspot34_100222.svg"
+              "src": "gt_thankyou_desktop_3rspot34_102915.svg"
             }
           },
           "mobile": {
@@ -833,7 +833,7 @@ module.exports = {
                 "신청이 완료되었습니다!",
                 "남겨주신 번호로 확인 연락드릴 예정입니다."
               ],
-              "src": "gt_thankyou_mobile_3rspot34_100222.svg"
+              "src": "gt_thankyou_mobile_3rspot34_102915.svg"
             }
           }
         },
@@ -851,8 +851,8 @@ module.exports = {
             ]
           },
           "src": {
-            "desktop": "thankyouWhiteTitle_desktop_8rspot563_100222.svg",
-            "mobile": "thankyouWhiteTitle_mobile_3rspot016_100222.svg"
+            "desktop": "thankyouWhiteTitle_desktop_8rspot563_102915.svg",
+            "mobile": "thankyouWhiteTitle_mobile_3rspot016_102915.svg"
           }
         },
         "etc": {
@@ -860,31 +860,31 @@ module.exports = {
             "desktop": "파일을 드래그하여 사진 업로드",
             "mobile": "클릭하여 사진 업로드",
             "src": {
-              "desktop": "thankyouClickWording_desktop_13rspot122_100222.svg",
-              "mobile": "thankyouClickWording_mobile_9rspot035_100222.svg"
+              "desktop": "thankyouClickWording_desktop_13rspot122_102915.svg",
+              "mobile": "thankyouClickWording_mobile_9rspot035_102915.svg"
             }
           },
           "fileSend": {
             "factorTitle": {
               "title": "파일 보내기",
               "src": {
-                "desktop": "thankyouFileSend_title_5rspot658_100222.svg",
-                "mobile": "thankyouFileSend_title_5rspot658_100222.svg"
+                "desktop": "thankyouFileSend_title_5rspot658_102915.svg",
+                "mobile": "thankyouFileSend_title_5rspot658_102915.svg"
               }
             },
             "white": [
               {
                 "title": "파일 선택",
                 "src": {
-                  "desktop": "thankyouFileSend_white_0_3rspot889_100222.svg",
-                  "mobile": "thankyouFileSend_white_0_3rspot889_100222.svg"
+                  "desktop": "thankyouFileSend_white_0_3rspot889_102915.svg",
+                  "mobile": "thankyouFileSend_white_0_3rspot889_102915.svg"
                 }
               },
               {
                 "title": "파일 추가",
                 "src": {
-                  "desktop": "thankyouFileSend_white_1_3rspot968_100222.svg",
-                  "mobile": "thankyouFileSend_white_1_3rspot968_100222.svg"
+                  "desktop": "thankyouFileSend_white_1_3rspot968_102915.svg",
+                  "mobile": "thankyouFileSend_white_1_3rspot968_102915.svg"
                 }
               }
             ]
@@ -892,8 +892,8 @@ module.exports = {
           "complete": {
             "title": "사진 전송이, 완료되었습니다!",
             "src": {
-              "desktop": "thankyouComplete_desktop_11rspot598_100222.svg",
-              "mobile": "thankyouComplete_mobile_2rspot673_100222.svg"
+              "desktop": "thankyouComplete_desktop_11rspot598_102915.svg",
+              "mobile": "thankyouComplete_mobile_2rspot673_102915.svg"
             }
           }
         }
