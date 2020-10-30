@@ -1,16 +1,13 @@
-class Pyeong {
-  constructor(rawNumber) {
-    this.raw = this.value = Number(rawNumber);
-  }
+const Pyeong = function (rawNumber) {
+  this.raw = this.value = Number(rawNumber);
+}
 
-  toNormal() {
-    return this.value;
-  }
+Pyeong.prototype.toNormal = function () {
+  return this.value;
+}
 
-  toMessage() {
-    return String(this.value) + "평";
-  }
-
+Pyeong.prototype.toMessage = function () {
+  return String(this.value) + "평";
 }
 
 module.exports = Pyeong;

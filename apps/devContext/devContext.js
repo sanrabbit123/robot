@@ -697,8 +697,17 @@ class DevContext extends Array {
 
 
 
-      const app = new ImmovablesServer();
-      await app.launching();
+      // const app = new ImmovablesServer();
+      // await app.launching();
+
+
+      let back = new BackMaker();
+      let client = await back.getClientById("c2010_aa69s");
+      console.log(client);
+      console.log(client.latestRequest);
+
+
+
 
 
       // TOOLS ----------------------------------------------------

@@ -1,11 +1,9 @@
-class Family {
-  constructor(rawString) {
-    this.raw = this.value = rawString;
-  }
+const Family = function (rawString) {
+  this.raw = this.value = rawString;
+}
 
-  toNormal() {
-    return this.value;
-  }
+Family.prototype.toNormal = function () {
+  return this.value;
 }
 
 module.exports = Family;

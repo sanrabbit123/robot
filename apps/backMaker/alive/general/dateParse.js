@@ -42,8 +42,6 @@ class DateParse extends Date {
     return (date.slice(2, 4) + date.slice(5, 7) + date.slice(8, 10));
   }
 
-
-
 }
 
 module.exports = DateParse;

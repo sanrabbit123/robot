@@ -116,7 +116,7 @@ PythonCloud.prototype.routingCloud = function () {
             const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
             await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
             for (let client of clients) {
-              await fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${todayMaker()}.json`, client.death ]);
+              await fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${todayMaker()}.json`, client.toDeath() ]);
             }
 
             slack_bot.chat.postMessage({ text: `${clients.name} 고객님의 Google analytics 정보를 업데이트하였습니다! : https://docs.google.com/spreadsheets/d/1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc/edit?usp=sharing`, channel: `#401_consulting` });

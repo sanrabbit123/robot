@@ -6,18 +6,12 @@ const DesignerProposal = require(CLIENT_DIR + "/designerProposal/designerProposa
 
 class Request extends Array {
 
-  toAlive(_request) {
+  constructor(_request) {
+    super();
     const { request, analytics, proposal } = _request;
-    let instance0, instance1, instance2;
-    instance0 = new WebRequest(request);
-    instance1 = new HomeLiaisonAnalytics(analytics);
-    instance2 = new DesignerProposal(proposal);
-    instance0.toAlive();
-    instance1.toAlive();
-    instance2.toAlive();
-    this.request = instance0;
-    this.analytics = instance1;
-    this.proposal = instance2;
+    this.request = new WebRequest(request);
+    this.analytics = new HomeLiaisonAnalytics(analytics);
+    this.proposal = new DesignerProposal(proposal);
     this.push(this.request);
     this.push(this.analytics);
     this.push(this.proposal);
@@ -54,16 +48,10 @@ class Requests extends Array {
 }
 
 const RequestsMaker = function (requests) {
-  this.rawRequests = requests;
-}
-
-RequestsMaker.prototype.output = function () {
   let result = new Requests();
   let requestInstance;
-
-  for (let i of this.rawRequests) {
-    requestInstance = new Request();
-    requestInstance.toAlive(i);
+  for (let i of requests) {
+    requestInstance = new Request(i);
     result.push(requestInstance);
   }
   return result;

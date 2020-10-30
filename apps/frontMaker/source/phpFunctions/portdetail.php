@@ -51,7 +51,7 @@ class Portdetailf extends Generalf {
   public function slideBox($flatform) {
     $html = '';
     if ($flatform === "desktop") {
-      
+
       $arr = [ "jari_l2", "jari_l1", "jari_ce", "jari_r2", "jari_r1" ];
 
       $html .= '<div id="pordslibox">';
@@ -87,14 +87,25 @@ class Portdetailf extends Generalf {
 
   public function designerBox($className, $boo) {
     $html = '<div class="'.$className.'">';
+
+
+
+
     $html .= '<div class="'.(($boo) ? '' : 'mo').'deligmar"></div>';
+
     if (!$boo) { $html .= '<img class="modeligdet1" src="./list_svg/revrevrev/revhook2.svg">'; }
+
     $html .= '<div class="'.(($boo) ? '' : 'mo').'deligimg" style="background-image: url(./list_image/portp'.$this->designer->daepyo_a.'/mobile/mo'.$this->designer->daepyo_t.$this->designer->daepyo_a.'.jpg);"></div>';
+
     $html .= '<img class="'.(($boo) ? '' : 'mo').'deligname" ';
     if ($boo) { $html .= 'style="padding-left:'.(($this->row->desid === "de000") ? "16px" : "0px").';" '; }
     $html .= 'src="./list_svg/delist/name/name'.$this->designer->desid.'.svg">';
+
     $html .= '<img class="'.(($boo) ? '' : 'mo').'deligmethod '.(($boo) ? '' : 'mo').'mtd1" src="./list_svg/delist/method/'.$this->designer->method1.(($boo) ? '_mid' : '').'.svg">';
+
     $html .= '<img class="'.(($boo) ? '' : 'mo').'deligmethod '.(($boo) ? '' : 'mo').'mtd2" src="./list_svg/delist/method/'.$this->designer->method2.(($boo) ? '_mid' : '').'.svg">';
+
+
     $html .= '<div class="'.(($boo) ? '' : 'mo').'deligyeongbox">';
     $html .= '<img class="'.(($boo) ? 'deligetc' : 'modedegyeongib').'" src="./list_svg/delist/etc/etc1.svg">';
     if ($boo) { $html .= '<img class="deligetc" src="./list_svg/delist/etc/etc0.svg">'; }
@@ -103,7 +114,13 @@ class Portdetailf extends Generalf {
     $html .= '<div class="'.(($boo) ? 'deliwetc0' : 'modedegyeongword').'"> '.$this->designer->career->month.'</div>';
     $html .= '<img class="'.(($boo) ? 'deligetc deligetc2' : 'modedegyeongib mogca2').'" src="./list_svg/delist/etc/etc3.svg">';
     $html .= '</div>';
+
     $html .= '<a href="./desdetail.php?qqq='.$this->designer->desid.'"><div class="delibutton"></div></a>';
+
+
+
+
+
     $html .= '</div>';
     return $html;
   }

@@ -19,8 +19,7 @@ class Client {
     this.phone = json.phone;
     this.email = json.email;
     this.cliid = clientId(json.cliid);
-    requestsInstance = new RequestsMaker(json.requests);
-    this.requests = requestsInstance.output();
+    this.requests = RequestsMaker(json.requests);
   }
 
   get latestRequest() {

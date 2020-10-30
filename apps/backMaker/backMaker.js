@@ -231,7 +231,6 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
 
       const { collection, id, time } = this.pastMap();
       queryObj = {};
-      queryObj[time] = 1;
 
       await MONGOC.connect();
 
@@ -264,8 +263,6 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
         contentsJson = require(`${contentsResourceDir}/${i}`);
         row.push(contentsJson);
       }
-
-      console.log(row);
 
     }
 

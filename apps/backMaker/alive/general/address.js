@@ -1,11 +1,9 @@
-class Address {
-  constructor(rawString) {
-    this.raw = this.value = rawString;
-  }
+const Address = function (rawString) {
+  this.raw = this.value = rawString;
+}
 
-  toNormal() {
-    return this.value;
-  }
+Address.prototype.toNormal = function () {
+  return this.value;
 }
 
 module.exports = Address;

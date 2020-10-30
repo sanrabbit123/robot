@@ -90,6 +90,71 @@ PortdetailJs.prototype.slideBox = function () {
 }
 
 
+PortdetailJs.prototype.designerBox = function () {
+  const instance = this;
+  let designerBox, div_clone;
+  let style = {};
+  let ea = "px";
+  designerBox = GeneralJs.nodes.div.cloneNode(true);
+
+  //css
+  /<%cssOut%>/ {
+    let h0 = '', h1 = '', h2 = '', h3 = '';
+    h0 = ".designerBox {position:relative;top:0;margin-left:842px;width:208px;height:303px;background-color:#f7f7f7;border-radius:5px;}";
+    h0 += ".slidethumbnail {position:absolute;top:603px;width:124px;height:124px;background-color:#f7f7f7;transform:translateX(0px);transition:transform 0.2s ease;left:0;}";
+    h0 += ".slidebutton {cursor:pointer;position:absolute;top:603px;width:124px;height:124px;opacity:0;}";
+    return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
+  } %/%/e
+
+  designerBox.classList.add("designerBox");
+
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    height: String(36) + ea,
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "block",
+    position: "relative",
+    width: String(120) + ea,
+    height: String(120) + ea,
+    borderRadius: String(60) + ea,
+    marginRight: "auto",
+    marginLeft: "auto",
+    backgroundSize: "auto 100%",
+    backgroundPosition: "50% 50%",
+    backgroundRepeat: "no-repeat",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+
+
+
+  return designerBox;
+}
+
+
+PortdetailJs.prototype.titleBox = function () {
+  const instance = this;
+  let titleBox, div_clone;
+  let style = {};
+  let ea = "px";
+  titleBox = GeneralJs.nodes.div.cloneNode(true);
+
+
+
+
+  return titleBox;
+}
 
 
 

@@ -6,29 +6,20 @@ const Response = require(MODULE_DIR + "/response.js");
 const DateAnalytics = require(MODULE_DIR + "/dateAnalytics.js");
 const Picture = require(MODULE_DIR + "/picture.js");
 
-class HomeLiaisonAnalytics {
+const HomeLiaisonAnalytics = function (analytics) {
+  this.googleAnalytics = new GoogleAnalytics(analytics.googleAnalytics);
+  this.response = new Response(analytics.response);
+  this.date = new DateAnalytics(analytics.date);
+  this.picture = new Picture(analytics.picture);
+}
 
-  constructor(analytics) {
-    this.rawAnalytics = analytics;
-  }
-
-  toAlive() {
-    this.googleAnalytics = new GoogleAnalytics(this.rawAnalytics.googleAnalytics);
-    this.response = new Response(this.rawAnalytics.response);
-    this.date = new DateAnalytics(this.rawAnalytics.date);
-    this.picture = new Picture(this.rawAnalytics.picture);
-    delete this.rawAnalytics;
-  }
-
-  toNormal() {
-    let obj = {};
-    obj.googleAnalytics = this.googleAnalytics.toNormal();
-    obj.response = this.response.toNormal();
-    obj.date = this.date.toNormal();
-    obj.picture = this.picture.toNormal();
-    return obj;
-  }
-
+HomeLiaisonAnalytics.prototype.toNormal = function () {
+  let obj = {};
+  obj.googleAnalytics = this.googleAnalytics.toNormal();
+  obj.response = this.response.toNormal();
+  obj.date = this.date.toNormal();
+  obj.picture = this.picture.toNormal();
+  return obj;
 }
 
 module.exports = HomeLiaisonAnalytics;

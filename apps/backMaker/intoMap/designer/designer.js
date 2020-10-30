@@ -28,8 +28,11 @@ module.exports = function (tools) {
         information.phone = past.b2_phone;
         information.email = past.b3_email;
 
+        tempArr = past.b5_address.split("__________split__________");
         information.address = [];
-        information.address.push(past.b5_address);
+        for (let i of tempArr) {
+          information.address.push(i);
+        }
 
         information.personalSystem = {};
         information.personalSystem.showRoom = (past.b7_showroom === "Y" ? true : false);
@@ -62,6 +65,13 @@ module.exports = function (tools) {
         for (let i of temp) {
           information.business.account.push(i);
         }
+
+
+
+
+
+
+
 
         /*****************************************************************************************************
         데이터 모델링 업무 중단 ( 2020 / 10 / 26 )

@@ -8,7 +8,6 @@ $jandiarray = array();
 class ContentsDetail extends Generalf {
 
   private $id;
-  private $query;
 
   function __construct($id) {
     $this->id = $id;
@@ -19,14 +18,9 @@ class ContentsDetail extends Generalf {
     return $newStr;
   }
 
-  public function setQuery() {
-    $query = "SELECT porlid,photosg,photodae,slide,wordingtitle,wordingkey,desid,designer,apartname,description,revid FROM pordeta WHERE porlid = '".$this->id."';";
-    $this->query = $query;
-  }
-
   public function getDetail() {
-    $this->setQuery();
-    $info_row = $this->mysqlGet($this->query);
+    $query = "SELECT porlid,photosg,photodae,slide,wordingtitle,wordingkey,desid,designer,apartname,description,revid FROM pordeta WHERE porlid = '".$this->id."';";
+    $info_row = $this->mysqlGet($query);
     if ($info_row === "error") {
       return "error";
     }
@@ -50,6 +44,30 @@ class ContentsDetail extends Generalf {
       }
     }
 
+    $designerQuery = "SELECT desid,name,start_Y,start_M,method1,method2,daepyo_a,daepyo_t FROM deslist WHERE desid = '".$info[6]."'";
+    $designerInfo_row = $this->mysqlGet($designerQuery);
+    if ($designerInfo_row === "error") {
+      return "error";
+    }
+    $designerInfo = $designerInfo_row[0];
+    $g = ((intval(date('Y')) - intval($info[2])) * 12) + intval(date('m')) - intval($info[3]);
+    $y = floor(($g)/12);
+    $m = $g - (12 * floor(($g)/12));
+    $career = array(
+      "year" => $y,
+      "month" => $m
+    );
+
+    $designer = array(
+      "desid" => $designerInfo[0],
+      "name" => $designerInfo[1],
+      "method1" => $designerInfo[4],
+      "method2" => $designerInfo[5],
+      "daepyo_a" => $designerInfo[6],
+      "daepyo_t" => $designerInfo[7],
+      "career" => $career
+    );
+
     $row = array(
       "porlid" => $info[0],
       "photosg" => $photosg,
@@ -62,7 +80,8 @@ class ContentsDetail extends Generalf {
       "wordingKey" => $wordingKey,
       "wordingTitle" => explode(' ',$info[4]),
       "revid" => $info[10],
-      "desid" => $info[6]
+      "desid" => $info[6],
+      "designer" => $designer,
     );
     return $row;
   }
