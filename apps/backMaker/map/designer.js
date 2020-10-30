@@ -18,8 +18,17 @@ module.exports = {
         ],
       },
       business: {
-        career: "",
-        account: [],
+        career: {
+          startY: 0,
+          startM: 0,
+        },
+        account: [
+          {
+            bankName: "",
+            accountNumber: "",
+            to: "",
+          }
+        ],
         cashReceipt: false,
         businessInfo: {
           classification: "",
@@ -32,15 +41,20 @@ module.exports = {
         },
         service: {
           cost: {
-            maxtrix: [
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-            ],
-            exception: [
-              { condition: "", cost: "", },
-            ],
+            matrix: {
+              pyeong: [
+                [ 0, 0, 0 ],
+                [ 0, 0, 0 ],
+                [ 0, 0, 0 ],
+                [ 0, 0, 0 ],
+              ],
+              availables: [
+                [ false, false, false ],
+                [ false, false, false ],
+                [ false, false, false ],
+                [ false, false, false ],
+              ]
+            },
             percentage: 0,
             percentageHistory: [
               {
@@ -48,17 +62,6 @@ module.exports = {
                 percentage: 0,
               }
             ]
-          },
-          availables: {
-            area: [],
-            style: [],
-            service: [],
-            tech: [],
-            make: {
-              furniture: false,
-              fabric: false,
-            },
-            purchaseAgent: false,
           },
           contruct: {
             partner: "",
@@ -71,6 +74,16 @@ module.exports = {
       personality: 0,
       grade: 0,
       reliability: 0,
+      availables: {
+        area: [],
+        style: [],
+        service: [],
+        tech: [],
+        make: {
+          furniture: false,
+          fabric: false,
+        },
+      },
     },
     realTime: {
       availableDate: [

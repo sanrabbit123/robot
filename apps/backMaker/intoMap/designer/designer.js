@@ -59,44 +59,37 @@ module.exports = function (tools) {
         }
 
         information.business = {};
-        information.business.career = past.b6_career;
+        tempArr = past.b6_career.split("년 ");
+        information.business.career = {};
+        information.business.career.startY = Number(tempArr[0])
+        information.business.career.startM = Number(tempArr[1].replace(/월/, '').replace(/^0/, '').replace(/[^0-9]/g, ''));
+
         information.business.account = [];
         temp = past.c4_bankname.split("__________split__________");
         for (let i of temp) {
-          information.business.account.push(i);
-        }
-
-
-
-
-
-
-
-
-        /*****************************************************************************************************
-        데이터 모델링 업무 중단 ( 2020 / 10 / 26 )
-        *****************************************************************************************************/
-
-        tempObj.proid = past.proid;
-        tempObj.cliid = past.cliid;
-        tempObj.desid = "";
-        tempObj.serid = past.service;
-        tempObj.proposal.status = past.status;
-
-        tempObj.proposal.detail = [];
-
-        tempArr = past.proposal;
-        for (let i of tempArr) {
           tempObjDetail = {};
-          tempObjDetail2 = i.picture_settings.pop();
-
-          tempObjDetail.desid = i.desid;
-          tempObjDetail.fee = i.fee;
-          tempObjDetail.pictureSettings = i.picture_settings;
-          tempObjDetail.description = Object.values(tempObjDetail2);
-
-          tempObj.proposal.detail.push(tempObjDetail);
+          tempObjDetail2 = i.split(" ");
+          tempObjDetail.bankName = tempObjDetail2[0];
+          tempObjDetail.accountNumber = tempObjDetail2[1];
+          if (tempObjDetail2[2] !== undefined) {
+            tempObjDetail.to = tempObjDetail2[2];
+          } else {
+            tempObjDetail.to = past.a5_name;
+          }
+          information.business.account.push(tempObjDetail);
         }
+
+        information.businessInfo = {};
+        information.businessInfo.classification = past.c2_classification;
+        information.businessInfo.businessNumber = past.c3_businessnumber;
+        information.businessInfo.files = {};
+        temp = past.c5_accountnumber.split(" / ");
+        information.businessInfo.files.businessRegistration = (/유$/.test(temp[0])) ? true : false;
+        information.businessInfo.files.bankBook = (/유$/.test(temp[1])) ? true : false;
+        information.businessInfo.files.registrationCard = (/유$/.test(temp[2])) ? true : false;
+
+        information.service.percentage = Number(past.c1_fees.replace(/\%$/, '').replace(/[^0-9]/g, ''));
+        information.service.percentageHistory = [];
 
         totalTong.push(tempObj);
       }

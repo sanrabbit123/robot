@@ -207,6 +207,9 @@ BackMaker.prototype.pastMap = function () {
     case "project":
       return { collection: "Project", id: "proid", time: "proid" };
       break;
+    case "designer":
+      return { collection: "BD2_deslist", id: "a4_desid", time: "a4_desid" };
+      break;
   }
 }
 
