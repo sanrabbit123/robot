@@ -102,7 +102,8 @@ module.exports = {
               position: "",
               sgTrue: "",
               unionPo: "",
-              styleText: ""
+              styleText: "",
+              imgSrc: ""
             },
           ],
           description: [
@@ -118,7 +119,6 @@ module.exports = {
           sgTrue: ""
         },
       ],
-      contents: [],
     },
   },
 }

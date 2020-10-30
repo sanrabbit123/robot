@@ -702,10 +702,7 @@ class DevContext extends Array {
 
 
       let back = new BackMaker();
-      let client = await back.getClientById("c2010_aa69s");
-      console.log(client);
-      console.log(client.latestRequest);
-
+      await back.launching("designer");
 
 
 

@@ -21,7 +21,8 @@ module.exports = {
               position: "",
               sgTrue: "",
               unionPo: "",
-              styleText: ""
+              styleText: "",
+              imgSrc: ""
             },
           ],
           description: [

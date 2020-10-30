@@ -7,7 +7,6 @@ module.exports = function (tools) {
       let tempObj, tempObjDetail, tempObjDetail2;
       let tempArr;
       let totalTong;
-
       let information, analytics, realTime, setting;
       let temp, temp2;
 
@@ -31,14 +30,19 @@ module.exports = function (tools) {
         tempArr = past.b5_address.split("__________split__________");
         information.address = [];
         for (let i of tempArr) {
-          information.address.push(i);
+          if (i !== '') {
+            information.address.push(i.trim());
+          }
         }
 
         information.personalSystem = {};
         information.personalSystem.showRoom = (past.b7_showroom === "Y" ? true : false);
         information.personalSystem.webPage = [];
-        information.personalSystem.sns = [];
+        if (past.b1_web !== '-' && past.b1_web !== '') {
+          information.personalSystem.webPage.push(past.b1_web);
+        }
 
+        information.personalSystem.sns = [];
         temp = past.b4_sns.split(" / ");
         tempArr = [];
         for (let i of temp) {
@@ -67,29 +71,53 @@ module.exports = function (tools) {
         information.business.account = [];
         temp = past.c4_bankname.split("__________split__________");
         for (let i of temp) {
-          tempObjDetail = {};
-          tempObjDetail2 = i.split(" ");
-          tempObjDetail.bankName = tempObjDetail2[0];
-          tempObjDetail.accountNumber = tempObjDetail2[1];
-          if (tempObjDetail2[2] !== undefined) {
-            tempObjDetail.to = tempObjDetail2[2];
-          } else {
-            tempObjDetail.to = past.a5_name;
+          if (i !== "") {
+            tempObjDetail = {};
+            tempObjDetail2 = i.split(" ");
+            tempObjDetail.bankName = tempObjDetail2[0];
+            tempObjDetail.accountNumber = tempObjDetail2[1];
+            if (tempObjDetail2[2] !== undefined) {
+              tempObjDetail.to = tempObjDetail2[2];
+            } else {
+              tempObjDetail.to = past.a5_name;
+            }
+            information.business.account.push(tempObjDetail);
           }
-          information.business.account.push(tempObjDetail);
         }
 
-        information.businessInfo = {};
-        information.businessInfo.classification = past.c2_classification;
-        information.businessInfo.businessNumber = past.c3_businessnumber;
-        information.businessInfo.files = {};
+        information.business.cashReceipt = false;
+        information.business.businessInfo = {};
+        information.business.businessInfo.classification = past.c2_classification;
+        information.business.businessInfo.businessNumber = past.c3_businessnumber;
+        information.business.businessInfo.files = {};
         temp = past.c5_accountnumber.split(" / ");
-        information.businessInfo.files.businessRegistration = (/유$/.test(temp[0])) ? true : false;
-        information.businessInfo.files.bankBook = (/유$/.test(temp[1])) ? true : false;
-        information.businessInfo.files.registrationCard = (/유$/.test(temp[2])) ? true : false;
-
-        information.service.percentage = Number(past.c1_fees.replace(/\%$/, '').replace(/[^0-9]/g, ''));
-        information.service.percentageHistory = [];
+        information.business.businessInfo.files.businessRegistration = (/유$/.test(temp[0])) ? true : false;
+        information.business.businessInfo.files.bankBook = (/유$/.test(temp[1])) ? true : false;
+        information.business.businessInfo.files.registrationCard = (/유$/.test(temp[2])) ? true : false;
+        information.business.service = {};
+        information.business.service.cost = {
+          matrix: {
+            pyeong: [
+              [ 0, 0, 0 ],
+              [ 0, 0, 0 ],
+              [ 0, 0, 0 ],
+              [ 0, 0, 0 ],
+            ],
+            availables: [
+              [ false, false, false ],
+              [ false, false, false ],
+              [ false, false, false ],
+              [ false, false, false ],
+            ]
+          },
+          percentage: 0,
+          percentageHistory: []
+        };
+        information.business.service.cost.percentage = Number(past.c1_fees.replace(/\%$/, '').replace(/[^0-9]/g, ''));
+        information.business.service.contruct = {
+          partner: "",
+          method: "",
+        };
 
         totalTong.push(tempObj);
       }
