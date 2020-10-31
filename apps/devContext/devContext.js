@@ -12,6 +12,7 @@ const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
 const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
 const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
+const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 
 class DevContext extends Array {
 
@@ -703,6 +704,9 @@ class DevContext extends Array {
 
       let back = new BackMaker();
       await back.launching("designer");
+
+      // const app = new KakaoTalk();
+      // await app.generateToken();
 
 
 
