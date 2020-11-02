@@ -320,13 +320,19 @@ BackMaker.prototype.launching = async function (button) {
     const tong = await this.pastToJson();
     const finalTong = await this.subLogicToJson(tong);
 
+    await fileSystem(`write`, [ process.cwd() + "/temp/past.js", JSON.stringify(finalTong, null, 2) ]);
+
     const Designer = require(`${this.aliveDir}/designer/designer.js`);
     let tempInstance;
 
+    let newTong = [];
     for (let i of finalTong) {
       tempInstance = new Designer(i);
       console.log(tempInstance);
+      newTong.push(tempInstance.toNormal());
     }
+
+    await fileSystem(`write`, [ process.cwd() + "/temp/new.js", JSON.stringify(newTong, null, 2) ]);
 
     return finalTong;
   } catch (e) {

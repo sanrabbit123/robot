@@ -3,11 +3,35 @@ const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
 
 // front --------------------------------------------------------------------------------
 
-class FrontMethods extends Array {}
+class FrontMethods extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
 
-class FrontIntroductionDesktop extends Array {}
+class FrontIntroductionDesktop extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
 
-class FrontIntroductionMobile extends Array {}
+class FrontIntroductionMobile extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
 
 const FrontIntroduction = function (json) {
   this.desktop = new FrontIntroductionDesktop();
@@ -20,9 +44,23 @@ const FrontIntroduction = function (json) {
   }
 }
 
+FrontIntroduction.prototype.toNormal = function () {
+  let obj = {};
+  obj.desktop = this.desktop.toNormal();
+  obj.mobile = this.mobile.toNormal();
+  return obj;
+}
+
 const FrontPhoto = function (json) {
   this.porlid = json.porlid;
   this.index = json.index;
+}
+
+FrontPhoto.prototype.toNormal = function () {
+  let obj = {};
+  obj.porlid = this.porlid;
+  obj.index = this.index;
+  return obj;
 }
 
 const Front = function (json) {
@@ -36,11 +74,36 @@ const Front = function (json) {
   this.order = json.order;
 }
 
+Front.prototype.toNormal = function () {
+  let obj = {};
+  obj.introduction = this.introduction.toNormal();
+  obj.methods = this.methods.toNormal();
+  obj.photo = this.photo.toNormal();
+  obj.order = this.order;
+  return obj;
+}
+
 // proposal --------------------------------------------------------------------------------
 
-class Proposals extends Array {}
+class Proposals extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
 
-class ProposalPhotos extends Array {}
+class ProposalPhotos extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
 
 const ProposalPhoto = function (json) {
   this.position = json.position;
@@ -50,7 +113,25 @@ const ProposalPhoto = function (json) {
   this.imgSrc = json.imgSrc;
 }
 
-class ProposalDescription extends Array {}
+ProposalPhoto.prototype.toNormal = function () {
+  let obj = {};
+  obj.position = this.position;
+  obj.sgTrue = this.sgTrue;
+  obj.unionPo = this.unionPo;
+  obj.styleText = this.styleText;
+  obj.imgSrc = this.imgSrc;
+  return obj;
+}
+
+class ProposalDescription extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
 
 const Proposal = function (json) {
   let tempInstance;
@@ -66,13 +147,36 @@ const Proposal = function (json) {
   }
 }
 
+Proposal.prototype.toNormal = function () {
+  let obj = {};
+  obj.name = this.name;
+  obj.photo = this.photo.toNormal();
+  obj.description = this.description.toNormal();
+  return obj;
+}
+
 // ghost --------------------------------------------------------------------------------
 
-class Ghosts extends Array {}
+class Ghosts extends Array {
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
 
 const Ghost = function (json) {
   this.link = json.link;
   this.sgTrue = json.sgTrue;
+}
+
+Ghost.prototype.toNormal = function () {
+  let obj = {};
+  obj.link = this.link;
+  obj.sgTrue = this.sgTrue;
+  return obj;
 }
 
 // main --------------------------------------------------------------------------------
@@ -90,6 +194,14 @@ const DesignerSetting = function (json) {
     tempInstance = new Ghost(i);
     this.ghost.push(tempInstance);
   }
+}
+
+DesignerSetting.prototype.toNormal = function () {
+  let obj = {};
+  obj.front = this.front.toNormal();
+  obj.proposal = this.proposal.toNormal();
+  obj.ghost = this.ghost.toNormal();
+  return obj;
 }
 
 module.exports = DesignerSetting;
