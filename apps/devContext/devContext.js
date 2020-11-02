@@ -582,6 +582,47 @@ class DevContext extends Array {
     console.log(clients);
   }
 
+  async designerTextFromAi() {
+    const targetMother = `/Users/baechang-gyu/Library/Mobile Documents/com~apple~CloudDocs/uragen/_NewWeb/_Designer`;
+    const targetMotherDir = await fileSystem(`readDir`, [ targetMother ]);
+    let desidTarget = [];
+    for (let i of targetMotherDir) { if ((new RegExp("^[0-9]")).test(i)) {
+      desidTarget.push('de0' + i.replace(/[^0-9]/g, ''));
+    }}
+
+    async function getText(desid) {
+      const app = new ContentsMaker();
+      let targetFolder, responseArr = {};
+      for (let i of targetMotherDir) { if ((new RegExp("^" + desid.slice(3))).test(i)) {
+        targetFolder = targetMother + "/" + i;
+      }}
+      responseArr.desktop = (await app.getTextFromAi(targetFolder + "/" + "word" + desid + ".ai"))[0].split("\n");
+      responseArr.mobile = (await app.getTextFromAi(targetFolder + "/" + "moword" + desid + ".ai"))[0].split("\n");
+
+      let resultArr = [];
+      resultArr.push("_desktop");
+      for (let i of responseArr.desktop) {
+        resultArr.push(i);
+      }
+      resultArr.push("_mobile");
+      for (let i of responseArr.mobile) {
+        resultArr.push(i);
+      }
+
+      return resultArr;
+    }
+
+    let note, targetArr, updateArr;
+    console.log(desidTarget);
+    for (let i of desidTarget) {
+      note = new AppleAPIs({ folder: "designer", subject: i });
+      targetArr = await note.readNote();
+      updateArr = targetArr.concat(await getText(i));
+      updateArr.shift();
+      await note.updateNote(updateArr.join('<br><br><br>'));
+    }
+  }
+
   async launching() {
     const instance = this;
     const { fileSystem, shell, shellLink } = this.mother;
@@ -696,19 +737,16 @@ class DevContext extends Array {
       // const app = new GoogleDrive();
       // await app.makeFolder_andMove_inPython("kkk", "11L22Szfanu0S7AgqPdg0kYT2lkpsHZWM");
 
-
-
       // const app = new ImmovablesServer();
       // await app.launching();
 
-
       let back = new BackMaker();
-      await back.launching("designer");
+      let obj = await back.launching("designer");
+
+
 
       // const app = new KakaoTalk();
       // await app.generateToken();
-
-
 
 
       // TOOLS ----------------------------------------------------

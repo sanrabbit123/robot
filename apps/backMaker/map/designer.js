@@ -29,7 +29,6 @@ module.exports = {
             to: "",
           }
         ],
-        cashReceipt: false,
         businessInfo: {
           classification: "",
           businessNumber: "",
@@ -94,6 +93,18 @@ module.exports = {
       ],
     },
     setting: {
+      front: {
+        introduction: {
+          desktop: [],
+          mobile: [],
+        },
+        methods: [],
+        photo: {
+          porlid: "",
+          index: "",
+        },
+        order: 0,
+      },
       proposal: [
         {
           name: "",

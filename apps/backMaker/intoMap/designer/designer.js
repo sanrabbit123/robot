@@ -85,7 +85,6 @@ module.exports = function (tools) {
           }
         }
 
-        information.business.cashReceipt = false;
         information.business.businessInfo = {};
         information.business.businessInfo.classification = past.c2_classification;
         information.business.businessInfo.businessNumber = past.c3_businessnumber;

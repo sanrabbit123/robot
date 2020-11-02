@@ -50,12 +50,9 @@ class ContentsDetail extends Generalf {
       return "error";
     }
     $designerInfo = $designerInfo_row[0];
-    $g = ((intval(date('Y')) - intval($info[2])) * 12) + intval(date('m')) - intval($info[3]);
-    $y = floor(($g)/12);
-    $m = $g - (12 * floor(($g)/12));
     $career = array(
-      "year" => $y,
-      "month" => $m
+      "year" => $designerInfo[2],
+      "month" => $designerInfo[3]
     );
 
     $designer = array(

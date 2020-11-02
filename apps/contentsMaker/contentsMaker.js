@@ -223,6 +223,7 @@ ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
     name = fileFullPath.split('/').pop().replace(/\.ai$/, '');
 
     getTextScript = `tell application "Adobe Illustrator"\n`;
+    getTextScript += `\tactivate\n`;
     getTextScript += `\topen POSIX file "${fileFullPath}" without dialogs\n`;
     getTextScript += `\tdo javascript "#include ~/${orderFuncName}"\n`;
     getTextScript += `\tset textArtItemCount to count text frames in document 1\n`;

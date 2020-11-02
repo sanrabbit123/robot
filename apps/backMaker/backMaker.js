@@ -195,7 +195,7 @@ BackMaker.filters = {
   emptyDate: function () {
     return "9999-09-09";
   },
-}
+};
 
 // METHOD ------------------------------------------------------------------------------------
 
@@ -320,11 +320,15 @@ BackMaker.prototype.launching = async function (button) {
     const tong = await this.pastToJson();
     const finalTong = await this.subLogicToJson(tong);
 
-    console.log(finalTong);
+    const Designer = require(`${this.aliveDir}/designer/designer.js`);
+    let tempInstance;
 
-    await fileSystem(`write`, [ `${process.cwd()}/temp/backMakerLaunching3.json`, JSON.stringify(finalTong, null, 2) ]);
+    for (let i of finalTong) {
+      tempInstance = new Designer(i);
+      console.log(tempInstance);
+    }
 
-    // return finalTong;
+    return finalTong;
   } catch (e) {
     console.log(e);
   }

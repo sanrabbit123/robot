@@ -92,33 +92,31 @@ PortdetailJs.prototype.slideBox = function () {
 
 PortdetailJs.prototype.designerBox = function () {
   const instance = this;
-  let designerBox, div_clone;
+  let designerBox, div_clone, div_clone2, img_clone;
   let style = {};
+  let inputStyle = {
+    display: "inline",
+    fontFamily: "'Roboto',sans-serif",
+    fontSize: String(12) + ea,
+    color: "#303030",
+    letterSpacing: String(-0.5) + ea,
+  };
   let ea = "px";
   designerBox = GeneralJs.nodes.div.cloneNode(true);
 
   //css
   /<%cssOut%>/ {
     let h0 = '', h1 = '', h2 = '', h3 = '';
-    h0 = ".designerBox {position:relative;top:0;margin-left:842px;width:208px;height:303px;background-color:#f7f7f7;border-radius:5px;}";
-    h0 += ".slidethumbnail {position:absolute;top:603px;width:124px;height:124px;background-color:#f7f7f7;transform:translateX(0px);transition:transform 0.2s ease;left:0;}";
-    h0 += ".slidebutton {cursor:pointer;position:absolute;top:603px;width:124px;height:124px;opacity:0;}";
+    h0 = ".designerBox {position:relative;top:0;margin-left:842px;padding-top:36px;width:208px;height:303px;background-color:#f7f7f7;border-radius:5px;}";
+    h0 += ".designerMethods {display:block;position:relative;width:80px;height:12px;margin-right:auto;margin-left:auto;}";
+    h0 += ".designerButton{position:absolute;width:100%;height:100%;top:0;background-color:#fff;opacity:0;transition:all 0.3s ease;cursor:pointer;}";
+    h0 += ".designerButton:hover{opacity:0.3;}";
     return { mediaAll: h0, media1400: h1, media1050: h2, media900: h3 };
   } %/%/e
 
   designerBox.classList.add("designerBox");
 
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    height: String(36) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-
-
+  //circle photo
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     display: "block",
@@ -131,13 +129,117 @@ PortdetailJs.prototype.designerBox = function () {
     backgroundSize: "auto 100%",
     backgroundPosition: "50% 50%",
     backgroundRepeat: "no-repeat",
+    backgroundImage: ("url('" + this.contents.designer.photo + "')"),
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  designerBox.appendChild(div_clone);
+
+  //designer name
+  img_clone = GeneralJs.nodes.img.cloneNode(true);
+  img_clone.src = this.contents.designer.name;
+  style = {
+    display: "block",
+    position: "relative",
+    width: String(50) + ea,
+    height: String(18) + ea,
+    marginRight: "auto",
+    marginLeft: "auto",
+    marginTop: String(13) + ea,
+    paddingLeft: ((this.contents.designer.desid === "de000") ? String(16) : String(0) + ea),
+  };
+  for (let i in style) {
+    img_clone.style[i] = style[i];
+  }
+  designerBox.appendChild(img_clone);
+
+  //designer methods
+  for (let i = 0; i < this.contents.designer.methods.length; i++) {
+    img_clone = GeneralJs.nodes.img.cloneNode(true);
+    img_clone.src = this.contents.designer.methods[i];
+    img_clone.classList.add("designerMethods");
+    img_clone.style.marginTop = (Boolean(i) ? String(6) : String(15)) + ea;
+    designerBox.appendChild(img_clone);
+  }
+
+  //designer career
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    height: String(15) + ea,
+    marginTop: String(17) + ea,
+    left: String(0) + ea,
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
 
+  //career title
+  img_clone = GeneralJs.nodes.img.cloneNode(true);
+  img_clone.src = this.contents.designer.career.title;
+  style = {
+    display: "inline-block",
+    position: "relative",
+    top: String(1) + ea,
+    height: String(11) + ea,
+  };
+  for (let i in style) {
+    img_clone.style[i] = style[i];
+  }
+  div_clone.appendChild(img_clone);
 
+  //career bar
+  img_clone = GeneralJs.nodes.img.cloneNode(true);
+  img_clone.src = this.contents.designer.career.bar;
+  for (let i in style) {
+    img_clone.style[i] = style[i];
+  }
+  div_clone.appendChild(img_clone);
 
+  //career year
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.textContent = this.contents.designer.career.values.year;
+  for (let i in inputStyle) {
+    div_clone2.style[i] = inputStyle[i];
+  }
+  div_clone.appendChild(div_clone2);
+
+  //career year wording
+  img_clone = GeneralJs.nodes.img.cloneNode(true);
+  img_clone.src = this.contents.designer.career.year;
+  for (let i in style) {
+    img_clone.style[i] = style[i];
+  }
+  img_clone.style.paddingLeft = String(1.5) + ea;
+  div_clone.appendChild(img_clone);
+
+  //career month
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.textContent = this.contents.designer.career.values.month;
+  for (let i in inputStyle) {
+    div_clone2.style[i] = inputStyle[i];
+  }
+  div_clone.appendChild(div_clone2);
+
+  //career month wording
+  img_clone = GeneralJs.nodes.img.cloneNode(true);
+  img_clone.src = this.contents.designer.career.month;
+  for (let i in style) {
+    img_clone.style[i] = style[i];
+  }
+  img_clone.style.paddingLeft = String(1.5) + ea;
+  div_clone.appendChild(img_clone);
+
+  designerBox.appendChild(div_clone);
+
+  //button
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("designerButton");
+  GeneralJs.addHrefEvent(div_clone, ("/desdetail.php?qqq" + this.contents.designer.desid));
+  designerBox.appendChild(div_clone);
 
   return designerBox;
 }
@@ -297,26 +399,33 @@ PortdetailJs.prototype.setContents = async function () {
   try {
     const getData = GeneralJs.returnGet();
     const contentsRAW = await GeneralJs.ajaxPromise(("id=" + getData.qqq), "/engine/ContentsDetail.php");
+    const sourceLink = GeneralJs.universalLink + "/designer";
+    const today = new Date();
+
+    let currentDate, pastDate;
     let filteredContents, contents;
 
     contents = JSON.parse(contentsRAW);
     filteredContents = { ...contents };
     const { porlid, slide, photoauto } = contents;
 
-    /*
-    apartname: "호반 써밋플레이스 39py 홈스타일링"
-    description: ""
-    desid: "de044"
-    photoauto: (24) ["auto 100%", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%", "100% auto", "auto 100%", "auto 100%", "100% auto", "100% auto", "auto 100%", "auto 100%"]
-    photodae: (2) ["9", "3"]
-    photonum: 23
-    photosg: (23) ["s", "s", "g", "g", "s", "s", "g", "g", "s", "s", "s", "s", "g", "g", "s", "s", "g", "s", "s", "g", "g", "s", "s"]
-    porlid: "a74"
-    revid: "re999"
-    slide: (9) ["1", "2", "3", "4", "7", "8", "13", "14", "17"]
-    wordingKey: (6) [2, 7, 13, 16, 20, 23]
-    wordingtitle: (6) ["entrance", "livingroom", "diningroom", "bedroom", "kidsroom", "kidsroom"]
-    */
+    filteredContents.designer.photo = "/list_image/portp" + filteredContents.designer.daepyo_a + "/mobile/mo" + filteredContents.designer.daepyo_t + filteredContents.designer.daepyo_a + ".jpg";
+
+    filteredContents.designer.name = sourceLink + "/name/" + filteredContents.designer.desid + ".svg";
+    filteredContents.designer.methods = [];
+    filteredContents.designer.methods.push(sourceLink + "/method/" + filteredContents.designer.method1 + ".svg");
+    filteredContents.designer.methods.push(sourceLink + "/method/" + filteredContents.designer.method2 + ".svg");
+
+    currentDate = (today.getFullYear() * 12) + (today.getMonth() + 1);
+    pastDate = (Number(filteredContents.designer.career.year) * 12) + (Number(filteredContents.designer.career.month));
+
+    filteredContents.designer.career.title = sourceLink + "/career/title.svg";
+    filteredContents.designer.career.bar = sourceLink + "/career/bar.svg";
+    filteredContents.designer.career.values = {};
+    filteredContents.designer.career.values.year = Math.floor((currentDate - pastDate) / 12);
+    filteredContents.designer.career.values.month = (currentDate - pastDate) % 12;
+    filteredContents.designer.career.year = sourceLink + "/career/year.svg";
+    filteredContents.designer.career.month = sourceLink + "/career/month.svg";
 
     filteredContents.backgroundImage = [];
     filteredContents.backgroundSize = [];
@@ -338,9 +447,7 @@ PortdetailJs.prototype.launching = async function () {
 
     console.log(this.contents);
 
-
     this.slilaunching();
-
   } catch (e) {
     console.log(e);
   }

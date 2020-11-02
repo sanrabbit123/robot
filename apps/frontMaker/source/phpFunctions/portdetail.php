@@ -107,12 +107,14 @@ class Portdetailf extends Generalf {
 
 
     $html .= '<div class="'.(($boo) ? '' : 'mo').'deligyeongbox">';
+
     $html .= '<img class="'.(($boo) ? 'deligetc' : 'modedegyeongib').'" src="./list_svg/delist/etc/etc1.svg">';
     if ($boo) { $html .= '<img class="deligetc" src="./list_svg/delist/etc/etc0.svg">'; }
     $html .= '<div class="'.(($boo) ? 'deliwetc0' : 'modedegyeongword').'">'.$this->designer->career->year.'</div>';
     $html .= '<img class="'.(($boo) ? 'deligetc deligetc2' : 'modedegyeongib mogca2').'" src="./list_svg/delist/etc/etc2.svg">';
     $html .= '<div class="'.(($boo) ? 'deliwetc0' : 'modedegyeongword').'"> '.$this->designer->career->month.'</div>';
     $html .= '<img class="'.(($boo) ? 'deligetc deligetc2' : 'modedegyeongib mogca2').'" src="./list_svg/delist/etc/etc3.svg">';
+
     $html .= '</div>';
 
     $html .= '<a href="./desdetail.php?qqq='.$this->designer->desid.'"><div class="delibutton"></div></a>';

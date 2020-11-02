@@ -8,6 +8,8 @@ const GeneralJs = function () {
 
 GeneralJs.sourceLink = "/list_image/general";
 
+GeneralJs.universalLink = "/list_image/universal";
+
 GeneralJs.events = {};
 
 GeneralJs.stacks = {};
