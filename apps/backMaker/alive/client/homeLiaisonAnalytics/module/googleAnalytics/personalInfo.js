@@ -1,17 +1,13 @@
-class PersonalInfo {
+const PersonalInfo = function (json) {
+  this.age = json.age;
+  this.gender = json.gender;
+}
 
-  constructor(json) {
-    this.age = json.age;
-    this.gender = json.gender;
-  }
-
-  toNormal() {
-    let obj = {};
-    obj.age = this.age;
-    obj.gender = this.gender;
-    return obj;
-  }
-
+PersonalInfo.prototype.toNormal = function () {
+  let obj = {};
+  obj.age = this.age;
+  obj.gender = this.gender;
+  return obj;
 }
 
 module.exports = PersonalInfo;

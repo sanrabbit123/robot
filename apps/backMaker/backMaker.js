@@ -398,6 +398,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
         clientsArr.push(new Client(i));
       }
     }
+
     return clientsArr;
   } catch (e) {
     console.log(e);
@@ -444,5 +445,39 @@ BackMaker.prototype.getContentsByPid = async function (pid) {
   }
 }
 
+// GET Service --------------------------------------------------------------------------------
+
+BackMaker.prototype.getServiceById = async function (id) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "service";
+  const { Service } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let arr, target;
+    await MONGOC.connect();
+    arr = await MONGOC.db(`miro81`).collection(`service`).find({ serid: id }).toArray();
+    target = new Service(arr[0]);
+    return target;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+  }
+}
+
+// GET Designer --------------------------------------------------------------------------------
+
+BackMaker.prototype.getDesignerById = async function (id) {
+  const instance = this;
+  this.button = "designer";
+  const { Designer, Designers, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let tong = await this.getTong(id);
+    return new Designer(tong[0]);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = BackMaker;

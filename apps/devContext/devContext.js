@@ -23,18 +23,6 @@ class DevContext extends Array {
     this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
 
-  async main0() {
-    let back = new BackMaker();
-    // let client = await back.getClientById("c2010_aa35s");
-    // console.log(client);
-    // console.log(client.google);
-
-    // let tong = await back.getLatestClients(5, { withTools: true });
-    // console.log(tong);
-    // console.log(await back.launching("project"));
-    await back.launching("project");
-  }
-
   async main1() {
     const fobot = new AiGraph();
     fobot.launching();
@@ -623,6 +611,150 @@ class DevContext extends Array {
     }
   }
 
+  getMatrix(index) {
+    const sheet = new GoogleSheet();
+    const sheetPromise = function (index) {
+      return new Promise(function(resolve, reject) {
+        const range = [
+          "target!C3:E224",
+          "target!F3:H224",
+          "target!I3:K224",
+        ]
+        sheet.get_value_inPython("11k3VpCdp_doHC-xoyWMpJqa5jMUeTERcG9C3MdCq_HQ", range[index]).then(function (fu) {
+          let arr, result;
+          arr = [];
+          result = '';
+          for (let i = 0; i < fu.length; i++) {
+            result += fu[i].join("__split0__");
+            result += "__split1__";
+            if ((i % 6) === 5) {
+              result = result.slice(0, -10);
+              arr.push(result);
+              result = '';
+            }
+          }
+          const set = new Set(arr);
+          const filteredArr = Array.from(set);
+          resolve(filteredArr);
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
+
+    return new Promise(function(resolve, reject) {
+      sheetPromise(index).then((value) => {
+        resolve(value);
+      })
+    });
+  }
+
+  parsingMatrix(values) {
+    const list = [
+      { name: "HomeFurnishing", range: "target!C3:E224", },
+      { name: "HomeStyling", range: "target!F3:H224", },
+      { name: "TotalStyling", range: "target!I3:K224", },
+    ];
+    let resultArr = [];
+    let tempObj;
+    for (let i = 0; i < list.length; i++) {
+      tempObj = {
+        serid: "s2011_aa0" + String(i + 1) + 's',
+        name: list[i].name,
+        standard: {
+          x: [
+            'M',
+            'B',
+            'P'
+          ],
+          y: [
+            [ 0, 9 ],
+            [ 9, 18 ],
+            [ 18, 25 ],
+            [ 25, 40 ],
+            [ 40, 50 ],
+            [ 50 ],
+          ],
+        },
+        case: values[i],
+      };
+      resultArr.push(tempObj);
+    }
+    return resultArr;
+  }
+
+  async getDesignerMatrix() {
+    const back = new BackMaker();
+    const sheet = new GoogleSheet();
+
+    let target = [
+      [ "s2011_aa01s", "target!C3:E224" ],
+      [ "s2011_aa02s", "target!F3:H224" ],
+      [ "s2011_aa03s", "target!I3:K224" ],
+    ]
+
+    let idArr = [];
+    let onlineArr = [];
+    let idArrRaw = await sheet.get_value_inPython("11k3VpCdp_doHC-xoyWMpJqa5jMUeTERcG9C3MdCq_HQ", "target!A3:A224");
+    let onlineArrRaw = await sheet.get_value_inPython("11k3VpCdp_doHC-xoyWMpJqa5jMUeTERcG9C3MdCq_HQ", "target!L3:L224");
+    for (let i of idArrRaw) {
+      if (i.length !== 0) {
+        idArr.push(i[0]);
+      }
+    }
+    for (let i of onlineArrRaw) {
+      if (i.length !== 0) {
+        onlineArr.push(i[0]);
+      }
+    }
+
+    async function returnTong(arr) {
+      let service, result;
+      let matrixTotalTong, matrixTong, resultTong;
+
+      service = await back.getServiceById(arr[0]);
+      result = await sheet.get_value_inPython("11k3VpCdp_doHC-xoyWMpJqa5jMUeTERcG9C3MdCq_HQ", arr[1]);
+
+      matrixTotalTong = [];
+      matrixTong = [];
+      for (let i = 0; i < result.length; i++) {
+        matrixTong.push(result[i]);
+        if ((i % 6) === 5) {
+          matrixTotalTong.push(matrixTong);
+          matrixTong = [];
+        }
+      }
+
+      resultTong = [];
+      for (let i of matrixTotalTong) {
+        resultTong.push(service.queryCase(i));
+      }
+
+      return resultTong;
+    }
+
+    let tongs = [];
+    for (let i = 0; i < target.length; i++) {
+      tongs.push({ id: target[i][0], arr: (await returnTong(target[i])) });
+    }
+
+    let finalTong = {};
+    for (let i = 0; i < idArr.length; i++) {
+      finalTong[idArr[i]] = { service: [], online: false };
+      for (let j = 0; j < tongs.length; j++) {
+        finalTong[idArr[i]].service.push({ serid: tongs[j].id, case: tongs[j].arr[i] });
+      }
+      if (/x/gi.test(onlineArr[i])) {
+        finalTong[idArr[i]].online = false;
+      } else {
+        finalTong[idArr[i]].online = true;
+      }
+    }
+
+    console.log(finalTong);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/serviceTong.js`, JSON.stringify(finalTong, null, 2) ]);
+  }
+
   async launching() {
     const instance = this;
     const { fileSystem, shell, shellLink } = this.mother;
@@ -633,73 +765,6 @@ class DevContext extends Array {
 
       // await this.main0();
       // await this.main1();
-
-      let aTargets = [
-        "a68",
-        "a67",
-        "a66",
-        "a64",
-        "a62",
-        "a61",
-        "a60",
-        "a59",
-        "a58",
-        "a57",
-        "a56",
-        "a55",
-        "a54",
-        "a53",
-        "a51",
-        "a49",
-        "a47",
-        "a45",
-        "a41",
-        "a39",
-        "a38",
-        "a37",
-        "a36",
-        "a35",
-        "a34",
-        "a33",
-        "a32",
-        "a30",
-        "a27",
-        "a26",
-        "a25",
-        "a24",
-        "a22",
-        "a20",
-        "a18",
-        "a17",
-        "a16",
-        "a14",
-        "a13",
-        "a10",
-      ];
-      let pTargets = [
-        "p32",
-        "p31",
-        "p30",
-        "p29",
-        "p27",
-        "p26",
-        "p25",
-        "p24",
-        "p23",
-        "p22",
-        "p21",
-        "p20",
-        "p19",
-        "p18",
-        "p17",
-        "p16",
-        "p15",
-        "p14",
-        "p13",
-        "p12",
-        "p11",
-        "p10",
-      ];
 
       // let app;
       //
@@ -741,7 +806,11 @@ class DevContext extends Array {
       // await app.launching();
 
       let back = new BackMaker();
-      let obj = await back.launching("designer");
+      // let obj = await back.launching("designer");
+      // const designer = await back.getDesignerById("de004");
+
+      console.log((await back.getClientById("c2011_aa06s")))
+
 
 
 

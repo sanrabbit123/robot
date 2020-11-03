@@ -96,18 +96,8 @@ module.exports = function (tools) {
         information.business.service = {};
         information.business.service.cost = {
           matrix: {
-            pyeong: [
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-              [ 0, 0, 0 ],
-            ],
-            availables: [
-              [ false, false, false ],
-              [ false, false, false ],
-              [ false, false, false ],
-              [ false, false, false ],
-            ]
+            service: [],
+            online: false
           },
           percentage: 0,
           percentageHistory: []

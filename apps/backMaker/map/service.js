@@ -1,7 +1,10 @@
 module.exports = {
   structure: {
     serid: "",
-    type: "",
     name: "",
-    detail: {},
+    standard: {
+      x: [],
+      y: [],
+    },
+    case: []
 }

@@ -2,10 +2,11 @@ const CLIENT_DIR = process.cwd() + "/apps/backMaker/alive/client";
 const Client = require(CLIENT_DIR + "/client.js");
 
 class Clients extends Array {
-  get latestRequests() {
+
+  latestRequests() {
     let arr = [];
     for (let i of this) {
-      arr.push(i.latestRequest);
+      arr.push(i.latestRequest());
     }
     return arr;
   }

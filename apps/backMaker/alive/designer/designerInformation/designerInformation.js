@@ -157,15 +157,48 @@ BusinessInfo.prototype.toNormal = function () {
   return obj;
 }
 
+const ServiceMatrixFactor = function (json) {
+  this.serid = json.serid;
+  this.case = json.case;
+}
+
+ServiceMatrixFactor.prototype.toNormal = function () {
+  let obj = {};
+  obj.serid = this.serid;
+  obj.case = this.case;
+  return obj;
+}
+
+class ServiceMatrix extends Array {
+
+  constructor(json) {
+    super();
+    let tempInstance;
+    for (let i of json) {
+      tempInstance = new ServiceMatrixFactor(i);
+      this.push(tempInstance);
+    }
+  }
+
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+
+}
+
 const Matrix = function (json) {
-  this.pyeong = json.pyeong;
-  this.availables = json.availables;
+  this.service = new ServiceMatrix(json.service);
+  this.online = json.online;
 }
 
 Matrix.prototype.toNormal = function () {
   let obj = {};
-  obj.pyeong = this.pyeong;
-  obj.availables = this.availables;
+  obj.service = this.service.toNormal();
+  obj.online = this.online;
   return obj;
 }
 

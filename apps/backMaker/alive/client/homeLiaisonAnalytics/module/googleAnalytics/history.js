@@ -1,22 +1,18 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const { DateParse } = require(GENERAL_DIR + "/generator.js");
 
-class HistoryDetail {
+const HistoryDetail = function (json) {
+  this.time = new DateParse(json.time);
+  this.page = json.page;
+  this.page_raw = json.page_raw;
+}
 
-  constructor(json) {
-    this.time = new DateParse(json.time);
-    this.page = json.page;
-    this.page_raw = json.page_raw;
-  }
-
-  toNormal() {
-    let obj = {};
-    obj.time = this.time.toNormal();
-    obj.page = this.page;
-    obj.page_raw = this.page_raw;
-    return obj;
-  }
-
+HistoryDetail.prototype.toNormal = function () {
+  let obj = {};
+  obj.time = this.time.toNormal();
+  obj.page = this.page;
+  obj.page_raw = this.page_raw;
+  return obj;
 }
 
 class History extends Array {

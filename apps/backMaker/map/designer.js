@@ -41,18 +41,21 @@ module.exports = {
         service: {
           cost: {
             matrix: {
-              pyeong: [
-                [ 0, 0, 0 ],
-                [ 0, 0, 0 ],
-                [ 0, 0, 0 ],
-                [ 0, 0, 0 ],
+              service: [
+                {
+                  serid: "s2011_aa01s",
+                  case: 9
+                },
+                {
+                  serid: "s2011_aa02s",
+                  case: 11
+                },
+                {
+                  serid: "s2011_aa03s",
+                  case: 9
+                }
               ],
-              availables: [
-                [ false, false, false ],
-                [ false, false, false ],
-                [ false, false, false ],
-                [ false, false, false ],
-              ]
+              online: true
             },
             percentage: 0,
             percentageHistory: [

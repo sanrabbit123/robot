@@ -1,29 +1,25 @@
 class QueryString extends Object {}
 
-class ReferrerDetail {
-
-  constructor(detail) {
-    if (Boolean(detail.host)) {
-      this.host = detail.host;
-    } else {
-      this.host = null;
-    }
-    this.queryString = new QueryString();
-    for (let i in detail.queryString) {
-      this.queryString[i] = detail.queryString[i];
-    }
+const ReferrerDetail = function (detail) {
+  if (Boolean(detail.host)) {
+    this.host = detail.host;
+  } else {
+    this.host = null;
   }
-
-  toNormal() {
-    let obj = {};
-    obj.host = this.host;
-    obj.queryString = {};
-    for (let i in this.queryString) {
-      obj.queryString[i] = this.queryString[i];
-    }
-    return obj;
+  this.queryString = new QueryString();
+  for (let i in detail.queryString) {
+    this.queryString[i] = detail.queryString[i];
   }
+}
 
+ReferrerDetail.prototype.toNormal = function () {
+  let obj = {};
+  obj.host = this.host;
+  obj.queryString = {};
+  for (let i in this.queryString) {
+    obj.queryString[i] = this.queryString[i];
+  }
+  return obj;
 }
 
 class Referrer {
