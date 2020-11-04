@@ -40,9 +40,10 @@ GeneralJs.prototype.generalCss = function () {
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;top:-20px}
   .hoverDefault{cursor:pointer;opacity:1}
   .hoverDefault:hover{opacity:0.5;}
-
-
-
+  @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
+  @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
+  .fadeout{animation:fadeout 0.4s ease forwards;}
+  .fadein{animation:fadein 0.4s ease forwards;}
   .totalMother{
     display: block;
     position: fixed;
@@ -83,7 +84,7 @@ GeneralJs.prototype.greenBar = function () {
     left: String(0),
     width: "100%",
     height: String(123) + ea,
-    zIndex: String(1),
+    zIndex: String(2),
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
@@ -198,7 +199,7 @@ GeneralJs.prototype.greenBar = function () {
     right: String(127) + ea,
     cursor: "pointer",
     background: "#ffffff",
-    borderRadius: String(3) + ea,
+    borderRadius: String(5) + ea,
   };
   for (let i in style) {
     div_clone2.style[i] = style[i];

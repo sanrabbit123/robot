@@ -348,7 +348,7 @@ BackMaker.prototype.launching = async function (button) {
 BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong = await this.getTong(cliid);
     if (!option.withTools) {
@@ -365,7 +365,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
 BackMaker.prototype.getLatestClient = async function (option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong = await this.getTong("latest_1");
     if (!option.withTools) {
@@ -382,7 +382,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
 BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false }) {
   const instance = this;
   this.button = "client";
-  const { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 

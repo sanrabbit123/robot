@@ -3,11 +3,9 @@ const DataRouter = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const DataBlock = require(`${this.dir}/block/dataBlock.js`);
-  const DataFlat = require(`${this.dir}/flat/dataFlat.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.block = new DataBlock();
-  this.flat = new DataFlat();
 }
 
 //GET --------------------------------------------------------------------------
@@ -51,7 +49,11 @@ DataRouter.prototype.rou_post_getClients = function () {
   obj.link = "/getClients";
   obj.func = async function (req, res) {
     try {
-      const result = await instance.flat.getClients(req.body.limit);
+      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true });
+      const result = {
+        standard: clients.clientStandard(),
+        data: clients.flatDeath()
+      };
       res.send(JSON.stringify(result));
     } catch (e) {
       console.log(e);

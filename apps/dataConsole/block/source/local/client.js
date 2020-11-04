@@ -265,91 +265,194 @@ ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
   const { cases, totalContents, totalMother } = this;
   return function (e) {
-    totalMother.style.display = "none";
+    if (instance.totalFather !== null) {
+      instance.totalFather.style.zIndex = String(1);
+      instance.totalMother.classList.remove("fadein");
+      instance.totalMother.classList.add("fadeout");
+      instance.totalFather.classList.remove("fadeout");
+      instance.totalFather.classList.add("fadein");
+    } else {
+      totalMother.classList.add("fadeout");
 
-    let totalFather;
-    let style;
-    let nameStyle, cliidStyle;
-    let div_clone, div_clone2;
-    let size, margin;
-    let ea = "px";
-    let num;
+      let totalFather;
+      let style;
+      let nameStyle, cliidStyle, barStyle, phoneStyle, addressStyle, timeLineStyle, budgetStyle;
+      let div_clone, div_clone2;
+      let size, margin;
+      let ea = "px";
+      let num;
+      let intend, totalWidth;
+      let lineHeight, startTop;
 
-    totalFather = GeneralJs.nodes.div.cloneNode(true);
-    totalFather.classList.add("totalFather");
+      totalFather = GeneralJs.nodes.div.cloneNode(true);
+      totalFather.classList.add("totalFather");
 
-    margin = 23;
-    size = ((window.innerWidth - (margin * 8.5)) / 6);
-    style = {
-      display: "inline-block",
-      position: "relative",
-      width: String(size) + ea,
-      height: String(size) + ea,
-      marginLeft: String(margin) + ea,
-      marginTop: String(margin) + ea,
-      background: "#f7f7f7",
-      borderRadius: String(5) + ea,
-    };
+      margin = 20;
+      lineHeight = 22;
+      size = ((window.innerWidth - (margin * 8.5)) / 6);
+      intend = 25;
+      startTop = 51;
+      totalWidth = size - (intend * 2) - 1;
+      style = {
+        display: "inline-block",
+        position: "relative",
+        width: String(size) + ea,
+        height: String(size) + ea,
+        marginLeft: String(margin) + ea,
+        marginTop: String(margin) + ea,
+        background: "#f7f7f7",
+        borderRadius: String(5) + ea,
+      };
 
-    nameStyle = {
-      position: "absolute",
-      fontSize: String(24) + ea,
-      fontWeight: String(200),
-      top: String(18) + ea,
-      left: String(25) + ea,
-      color: "#404040",
-    };
+      nameStyle = {
+        position: "absolute",
+        fontSize: String(23) + ea,
+        fontWeight: String(200),
+        top: String(18) + ea,
+        left: String(intend) + ea,
+        color: "#404040",
+      };
 
-    cliidStyle = {
-      position: "absolute",
-      fontSize: String(14) + ea,
-      fontWeight: String(600),
-      top: String(31) + ea,
-      left: String(94) + ea,
-      color: "#2fa678",
-    };
+      cliidStyle = {
+        position: "absolute",
+        fontSize: String(14) + ea,
+        fontWeight: String(600),
+        top: String(30) + ea,
+        left: String(94) + ea,
+        color: "#2fa678",
+      };
 
-    num = 0;
-    for (let obj of cases) {
-      if (num !== 0) {
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in style) {
-          div_clone.style[i] = style[i];
-        }
+      barStyle = {
+        position: "absolute",
+        background: "#ececec",
+        top: String(startTop + 3) + ea,
+        left: String(intend) + ea,
+        width: String(totalWidth) + ea,
+        height: String(1) + ea,
+      };
 
-        //name
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = obj.name;
-        for (let i in nameStyle) {
-          div_clone2.style[i] = nameStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
+      timeLineStyle = {
+        position: "absolute",
+        fontSize: String(14) + ea,
+        fontWeight: String(500),
+        top: String(startTop + lineHeight) + ea,
+        left: String(intend) + ea,
+        color: "#404040",
+      };
 
-        //cliid
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = obj.cliid;
-        for (let i in cliidStyle) {
-          div_clone2.style[i] = cliidStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
+      phoneStyle = {
+        position: "absolute",
+        fontSize: String(14) + ea,
+        fontWeight: String(500),
+        top: String(startTop + (lineHeight * 2)) + ea,
+        left: String(intend) + ea,
+        color: "#404040",
+      };
 
-
-        totalFather.appendChild(div_clone);
+      budgetStyle = {
+        position: "absolute",
+        fontSize: String(14) + ea,
+        fontWeight: String(500),
+        top: String(startTop + (lineHeight * 3)) + ea,
+        left: String(intend) + ea,
+        color: "#404040",
       }
-      num++;
+
+      addressStyle = {
+        position: "absolute",
+        fontSize: String(14) + ea,
+        fontWeight: String(500),
+        top: String(151) + ea,
+        left: String(intend) + ea,
+        color: "#404040",
+        width: String(totalWidth) + ea,
+        lineHeight: String(1.5),
+      };
+
+      num = 0;
+      for (let obj of cases) {
+        if (num !== 0) {
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
+          //name
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.name;
+          for (let i in nameStyle) {
+            div_clone2.style[i] = nameStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //cliid
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.cliid;
+          for (let i in cliidStyle) {
+            div_clone2.style[i] = cliidStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //bar
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in barStyle) {
+            div_clone2.style[i] = barStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //timeline
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.timeline;
+          for (let i in timeLineStyle) {
+            div_clone2.style[i] = timeLineStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //phone
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.phone;
+          for (let i in phoneStyle) {
+            div_clone2.style[i] = phoneStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //budget
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.budget;
+          for (let i in budgetStyle) {
+            div_clone2.style[i] = budgetStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          //address
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.textContent = obj.address;
+          for (let i in addressStyle) {
+            div_clone2.style[i] = addressStyle[i];
+          }
+          div_clone.appendChild(div_clone2);
+
+          totalFather.appendChild(div_clone);
+        }
+        num++;
+      }
+
+      totalFather.style.paddingTop = String(margin * 0.75) + ea;
+      totalFather.style.paddingLeft = String(margin * 0.75) + ea;
+      totalFather.style.paddingRight = String(margin * 0.75) + ea;
+      totalFather.style.height = "calc(100vh - 123px - " + String(margin * 0.75) + ea + ")";
+      totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
+      totalFather.style.zIndex = String(1);
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.style.height = String(margin * 2) + ea;
+      totalFather.appendChild(div_clone);
+
+      totalFather.classList.add("fadein");
+
+      totalContents.appendChild(totalFather);
+      instance.totalFather = totalFather;
     }
-
-    totalFather.style.paddingTop = String(margin * 0.75) + ea;
-    totalFather.style.paddingLeft = String(margin * 0.75) + ea;
-    totalFather.style.paddingRight = String(margin * 0.75) + ea;
-    totalFather.style.height = "calc(100vh - 123px - " + String(margin * 0.75) + ea + ")"
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.style.height = String(margin * 2) + ea;
-    totalFather.appendChild(div_clone);
-
-    totalContents.appendChild(totalFather);
-    instance.totalFather = totalFather;
   }
 }
 
@@ -357,6 +460,15 @@ ClientJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { up, down } = this.mother.belowButtons.square;
   up.addEventListener("click", this.cardViewMaker());
+  down.addEventListener("click", function (e) {
+    if (instance.totalFather !== null) {
+      instance.totalFather.style.zIndex = String(-1);
+      instance.totalFather.classList.remove("fadein");
+      instance.totalFather.classList.add("fadeout");
+      instance.totalMother.classList.remove("fadeout");
+      instance.totalMother.classList.add("fadein");
+    }
+  });
 }
 
 ClientJs.prototype.launching = async function () {
