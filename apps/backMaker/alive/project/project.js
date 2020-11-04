@@ -26,4 +26,4 @@ Project.prototype.toNormal = function () {
   return obj;
 }
 
-module.exports = Client;
+module.exports = Project;

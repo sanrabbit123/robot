@@ -11,6 +11,7 @@ module.exports = function (tools) {
       let past0, past1, past2;
       let process, past;
       let temp;
+      let tempDesigner;
 
       for (let i = 0; i < tong.length; i++) {
         row0 = await MONGOC.db("miro81").collection("BC1_conlist").find({ a4_customernumber: tong[i].cliid }).toArray();
@@ -23,11 +24,12 @@ module.exports = function (tools) {
           past2 = row2[0];
 
           if (past1.a5_name !== "김미경" && past1.a5_name !== "제이미") {
-            if ((await MONGOC.db("miro81").collection("Designer").find({ designer: past1.a5_name }).toArray())[0] === undefined) {
-              console.log(tong[i]);
-              console.log(past1);
+            tempDesigner = await MONGOC.db("miro81").collection("Designer").find({ designer: past1.a5_name }).toArray();
+            if (tempDesigner[0] !== undefined) {
+              tong[i].desid = tempDesigner[0].desid;
+            } else {
+              tong[i].desid = "";
             }
-            tong[i].desid = (await MONGOC.db("miro81").collection("Designer").find({ designer: past1.a5_name }).toArray())[0].desid;
           } else {
             tong[i].desid = "de024";
           }

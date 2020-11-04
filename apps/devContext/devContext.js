@@ -806,10 +806,10 @@ class DevContext extends Array {
       // await app.launching();
 
       let back = new BackMaker();
-      // let obj = await back.launching("designer");
+      let obj = await back.launching("project");
       // const designer = await back.getDesignerById("de004");
+      // console.log(designer);
 
-      console.log((await back.getClientById("c2011_aa06s")))
 
 
 

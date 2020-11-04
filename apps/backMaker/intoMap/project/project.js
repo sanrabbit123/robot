@@ -7,6 +7,7 @@ module.exports = function (tools) {
       let tempObj, tempObjDetail, tempObjDetail2;
       let tempArr;
       let totalTong;
+      let tempFee;
 
       totalTong = [];
 
@@ -26,7 +27,14 @@ module.exports = function (tools) {
           tempObjDetail2 = i.picture_settings.pop();
 
           tempObjDetail.desid = i.desid;
-          tempObjDetail.fee = i.fee;
+          tempObjDetail.fee = [];
+          for (let j of i.fee) {
+            tempFee = {};
+            tempFee.method = j.method;
+            tempFee.partial = j.partial;
+            tempFee.amount = j.money;
+            tempObjDetail.fee.push(tempFee);
+          }
           tempObjDetail.pictureSettings = i.picture_settings;
           tempObjDetail.description = Object.values(tempObjDetail2);
 
