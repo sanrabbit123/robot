@@ -15,7 +15,7 @@ Robot.prototype.consoleQ = function (question) {
 }
 
 Robot.prototype.dataConsole = function () {
-  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole_dev.js");
   let app = new DataConsole();
   app.connect();
 }

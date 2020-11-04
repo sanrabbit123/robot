@@ -1,8 +1,9 @@
 const DataConsole = function () {
-  const Mother = require("../mother.js");
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
   this.data = {};
   this.setting = {};
+  this.dir = process.cwd() + "/apps/dataConsole";
 }
 
 DataConsole.prototype.block_template = function () {
