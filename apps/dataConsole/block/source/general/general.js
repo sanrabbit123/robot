@@ -4,8 +4,10 @@ GeneralJs.prototype.belowButtons = {
     right: null,
   },
   square: {
-    up: null,
-    down: null,
+    upLeft: null,
+    downLeft: null,
+    upRight: null,
+    downRight: null,
   }
 }
 
@@ -91,6 +93,8 @@ GeneralJs.prototype.greenBar = function () {
   }
   this.below = div_clone;
 
+
+  //circle
   margin = 18;
   start = 7;
   colors = [
@@ -106,6 +110,8 @@ GeneralJs.prototype.greenBar = function () {
     div_clone.insertAdjacentHTML(`beforeend`, svgString(String(start + (margin * i)) + ea, colors[i]));
   }
 
+
+  //arrow
   arrowString = function (color) {
     return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140.3158722 226.7716522" style="position:absolute;top:0;left:0;width:100%;" xml:space="preserve"><path style="fill:${color}" d="M139.3157501,110.4524536l-8.1448364-10.5556641c-0.0001831-0.0001831-0.0002441-0.0004272-0.0004272-0.0006104 l-53.7539062-69.664978l0.0002441-0.000061L56.3754845,2.9616106C54.9343452,1.0938948,52.7086105,0,50.3495331,0h-7.2148094 H28.4846973H1.8857865c-1.5630032,0-2.4450798,1.7947513-1.490254,3.032203l25.1439133,32.5864487 c0.0010986,0.0014038,0.0019531,0.0029907,0.0030518,0.0043945l58.6533508,76.0145111 c0.7948532,1.0301361,0.7948532,2.4667816,0,3.4969177l-41.8935814,54.2939911h-0.000061L0.3955295,223.7394714 c-0.9548249,1.237442-0.0727481,3.032196,1.4902546,3.032196h26.5989132h14.6500263h7.2148132 c2.3590775,0,4.5848083-1.0938873,6.0259514-2.9616089l4.3834419-5.6809082 c0.0001221-0.0001831,0.0002441-0.0003052,0.0003662-0.0004883l45.0211754-58.3474121v0.000061l2.3292847-3.0187988 l23.06073-29.8866577c0.0009766-0.0012817,0.0018311-0.0026855,0.0028076-0.0039673l8.1424866-10.5527649 C140.6492767,114.5908966,140.6492615,112.1806793,139.3157501,110.4524536z"/></svg>`;
   }
@@ -188,6 +194,8 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.arrow.right = div_clone2;
   div_clone.appendChild(div_clone2);
 
+
+  //white square
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.classList.add("hoverDefault");
   style = {
@@ -196,7 +204,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(20) + ea,
     height: String(20) + ea,
     top: String(34) + ea,
-    right: String(127) + ea,
+    right: String(154) + ea,
     cursor: "pointer",
     background: "#ffffff",
     borderRadius: String(5) + ea,
@@ -204,7 +212,7 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in style) {
     div_clone2.style[i] = style[i];
   }
-  this.belowButtons.square.up = div_clone2;
+  this.belowButtons.square.upLeft = div_clone2;
   div_clone.appendChild(div_clone2);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -213,7 +221,26 @@ GeneralJs.prototype.greenBar = function () {
     div_clone2.style[i] = style[i];
   }
   div_clone2.style.top = String(60) + ea;
-  this.belowButtons.square.down = div_clone2;
+  this.belowButtons.square.downLeft = div_clone2;
+  div_clone.appendChild(div_clone2);
+
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.classList.add("hoverDefault");
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.style.right = String(127) + ea;
+  this.belowButtons.square.upRight = div_clone2;
+  div_clone.appendChild(div_clone2);
+
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.classList.add("hoverDefault");
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.style.right = String(127) + ea;
+  div_clone2.style.top = String(60) + ea;
+  this.belowButtons.square.downRight = div_clone2;
   div_clone.appendChild(div_clone2);
 
   this.totalContents.appendChild(div_clone);

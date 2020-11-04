@@ -1,6 +1,12 @@
 const ClientJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
+  this.module = {
+    paddingTop: 38,
+    height: 20,
+    marginBottom: 18
+  }
+  this.grayBarWidth = 210;
   this.cases = [];
   this.totalMother = null;
   this.totalFather = null;
@@ -27,7 +33,7 @@ ClientJs.prototype.standardBar = function (standard) {
     background: "#f7f7f7",
     top: String(0),
     left: String(0),
-    width: String(200) + ea,
+    width: String(this.grayBarWidth) + ea,
     zIndex: String(2),
   };
   for (let i in style) {
@@ -37,8 +43,8 @@ ClientJs.prototype.standardBar = function (standard) {
   style2 = {
     display: "block",
     position: "fixed",
-    height: String(38) + ea,
-    paddingTop: String(35) + ea,
+    height: String(this.module.height + this.module.marginBottom) + ea,
+    paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
     background: "#f7f7f7",
@@ -47,19 +53,19 @@ ClientJs.prototype.standardBar = function (standard) {
 
   style3 = {
     position: "absolute",
-    height: String(38) + ea,
+    height: String(this.module.height + this.module.marginBottom) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
     color: "#2fa678",
   };
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.style.height = String(38 + 35) + ea;
+  div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop) + ea;
   div_clone.appendChild(div_clone2);
 
   leftPosition = [
-    40,
-    135,
+    41,
+    141,
   ];
 
   num = 0;
@@ -72,8 +78,8 @@ ClientJs.prototype.standardBar = function (standard) {
       delete style2.background;
       delete style2.width;
       leftPosition = [
-        35,
-        128,
+        38,
+        135,
       ];
     }
 
@@ -117,7 +123,7 @@ ClientJs.prototype.infoArea = function (info) {
   let temp, target;
   let num, leftPosition, widthArr;
   let columns;
-  const grayBarWidth = 200;
+  const grayBarWidth = this.grayBarWidth;
   let upsideWhiteBar;
   let eventFunction;
 
@@ -150,8 +156,8 @@ ClientJs.prototype.infoArea = function (info) {
   style2 = {
     display: "block",
     position: "fixed",
-    height: String(38) + ea,
-    paddingTop: String(35) + ea,
+    height: String(this.module.height + this.module.marginBottom) + ea,
+    paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
     background: "#ffffff",
@@ -160,8 +166,8 @@ ClientJs.prototype.infoArea = function (info) {
   };
   style3 = {
     position: "absolute",
-    marginBottom: String(18) + ea,
-    height: String(20) + ea,
+    marginBottom: String(this.module.marginBottom) + ea,
+    height: String(this.module.height) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
     color: "#2fa678",
@@ -171,7 +177,7 @@ ClientJs.prototype.infoArea = function (info) {
   };
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.style.height = String(38 + 35) + ea;
+  div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop) + ea;
   div_clone.appendChild(div_clone2);
 
   num = 0;
@@ -458,9 +464,9 @@ ClientJs.prototype.cardViewMaker = function () {
 
 ClientJs.prototype.addTransFormEvent = function () {
   const instance = this;
-  const { up, down } = this.mother.belowButtons.square;
-  up.addEventListener("click", this.cardViewMaker());
-  down.addEventListener("click", function (e) {
+  const { upLeft, downLeft, upRight, downRight } = this.mother.belowButtons.square;
+  upLeft.addEventListener("click", this.cardViewMaker());
+  downLeft.addEventListener("click", function (e) {
     if (instance.totalFather !== null) {
       instance.totalFather.style.zIndex = String(-1);
       instance.totalFather.classList.remove("fadein");
