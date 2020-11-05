@@ -1,13 +1,13 @@
+GeneralJs.timeouts = {};
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
     right: null,
   },
   square: {
-    upLeft: null,
-    downLeft: null,
-    upRight: null,
-    downRight: null,
+    up: null,
+    down: null,
   }
 }
 
@@ -17,7 +17,7 @@ GeneralJs.prototype.generalCss = function () {
   const styleTag = document.querySelector("style");
   const css = `
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
-  *{margin:0;padding:0;transition:all 0.5s ease;font-family:'sandoll'}
+  *{margin:0;padding:0;transition:all 0.4s ease;font-family:'sandoll'}
   body,div{font-size:0;color:#404040;margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}
@@ -42,10 +42,23 @@ GeneralJs.prototype.generalCss = function () {
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;top:-20px}
   .hoverDefault{cursor:pointer;opacity:1}
   .hoverDefault:hover{opacity:0.5;}
+  @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
+  @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
+  @keyframes justfadein{from{opacity:0;}to{opacity:0.3;}}
+  @keyframes justfadeout{from{opacity:0.3;}to{opacity:0;}}
+  @keyframes fadedown{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(20px);}}
+  @keyframes fadeup{from{opacity:0;transform:translateY(20px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
+  .justfadeinoriginal{animation:justfadeinoriginal 0.4s ease forwards;}
+  .justfadeoutoriginal{animation:justfadeoutoriginal 0.4s ease forwards;}
+  .justfadein{animation:justfadein 0.4s ease forwards;}
+  .justfadeout{animation:justfadeout 0.4s ease forwards;}
   .fadeout{animation:fadeout 0.4s ease forwards;}
   .fadein{animation:fadein 0.4s ease forwards;}
+  .fadedown{animation:fadedown 0.4s ease forwards;}
+  .fadeup{animation:fadeup 0.4s ease forwards;}
+
   .totalMother{
     display: block;
     position: fixed;
@@ -69,13 +82,40 @@ GeneralJs.prototype.generalCss = function () {
   styleTag.textContent = css;
 }
 
+GeneralJs.prototype.returnCircle = function (cssString, color) {
+  return `<svg class="circle" style="${cssString}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
+}
+
+GeneralJs.prototype.returnBigArrow = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140.316 226.772"><path d="M139.316 110.452l-8.145-10.556c0 0 0 0 0-0.001l-53.754-69.665 0 0L56.375 2.962C54.934 1.094 52.709 0 50.35 0h-7.215H28.485 1.886c-1.563 0-2.445 1.795-1.49 3.032l25.144 32.586c0.001 0.001 0.002 0.003 0.003 0.004l58.653 76.015c0.795 1.03 0.795 2.467 0 3.497l-41.894 54.294h0L0.396 223.739c-0.955 1.237-0.073 3.032 1.49 3.032h26.599 14.65 7.215c2.359 0 4.585-1.094 6.026-2.962l4.383-5.681c0 0 0 0 0 0l45.021-58.347v0l2.329-3.019 23.061-29.887c0.001-0.001 0.002-0.003 0.003-0.004l8.142-10.553C140.649 114.591 140.649 112.181 139.316 110.452z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnArrow = function (direction, color) {
+  if (direction === undefined && color === undefined) {
+    throw new Error("invaild arguments");
+  }
+  if (direction !== undefined && color === undefined) {
+    color = direction;
+    direction = "right";
+  }
+  const right = `<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" viewBox="0 0 425.197 425.197"><path style="fill:${color};" d="M32.348 422.275l330.823-191.001c14.377-8.301 14.377-29.052 0-37.353L32.348 2.921C17.971-5.379 0 4.997 0 21.598v382.001C0 420.2 17.971 430.576 32.348 422.275z"/></svg>`;
+  const left = `<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" viewBox="0 0 425.197 425.197"><path style="fill:${color}" d="M392.849 2.921L62.026 193.922c-14.377 8.301-14.377 29.052 0 37.353l330.823 191.001c14.377 8.301 32.348-2.075 32.348-18.676V21.598C425.197 4.997 407.226-5.379 392.849 2.921z"/></svg>`;
+  if (direction === "right") {
+    return right;
+  } else if (direction === "left") {
+    return left;
+  }
+}
+
 GeneralJs.prototype.greenBar = function () {
   let div_clone, div_clone2;
   let style = {};
   let ea = "px";
-  let margin, start, colors, svgString;
-  let arrowString, move;
+  let margin, start, colors;
+  let move;
   let moveEventLeft, moveEventRight;
+
+  this.belowHeight = 123;
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -85,14 +125,13 @@ GeneralJs.prototype.greenBar = function () {
     bottom: String(0),
     left: String(0),
     width: "100%",
-    height: String(123) + ea,
+    height: String(this.belowHeight) + ea,
     zIndex: String(2),
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
   this.below = div_clone;
-
 
   //circle
   margin = 18;
@@ -101,25 +140,16 @@ GeneralJs.prototype.greenBar = function () {
     "#59AF89",
     "#FFBD3D",
     "#FF5F57",
-  ]
-  svgString = function (position, color) {
-    return `<svg class="circle" style="right:${position}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
-  }
+  ];
 
   for (let i = 0; i < colors.length; i++) {
-    div_clone.insertAdjacentHTML(`beforeend`, svgString(String(start + (margin * i)) + ea, colors[i]));
-  }
-
-
-  //arrow
-  arrowString = function (color) {
-    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 140.3158722 226.7716522" style="position:absolute;top:0;left:0;width:100%;" xml:space="preserve"><path style="fill:${color}" d="M139.3157501,110.4524536l-8.1448364-10.5556641c-0.0001831-0.0001831-0.0002441-0.0004272-0.0004272-0.0006104 l-53.7539062-69.664978l0.0002441-0.000061L56.3754845,2.9616106C54.9343452,1.0938948,52.7086105,0,50.3495331,0h-7.2148094 H28.4846973H1.8857865c-1.5630032,0-2.4450798,1.7947513-1.490254,3.032203l25.1439133,32.5864487 c0.0010986,0.0014038,0.0019531,0.0029907,0.0030518,0.0043945l58.6533508,76.0145111 c0.7948532,1.0301361,0.7948532,2.4667816,0,3.4969177l-41.8935814,54.2939911h-0.000061L0.3955295,223.7394714 c-0.9548249,1.237442-0.0727481,3.032196,1.4902546,3.032196h26.5989132h14.6500263h7.2148132 c2.3590775,0,4.5848083-1.0938873,6.0259514-2.9616089l4.3834419-5.6809082 c0.0001221-0.0001831,0.0002441-0.0003052,0.0003662-0.0004883l45.0211754-58.3474121v0.000061l2.3292847-3.0187988 l23.06073-29.8866577c0.0009766-0.0012817,0.0018311-0.0026855,0.0028076-0.0039673l8.1424866-10.5527649 C140.6492767,114.5908966,140.6492615,112.1806793,139.3157501,110.4524536z"/></svg>`;
+    div_clone.insertAdjacentHTML(`beforeend`, this.returnCircle("right:" + String(start + (margin * i)) + ea, colors[i]));
   }
 
   move = 300;
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.insertAdjacentHTML(`beforeend`, arrowString("#ffffff"));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnBigArrow("#ffffff"));
   div_clone2.classList.add("hoverDefault");
   style = {
     display: "block",
@@ -138,7 +168,7 @@ GeneralJs.prototype.greenBar = function () {
     const targets = document.querySelectorAll(".moveTarget");
     const ea = "px";
     const translateFunc = function (past) {
-      const newValue = Number(past.replace(/[^0-9\-]/g, '')) - move;
+      const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
     for (let target of targets) {
@@ -147,9 +177,9 @@ GeneralJs.prototype.greenBar = function () {
       } else {
         target.style.transform = translateFunc(target.style.transform);
       }
-      if (Number(target.style.transform.replace(/[^0-9\-]/g, '')) > 0) {
+      if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-]/g, ''))) {
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
         target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
       }
     }
@@ -160,20 +190,20 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(div_clone2);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.insertAdjacentHTML(`beforeend`, arrowString("#ffffff"));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnBigArrow("#ffffff"));
   div_clone2.classList.add("hoverDefault");
   for (let i in style) {
     div_clone2.style[i] = style[i];
   }
   div_clone2.style.top = String(34) + ea;
-  div_clone2.style.right = String(83) + ea;
+  div_clone2.style.right = String(81) + ea;
   div_clone2.style.transform = "rotate(180deg)";
 
   moveEventRight = function (e) {
     const targets = document.querySelectorAll(".moveTarget");
     const ea = "px";
     const translateFunc = function (past) {
-      const newValue = Number(past.replace(/[^0-9\-]/g, '')) + move;
+      const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
     for (let target of targets) {
@@ -182,9 +212,9 @@ GeneralJs.prototype.greenBar = function () {
       } else {
         target.style.transform = translateFunc(target.style.transform);
       }
-      if (Number(target.style.transform.replace(/[^0-9\-]/g, '')) > 0) {
+      if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-]/g, ''))) {
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
         target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
       }
     }
@@ -204,7 +234,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(20) + ea,
     height: String(20) + ea,
     top: String(34) + ea,
-    right: String(154) + ea,
+    right: String(127) + ea,
     cursor: "pointer",
     background: "#ffffff",
     borderRadius: String(5) + ea,
@@ -212,7 +242,7 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in style) {
     div_clone2.style[i] = style[i];
   }
-  this.belowButtons.square.upLeft = div_clone2;
+  this.belowButtons.square.up = div_clone2;
   div_clone.appendChild(div_clone2);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -221,26 +251,7 @@ GeneralJs.prototype.greenBar = function () {
     div_clone2.style[i] = style[i];
   }
   div_clone2.style.top = String(60) + ea;
-  this.belowButtons.square.downLeft = div_clone2;
-  div_clone.appendChild(div_clone2);
-
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.classList.add("hoverDefault");
-  for (let i in style) {
-    div_clone2.style[i] = style[i];
-  }
-  div_clone2.style.right = String(127) + ea;
-  this.belowButtons.square.upRight = div_clone2;
-  div_clone.appendChild(div_clone2);
-
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.classList.add("hoverDefault");
-  for (let i in style) {
-    div_clone2.style[i] = style[i];
-  }
-  div_clone2.style.right = String(127) + ea;
-  div_clone2.style.top = String(60) + ea;
-  this.belowButtons.square.downRight = div_clone2;
+  this.belowButtons.square.down = div_clone2;
   div_clone.appendChild(div_clone2);
 
   this.totalContents.appendChild(div_clone);

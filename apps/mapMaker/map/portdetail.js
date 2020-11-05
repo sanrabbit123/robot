@@ -202,6 +202,11 @@ module.exports = {
         "src": "room_powderroom_5rspot087_102915.svg"
       },
       {
+        "wording": "Pentry",
+        "value": "pentry",
+        "src": "room_powderroom_5rspot087_102915.svg"
+      },
+      {
         "wording": "Second floor",
         "value": "secondfloor",
         "src": "room_secondfloor_4rspot94_102915.svg"

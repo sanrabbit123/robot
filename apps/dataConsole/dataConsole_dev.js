@@ -48,22 +48,25 @@ DataConsole.prototype.connect = async function () {
     }
 
     //set static
-    const staticDir = `${this.dir}/block/source/local`;
+    const staticDir = `${this.dir}/router/source/local`;
     const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
-    let generalString, consoleGeneralString, execString, fileString;
+
+    let svgTongString, generalString, consoleGeneralString, execString, fileString;
+
     if (!homeDirList.includes(`static`)) {
       shell.exec(`mkdir ${shellLink(process.env.HOME)}/static`);
     }
     for (let i of staticDirList) {
       if (i !== `.DS_Store`) {
+        svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
         generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
         generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
-        consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/block/source/general/general.js` ]);
-        fileString = await fileSystem(`readString`, [ `${this.dir}/block/source/local/${i}` ]);
-        execString = await fileSystem(`readString`, [ `${this.dir}/block/source/general/exec.js` ]);
+        consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+        fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
         execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, ('"use strict";' + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString) ]);
+        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, ('"use strict";' + "\n\n" + svgTongString + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString) ]);
       }
     }
 
