@@ -805,8 +805,8 @@ class DevContext extends Array {
       // const app = new ImmovablesServer();
       // await app.launching();
 
-      let back = new BackMaker();
-      let obj = await back.launching("project");
+      // let back = new BackMaker();
+      // let obj = await back.launching("project");
       // const designer = await back.getDesignerById("de004");
       // console.log(designer);
 
@@ -820,7 +820,7 @@ class DevContext extends Array {
 
       // TOOLS ----------------------------------------------------
 
-      // await this.spellCheck("p60");
+      await this.spellCheck("p64");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

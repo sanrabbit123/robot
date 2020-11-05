@@ -186,6 +186,19 @@ PortfolioFilter.prototype.to_portfolio = async function () {
     await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
 
+    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
+
+    return resultFolder;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+PortfolioFilter.prototype.parsing_fileList = async function (resultFolder) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
     let fileList_780_raw, fileList_original_raw, fileList_png_raw;
     let fileList_780, fileList_original, fileList_png;
     let resultFolderArr, resultFolderParent;
@@ -197,9 +210,11 @@ PortfolioFilter.prototype.to_portfolio = async function () {
     fileList_780 = [];
     fileList_original = [];
     fileList_png = [];
+
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
     fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
     fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
+
     for (let i of fileList_780_raw) {
       if (i !== `.DS_Store`) {
         fileList_780.push(resultFolder + "/780/" + i);
@@ -211,15 +226,15 @@ PortfolioFilter.prototype.to_portfolio = async function () {
       }
     }
     for (let i of fileList_png_raw) {
-      if (i !== `.DS_Store` && i !== `780` && i !== `원본`) {
-        fileList_png_raw.push(resultFolderParent + "/" + i);
+      if (/\.png$/g.test(i)) {
+        fileList_png.push(resultFolderParent + "/" + i);
+        console.log(i);
       }
     }
 
     return { fileList_780, fileList_original, fileList_png };
-
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   }
 }
 
@@ -272,9 +287,7 @@ PortfolioFilter.prototype.total_make = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, slack_bot } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
-
+  const drive = new GoogleDrive();
   const idFilterNum = function (past) {
     past = past.replace(/\.jpg$/, '');
     past = past.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '');
@@ -283,22 +296,22 @@ PortfolioFilter.prototype.total_make = async function () {
     let newNumber = Number(past);
     return (newNumber - 1);
   }
-
   const idFilter = function (past) {
     return String(idFilterNum(past));
   }
 
   try {
-    await MONGOC.connect();
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
     let pidFolder, fromArr, toArr;
     let webViewLink;
+    let resultFolder;
 
-    const { fileList_780, fileList_original, fileList_png } = await this.to_portfolio();
+    resultFolder = await this.to_portfolio();
+    const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder);
+    console.log(fileList_780, fileList_original, fileList_png);
 
-    const drive = new GoogleDrive();
     thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21");
     await drive.sleep(1000);
     console.log(`make folder ${this.folderName} done`);
@@ -325,6 +338,7 @@ PortfolioFilter.prototype.total_make = async function () {
       console.log(`upload file ${f} done`);
     }
 
+    //this is problem
     webViewLink = await drive.read_webView_inPython(thisFolderId);
     await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
 
@@ -348,11 +362,11 @@ PortfolioFilter.prototype.total_make = async function () {
 
     await this.mother.s3FileUpload(fromArr, toArr);
 
+
     console.log(`s3 upload done`);
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   } finally {
-    MONGOC.close();
     process.exit();
   }
 }

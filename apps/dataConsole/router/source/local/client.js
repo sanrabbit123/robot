@@ -500,7 +500,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     color: "#404040",
     fontSize: String(48) + ea,
-    fontWeight: String(100),
+    fontWeight: String(600),
     bottom: String(12) + ea,
     left: String(leftMargin - 3) + ea,
   };
@@ -589,7 +589,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //contents ---------------------------------------
 
   motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, '')) - titleHeight;
-  segmentHeight = (motherHeight - (leftMargin + 10)) / info.length;
+  segmentHeight = (motherHeight - (leftMargin + 16)) / info.length;
 
   if (segmentHeight <= 33.4) {
     fontSize = segmentHeight / 1.9;
@@ -634,7 +634,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       left: String(0) + ea,
       height: String(fontSize + 5) + ea,
       fontSize: String(fontSize) + ea,
-      fontWeight: String(600),
+      fontWeight: String(700),
     };
     for (let i in style) {
       div_clone4.style[i] = style[i];
@@ -648,8 +648,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       display: "inline-block",
       position: "absolute",
       top: String(0) + ea,
-      left: String(leftMargin * 2) + ea,
-      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+      left: String(leftMargin * 2.5) + ea,
+      width: "calc(100% - " + String(leftMargin * 2.5) + ea + ")",
       height: String(fontSize + 5) + ea,
       overflow: "scroll",
       fontSize: String(fontSize) + ea,
@@ -671,7 +671,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     bottom: String(32) + ea,
     right: String(32) + ea,
-    fontSize: String(fontSize - 3) + ea,
+    fontSize: String(fontSize - 2) + ea,
     color: "#2fa678",
   };
   for (let i in style) {
@@ -846,12 +846,42 @@ ClientJs.prototype.addTransFormEvent = function () {
   });
 }
 
+ClientJs.prototype.addSearchEvent = function () {
+  const instance = this;
+  const input = this.searchInput;
+
+  input.addEventListener("keyup", async function (e) {
+    if (e.keyCode === 13) {
+      if (instance.totalFather !== null && instance.totalFather !== undefined) {
+        instance.totalFather.remove();
+        instance.totalFather = null;
+      }
+      if (instance.totalMother !== null && instance.totalMother !== undefined) {
+        instance.totalMother.remove();
+        instance.totalMother = null;
+        instance.belowHeight = null;
+        instance.whiteBox = null;
+        instance.standardDoms = [];
+        instance.cases = [];
+        instance.totalMother = null;
+        instance.totalFather = null;
+        instance.onView = "mother";
+        await instance.spreadData();
+        instance.addTransFormEvent();
+      }
+    }
+  });
+
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
     this.belowHeight = this.mother.belowHeight;
+    this.searchInput = this.mother.searchInput;
     await this.spreadData();
     this.addTransFormEvent();
+    this.addSearchEvent();
   } catch (e) {
     console.log(e);
   }

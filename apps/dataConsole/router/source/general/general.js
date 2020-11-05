@@ -18,6 +18,7 @@ GeneralJs.prototype.generalCss = function () {
   const css = `
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
   *{margin:0;padding:0;transition:all 0.4s ease;font-family:'sandoll'}
+  input::placeholder {color:white;opacity:0.5;}
   body,div{font-size:0;color:#404040;margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}
@@ -58,25 +59,9 @@ GeneralJs.prototype.generalCss = function () {
   .fadein{animation:fadein 0.4s ease forwards;}
   .fadedown{animation:fadedown 0.4s ease forwards;}
   .fadeup{animation:fadeup 0.4s ease forwards;}
-
-  .totalMother{
-    display: block;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    height: calc(100% - 123px);
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+  .totalMother{display:block;position:fixed;top:0px;left:0px;height:calc(100% - 123px);width:100%;overflow-x:hidden;overflow-y:scroll;}
   .totalMother::-webkit-scrollbar{display:none;}
-  .totalFather{
-    width: 100%;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    height: calc(100vh - 123px);
-  }
+  .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);}
   .totalFather::-webkit-scrollbar{display:none;}
   `;
   styleTag.textContent = css;
@@ -107,8 +92,54 @@ GeneralJs.prototype.returnArrow = function (direction, color) {
   }
 }
 
+GeneralJs.prototype.searchInput = function (greenBox) {
+  let div_clone, input_clone;
+  let style = {};
+  let ea = "px";
+  let width, height, visualSpecific;
+  let fontSize;
+
+  width = 300;
+  height = 60;
+  visualSpecific = 9;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(width) + ea,
+    height: String(height) + ea,
+    left: "calc(50% - " + String(width / 2) + ea + ")",
+    top: "calc(50% - " + String((height / 2) + visualSpecific) + ea + ")",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  fontSize = 38;
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
+  input_clone.setAttribute("type", "text");
+  input_clone.setAttribute("placeholder", "검색어 입력");
+  style = {
+    width: "100%",
+    height: "100%",
+    fontSize: String(fontSize) + ea,
+    background: "transparent",
+    border: String(0),
+    textAlign: "center",
+    fontWeight: String(100),
+    color: "white",
+    outline: "none",
+  };
+  for (let i in style) {
+    input_clone.style[i] = style[i];
+  }
+  div_clone.appendChild(input_clone);
+  greenBox.appendChild(div_clone);
+  this.searchInput = input_clone;
+}
+
 GeneralJs.prototype.greenBar = function () {
   let div_clone, div_clone2;
+  let input_clone;
   let style = {};
   let ea = "px";
   let margin, start, colors;
@@ -234,7 +265,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(20) + ea,
     height: String(20) + ea,
     top: String(34) + ea,
-    right: String(127) + ea,
+    right: String(125) + ea,
     cursor: "pointer",
     background: "#ffffff",
     borderRadius: String(5) + ea,
@@ -254,5 +285,7 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.square.down = div_clone2;
   div_clone.appendChild(div_clone2);
 
+  this.searchInput(div_clone);
   this.totalContents.appendChild(div_clone);
+  this.searchInput.focus();
 }
