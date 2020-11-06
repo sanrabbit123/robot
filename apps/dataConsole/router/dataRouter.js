@@ -82,12 +82,28 @@ DataRouter.prototype.rou_post_getClients = function () {
   obj.link = "/getClients";
   obj.func = async function (req, res) {
     try {
+      const standard = instance.patch.clientStandard();
       const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true });
-      const result = {
-        standard: instance.patch.clientStandard(),
-        data: clients.flatDeath()
-      };
-      res.send(JSON.stringify(result));
+      const data = clients.flatDeath();
+      res.send(JSON.stringify({ standard, data }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_searchClients = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/searchClients";
+  obj.func = async function (req, res) {
+    try {
+      const standard = instance.patch.clientStandard();
+      const map = instance.patch.clientMap();
+      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true });
+      const data = clients.flatDeath();
+      res.send(JSON.stringify({ standard, map, data }));
     } catch (e) {
       console.log(e);
     }

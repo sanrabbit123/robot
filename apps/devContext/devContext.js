@@ -810,8 +810,6 @@ class DevContext extends Array {
       // const designer = await back.getDesignerById("de004");
       // console.log(designer);
 
-
-
       const resultFolder = process.env.HOME + "/photoOriginal";
       let fromArr, toArr;
       let pidList_raw, pidList;

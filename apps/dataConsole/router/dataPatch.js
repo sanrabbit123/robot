@@ -197,6 +197,29 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
   return targetColumns;
 }
 
-
+DataPatch.prototype.clientMap = function () {
+  const map = {
+    timeline: { position: "requests.0.request.timeline", type: "date" },
+    budget: { position: "requests.0.request.budget", type: "string" },
+    family: { position: "requests.0.request.family", type: "string" },
+    address: { position: "requests.0.request.space.address", type: "string" },
+    contract: { position: "requests.0.request.space.contract", type: "string" },
+    pyeong: { position: "requests.0.request.space.pyeong", type: "number" },
+    room: { position: "requests.0.request.space.spec.room", type: "number" },
+    bathroom: { position: "requests.0.request.space.spec.bathroom", type: "number" },
+    valcony: { position: "requests.0.request.space.spec.valcony", type: "boolean" },
+    living: { position: "requests.0.request.space.resident.living", type: "boolean" },
+    expected: { position: "requests.0.request.space.resident.expected", type: "date" },
+    comment: { position: "requests.0.request.etc.comment", type: "date" },
+    channel: { position: "requests.0.request.etc.channel", type: "date" },
+    status: { position: "requests.0.analytics.response.status", type: "date" },
+    outreason: { position: "requests.0.analytics.response.outreason", type: "array" },
+    callHistory: { position: "requests.0.analytics.date.callHistory", type: "array" },
+    precheck: { position: "requests.0.analytics.date.space.precheck", type: "date" },
+    empty: { position: "requests.0.analytics.date.space.empty", type: "date" },
+    movein: { position: "requests.0.analytics.date.space.movein", type: "date" },
+  };
+  return map;
+}
 
 module.exports = DataPatch;

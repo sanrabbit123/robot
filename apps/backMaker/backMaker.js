@@ -408,7 +408,12 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
   try {
     let tong, clientsArr;
     await MONGOC.connect();
-    tong = await MONGOC.db("miro81").collection(`client`).find(query).toArray();
+
+    if (option.limit !== undefined) {
+      tong = await MONGOC.db(`miro81`).collection(`client`).find(query).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOC.db(`miro81`).collection(`client`).find(query).toArray();
+    }
 
     if (!option.withTools) {
       clientsArr = new Clients();
@@ -441,7 +446,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
   try {
     let arr, target;
     await MONGOC.connect();
-    arr = await MONGOC.db("miro81").collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
+    arr = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
     if (option.withTools) {
       Client = Tools.widthTools(Client);
     }
@@ -463,7 +468,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   try {
     let tong, clientsArr;
     await MONGOC.connect();
-    tong = await MONGOC.db("miro81").collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
+    tong = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
 
     if (!option.withTools) {
       clientsArr = new Clients();
