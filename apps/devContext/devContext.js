@@ -812,6 +812,52 @@ class DevContext extends Array {
 
 
 
+      const resultFolder = process.env.HOME + "/photoOriginal";
+      let fromArr, toArr;
+      let pidList_raw, pidList;
+      let targetFolder, targetFolderList_raw, targetFolderList;
+
+
+      pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
+      pidList = [];
+      for (let i of pidList_raw) {
+        if (i !== `.DS_Store`) {
+          pidList.push(i);
+        }
+      }
+
+      for (let pid of pidList) {
+
+        targetFolder = resultFolder + "/" + pid;
+        targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
+        targetFolderList = [];
+        for (let i of targetFolderList_raw) {
+          if (i !== `.DS_Store`) {
+            targetFolderList.push(i);
+          }
+        }
+
+        fromArr = [];
+        toArr = [];
+        for (let i of targetFolderList) {
+          if (i !== `.DS_Store`) {
+            fromArr.push(`${shellLink(targetFolder)}/${i}`);
+            toArr.push(`corePortfolio/original/${pid}/${i}`);
+          }
+        }
+
+        console.log(fromArr);
+        console.log(toArr);
+
+        await this.mother.s3FileUpload(fromArr, toArr);
+
+      }
+
+
+
+
+
+
 
 
       // const app = new KakaoTalk();
@@ -819,13 +865,15 @@ class DevContext extends Array {
 
 
       // TOOLS ----------------------------------------------------
+      // let back = new BackMaker();
+      // await back.pastToMongo();
 
-      await this.spellCheck("p64");
+      // await this.spellCheck("p64");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
-      // await this.deletePorfolioWithReview("p60");
+      // await this.deletePorfolioWithReview("p64", "re059");
 
     } catch (e) {
       console.log(e);

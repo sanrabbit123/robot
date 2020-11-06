@@ -496,10 +496,10 @@ ResourceMaker.prototype.portfolio_verification = function () {
 
   if (!noReview) {
     reviewTitleArr = this.arr[reviewTitleIndex].split(", ");
-    booResults.push(reviewTitleArr[0].length < 10);
-    booResults.push(reviewTitleArr[1].length < 10);
+    booResults.push(reviewTitleArr[0].length <= 10);
+    booResults.push(reviewTitleArr[1].length <= 10);
     if (!booResults[0] || !booResults[1]) {
-      throw new Error("invaild review title : " + JSON.stringify(booResults, null, 2));
+      throw new Error("invaild review title : " + JSON.stringify(booResults) + ", " + reviewTitleArr.join(", "));
     }
   }
 }
@@ -609,8 +609,10 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
   try {
 
     let tempObj, tempObjDetail, portfolio, review;
-    let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir
+    let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir, targetPhotoDirFinal;
     let tempReg, conidTargetArr;
+    let garoseroObj;
+
 
     tempObj = this.modelingMap().structure;
 
@@ -719,9 +721,17 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
       }
     }
 
+    targetPhotoDirFinal = [];
+    for (let { index, gs } of targetPhotoDir) {
+      garoseroObj = {};
+      garoseroObj.index = index + 1;
+      garoseroObj.gs = gs;
+      targetPhotoDirFinal.push(garoseroObj);
+    }
+
     tempObj.photos.first = 1;
     tempObj.photos.last = targetPhotoDirArr.length;
-    tempObj.photos.detail = targetPhotoDir;
+    tempObj.photos.detail = targetPhotoDirFinal;
 
     conidTargetArr = [];
     tempReg = new RegExp('^t' + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7));
@@ -730,8 +740,12 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
         conidTargetArr.push(conid);
       }
     }
-    conidTargetArr.sort((a, b) => { return orderSystem("decode", b) - orderSystem("decode", a) });
-    tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
+
+    if (conidTargetArr.length === 0) {
+      tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_aa01s");
+    } else {
+      tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
+    }
 
     this.final = tempObj;
 
@@ -763,9 +777,14 @@ ResourceMaker.prototype.launching = async function () {
     }
     shell.exec(`mkdir ${shellLink(tempHome)}`);
 
+    note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });
+    this.arr = await note.readNote();
+
+    this.portfolio_verification();
+
     //parsing portfolio number
     tempResponse = 200;
-    index = -1;
+    index = 0;
     while (tempResponse === 200) {
       index++;
       tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(index) + this.p_id + ".jpg");
@@ -773,7 +792,7 @@ ResourceMaker.prototype.launching = async function () {
     }
 
     //download images
-    for (let i = 0; i < index; i++) {
+    for (let i = 1; i < index; i++) {
       tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/i" + String(i) + this.p_id + ".jpg");
       await fileSystem(`writeBinary`, [ tempHome + "/i" + String(i) + this.p_id + ".jpg", tempObject ]);
       console.log(`download success`);
@@ -781,17 +800,13 @@ ResourceMaker.prototype.launching = async function () {
 
     this.targetFolder = tempHome;
 
-    note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });
-    this.arr = await note.readNote();
-
     this.infoMaker();
-    this.portfolio_verification();
     this.portfolio_maker();
 
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}_raw.js`, JSON.stringify(this.final, null, 2) ]);
 
     await MONGOC.connect();
-    temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).toArray();
+    temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).limit(1).toArray();
     await this.portfolio_modeling(temp);
 
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);

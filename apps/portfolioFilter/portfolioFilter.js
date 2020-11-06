@@ -294,7 +294,7 @@ PortfolioFilter.prototype.total_make = async function () {
     past = past.replace(/[^0-9]/g, '');
     past = past.replace(/^0/, '');
     let newNumber = Number(past);
-    return (newNumber - 1);
+    return (newNumber);
   }
   const idFilter = function (past) {
     return String(idFilterNum(past));
@@ -361,7 +361,6 @@ PortfolioFilter.prototype.total_make = async function () {
     console.log(toArr);
 
     await this.mother.s3FileUpload(fromArr, toArr);
-
 
     console.log(`s3 upload done`);
   } catch (e) {

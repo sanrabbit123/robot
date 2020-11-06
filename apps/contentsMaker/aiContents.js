@@ -80,6 +80,14 @@ AiContents.prototype.photo_sort = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const { photo_dir } = this.options;
+  const sortFilter = function (str) {
+    str = str.replace(/\.jpg$/, '');
+    str = str.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '');
+    str = str.replace(/[ap][0-9]+$/, '');
+    str = str.replace(/[^0-9]/g, '');
+    str = str.replace(/^0/, '');
+    return Number(str);
+  }
   try {
     let photo_list = [];
     let file_list = await fileSystem(`readDir`, [ photo_dir ]);
@@ -91,9 +99,8 @@ AiContents.prototype.photo_sort = async function () {
     for (let i = 0; i < file_list.length; i++) { if (file_list[i] === '.DS_Store') {
       file_list.splice(i, 1);
     }}
-    file_list.sort(function (a, b) {
-      return Number(instance.image_filter(a)) - Number(instance.image_filter(b));
-    });
+
+    file_list.sort((a, b) => { return sortFilter(a) - sortFilter(b); });
 
     for (let i = 0; i < file_list.length; i++) {
       shell.exec(`mv ${shellLink(photo_dir)}/${file_list[i]} ${shellLink(photo_dir)}/photo${String(i + 1)}.jpg`);
