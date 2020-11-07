@@ -52,7 +52,7 @@ from tool.client import Client
 from notion.client import NotionClient
 
 try:
-    app = NotionClient(token_v2="48939ecc63b3d656b974759f02242a4ab3668d47a946fae84e3897b20db14dfb2f0afae3c69dd00f75384e29ca9bacebf62347556719ee03a66f3988385dfb7edb341e1331049d0937f3f2987208")
+    app = NotionClient(token_v2="671489b54b004ebe2d266be5e21154f69dda7373ed8ba6c70747b506bce158b094a8b8cdb990007c989b874aafa8dfb7cda655bd98d902a44399ae6797f21cbbdd23504409a0349107068db13406")
     clientInstance = Client(app)
     data = getBridge()
 

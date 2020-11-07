@@ -7,7 +7,7 @@ class Client:
 
     def __init__(self, app):
         self.client = app
-        self.table = app.get_collection_view("https://www.notion.so/8fc93e280b18483dab13d24e5aca4078?v=b2f732a2826f451eaddbc1fb8a05c012")
+        self.table = app.get_collection_view("https://www.notion.so/a054c5877bf84d46aa5c8c5ff3baf4b9?v=a5f22beba9e748a9b3fb56d9623204bf")
 
 
     def createElement(self, dic):

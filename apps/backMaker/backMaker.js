@@ -516,41 +516,57 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
 
 // GET Contents --------------------------------------------------------------------------------
 
-BackMaker.prototype.getContentsById = async function (conid) {
+BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "contents";
-  const { Contents } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
   try {
     let arr, target;
-    await MONGOC.connect();
-    arr = await MONGOC.db(`miro81`).collection(`contents`).find({ conid }).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`contents`).find({ conid }).toArray();
+      MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`contents`).find({ conid }).toArray();
+    }
+
+    if (option.withTools) {
+      Contents = Tools.widthTools(Contents);
+    }
     target = new Contents(arr[0]);
     return target;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
-BackMaker.prototype.getContentsByPid = async function (pid) {
+BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "contents";
-  const { Contents } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
   try {
     let arr, target;
-    await MONGOC.connect();
-    arr = await MONGOC.db(`miro81`).collection(`contents`).find({ "contents.portfolio.pid": pid }).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`contents`).find({ "contents.portfolio.pid": pid }).toArray();
+      MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`contents`).find({ "contents.portfolio.pid": pid }).toArray();
+    }
+
+    if (option.withTools) {
+      Contents = Tools.widthTools(Contents);
+    }
     target = new Contents(arr[0]);
     return target;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
