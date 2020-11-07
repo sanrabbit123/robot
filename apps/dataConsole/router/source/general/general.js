@@ -61,7 +61,7 @@ GeneralJs.prototype.generalCss = function () {
   .fadeup{animation:fadeup 0.4s ease forwards;}
   .totalMother{display:block;position:fixed;top:0px;left:0px;height:calc(100% - 123px);width:100%;overflow-x:hidden;overflow-y:scroll;}
   .totalMother::-webkit-scrollbar{display:none;}
-  .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);}
+  .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);background:white}
   .totalFather::-webkit-scrollbar{display:none;}
   `;
   styleTag.textContent = css;

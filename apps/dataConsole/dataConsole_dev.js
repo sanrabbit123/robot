@@ -6,15 +6,16 @@ const DataConsole = function () {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
   const http = require("http");
   const express = require("express");
   const app = express();
   const bodyParser = require("body-parser");
   const session = require("express-session");
   const MongoStore = require("connect-mongo")(session);
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   let localMongoUrl_Arr, localMongoUrl;
-  localMongoUrl_Arr = this.mother.mongoinfo.split('@');
+  localMongoUrl_Arr = mongoinfo.split('@');
   localMongoUrl = localMongoUrl_Arr[0] + '@' + "localhost" + ':' + (localMongoUrl_Arr[1].split(':'))[1];
   const sessionStore = new MongoStore({
     url: localMongoUrl,
@@ -36,9 +37,12 @@ DataConsole.prototype.connect = async function () {
   }));
 
   try {
+
+    await MONGOC.connect();
+
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter();
+    const router = new DataRouter(MONGOC);
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);

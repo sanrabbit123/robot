@@ -30,9 +30,10 @@ ClientJs.prototype.standardBar = function (standard) {
     name: standard.standard.name.name
   };
   target = standard.data;
-  target.unshift(temp);
+  if (standard.search === null) {
+    target.unshift(temp);
+  }
 
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     display: "block",
     position: "relative",
@@ -42,9 +43,6 @@ ClientJs.prototype.standardBar = function (standard) {
     width: String(this.grayBarWidth) + ea,
     zIndex: String(2),
   };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
 
   style2 = {
     display: "block",
@@ -65,17 +63,24 @@ ClientJs.prototype.standardBar = function (standard) {
     color: "#2fa678",
   };
 
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop + this.module.initialMargin) + ea;
-
-  div_clone.appendChild(div_clone2);
+  if (standard.search === null) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop + this.module.initialMargin) + ea;
+    div_clone.appendChild(div_clone2);
+  } else {
+    div_clone = this.totalMother.children[0];
+  }
 
   leftPosition = [
     42,
     141,
   ];
 
-  num = 0;
+  num = (standard.search === null ? 0 : 1);
   for (let { cliid, name } of target) {
     if (num === 1) {
       style2.position = "relative";
@@ -128,7 +133,10 @@ ClientJs.prototype.standardBar = function (standard) {
     num++;
   }
 
-  this.totalMother.appendChild(div_clone);
+  if (standard.search === null) {
+    this.totalMother.appendChild(div_clone);
+  }
+
 }
 
 ClientJs.prototype.infoArea = function (info) {
@@ -154,9 +162,10 @@ ClientJs.prototype.infoArea = function (info) {
   }
 
   target = info.data;
-  target.unshift(temp);
+  if (info.search === null) {
+    target.unshift(temp);
+  }
 
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     display: "block",
     position: "absolute",
@@ -164,10 +173,6 @@ ClientJs.prototype.infoArea = function (info) {
     left: String(grayBarWidth) + ea,
     width: `5000px`,
   };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-
   style2 = {
     display: "block",
     position: "fixed",
@@ -191,11 +196,20 @@ ClientJs.prototype.infoArea = function (info) {
     cursor: "pointer",
   };
 
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop + this.module.initialMargin) + ea;
-  div_clone.appendChild(div_clone2);
 
-  num = 0;
+  if (info.search === null) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.style.height = String(this.module.height + this.module.marginBottom + this.module.paddingTop + this.module.initialMargin) + ea;
+    div_clone.appendChild(div_clone2);
+  } else {
+    div_clone = this.totalMother.children[2];
+  }
+
+  num = (info.search === null ? 0 : 1);
   eventFunction = function (left) {
     return function (e) {
       const targets = document.querySelectorAll(".moveTarget");
@@ -254,32 +268,60 @@ ClientJs.prototype.infoArea = function (info) {
     num++;
   }
 
-  div_clone.classList.add("moveTarget");
-  upsideWhiteBar.style.width = div_clone.style.width = String(grayBarWidth + leftPosition[leftPosition.length - 1] + widthArr[widthArr.length - 1]) + ea;
+  if (info.search === null) {
+    div_clone.classList.add("moveTarget");
+    upsideWhiteBar.style.width = div_clone.style.width = String(grayBarWidth + leftPosition[leftPosition.length - 1] + widthArr[widthArr.length - 1]) + ea;
+    this.totalMother.appendChild(div_clone);
+  }
 
-  this.totalMother.appendChild(div_clone);
 }
 
-ClientJs.prototype.spreadData = async function () {
+ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
   try {
-    const clients = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getClients"));
-    const { standard, data } = clients;
-    let totalMother;
-
+    let clients, totalMother;
     let standardDataTong = [], infoDataTong = [];
+    let standardDomsFirst, casesFirst;
+    let standardDomsTargets, casesTargets;
+
+    if (search === null) {
+      clients = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getClients"));
+    } else {
+      clients = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
+    }
+
+    const { standard, data } = clients;
+
     for (let i of data) {
       standardDataTong.push(i.standard);
       infoDataTong.push(i.info);
     }
 
-    totalMother = GeneralJs.nodes.div.cloneNode(true);
-    totalMother.classList.add("totalMother");
-    this.totalContents.appendChild(totalMother);
-    this.totalMother = totalMother;
+    if (search === null) {
+      totalMother = GeneralJs.nodes.div.cloneNode(true);
+      totalMother.classList.add("totalMother");
+      this.totalContents.appendChild(totalMother);
+      this.totalMother = totalMother;
+    } else {
+      standardDomsFirst = this.standardDoms.shift();
+      casesFirst = this.cases.shift();
+      this.standardDoms = [];
+      this.cases = [];
+      this.standardDoms.push(standardDomsFirst);
+      this.cases.push(casesFirst);
 
-    this.standardBar({ standard: standard.standard, data: standardDataTong });
-    this.infoArea({ standard: standard.info, data: infoDataTong });
+      standardDomsTargets = this.totalMother.children[0].children;
+      while (standardDomsTargets[2] !== undefined) {
+        this.totalMother.children[0].removeChild(this.totalMother.children[0].lastChild);
+      }
+      casesTargets = this.totalMother.children[2].children;
+      while (casesTargets[1] !== undefined) {
+        this.totalMother.children[2].removeChild(this.totalMother.children[2].lastChild);
+      }
+    }
+
+    this.standardBar({ standard: standard.standard, data: standardDataTong, search: search });
+    this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
 
   } catch (e) {
     console.log(e);
@@ -850,28 +892,41 @@ ClientJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
 
-  input.addEventListener("keyup", async function (e) {
+  input.addEventListener("keypress", async function (e) {
     if (e.keyCode === 13) {
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
         instance.totalFather.remove();
         instance.totalFather = null;
       }
-      if (instance.totalMother !== null && instance.totalMother !== undefined) {
-        instance.totalMother.remove();
-        instance.totalMother = null;
-        instance.belowHeight = null;
-        instance.whiteBox = null;
-        instance.standardDoms = [];
-        instance.cases = [];
-        instance.totalMother = null;
-        instance.totalFather = null;
-        instance.onView = "mother";
-        await instance.spreadData();
-        instance.addTransFormEvent();
-      }
+      instance.whiteBox = null;
+      instance.onView = "mother";
+      await instance.spreadData(this.value);
     }
   });
 
+}
+
+ClientJs.prototype.backGrayBar = function () {
+  const instance = this;
+  let div_clone;
+  let style;
+  let ea = "px";
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    background: "#f7f7f7",
+    width: String(this.grayBarWidth) + ea,
+    height: String(100) + "vh",
+    top: String(0) + ea,
+    left: String(0) + ea,
+    zIndex: String(0),
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  this.totalContents.appendChild(div_clone);
 }
 
 ClientJs.prototype.launching = async function () {
@@ -879,6 +934,7 @@ ClientJs.prototype.launching = async function () {
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
+    this.backGrayBar();
     await this.spreadData();
     this.addTransFormEvent();
     this.addSearchEvent();

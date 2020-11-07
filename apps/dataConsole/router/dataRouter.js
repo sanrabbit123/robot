@@ -1,4 +1,4 @@
-const DataRouter = function () {
+const DataRouter = function (MONGOC) {
   this.dir = process.cwd() + "/apps/dataConsole";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
@@ -6,9 +6,12 @@ const DataRouter = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.patch = new DataPatch();
+  if (MONGOC !== undefined && MONGOC !== null) {
+    this.mongo = MONGOC;
+  }
 }
 
-//BLOCK --------------------------------------------------------------------------
+//STATIC --------------------------------------------------------------------------
 
 DataRouter.baseMaker = function (target) {
   const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
@@ -25,8 +28,7 @@ DataRouter.baseMaker = function (target) {
       }
     }
   }
-  html = `
-  <!DOCTYPE html>
+  html = `<!DOCTYPE html>
   <html lang="ko" dir="ltr">
     <head>
       <meta charset="utf-8">
@@ -41,6 +43,13 @@ DataRouter.baseMaker = function (target) {
     </body>
   </html>`
   return html;
+}
+
+DataRouter.queryFilter = function (str) {
+  str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
+  str = str.replace(/\n/g, '');
+  str = str.replace(/\t/g, '');
+  return str;
 }
 
 //GET --------------------------------------------------------------------------
@@ -83,7 +92,7 @@ DataRouter.prototype.rou_post_getClients = function () {
   obj.func = async function (req, res) {
     try {
       const standard = instance.patch.clientStandard();
-      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true });
+      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true, selfMongo: instance.mongo });
       const data = clients.flatDeath();
       res.send(JSON.stringify({ standard, data }));
     } catch (e) {
@@ -101,9 +110,31 @@ DataRouter.prototype.rou_post_searchClients = function () {
     try {
       const standard = instance.patch.clientStandard();
       const map = instance.patch.clientMap();
-      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true });
+      const mapArr = Object.values(map);
+      let searchQuery, searchArr, tempObj, tempObj2;
+
+      searchQuery = {};
+      searchArr = [];
+
+      for (let { position, searchBoo } of mapArr) {
+        if (searchBoo) {
+          tempObj = {};
+          tempObj2 = {};
+          if (req.body.query !== "") {
+            tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+          } else {
+            tempObj["$regex"] = new RegExp('.', 'gi');
+          }
+          tempObj2[position] = tempObj["$regex"];
+          searchArr.push(tempObj2);
+        }
+      }
+
+      searchQuery["$or"] = searchArr;
+
+      const clients = await instance.back.getClientsByQuery(searchQuery, { withTools: true, limit: 300, selfMongo: instance.mongo });
       const data = clients.flatDeath();
-      res.send(JSON.stringify({ standard, map, data }));
+      res.send(JSON.stringify({ standard, data }));
     } catch (e) {
       console.log(e);
     }

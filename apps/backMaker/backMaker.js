@@ -377,7 +377,7 @@ BackMaker.prototype.launching = async function (button) {
 // GET Client --------------------------------------------------------------------------------
 
 
-BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false }) {
+BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -385,8 +385,15 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
   let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let arr, target;
-    await MONGOC.connect();
-    arr = await MONGOC.db(`miro81`).collection(`client`).find({ cliid }).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`client`).find({ cliid }).toArray();
+      MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`client`).find({ cliid }).toArray();
+    }
+
     if (option.withTools) {
       Client = Tools.widthTools(Client);
     }
@@ -394,12 +401,10 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
     return target;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
-BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false }) {
+BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -407,12 +412,22 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
   let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
-    await MONGOC.connect();
 
-    if (option.limit !== undefined) {
-      tong = await MONGOC.db(`miro81`).collection(`client`).find(query).limit(Number(option.limit)).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(`client`).find(query).sort({ "requests.0.request.timeline": -1 }).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(`client`).find(query).sort({ "requests.0.request.timeline": -1 }).toArray();
+      }
+      MONGOC.close();
     } else {
-      tong = await MONGOC.db(`miro81`).collection(`client`).find(query).toArray();
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(`client`).find(query).sort({ "requests.0.request.timeline": -1 }).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(`client`).find(query).sort({ "requests.0.request.timeline": -1 }).toArray();
+      }
     }
 
     if (!option.withTools) {
@@ -432,12 +447,10 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
     return clientsArr;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
-BackMaker.prototype.getLatestClient = async function (option = { withTools: false }) {
+BackMaker.prototype.getLatestClient = async function (option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -445,8 +458,15 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
   let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let arr, target;
-    await MONGOC.connect();
-    arr = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
+      MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
+    }
+
     if (option.withTools) {
       Client = Tools.widthTools(Client);
     }
@@ -454,12 +474,10 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
     return target;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
-BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false }) {
+BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -467,8 +485,14 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
-    await MONGOC.connect();
-    tong = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      tong = await MONGOC.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
+      MONGOC.close();
+    } else {
+      tong = await option.selfMongo.db(`miro81`).collection(`client`).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
+    }
 
     if (!option.withTools) {
       clientsArr = new Clients();
@@ -487,8 +511,6 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
     return clientsArr;
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
