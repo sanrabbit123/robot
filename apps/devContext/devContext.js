@@ -810,46 +810,52 @@ class DevContext extends Array {
       // const designer = await back.getDesignerById("de004");
       // console.log(designer);
 
-      const resultFolder = process.env.HOME + "/photoOriginal";
-      let fromArr, toArr;
-      let pidList_raw, pidList;
-      let targetFolder, targetFolderList_raw, targetFolderList;
+      {
+
+        const resultFolder = process.env.HOME + "/photoOriginal";
+        let fromArr, toArr;
+        let pidList_raw, pidList;
+        let targetFolder, targetFolderList_raw, targetFolderList;
 
 
-      pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
-      pidList = [];
-      for (let i of pidList_raw) {
-        if (i !== `.DS_Store`) {
-          pidList.push(i);
-        }
-      }
-
-      for (let pid of pidList) {
-
-        targetFolder = resultFolder + "/" + pid;
-        targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
-        targetFolderList = [];
-        for (let i of targetFolderList_raw) {
+        pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
+        pidList = [];
+        for (let i of pidList_raw) {
           if (i !== `.DS_Store`) {
-            targetFolderList.push(i);
+            pidList.push(i);
           }
         }
 
-        fromArr = [];
-        toArr = [];
-        for (let i of targetFolderList) {
-          if (i !== `.DS_Store`) {
-            fromArr.push(`${shellLink(targetFolder)}/${i}`);
-            toArr.push(`corePortfolio/original/${pid}/${i}`);
+        for (let pid of pidList) {
+
+          targetFolder = resultFolder + "/" + pid;
+          targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
+          targetFolderList = [];
+          for (let i of targetFolderList_raw) {
+            if (i !== `.DS_Store`) {
+              targetFolderList.push(i);
+            }
           }
+
+          fromArr = [];
+          toArr = [];
+          for (let i of targetFolderList) {
+            if (i !== `.DS_Store`) {
+              fromArr.push(`${shellLink(targetFolder)}/${i}`);
+              toArr.push(`corePortfolio/original/${pid}/${i}`);
+            }
+          }
+
+          console.log(fromArr);
+          console.log(toArr);
+
+          await this.mother.s3FileUpload(fromArr, toArr);
+
         }
 
-        console.log(fromArr);
-        console.log(toArr);
-
-        await this.mother.s3FileUpload(fromArr, toArr);
-
       }
+
+
 
 
 

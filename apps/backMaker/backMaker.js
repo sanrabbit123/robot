@@ -514,6 +514,32 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   }
 }
 
+BackMaker.prototype.updateClient = async function (queryArr, option = { selfMongo: null }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "client";
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(`client`).updateOne(whereQuery, { $set: updateQuery });
+      MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(`client`).updateOne(whereQuery, { $set: updateQuery });
+    }
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 // GET Contents --------------------------------------------------------------------------------
 
 BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null }) {

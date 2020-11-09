@@ -1,5 +1,75 @@
 GeneralJs.timeouts = {};
 
+GeneralJs.confirmKeyCode = [
+  13,
+  9,
+];
+
+GeneralJs.updateHistoryTong = [];
+
+GeneralJs.objectToQuery = function (dataObj) {
+  let dataString;
+
+  dataString = '';
+  for (let i in dataObj) {
+    dataString += i.replace(/\=\&/g, '');
+    dataString += '=';
+    dataString += String(dataObj[i]).replace(/\=\&/g, '');
+    dataString += '&';
+  }
+  dataString = dataString.slice(0, -1);
+
+  return dataString;
+}
+
+GeneralJs.updateValue = async function (dataObj) {
+  if (dataObj === undefined) {
+    throw new Error("invaild arguments");
+  }
+  const instance = this;
+  try {
+    let dataString, response;
+
+    GeneralJs.updateHistoryTong.unshift(dataObj);
+    dataString = GeneralJs.objectToQuery(dataObj);
+    response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+    if (response.message !== "success") {
+      throw new Error("update error");
+    }
+
+    return response.message;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GeneralJs.returnValue = async function () {
+  const instance = this;
+  try {
+    let pastObj, copiedObj;
+    let dataString, response;
+
+    if (GeneralJs.updateHistoryTong.length === 0) {
+      return "pass";
+    } else {
+      pastObj = GeneralJs.updateHistoryTong.shift();
+      copiedObj = JSON.parse(JSON.stringify(pastObj));
+      delete copiedObj.value;
+      copiedObj.value = copiedObj.pastValue;
+      dataString = GeneralJs.objectToQuery(copiedObj);
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+      if (response.message !== "success") {
+        throw new Error("return error");
+      }
+
+      return copiedObj;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
@@ -92,6 +162,22 @@ GeneralJs.prototype.returnArrow = function (direction, color) {
   }
 }
 
+GeneralJs.prototype.returnCinitial = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 276.866 296.154"><path d="M0 169.978C0 73.134 61.481 0 157.52 0c68.717 0 116.133 34.957 119.346 104.478h-64.695c-4.42-34.557-21.298-53.442-56.661-53.442 -56.658 0-87.199 53.042-87.599 116.93 -0.403 45.809 20.895 76.353 68.314 76.353 34.957 0 59.068-20.498 69.114-55.855h63.894c-12.859 69.515-67.107 107.691-133.814 107.691C52.639 296.154 0 250.345 0 169.978z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnRinitial = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 179.985 211.309"><path d="M33.395 0h73.589c46.4 0 73.295 20.985 72.998 57.629 0 36.648-23.052 57.629-53.196 64.131l44.329 89.548H121.761l-40.191-81.567H60.29L47.582 211.309H0L33.395 0zM93.685 97.23c25.417 0 39.307-10.934 39.307-34.872 0.294-17.734-10.936-25.711-31.623-25.711H75.361l-9.751 60.582H93.685z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnReturn = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 475.449 413.43"><path style="fill:${color}" d="M201.159 62.683c-1.04 0 1.037 0.02 0 0.031l0-58.417c0-3.611-4.287-5.606-7.155-3.329L43.119 120.739c-3.724 2.956-3.755 8.501-0.065 11.497l150.913 120.542c2.859 2.322 7.193 0.334 7.193-3.299v-69.727l-3.111 0c120.242 0.588 163.157 53.466 163.157 118.639 0 55.465-52.965 102.031-124.531 115.039 107.786-13.319 190.203-93.841 190.203-181.851C426.877 143.35 361.043 62.683 201.159 62.683z"/></svg>`;
+}
+
+GeneralJs.prototype.returnReport = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 138.205 174.702"><path d="M133.959 24.22l-18.454-19.689C112.786 1.63 109.098 0 105.253 0H13.1C5.865 0 0 6.258 0 13.977v146.748c0 7.719 5.865 13.977 13.1 13.977h112.005c7.235 0 13.1-6.258 13.1-13.977V35.158C138.205 31.055 136.678 27.121 133.959 24.22zM110.481 138.596H26.823c-2.529 0-4.579-2.187-4.579-4.886s2.05-4.886 4.579-4.886h83.658c2.529 0 4.579 2.187 4.579 4.886S113.01 138.596 110.481 138.596zM110.481 106.992H26.823c-2.529 0-4.579-2.187-4.579-4.886s2.05-4.886 4.579-4.886h83.658c2.529 0 4.579 2.187 4.579 4.886S113.01 106.992 110.481 106.992zM110.481 75.388H26.823c-2.529 0-4.579-2.187-4.579-4.886s2.05-4.886 4.579-4.886h83.658c2.529 0 4.579 2.187 4.579 4.886S113.01 75.388 110.481 75.388z" fill="${color}"/></svg>`;
+}
+
 GeneralJs.prototype.searchInput = function (greenBox) {
   let div_clone, input_clone;
   let style = {};
@@ -138,13 +224,15 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 }
 
 GeneralJs.prototype.greenBar = function () {
-  let div_clone, div_clone2;
+  let div_clone, div_clone2, svg_icon;
   let input_clone;
   let style = {};
   let ea = "px";
   let margin, start, colors;
   let move;
   let moveEventLeft, moveEventRight;
+  let top, belowTop, right, iconRight;
+
 
   this.belowHeight = 123;
 
@@ -178,17 +266,19 @@ GeneralJs.prototype.greenBar = function () {
   }
 
   move = 300;
+  top = 32;
+  right = 38;
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.insertAdjacentHTML(`beforeend`, this.returnBigArrow("#ffffff"));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
   div_clone2.classList.add("hoverDefault");
   style = {
     display: "block",
     position: "absolute",
-    width: String(28) + ea,
-    height: String(46) + ea,
-    top: String(35) + ea,
-    right: String(36) + ea,
+    width: String(34) + ea,
+    height: String(53) + ea,
+    top: String(top) + ea,
+    right: String(right) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
@@ -221,13 +311,13 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(div_clone2);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.insertAdjacentHTML(`beforeend`, this.returnBigArrow("#ffffff"));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
   div_clone2.classList.add("hoverDefault");
   for (let i in style) {
     div_clone2.style[i] = style[i];
   }
-  div_clone2.style.top = String(34) + ea;
-  div_clone2.style.right = String(81) + ea;
+  div_clone2.style.top = String(top + 2) + ea;
+  div_clone2.style.right = String(right + 50) + ea;
   div_clone2.style.transform = "rotate(180deg)";
 
   moveEventRight = function (e) {
@@ -256,35 +346,68 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(div_clone2);
 
 
-  //white square
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.classList.add("hoverDefault");
+  iconRight = right + 102;
+  top = top;
+  belowTop = top + 34;
+
+  //report
+  svg_icon = SvgTong.stringParsing(this.returnReport("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
   style = {
     display: "block",
     position: "absolute",
-    width: String(20) + ea,
-    height: String(20) + ea,
-    top: String(34) + ea,
-    right: String(125) + ea,
+    width: String(22) + ea,
+    height: String(23) + ea,
+    top: String(top) + ea,
+    right: String(iconRight) + ea,
     cursor: "pointer",
-    background: "#ffffff",
-    borderRadius: String(5) + ea,
   };
   for (let i in style) {
-    div_clone2.style[i] = style[i];
+    svg_icon.style[i] = style[i];
   }
-  this.belowButtons.square.up = div_clone2;
-  div_clone.appendChild(div_clone2);
+  this.belowButtons.square.reportIcon = svg_icon;
+  div_clone.appendChild(svg_icon);
 
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.classList.add("hoverDefault");
+  //return
+  svg_icon = SvgTong.stringParsing(this.returnReturn("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
   for (let i in style) {
-    div_clone2.style[i] = style[i];
+    svg_icon.style[i] = style[i];
   }
-  div_clone2.style.top = String(60) + ea;
-  this.belowButtons.square.down = div_clone2;
-  div_clone.appendChild(div_clone2);
+  svg_icon.style.width = String(28) + ea;
+  svg_icon.style.height = String(27) + ea;
+  svg_icon.style.top = String(belowTop - 2) + ea;
+  svg_icon.style.right = String(iconRight - 3) + ea;
+  this.belowButtons.square.returnIcon = svg_icon;
+  div_clone.appendChild(svg_icon);
 
+  //button C
+  svg_icon = SvgTong.stringParsing(this.returnCinitial("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  svg_icon.style.width = String(21) + ea;
+  svg_icon.style.height = String(24) + ea;
+  svg_icon.style.top = String(top - 1) + ea;
+  svg_icon.style.right = String(iconRight + 31) + ea;
+  this.belowButtons.square.up = svg_icon;
+  div_clone.appendChild(svg_icon);
+
+  //button R
+  svg_icon = SvgTong.stringParsing(this.returnRinitial("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  svg_icon.style.width = String(22) + ea;
+  svg_icon.style.height = String(22) + ea;
+  svg_icon.style.top = String(belowTop) + ea;
+  svg_icon.style.right = String(iconRight + 31) + ea;
+  this.belowButtons.square.down = svg_icon;
+  div_clone.appendChild(svg_icon);
+
+  //search Input
   this.searchInput(div_clone);
   this.totalContents.appendChild(div_clone);
   this.searchInput.focus();

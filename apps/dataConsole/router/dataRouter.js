@@ -94,6 +94,7 @@ DataRouter.prototype.rou_post_getClients = function () {
       const standard = instance.patch.clientStandard();
       const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true, selfMongo: instance.mongo });
       const data = clients.flatDeath();
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ standard, data }));
     } catch (e) {
       console.log(e);
@@ -134,7 +135,38 @@ DataRouter.prototype.rou_post_searchClients = function () {
 
       const clients = await instance.back.getClientsByQuery(searchQuery, { withTools: true, limit: 300, selfMongo: instance.mongo });
       const data = clients.flatDeath();
+      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ standard, data }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+//POST --------------------------------------------------------------------------
+
+DataRouter.prototype.rou_post_updateClient = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/:id";
+  obj.func = async function (req, res) {
+    try {
+      const { thisId, requestIndex, column, value } = req.body;
+      const map = instance.patch.clientMap();
+      let whereQuery, updateQuery;
+      let message;
+
+      updateQuery = {};
+      updateQuery[map[column].position.replace(/\.0\./, ("." + requestIndex + "."))] = value;
+
+      whereQuery = {};
+      whereQuery[map.cliid.position] = thisId;
+
+      message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message }));
     } catch (e) {
       console.log(e);
     }
@@ -147,7 +179,7 @@ DataRouter.prototype.rou_post_searchClients = function () {
 DataRouter.prototype.getAll = function () {
   let result, result_arr;
 
-  result = { get: [], post: [] }
+  result = { get: [], post: [] };
   result_arr = Object.keys(DataRouter.prototype);
 
   for (let i of result_arr) { if (/^rou_get/g.test(i)) {
