@@ -1,7 +1,7 @@
 module.exports = function (tools) {
   const { map, Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = emptyDate();
+  const EMPTYDATE = new Date("1800-01-01");
   return async function (row) {
     try {
       let tempObj, tempObjDetail, tempObjDetail2;
@@ -22,7 +22,7 @@ module.exports = function (tools) {
 
         information.contract = {};
         information.contract.status = past.a1_relation;
-        information.contract.date = past.a2_contractday;
+        information.contract.date = new Date(past.a2_contractday);
 
         information.phone = past.b2_phone;
         information.email = past.b3_email;

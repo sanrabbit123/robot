@@ -1,5 +1,6 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
+const { DateParse } = require(GENERAL_DIR + "/generator.js");
 
 class Fees extends Array {
   toNormal() {
@@ -104,6 +105,7 @@ Proposal.prototype.toNormal = function () {
 const ProjectProposal = function (json) {
   let tempInstance;
   this.status = json.status;
+  this.date = new DateParse(json.date);
   this.detail = new Proposals();
   for (let i of json.detail) {
     tempInstance = new Proposal(i);
@@ -114,6 +116,7 @@ const ProjectProposal = function (json) {
 ProjectProposal.prototype.toNormal = function () {
   let obj = {};
   obj.status = this.status;
+  obj.date = this.date.toNormal();
   obj.detail = this.detail.toNormal();
   return obj;
 }

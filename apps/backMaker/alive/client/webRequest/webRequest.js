@@ -18,7 +18,7 @@ const WebRequest = function (request) {
 
 WebRequest.prototype.toNormal = function () {
   let obj = {};
-  obj.timeline = this.timeline.toNormal(true);
+  obj.timeline = this.timeline.toNormal();
   obj.notionId = this.notionId;
   obj.budget = this.budget.toNormal();
   obj.family = this.family.toNormal();

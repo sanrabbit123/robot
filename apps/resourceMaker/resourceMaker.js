@@ -612,7 +612,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
     let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir, targetPhotoDirFinal;
     let tempReg, conidTargetArr;
     let garoseroObj;
-
+    let todayString;
 
     tempObj = this.modelingMap().structure;
 
@@ -709,8 +709,9 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
       review.contents.detail = [];
     }
 
-    portfolio.date = dateMaker(this.mother.todayMaker("year"));
-    review.date = portfolio.date;
+    todayString = dateMaker(this.mother.todayMaker("year"));
+    portfolio.date = new Date();
+    review.date = new Date();
 
     targetPhotoDirArr = [];
     targetPhotoDirRaw = await fileSystem(`readDir`, [ this.targetFolder ]);
@@ -734,7 +735,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
     tempObj.photos.detail = targetPhotoDirFinal;
 
     conidTargetArr = [];
-    tempReg = new RegExp('^t' + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7));
+    tempReg = new RegExp('^t' + todayString.slice(2, 4) + todayString.slice(5, 7));
     for (let { conid } of conidArr) {
       if (tempReg.test(conid)) {
         conidTargetArr.push(conid);
@@ -742,9 +743,9 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
     }
 
     if (conidTargetArr.length === 0) {
-      tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_aa01s");
+      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_aa01s");
     } else {
-      tempObj.conid = ("t" + portfolio.date.slice(2, 4) + portfolio.date.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
+      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
     }
 
     this.final = tempObj;

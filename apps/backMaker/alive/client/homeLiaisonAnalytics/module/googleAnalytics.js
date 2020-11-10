@@ -81,7 +81,7 @@ class GoogleAnalytics {
     let historyArr = this.history.toNormal();
 
     for (let { time, page, page_raw } of this.history) {
-      temp += `${time.toNormal(true).slice(5)} : ${page}(${page_raw}) / `;
+      temp += `${time.toString(true).slice(5)} : ${page}(${page_raw}) / `;
     }
     temp = temp.slice(0, -3);
     return temp;

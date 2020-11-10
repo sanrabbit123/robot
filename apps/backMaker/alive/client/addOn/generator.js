@@ -27,7 +27,7 @@ const widthTools = function (Client) {
     const { request } = this.requests[this.requests.length - 1];
     let message = "";
 
-    message += "문의일 : " + request.timeline.toNormal(true) + "\n";
+    message += "문의일 : " + request.timeline.toString(true) + "\n";
     message += "고객 아이디 : " + this.cliid + "\n";
     message += "성함 : " + this.name + "\n";
     message += "연락처 : " + this.phone + "\n";
@@ -49,7 +49,7 @@ const widthTools = function (Client) {
     const { request, analytics: { googleAnalytics } } = this.requests[this.requests.length - 1];
     let sheet = [];
 
-    sheet.push(request.timeline.toNormal(true));
+    sheet.push(request.timeline.toString(true));
     sheet.push(this.cliid);
     sheet.push(this.name);
     sheet.push(this.phone);

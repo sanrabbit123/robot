@@ -1102,6 +1102,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     div_clone.setAttribute("index", thisCase["cliid"]);
     div_clone.setAttribute("request", String(requestIndex));
+
     style = {
       position: "fixed",
       background: "white",
@@ -1142,29 +1143,28 @@ ClientJs.prototype.whiteViewMaker = function (index) {
   }
 }
 
-ClientJs.prototype.addTransFormEvent = function () {
+ClientJs.prototype.rowViewMaker = function () {
   const instance = this;
-  const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
-  up.addEventListener("click", this.cardViewMaker());
-  down.addEventListener("click", function (e) {
-    if (instance.totalFather !== null) {
-      instance.totalFather.style.zIndex = String(-1);
-      instance.totalFather.classList.remove("fadein");
-      instance.totalFather.classList.add("fadeout");
-      instance.totalMother.classList.remove("justfadeoutoriginal");
-      instance.totalMother.classList.add("justfadeinoriginal");
-      instance.onView = "mother";
-      GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
-        instance.totalFather.remove();
-        instance.totalFather = null;
-        instance.totalMother.classList.remove("justfadeinoriginal");
-        clearTimeout(GeneralJs.timeouts.fadeinTimeout);
-        GeneralJs.timeouts.fadeinTimeout = null;
-      }, 401);
-    }
-  });
+  return function (e) {
+    instance.totalFather.style.zIndex = String(-1);
+    instance.totalFather.classList.remove("fadein");
+    instance.totalFather.classList.add("fadeout");
+    instance.totalMother.classList.remove("justfadeoutoriginal");
+    instance.totalMother.classList.add("justfadeinoriginal");
+    instance.onView = "mother";
+    GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
+      instance.totalFather.remove();
+      instance.totalFather = null;
+      instance.totalMother.classList.remove("justfadeinoriginal");
+      clearTimeout(GeneralJs.timeouts.fadeinTimeout);
+      GeneralJs.timeouts.fadeinTimeout = null;
+    }, 401);
+  }
+}
 
-  returnIcon.addEventListener("click", async function (e) {
+ClientJs.prototype.returnValueEventMaker = function () {
+  const instance = this;
+  return async function (e) {
     let pastObj;
     let textTargets;
     let mother, nodeArr;
@@ -1227,7 +1227,106 @@ ClientJs.prototype.addTransFormEvent = function () {
     }
     instance.cases[Number(pastObj.index)][pastObj.column] = pastObj.value;
 
-  });
+  }
+}
+
+ClientJs.prototype.reportViewMakerDetail = async function (recycle = false) {
+  const instance = this;
+  try {
+
+    
+
+
+
+    return function () {
+      let div_clone;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: "#404040",
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
+          height: String(window.innerHeight - instance.belowHeight) + ea,
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("fadeup");
+      div_clone.classList.add("totalWhite");
+      style = {
+        position: "fixed",
+        background: "white",
+        top: String(margin) + ea,
+        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px #808080",
+        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+        zIndex: String(2),
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ClientJs.prototype.reportViewMaker = function () {
+  const instance = this;
+  return async function (e) {
+    let tempFunc;
+    if (GeneralJs.stacks.whiteBox !== 1) {
+      if (instance.whiteBox !== null) {
+        tempFunc = instance.whiteCancelMaker(await instance.reportViewMakerDetail(true), true);
+        tempFunc();
+      } else {
+        tempFunc = await instance.reportViewMakerDetail(false);
+        tempFunc();
+      }
+    }
+  }
+}
+
+ClientJs.prototype.addTransFormEvent = function () {
+  const instance = this;
+  const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
+  up.addEventListener("click", this.cardViewMaker());
+  down.addEventListener("click", this.rowViewMaker());
+  reportIcon.addEventListener("click", this.reportViewMaker());
+  returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
 ClientJs.prototype.addSearchEvent = function () {

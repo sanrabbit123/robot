@@ -5,7 +5,7 @@ module.exports = {
     information: {
       contract: {
         status: "",
-        date: "9999-09-09",
+        date: new Date("1800-01-01"),
       },
       phone: "",
       email: "",
@@ -60,7 +60,7 @@ module.exports = {
             percentage: 0,
             percentageHistory: [
               {
-                date: { start: "9999-09-09", end: "9999-09-09" },
+                date: { start: new Date("1800-01-01"), end: new Date("1800-01-01") },
                 percentage: 0,
               }
             ]

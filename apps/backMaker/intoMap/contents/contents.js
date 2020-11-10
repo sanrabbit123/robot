@@ -4,7 +4,7 @@ module.exports = function (tools) {
   const { map, Mother, Notion, Filters } = tools;
   const { fileSystem, orderSystem } = Mother;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = emptyDate();
+  const EMPTYDATE = new Date("1800-01-01");
 
   let ORDER = {};
 

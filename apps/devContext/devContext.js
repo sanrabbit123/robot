@@ -759,8 +759,6 @@ class DevContext extends Array {
     const instance = this;
     const { fileSystem, shell, shellLink } = this.mother;
     try {
-      let temp, temp2;
-
       await this.MONGOC.connect();
 
       // await this.main0();
@@ -810,66 +808,73 @@ class DevContext extends Array {
       // const designer = await back.getDesignerById("de004");
       // console.log(designer);
 
-      {
+      // {
+      //
+      //   const resultFolder = process.env.HOME + "/photoOriginal";
+      //   let fromArr, toArr;
+      //   let pidList_raw, pidList;
+      //   let targetFolder, targetFolderList_raw, targetFolderList;
+      //
+      //
+      //   pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
+      //   pidList = [];
+      //   for (let i of pidList_raw) {
+      //     if (i !== `.DS_Store`) {
+      //       pidList.push(i);
+      //     }
+      //   }
+      //
+      //   for (let pid of pidList) {
+      //
+      //     targetFolder = resultFolder + "/" + pid;
+      //     targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
+      //     targetFolderList = [];
+      //     for (let i of targetFolderList_raw) {
+      //       if (i !== `.DS_Store`) {
+      //         targetFolderList.push(i);
+      //       }
+      //     }
+      //
+      //     fromArr = [];
+      //     toArr = [];
+      //     for (let i of targetFolderList) {
+      //       if (i !== `.DS_Store`) {
+      //         fromArr.push(`${shellLink(targetFolder)}/${i}`);
+      //         toArr.push(`corePortfolio/original/${pid}/${i}`);
+      //       }
+      //     }
+      //
+      //     console.log(fromArr);
+      //     console.log(toArr);
+      //
+      //     await this.mother.s3FileUpload(fromArr, toArr);
+      //
+      //   }
+      //
+      // }
 
-        const resultFolder = process.env.HOME + "/photoOriginal";
-        let fromArr, toArr;
-        let pidList_raw, pidList;
-        let targetFolder, targetFolderList_raw, targetFolderList;
-
-
-        pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
-        pidList = [];
-        for (let i of pidList_raw) {
-          if (i !== `.DS_Store`) {
-            pidList.push(i);
-          }
-        }
-
-        for (let pid of pidList) {
-
-          targetFolder = resultFolder + "/" + pid;
-          targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
-          targetFolderList = [];
-          for (let i of targetFolderList_raw) {
-            if (i !== `.DS_Store`) {
-              targetFolderList.push(i);
-            }
-          }
-
-          fromArr = [];
-          toArr = [];
-          for (let i of targetFolderList) {
-            if (i !== `.DS_Store`) {
-              fromArr.push(`${shellLink(targetFolder)}/${i}`);
-              toArr.push(`corePortfolio/original/${pid}/${i}`);
-            }
-          }
-
-          console.log(fromArr);
-          console.log(toArr);
-
-          await this.mother.s3FileUpload(fromArr, toArr);
-
-        }
-
-      }
-
-
-
-
-
-
+      const back = new BackMaker();
+      console.log(await back.getContentsByPid("p46"));
+      console.log((await back.getContentsByPid("p46")).toNormal());
 
 
 
 
-      // const app = new KakaoTalk();
-      // await app.generateToken();
+      // let projects = await back.getProjectsAll();
+      //
+      // for (let i of projects) {
+      //   if (/^9/.test(i.proposal.date.toNormal())) {
+      //     console.log(i.proid, i.proposal.date);
+      //   }
+      // }
 
+      // await this.MONGOC.db("miro81").collection("project").insertOne({ test: new Date("2020-10-03") });
 
       // TOOLS ----------------------------------------------------
-      // let back = new BackMaker();
+      // const app = new KakaoTalk();
+      // await app.generateToken();
+      //
+      // const back = new BackMaker();
       // await back.pastToMongo();
 
       // await this.spellCheck("p64");

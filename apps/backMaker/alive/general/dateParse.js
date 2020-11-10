@@ -1,10 +1,7 @@
 class DateParse extends Date {
-  constructor(dateString) {
-    if (/^9/.test(dateString)) {
-      super("1001/01/01");
-    } else {
-      super(dateString);
-    }
+
+  constructor(dateObject) {
+    super(dateObject.toISOString());
   }
 
   static zeroAddition(number) {
@@ -15,7 +12,7 @@ class DateParse extends Date {
     }
   }
 
-  toNormal(detail = false) {
+  toString(detail = false) {
     const year = this.getFullYear();
     const month = this.getMonth() + 1;
     const day = this.getDate();
@@ -23,22 +20,26 @@ class DateParse extends Date {
     const minutes = this.getMinutes();
     const seconds = this.getSeconds();
     if (detail) {
-      if (year === 1001) {
-        return "9999-09-09";
+      if (year === 1800) {
+        return "1800-01-01";
       } else {
         return (DateParse.zeroAddition(year) + "-" + DateParse.zeroAddition(month) + "-" + DateParse.zeroAddition(day) + " " + DateParse.zeroAddition(hours) + ":" + DateParse.zeroAddition(minutes) + ":" + DateParse.zeroAddition(seconds));
       }
     } else {
-      if (year === 1001) {
-        return "9999-09-09";
+      if (year === 1800) {
+        return "1800-01-01";
       } else {
         return (DateParse.zeroAddition(year) + "-" + DateParse.zeroAddition(month) + "-" + DateParse.zeroAddition(day));
       }
     }
   }
 
+  toNormal() {
+    return new Date(this.toISOString());
+  }
+
   toSixString() {
-    let date = this.toNormal(false);
+    let date = this.toString(false);
     return (date.slice(2, 4) + date.slice(5, 7) + date.slice(8, 10));
   }
 

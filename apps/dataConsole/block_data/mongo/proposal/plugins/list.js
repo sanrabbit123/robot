@@ -278,11 +278,15 @@ Proposal.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "complete":
       return_func = async function (e) {
-        let info = JSON.parse(this.parentElement.parentElement.querySelector('section').textContent);
-        let today = new Date();
-        let month = (today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1);
-        let date = (today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate());
-        let value = String(today.getFullYear()) + '-' + month + '-' + date;
+        const info = JSON.parse(this.parentElement.parentElement.querySelector('section').textContent);
+        const today = new Date();
+
+        let month, date, value;
+
+        month = (today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1);
+        date = (today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate());
+        value = String(today.getFullYear()) + '-' + month + '-' + date;
+
         await Genemongo.ajax("/post_update", "table=BC1_conlist&c=a9_proposal&st=a4_customernumber&i=" + info.cliid + "&v=" + value);
         await mother_name(obj);
         reset_event(this);

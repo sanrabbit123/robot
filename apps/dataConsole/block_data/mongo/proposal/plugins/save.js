@@ -6,6 +6,7 @@ Proposal.save_init = async function (update = false) {
   let full_string = '';
 
   if (!update) {
+
     // 0 make proid
     let proids = JSON.parse(await Genemongo.ajax("/post_mfind", "collection=Project&find1=" + JSON.stringify({}) + "&find2=" + JSON.stringify({ proid: 1 })));
     let proid_box = [];
@@ -14,7 +15,7 @@ Proposal.save_init = async function (update = false) {
     }
     proid_box.sort(function (a, b) { return b - a; });
 
-    let today = new Date();
+    const today = new Date();
     let today_str = String(today.getFullYear()).slice(2) + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1));
     let new_num = 0;
     if (proid_box[0].slice(0,4) === today_str) {
@@ -38,6 +39,7 @@ Proposal.save_init = async function (update = false) {
       result_obj.cliid = target.getAttribute("cus_id");
       result_obj.client = target.textContent.replace(/ : /g, '');
     }
+
   }
 
   // 2 service
@@ -110,6 +112,13 @@ Proposal.save_init = async function (update = false) {
   }
 
   if (!update) {
+
+    let month, date;
+    month = (today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1);
+    date = (today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate());
+
+    await Genemongo.ajax("/post_update", "table=BC1_conlist&c=a9_proposal&st=a4_customernumber&i=" + result_obj.cliid + "&v=" + (String(today.getFullYear()) + '-' + month + '-' + date));
+
     full_string = JSON.stringify(result_obj);
     await Genemongo.ajax("/post_minsert", "collection=Project" + "&obj=" + Genemongo.queryFilter(full_string));
   } else {
@@ -118,10 +127,21 @@ Proposal.save_init = async function (update = false) {
     full_string = JSON.stringify(result_obj.proposal);
     await Genemongo.ajax("/post_mupdate", "table=Project&st=proid&i=" + Genemongo.queryFilter(standard_id) + "&c=proposal&v=" + Genemongo.queryFilter(full_string));
   }
-  if (document.querySelector(".pp_fifth_cancelback") !== null) { document.querySelector(".pp_fifth_cancelback").remove(); }
-  if (document.querySelector(".pp_fifth_whitebox") !== null) { document.querySelector(".pp_fifth_whitebox").remove(); }
+
+  if (document.querySelector(".pp_fifth_cancelback") !== null) {
+    document.querySelector(".pp_fifth_cancelback").remove();
+  }
+
+  if (document.querySelector(".pp_fifth_whitebox") !== null) {
+    document.querySelector(".pp_fifth_whitebox").remove();
+  }
+
   document.querySelector('.blewpp_button_garim').click();
   console.log(result_obj);
-  if (!update) { return "success"; }
-  else { return "update success"; }
+
+  if (!update) {
+    return "success";
+  } else {
+    return "update success";
+  }
 }

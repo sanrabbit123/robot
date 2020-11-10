@@ -1,7 +1,7 @@
 module.exports = function (tools) {
   const { Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = emptyDate();
+  const EMPTYDATE = new Date("1800-01-01");
   const { mongo, mongoinfo } = Mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   return async function (tong) {
@@ -9,7 +9,7 @@ module.exports = function (tools) {
       await MONGOC.connect();
       let row0, row1, row2;
       let past0, past1, past2;
-      let process, past;
+      let proposal, process, past;
       let temp;
       let tempDesigner;
 
@@ -18,8 +18,16 @@ module.exports = function (tools) {
         row1 = await MONGOC.db("miro81").collection("BP1_process").find({ a4_customernumber: tong[i].cliid }).toArray();
         row2 = await MONGOC.db("miro81").collection("BP2_calculation").find({ a4_customernumber: tong[i].cliid }).toArray();
         process = tong[i].process;
+
+        past0 = row0[0];
+
+        if (past0.a9_proposal !== '' && past0.a9_proposal !== '-') {
+          tong[i].proposal.date = new Date(past0.a9_proposal);
+        } else {
+          tong[i].proposal.date = EMPTYDATE;
+        }
+
         if (row1.length > 0) {
-          past0 = row0[0];
           past1 = row1[0];
           past2 = row2[0];
 
@@ -36,8 +44,9 @@ module.exports = function (tools) {
 
           process.status = past1.b1_process;
 
+          process.contract.first.guide = EMPTYDATE;
           if (past1.b2_contractfee !== '' && past1.b2_contractfee !== '-') {
-            process.contract.first.date = past1.b2_contractfee;
+            process.contract.first.date = new Date(past1.b2_contractfee);
           } else {
             process.contract.first.date = EMPTYDATE;
           }
@@ -47,8 +56,9 @@ module.exports = function (tools) {
           process.contract.first.calculation.info.proof = temp[1].replace(/^증빙 /, '');
           process.contract.first.calculation.info.to = temp[2].replace(/^수신자 /, '');
 
+          process.contract.remain.guide = EMPTYDATE;
           if (past1.b3_designfee !== '' && past1.b3_designfee !== '-') {
-            process.contract.remain.date = past1.b3_designfee;
+            process.contract.remain.date = new Date(past1.b3_designfee);
           } else {
             process.contract.remain.date = EMPTYDATE;
           }
@@ -61,8 +71,14 @@ module.exports = function (tools) {
           process.contract.remain.calculation.info.proof = temp[1].replace(/^증빙 /, '');
           process.contract.remain.calculation.info.to = temp[2].replace(/^수신자 /, '');
 
+
+          process.contract.form.guide = EMPTYDATE;
+          process.contract.form.date.from = EMPTYDATE;
+          process.contract.form.date.to = EMPTYDATE;
+
+
           if (past1.b5_metting1 !== '' && past1.b5_metting1 !== '-') {
-            process.contract.meeting.date = past1.b5_metting1;
+            process.contract.meeting.date = new Date(past1.b5_metting1);
           } else {
             process.contract.meeting.date = EMPTYDATE;
           }
@@ -82,12 +98,14 @@ module.exports = function (tools) {
 
           process.calculation.payments.totalAmount = (past2.f2_calculamount !== '' && past2.f2_calculamount !== '-') ? Number(past2.f2_calculamount.replace(/[^0-9\.\-]/g, '')) : 0;
           process.calculation.payments.first.amount = (past2.f3_calculfirst !== '' && past2.f3_calculfirst !== '-') ? Number(past2.f3_calculfirst.replace(/[^0-9\.\-]/g, '')) : 0;
-          process.calculation.payments.first.date = (past2.f4_calculfisrtyn !== '' && past2.f4_calculfisrtyn !== '-') ? past2.f4_calculfisrtyn : EMPTYDATE;
+          process.calculation.payments.first.date = (past2.f4_calculfisrtyn !== '' && past2.f4_calculfisrtyn !== '-') ? new Date(past2.f4_calculfisrtyn) : EMPTYDATE;
           process.calculation.payments.remain.amount = (past2.f5_calcullast !== '' && past2.f5_calcullast !== '-') ? Number(past2.f5_calcullast.replace(/[^0-9\.\-]/g, '')) : 0;
-          process.calculation.payments.remain.date = (past2.f6_calcullastyn !== '' && past2.f6_calcullastyn !== '-') ? past2.f6_calcullastyn : EMPTYDATE;
+          process.calculation.payments.remain.date = (past2.f6_calcullastyn !== '' && past2.f6_calcullastyn !== '-') ? new Date(past2.f6_calcullastyn) : EMPTYDATE;
 
           if (past1.b8_interview !== '' && past1.b8_interview !== '-') {
-            tong[i].contents.photo.date = past1.b8_interview;
+            tong[i].contents.photo.date = new Date(past1.b8_interview);
+          } else {
+            tong[i].contents.photo.date = EMPTYDATE;
           }
 
           if (past1.c1_photo !== '' && past1.c1_photo !== '-') {
@@ -98,7 +116,6 @@ module.exports = function (tools) {
             tong[i].contents.photo.info.interviewer = past1.c2_interviewer;
           }
 
-
         } else {
 
           tong[i].desid = "";
@@ -106,6 +123,23 @@ module.exports = function (tools) {
           process.design.proposal.detail = [];
           process.design.construct.detail = [];
           process.design.purchase.detail = [];
+
+          tong[i].process.contract.first.guide = EMPTYDATE;
+          tong[i].process.contract.first.date = EMPTYDATE;
+
+          tong[i].process.contract.remain.guide = EMPTYDATE;
+          tong[i].process.contract.remain.date = EMPTYDATE;
+
+          tong[i].process.contract.form.guide = EMPTYDATE;
+          tong[i].process.contract.form.date.from = EMPTYDATE;
+          tong[i].process.contract.form.date.to = EMPTYDATE;
+
+          tong[i].process.contract.meeting.date = EMPTYDATE;
+
+          tong[i].process.calculation.payments.first.date = EMPTYDATE;
+          tong[i].process.calculation.payments.remain.date = EMPTYDATE;
+
+          tong[i].contents.photo.date = EMPTYDATE;
 
         }
 

@@ -1,7 +1,7 @@
 module.exports = function (tools) {
   const { map, Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = emptyDate();
+  const EMPTYDATE = new Date("1800-01-01");
   return async function (row) {
     try {
       let request, analytics, proposal;
@@ -24,7 +24,7 @@ module.exports = function (tools) {
 
         request = tempObjDetail.request;
 
-        request.timeline = past.a18_timeline;
+        request.timeline = new Date(past.a18_timeline);
         request.budget = selectionFilter(past.a23_budget.trim(), ['500만원 이하','1,000만원','1,500만원','2,000만원','2,500만원','3,000만원','3,500만원','4,000만원','4,500만원','5,000만원 이상']);
         request.family = hypenFilter(past.a22_family.trim());
 
@@ -49,7 +49,7 @@ module.exports = function (tools) {
         } else {
           if (past.a25_due_date !== '' && past.a25_due_date !== '-') {
             request.space.resident.living = false;
-            request.space.resident.expected = dateFilter(past.a25_due_date.trim(), past);
+            request.space.resident.expected = new Date(dateFilter(past.a25_due_date.trim(), past));
           } else {
             request.space.resident.living = false;
             request.space.resident.expected = EMPTYDATE;
@@ -64,6 +64,7 @@ module.exports = function (tools) {
 
         analytics = tempObjDetail.analytics;
 
+        analytics.googleAnalytics.timeline = EMPTYDATE;
         analytics.googleAnalytics.history = [];
 
         analytics.response.status = selectionFilter(past.a1_class1.trim(), ['드랍','진행','응대중','완료']);
@@ -74,27 +75,27 @@ module.exports = function (tools) {
         }
 
         if (past.a5_call !== '' && past.a5_call !== '-') {
-          analytics.date.callHistory.push(dateFilter(past.a5_call.trim(), past));
+          analytics.date.callHistory.push(new Date(dateFilter(past.a5_call.trim(), past)));
         } else {
           analytics.date.callHistory = [];
         }
 
         if (past.a13_sajeon !== '' && past.a13_sajeon !== '-') {
-          analytics.date.space.precheck = dateFilter(past.a13_sajeon.trim(), past);
+          analytics.date.space.precheck = new Date(dateFilter(past.a13_sajeon.trim(), past));
         } else {
           analytics.date.space.precheck = EMPTYDATE;
         }
 
         if (past.a14_emptyday !== '' && past.a14_emptyday !== '-' && /^[0-9]/.test(past.a14_emptyday)) {
-          analytics.date.space.empty = dateFilter(past.a14_emptyday.trim(), past);
+          analytics.date.space.empty = new Date(dateFilter(past.a14_emptyday.trim(), past));
         } else if (past.a14_emptyday !== '' && past.a14_emptyday !== '-') {
-          analytics.date.space.empty = past.a18_timeline.slice(0, 10);
+          analytics.date.space.empty = new Date(past.a18_timeline.slice(0, 10));
         } else {
           analytics.date.space.empty = EMPTYDATE;
         }
 
         if (past.a25_due_date !== '' && past.a25_due_date !== '-' && !/거주/g.test(past.a25_due_date)) {
-          analytics.date.space.movein = dateFilter(past.a25_due_date.trim(), past);
+          analytics.date.space.movein = new Date(dateFilter(past.a25_due_date.trim(), past));
         } else {
           analytics.date.space.movein = EMPTYDATE;
         }

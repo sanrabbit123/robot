@@ -104,7 +104,7 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone) {
       token: this.authObj.token,
       senderkey: this.authObj.senderkey,
       tpl_code: targetId,
-      sender: "01024560311",
+      sender: "0220392252",
       receiver_1: client.phone.replace(/-/g, ''),
       recvname_1: client.name,
       subject_1: this.templates[targetId].templtName,
