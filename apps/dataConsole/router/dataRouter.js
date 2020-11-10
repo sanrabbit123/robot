@@ -149,16 +149,48 @@ DataRouter.prototype.rou_post_searchClients = function () {
 DataRouter.prototype.rou_post_updateClient = function () {
   const instance = this;
   let obj = {};
-  obj.link = "/:id";
+  obj.link = "/updateClient";
   obj.func = async function (req, res) {
     try {
-      const { thisId, requestIndex, column, value } = req.body;
+      const { thisId, requestIndex, column, value, pastValue } = req.body;
       const map = instance.patch.clientMap();
       let whereQuery, updateQuery;
       let message;
+      let finalValue, valueTemp;
+
+      switch (map[column].type) {
+        case "string":
+          finalValue = String(value);
+          break;
+        case "number":
+          if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
+            finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
+          } else {
+            finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
+          }
+          break;
+        case "date":
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+            finalValue = new Date(value);
+          } else {
+            finalValue = new Date(pastValue);
+          }
+          break;
+        case "boolean":
+          finalValue = Boolean(value);
+          break;
+        case "array":
+          finalValue = [];
+          valueTemp = value.split("__split__");
+          for (let i of valueTemp) {
+            finalValue.push(i);
+          }
+        default:
+          throw new Error("invaild type");
+      }
 
       updateQuery = {};
-      updateQuery[map[column].position.replace(/\.0\./, ("." + requestIndex + "."))] = value;
+      updateQuery[map[column].position.replace(/\.0\./, ("." + requestIndex + "."))] = finalValue;
 
       whereQuery = {};
       whereQuery[map.cliid.position] = thisId;

@@ -298,6 +298,7 @@ ClientJs.prototype.infoArea = function (info) {
           let idDom;
           let mothers, targetDom;
           let orginalDiv = this.parentNode;
+          let finalValue;
 
           if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
             idDom = this.parentNode.parentNode;
@@ -314,17 +315,20 @@ ClientJs.prototype.infoArea = function (info) {
               }
             }
             column = this.parentNode.getAttribute("column");
+
+            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.textContent);
+
             await GeneralJs.updateValue({
               thisId: thisId,
               requestIndex: String(requestIndex),
               column: column,
               pastValue: orginalDiv.textContent,
-              value: this.value,
+              value: finalValue,
               index: Number(idDom.getAttribute("index")),
             });
 
-            instance.cases[Number(idDom.getAttribute("index"))][column] = this.value;
-            orginalDiv.textContent = this.value;
+            instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
+            orginalDiv.textContent = finalValue;
             idDom.setAttribute("active", "false");
             cancel_inputBack.remove();
             input_clone.remove();
@@ -849,6 +853,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let targetDom;
           let fatherTarget = null;
           let orginalDiv = this.parentNode;
+          let finalValue;
 
           if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
             grandMother = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -868,12 +873,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               }
             }
 
+            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.textContent);
+
             await GeneralJs.updateValue({
               thisId: thisId,
               requestIndex: requestIndex,
               column: column,
               pastValue: orginalDiv.textContent,
-              value: this.value,
+              value: finalValue,
               index: thisCase["index"],
             });
 
@@ -886,12 +893,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 }
               }
               if (fatherTarget !== null) {
-                fatherTarget.textContent = this.value;
+                fatherTarget.textContent = finalValue;
               }
             }
-            instance.cases[thisCase["index"]][column] = this.value;
-            orginalDiv.textContent = this.value;
-            targetDom.textContent = this.value;
+            instance.cases[thisCase["index"]][column] = finalValue;
+            orginalDiv.textContent = finalValue;
+            targetDom.textContent = finalValue;
             cancel_inputBack.remove();
             input_clone.remove();
           }
@@ -1234,7 +1241,7 @@ ClientJs.prototype.reportViewMakerDetail = async function (recycle = false) {
   const instance = this;
   try {
 
-    
+
 
 
 

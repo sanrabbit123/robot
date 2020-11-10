@@ -22,6 +22,40 @@ GeneralJs.objectToQuery = function (dataObj) {
   return dataString;
 }
 
+GeneralJs.vaildValue = function (column, value, pastValue) {
+  const map = DataPatch.clientMap();
+  let finalValue, valueTemp;
+
+  switch (map[column].type) {
+    case "string":
+      finalValue = String(value);
+      break;
+    case "number":
+      if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
+        finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
+      } else {
+        finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
+      break;
+    case "date":
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+        finalValue = value;
+      } else {
+        finalValue = pastValue;
+      }
+      break;
+    case "boolean":
+      finalValue = Boolean(value);
+      break;
+    case "array":
+      finalValue = value;
+    default:
+      throw new Error("invaild type");
+  }
+
+  return finalValue;
+}
+
 GeneralJs.updateValue = async function (dataObj) {
   if (dataObj === undefined) {
     throw new Error("invaild arguments");
