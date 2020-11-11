@@ -240,6 +240,7 @@ Proposal.below_events = {
 
 Proposal.prototype.below_initial = function () {
   const instance = this;
+
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let buttonTexts = {
     width: [ 122, 108, 126, 108 ],

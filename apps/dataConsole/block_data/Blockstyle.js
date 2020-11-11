@@ -157,35 +157,39 @@ Blockstyle.prototype.navinavi = function (mete2) {
 
   //main switches
   let h = `<body>\n`;
-  for (let i of this.data.colcol_arr) { h += `<input type="checkbox" id="${i}_switch" class="columnobj_switch switch">`; }
-  h += `<input type="checkbox" id="coloringback_switch" class="switch">`;
-  h += `<input type="checkbox" id="coloring_switch" class="switch">`;
-  h += `<input type="checkbox" id="red_button_Y_switch" class="switch">`;
-  h += `<input type="checkbox" id="red_button_X_switch" class="switch">`;
-  h += `<input type="checkbox" id="create_on_switch" class="switch">`;
-  h += `<input type="checkbox" id="card_on_switch" class="switch">`;
-  h += `<input type="checkbox" id="grayfocus_card_switch" class="switch">`;
-  h += `<input type="checkbox" id="grayfocus_switch" class="switch">\n`;
-  h += `<aside id="cardmain"></aside>\n`;
-  h += `<main id="rowmain">`;
+  // for (let i of this.data.colcol_arr) { h += `<input type="checkbox" id="${i}_switch" class="columnobj_switch switch">`; }
+  // h += `<input type="checkbox" id="coloringback_switch" class="switch">`;
+  // h += `<input type="checkbox" id="coloring_switch" class="switch">`;
+  // h += `<input type="checkbox" id="red_button_Y_switch" class="switch">`;
+  // h += `<input type="checkbox" id="red_button_X_switch" class="switch">`;
+  // h += `<input type="checkbox" id="create_on_switch" class="switch">`;
+  // h += `<input type="checkbox" id="card_on_switch" class="switch">`;
+  // h += `<input type="checkbox" id="grayfocus_card_switch" class="switch">`;
+  // h += `<input type="checkbox" id="grayfocus_switch" class="switch">\n`;
+  // h += `<aside id="cardmain"></aside>\n`;
+  // h += `<main id="rowmain">`;
 
   // making html
+
+
+  /*
   for (let navi_below of navibelow_arr) {
     h += `<div id="${navi_below[0]}id" class="${navi_below[0]}">`;
-    h += circle(navi_below[0]);
+    // h += circle(navi_below[0]);
     h += `<div class="${navi_below[0]}2" id="${navi_below[0]}green" style="display:block">`;
     h += `<div class="navibelow_back" id="${navi_below[0]}green_back"></div>`;
     h += navibelow_funcs[navi_below[2]]();
     h += `</div>`;
-    h += `<div class="${navi_below[0]}2" id="${navi_below[0]}yellow" style="display:none;">`;
-    h += `<div class="navibelow_back" id="${navi_below[0]}yellow_back"></div>`;
-    h += navibelow_funcs[navi_below[3]]();
-    h += `</div>`;
-    h += `<div id="${navi_below[0]}scroll">`;
-    h += navibelow_funcs[navi_below[4]]();
-    h += `</div>`;
+    // h += `<div class="${navi_below[0]}2" id="${navi_below[0]}yellow" style="display:none;">`;
+    // h += `<div class="navibelow_back" id="${navi_below[0]}yellow_back"></div>`;
+    // h += navibelow_funcs[navi_below[3]]();
+    // h += `</div>`;
+    // h += `<div id="${navi_below[0]}scroll">`;
+    // h += navibelow_funcs[navi_below[4]]();
+    // h += `</div>`;
     h += `</div>\n`;
   }
+  */
   return h;
 }
 
@@ -237,17 +241,26 @@ Blockstyle.prototype.mongohead = function () {
   h += `<html lang="ko" dir="ltr">\n`;
   h += `<head><meta charset="utf-8"><title>${this.data.dbtitle}</title>`;
   h += `<link href="/font/fonts.css" rel="stylesheet">`;
+
   h += `<link href="/css/style.css" rel="stylesheet">`;
+
   h += `<style>${this.data.css}</style>`;
   h += `</head>\n`;
-  return h;
-}
+  h += `<body>`;
 
-Blockstyle.prototype.mongobody = function () {
-  let h = ``;
-  h += `<div id="mongo_totalcontents">\n`;
-  // h += `<div id="mongo_box"></div>\n`;
+
+
+
+  h += `<div id="belowid" class="below">`;
+  h += `<div class="below2" id="belowgreen" style="display:block">`;
+
   h += `</div>`;
+  h += `</div>`;
+  h += `<div id="mongo_totalcontents"></div>`;
+
+
+
+
   h += `<script>${this.data.js}</script>`;
   h += `<script>`;
   h += `const funcs = new ${this.data.dbtitle[0].toUpperCase() + this.data.dbtitle.slice(1)}();\n`;
@@ -265,7 +278,37 @@ Blockstyle.prototype.mongobody = function () {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.send("message=" + e.error.stack + "&channel=#error_log&query={}"); });\n`;
   h += `</script>`;
-  h += `</main></body>\n</html>`;
+  h += `</body>\n</html>`;
+  return h;
+}
+
+Blockstyle.prototype.mongobody = function () {
+  let h = ``;
+  h += `<body>`;
+  h += `<div id="belowid" class="below">`;
+  h += `<div class="below2" id="belowgreen" style="display:block">`;
+  h += `<div class="navibelow_back" id="belowgreen_back"></div>`;
+  h += `</div>`;
+  h += `</div>`;
+  h += `<div id="mongo_totalcontents"></div>`;
+  h += `<script>${this.data.js}</script>`;
+  h += `<script>`;
+  h += `const funcs = new ${this.data.dbtitle[0].toUpperCase() + this.data.dbtitle.slice(1)}();\n`;
+  h += `window.addEventListener('DOMContentLoaded', function (e) {\n`;
+  if (Object.keys(this.data.query).length === 0) {
+    h += `  funcs.launching();`;
+  } else {
+    h += `  funcs.launching(${JSON.stringify(this.data.query)});`;
+  }
+  h += `});\n`
+  h += `window.addEventListener('error', function (e) { alert('에러가 발생하였답니다!');
+  console.log(e);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/slack");
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.send("message=" + e.error.stack + "&channel=#error_log&query={}"); });\n`;
+  h += `</script>`;
+  h += `</body>\n</html>`;
   return h;
 }
 

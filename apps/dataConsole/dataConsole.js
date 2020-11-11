@@ -26,8 +26,8 @@ DataConsole.prototype.block_template = function () {
   function mongo_render(monSet) {
     const block = new Blockstyle(monSet, "mongo");
     let h = block.mongohead();
-    h += block.navinavi("mongo");
-    h += block.mongobody();
+    // h += block.navinavi("mongo");
+    // h += block.mongobody();
     return h;
   }
   return { first_render: first_render, second_render: second_render, mongo_render: mongo_render };

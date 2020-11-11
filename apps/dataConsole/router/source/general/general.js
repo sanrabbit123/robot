@@ -104,6 +104,62 @@ GeneralJs.returnValue = async function () {
   }
 }
 
+GeneralJs.queryFilter = function (str) {
+  return str.replace(/ &/g, ',').replace(/&/g, ',').replace(/=/g, '');
+}
+
+GeneralJs.tagParsing = function (target) {
+  let arr0, arr1;
+  let result_arr0 = []
+  let result_arr1 = []
+  let result_obj = {}
+
+  function simple(str) {
+    let obj = {}
+    for (let i of str.split("__split1__")) {
+      obj[i.split("__split2__")[0]] = i.split("__split2__")[1];
+    }
+    return obj;
+  }
+  if (target.search(/__split4__/g) !== -1) {
+    arr0 = target.split("__split4__");
+    for (let a of arr0) {
+      arr1 = a.split("__split3__");
+      for (let b of arr1) {
+        result_arr1.push(simple(b));
+      }
+      result_arr0.push(result_arr1);
+    }
+    return result_arr0;
+
+  } else if (target.search(/__split3__/g) !== -1) {
+    arr0 = target.split("__split3__");
+    for (let a of arr0) {
+      result_arr0.push(simple(a));
+    }
+    return result_arr0;
+
+  } else {
+    return simple(target)
+  }
+}
+
+GeneralJs.tagCoverting = function (obj) {
+  let keyArr = Object.keys(obj);
+  let str = '';
+  for (let i of keyArr) {
+    if (typeof obj[i] === "string") {
+      str += i + "__split2__" + obj[i];
+      str += "__split1__";
+    } else if (typeof obj[i] === "number") {
+      str += i + "__split2__" + String(obj[i]);
+      str += "__split1__";
+    }
+  }
+  str = str.slice(0, -10);
+  return str;
+}
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
@@ -281,7 +337,6 @@ GeneralJs.prototype.greenBar = function () {
   let moveEventLeft, moveEventRight;
   let top, belowTop, right, iconRight;
 
-
   this.belowHeight = 123;
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -392,7 +447,6 @@ GeneralJs.prototype.greenBar = function () {
   div_clone2.addEventListener("click", moveEventRight);
   this.belowButtons.arrow.right = div_clone2;
   div_clone.appendChild(div_clone2);
-
 
   iconRight = right + 102;
   top = top;
