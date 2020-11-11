@@ -1237,21 +1237,425 @@ ClientJs.prototype.returnValueEventMaker = function () {
   }
 }
 
-ClientJs.prototype.reportViewMakerDetail = async function (recycle = false) {
+ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
+  const instance = this;
+  const report = JSON.parse(data);
+
+  let div_clone, div_clone2;
+  let style;
+  let ea = "px";
+  let entireMargin;
+  let margin;
+  let scrollBox, boxTop, boxWidth, boxHeight, boxNumber;
+  let titleBox, titleTop;
+  let matrixTop, matrixBox, matrixWidth, matrixBoxMargin, matrixHeight;
+  let matrixStyle0, matrixStyle1;
+  let matrixFontSize;
+  let matrixOuterLine, matrixInnerLine;
+  let columnTop, columnLineHeight, columnPaddingTop;
+  let reportNumber;
+  let grayBar;
+  let summaryBox, summaryTong;
+
+  margin = 18;
+  boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
+  boxHeight = 400;
+  boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
+  boxTop = 90;
+
+  //entire scroll box
+  scrollBox = GeneralJs.nodes.div.cloneNode(true);
+  scrollBox.classList.add("reportScrollBox");
+  entireMargin = margin * 2;
+  style = {
+    position: "relative",
+    top: String(boxTop) + ea,
+    paddingLeft: String(entireMargin) + ea,
+    paddingBottom: String(margin) + ea,
+    width: String(motherWidth - entireMargin) + ea,
+    height: "calc(100% - " + String(boxTop + margin) + ea + ")",
+    overflow: "scroll",
+  };
+  for (let z in style) {
+    scrollBox.style[z] = style[z];
+  }
+
+  for (let i = 0; i < report.length; i++) {
+
+    //numbers
+    titleTop = 18;
+    columnTop = 0;
+    columnLineHeight = 30;
+    columnPaddingTop = 7;
+    matrixFontSize = 14.5;
+    matrixInnerLine = "1px solid #ececec";
+    matrixOuterLine = "1px solid #cccccc";
+    matrixTop = titleTop + 40;
+    matrixBoxMargin = 23;
+    matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
+    matrixHeight = 240;
+    summaryTong = {
+      client: 0,
+      proposal: 0,
+      contract: 0,
+    };
+
+    //gray card
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      display: "inline-block",
+      position: "relative",
+      width: String(boxWidth) + ea,
+      height: String(boxHeight) + ea,
+      overflow: "scroll",
+      marginRight: String(margin) + ea,
+      marginBottom: String(margin) + ea,
+      fontSize: String(15) + ea,
+      background: "#f7f7f7",
+      borderRadius: String(5) + ea,
+    };
+    for (let z in style) {
+      div_clone.style[z] = style[z];
+    }
+
+    //title gray bar
+    grayBar = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(matrixWidth) + ea,
+      right: String(matrixBoxMargin + 1) + ea,
+      top: String(titleTop + 14) + ea,
+      height: String(0),
+      borderTop: "1px solid #dddddd",
+    };
+    for (let z in style) {
+      grayBar.style[z] = style[z];
+    }
+    div_clone.appendChild(grayBar);
+
+    //title
+    titleBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      paddingRight: String(12) + ea,
+      fontSize: String(matrixFontSize + 6) + ea,
+      left: String(matrixBoxMargin + 1) + ea,
+      top: String(titleTop) + ea,
+      fontWeight: String(200),
+      background: "#f7f7f7",
+    };
+    for (let z in style) {
+      titleBox.style[z] = style[z];
+    }
+    titleBox.textContent = `${report[i][0].startDay.split('-')[0]}-${report[i][0].startDay.split('-')[1]}`;
+    div_clone.appendChild(titleBox);
+
+    //matrix
+    matrixBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      width: String(matrixWidth) + ea,
+      height: String(matrixHeight) + ea,
+      top: String(matrixTop) + ea,
+      left: String(matrixBoxMargin) + ea,
+      borderRadius: String(5) + ea,
+      border: matrixOuterLine,
+      overflow: "hidden",
+    };
+    for (let z in style) {
+      matrixBox.style[z] = style[z];
+    }
+
+    //case name
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    matrixStyle0 = {
+      position: "absolute",
+      fontSize: String(matrixFontSize) + ea,
+      fontWeight: String(600),
+      width: String(matrixWidth * (2 / 5)) + ea,
+      textAlign: "center",
+      left: String(0) + ea,
+      paddingTop: String(columnPaddingTop) + ea,
+      top: String(columnTop) + ea,
+      height: String(columnLineHeight) + ea,
+      borderBottom: matrixInnerLine,
+      background: "white",
+    };
+    for (let z in matrixStyle0) {
+      div_clone2.style[z] = matrixStyle0[z];
+    }
+    matrixBox.appendChild(div_clone2);
+
+    //client
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    matrixStyle1 = JSON.parse(JSON.stringify(matrixStyle0));
+    matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
+    matrixStyle1.width = String(matrixWidth * (1 / 5)) + ea;
+    matrixStyle1.borderLeft = matrixInnerLine;
+    for (let z in matrixStyle1) {
+      div_clone2.style[z] = matrixStyle1[z];
+    }
+    div_clone2.textContent = "문의";
+    matrixBox.appendChild(div_clone2);
+
+    //proposal
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
+    for (let z in matrixStyle1) {
+      div_clone2.style[z] = matrixStyle1[z];
+    }
+    div_clone2.textContent = "제안";
+    matrixBox.appendChild(div_clone2);
+
+    //contract
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
+    for (let z in matrixStyle1) {
+      div_clone2.style[z] = matrixStyle1[z];
+    }
+    div_clone2.textContent = "계약";
+    matrixBox.appendChild(div_clone2);
+
+    reportNumber = 0;
+    for (let { startDay, endDay, client, proposal, contract } of report[i]) {
+
+      columnTop = columnTop + columnLineHeight + columnPaddingTop;
+
+      //case name
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      matrixStyle0.top = String(columnTop) + ea;
+      matrixStyle0.background = "";
+      if (reportNumber === report[i].length - 1) {
+        matrixStyle0.borderBottom = '';
+      }
+      for (let z in matrixStyle0) {
+        div_clone2.style[z] = matrixStyle0[z];
+      }
+      div_clone2.textContent = `${startDay.split('-')[2]} ~ ${endDay.split('-')[2]}`;
+      matrixBox.appendChild(div_clone2);
+
+      //client
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      matrixStyle1.top = String(columnTop) + ea;
+      matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
+      matrixStyle1.background = "";
+      matrixStyle1.fontWeight = String(200);
+      if (reportNumber === report[i].length - 1) {
+        matrixStyle1.borderBottom = '';
+      }
+      for (let z in matrixStyle1) {
+        div_clone2.style[z] = matrixStyle1[z];
+      }
+      div_clone2.textContent = String(client);
+      matrixBox.appendChild(div_clone2);
+      summaryTong.client += client;
+
+      //proposal
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
+      for (let z in matrixStyle1) {
+        div_clone2.style[z] = matrixStyle1[z];
+      }
+      div_clone2.textContent = String(proposal);
+      matrixBox.appendChild(div_clone2);
+      summaryTong.proposal += proposal;
+
+      //contract
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
+      for (let z in matrixStyle1) {
+        div_clone2.style[z] = matrixStyle1[z];
+      }
+      div_clone2.textContent = String(contract);
+      matrixBox.appendChild(div_clone2);
+      summaryTong.contract += contract;
+
+      reportNumber++;
+    }
+    matrixBox.style.height = String(columnTop + columnLineHeight + columnPaddingTop) + ea;
+    div_clone.appendChild(matrixBox);
+
+    //summary
+    summaryBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(matrixWidth) + ea,
+      fontSize: String(matrixFontSize + 6) + ea,
+      left: String(matrixBoxMargin) + ea,
+      bottom: String(titleTop + 8) + ea,
+      fontWeight: String(200),
+      textAlign: "right",
+    };
+    for (let z in style) {
+      summaryBox.style[z] = style[z];
+    }
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${String(summaryTong.contract)}</b>명`);
+    div_clone.appendChild(summaryBox);
+
+    scrollBox.appendChild(div_clone);
+  }
+
+  return scrollBox;
+}
+
+ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
+  const instance = this;
+  const vaildValue = function (target) {
+    const today = new Date();
+    let valueArr0, valueArr1, valueArr2;
+    input_clone.style.color = "#404040";
+    if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+      if (/[0-9][0-9][0-9][0-9]\-[0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+        target.value = target.value.slice(0, 5) + '0' + target.value.slice(5);
+      } else if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9]/.test(target.value)) {
+        target.value = target.value.slice(0, -1) + '0' + target.value.slice(-1);
+      } else if (/[0-9][0-9][0-9][0-9]\-[0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9]/.test(target.value)) {
+        target.value = target.value.slice(0, 5) + '0' + target.value.slice(5);
+        target.value = target.value.slice(0, -1) + '0' + target.value.slice(-1);
+      } else {
+        target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+      }
+    }
+    target.value = (/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+    valueArr0 = target.value.split(" ~ ");
+    valueArr1 = valueArr0[0].split("-");
+    valueArr2 = valueArr0[1].split("-");
+    if ((Number(valueArr1[0]) * 12) + Number(valueArr1[1].replace(/^0/, '')) > (Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, ''))) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[1].replace(/^0/, '')) > 12 || Number(valueArr1[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[0]) < 2019) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if ((Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, '')) > (today.getFullYear() * 12) + (today.getMonth() + 1)) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+
+    GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
+
+    valueArr0 = target.value.split(" ~ ");
+    valueArr1 = valueArr0[0].split("-");
+    valueArr2 = valueArr0[1].split("-");
+
+    return { startYear: valueArr1[0], startMonth: valueArr1[1], endYear: valueArr2[0], endMonth: valueArr2[1], };
+  }
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
+
+  let div_clone, div_clone2, input_clone;
+  let style, inputStyle;
+  let ea = "px";
+  let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
+  const scrollBox = this.reportScrollBox(data, motherWidth);
+  const today = new Date();
+  let top, height, margin;
+
+  //numbers
+  top = 0;
+  margin = 36;
+  height = 90;
+
+  //search box
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    top: String(top) + ea,
+    left: String(margin) + ea,
+    width: String(motherWidth - (margin * 2)) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  //start day
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
+  inputStyle = {
+    position: "absolute",
+    left: String(0) + ea,
+    top: String(40) + ea,
+    width: String(500) + ea,
+    height: String(30) + ea,
+    fontSize: String(29) + ea,
+    fontWeight: String(100),
+    border: String(0) + ea,
+    outline: String(0) + ea,
+    color: "#404040",
+  };
+  for (let i in inputStyle) {
+    input_clone.style[i] = inputStyle[i];
+  }
+  input_clone.setAttribute("type", "text");
+  input_clone.setAttribute("value", "2020-04 ~ 2020-11");
+  input_clone.addEventListener("focus", function (e) {
+    input_clone.style.color = "#2fa678";
+    GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
+  });
+  input_clone.addEventListener("blur", function (e) {
+    vaildValue(this);
+  });
+  input_clone.addEventListener("keyup", function (e) {
+    if (e.keyCode === 13) {
+      const queryObj = vaildValue(this);
+      input_clone.blur();
+      mother.removeChild(mother.lastChild);
+      loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
+      loadingIcon.style.opacity = "1";
+      GeneralJs.ajax(GeneralJs.objectToQuery(queryObj), "/getClientReport", function (data) {
+        loadingIcon.style.opacity = "0";
+        const scrollBox = instance.reportScrollBox(data, motherWidth);
+        mother.appendChild(scrollBox);
+      });
+    }
+  });
+
+  div_clone.appendChild(input_clone);
+
+  //today box
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    fontSize: String(14) + ea,
+    fontWeight: String(500) + ea,
+    right: String(1) + ea,
+    top: String(58) + ea,
+    color: "#2fa678",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.textContent = "today : " + String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+  div_clone.appendChild(div_clone2);
+
+  //end
+  mother.appendChild(div_clone);
+
+  //scroll box
+  mother.appendChild(scrollBox);
+}
+
+ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
   try {
-
-
-
-
-
     return function () {
-      let div_clone;
+      let div_clone, svg_icon;
       let style;
       let ea = "px";
       let margin;
       let domTargets;
       let motherBoo;
+      let width;
 
       motherBoo = (instance.onView === "mother") ? true : false;
 
@@ -1302,8 +1706,28 @@ ClientJs.prototype.reportViewMakerDetail = async function (recycle = false) {
         div_clone.style[i] = style[i];
       }
 
+      width = 50;
+
+      svg_icon = instance.mother.returnLoadingIcon();
+      style = {
+        width: String(width) + ea,
+        height: String(width) + ea,
+        top: 'calc(50% - ' + String(width / 2) + ea + ')',
+        left: 'calc(50% - ' + String(width / 2) + ea + ')',
+      }
+      for (let i in style) {
+        svg_icon.style[i] = style[i];
+      }
+      div_clone.appendChild(svg_icon);
+
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
+
+      GeneralJs.ajax("month=8", "/getClientReport", function (data) {
+        svg_icon.style.opacity = "0";
+        instance.reportContents(data, div_clone, svg_icon);
+      });
+
       GeneralJs.stacks.whiteBox = 0;
     }
   } catch (e) {
@@ -1313,14 +1737,14 @@ ClientJs.prototype.reportViewMakerDetail = async function (recycle = false) {
 
 ClientJs.prototype.reportViewMaker = function () {
   const instance = this;
-  return async function (e) {
+  return function (e) {
     let tempFunc;
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
-        tempFunc = instance.whiteCancelMaker(await instance.reportViewMakerDetail(true), true);
+        tempFunc = instance.whiteCancelMaker(instance.reportViewMakerDetail(true), true);
         tempFunc();
       } else {
-        tempFunc = await instance.reportViewMakerDetail(false);
+        tempFunc = instance.reportViewMakerDetail(false);
         tempFunc();
       }
     }

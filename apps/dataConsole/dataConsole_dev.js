@@ -77,7 +77,7 @@ DataConsole.prototype.connect = async function () {
     //server on
     http.createServer(app).listen(3000, () => { console.log(`connect 3000`) });
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   }
 }
 

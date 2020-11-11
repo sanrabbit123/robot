@@ -9,9 +9,10 @@ const DataRouter = function (MONGOC) {
   if (MONGOC !== undefined && MONGOC !== null) {
     this.mongo = MONGOC;
   }
+  this.pythonApp = this.dir + "/python/app.py";
 }
 
-//STATIC --------------------------------------------------------------------------
+//STATIC FUNCTIONS --------------------------------------------------------------------------
 
 DataRouter.baseMaker = function (target) {
   const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
@@ -52,13 +53,68 @@ DataRouter.queryFilter = function (str) {
   return str;
 }
 
-//GET --------------------------------------------------------------------------
+//GENERAL METHODS ---------------------------------------------------------------------------------
+
+DataRouter.prototype.getDateMatrix = async function (length = 6) {
+  const instance = this;
+  try {
+    const today = new Date();
+    const dateMatrix = await this.mother.pythonExecute(this.pythonApp, [ "dateMatrix" ], { length });
+
+    let year, month;
+    let day0, day1, day2;
+    let dateString0, dateString1;
+
+    resultArr = [];
+    for (let j = 0; j < dateMatrix.length; j++) {
+
+      year = today.getFullYear();
+      month = today.getMonth() + 1 - j;
+
+      year = today.getFullYear() + Math.floor(month / 12) + ((month % 12) === 0 ? -1 : 0);
+      month = (month % 12) > 0 ? (month % 12) : 12 + (month % 12);
+
+      middleResultArr = [];
+      for (let i = 0; i < dateMatrix[j].length; i++) {
+        resultFatorArr = [];
+
+        day0 = dateMatrix[j][i][0];
+        resultFatorArr.push(new Date(year, month - 1, day0));
+
+        day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];
+        resultFatorArr.push(new Date(year, month - 1, day1));
+
+        if (i !== dateMatrix[j].length - 1) {
+          day2 = dateMatrix[j][i + 1][0];
+          resultFatorArr.push(new Date(year, month - 1, day2));
+        } else {
+          day2 = 1;
+          if (month === 12) {
+            resultFatorArr.push(new Date(year + 1, 0, day2));
+          } else {
+            resultFatorArr.push(new Date(year, month, day2));
+          }
+        }
+
+        middleResultArr.push(resultFatorArr);
+      }
+
+      resultArr.push(middleResultArr);
+    }
+
+    return resultArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+//GET ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_get_Root = function () {
   const instance = this;
   let obj = {};
   obj.link = '/';
-  obj.func = function (req, res) {
+  obj.func = async function (req, res) {
     try {
       res.set("Content-Type", "text/html");
       res.send("hello?");
@@ -199,6 +255,93 @@ DataRouter.prototype.rou_post_updateClient = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getClientReport = function () {
+  const instance = this;
+  const back = this.back;
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return `0${String(number)}`;
+    } else {
+      return String(number);
+    }
+  }
+
+  let obj = {};
+  obj.link = "/getClientReport";
+  obj.func = async function (req, res) {
+    try {
+      const today = new Date();
+      let dateMatrix;
+      let searchQuery, clients, proposals, contracts;
+      let resultArr;
+      let obj;
+      let searchBoo;
+
+      if (req.body.month === undefined) {
+        if (req.body.startYear === undefined) {
+          req.body.month = 8;
+          searchBoo = false;
+        } else {
+          let { startYear, startMonth, endYear, endMonth } = req.body;
+          startYear = Number(startYear);
+          startMonth = Number(startMonth.replace(/^0/, ''));
+          endYear = Number(endYear);
+          endMonth = Number(endMonth.replace(/^0/, ''));
+          req.body.month = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((startYear * 12) + startMonth) + 1;
+          req.body.endMonth = ((today.getFullYear() * 12) + today.getMonth() + 1) - ((endYear * 12) + endMonth);
+          searchBoo = true;
+        }
+      } else {
+        searchBoo = false;
+      }
+
+      if (!searchBoo) {
+        dateMatrix = await instance.getDateMatrix(Number(req.body.month));
+      } else {
+        dateMatrix = await instance.getDateMatrix(Number(req.body.month));
+        for (let i = 0; i < req.body.endMonth; i++) {
+          dateMatrix.shift();
+        }
+      }
+
+      resultArr = [];
+
+      for (let matrix of dateMatrix) {
+        monthArr = [];
+        for (let arr of matrix) {
+          obj = {};
+          obj.startDay = `${zeroAddition(arr[0].getFullYear())}-${zeroAddition(arr[0].getMonth() + 1)}-${zeroAddition(arr[0].getDate())}`;
+          obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
+
+          //client
+          searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[2] } } } };
+          clients = await instance.back.getClientsByQuery(searchQuery, { selfMongo: instance.mongo });
+          obj.client = clients.length;
+
+          //proposal
+          searchQuery = { "proposal.date": { "$gte": arr[0], "$lt": arr[2] } };
+          proposals = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+          obj.proposal = proposals.length;
+
+          //contract
+          searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
+          contracts = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+          obj.contract = contracts.length;
+
+          monthArr.push(obj);
+        }
+        resultArr.push(monthArr);
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(resultArr));
     } catch (e) {
       console.log(e);
     }
