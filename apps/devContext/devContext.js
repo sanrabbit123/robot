@@ -853,9 +853,9 @@ class DevContext extends Array {
       //
       // }
 
-      const back = new BackMaker();
-      console.log(await back.getContentsByPid("p46"));
-      console.log((await back.getContentsByPid("p46")).toNormal());
+      // const back = new BackMaker();
+
+
 
 
 
@@ -874,8 +874,15 @@ class DevContext extends Array {
       // const app = new KakaoTalk();
       // await app.generateToken();
       //
-      // const back = new BackMaker();
-      // await back.pastToMongo();
+      const back = new BackMaker();
+      const designers = await back.getDesignersAll();
+
+      let result = [];
+      for (let d of designers) {
+        result.push(d.toNormal());
+      }
+
+      await fileSystem(`write`, [ `${process.cwd()}/temp/디자이너.json`, JSON.stringify(result, null, 2) ]);
 
       // await this.spellCheck("p64");
       // await this.intoDesigner();

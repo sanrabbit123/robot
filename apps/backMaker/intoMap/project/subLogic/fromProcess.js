@@ -1,7 +1,29 @@
 module.exports = function (tools) {
   const { Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = new Date("1800-01-01");
+  const EMPTYDATE = new Date(1800, 0, 1);
+  const dateToNumberArr = function (str, detail = false) {
+    let strArr, strArr2, strArr3;
+    let year, month, date, hour, minute, second;
+    if (!detail) {
+      strArr = str.split("-");
+      year = Number(strArr[0]);
+      month = Number(strArr[1].replace(/^0/, '')) - 1;
+      date = Number(strArr[2].replace(/^0/, ''));
+      return [ year, month, date ];
+    } else {
+      strArr = str.split(' ');
+      strArr2 = strArr[0].split("-");
+      strArr3 = strArr[1].split(":");
+      year = Number(strArr2[0]);
+      month = Number(strArr2[1].replace(/^0/, '')) - 1;
+      date = Number(strArr2[2].replace(/^0/, ''));
+      hour = Number(strArr3[0].replace(/^0/, ''));
+      minute = Number(strArr3[1].replace(/^0/, ''));
+      second = Number(strArr3[2].replace(/^0/, ''));
+      return [ year, month, date, hour, minute, second ];
+    }
+  }
   const { mongo, mongoinfo } = Mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   return async function (tong) {
@@ -22,7 +44,7 @@ module.exports = function (tools) {
         past0 = row0[0];
 
         if (past0.a9_proposal !== '' && past0.a9_proposal !== '-') {
-          tong[i].proposal.date = new Date(past0.a9_proposal);
+          tong[i].proposal.date = new Date(...dateToNumberArr(past0.a9_proposal));
         } else {
           tong[i].proposal.date = EMPTYDATE;
         }
@@ -46,7 +68,7 @@ module.exports = function (tools) {
 
           process.contract.first.guide = EMPTYDATE;
           if (past1.b2_contractfee !== '' && past1.b2_contractfee !== '-') {
-            process.contract.first.date = new Date(past1.b2_contractfee);
+            process.contract.first.date = new Date(...dateToNumberArr(past1.b2_contractfee));
           } else {
             process.contract.first.date = EMPTYDATE;
           }
@@ -58,7 +80,7 @@ module.exports = function (tools) {
 
           process.contract.remain.guide = EMPTYDATE;
           if (past1.b3_designfee !== '' && past1.b3_designfee !== '-') {
-            process.contract.remain.date = new Date(past1.b3_designfee);
+            process.contract.remain.date = new Date(...dateToNumberArr(past1.b3_designfee));
           } else {
             process.contract.remain.date = EMPTYDATE;
           }
@@ -78,7 +100,7 @@ module.exports = function (tools) {
 
 
           if (past1.b5_metting1 !== '' && past1.b5_metting1 !== '-') {
-            process.contract.meeting.date = new Date(past1.b5_metting1);
+            process.contract.meeting.date = new Date(...dateToNumberArr(past1.b5_metting1));
           } else {
             process.contract.meeting.date = EMPTYDATE;
           }
@@ -98,12 +120,12 @@ module.exports = function (tools) {
 
           process.calculation.payments.totalAmount = (past2.f2_calculamount !== '' && past2.f2_calculamount !== '-') ? Number(past2.f2_calculamount.replace(/[^0-9\.\-]/g, '')) : 0;
           process.calculation.payments.first.amount = (past2.f3_calculfirst !== '' && past2.f3_calculfirst !== '-') ? Number(past2.f3_calculfirst.replace(/[^0-9\.\-]/g, '')) : 0;
-          process.calculation.payments.first.date = (past2.f4_calculfisrtyn !== '' && past2.f4_calculfisrtyn !== '-') ? new Date(past2.f4_calculfisrtyn) : EMPTYDATE;
+          process.calculation.payments.first.date = (past2.f4_calculfisrtyn !== '' && past2.f4_calculfisrtyn !== '-') ? new Date(...dateToNumberArr(past2.f4_calculfisrtyn)) : EMPTYDATE;
           process.calculation.payments.remain.amount = (past2.f5_calcullast !== '' && past2.f5_calcullast !== '-') ? Number(past2.f5_calcullast.replace(/[^0-9\.\-]/g, '')) : 0;
-          process.calculation.payments.remain.date = (past2.f6_calcullastyn !== '' && past2.f6_calcullastyn !== '-') ? new Date(past2.f6_calcullastyn) : EMPTYDATE;
+          process.calculation.payments.remain.date = (past2.f6_calcullastyn !== '' && past2.f6_calcullastyn !== '-') ? new Date(...dateToNumberArr(past2.f6_calcullastyn)) : EMPTYDATE;
 
           if (past1.b8_interview !== '' && past1.b8_interview !== '-') {
-            tong[i].contents.photo.date = new Date(past1.b8_interview);
+            tong[i].contents.photo.date = new Date(...dateToNumberArr(past1.b8_interview));
           } else {
             tong[i].contents.photo.date = EMPTYDATE;
           }

@@ -7,7 +7,7 @@ module.exports = {
     requests: [
       {
         request: {
-          timeline: new Date("1800-01-01"),
+          timeline: new Date(1800, 0, 1),
           notionId: "",
           budget: "알 수 없음",
           family: "",
@@ -22,7 +22,7 @@ module.exports = {
             },
             resident: {
               living: false,
-              expected: new Date("1800-01-01"),
+              expected: new Date(1800, 0, 1),
             },
           },
           etc: {
@@ -32,7 +32,7 @@ module.exports = {
         },
         analytics: {
           googleAnalytics: {
-            timeline: new Date("1800-01-01"),
+            timeline: new Date(1800, 0, 1),
             userType: "",
             referrer: {
               name: "",
@@ -58,7 +58,7 @@ module.exports = {
             },
             campaign: "",
             history: [
-              { time: new Date("1800-01-01"), page: "", page_raw: "" },
+              { time: new Date(1800, 0, 1), page: "", page_raw: "" },
             ],
           },
           response: {
@@ -68,9 +68,9 @@ module.exports = {
           date: {
             callHistory: [],
             space: {
-              precheck: new Date("1800-01-01"),
-              empty: new Date("1800-01-01"),
-              movein: new Date("1800-01-01"),
+              precheck: new Date(1800, 0, 1),
+              empty: new Date(1800, 0, 1),
+              movein: new Date(1800, 0, 1),
             },
           },
           picture: {

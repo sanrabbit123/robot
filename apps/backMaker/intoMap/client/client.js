@@ -1,7 +1,29 @@
 module.exports = function (tools) {
   const { map, Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = new Date("1800-01-01");
+  const EMPTYDATE = new Date(1800, 0, 1);
+  const dateToNumberArr = function (str, detail = false) {
+    let strArr, strArr2, strArr3;
+    let year, month, date, hour, minute, second;
+    if (!detail) {
+      strArr = str.split("-");
+      year = Number(strArr[0]);
+      month = Number(strArr[1].replace(/^0/, '')) - 1;
+      date = Number(strArr[2].replace(/^0/, ''));
+      return [ year, month, date ];
+    } else {
+      strArr = str.split(' ');
+      strArr2 = strArr[0].split("-");
+      strArr3 = strArr[1].split(":");
+      year = Number(strArr2[0]);
+      month = Number(strArr2[1].replace(/^0/, '')) - 1;
+      date = Number(strArr2[2].replace(/^0/, ''));
+      hour = Number(strArr3[0].replace(/^0/, ''));
+      minute = Number(strArr3[1].replace(/^0/, ''));
+      second = Number(strArr3[2].replace(/^0/, ''));
+      return [ year, month, date, hour, minute, second ];
+    }
+  }
   return async function (row) {
     try {
       let request, analytics, proposal;
@@ -24,7 +46,11 @@ module.exports = function (tools) {
 
         request = tempObjDetail.request;
 
-        request.timeline = new Date(past.a18_timeline);
+        if (past.a18_timeline.trim().length === 10) {
+          request.timeline = new Date(...dateToNumberArr(past.a18_timeline));
+        } else {
+          request.timeline = new Date(...dateToNumberArr(past.a18_timeline, true));
+        }
         request.budget = selectionFilter(past.a23_budget.trim(), ['500만원 이하','1,000만원','1,500만원','2,000만원','2,500만원','3,000만원','3,500만원','4,000만원','4,500만원','5,000만원 이상']);
         request.family = hypenFilter(past.a22_family.trim());
 
@@ -49,7 +75,7 @@ module.exports = function (tools) {
         } else {
           if (past.a25_due_date !== '' && past.a25_due_date !== '-') {
             request.space.resident.living = false;
-            request.space.resident.expected = new Date(dateFilter(past.a25_due_date.trim(), past));
+            request.space.resident.expected = new Date(...dateToNumberArr(dateFilter(past.a25_due_date.trim(), past)));
           } else {
             request.space.resident.living = false;
             request.space.resident.expected = EMPTYDATE;
@@ -75,27 +101,27 @@ module.exports = function (tools) {
         }
 
         if (past.a5_call !== '' && past.a5_call !== '-') {
-          analytics.date.callHistory.push(new Date(dateFilter(past.a5_call.trim(), past)));
+          analytics.date.callHistory.push(new Date(...dateToNumberArr(dateFilter(past.a5_call.trim(), past))));
         } else {
           analytics.date.callHistory = [];
         }
 
         if (past.a13_sajeon !== '' && past.a13_sajeon !== '-') {
-          analytics.date.space.precheck = new Date(dateFilter(past.a13_sajeon.trim(), past));
+          analytics.date.space.precheck = new Date(...dateToNumberArr(dateFilter(past.a13_sajeon.trim(), past)));
         } else {
           analytics.date.space.precheck = EMPTYDATE;
         }
 
         if (past.a14_emptyday !== '' && past.a14_emptyday !== '-' && /^[0-9]/.test(past.a14_emptyday)) {
-          analytics.date.space.empty = new Date(dateFilter(past.a14_emptyday.trim(), past));
+          analytics.date.space.empty = new Date(...dateToNumberArr(dateFilter(past.a14_emptyday.trim(), past)));
         } else if (past.a14_emptyday !== '' && past.a14_emptyday !== '-') {
-          analytics.date.space.empty = new Date(past.a18_timeline.slice(0, 10));
+          analytics.date.space.empty = new Date(...dateToNumberArr(past.a18_timeline.slice(0, 10)));
         } else {
           analytics.date.space.empty = EMPTYDATE;
         }
 
         if (past.a25_due_date !== '' && past.a25_due_date !== '-' && !/거주/g.test(past.a25_due_date)) {
-          analytics.date.space.movein = new Date(dateFilter(past.a25_due_date.trim(), past));
+          analytics.date.space.movein = new Date(...dateToNumberArr(dateFilter(past.a25_due_date.trim(), past)));
         } else {
           analytics.date.space.movein = EMPTYDATE;
         }

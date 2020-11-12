@@ -5,7 +5,7 @@ module.exports = {
     contents: {
       portfolio: {
         pid: "",
-        date: new Date("1800-01-01"),
+        date: new Date(1800, 0, 1),
         spaceInfo: {
           space: "",
           pyeong: 0,
@@ -52,7 +52,7 @@ module.exports = {
       },
       review: {
         rid: "",
-        date: new Date("1800-01-01"),
+        date: new Date(1800, 0, 1),
         title: {
           main: "",
           sub: "",

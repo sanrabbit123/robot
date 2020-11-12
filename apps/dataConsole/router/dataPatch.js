@@ -226,4 +226,59 @@ DataPatch.prototype.clientMap = function () {
   return map;
 }
 
+
+//DESIGNER --------------------------------------------------------------------------------------
+
+DataPatch.prototype.designerStandard = function () {
+
+}
+
+DataPatch.prototype.designerCardViewStandard = function () {
+
+}
+
+DataPatch.prototype.designerWhiteViewStandard = function () {
+
+}
+
+DataPatch.prototype.designerMap = function () {
+
+}
+
+//PROJECT ---------------------------------------------------------------------------------------
+
+DataPatch.prototype.projectStandard = function () {
+
+}
+
+DataPatch.prototype.projectCardViewStandard = function () {
+
+}
+
+DataPatch.prototype.projectWhiteViewStandard = function () {
+
+}
+
+DataPatch.prototype.projectMap = function () {
+
+}
+
+//CONTENTS --------------------------------------------------------------------------------------
+
+DataPatch.prototype.contentsStandard = function () {
+
+}
+
+DataPatch.prototype.contentsCardViewStandard = function () {
+
+}
+
+DataPatch.prototype.contentsWhiteViewStandard = function () {
+
+}
+
+DataPatch.prototype.contentsMap = function () {
+
+}
+
 module.exports = DataPatch;

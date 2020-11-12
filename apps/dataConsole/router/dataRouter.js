@@ -141,15 +141,56 @@ DataRouter.prototype.rou_get_First = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_getClients = function () {
+//POST ---------------------------------------------------------------------------------------------
+
+DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = "/getClients";
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents" ];
   obj.func = async function (req, res) {
     try {
-      const standard = instance.patch.clientStandard();
-      const clients = await instance.back.getLatestClients(req.body.limit, { withTools: true, selfMongo: instance.mongo });
-      const data = clients.flatDeath();
+      let standard, raw_data, data;
+
+      if (req.url === "/getClients") {
+        standard = instance.patch.clientStandard();
+        if (req.body.where === undefined) {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getLatestClients(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+          } else {
+            raw_data = await instance.back.getLatestClients("all", { withTools: true, selfMongo: instance.mongo });
+          }
+        } else {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
+          } else {
+            raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+          }
+        }
+      } else if (req.url === "/getDesigners") {
+        standard = instance.patch.designerStandard();
+
+
+
+
+
+      } else if (req.url === "/getProjects") {
+        standard = instance.patch.projectStandard();
+
+
+
+
+
+      } else if (req.url === "/getContents") {
+        standard = instance.patch.contentsStandard();
+
+
+
+
+
+      }
+
+      data = raw_data.flatDeath();
+
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ standard, data }));
     } catch (e) {
@@ -199,8 +240,6 @@ DataRouter.prototype.rou_post_searchClients = function () {
   }
   return obj;
 }
-
-//POST --------------------------------------------------------------------------
 
 DataRouter.prototype.rou_post_updateClient = function () {
   const instance = this;
@@ -348,6 +387,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   }
   return obj;
 }
+
+
 
 
 //DEV --------------------------------------------------------------------------

@@ -9,7 +9,7 @@ module.exports = {
     },
     proposal: {
       status: "",
-      date: new Date("1800-01-01"),
+      date: new Date(1800, 0, 1),
       detail: [
         {
           desid: "",
@@ -41,8 +41,8 @@ module.exports = {
       status: "드랍", // [ '드랍', '진행', '응대중', '완료' ]
       contract: {
         first: {
-          guide: new Date("1800-01-01"), // alimtalk api in button in notion (to mongo / to notion)
-          date: new Date("1800-01-01"), // bank api in button in notion (to mongo / to notion)
+          guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+          date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
           calculation: {
             amount: 0, // from contract
             info: {
@@ -53,8 +53,8 @@ module.exports = {
           },
         },
         remain: {
-          guide: new Date("1800-01-01"), // alimtalk api in button in notion (to mongo / to notion)
-          date: new Date("1800-01-01"), // bank api in button in notion (to mongo / to notion)
+          guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+          date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
           calculation: {
             amount: {
               supply: 0, // from contract
@@ -70,14 +70,14 @@ module.exports = {
         },
         form: {
           id: "", // eform api in button in notion (to mongo / to notion)
-          guide: new Date("1800-01-01"), // alimtalk api in button in notion (to mongo / to notion)
+          guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
           date: {
-            from: new Date("1800-01-01"), // from contract
-            to: new Date("1800-01-01"), // from contract
+            from: new Date(1800, 0, 1), // from contract
+            to: new Date(1800, 0, 1), // from contract
           }
         },
         meeting: {
-          date: new Date("1800-01-01"), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
+          date: new Date(1800, 0, 1), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
           pastDesigners: [
             { desid: "" },
           ]
@@ -89,7 +89,7 @@ module.exports = {
           limit: null,
           detail: [
             {
-              date: new Date("1800-01-01"),
+              date: new Date(1800, 0, 1),
             }
           ]
         },
@@ -102,8 +102,8 @@ module.exports = {
               form: {
                 id: "",
                 date: {
-                  from: new Date("1800-01-01"),
-                  to: new Date("1800-01-01"),
+                  from: new Date(1800, 0, 1),
+                  to: new Date(1800, 0, 1),
                 }
               },
               calculation: {
@@ -152,18 +152,18 @@ module.exports = {
           totalAmount: 0,
           first: {
             amount: 0,
-            date: new Date("1800-01-01"),
+            date: new Date(1800, 0, 1),
           },
           remain: {
             amount: 0,
-            date: new Date("1800-01-01"),
+            date: new Date(1800, 0, 1),
           }
         }
       },
     },
     contents: {
       photo: {
-        date: new Date("1800-01-01"),
+        date: new Date(1800, 0, 1),
         info: {
           photographer: "",
           interviewer: "",

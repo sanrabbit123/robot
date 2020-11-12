@@ -91,12 +91,10 @@ ProposalJs.auto_comma = function (str) {
 
 ProposalJs.below_events = {
   save: async function (e) {
-    let msg = await ProposalJs.save_init(false);
-    console.log(msg);
+    await ProposalJs.save_init(false);
   },
   update: async function (e) {
-    let msg = await ProposalJs.save_init(true);
-    console.log(msg);
+    await ProposalJs.save_init(true);
   },
   search: {
     client: function (e) {
@@ -331,42 +329,23 @@ ProposalJs.below_events = {
 
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
-
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let buttonTexts = {
     width: [ 122, 108, 126, 108 ],
     leftRight: [ 48, 180, 173, 55 ],
     contents: [ "제안서 리스트", "제안서 생성", "변동 버튼 1", "변동 버튼 2" ],
-  }
+  };
   let h = document.createDocumentFragment();
+
   for (let i = 0; i < buttonTexts.contents.length; i++) {
     if (i === 2) {
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("blewpp_bar");
-      div_clone.classList.add("blewpp_barleft");
-      this.below_tong.set("barleft", div_clone);
-      h.appendChild(div_clone);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.className = "blewpp_numberbar_total";
-
-      input_clone = GeneralJs.nodes.input.cloneNode(true);
-      input_clone.setAttribute("type", "text");
-      input_clone.setAttribute("placeholder", "고객 이름 검색...");
-      input_clone.classList.add("blewpp_input");
-      this.below_tong.set("search", input_clone);
-      div_clone.appendChild(input_clone);
-      h.appendChild(div_clone);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("blewpp_bar");
-      div_clone.classList.add("blewpp_barright");
-      this.below_tong.set("barright", div_clone);
-      h.appendChild(div_clone);
+      this.below_tong.set("search", this.mother.searchInput);
     }
+
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.className = "blewpp_button";
     div_clone.id = "blewpp_button" + String(i);
+
     if (i === 0) {
       div_clone.addEventListener("click", function (e) {
         if (instance.toggleSetting.listCreate === 0) {
@@ -414,8 +393,13 @@ ProposalJs.prototype.below_initial = function () {
         }
       });
     }
-    if (i < 2) { div_clone.style.left = String(buttonTexts.leftRight[i]) + "px"; }
-    else { div_clone.style.right = String(buttonTexts.leftRight[i]) + "px"; }
+
+    if (i < 2) {
+      div_clone.style.left = String(buttonTexts.leftRight[i]) + "px";
+    } else {
+      div_clone.style.right = String(buttonTexts.leftRight[i]) + "px";
+    }
+
     div_clone.style.width = String(buttonTexts.width[i]) + "px";
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -433,21 +417,27 @@ ProposalJs.prototype.below_initial = function () {
 
 ProposalJs.prototype.below_first = function () {
   const instance = this;
+
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
+
   //button
   this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
-  if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-  else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+  if (this.toggleSetting.load === 0) {
+    this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+  } else {
+    this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+  }
   this.below_tong.get("button2").style.right = String(173) + "px";
   this.below_tong.get("button3").style.right = String(55) + "px";
   this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.first.b2);
-  if (this.toggleSetting.load === 0) { this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.save); }
-  else { this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.update); }
-  //bar
-  this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-  this.below_tong.get("barright").style.right = String(324) + "px";
+  if (this.toggleSetting.load === 0) {
+    this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.save);
+  } else {
+    this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.update);
+  }
+
   //search
   this.below_tong.get("search").setAttribute("placeholder", "고객 이름 검색...");
   this.below_tong.get("search").value = "";
@@ -458,20 +448,23 @@ ProposalJs.prototype.below_first = function () {
 
 ProposalJs.prototype.below_second = function (onoff) {
   const instance = this;
+
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
+
   if (onoff === "on") {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 437px)";
-    this.below_tong.get("barright").style.right = String(304) + "px";
+
     //button
     this.below_tong.get("button2").style.width = String(108) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
     this.below_tong.get("button3").style.right = String(55) + "px";
     this.below_tong.get("button2").children[0].textContent = "서비스 상세";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+    } else {
+      this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+    }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
@@ -484,20 +477,22 @@ ProposalJs.prototype.below_second = function (onoff) {
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.service);
 
   } else {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
+
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
     this.below_tong.get("button3").style.right = String(55) + "px";
     this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+    } else {
+      this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+    }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
     this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.first.b2);
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "고객 이름 검색...");
     this.below_tong.get("search").value = "";
@@ -505,17 +500,16 @@ ProposalJs.prototype.below_second = function (onoff) {
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.client);
   }
+
 }
 
 ProposalJs.prototype.below_third = function (onoff) {
   const instance = this;
+
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -534,9 +528,6 @@ ProposalJs.prototype.below_third = function (onoff) {
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 437px)";
-    this.below_tong.get("barright").style.right = String(304) + "px";
     //button
     this.below_tong.get("button2").style.width = String(108) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -559,13 +550,11 @@ ProposalJs.prototype.below_third = function (onoff) {
 
 ProposalJs.prototype.below_fourth = function (onoff) {
   const instance = this;
+
   //general
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -588,9 +577,6 @@ ProposalJs.prototype.below_fourth = function (onoff) {
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -617,9 +603,6 @@ ProposalJs.prototype.below_fifth = function (onoff) {
   this.below_tong.get("button0").children[0].style.opacity = "0.4";
   this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -640,9 +623,6 @@ ProposalJs.prototype.below_fifth = function (onoff) {
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
-    //bar
-    this.below_tong.get("barright").style.width = "calc(50% - 457px)";
-    this.below_tong.get("barright").style.right = String(324) + "px";
     //button
     this.below_tong.get("button2").style.width = String(126) + "px";
     this.below_tong.get("button2").style.right = String(173) + "px";
@@ -686,29 +666,32 @@ ProposalJs.toggleTimeout = {
   load_third: {},
 }
 
-ProposalJs.prototype.firstToggle = function (m, domBox) {
+ProposalJs.prototype.firstToggle = function (button, domBox) {
   const instance = this;
-  let nodes = {
-    title: domBox.get("고객 선택").children[0],
-    contents: domBox.get("고객 선택").children[1],
-  }
-  if (m === "on") {
+  const title = domBox.get("고객 선택").children[0];
+  const contents =  domBox.get("고객 선택").children[1];
+  let service, service_input;
+
+  if (button === "on") {
     return function (e) {
       if (instance.toggleSetting.first === 0) {
         ProposalJs.toggleTimeout.first = setTimeout(function () {
-          instance.below_launching("second", m);
+
+          instance.below_launching("second", button);
           domBox.get("고객 선택").style.height = "3.2vh";
           domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
+
           domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
           domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
           domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
 
-          let service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
+          service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
           for (let i of service) {
             i.style.background = "white";
             i.children[0].style.color = "#59af89";
             i.children[0].style.fontSize = "1.7vh";
           }
+
           if (/^M/g.test(navigator.platform)) {
             for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
             for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
@@ -719,41 +702,50 @@ ProposalJs.prototype.firstToggle = function (m, domBox) {
             for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-4px"; }
           }
 
-          let service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
+          service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
           for (let i of service_input) {
             if (i.checked) {
               i.nextElementSibling.style.background = "#59af89";
               i.nextElementSibling.children[0].style.color = "white";
             }
           }
-          nodes.title.style.color = "#59af89";
-          nodes.contents.style.background = "white";
+          title.style.color = "#59af89";
+          contents.style.background = "white";
 
-          if (document.querySelector("#pp_title_sub_b")) { document.querySelector("#pp_title_sub_b").remove(); }
-          nodes.title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+          if (document.querySelector("#pp_title_sub_b") !== null) {
+            document.querySelector("#pp_title_sub_b").remove();
+          }
+
+          title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+
           instance.toggleSetting.first = 1;
         }, 300);
       }
     }
-  } else if (m === "off") {
+  } else if (button === "off") {
     return function (e) {
       if (instance.toggleSetting.first === 1 && instance.toggleSetting.second === 0) {
+
         clearTimeout(ProposalJs.toggleTimeout.first);
-        instance.below_launching("second", m);
-        domBox.get("고객 선택").style.height = "";
+
+        instance.below_launching("second", button);
+
+        domBox.get("고객 선택").style.height = "calc(calc(100% / 3) - 21px)",
         domBox.get("고객 선택").style.borderBottom = "";
-        domBox.get("서비스 선택").style.height = "";
-        domBox.get("서비스 선택").children[1].style.height = "";
-        domBox.get("서비스 선택").children[1].style.marginTop = "";
-        let service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
+
+        domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)",
+        domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
+        domBox.get("서비스 선택").children[1].style.marginTop = "10px";
+
+        service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
           i.style.background = "";
           i.children[0].style.color = "";
           i.children[0].style.fontSize = "";
           i.children[0].style.marginTop = "";
         }
-        nodes.title.style.color = "";
-        nodes.contents.style.background = "";
+        title.style.color = "#404040";
+        contents.style.background = "#f7f7f7";
         instance.toggleSetting.first = 0;
       }
     }
@@ -761,7 +753,8 @@ ProposalJs.prototype.firstToggle = function (m, domBox) {
 }
 
 ProposalJs.prototype.firstProcess = async function () {
-  let h = document.createDocumentFragment();
+  const instance = this;
+  let h;
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
   let titles = [ "pp_firstprocess_box", "pp_secondprocess_box", "pp_thirdprocess_box" ];
   let titles_con = [ "고객 선택", "서비스 선택", "디자이너 선택" ];
@@ -770,6 +763,7 @@ ProposalJs.prototype.firstProcess = async function () {
   let style;
   let ea = "px";
 
+  h = document.createDocumentFragment();
   domBox = new Map();
 
   for (let i = 0; i < titles.length; i++) {
@@ -788,7 +782,6 @@ ProposalJs.prototype.firstProcess = async function () {
     }
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("pp_title");
     style = {
       fontSize: "1.8vh",
       fontWeight: "700",
@@ -803,7 +796,6 @@ ProposalJs.prototype.firstProcess = async function () {
     div_clone.appendChild(div_clone2);
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("pp_contents");
     style = {
       display: "block",
       height: "calc(90% - 10px)",
@@ -812,6 +804,7 @@ ProposalJs.prototype.firstProcess = async function () {
       borderRadius: "10px",
       paddingRight: "30px",
       paddingLeft: "30px",
+      boxSizing: "border-box",
     };
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -825,11 +818,12 @@ ProposalJs.prototype.firstProcess = async function () {
 
   this.createPannel.appendChild(h);
 
-  clients = JSON.parse(await GeneralJs.ajaxPromise("col_arr=a4_customernumber,a19_name&title=BC1_conlist&standard=a1_class1&where=응대중", "/post_select"));
+  //get client
+  clients = JSON.parse(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ "requests": { "$elemMatch": { "analytics.response.status": "응대중" } } }), "/getClients"));
   div_clone4 = GeneralJs.nodes.div.cloneNode(true);
   div_clone4.classList.add("pp_contents_inbox");
 
-  for (let i = 0; i < clients.length; i++) {
+  for (let i = 0; i < clients.data.length; i++) {
 
     input_clone = GeneralJs.nodes.input.cloneNode(true);
     input_clone.classList.add("pp_clients_input");
@@ -842,14 +836,14 @@ ProposalJs.prototype.firstProcess = async function () {
     div_clone.classList.add("pp_clients");
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.textContent = clients[i].a4_customernumber + " | " + clients[i].a19_name;
+    div_clone2.textContent = clients.data[i].standard.cliid + " | " + clients.data[i].standard.name;
     div_clone.appendChild(div_clone2);
 
     label_clone = GeneralJs.nodes.label.cloneNode(true);
     label_clone.classList.add("pp_clients_label");
     label_clone.setAttribute("for", "pp_clients_input" + String(i));
-    label_clone.setAttribute("cus_value", clients[i].a19_name);
-    label_clone.setAttribute("cus_id", clients[i].a4_customernumber);
+    label_clone.setAttribute("cus_value", clients.data[i].standard.name);
+    label_clone.setAttribute("cus_id", clients.data[i].standard.cliid);
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.classList.add("garim");
@@ -863,6 +857,7 @@ ProposalJs.prototype.firstProcess = async function () {
     domBox.get(titles_con[0]).children[1].appendChild(div_clone4);
 
   }
+
   domBox.get(titles_con[0]).children[0].addEventListener("click", this.firstToggle("off", domBox));
   this.below_launching("first");
 
@@ -871,39 +866,66 @@ ProposalJs.prototype.firstProcess = async function () {
 
 // Create process 2 ------------------------------------------------------------
 
-ProposalJs.prototype.secondToggle = function (m, domBox) {
-  let instance = this;
-  if (m === "on") {
+ProposalJs.prototype.secondToggle = function (button, domBox) {
+  const instance = this;
+  let service, service_input;
+
+  if (button === "on") {
     return function (e) {
+      let selectionBoxBack, selectionBoxWording;
+
       if (instance.toggleSetting.first === 1 && instance.toggleSetting.second === 0) {
-        let service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
+
+        service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
           i.style.background = "white";
           i.children[0].style.color = "#59af89";
           i.children[0].style.fontSize = "1.7vh";
         }
-        for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-        for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-        for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
-        let target0 = e.target.parentNode.parentNode;
-        let target1 = e.target.parentNode.parentNode.children[0];
-        target0.style.background = "#59af89";
-        target1.style.color = "white";
+
+        for (let i = 0; i < 4; i++) {
+          service[i].children[0].style.marginTop = "-2px";
+        }
+        for (let i = 4; i < 8; i++) {
+          service[i].children[0].style.marginTop = "-4px";
+        }
+        for (let i = 8; i < 12; i++) {
+          service[i].children[0].style.marginTop = "-6px";
+        }
+
+        selectionBoxBack = e.target.parentNode.parentNode;
+        selectionBoxWording = e.target.parentNode.parentNode.children[0];
+
+        selectionBoxBack.style.background = "#59af89";
+        selectionBoxWording.style.color = "white";
+
         ProposalJs.toggleTimeout.second = setTimeout(function () {
-          instance.below_launching("third", m);
+
+          instance.below_launching("third", button);
+
           domBox.get("서비스 선택").children[0].style.color = "#59af89";
           domBox.get("서비스 선택").children[1].style.background = "white";
-          if (document.querySelector("#pp_title2_sub_b")) { document.querySelector("#pp_title2_sub_b").remove(); }
+
+          if (document.querySelector("#pp_title2_sub_b") !== null) {
+            document.querySelector("#pp_title2_sub_b").remove();
+          }
+
           domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
           domBox.get("서비스 선택").style.height = "3.2vh";
           domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
-          for (let i of service) { i.style.opacity = "0"; }
+
+          for (let i of service) {
+            i.style.opacity = "0";
+          }
+
           instance.toggleSetting.second = 1;
-          domBox.get("서비스 선택").children[1].style.height = "";
-          domBox.get("서비스 선택").children[1].style.marginTop = "";
+
+          domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
+          domBox.get("서비스 선택").children[1].style.marginTop = "10px";
           domBox.get("디자이너 선택").style.height = "calc(100% - 6.4vh - 63px)";
           domBox.get("디자이너 선택").children[1].style.height = "calc(90% + 2.7vh)";
           domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
+
           instance.thirdChildren.get("box1_designerInput").focus();
           instance.thirdChildren.get("box1_designerInput").style.color = "#59af89";
           instance.thirdChildren.get("box1_title").style.color = "#59af89";
@@ -911,45 +933,59 @@ ProposalJs.prototype.secondToggle = function (m, domBox) {
           instance.thirdChildren.get("box1_title").style.fontSize = "24px";
           instance.thirdChildren.get("box1").style.background = "white";
           instance.thirdChildren.get("box1").style.border = "1px solid #dddddd";
+
           document.querySelector(".pp_designer_question").classList.remove("pp_designer_question_remove");
           document.querySelector(".pp_designer_question").classList.add("pp_designer_question_add");
           document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_remove");
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
         }, 300);
+
       }
     }
-  } else if (m === "off") {
+  } else if (button === "off") {
     return function (e) {
       if (instance.toggleSetting.first === 1 && instance.toggleSetting.second === 1) {
+
         clearTimeout(ProposalJs.toggleTimeout.second);
         document.querySelector(".pp_designer_question").classList.add("pp_designer_question_remove");
         document.querySelector(".pp_designer_question").classList.remove("pp_designer_question_add");
         document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_remove");
         document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_add");
-        instance.below_launching("third", m);
-        let service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
-        domBox.get("서비스 선택").children[0].style.color = "";
-        domBox.get("서비스 선택").children[1].style.background = "";
-        domBox.get("서비스 선택").style.height = "";
+
+        instance.below_launching("third", button);
+
+        domBox.get("서비스 선택").children[0].style.color = "#404040";
+        domBox.get("서비스 선택").children[1].style.background = "#f7f7f7";
+        domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)";
         domBox.get("서비스 선택").style.borderBottom = "";
         instance.toggleSetting.second = 0;
         domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
         domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
         domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
+
+        service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
           i.style.opacity = "";
           i.style.background = "white";
           i.children[0].style.color = "#59af89";
           i.children[0].style.fontSize = "1.7vh";
         }
-        for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-        for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-        for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
-        let service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
+
+        for (let i = 0; i < 4; i++) {
+          service[i].children[0].style.marginTop = "-2px";
+        }
+        for (let i = 4; i < 8; i++) {
+          service[i].children[0].style.marginTop = "-4px";
+        }
+        for (let i = 8; i < 12; i++) {
+          service[i].children[0].style.marginTop = "-6px";
+        }
+
+        service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
         for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#59af89";i.nextElementSibling.children[0].style.color = "white"; } }
-        domBox.get("디자이너 선택").style.height = "";
-        domBox.get("디자이너 선택").children[1].style.height = "";
-        domBox.get("디자이너 선택").children[1].style.marginTop = "";
+        domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
+        domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
+        domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
 
         instance.thirdChildren.get("box1_designerInput").style.color = "";
         instance.thirdChildren.get("box1_title").style.color = "";
@@ -966,16 +1002,35 @@ ProposalJs.prototype.secondToggle = function (m, domBox) {
 }
 
 ProposalJs.prototype.secondProcess = async function () {
-  let second = {}
+  const instance = this;
+  let second = {};
+  let h;
+  let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
+  let serviceX, serviceY;
+  let style;
+  let ea = "px";
+
   second.total = this.domBox.get("서비스 선택");
   second.title = second.total.children[0];
   second.contents = second.total.children[1];
-  let h = document.createDocumentFragment();
-  let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
-  let serviceX = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
-  let serviceY = [ "mini", "basic", "premium" ];
+
+  h = document.createDocumentFragment();
+  serviceX = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
+  serviceY = [ "mini", "basic", "premium" ];
+
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("pp_contents_inbox");
+  style = {
+    display: "flex",
+    flexWrap: "wrap",
+    paddingLeft: "2.5px",
+    paddingTop: "16px",
+    height: "calc(100% - 56px)",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
   for (let i = 0; i < serviceY.length; i++) {
     for (let j = 0; j < serviceX.length; j++) {
       input_clone = GeneralJs.nodes.input.cloneNode(true);
@@ -1022,10 +1077,15 @@ ProposalJs.prototype.thirdKeyup = function () {
 }
 
 ProposalJs.prototype.thirdProcess = async function () {
-  let third = {};
-  let h = document.createDocumentFragment();
+  const instance = this;
+  let h;
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
-  let children = new Map();
+  let third;
+  let children;
+
+  third = {};
+  h = document.createDocumentFragment();
+  children = new Map();
 
   third.total = this.domBox.get("디자이너 선택");
   third.title = third.total.children[0];
@@ -1082,11 +1142,17 @@ ProposalJs.prototype.thirdProcess = async function () {
 // Create process 4 ------------------------------------------------------------
 
 ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
-  let fourthChildren = new Map();
-  let instance = this;
-  let thirdChildren = this.thirdChildren;
-  let domBox = this.domBox;
-  let fourth = {};
+  const instance = this;
+  const domBox = this.domBox;
+  let fourthChildren;
+  let thirdChildren;
+  let fourth;
+  let money_set;
+  let designers;
+
+  fourthChildren = new Map();
+  thirdChildren = this.thirdChildren;
+  fourth = {};
 
   fourth.total = domBox.get("디자이너 선택");
   fourth.title = fourth.total.children[0];
@@ -1114,7 +1180,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     }
   }
 
-  let money_set = function (onoff, s = 0) {
+  money_set = function (onoff, s = 0) {
     let div_clone, div_clone2, div_clone3, input_clone;
 
     //set
@@ -1160,7 +1226,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   fourth.events.designer = function (e) {
-    function getnode(num, boo = true) {
+    const getnode = function (num, boo = true) {
       if (boo) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[num].style;
       } else {
@@ -1222,7 +1288,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   //디자이너 이름
-  let designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ designer: 1, past_desid: 1 }), '/post_mfind'));
+  designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ designer: 1, past_desid: 1 }), '/post_mfind'));
 
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
@@ -1385,10 +1451,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   });
 
   return function () {
-    //------------------------------------------------------------------------
     let div_clone, div_clone2, div_clone3, div_clone4, general_string;
     let target0, target1, target2;
-    //------------------------------------------------------------------------
+
     fourth.box.style.display = "none";
     fourth.title.style.color = "#59af89";
     fourth.contents.style.background = "white";
@@ -1420,6 +1485,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
           div_clone2.appendChild(div_clone3);
           div_clone.appendChild(div_clone2);
         }
+
         //remember value
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
         div_clone4.classList.add("pp_designer_selected_box_value");
@@ -1439,6 +1505,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         fourthChildren.set("box" + String(i), div_clone);
         instance.totalTong.fifthScrollmove["designer" + String(i)] = new Map();
       }
+
     } else {
       console.log("in past");
       if (num <= instance.pastMaps[0].size) {
@@ -1551,7 +1618,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       }
     }
     fourth.title.addEventListener("click", removeAll, { once: true });
-    //------------------------------------------------------------------------
+
     clearTimeout(ProposalJs.toggleTimeout.fourth);
   }
 }
@@ -2439,7 +2506,7 @@ ProposalJs.prototype.load_initevent = function () {
         if (document.querySelector(".pp_designer_selected") === null) {
           instance.load_reset(obj);
         } else {
-          document.querySelector('#pp_thirdprocess_box .pp_title').click();
+          instance.domBox.get("디자이너 선택").children[0].click();
           ProposalJs.toggleTimeout.load_init_in = setTimeout(function () {
             instance.load_reset(obj);
           }, 500);
@@ -2674,6 +2741,7 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
+  const instance = this;
   let target, temp, temp2, standard_id;
   let temp_arr = [];
   let temp_num = 0;
@@ -2705,7 +2773,7 @@ ProposalJs.save_init = async function (update = false) {
     result_obj.status = "작성중";
 
     // 1 client
-    target = document.querySelector("#pp_firstprocess_box .pp_title");
+    target = instance.domBox.get("고객 선택").children[0];
     if (target.querySelector("#pp_title_sub_b") === null) {
       alert("고객을 선택해주세요!");
       return "fail";
@@ -2718,7 +2786,7 @@ ProposalJs.save_init = async function (update = false) {
   }
 
   // 2 service
-  target = document.querySelector("#pp_secondprocess_box .pp_title");
+  target = instance.domBox.get("서비스 선택").children[0];
   if (target.querySelector("#pp_title2_sub_b") === null) {
     alert("서비스를 선택해주세요!");
     return "fail";
@@ -2933,22 +3001,7 @@ ProposalJs.prototype.cssInjection = function () {
   #naviscroll{display:none;}
 
   #pp_secondprocess_box{cursor: pointer;}
-  .pp_title{
-    font-size: 1.8vh;
-    font-weight: 700;
-    display: block;
-    height: 10%;
-    cursor: pointer;
-  }
-  .pp_contents{
-    display: block;
-    height: calc(90% - 10px);
-    margin-top: 10px;
-    background: #f7f7f7;
-    border-radius: 10px;
-    padding-right: 30px;
-    padding-left: 30px;
-  }
+
   .pp_contents_inbox{
     display: block;
     text-align: center;
@@ -2958,14 +3011,6 @@ ProposalJs.prototype.cssInjection = function () {
     overflow: scroll;
   }
   .pp_contents_inbox::-webkit-scrollbar{display:none;}
-
-  #pp_secondprocess_box > .pp_contents > .pp_contents_inbox{
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 2.5px;
-    padding-top: 16px;
-    height: calc(100% - 56px);
-  }
 
   .pp_service{
     display: inline-flex;
@@ -3009,8 +3054,6 @@ ProposalJs.prototype.cssInjection = function () {
     top: 0;
     left: 0;
   }
-
-  #pp_thirdprocess_box .pp_contents{box-sizing: border-box;}
 
   .pp_clients{
     font-size:1.3vh;

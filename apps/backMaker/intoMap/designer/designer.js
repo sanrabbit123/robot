@@ -1,7 +1,42 @@
 module.exports = function (tools) {
   const { map, Mother, Notion, Filters } = tools;
   const { emailFilter, dateFilter, selectionFilter, hypenFilter, emptyDate } = Filters;
-  const EMPTYDATE = new Date("1800-01-01");
+  const EMPTYDATE = new Date(1800, 0, 1);
+  const dateToNumberArr = function (str, detail = false) {
+    let strArr, strArr2, strArr3;
+    let year, month, date, hour, minute, second;
+    if (!detail) {
+      strArr = str.split("-");
+      year = Number(strArr[0]);
+      month = Number(strArr[1].replace(/^0/, '')) - 1;
+      date = Number(strArr[2].replace(/^0/, ''));
+      return [ year, month, date ];
+    } else {
+      strArr = str.split(' ');
+      strArr2 = strArr[0].split("-");
+      strArr3 = strArr[1].split(":");
+      year = Number(strArr2[0]);
+      month = Number(strArr2[1].replace(/^0/, '')) - 1;
+      date = Number(strArr2[2].replace(/^0/, ''));
+      hour = Number(strArr3[0].replace(/^0/, ''));
+      minute = Number(strArr3[1].replace(/^0/, ''));
+      second = Number(strArr3[2].replace(/^0/, ''));
+      return [ year, month, date, hour, minute, second ];
+    }
+  }
+  const newDesid = function (contractDay, order) {
+    let year, month;
+    let thisId, number;
+
+    year = contractDay.split("-")[0].slice(2);
+    month = contractDay.split("-")[1];
+    number = Mother.orderSystem("encode", order);
+
+    thisId = `d${year}${month}_${number}s`;
+
+    return thisId;
+  }
+
   return async function (row) {
     try {
       let tempObj, tempObjDetail, tempObjDetail2;
@@ -10,9 +45,48 @@ module.exports = function (tools) {
       let information, analytics, realTime, setting;
       let temp, temp2;
 
+      let orderTong;
+      let lastStringArr, newString, lastNumberObj;
+
       totalTong = [];
+      orderTong = [];
+      for (let past of row) {
+        if (/^1/.test(past.a2_contractday.slice(0, 7))) {
+          continue;
+        }
+        orderTong.push({ past_desid: past.a4_desid, contractDate: past.a2_contractday.slice(0, 7) });
+      }
+
+      orderTong.sort((a, b) => { return Number(a.past_desid.replace(/de0/g, '')) - Number(b.past_desid.replace(/de0/g, '')); });
+
+      lastStringArr = [];
+      newString = '';
+      lastNumberObj = {};
+
+      for (let i = 0; i < orderTong.length; i++) {
+        newString = orderTong[i].contractDate;
+        if (!lastStringArr.includes(newString)) {
+          lastNumberObj[newString] = 0;
+        } else {
+          lastNumberObj[newString] = lastNumberObj[newString] + 1;
+        }
+        lastStringArr.push(orderTong[i].contractDate);
+        orderTong[i].order = lastNumberObj[newString];
+      }
+
+      for (let obj of orderTong) {
+        obj.order = obj.order + 1;
+        obj.desid = newDesid(obj.contractDate, obj.order);
+      }
+
+      await Mother.fileSystem(`write`, [ `${process.cwd()}/temp/desidPastDesid.json`, JSON.stringify(orderTong, null, 2) ]);
 
       for (let past of row) {
+
+        if (/^1/.test(past.a2_contractday.slice(0, 7))) {
+          continue;
+        }
+
         tempObj = map().structure;
 
         tempObj.designer = past.a5_name;
@@ -22,7 +96,7 @@ module.exports = function (tools) {
 
         information.contract = {};
         information.contract.status = past.a1_relation;
-        information.contract.date = new Date(past.a2_contractday);
+        information.contract.date = new Date(...dateToNumberArr(past.a2_contractday));
 
         information.phone = past.b2_phone;
         information.email = past.b3_email;
