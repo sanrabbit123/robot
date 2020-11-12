@@ -98,9 +98,9 @@ ResourceMaker.prototype.infoMaker = function () {
 
   //review
   if (reviewKey !== 0) {
-    result.review = {}
-    result.review.revivec = {}
-    result.review.rev_name_card = {}
+    result.review = {};
+    result.review.revivec = {};
+    result.review.rev_name_card = {};
     let reviewInfo = [];
     for (let i = reviewKey + 1; i < totalInfo.length; i++) {
       reviewInfo.push(totalInfo[i]);

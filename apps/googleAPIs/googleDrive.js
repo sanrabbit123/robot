@@ -175,9 +175,8 @@ GoogleDrive.prototype.read_webView_inPython = async function (targetId) {
   const mother = this.general;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "permissionsOn" ], { targetId });
-    console.log(result)
-    console.log(result.link)
-    return result.link;
+    let resultObj = JSON.parse(result.slice(/\{/.exec(result).index, /\}/.exec(result).index + 1));
+    return resultObj.link;
   } catch (e) {
     console.log(e.message);
   }

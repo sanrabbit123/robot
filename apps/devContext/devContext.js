@@ -856,7 +856,11 @@ class DevContext extends Array {
       // const back = new BackMaker();
 
 
+      const drive = new GoogleDrive();
+      let webViewLink, str;
 
+      webViewLink = await drive.read_webView_inPython("1WIPPd4XI52mihec9pahb1Kr3Pcs_43wG");
+      console.log(webViewLink);
 
 
 
