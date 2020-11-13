@@ -1,4 +1,4 @@
-const PortfolioFilter = function (clientName, apartName, designer, pid = "g0") {
+const PortfolioFilter = function (clientName = "", apartName = "", designer = "", pid = "g0") {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
 
@@ -467,5 +467,53 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
   }
 }
 
+PortfolioFilter.prototype.addtionalRepair = async function (pid, tNumber) {
+  const instance = this;
+  const { fileSystem, shell, shellLink, s3FileUpload, todayMaker } = this.mother;
+  const home = process.env.HOME;
+  const tempFolderName = "__PortfolioFilteraddtionalRepairTemp__" + todayMaker("year");
+  try {
+    let homeDir;
+    let currentDir, currentDirArr;
+    let binaryTarget, binaryTargetDir;
+    let targetFolder, targetFile;
+    let fromArr, toArr;
+
+    fromArr = [];
+    toArr = [];
+
+    currentDir = process.cwd();
+    currentDirArr = currentDir.split("/");
+    currentDirArr.pop();
+    currentDirArr.push("binary");
+    currentDirArr.push("corePortfolio");
+    currentDirArr.push("original");
+    binaryTarget = currentDirArr.join("/");
+
+    binaryTargetDir = await fileSystem("readDir", [ binaryTarget ]);
+
+    for (let i of binaryTargetDir) {
+      if ((new RegExp('^' + pid)).test(i)) {
+        targetFolder = i;
+      }
+    }
+
+    targetFile = 'i' + String(tNumber) + pid + ".jpg";
+
+    homeDir = await fileSystem("readDir", [ home ]);
+    if (!homeDir.includes(tempFolderName)) {
+      shell.exec(`mkdir ${shellLink(home)}/${tempFolderName}`);
+    }
+    shell.exec(`cp ${shellLink(binaryTarget + '/' + targetFolder + '/' + pid + '/' + targetFile)} ${shellLink(home)}/${tempFolderName}/`);
+
+    fromArr.push(shellLink(home + '/' + tempFolderName + '/' + targetFile));
+    toArr.push(`corePortfolio/original/${pid}/${targetFile}`);
+
+    await s3FileUpload(fromArr, toArr);
+    shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = PortfolioFilter;

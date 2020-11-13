@@ -13,6 +13,7 @@ const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
 const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
 const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
+const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 
 class DevContext extends Array {
 
@@ -861,8 +862,11 @@ class DevContext extends Array {
       // const app = new KakaoTalk();
       // await app.generateToken();
 
-      const back = new BackMaker();
-      await back.pastToMongo();
+      // const back = new BackMaker();
+      // await back.pastToMongo();
+
+      const filter = new PortfolioFilter();
+      await filter.addtionalRepair("p65", 6);
 
       // await this.spellCheck("p65");
       // await this.intoDesigner();

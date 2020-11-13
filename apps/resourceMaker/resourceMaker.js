@@ -79,14 +79,14 @@ ResourceMaker.prototype.infoMaker = function () {
       twoKey = i;
     }
   }
-  result.portfolio = {}
-  result.portfolio.portivec = {}
+  result.portfolio = {};
+  result.portfolio.portivec = {};
   result.portfolio.portivec.sub = portfolioInfo[1];
   result.portfolio.portivec.region = portfolioInfo[2];
   result.portfolio.portivec.method = portfolioInfo[3];
-  result.portfolio.name_card = {}
+  result.portfolio.name_card = {};
   result.portfolio.name_card.sub = result.portfolio.portivec.sub.replace(/, /, "\n");
-  result.portfolio.p_info = {}
+  result.portfolio.p_info = {};
   temp_arr = [ "photodae", "slide", "tag", "service", "key8", "key9" ];
   for (let i = 0; i < temp_arr.length; i++) {
     if (temp_arr[i] === "photodae") {
