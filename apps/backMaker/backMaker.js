@@ -9,6 +9,7 @@ const BackMaker = function () {
   this.tempDir = process.cwd() + "/temp";
   this.resourceDir = this.dir + "/resource";
   this.aliveDir = this.dir + "/alive";
+  this.idFilterDir = this.dir + "/idFilter";
 }
 
 // STATIC ------------------------------------------------------------------------------------
@@ -228,6 +229,17 @@ BackMaker.prototype.idMaker = function (pastId) {
   }
 
   return thisId;
+}
+
+BackMaker.prototype.idFilter = async function (button) {
+  const instance = this;
+  this.button = button;
+  try {
+    const Filter = require(`${this.idFilterDir}/${this.button}.js`);
+    return Filter;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 BackMaker.prototype.pastMap = function () {

@@ -47,7 +47,7 @@ module.exports = function (tools) {
 
       let orderTong;
       let lastStringArr, newString, lastNumberObj;
-      let scriptString;
+      let scriptString, scriptSpace;
 
       totalTong = [];
       orderTong = [];
@@ -64,6 +64,7 @@ module.exports = function (tools) {
       newString = '';
       lastNumberObj = {};
       scriptString = '';
+      scriptSpace = '  ';
 
       for (let i = 0; i < orderTong.length; i++) {
         newString = orderTong[i].contractDate;
@@ -81,13 +82,36 @@ module.exports = function (tools) {
         obj.desid = newDesid(obj.contractDate, obj.order);
       }
 
-      scriptString = `const targetArr = ${JSON.stringify(orderTong, null, 2)}`;
+      scriptString = `const Filter = function () {}\n`;
       scriptString += `\n`;
+
+      scriptString += `Filter.pastToNew = function (in) {\n`;
+      scriptString += `${scriptSpace}switch (in) {\n`;
+      for (let { past_desid, desid } of orderTong) {
+        scriptString += `${scriptSpace}${scriptSpace}case "${past_desid}":\n`;
+        scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}return "${desid}";\n`;
+        scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}break;\n`;
+      }
+      scriptString += `${scriptSpace}}\n`;
+      scriptString += `}\n`;
+
       scriptString += `\n`;
 
+      scriptString += `Filter.newToPast = function (in) {\n`;
+      scriptString += `${scriptSpace}switch (in) {\n`;
+      for (let { past_desid, desid } of orderTong) {
+        scriptString += `${scriptSpace}${scriptSpace}case "${desid}":\n`;
+        scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}return "${past_desid}";\n`;
+        scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}break;\n`;
+      }
+      scriptString += `${scriptSpace}}\n`;
+      scriptString += `}\n`;
 
+      scriptString += `\n`;
 
-      await Mother.fileSystem(`write`, [ `${process.cwd()}/temp/desidPastDesid.js`, scriptString ]);
+      scriptString += `module.exports = Filter;`;
+
+      await Mother.fileSystem(`write`, [ `${process.cwd()}/apps/backMaker/idFilter/designer.js`, scriptString ]);
 
       for (let past of row) {
 
