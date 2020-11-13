@@ -853,42 +853,18 @@ class DevContext extends Array {
       //
       // }
 
-      // const back = new BackMaker();
-
-
-      const drive = new GoogleDrive();
-      let webViewLink, str;
-
-      webViewLink = await drive.read_webView_inPython("1WIPPd4XI52mihec9pahb1Kr3Pcs_43wG");
-      console.log(webViewLink);
 
 
 
-      // let projects = await back.getProjectsAll();
-      //
-      // for (let i of projects) {
-      //   if (/^9/.test(i.proposal.date.toNormal())) {
-      //     console.log(i.proid, i.proposal.date);
-      //   }
-      // }
+      // TOOLS ----------------------------------------------------------------------------------------------------
 
-      // await this.MONGOC.db("miro81").collection("project").insertOne({ test: new Date("2020-10-03") });
-
-      // TOOLS ----------------------------------------------------
       // const app = new KakaoTalk();
       // await app.generateToken();
-      //
+
       const back = new BackMaker();
-      const designers = await back.getDesignersAll();
+      await back.pastToMongo();
 
-      let result = [];
-      for (let d of designers) {
-        result.push(d.toNormal());
-      }
-
-      await fileSystem(`write`, [ `${process.cwd()}/temp/디자이너.json`, JSON.stringify(result, null, 2) ]);
-
-      // await this.spellCheck("p64");
+      // await this.spellCheck("p65");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

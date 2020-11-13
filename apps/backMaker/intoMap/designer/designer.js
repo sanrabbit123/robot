@@ -47,6 +47,7 @@ module.exports = function (tools) {
 
       let orderTong;
       let lastStringArr, newString, lastNumberObj;
+      let scriptString;
 
       totalTong = [];
       orderTong = [];
@@ -62,6 +63,7 @@ module.exports = function (tools) {
       lastStringArr = [];
       newString = '';
       lastNumberObj = {};
+      scriptString = '';
 
       for (let i = 0; i < orderTong.length; i++) {
         newString = orderTong[i].contractDate;
@@ -79,7 +81,13 @@ module.exports = function (tools) {
         obj.desid = newDesid(obj.contractDate, obj.order);
       }
 
-      await Mother.fileSystem(`write`, [ `${process.cwd()}/temp/desidPastDesid.json`, JSON.stringify(orderTong, null, 2) ]);
+      scriptString = `const targetArr = ${JSON.stringify(orderTong, null, 2)}`;
+      scriptString += `\n`;
+      scriptString += `\n`;
+
+
+
+      await Mother.fileSystem(`write`, [ `${process.cwd()}/temp/desidPastDesid.js`, scriptString ]);
 
       for (let past of row) {
 
