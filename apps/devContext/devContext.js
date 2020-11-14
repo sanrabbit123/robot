@@ -866,7 +866,7 @@ class DevContext extends Array {
       // await back.pastToMongo();
 
       const filter = new PortfolioFilter();
-      await filter.addtionalRepair("p65", 6);
+      await filter.addtionalRepair("p65", 16);
 
       // await this.spellCheck("p65");
       // await this.intoDesigner();
