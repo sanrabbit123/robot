@@ -267,7 +267,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
           ajaxdata += ajaxList[i] + '=' + submitNamePhone[0];
         } else if (ajaxList[i] === "cellphone") {
           submitNamePhone[1] = GeneralJs.escapeString(obj[ajaxList[i]], { isPhone: true });
-          ajaxdata += ajaxList[i] + '=' + GeneralJs.escapeString(obj[ajaxList[i]], { isPhone: true });
+          ajaxdata += ajaxList[i] + '=' + submitNamePhone[1];
         } else {
           ajaxdata += ajaxList[i] + '=' + obj[ajaxList[i]].replace(/\&/g, '').replace(/\=/g, '').replace(/[\*\^\:\&\<\>\;\#\$\[\]\\\|\(\)\`\'\"\{\}]/g, '');
         }
@@ -299,8 +299,12 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       }
 
       //submit
-      GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
-      GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
+      if (submitNamePhone[0] === '') {
+        GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "성함을 정확히 입력해주세요!");
+      } else {
+        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
+        GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
+      }
 
       //test
       /*
@@ -413,7 +417,9 @@ ConsultingJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order,
 }
 
 ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
-  if (valuesTong.length < 2) { throw new Error("invaild values"); }
+  if (valuesTong.length < 2) {
+    throw new Error("invaild values");
+  }
   const instance = this;
   const { sub: { submit, thankyou: { main, sub } } } = this.map;
   const { whiteTitle, etc: { clickWording, fileSend, complete } } = sub;
