@@ -1,5 +1,6 @@
 const PortdetailJs = function () {
   this.mother = new GeneralJs();
+  this.map = /<%map%>/;
 }
 
 PortdetailJs.prototype.slideBox = function () {
@@ -257,6 +258,8 @@ PortdetailJs.prototype.titleBox = function () {
 
   return titleBox;
 }
+
+
 
 
 

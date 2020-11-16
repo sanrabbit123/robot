@@ -255,7 +255,10 @@ ConsultingJs.prototype.submitEvent = function (boo) {
     } else {
 
       //make ajax data
-      if (!mother.querySelector(queryClass + "below_box_checkbox_input").checked) { alert("이용 약관에 동의하여 주세요!"); return; }
+      if (!mother.querySelector(queryClass + "below_box_checkbox_input").checked) {
+        alert("이용 약관에 동의하여 주세요!");
+        return;
+      }
       ajaxdata = '';
       submitNamePhone = new Array(2);
       for (let i = 0; i < ajaxList.length; i++) {

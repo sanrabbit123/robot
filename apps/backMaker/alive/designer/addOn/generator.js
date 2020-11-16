@@ -53,40 +53,47 @@ const widthTools = function (Designer) {
     let tong = [];
     let temp;
 
-    {
-      information: {
-        contract: {
-          status,
-          date: contraceDate
-        },
-        phone,
-        email,
-        address,
-        personalSystem: {
-          showRoom,
-          webPage,
-          sns
-        },
-        business: {
-          career,
-          account,
-          businessInfo: {
-            classification,
-            businessNumber,
-            files
-          }
-          service: {
-
-          }
-
-
-
-
-        }
-      }
-      analytics
-
-    }
+    // {
+    //   information: {
+    //     contract: {
+    //       status,
+    //       date: contraceDate
+    //     },
+    //     phone,
+    //     email,
+    //     address,
+    //     personalSystem: {
+    //       showRoom,
+    //       webPage,
+    //       sns
+    //     },
+    //     business: {
+    //       career,
+    //       account,
+    //       businessInfo: {
+    //         classification,
+    //         businessNumber,
+    //         files
+    //       },
+    //       service: {
+    //         cost: {
+    //           matrix: {
+    //             service,
+    //             online
+    //           },
+    //           percentage,
+    //         },
+    //         contruct: {
+    //           partner,
+    //           method
+    //         }
+    //       }
+    //     },
+    //   },
+    //   analytics: {
+    //
+    //   }
+    // }
 
     for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected } }, etc: { comment, channel } }, analytics: { response: { status, outreason }, date: { callHistory, space: { precheck, empty, movein } }, picture } } of client.requests) {
 

@@ -161,6 +161,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //ban bad data
       const ifOverlap = await MONGOC.db("miro81").collection("BC1_conlist").find({ a20_phone: filterAll(resultObj.cellphone) }).toArray();
       let pastInfos = "no", pastInfo_boo = false;
+      console.log(ifOverlap);
 
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext) || resultObj.pretext === '') {
 
@@ -213,10 +214,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             clientObj[columnMap[i]] = filterAll(resultObj[i]);
           }
         }
+        console.log("client object make");
 
         //id and add column
         let rows = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).sort({ a4_customernumber: -1 }).limit(1).toArray();
+        console.log(rows);
         let this_id = BridgeCloud.makeId(rows[0].a4_customernumber);
+        console.log(this_id);
         const additionColumns = {
           "a18_timeline": BridgeCloud.returnTimeline(),
           "a1_class1": "응대중",
