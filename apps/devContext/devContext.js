@@ -855,6 +855,10 @@ class DevContext extends Array {
       // }
 
 
+      const back = new BackMaker();
+      const project = await back.getProjectById("p1906_aa03s", { withTools: true });
+      console.log(project.process.contract.first);
+      console.log(project.flatDeath());
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
@@ -865,8 +869,8 @@ class DevContext extends Array {
       // const back = new BackMaker();
       // await back.pastToMongo();
 
-      const filter = new PortfolioFilter();
-      await filter.addtionalRepair("p65", 16);
+      // const filter = new PortfolioFilter();
+      // await filter.addtionalRepair("p65", 16);
 
       // await this.spellCheck("p65");
       // await this.intoDesigner();

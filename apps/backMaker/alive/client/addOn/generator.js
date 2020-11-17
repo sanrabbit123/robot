@@ -126,7 +126,7 @@ const widthTools = function (Client) {
 
       callHistoryString = '';
       for (let h of callHistory) {
-        callHistoryString += dateToString(h) + "__split__";
+        callHistoryString += dateToString(h) + ", ";
       }
       callHistoryString = callHistoryString.slice(0, -9);
 
@@ -137,7 +137,7 @@ const widthTools = function (Client) {
       };
       temp.info = {
         status,
-        outreason: outreason.join("__split__"),
+        outreason: outreason.join(", "),
         callHistory: callHistoryString,
         timeline: dateToString(timeline, true),
         phone,

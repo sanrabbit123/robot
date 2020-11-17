@@ -272,11 +272,17 @@ DataRouter.prototype.rou_post_updateClient = function () {
           }
           break;
         case "boolean":
-          finalValue = Boolean(value);
+          if (value === "true") {
+            finalValue = true;
+          } else if (value === "false") {
+            finalValue = false;
+          } else {
+            finalValue = Boolean(value);
+          }
           break;
         case "array":
           finalValue = [];
-          valueTemp = value.split("__split__");
+          valueTemp = value.split(", ");
           for (let i of valueTemp) {
             finalValue.push(i);
           }

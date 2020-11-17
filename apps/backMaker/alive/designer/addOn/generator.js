@@ -8,8 +8,7 @@ class Designers extends Array {
 const widthTools = function (Designer) {
 
   Designer.prototype.flatDeath = function () {
-    const designer = this.toNormal();
-    const { designer, desid } = designer;
+    const designer_raw = this.toNormal();
     const dateToString = function (dateObject, detail = false) {
       let dayString = '';
       dayString += String(dateObject.getFullYear()).slice(0, 4);
@@ -49,90 +48,56 @@ const widthTools = function (Designer) {
 
       return dayString;
     }
+    const snsSplit = function (snsArr) {
+      let result = '';
+      for (let { kind, href } of snsArr) {
+        result += kind + " " + href;
+        result += " / ";
+      }
+      result = result.slice(0, -3);
+      return result;
+    }
+    const accountSplit = function (accountArr) {
+      let result = '';
+      for (let { bankName, accountNumber, to } of accountArr) {
+        result += bankName + " " + accountNumber + " " + to;
+        result += " / ";
+      }
+      result = result.slice(0, -3);
+      return result;
+    }
 
     let tong = [];
     let temp;
 
-    // {
-    //   information: {
-    //     contract: {
-    //       status,
-    //       date: contraceDate
-    //     },
-    //     phone,
-    //     email,
-    //     address,
-    //     personalSystem: {
-    //       showRoom,
-    //       webPage,
-    //       sns
-    //     },
-    //     business: {
-    //       career,
-    //       account,
-    //       businessInfo: {
-    //         classification,
-    //         businessNumber,
-    //         files
-    //       },
-    //       service: {
-    //         cost: {
-    //           matrix: {
-    //             service,
-    //             online
-    //           },
-    //           percentage,
-    //         },
-    //         contruct: {
-    //           partner,
-    //           method
-    //         }
-    //       }
-    //     },
-    //   },
-    //   analytics: {
-    //
-    //   }
-    // }
+    const { designer, desid } = designer_raw;
+    const { contract: { status, date }, phone, email, address, personalSystem: { showRoom, webPage, sns }, business: { career, account, businessInfo: { classification, businessNumber, files }, service: { cost: { percentage }, contruct: { partner, method } } } } = designer_raw.information;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected } }, etc: { comment, channel } }, analytics: { response: { status, outreason }, date: { callHistory, space: { precheck, empty, movein } }, picture } } of client.requests) {
-
-      callHistoryString = '';
-      for (let h of callHistory) {
-        callHistoryString += dateToString(h) + "__split__";
-      }
-      callHistoryString = callHistoryString.slice(0, -9);
-
-      temp = {};
-      temp.standard = {
-        cliid,
-        name
-      };
-      temp.info = {
-        status,
-        outreason: outreason.join("__split__"),
-        callHistory: callHistoryString,
-        timeline: dateToString(timeline, true),
-        phone,
-        email,
-        budget,
-        address,
-        contract,
-        pyeong,
-        living,
-        expected: dateToString(expected),
-        precheck: dateToString(precheck),
-        empty: dateToString(empty),
-        movein: dateToString(movein),
-        room,
-        bathroom,
-        valcony,
-        family,
-        comment,
-        channel,
-      }
-      tong.push(temp);
+    temp = {};
+    temp.standard = {
+      desid,
+      designer
+    };
+    temp.info = {
+      status,
+      date: dateToString(date),
+      phone,
+      email,
+      address: address.join(", "),
+      showRoom: String(showRoom),
+      webPage: webPage.join(", "),
+      sns: snsSplit(sns),
+      career: (String(career.startY) + '년' + ' ' + String(career.startM) + '월'),
+      account: accountSplit(account),
+      classification,
+      businessNumber,
+      files: ((files.businessRegistration ? '사업자등록증 유' : '사업자등록증 무') + " / " + (files.bankBook ? '통장사본 유' : '통장사본 무') + " / " + (files.registrationCard ? '신분증사본 유' : '신분증사본 무')),
+      percentage: String(percentage),
+      partner,
+      method
     }
+    tong.push(temp);
+
     return tong;
   }
 
