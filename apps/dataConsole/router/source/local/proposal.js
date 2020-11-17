@@ -218,7 +218,7 @@ ProposalJs.below_events = {
       let designer = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_designer");
       let desid = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_desid");
 
-      let result = JSON.parse(await GeneralJs.ajaxPromise("collection=Designer&find1=" + JSON.stringify({ past_desid: desid }) + "&find2={}", "/post_mfind"));
+      let result = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
       let mother = this;
       let div = document.createElement("DIV");
       div.classList.add("blewpp_fifthevent_box");
@@ -227,16 +227,17 @@ ProposalJs.below_events = {
       let div_clone;
       async function click_event(e) {
         if (this.id !== "blewpp_fifthevent_cancelbox") {
+
           //general
           let this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
 
           //name
           let today = new Date();
           let new_name = document.getElementById("pp_title_sub_b").textContent.replace(/:/g, '').replace(/ /g, '') + ' ' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1));
-          result[0].picture.settings[this_order].name = new_name;
+          result[0].setting.proposal[this_order].name = new_name;
 
           //value
-          let obj = {}
+          let obj = [];
           let pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
           let descriptions = document.querySelectorAll(".ppw_left_description_inbox_input");
           let targetBoxes = document.querySelectorAll(".pp_designer_selected");
@@ -244,12 +245,17 @@ ProposalJs.below_events = {
           for (let pic of pictures) {
             general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
           }
+          general_str = general_str.slice(0, -10);
+
+          result[0].setting.proposal[this_order].photo = GeneralJs.tagParsing(general_str);
+
           for (let i = 0; i < descriptions.length; i++) {
-            obj["description" + String(i)] = descriptions[i].value;
+            obj.push(descriptions[i].value);
           }
-          general_str += GeneralJs.tagCoverting(obj);
-          result[0].picture.settings[this_order].value = GeneralJs.tagParsing(general_str);
-          console.log(await GeneralJs.ajaxPromise("table=Designer&st=past_desid&i=" + desid + "&c=picture.settings&v=" + JSON.stringify(result[0].picture.settings), "/post_mupdate"));
+
+          result[0].setting.proposal[this_order].description = obj;
+
+          console.log(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ desid: desid }) + "&target=setting.proposal" + "&updateValue=" + JSON.stringify(result[0].setting.proposal), "/rawUpdateDesigner"));
         }
 
         //remove
@@ -265,8 +271,8 @@ ProposalJs.below_events = {
           //general
           let this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
           // Default 0
-          let descriptions = result[0].picture.settings[this_order].value.pop();
-          let default_setting = result[0].picture.settings[this_order].value;
+          let descriptions = result[0].setting.proposal[this_order].description;
+          let default_setting = result[0].setting.proposal[this_order].photo;
           function picturebox_make(dom) {
             let div = document.createElement("DIV");
             let div_clone, inbox;
@@ -316,7 +322,7 @@ ProposalJs.below_events = {
       for (let i = 0; i < loop_css.length; i++) {
         div_clone = div.cloneNode(true);
         div_clone.style.cssText = loop_css[i];
-        div_clone.textContent = result[0].picture.settings[i].name;
+        div_clone.textContent = result[0].setting.proposal[this_order].name;
         div_clone.setAttribute("cus_order", loop_order[i]);
         div_clone.addEventListener("click", click_event, { once: true });
         div_clone.addEventListener("contextmenu", contextmenu_event, { once: true });
@@ -1288,7 +1294,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   //디자이너 이름
-  designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ designer: 1, past_desid: 1 }), '/post_mfind'));
+
+  designers = JSON.parse(await GeneralJs.ajaxPromise("", "/getDesigners"));
+  designers = designers.data;
 
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
@@ -1308,19 +1316,19 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
 
       input_clone = input.cloneNode(true);
       input_clone.id = "pp_designer_selected_box_contents_designers_input" + String(n) + String(i);
-      input_clone.value = designer.past_desid;
+      input_clone.value = designer.standard.desid;
 
       div_clone.appendChild(input_clone);
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
-      div_clone2.textContent = designer.designer;
+      div_clone2.textContent = designer.standard.designer;
 
       label_clone = GeneralJs.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_designers_input" + String(n) + String(i));
 
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
-      div_clone3.setAttribute("cus_value", designer.designer);
+      div_clone3.setAttribute("cus_value", designer.standard.designer);
       div_clone3.setAttribute("cus_num", String(n));
       div_clone3.addEventListener("click", fourth.events.designer);
 
@@ -1330,7 +1338,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       div_clone.appendChild(div_clone2);
 
       if (obj.proposal !== undefined) {
-        if (designer.past_desid === obj.proposal[n].desid) {
+        if (designer.standard.desid === obj.proposal[n].desid) {
           input_clone.checked = true;
         }
       }
@@ -1662,7 +1670,7 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
   }
 }
 
-ProposalJs.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, picture_settings) {
+ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, picture_settings) {
   let instance = this;
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
   let leftMother, rightMother;
@@ -1687,8 +1695,8 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, pictu
   let values = target_value[id].querySelector(".pp_designer_selected_box_value").textContent;
 
   // Default 0
-  let descriptions = picture_settings[0].value.pop();
-  let default_setting = picture_settings[0].value;
+  let descriptions = picture_settings[0].description;
+  let default_setting = picture_settings[0].photo;
 
   // if memory this
   if (values !== "") {
@@ -1761,7 +1769,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, pictu
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_right_totalbox");
 
-  for (let j = 0; j < (porpor.length + 1); j++) {
+  for (let j = 0; j < (contents.length + 1); j++) {
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.classList.add("ppw_right_set");
     for (let i = 0; i < rightList.length; i++) {
@@ -1770,8 +1778,8 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, pictu
 
       //title
       if (i === 0) {
-        if (j < porpor.length) {
-          div_clone3.textContent = porpor[j].porlid + " : " + porpor[j].title;
+        if (j < contents.length) {
+          div_clone3.textContent = contents[j].contents.portfolio.pid + " : " + contents[j].contents.portfolio.spaceInfo.space + " " + String(contents[j].contents.portfolio.spaceInfo.pyeong) + "py";
         } else {
           div_clone3.textContent = "기타 미등록 포트폴리오";
         }
@@ -1782,25 +1790,25 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, porpor, id, ghost, pictu
         sgTong.g = [];
         scroll_box = GeneralJs.nodes.div.cloneNode(true);
         scroll_box.classList.add("ppw_right_picturebox_scroll");
-        if (j < porpor.length) {
-          for (let k = 0; k < porpor[j].photosg.length; k++) {
+        if (j < contents.length) {
+          for (let k = 0; k < contents[j].photos.detail.length; k++) {
             div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone4.classList.add("ppw_right_picturebox_" + porpor[j].photosg[k]);
+            div_clone4.classList.add("ppw_right_picturebox_" + contents[j].photos.detail[k].gs);
             div_clone4.id = "ppw_right_picturebox_totaldiv" + String(j) + String(k);
             img_clone = GeneralJs.nodes.img.cloneNode(true);
             img_clone.classList.add("ppw_right_picturebox_img");
             img_clone.classList.add("fifth_drag_img");
-            imgSrc = "/list_image/portp" + porpor[j].porlid + "/t" + String(k + 1) + porpor[j].porlid + ".jpg";
-            sgTrue = porpor[j].photosg[k];
+            imgSrc = "/list_image/portp" + contents[j].contents.portfolio.pid + "/t" + String(k + 1) + contents[j].contents.portfolio.pid + ".jpg";
+            sgTrue = contents[j].photos.detail[k].gs;
             img_clone.setAttribute("src", imgSrc);
             img_clone.setAttribute("cus_info", GeneralJs.tagCoverting({ imgSrc: imgSrc, sgTrue: sgTrue }));
             img_clone.setAttribute("draggable", "true");
             div_clone4.appendChild(img_clone);
             scroll_box.appendChild(div_clone4);
-            if (porpor[j].photosg[k] === 's') {
-              sgTong.s.push(porpor[j].photosg[k]);
+            if (contents[j].photos.detail[k].gs === 's') {
+              sgTong.s.push(contents[j].photos.detail[k].gs);
             } else {
-              sgTong.g.push(porpor[j].photosg[k]);
+              sgTong.g.push(contents[j].photos.detail[k].gs);
             }
           }
         } else {
@@ -1923,22 +1931,12 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
   const total = this.createPannel.parentNode;
   let popupDom;
   let ghost;
-  let find1, find2;
-  let porpor, pordeta;
+  let designer;
+  let contents;
 
   popupDom = new Map();
-  ghost = JSON.parse(await GeneralJs.ajaxPromise("collection=Designer&find1=" + JSON.stringify({ past_desid: desid }) + "&find2={}", "/post_mfind"));
-  find1 = { desid: ghost[0].past_desid };
-  find2 = {};
-  porpor = JSON.parse(await GeneralJs.ajaxPromise("collection=FP1_porlist&find1=" + JSON.stringify(find1) + "&find2=" + JSON.stringify(find2), "/post_mfind"));
-  pordeta = JSON.parse(await GeneralJs.ajaxPromise("collection=FP2_pordeta&find1=" + JSON.stringify(find1) + "&find2=" + JSON.stringify(find2), "/post_mfind"));
-  for (let i of porpor) {
-    for (let j of pordeta) {
-      if (i.porlid === j.porlid) {
-        i.photosg = j.photosg.split(" ");
-      }
-    }
-  }
+  designer = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
+  contents = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: designer[0].desid }), "/getContents"));
 
   return function () {
     let div_clone;
@@ -1951,13 +1949,13 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     popupDom.set("cancelBack", div_clone);
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_fifth_whitebox");
-    div_clone.setAttribute("cus_designer", ghost[0].designer);
-    div_clone.setAttribute("cus_desid", ghost[0].past_desid);
+    div_clone.setAttribute("cus_designer", designer[0].designer);
+    div_clone.setAttribute("cus_desid", designer[0].desid);
     div_clone.setAttribute("cus_boxid", String(id));
     total.appendChild(div_clone);
 
     popupDom.set("whiteBox", div_clone);
-    instance.fifthWhiteup(div_clone, porpor, id, ghost[0].picture.ghost, ghost[0].picture.settings);
+    instance.fifthWhiteup(div_clone, contents, id, designer[0].setting.ghost, designer[0].setting.proposal);
     instance.fifthChildren = popupDom;
   }
 }
@@ -2412,7 +2410,6 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "make":
       return_func = async function (e) {
         let message = "제안서의 제작을 요청드립니다! link: ";
-        // await GeneralJs.ajaxPromise("/polling", "proid=" + proid + "");
         // await GeneralJs.ajaxPromise("/slack", "linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal");
         await mother_name(obj);
         reset_event(this);

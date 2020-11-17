@@ -70,9 +70,17 @@ const widthTools = function (Project) {
     const { photo: { date: contentsPhotoDate, info: { photographer, interviewer } } } = project.contents;
 
     temp = {};
+
     temp.standard = {
       proid
     };
+
+    temp.middle = {
+      cliid,
+      desid,
+      serid
+    };
+
     temp.info = {
       status,
       firstGuide: dateToString(firstGuide),

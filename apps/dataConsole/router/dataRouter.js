@@ -168,31 +168,58 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
       } else if (req.url === "/getDesigners") {
         standard = instance.patch.designerStandard();
-
-
-
-
-
+        if (req.body.where === undefined) {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getLatestDesigners(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+          } else {
+            raw_data = await instance.back.getLatestDesigners("all", { withTools: true, selfMongo: instance.mongo });
+          }
+        } else {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
+          } else {
+            raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+          }
+        }
       } else if (req.url === "/getProjects") {
         standard = instance.patch.projectStandard();
-
-
-
-
-
+        if (req.body.where === undefined) {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getLatestProjects(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+          } else {
+            raw_data = await instance.back.getLatestProjects("all", { withTools: true, selfMongo: instance.mongo });
+          }
+        } else {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getProjectsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
+          } else {
+            raw_data = await instance.back.getProjectsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+          }
+        }
       } else if (req.url === "/getContents") {
-        standard = instance.patch.contentsStandard();
-
-
-
-
-
+        if (req.body.where === undefined) {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getLatestContentsArr(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+          } else {
+            raw_data = await instance.back.getLatestContentsArr("all", { withTools: true, selfMongo: instance.mongo });
+          }
+        } else {
+          if (req.body.limit !== undefined) {
+            raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
+          } else {
+            raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+          }
+        }
       }
 
-      data = raw_data.flatDeath();
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ standard, data }));
+      if (req.body.noFlat === undefined && req.url !== "/getContents") {
+        data = raw_data.flatDeath();
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ standard, data }));
+      } else {
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify(raw_data));
+      }
     } catch (e) {
       console.log(e);
     }
@@ -252,6 +279,8 @@ DataRouter.prototype.rou_post_updateClient = function () {
       let whereQuery, updateQuery;
       let message;
       let finalValue, valueTemp;
+      let temp, temp2, temp3;
+      let tempFunction;
 
       switch (map[column].type) {
         case "string":
@@ -266,7 +295,15 @@ DataRouter.prototype.rou_post_updateClient = function () {
           break;
         case "date":
           if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
-            finalValue = new Date(value);
+            if (value.length === 10) {
+              temp = value.split('-');
+              finalValue = new Date(Number(temp[0]), Number(temp[1].replace(/^0/, '')) - 1, Number(temp[2].replace(/^0/, '')));
+            } else {
+              temp = value.split(' ');
+              temp2 = temp[0].split('-');
+              temp3 = temp[1].split(':');
+              finalValue = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '')) - 1, Number(temp2[2].replace(/^0/, '')), Number(temp3[0].replace(/^0/, '')), Number(temp3[1].replace(/^0/, '')), Number(temp3[2].replace(/^0/, '')));
+            }
           } else {
             finalValue = new Date(pastValue);
           }
@@ -286,6 +323,9 @@ DataRouter.prototype.rou_post_updateClient = function () {
           for (let i of valueTemp) {
             finalValue.push(i);
           }
+        case "object":
+          tempFunction = new Function("value", "pastValue", map[column].objectFunction);
+          finalValue = tempFunction(value, pastValue);
         default:
           throw new Error("invaild type");
       }
@@ -300,6 +340,37 @@ DataRouter.prototype.rou_post_updateClient = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_rawUpdateDocument = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents" ];
+  obj.func = async function (req, res) {
+    try {
+      let raw_data;
+      let whereQuery, updateQuery;
+
+      whereQuery = JSON.parse(req.body);
+      updateQuery = {};
+      if (/^\{/.test(req.updateValue) || /^\[/.test(req.updateValue)) {
+        updateQuery[req.target] = JSON.parse(req.updateValue);
+      } else {
+        updateQuery[req.target] = req.updateValue;
+      }
+
+      if (req.url === "/rawUpdateDesigner") {
+        raw_data = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: raw_data }));
+
     } catch (e) {
       console.log(e);
     }

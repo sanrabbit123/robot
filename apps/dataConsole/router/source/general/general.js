@@ -121,6 +121,7 @@ GeneralJs.tagParsing = function (target) {
     }
     return obj;
   }
+
   if (target.search(/__split4__/g) !== -1) {
     arr0 = target.split("__split4__");
     for (let a of arr0) {
