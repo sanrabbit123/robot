@@ -783,6 +783,8 @@ DataPatch.prototype.projectMap = function () {
 
   const map = {
     proid: { position: "proid", type: "string", searchBoo: true, },
+    cliid: { position: "cliid", type: "string", searchBoo: true, },
+    desid: { position: "desid", type: "string", searchBoo: true, },
     status: { position: "process.status", type: "string", searchBoo: true, },
     firstGuide: { position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { position: "process.contract.first.date", type: "date", searchBoo: true, },

@@ -855,34 +855,35 @@ class DevContext extends Array {
       // }
 
 
-      const back = new BackMaker();
-
-      const contents = await back.getLatestContentsArr("all");
-      console.log(contents);
-
-
-      const past = await this.MONGOC.db(`miro81`).collection(`FP1_porlist`).find({}).toArray();
-      console.log(past)
-
-
-      for (let i of past) {
-        for (let j of contents) {
-          if (i.porlid === j.contents.portfolio.pid) {
-            console.log(i.desid === j.desid);
-          }
-        }
-      }
-
+      // const back = new BackMaker();
+      //
+      // const contents = await back.getLatestContentsArr("all");
+      // console.log(contents);
+      //
+      //
+      // const past = await this.MONGOC.db(`miro81`).collection(`FP1_porlist`).find({}).toArray();
+      // console.log(past)
+      //
+      //
+      // for (let i of past) {
+      //   for (let j of contents) {
+      //     if (i.porlid === j.contents.portfolio.pid) {
+      //       console.log(i.desid === j.desid);
+      //     }
+      //   }
+      // }
 
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
+      // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
+
       // const app = new KakaoTalk();
       // await app.generateToken();
 
-      // const back = new BackMaker();
-      // await back.pastToMongo();
+      const back = new BackMaker();
+      await back.pastToMongo();
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p65", 16);

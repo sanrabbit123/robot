@@ -128,7 +128,7 @@ const widthTools = function (Client) {
       for (let h of callHistory) {
         callHistoryString += dateToString(h) + ", ";
       }
-      callHistoryString = callHistoryString.slice(0, -9);
+      callHistoryString = callHistoryString.slice(0, -2);
 
       temp = {};
       temp.standard = {

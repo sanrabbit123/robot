@@ -370,29 +370,43 @@ Router.prototype.rou_post_slackBot = function () {
   let url = require('url');
   let obj = { link: '/slack' }
   obj.func = function (req, res) {
-    let link = '';
-    let link_index = 0;
-    let row_message = '', new_message = '';
-    let query = JSON.parse(req.body.query);
+    let link;
+    let link_index;
+    let row_message, new_message;
+    let query;
+    let requrl;
+
+    query = JSON.parse(req.body.query);
+
+    link = '';
+    link_index = 0;
+    row_message = '';
+    new_message = '';
+
     if (req.body.linkmake !== undefined) {
-      let requrl = url.format({
+      requrl = url.format({
           protocol: req.protocol,
           host: req.get('host'),
           pathname: req.body.link,
       });
+
       link += requrl + '?';
       for (let i of query) {
         link += i.standard + '=' + i.value + '&'
       }
       link = link.slice(0, -1);
+
       row_message = req.body.message;
       link_index = row_message.search(/link:/g);
       new_message = row_message.slice(0, link_index) + "link: " + link + row_message.slice(link_index + 6);
+
       slack.chat.postMessage({ text: new_message, channel: req.body.channel });
     } else {
       slack.chat.postMessage({ text: req.body.message, channel: req.body.channel });
     }
-    res.send('');
+    res.set("Content-Type", "application/json");
+    res.send(JSON.stringify({ message: "success" }));
+
   }
   return obj;
 }

@@ -700,7 +700,7 @@ Mother.prototype.orderSystem = function (type, number) {
   }
   const abc = `[ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]`;
   const ABC = JSON.parse(abc);
-  let text = '', func
+  let text = '', func;
   let target, index0, index1, result;
 
   if (type === "encode") {

@@ -632,18 +632,104 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
     let dummy, latestClient;
 
     latestClient = await this.getLatestClient(option);
-    dummy = require(`${this.mapDir}/${this.button}.js`);
-    dummy.cliid = this.idMaker(latestClient.cliid);
+    dummy = {
+      structure: {
+        name: "",
+        phone: "",
+        email: "",
+        cliid: "",
+        requests: [
+          {
+            request: {
+              timeline: new Date(1800, 0, 1),
+              notionId: "",
+              budget: "알 수 없음",
+              family: "",
+              space: {
+                address: "",
+                contract: "알 수 없음",
+                pyeong: 0,
+                spec: {
+                  room: 0,
+                  bathroom: 0,
+                  valcony: false
+                },
+                resident: {
+                  living: false,
+                  expected: new Date(1800, 0, 1),
+                },
+              },
+              etc: {
+                comment: "",
+                channel: "",
+              },
+            },
+            analytics: {
+              googleAnalytics: {
+                timeline: new Date(1800, 0, 1),
+                userType: "",
+                referrer: {
+                  name: "",
+                  detail: {
+                    host: null,
+                    queryString: {},
+                  },
+                },
+                device: {
+                  type: "",
+                  os: "",
+                  mobileDevice: "",
+                },
+                region: {
+                  country: "",
+                  city: "",
+                  latitude: 0,
+                  longitude: 0,
+                },
+                personalInfo: {
+                  age: null,
+                  gender: null
+                },
+                campaign: "",
+                history: [
+                  { time: new Date(1800, 0, 1), page: "", page_raw: "" },
+                ],
+              },
+              response: {
+                status: "응대중",
+                outreason: [],
+              },
+              date: {
+                callHistory: [],
+                space: {
+                  precheck: new Date(1800, 0, 1),
+                  empty: new Date(1800, 0, 1),
+                  movein: new Date(1800, 0, 1),
+                },
+              },
+              picture: {
+                space: false,
+                prefer: false,
+              },
+            },
+            proposal: {
+              proid: "",
+            },
+          },
+        ],
+      },
+    };
+    dummy.structure.cliid = this.idMaker(latestClient.cliid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy);
+      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy.structure);
       MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy);
+      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy.structure);
     }
 
-    await this.updateClient([ { cliid }, updateQuery ], option);
+    await this.updateClient([ { cliid: dummy.structure.cliid }, updateQuery ], option);
 
     return "success";
   } catch (e) {
@@ -923,18 +1009,105 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
     let dummy, latestClient;
 
     latestClient = await this.getLatestContents(option);
-    dummy = require(`${this.mapDir}/${this.button}.js`);
-    dummy.conid = this.idMaker(latestClient.conid);
+    dummy = {
+      structure: {
+        conid: "",
+        desid: "",
+        contents: {
+          portfolio: {
+            pid: "",
+            date: new Date(1800, 0, 1),
+            spaceInfo: {
+              space: "",
+              pyeong: 0,
+              region: "",
+              method: "",
+            },
+            title: {
+              main: "",
+              sub: "",
+            },
+            color: {
+              main: "",
+              sub: "",
+              title: "",
+            },
+            detailInfo: {
+              photodae: [],
+              photosg: {
+                first: 0,
+                last: 0,
+              },
+              slide: [],
+              tag: [],
+              service: "",
+              sort: {
+                key8: 0,
+                key9: 0,
+              },
+            },
+            contents: {
+              suggestion: "Designer's\nSuggestion",
+              detail: [
+                {
+                  photoKey: 0,
+                  title: "",
+                  contents: "",
+                  smallTalk: {
+                    title: "",
+                    contents: "",
+                  },
+                },
+              ],
+            }
+          },
+          review: {
+            rid: "",
+            date: new Date(1800, 0, 1),
+            title: {
+              main: "",
+              sub: "",
+            },
+            detailInfo: {
+              photodae: [],
+              order: 0,
+            },
+            contents: {
+              detail: [
+                {
+                  type: "",
+                  photos: [],
+                  contents: [
+                    {
+                      question: "",
+                      answer: "",
+                    }
+                  ]
+                },
+              ],
+            }
+          }
+        },
+        photos: {
+          first: 0,
+          last: 0,
+          detail: [
+            { index: 0, gs: 'g' },
+          ],
+        }
+      }
+    };
+    dummy.structure.conid = this.idMaker(latestClient.conid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy);
+      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy.structure);
       MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy);
+      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy.structure);
     }
 
-    await this.updateClient([ { conid }, updateQuery ], option);
+    await this.updateContents([ { conid: dummy.structure.conid }, updateQuery ], option);
 
     return "success";
   } catch (e) {
@@ -1213,18 +1386,155 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     let dummy, latestClient;
 
     latestClient = await this.getLatestDesigner(option);
-    dummy = require(`${this.mapDir}/${this.button}.js`);
-    dummy.desid = this.idMaker(latestClient.desid);
+    dummy = {
+      structure: {
+        designer: "",
+        desid: "",
+        information: {
+          contract: {
+            status: "",
+            date: new Date(1800, 0, 1),
+          },
+          phone: "",
+          email: "",
+          address: [],
+          personalSystem: {
+            showRoom: false,
+            webPage: [],
+            sns: [
+              { kind: "", href: "" },
+            ],
+          },
+          business: {
+            career: {
+              startY: 0,
+              startM: 0,
+            },
+            account: [
+              {
+                bankName: "",
+                accountNumber: "",
+                to: "",
+              }
+            ],
+            businessInfo: {
+              classification: "",
+              businessNumber: "",
+              files: {
+                businessRegistration: false,
+                bankBook: false,
+                registrationCard: false
+              },
+            },
+            service: {
+              cost: {
+                matrix: {
+                  service: [
+                    {
+                      serid: "s2011_aa01s",
+                      case: 9
+                    },
+                    {
+                      serid: "s2011_aa02s",
+                      case: 11
+                    },
+                    {
+                      serid: "s2011_aa03s",
+                      case: 9
+                    }
+                  ],
+                  online: true
+                },
+                percentage: 0,
+                percentageHistory: [
+                  {
+                    date: { start: new Date(1800, 0, 1), end: new Date(1800, 0, 1) },
+                    percentage: 0,
+                  }
+                ]
+              },
+              contruct: {
+                partner: "",
+                method: "",
+              },
+            },
+          }
+        },
+        analytics: {
+          personality: 0,
+          grade: 0,
+          reliability: 0,
+          availables: {
+            area: [],
+            style: [],
+            service: [],
+            tech: [],
+            make: {
+              furniture: false,
+              fabric: false,
+            },
+          },
+        },
+        realTime: {
+          availableDate: [
+            {
+              startDate: "",
+              endDate: "",
+            }
+          ],
+        },
+        setting: {
+          front: {
+            introduction: {
+              desktop: [],
+              mobile: [],
+            },
+            methods: [],
+            photo: {
+              porlid: "",
+              index: "",
+            },
+            order: 0,
+          },
+          proposal: [
+            {
+              name: "",
+              photo: [
+                {
+                  position: "",
+                  sgTrue: "",
+                  unionPo: "",
+                  styleText: "",
+                  imgSrc: ""
+                },
+              ],
+              description: [
+                "",
+                "",
+                "",
+              ]
+            }
+          ],
+          ghost: [
+            {
+              link: "",
+              sgTrue: ""
+            },
+          ],
+        },
+      },
+    };
+    dummy.structure.desid = this.idMaker(latestClient.desid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy);
+      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy.structure);
       MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy);
+      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy.structure);
     }
 
-    await this.updateClient([ { desid }, updateQuery ], option);
+    await this.updateDesigner([ { desid: dummy.structure.desid }, updateQuery ], option);
 
     return "success";
   } catch (e) {
@@ -1361,10 +1671,10 @@ BackMaker.prototype.getLatestProject = async function (option = { withTools: fal
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      arr = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).limit(1).toArray();
+      arr = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).limit(1).toArray();
       MONGOC.close();
     } else {
-      arr = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).limit(1).toArray();
+      arr = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).limit(1).toArray();
     }
 
     if (option.withTools) {
@@ -1389,18 +1699,18 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
     if (number !== "all") {
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
-        tong = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).limit(Number(number)).toArray();
+        tong = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).limit(Number(number)).toArray();
         MONGOC.close();
       } else {
-        tong = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).limit(Number(number)).toArray();
+        tong = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).limit(Number(number)).toArray();
       }
     } else {
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
-        tong = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).toArray();
+        tong = await MONGOC.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).toArray();
         MONGOC.close();
       } else {
-        tong = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proposal.date": -1 }).toArray();
+        tong = await option.selfMongo.db(`miro81`).collection(this.button).find({}).sort({ "proid": -1 }).toArray();
       }
     }
 
@@ -1475,20 +1785,195 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
   this.button = "project";
   try {
     let dummy, latestClient;
+    let temp;
 
     latestClient = await this.getLatestProject(option);
-    dummy = require(`${this.mapDir}/${this.button}.js`);
-    dummy.proid = this.idMaker(latestClient.proid);
+    dummy = {
+      structure: {
+        proid: "",
+        cliid: "",
+        desid: "",
+        service: {
+          serid: "",
+          xValue: "",
+        },
+        proposal: {
+          status: "",
+          date: new Date(1800, 0, 1),
+          detail: [
+            {
+              desid: "",
+              fee: [
+                {
+                  method: "offline",
+                  partial: false,
+                  amount: 0
+                }
+              ],
+              pictureSettings: [
+                {
+                  position: "",
+                  sgTrue: "",
+                  unionPo: "",
+                  styleText: "",
+                  imgSrc: ""
+                },
+              ],
+              description: [
+                "",
+                "",
+                "",
+              ]
+            }
+          ],
+        },
+        process: {
+          status: "드랍", // [ '드랍', '진행', '응대중', '완료' ]
+          contract: {
+            first: {
+              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+              date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+              calculation: {
+                amount: 0, // from contract
+                info: {
+                  method: "", // from contract
+                  proof: "", // from contract
+                  to: "", // from contract
+                }
+              },
+            },
+            remain: {
+              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+              date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+              calculation: {
+                amount: {
+                  supply: 0, // from contract
+                  vat: 0, // from contract
+                  consumer: 0, // from contract
+                },
+                info: {
+                  method: "", // from contract
+                  proof: "", // from contract
+                  to: "", // from contract
+                }
+              },
+            },
+            form: {
+              id: "", // eform api in button in notion (to mongo / to notion)
+              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+              date: {
+                from: new Date(1800, 0, 1), // from contract
+                to: new Date(1800, 0, 1), // from contract
+              }
+            },
+            meeting: {
+              date: new Date(1800, 0, 1), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
+              pastDesigners: [
+                { desid: "" },
+              ]
+            },
+          },
+          design: {
+            proposal: {
+              provided: false,
+              limit: null,
+              detail: [
+                {
+                  date: new Date(1800, 0, 1),
+                }
+              ]
+            },
+            construct: {
+              provided: false,
+              detail: [
+                {
+                  name: "",
+                  provider: "HomeLiaison",
+                  form: {
+                    id: "",
+                    date: {
+                      from: new Date(1800, 0, 1),
+                      to: new Date(1800, 0, 1),
+                    }
+                  },
+                  calculation: {
+                    amount: {
+                      detail: [
+                        {
+                          name: "",
+                          amount: 0,
+                        }
+                      ],
+                      total: 0,
+                    },
+                    percentage: 5,
+                    info: {
+                      account: "",
+                      proof: "",
+                      to: "",
+                    }
+                  }
+                },
+              ],
+            },
+            purchase: {
+              provided: false,
+              detail: [
+                {
+                  name: "",
+                  provider: "HomeLiaison",
+                  link: "",
+                  calculation: {
+                    amount: 0,
+                  }
+                },
+              ],
+            },
+          },
+          calculation: {
+            method: "",
+            percentage: 0,
+            info: {
+              account: "", // from contract
+              proof: "", // from contract
+              to: "", // from contract
+            },
+            payments: {
+              totalAmount: 0,
+              first: {
+                amount: 0,
+                date: new Date(1800, 0, 1),
+              },
+              remain: {
+                amount: 0,
+                date: new Date(1800, 0, 1),
+              }
+            }
+          },
+        },
+        contents: {
+          photo: {
+            date: new Date(1800, 0, 1),
+            info: {
+              photographer: "",
+              interviewer: "",
+            }
+          },
+          conid: "",
+        },
+      }
+    };
+    dummy.structure.proid = this.idMaker(latestClient.proid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy);
+      await MONGOC.db(`miro81`).collection(this.button).insertOne(dummy.structure);
       MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy);
+      await option.selfMongo.db(`miro81`).collection(this.button).insertOne(dummy.structure);
     }
 
-    await this.updateClient([ { proid }, updateQuery ], option);
+    await this.updateProject([ { proid: dummy.structure.proid }, updateQuery ], option);
 
     return "success";
   } catch (e) {

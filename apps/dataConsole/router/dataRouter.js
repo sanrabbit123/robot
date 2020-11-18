@@ -227,16 +227,30 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_searchClients = function () {
+DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = "/searchClients";
+  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners" ];
   obj.func = async function (req, res) {
     try {
-      const standard = instance.patch.clientStandard();
-      const map = instance.patch.clientMap();
-      const mapArr = Object.values(map);
+      let standard;
+      let map, mapArr;
       let searchQuery, searchArr, tempObj, tempObj2;
+      let data;
+      let rawJson;
+
+      if (req.url === "/searchClients") {
+        standard = instance.patch.clientStandard();
+        map = instance.patch.clientMap();
+      } else if (req.url === "/searchProjects") {
+        standard = instance.patch.projectStandard();
+        map = instance.patch.projectMap();
+      } else if (req.url === "/searchDesigners") {
+        standard = instance.patch.designerStandard();
+        map = instance.patch.designerMap();
+      }
+
+      mapArr = Object.values(map);
 
       searchQuery = {};
       searchArr = [];
@@ -257,10 +271,22 @@ DataRouter.prototype.rou_post_searchClients = function () {
 
       searchQuery["$or"] = searchArr;
 
-      const clients = await instance.back.getClientsByQuery(searchQuery, { withTools: true, limit: 300, selfMongo: instance.mongo });
-      const data = clients.flatDeath();
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ standard, data }));
+      if (req.url === "/searchClients") {
+        rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+      } else if (req.url === "/searchProjects") {
+        rawJson = await instance.back.getProjectsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+      } else if (req.url === "/searchDesigners") {
+        rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+      }
+
+      if (req.body.noFlat === undefined) {
+        data = rawJson.flatDeath();
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ standard, data }));
+      } else {
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify(rawJson));
+      }
     } catch (e) {
       console.log(e);
     }
@@ -356,21 +382,88 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       let raw_data;
       let whereQuery, updateQuery;
 
-      whereQuery = JSON.parse(req.body);
-      updateQuery = {};
-      if (/^\{/.test(req.updateValue) || /^\[/.test(req.updateValue)) {
-        updateQuery[req.target] = JSON.parse(req.updateValue);
+      whereQuery = JSON.parse(req.body.where);
+
+      if (req.body.updateQuery === undefined) {
+        updateQuery = {};
+        if (/^\{/.test(req.body.updateValue) || /^\[/.test(req.body.updateValue)) {
+          updateQuery[req.body.target] = JSON.parse(req.body.updateValue);
+        } else if (req.body.updateValue === "today") {
+          updateQuery[req.body.target] = new Date();
+        } else {
+          updateQuery[req.body.target] = req.body.updateValue;
+        }
       } else {
-        updateQuery[req.target] = req.updateValue;
+        updateQuery = JSON.parse(req.body.updateQuery);
       }
 
-      if (req.url === "/rawUpdateDesigner") {
+      if (req.url === "/rawUpdateClient") {
+        raw_data = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/rawUpdateDesigner") {
         raw_data = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/rawUpdateProject") {
+        raw_data = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/rawUpdateContents") {
+        raw_data = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: raw_data }));
 
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_deleteDocument = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = [ "/deleteClient", "/deleteDesigner", "/deleteProject", "/deleteContents" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.url === "/deleteClient") {
+        await instance.back.deleteClient(req.body.id, { selfMongo: instance.mongo });
+      } else if (req.url === "/deleteDesigner") {
+        await instance.back.deleteDesigner(req.body.id, { selfMongo: instance.mongo });
+      } else if (req.url === "/deleteProject") {
+        await instance.back.deleteProject(req.body.id, { selfMongo: instance.mongo });
+      } else if (req.url === "/deleteContents") {
+        await instance.back.deleteContents(req.body.id, { selfMongo: instance.mongo });
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "success" }));
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_createDocument = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = [ "/createClient", "/createDesigner", "/createProject", "/createContents" ];
+  obj.func = async function (req, res) {
+    try {
+      const updateQuery = JSON.parse(req.body.updateQuery);
+
+      if (req.url === "/createClient") {
+        await instance.back.createClient(updateQuery, { selfMongo: instance.mongo });
+      } else if (req.url === "/createDesigner") {
+        await instance.back.createDesigner(updateQuery, { selfMongo: instance.mongo });
+      } else if (req.url === "/createProject") {
+        updateQuery["proposal.date"] = new Date();
+        await instance.back.createProject(updateQuery, { selfMongo: instance.mongo });
+      } else if (req.url === "/createContents") {
+        await instance.back.createContents(updateQuery, { selfMongo: instance.mongo });
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       console.log(e);
     }
@@ -465,6 +558,59 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_sendSlack = function () {
+  const instance = this;
+  const back = this.back;
+  const slack = this.mother.slack_bot;
+  const url = require('url');
+  let obj = {};
+  obj.link = "/sendSlack";
+  obj.func = async function (req, res) {
+    try {
+      let link;
+      let link_index;
+      let row_message, new_message;
+      let query;
+      let requrl;
+
+      query = JSON.parse(req.body.query);
+
+      link = '';
+      link_index = 0;
+      row_message = '';
+      new_message = '';
+
+      if (req.body.linkmake !== undefined) {
+        requrl = url.format({
+            protocol: req.protocol,
+            host: req.get('host'),
+            pathname: req.body.link,
+        });
+
+        link += requrl + '?';
+        for (let i of query) {
+          link += i.standard + '=' + i.value + '&'
+        }
+        link = link.slice(0, -1);
+
+        row_message = req.body.message;
+        link_index = row_message.search(/link:/g);
+        new_message = row_message.slice(0, link_index) + "link: " + link + row_message.slice(link_index + 6);
+
+        await slack.chat.postMessage({ text: new_message, channel: req.body.channel });
+      } else {
+        await slack.chat.postMessage({ text: req.body.message, channel: req.body.channel });
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "success" }));
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 
 

@@ -22,6 +22,30 @@ GeneralJs.objectToQuery = function (dataObj) {
   return dataString;
 }
 
+GeneralJs.idOrderDecode = function (number) {
+  const abc = `[ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]`;
+  const ABC = JSON.parse(abc);
+  let text = '';
+  let target, index0, index1, result;
+
+  target = number.replace(/[a-z]$/, '').split("_")[1];
+
+  index0 = 0;
+  index1 = 0;
+  for (let i = 0; i < ABC.length; i++) {
+    if (ABC[i] === target[0]) {
+      index0 = i;
+    }
+    if (ABC[i] === target[1]) {
+      index1 = i;
+    }
+  }
+  result = (index0 * 100 * 26) + (index1 * 100) + (Number(target[2]) * 10) + (Number(target[3]) * 1);
+  result = (Number(number.split('_')[0].replace(/[^0-9]/g, '')) * 100000) + result;
+
+  return result;
+}
+
 GeneralJs.vaildValue = function (column, value, pastValue) {
   const map = DataPatch.clientMap();
   let finalValue, valueTemp;
@@ -202,6 +226,8 @@ GeneralJs.prototype.generalCss = function () {
   #totalcontents,#secondcontents{display:block;position:relative;left:0;}
   .hiddenp,.switch{display:none;}
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;top:-20px}
+  .hoverDefault_lite{cursor:pointer;opacity:1}
+  .hoverDefault_lite:hover{opacity:0.75;}
   .hoverDefault{cursor:pointer;opacity:1}
   .hoverDefault:hover{opacity:0.5;}
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}

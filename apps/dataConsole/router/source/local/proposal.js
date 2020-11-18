@@ -335,108 +335,110 @@ ProposalJs.below_events = {
 
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
+  const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
+
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
-  let buttonTexts = {
-    width: [ 122, 108, 126, 108 ],
-    leftRight: [ 48, 180, 173, 55 ],
-    contents: [ "제안서 리스트", "제안서 생성", "변동 버튼 1", "변동 버튼 2" ],
+  let style;
+  let ea = 'px';
+
+  reportIcon.style.opacity = '0.4';
+  returnIcon.style.opacity = '0.4';
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.id = "blewpp_button" + String(3);
+  div_clone.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    width: String(74.5) + ea,
+    height: String(44) + ea,
+    top: String(31.5) + ea,
+    right: String(49) + ea,
+    background: "white",
+    borderRadius: String(3) + ea,
+    fontSize: String(17.5) + ea,
+    fontWeight: String(500) + ea,
+    textAlign: "center",
+    paddingTop: String(13) + ea,
+    color: "#2fa678",
+    cursor: "pointer",
+    animation: "justfadeinoriginal 0.4s ease forwards",
   };
-  let h = document.createDocumentFragment();
-
-  for (let i = 0; i < buttonTexts.contents.length; i++) {
-    if (i === 2) {
-      this.below_tong.set("search", this.mother.searchInput);
-    }
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.className = "blewpp_button";
-    div_clone.id = "blewpp_button" + String(i);
-
-    if (i === 0) {
-      div_clone.addEventListener("click", function (e) {
-        if (instance.toggleSetting.listCreate === 0) {
-          this.children[0].style.color = "#59af89";
-          this.children[0].style.opacity = "";
-          this.nextElementSibling.children[0].style.color = "";
-          this.nextElementSibling.children[0].style.opacity = "0.4";
-          let mother = instance.createPannel;
-          let father = instance.listPannel;
-          father.classList.remove("listpp_fadeout");
-          father.classList.add("listpp_fadein");
-          instance.list_launching();
-          mother.classList.add("listpp_fadeout");
-          mother.classList.remove("listpp_fadein");
-          father.style.zIndex = "0";
-          instance.toggleSetting.listCreate = 1;
-          instance.pastMaps = [];
-        }
-      });
-    } else if (i === 1) {
-      div_clone.addEventListener("click", function (e) {
-        if (instance.toggleSetting.listCreate === 1) {
-          this.children[0].style.color = "#59af89";
-          this.children[0].style.opacity = "";
-          this.previousElementSibling.children[0].style.color = "";
-          this.previousElementSibling.children[0].style.opacity = "0.4";
-          let mother = instance.createPannel;
-          let father = instance.listPannel;
-          father.classList.add("listpp_fadeout");
-          father.classList.remove("listpp_fadein");
-          mother.classList.remove("listpp_fadeout");
-          mother.classList.add("listpp_fadein");
-          father.style.zIndex = "-1";
-          instance.toggleSetting.listCreate = 0;
-          if (instance.toggleSetting.load === 1) {
-            instance.load_reset({});
-            temp_dom = document.getElementById("blewpp_button3");
-            temp_dom.children[0].textContent = "제안서 저장";
-            temp_dom.addEventListener("click", ProposalJs.below_events.save);
-            temp_dom.removeEventListener("click", ProposalJs.below_events.update);
-            temp_dom.setAttribute("cus_id", "");
-          }
-          instance.toggleSetting.load = 0;
-          instance.pastMaps = [];
-        }
-      });
-    }
-
-    if (i < 2) {
-      div_clone.style.left = String(buttonTexts.leftRight[i]) + "px";
-    } else {
-      div_clone.style.right = String(buttonTexts.leftRight[i]) + "px";
-    }
-
-    div_clone.style.width = String(buttonTexts.width[i]) + "px";
-
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.className = "blewpp_button_text";
-    div_clone2.textContent = buttonTexts.contents[i];
-    div_clone.appendChild(div_clone2);
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.className = "blewpp_button_garim";
-    div_clone.appendChild(div_clone2);
-    h.appendChild(div_clone);
-    this.below_tong.set("button" + String(i), div_clone);
+  for (let i in style) {
+    div_clone.style[i] = style[i];
   }
-  this.mother.below.appendChild(h);
+  div_clone.textContent = "Save";
+  this.mother.below.appendChild(div_clone);
+  GeneralJs.timeouts["saveButtonTimeout"] = setTimeout(function () {
+    div_clone.style.animation = "";
+    clearTimeout(GeneralJs.timeouts["saveButtonTimeout"]);
+    GeneralJs.timeouts["saveButtonTimeout"] = null;
+  }, 401);
+
+  this.below_tong.set("button3", div_clone);
+
+  this.below_tong.set("search", this.mother.searchInput);
+
+  this.below_tong.set("button0", down);
+  down.id = "blewpp_button" + String(0);
+  this.below_tong.set("button1", up);
+  up.id = "blewpp_button" + String(1);
+  this.below_tong.set("button2", reportIcon);
+  reportIcon.id = "blewpp_button" + String(2);
+
+  down.addEventListener("click", function (e) {
+    if (instance.toggleSetting.listCreate === 0) {
+      let mother = instance.createPannel;
+      let father = instance.listPannel;
+      father.classList.remove("listpp_fadeout");
+      father.classList.add("listpp_fadein");
+      instance.list_launching();
+      mother.classList.add("listpp_fadeout");
+      mother.classList.remove("listpp_fadein");
+      father.style.zIndex = "0";
+      instance.toggleSetting.listCreate = 1;
+      instance.pastMaps = [];
+    }
+  });
+
+  up.addEventListener("click", function (e) {
+    if (instance.toggleSetting.listCreate === 1) {
+      let mother = instance.createPannel;
+      let father = instance.listPannel;
+      father.classList.add("listpp_fadeout");
+      father.classList.remove("listpp_fadein");
+      mother.classList.remove("listpp_fadeout");
+      mother.classList.add("listpp_fadein");
+      father.style.zIndex = "-1";
+      instance.toggleSetting.listCreate = 0;
+      if (instance.toggleSetting.load === 1) {
+        instance.load_reset({});
+        temp_dom = instance.below_tong.get("button3");
+        temp_dom.addEventListener("click", ProposalJs.below_events.save);
+        temp_dom.removeEventListener("click", ProposalJs.below_events.update);
+        temp_dom.setAttribute("cus_id", "");
+      }
+      instance.toggleSetting.load = 0;
+      instance.pastMaps = [];
+    }
+  });
 }
 
 ProposalJs.prototype.below_first = function () {
   const instance = this;
 
   //general
-  this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  this.below_tong.get("button1").children[0].style.color = "#59af89";
+  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
+  //this.below_tong.get("button1").children[0].style.color = "#59af89";
 
   //button
-  this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
+  //this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
   if (this.toggleSetting.load === 0) {
-    this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+    //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
   } else {
-    this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+    //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
   }
-  this.below_tong.get("button2").style.right = String(173) + "px";
-  this.below_tong.get("button3").style.right = String(55) + "px";
+  //this.below_tong.get("button2").style.right = String(173) + "px";
+  //this.below_tong.get("button3").style.right = String(55) + "px";
   this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.first.b2);
   if (this.toggleSetting.load === 0) {
     this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.save);
@@ -456,20 +458,20 @@ ProposalJs.prototype.below_second = function (onoff) {
   const instance = this;
 
   //general
-  this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  this.below_tong.get("button1").children[0].style.color = "#59af89";
+  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
+  //this.below_tong.get("button1").children[0].style.color = "#59af89";
 
   if (onoff === "on") {
 
     //button
-    this.below_tong.get("button2").style.width = String(108) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "서비스 상세";
+    //this.below_tong.get("button2").style.width = String(108) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "서비스 상세";
     if (this.toggleSetting.load === 0) {
-      this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+      //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
     } else {
-      this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+      //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
     }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
@@ -485,14 +487,14 @@ ProposalJs.prototype.below_second = function (onoff) {
   } else {
 
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
     if (this.toggleSetting.load === 0) {
-      this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+      //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
     } else {
-      this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+      //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
     }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
@@ -513,16 +515,16 @@ ProposalJs.prototype.below_third = function (onoff) {
   const instance = this;
 
   //general
-  this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  this.below_tong.get("button1").children[0].style.color = "#59af89";
+  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
+  //this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
@@ -535,12 +537,12 @@ ProposalJs.prototype.below_third = function (onoff) {
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
     //button
-    this.below_tong.get("button2").style.width = String(108) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "서비스 상세";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(108) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "서비스 상세";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
@@ -558,16 +560,16 @@ ProposalJs.prototype.below_fourth = function (onoff) {
   const instance = this;
 
   //general
-  this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  this.below_tong.get("button1").children[0].style.color = "#59af89";
+  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
+  //this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
@@ -584,12 +586,12 @@ ProposalJs.prototype.below_fourth = function (onoff) {
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
@@ -606,16 +608,16 @@ ProposalJs.prototype.below_fourth = function (onoff) {
 ProposalJs.prototype.below_fifth = function (onoff) {
   const instance = this;
   //general
-  this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  this.below_tong.get("button1").children[0].style.color = "#59af89";
+  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
+  //this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "세팅 저장하기";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "세팅 저장하기";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
 
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
@@ -630,12 +632,12 @@ ProposalJs.prototype.below_fifth = function (onoff) {
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
   } else {
     //button
-    this.below_tong.get("button2").style.width = String(126) + "px";
-    this.below_tong.get("button2").style.right = String(173) + "px";
-    this.below_tong.get("button3").style.right = String(55) + "px";
-    this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
-    if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+    //this.below_tong.get("button2").style.width = String(126) + "px";
+    //this.below_tong.get("button2").style.right = String(173) + "px";
+    //this.below_tong.get("button3").style.right = String(55) + "px";
+    //this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
+    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
+    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fifth.b2, { once: true });
     this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.fourth.b2);
     //search
@@ -1215,7 +1217,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     if (typeof onoff === "string") {
       input_clone.value = "2,000,000";
     } else {
-      input_clone.value = ProposalJs.auto_comma(String(onoff.fee[s].money));
+      input_clone.value = ProposalJs.auto_comma(String(onoff.fee[s].amount));
     }
     input_clone.style.width = String(0.85 * input_clone.value.length) + "vh";
     input_clone.addEventListener("keyup", fourth.events.money);
@@ -1294,7 +1296,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   //디자이너 이름
-
   designers = JSON.parse(await GeneralJs.ajaxPromise("", "/getDesigners"));
   designers = designers.data;
 
@@ -1445,8 +1446,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     //------------------------------------------------------------------------
     if (obj.proposal !== undefined) {
       for (let d of designers) {
-        if (d.past_desid === obj.proposal[n].desid) {
-          div_clone.textContent = d.designer + " 디자이너의 사진 선택";
+        if (d.standard.desid === obj.proposal[n].desid) {
+          div_clone.textContent = d.standard.designer + " 디자이너의 사진 선택";
         }
       }
       div_clone.style.color = "white";
@@ -1460,7 +1461,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
 
   return function () {
     let div_clone, div_clone2, div_clone3, div_clone4, general_string;
-    let target0, target1, target2;
+    let target0, target1, target2, target3;
 
     fourth.box.style.display = "none";
     fourth.title.style.color = "#59af89";
@@ -1500,8 +1501,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         //------------------------------------------------------------------------
         if (obj.proposal !== undefined) {
           general_string = '';
-          for (let k of obj.proposal[i].picture_settings) {
-            general_string += GeneralJs.tagCoverting(k)  + "__split3__";
+          for (let k of obj.proposal[i].pictureSettings) {
+            general_string += GeneralJs.tagCoverting(k) + "__split3__";
+          }
+          for (let k = 0; k < obj.proposal[i].description.length; k++) {
+            general_string += "description" + String(k) + "__split2__" + obj.proposal[i].description[k] + "__split1__";
           }
           general_string = general_string.slice(0, -10);
           div_clone4.textContent = general_string;
@@ -1580,8 +1584,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
           //------------------------------------------------------------------------
           if (obj.proposal !== undefined) {
             general_string = '';
-            for (let k of obj.proposal[i].picture_settings) {
+            for (let k of obj.proposal[i].pictureSettings) {
               general_string += GeneralJs.tagCoverting(k)  + "__split3__";
+            }
+            for (let k = 0; k < obj.proposal[i].description.length; k++) {
+              general_string += "description" + String(k) + "__split2__" + obj.proposal[i].description[k] + "__split1__";
             }
             general_string = general_string.slice(0, -10);
             div_clone4.textContent = general_string;
@@ -1611,9 +1618,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
           instance.pastMaps[0].set(key, value.cloneNode(true));
           value.remove();
         });
-        instance.fourthChildren = {}
-        instance.totalTong.fifthScrollmove = {}
-        fourthChildren = {}
+        instance.fourthChildren = {};
+        instance.totalTong.fifthScrollmove = {};
+        fourthChildren = {};
         fourth.box.style.display = "";
         fourth.title.style.color = "";
         fourth.contents.style.background = "";
@@ -1670,7 +1677,7 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
   }
 }
 
-ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, picture_settings) {
+ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pictureSettings) {
   let instance = this;
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
   let leftMother, rightMother;
@@ -1690,13 +1697,13 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
   rightMother = div_clone;
 
   // Left
-  let leftList = [ "title", "picturebox", "description", ];
+  let leftList = [ "title", "picturebox", "description" ];
   let target_value = document.querySelectorAll(".pp_designer_selected");
   let values = target_value[id].querySelector(".pp_designer_selected_box_value").textContent;
 
   // Default 0
-  let descriptions = picture_settings[0].description;
-  let default_setting = picture_settings[0].photo;
+  let descriptions = pictureSettings[0].description;
+  let default_setting = pictureSettings[0].photo;
 
   // if memory this
   if (values !== "") {
@@ -2145,153 +2152,245 @@ ProposalJs.fifthPicturebox_union = function () {
   }
 }
 
-ProposalJs.prototype.list_initial = async function () {
+ProposalJs.prototype.list_initial = function () {
   const instance = this;
-  let mother = this.listPannel;
+  const mother = this.listPannel;
+
   let div_clone, div_clone2;
-  let classes = [ "listpp_searchBar", "listpp_leftBar", "listpp_mainArea" ];
-  let mapname = [ "검색창", "제안 현황", "메인 리스트" ];
+  let classes, mapname;
+
+  classes = [ "listpp_searchBar", "listpp_leftBar", "listpp_mainArea" ];
+  mapname = [ "검색창", "제안 현황", "메인 리스트" ];
+
   for (let i = 0; i < classes.length; i++) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add(classes[i]);
     mother.appendChild(div_clone);
     this.list_domBox.set(mapname[i], div_clone);
   }
-  console.log(this.list_domBox);
-}
 
-ProposalJs.prototype.list_searchBar_event = async function () {
-  let instance = this;
-  let search_obj = [];
-  let temp_obj, temp_str1, temp_str2, temp_str3;
-  let proposal_list_raw = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1={}&find2={}', '/post_mfind'));
-  let designer_names = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ past_desid: 1, designer: 1 }), '/post_mfind'));
-  let designer_names_obj = {};
-  for (let obj of designer_names) {
-    designer_names_obj[obj.past_desid] = obj.designer;
-  }
-  for (let obj of proposal_list_raw) {
-    temp_obj = {}
-    temp_obj.originalObj = obj;
-    temp_obj.proid = obj.proid;
-    temp_obj.client = obj.client;
-    temp_obj.cliid = obj.cliid;
-    temp_obj.service = obj.service;
-    temp_str1 = '';
-    temp_str2 = '';
-    temp_str3 = '';
-    for (let obj2 of obj.proposal) {
-      temp_str1 += obj2.desid;
-      temp_str1 += designer_names_obj[obj2.desid];
-      for (let obj3 of obj2.fee) {
-        temp_str2 += obj3.method;
-        temp_str3 += (obj3.partial) ? "부분" : '';
-      }
-    }
-    temp_obj.desid = temp_str1;
-    temp_obj.method = (/online/g.test(temp_str2)) ? "온라인" : "오프라인"
-    temp_obj.partial = temp_str3;
-    search_obj.push(temp_obj);
-  }
-  return async function (e) {
-    if (this.value !== '') {
-      if (e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 9) {
-        let value = this.value;
-        let proposal_list_raw_search = [];
-        let res = search_obj.filter(function (obj) {
-          return (obj.proid.includes(value) || obj.client.includes(value) || obj.service.includes(value) || obj.cliid.includes(value) || obj.desid.includes(value) || obj.method.includes(value) || obj.partial.includes(value));
-        });
-        for (let obj of res) {
-          proposal_list_raw_search.push(obj.originalObj);
-        }
-        instance.list_mainArea_tongMake(instance.list_domBox.get("메인 리스트"), proposal_list_raw_search, designer_names_obj, false);
-      }
-    } else {
-      instance.list_mainArea_tongMake(instance.list_domBox.get("메인 리스트"), proposal_list_raw, designer_names_obj, false);
-    }
-  }
 }
 
 ProposalJs.prototype.list_searchBar = async function () {
-  let parent = this.list_domBox.get("검색창");
-  let div_clone, div_clone2, img_clone, input_clone;
-  img_clone = GeneralJs.nodes.img.cloneNode(true);
-  img_clone.src = "/list_svg/porporpor/search/searbae01.svg";
-  img_clone.classList.add("listpp_searchBar_img");
-  parent.appendChild(img_clone);
-  input_clone = GeneralJs.nodes.input.cloneNode(true);
-  input_clone.setAttribute("type", "text");
-  input_clone.classList.add("listpp_searchBar_input");
-  input_clone.addEventListener("keyup", (await this.list_searchBar_event()));
-  parent.appendChild(input_clone);
-}
-
-ProposalJs.prototype.list_leftBar = async function () {
-  let parent = this.list_domBox.get("제안 현황");
-  let div_clone, div_clone2;
-  let proposal_list_raw = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1={}&find2={}', '/post_mfind'));
-  let designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ past_desid: 1, designer: 1 }), '/post_mfind'));
-  let desid_numbers = {}
-  for (let obj of designers) { desid_numbers[obj.past_desid] = 0; }
-  for (let obj of proposal_list_raw) {
-    for (let obj2 of obj.proposal) {
-      desid_numbers[obj2.desid] = desid_numbers[obj2.desid] + 1;
-    }
-  }
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.classList.add("listpp_leftBar_totalbox");
-  for (let i = 0; i < designers.length; i++) {
-    //designer id
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("listpp_leftBar_detail_id");
-    div_clone2.textContent = designers[i].past_desid;
-    div_clone.appendChild(div_clone2);
-    //designer name
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("listpp_leftBar_detail");
-    div_clone2.textContent = designers[i].designer;
-    div_clone.appendChild(div_clone2);
-    //designer bar
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("listpp_leftBar_detail_bar");
-    div_clone2.style.top = String(7.5 + (34 * i)) + "px";
-    div_clone.appendChild(div_clone2);
-    //designer number
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("listpp_leftBar_detail_num");
-    div_clone2.textContent = String(desid_numbers[designers[i].past_desid]);
-    div_clone.appendChild(div_clone2);
-  }
-  parent.appendChild(div_clone);
-}
-
-ProposalJs.prototype.list_mainArea = async function () {
   const instance = this;
   try {
-    let projectList;
-    let designers;
-    let designersObj;
+    let parent;
+    let div_clone, div_clone2, img_clone, input_clone;
 
-    console.log(await GeneralJs.ajaxPromise('noFlat=true', '/getProjects'));
+    parent = this.list_domBox.get("검색창");
+    img_clone = GeneralJs.nodes.img.cloneNode(true);
+    img_clone.src = "/list_svg/porporpor/search/searbae01.svg";
+    img_clone.classList.add("listpp_searchBar_img");
+    parent.appendChild(img_clone);
+    input_clone = GeneralJs.nodes.input.cloneNode(true);
+    input_clone.setAttribute("type", "text");
+    input_clone.classList.add("listpp_searchBar_input");
+    input_clone.addEventListener("keypress", async function (e) {
+      let parent;
+      let entireList;
+      let svg_icon;
+      let style;
+      let ea = "px";
+      let width;
 
-    projectList = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1={}&find2={}', '/post_mfind'));
-    designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ past_desid: 1, designer: 1 }), '/post_mfind'));
+      if (e.keyCode === 13) {
 
-    designersObj = {};
-    for (let d of designers) {
-      designersObj[d.desid] = d.designer;
-    }
+        entireList = [ "전체", "모두", "all" ];
 
-    this.list_mainArea_tongMake(this.list_domBox.get("메인 리스트"), projectList, designersObj, true);
+        parent = instance.list_domBox.get("메인 리스트");
+        while (parent.firstChild) {
+          parent.removeChild(parent.lastChild);
+        }
+
+        width = 50;
+        svg_icon = instance.mother.returnLoadingIcon();
+        style = {
+          width: String(width) + ea,
+          height: String(width) + ea,
+          top: 'calc(50% - ' + String((width / 2) + 20) + ea + ')',
+          left: 'calc(50% - ' + String(width / 2) + ea + ')',
+        }
+        for (let i in style) {
+          svg_icon.style[i] = style[i];
+        }
+        parent.appendChild(svg_icon);
+
+        if (this.value !== '' && !entireList.includes(this.value) && !/^[0-9]/.test(this.value)) {
+          if (/^p/.test(this.value)) {
+            await instance.list_mainArea({ target: "project", value: this.value });
+          } else {
+            await instance.list_mainArea({ target: "client", value: this.value });
+          }
+
+        } else if (entireList.includes(this.value)) {
+            await instance.list_mainArea({ target: "client", value: '.' });
+
+        } else if (/^[0-9]/.test(this.value)) {
+            await instance.list_mainArea(null, Number(this.value.replace(/[^0-9]/g, '')));
+
+        } else {
+          await instance.list_mainArea();
+        }
+
+      }
+    });
+    parent.appendChild(input_clone);
+
   } catch (e) {
     console.log(e);
   }
 }
 
-ProposalJs.prototype.list_mainArea_tongMake = function (parent, proposal_list_raw, designer_names_obj, init) {
-  if (!init) {
-    while (parent.firstChild) { parent.removeChild(parent.lastChild); }
+ProposalJs.prototype.list_leftBar = function (obj) {
+  const instance = this;
+  const parent = this.list_domBox.get("제안 현황");
+  const { projects, designers } = obj;
+  try {
+    while (parent.firstChild) {
+      parent.removeChild(parent.lastChild);
+    }
+
+    let div_clone, div_clone2;
+    let desid_numbers = {};
+
+    for (let i of Object.keys(designers)) {
+      desid_numbers[i] = 0;
+    }
+
+    for (let i of projects) {
+      for (let j of i.proposal.detail) {
+        desid_numbers[j.desid] = desid_numbers[j.desid] + 1;
+      }
+    }
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("listpp_leftBar_totalbox");
+    for (let i = 0; i < Object.keys(designers).length; i++) {
+      //designer id
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("listpp_leftBar_detail_id");
+
+      div_clone2.textContent = Object.keys(designers)[i];
+      div_clone.appendChild(div_clone2);
+      //designer name
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("listpp_leftBar_detail");
+      div_clone2.textContent = designers[Object.keys(designers)[i]];
+      div_clone.appendChild(div_clone2);
+      //designer bar
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("listpp_leftBar_detail_bar");
+      div_clone2.style.top = String(7.5 + (34 * i)) + "px";
+      div_clone.appendChild(div_clone2);
+      //designer number
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("listpp_leftBar_detail_num");
+      div_clone2.textContent = String(desid_numbers[Object.keys(designers)[i]]);
+      div_clone.appendChild(div_clone2);
+    }
+
+    parent.appendChild(div_clone);
+  } catch (e) {
+    console.log(e);
   }
+}
+
+ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit = 100) {
+  const instance = this;
+  try {
+    let projectList;
+    let clients;
+    let designers;
+    let designersObj;
+    let number;
+    let serviceMap, xValueMap;
+    let temp;
+    let retry = false;
+
+    serviceMap = new Map();
+    xValueMap = new Map();
+
+    serviceMap.set("s2011_aa01s", "홈퍼니싱");
+    serviceMap.set("s2011_aa02s", "홈스타일링");
+    serviceMap.set("s2011_aa03s", "토탈 스타일링");
+
+    xValueMap.set("M", "mini");
+    xValueMap.set("B", "basic");
+    xValueMap.set("P", "premium");
+
+    designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true", "/getDesigners"));
+    designersObj = {};
+    for (let d of designers) {
+      designersObj[d.desid] = d.designer;
+    }
+
+    if (searchQuery === null) {
+      projectList = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&limit=" + String(limit), "/getProjects"));
+      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&limit=" + String(limit + 1000), "/getClients"));
+      number = 0;
+      for (let p of projectList) {
+        p.serviceName = `${serviceMap.get(p.service.serid)} ${xValueMap.get(p.service.xValue)}`;
+        for (let i of clients) {
+          if (p.cliid === i.cliid) {
+            p.client = i.name;
+            number++;
+          }
+        }
+      }
+      if (projectList.length !== number) {
+        throw new Error("project client limit number error");
+      }
+    } else {
+      if (searchQuery.target === undefined || searchQuery.value === undefined) {
+        throw new Error("invaild query");
+      }
+
+      if (searchQuery.target === "project") {
+        projectList = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + searchQuery.value, "/searchProjects"));
+        for (let p of projectList) {
+          clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + p.cliid, "/searchClients"));
+          p.client = clients[0].name;
+          p.serviceName = `${serviceMap.get(p.service.serid)} ${xValueMap.get(p.service.xValue)}`;
+        }
+      } else if (searchQuery.target === "client") {
+        clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + searchQuery.value, "/searchClients"));
+        projectList = [];
+        for (let c of clients) {
+          temp = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + c.cliid, "/searchProjects"));
+          for (let t of temp) {
+            t.client = c.name;
+            t.serviceName = `${serviceMap.get(t.service.serid)} ${xValueMap.get(t.service.xValue)}`;
+            projectList.push(t);
+          }
+        }
+      } else {
+        throw new Error("invaild query target");
+      }
+
+      if (projectList.length === 0) {
+        alert("결과가 없습니다.");
+        retry = true;
+      }
+
+    }
+
+    if (!retry) {
+      projectList.sort((a, b) => { return GeneralJs.idOrderDecode(a.proid) - GeneralJs.idOrderDecode(b.proid); });
+      this.list_mainAreaContents(this.list_domBox.get("메인 리스트"), projectList, designersObj);
+    } else {
+      this.list_mainArea();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw, designer_names_obj) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.lastChild);
+  }
+
   let details = [ "_id", "_name", "_details", "_progress" ];
   let details_list = [];
   let info_object_arr = [];
@@ -2300,17 +2399,20 @@ ProposalJs.prototype.list_mainArea_tongMake = function (parent, proposal_list_ra
   for (let i = 0; i < proposal_list_raw.length; i++) {
     proposal_obj_new = [];
     proposal_obj = proposal_list_raw[i];
+
     proposal_obj_new.push(proposal_obj.proid);
     proposal_obj_new.push(proposal_obj.client);
+
     general_string = '';
-    general_string = proposal_obj.service + "<b> | </b>";
-    for (let obj of proposal_obj.proposal) {
+    general_string = proposal_obj.serviceName + "<b> | </b>";
+
+    for (let obj of proposal_obj.proposal.detail) {
       general_string += designer_names_obj[obj.desid];
       general_string += ' : ';
       for (let obj2 of obj.fee) {
         general_string += (obj2.method === "offline") ? "오프라인" : "온라인";
         general_string += ' ';
-        general_string += String(obj2.money / 10000) + "만원";
+        general_string += String(obj2.amount / 10000) + "만원";
         if (obj2.partial) {
           general_string += '(부분 공간)';
         }
@@ -2320,14 +2422,16 @@ ProposalJs.prototype.list_mainArea_tongMake = function (parent, proposal_list_ra
       general_string += "<b> | </b>";
     }
     general_string = general_string.slice(0, -10);
+
     proposal_obj_new.push(general_string);
-    proposal_obj_new.push(proposal_obj.status);
+    proposal_obj_new.push(proposal_obj.proposal.status);
+
     info_object_arr.unshift({
       proid: proposal_obj.proid,
       client: proposal_obj.client,
       cliid: proposal_obj.cliid,
-      service: proposal_obj.service,
-      proposal: proposal_obj.proposal,
+      service: proposal_obj.serviceName,
+      proposal: proposal_obj.proposal.detail,
     });
     details_list.unshift(proposal_obj_new);
   }
@@ -2349,6 +2453,8 @@ ProposalJs.prototype.list_mainArea_tongMake = function (parent, proposal_list_ra
     div_clone.insertAdjacentHTML("beforeend", '<section style="display:none;">' + JSON.stringify(info_object_arr[i]) + '</section>')
     parent.appendChild(div_clone);
   }
+
+  this.list_leftBar({ projects: proposal_list_raw, designers: designer_names_obj });
 }
 
 ProposalJs.prototype.list_menu = function () {
@@ -2398,7 +2504,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
   let return_func;
   async function mother_name(o) {
     mother.textContent = o.name;
-    console.log(await GeneralJs.ajaxPromise("table=Project&st=proid&i=" + proid + "&c=status&v=" + o.name, "/post_mupdate"));
+    await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&target=proposal.status&updateValue=" + o.name, "/rawUpdateProject");
   }
   function reset_event(t) {
     t.parentElement.previousElementSibling.remove();
@@ -2415,7 +2521,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "confirm":
       return_func = async function (e) {
         let message = "제안서 확인 후, 컨펌 부탁드리겠습니다! link: ";
-        // await GeneralJs.ajaxPromise("/slack", "linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal");
+        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
         await mother_name(obj);
         reset_event(this);
       }
@@ -2423,31 +2529,20 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "make":
       return_func = async function (e) {
         let message = "제안서의 제작을 요청드립니다! link: ";
-        // await GeneralJs.ajaxPromise("/slack", "linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal");
+        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
         await mother_name(obj);
         reset_event(this);
       }
       break;
     case "send":
       return_func = async function (e) {
-        let message = "제안서의 제작이 완성되었습니다! 발송 부탁드리겠습니다. link:  / google drive : ";
-        // await GeneralJs.ajaxPromise("/slack", "linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal");
         await mother_name(obj);
         reset_event(this);
       }
       break;
     case "complete":
       return_func = async function (e) {
-        const info = JSON.parse(this.parentElement.parentElement.querySelector('section').textContent);
-        const today = new Date();
-
-        let month, date, value;
-
-        month = (today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1);
-        date = (today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate());
-        value = String(today.getFullYear()) + '-' + month + '-' + date;
-
-        await GeneralJs.ajaxPromise("table=BC1_conlist&c=a9_proposal&st=a4_customernumber&i=" + info.cliid + "&v=" + valu, "/post_update");
+        await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&target=proposal.date&updateValue=today", "/rawUpdateProject");
         await mother_name(obj);
         reset_event(this);
       }
@@ -2460,7 +2555,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "delete":
       return_func = async function (e) {
-        console.log(await GeneralJs.ajaxPromise("table=Project&st=proid&i=" + proid, "/post_mdelete"));
+        await GeneralJs.ajaxPromise("id=" + proid, "/deleteProject");
         mother.parentElement.remove();
         reset_event(this);
       }
@@ -2472,11 +2567,13 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 ProposalJs.prototype.list_launching = async function () {
   const instance = this;
   let father = this.listPannel;
-  while (father.firstChild) {father.removeChild(father.lastChild);}
-  await this.list_initial();
-  this.list_searchBar();
-  this.list_leftBar();
-  this.list_mainArea();
+  while (father.firstChild) {
+    father.removeChild(father.lastChild);
+  }
+
+  this.list_initial();
+  await this.list_searchBar();
+  await this.list_mainArea();
 }
 
 
@@ -2487,10 +2584,6 @@ ProposalJs.prototype.load_initevent = function () {
       let obj = JSON.parse(this.parentElement.querySelector("section").textContent);
       let button0 = document.getElementById("blewpp_button0");
       let button1 = document.getElementById("blewpp_button1");
-      button1.children[0].style.color = "#59af89";
-      button1.children[0].style.opacity = "";
-      button0.children[0].style.color = "";
-      button0.children[0].style.opacity = "0.4";
       let mother = instance.createPannel;
       let father = instance.listPannel;
       father.classList.add("listpp_fadeout");
@@ -2504,14 +2597,15 @@ ProposalJs.prototype.load_initevent = function () {
         father.style.display = "";
         father.style.transform = "";
         father.style.opacity = "";
-        while (father.firstChild) {father.removeChild(father.lastChild);}
+        while (father.firstChild) {
+          father.removeChild(father.lastChild);
+        }
         let button2 = document.getElementById("blewpp_button2");
         let button3 = document.getElementById("blewpp_button3");
         button2.removeEventListener("click", ProposalJs.below_events.first.b2);
         button2.removeEventListener("click", ProposalJs.below_events.second.b2);
         button2.removeEventListener("click", ProposalJs.below_events.third.b2);
         button2.removeEventListener("click", ProposalJs.below_events.fourth.b2);
-        console.log(obj);
         button3.setAttribute("cus_id", obj.proid);
         if (document.querySelector(".pp_designer_selected") === null) {
           instance.load_reset(obj);
@@ -2539,22 +2633,27 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
     document.getElementById("pp_title2_sub_b").remove();
   }
   inputs = this.domBox.get("고객 선택").querySelectorAll("input");
-  for (let input of inputs) { input.checked = false; }
+  for (let input of inputs) {
+    input.checked = false;
+  }
   inputs = this.domBox.get("서비스 선택").querySelectorAll("input");
-  for (let input of inputs) { input.checked = false; }
+  for (let input of inputs) {
+    input.checked = false;
+  }
 
   //fifth reset
   if (document.querySelector(".pp_fifth_cancelback")) {
     document.querySelector(".pp_fifth_cancelback").remove();
     document.querySelector(".pp_fifth_whitebox").remove();
   }
+
   //fourth reset
   if (this.fourthChildren instanceof Map) {
     this.fourthChildren.forEach(function (value, key, map) {
       value.remove();
     });
-    this.fourthChildren = {}
-    let fourth = {}
+    this.fourthChildren = {};
+    let fourth = {};
     fourth.total = this.domBox.get("디자이너 선택");
     fourth.title = fourth.total.children[0];
     fourth.contents = fourth.total.children[1];
@@ -2567,13 +2666,14 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
     fourth.contents.style.padding = "";
     for (let i = 0; i < 3; i++) { this.thirdChildren.get("box" + String(i)).style.opacity = ""; }
   }
+
   //third reset
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
-  this.domBox.get("서비스 선택").children[0].style.color = "";
-  this.domBox.get("서비스 선택").children[1].style.background = "";
-  this.domBox.get("서비스 선택").style.height = "";
+  this.domBox.get("서비스 선택").children[0].style.color = "#404040";
+  this.domBox.get("서비스 선택").children[1].style.background = "#f7f7f7";
+  this.domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)";
   this.domBox.get("서비스 선택").style.borderBottom = "";
-  this.domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
+  // this.domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
   this.domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
   this.domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
   for (let i of service) {
@@ -2587,9 +2687,9 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
   for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
   let service_input = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
   for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#59af89";i.nextElementSibling.children[0].style.color = "white"; } }
-  this.domBox.get("디자이너 선택").style.height = "";
-  this.domBox.get("디자이너 선택").children[1].style.height = "";
-  this.domBox.get("디자이너 선택").children[1].style.marginTop = "";
+  this.domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
+  this.domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
+  this.domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
 
   if (this.thirdChildren instanceof Map) {
     this.thirdChildren.get("box1_designerInput").style.color = "";
@@ -2607,11 +2707,11 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
   document.querySelector(".pp_designer_question").classList.remove("pp_designer_question_add");
   document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_remove");
   document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_add");
-  this.domBox.get("고객 선택").style.height = "";
+  this.domBox.get("고객 선택").style.height = "calc(calc(100% / 3) - 21px)";
   this.domBox.get("고객 선택").style.borderBottom = "";
-  this.domBox.get("서비스 선택").style.height = "";
-  this.domBox.get("서비스 선택").children[1].style.height = "";
-  this.domBox.get("서비스 선택").children[1].style.marginTop = "";
+  this.domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)";
+  this.domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
+  this.domBox.get("서비스 선택").children[1].style.marginTop = "10px";
   let service2 = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
   for (let i of service2) {
     i.style.background = "";
@@ -2619,8 +2719,8 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
     i.children[0].style.fontSize = "";
     i.children[0].style.marginTop = "";
   }
-  this.domBox.get("고객 선택").children[0].style.color = "";
-  this.domBox.get("고객 선택").children[1].style.background = "";
+  this.domBox.get("고객 선택").children[0].style.color = "#404040";
+  this.domBox.get("고객 선택").children[1].style.background = "#f7f7f7";
 
   this.toggleSetting.first = 0;
   this.toggleSetting.second = 0;
@@ -2638,8 +2738,7 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
 }
 
 ProposalJs.prototype.load_processLoad = function (obj) {
-  let instance = this;
-  console.log(obj);
+  const instance = this;
   return function () {
     instance.toggleSetting.load = 1;
     instance.load_processLoad_first(obj);
@@ -2711,15 +2810,15 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     instance.domBox.get("서비스 선택").style.height = "3.2vh";
     instance.domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
     for (let i of service) { i.style.opacity = "0"; }
-    instance.domBox.get("서비스 선택").children[1].style.height = "";
-    instance.domBox.get("서비스 선택").children[1].style.marginTop = "";
+    instance.domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
+    instance.domBox.get("서비스 선택").children[1].style.marginTop = "10px";
     instance.domBox.get("디자이너 선택").style.height = "calc(100% - 6.4vh - 63px)";
     instance.domBox.get("디자이너 선택").children[1].style.height = "calc(90% + 2.7vh)";
     instance.domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
     if (instance.thirdChildren instanceof Map) {
       instance.thirdChildren.get("box1_designerInput").focus();
       instance.thirdChildren.get("box1_designerInput").style.color = "#59af89";
-      instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(obj.ProposalJs.length) + "명");
+      instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(obj.proposal.length) + "명");
       instance.thirdChildren.get("box1_title").style.color = "#59af89";
       instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
       instance.thirdChildren.get("box1_title").style.fontSize = "24px";
@@ -2751,58 +2850,55 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
-  const instance = this;
   let target, temp, temp2, standard_id;
   let temp_arr = [];
   let temp_num = 0;
-  let result_obj = {}
+  let result_obj = {};
   let full_string = '';
+  let tempObj_raw, tempObj;
+  let tagParsingObj, descriptionObj, descriptionArr;
 
   if (!update) {
-
     // 0 make proid
-    let proids = JSON.parse(await GeneralJs.ajaxPromise("collection=Project&find1={}&find2=" + JSON.stringify({ proid: 1 }), "/post_mfind"));
-    let proid_box = [];
-    for (let p of proids) {
-      proid_box.push(p.proid.replace(/[^0-9]/g, ''));
-    }
-    proid_box.sort(function (a, b) { return b - a; });
-
-    const today = new Date();
-    let today_str = String(today.getFullYear()).slice(2) + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1));
-    let new_num = 0;
-    if (proid_box[0].slice(0,4) === today_str) {
-      new_num = ((proid_box[0].slice(4).slice(0, 1) === '0') ? Number(proid_box[0].slice(5)) : Number(proid_box[0].slice(4))) + 1;
-      result_obj.proid = 'p' + today_str + '_' + "aa" + ((new_num < 10) ? '0' + String(new_num) : String(new_num)) + 's';
-    } else {
-      result_obj.proid = 'p' + today_str + '_' + "aa" + "01" + 's';
-    }
-
-    // 0 default
-    result_obj.desid = "";
-    result_obj.status = "작성중";
+    result_obj["desid"] = "";
+    result_obj["proposal.status"] = "작성중";
 
     // 1 client
-    target = instance.domBox.get("고객 선택").children[0];
+    target = document.getElementById("pp_firstprocess_box").children[0];
     if (target.querySelector("#pp_title_sub_b") === null) {
       alert("고객을 선택해주세요!");
       return "fail";
     } else {
       target = target.querySelector("#pp_title_sub_b");
-      result_obj.cliid = target.getAttribute("cus_id");
-      result_obj.client = target.textContent.replace(/ : /g, '');
+      result_obj["cliid"] = target.getAttribute("cus_id");
     }
-
   }
 
   // 2 service
-  target = instance.domBox.get("서비스 선택").children[0];
+  target = document.getElementById("pp_secondprocess_box").children[0];
   if (target.querySelector("#pp_title2_sub_b") === null) {
     alert("서비스를 선택해주세요!");
     return "fail";
   } else {
     target = target.querySelector("#pp_title2_sub_b");
-    result_obj.service = target.getAttribute("cus_id");
+    tempObj_raw = target.getAttribute("cus_id");
+    tempObj = tempObj_raw.split(' ');
+
+    if (/^홈스/.test(tempObj[0])) {
+      result_obj["service.serid"] = "s2011_aa02s";
+    } else if (/^홈퍼/.test(tempObj[0])) {
+      result_obj["service.serid"] = "s2011_aa01s";
+    } else {
+      result_obj["service.serid"] = "s2011_aa03s";
+    }
+
+    if (/mini/gi.test(tempObj[1])) {
+      result_obj["service.xValue"] = "M";
+    } else if (/basic/gi.test(tempObj[1])) {
+      result_obj["service.xValue"] = "B";
+    } else {
+      result_obj["service.xValue"] = "P";
+    }
   }
 
   // 3 details
@@ -2811,45 +2907,56 @@ ProposalJs.save_init = async function (update = false) {
     return "fail";
   } else {
     temp = document.querySelectorAll('.pp_designer_selected');
-    result_obj.proposal = new Array(temp.length);
-    for (let i = 0; i < result_obj.ProposalJs.length; i++) {
-      result_obj.proposal[i] = {}
+
+    result_obj["proposal.detail"] = new Array(temp.length);
+
+    for (let i = 0; i < temp.length; i++) {
+      result_obj["proposal.detail"][i] = {};
       temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_designers_total");
-      result_obj.proposal[i].desid = false;
+      result_obj["proposal.detail"][i].desid = false;
       for (let input of temp2.querySelectorAll("input")) {
-        if (input.checked) { result_obj.proposal[i].desid = input.value }
+        if (input.checked) {
+          result_obj["proposal.detail"][i].desid = input.value;
+        }
       }
-      if (!result_obj.proposal[i].desid) {
+      if (!result_obj["proposal.detail"][i].desid) {
         alert("디자이너를 선택해주세요!");
         return "fail";
       }
 
       temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_service_total");
       for (let input of temp2.querySelectorAll("input")) {
-        if (input.checked) { temp_arr.push(input.value); }
+        if (input.checked) {
+          temp_arr.push(input.value);
+        }
       }
       if (temp_arr.length === 0) {
         alert("금액의 종류와 양을 정확히 선택해주세요!");
         return "fail";
       }
+
       temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
-      result_obj.proposal[i].fee = new Array(temp_num);
+
+      result_obj["proposal.detail"][i].fee = new Array(temp_num);
+
       for (let f = 0; f < temp_num; f++) {
-        result_obj.proposal[i].fee[f] = {}
-        result_obj.proposal[i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
-        result_obj.proposal[i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
-        result_obj.proposal[i].fee[f].money = 0;
+        result_obj["proposal.detail"][i].fee[f] = {};
+        result_obj["proposal.detail"][i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
+        result_obj["proposal.detail"][i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
+        result_obj["proposal.detail"][i].fee[f].amount = 0;
+
         temp2 = temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[f];
         if (temp2.querySelector(".pp_designer_selected_box_contents_money_text").textContent === temp_arr[f]) {
-          result_obj.proposal[i].fee[f].money = Number(temp2.querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+          result_obj["proposal.detail"][i].fee[f].amount = Number(temp2.querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
         } else {
           if (f === 0) {
-            result_obj.proposal[i].fee[f].money = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[1].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+            result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[1].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
           } else {
-            result_obj.proposal[i].fee[f].money = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[0].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+            result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[0].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
           }
         }
       }
+
       temp_num = 0;
       temp_arr = [];
 
@@ -2860,25 +2967,22 @@ ProposalJs.save_init = async function (update = false) {
       if (document.querySelector('.pp_fifth_whitebox') !== null) {
         document.querySelector('.ppw_left_description_inbutton').click();
       }
-      result_obj.proposal[i].picture_settings = GeneralJs.tagParsing(temp[i].querySelector(".pp_designer_selected_box_value").textContent);
+      tagParsingObj = GeneralJs.tagParsing(temp[i].querySelector(".pp_designer_selected_box_value").textContent);
+      descriptionObj = tagParsingObj.pop();
+      descriptionArr = new Array(Object.keys(descriptionObj).length);
+      for (let z = 0; z < Object.keys(descriptionObj).length; z++) {
+        descriptionArr[z] = descriptionObj[Object.keys(descriptionObj)[z]];
+      }
+      result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
+      result_obj["proposal.detail"][i].description = descriptionArr;
     }
   }
 
   if (!update) {
-
-    let month, date;
-    month = (today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1);
-    date = (today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate());
-
-    await GeneralJs.ajaxPromise("table=BC1_conlist&c=a9_proposal&st=a4_customernumber&i=" + result_obj.cliid + "&v=" + (String(today.getFullYear()) + '-' + month + '-' + date), "/post_update");
-
-    full_string = JSON.stringify(result_obj);
-    await GeneralJs.ajaxPromise("collection=Project" + "&obj=" + GeneralJs.queryFilter(full_string), "/post_minsert");
+    await GeneralJs.ajaxPromise("updateQuery=" + JSON.stringify(result_obj), "/createProject");
   } else {
     standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
-    await GeneralJs.ajaxPromise("table=Project&st=proid&i=" + GeneralJs.queryFilter(standard_id) + "&c=service&v=" + GeneralJs.queryFilter(result_obj.service), "/post_mupdate");
-    full_string = JSON.stringify(result_obj.proposal);
-    await GeneralJs.ajaxPromise("table=Project&st=proid&i=" + GeneralJs.queryFilter(standard_id) + "&c=proposal&v=" + GeneralJs.queryFilter(full_string), "/post_mupdate");
+    await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: standard_id }) + "&updateQuery=" + JSON.stringify(result_obj), "/rawUpdateProject");
   }
 
   if (document.querySelector(".pp_fifth_cancelback") !== null) {
@@ -2889,8 +2993,9 @@ ProposalJs.save_init = async function (update = false) {
     document.querySelector(".pp_fifth_whitebox").remove();
   }
 
-  document.querySelector('.blewpp_button_garim').click();
-  console.log(result_obj);
+  console.log(document.getElementById("blewpp_button0"))
+
+  // document.getElementById("blewpp_button0").click();
 
   if (!update) {
     return "success";
@@ -3987,32 +4092,75 @@ ProposalJs.prototype.cssInjection = function () {
   document.querySelector("style").insertAdjacentHTML("beforeend", css);
 }
 
-ProposalJs.prototype.launching = async function (query = {}) {
+ProposalJs.prototype.launching = async function () {
+  const instance = this;
+  const { left, right } = this.mother.belowButtons.arrow;
   try {
+
+    left.style.display = 'none';
+    right.style.display = 'none';
+
     this.cssInjection();
     this.totalInitial();
     this.domBox = await this.firstProcess();
     this.thirdChildren = await this.thirdProcess();
     await this.secondProcess();
 
+    let query = GeneralJs.returnGet();
+    let proposal_list_raw, proposal_obj;
+    let textTarget;
+    let proid;
+    let serviceMap, xValueMap;
+    let clients;
+
     if (query.proid !== undefined) {
-      //query load start
-      let proid = query["proid"];
+
+      proid = query["proid"];
+
       if (proid.length === 11 && /_/g.test(proid)) {
-        //query load
         this.toggleSetting.listCreate = 1;
-        let proposal_list_raw = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1=' + JSON.stringify({ proid: proid }) + '&find2={}', '/post_mfind'));
-        (this.load_initevent()).call({
-          parentElement: {
-            querySelector: function (str) {
-              return {
-                textContent: JSON.stringify(proposal_list_raw[0]),
+        proposal_list_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + proid, "/searchProjects"));
+
+        serviceMap = new Map();
+        xValueMap = new Map();
+
+        serviceMap.set("s2011_aa01s", "홈퍼니싱");
+        serviceMap.set("s2011_aa02s", "홈스타일링");
+        serviceMap.set("s2011_aa03s", "토탈 스타일링");
+
+        xValueMap.set("M", "mini");
+        xValueMap.set("B", "basic");
+        xValueMap.set("P", "premium");
+
+        for (let p of proposal_list_raw) {
+          clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&query=" + p.cliid, "/searchClients"));
+          p.client = clients[0].name;
+          p.serviceName = `${serviceMap.get(p.service.serid)} ${xValueMap.get(p.service.xValue)}`;
+        }
+
+        if (proposal_list_raw.length > 0) {
+
+          proposal_obj = proposal_list_raw[0];
+          textTarget = {
+            proid: proposal_obj.proid,
+            client: proposal_obj.client,
+            cliid: proposal_obj.cliid,
+            service: proposal_obj.serviceName,
+            proposal: proposal_obj.proposal.detail,
+          };
+
+          (this.load_initevent()).call({
+            parentElement: {
+              querySelector: function (str) {
+                return {
+                  textContent: JSON.stringify(textTarget),
+                };
               }
             }
-          }
-        }, {});
+          }, {});
+
+        }
       }
-      //query load end
     }
   } catch (e) {
     console.log(e);
