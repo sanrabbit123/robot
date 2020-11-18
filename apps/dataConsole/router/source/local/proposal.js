@@ -2266,13 +2266,26 @@ ProposalJs.prototype.list_leftBar = async function () {
 }
 
 ProposalJs.prototype.list_mainArea = async function () {
-  let proposal_list_raw = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1={}&find2={}', '/post_mfind'));
-  let designer_names = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ past_desid: 1, designer: 1 }), '/post_mfind'));
-  let designer_names_obj = {};
-  for (let obj of designer_names) {
-    designer_names_obj[obj.past_desid] = obj.designer;
+  const instance = this;
+  try {
+    let projectList;
+    let designers;
+    let designersObj;
+
+    console.log(await GeneralJs.ajaxPromise('noFlat=true', '/getProjects'));
+
+    projectList = JSON.parse(await GeneralJs.ajaxPromise('collection=Project&find1={}&find2={}', '/post_mfind'));
+    designers = JSON.parse(await GeneralJs.ajaxPromise('collection=Designer&find1={}&find2=' + JSON.stringify({ past_desid: 1, designer: 1 }), '/post_mfind'));
+
+    designersObj = {};
+    for (let d of designers) {
+      designersObj[d.desid] = d.designer;
+    }
+
+    this.list_mainArea_tongMake(this.list_domBox.get("메인 리스트"), projectList, designersObj, true);
+  } catch (e) {
+    console.log(e);
   }
-  this.list_mainArea_tongMake(this.list_domBox.get("메인 리스트"), proposal_list_raw, designer_names_obj, true);
 }
 
 ProposalJs.prototype.list_mainArea_tongMake = function (parent, proposal_list_raw, designer_names_obj, init) {
