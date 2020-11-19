@@ -12,6 +12,7 @@ const ClientJs = function () {
   this.belowHeight = null;
   this.whiteBox = null;
   this.standardDoms = [];
+  this.caseDoms = [];
   this.cases = [];
   this.totalMother = null;
   this.totalFather = null;
@@ -77,7 +78,7 @@ ClientJs.prototype.standardBar = function (standard) {
   }
 
   leftPosition = [
-    42,
+    57,
     141,
   ];
 
@@ -107,6 +108,31 @@ ClientJs.prototype.standardBar = function (standard) {
       div_clone3.style[i] = style3[i];
     }
     div_clone3.style.left = String(leftPosition[0]) + ea;
+    if (num === 0) {
+      div_clone3.addEventListener("click", function (e) {
+        let h, arr, toggle;
+        h = document.createDocumentFragment();
+        arr = [];
+        toggle = Number(instance.standardDoms[0].getAttribute("sort"));
+        for (let i = 1; i < instance.standardDoms.length; i++) {
+          arr.push(instance.standardDoms[i]);
+        }
+        arr.sort((a, b) => {
+          if (a.children[0].textContent < b.children[0].textContent) {
+            return toggle ? -1 : 1;
+          }
+          if (a.children[0].textContent > b.children[0].textContent) {
+            return toggle ? 1 : -1;
+          }
+          return 0;
+        });
+        for (let div of arr) {
+          h.appendChild(div);
+        }
+        div_clone.appendChild(h);
+        instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
+      });
+    }
     div_clone2.appendChild(div_clone3);
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -115,10 +141,37 @@ ClientJs.prototype.standardBar = function (standard) {
       div_clone3.style[i] = style3[i];
     }
     div_clone3.style.left = String(leftPosition[1]) + ea;
+    if (num === 0) {
+      div_clone3.addEventListener("click", function (e) {
+        let h, arr, toggle;
+        h = document.createDocumentFragment();
+        arr = [];
+        toggle = Number(instance.standardDoms[0].getAttribute("sort"));
+        for (let i = 1; i < instance.standardDoms.length; i++) {
+          arr.push(instance.standardDoms[i]);
+        }
+        arr.sort((a, b) => {
+          if (a.children[1].textContent < b.children[1].textContent) {
+            return toggle ? -1 : 1;
+          }
+          if (a.children[1].textContent > b.children[1].textContent) {
+            return toggle ? 1 : -1;
+          }
+          return 0;
+        });
+        for (let div of arr) {
+          h.appendChild(div);
+        }
+        div_clone.appendChild(h);
+        instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
+      });
+    }
     div_clone2.appendChild(div_clone3);
 
     div_clone2.style.cursor = "pointer";
-    div_clone2.addEventListener("click", this.whiteViewMaker(num));
+    if (num !== 0) {
+      div_clone2.addEventListener("click", this.whiteViewMaker(num));
+    }
 
     if (num !== 0) {
       this.cases.push({ cliid, name });
@@ -129,6 +182,9 @@ ClientJs.prototype.standardBar = function (standard) {
     }
 
     this.standardDoms.push(div_clone2);
+    if (num === 0) {
+      div_clone2.setAttribute("sort", String(0));
+    }
     div_clone2.setAttribute("index", String(num));
     div_clone.appendChild(div_clone2);
     num++;
@@ -377,8 +433,45 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
       div_clone3.setAttribute("column", columns[z]);
-      div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
       div_clone3.addEventListener("contextmenu", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+
+      if (num === 0) {
+        div_clone3.addEventListener("click", function (e) {
+          let h, arr, toggle;
+          h = document.createDocumentFragment();
+          arr = [];
+          toggle = Number(instance.caseDoms[0].getAttribute("sort"));
+          for (let i = 1; i < instance.caseDoms.length; i++) {
+            arr.push(instance.caseDoms[i]);
+          }
+
+          arr.sort((a, b) => {
+            if (/^[0-9]/.test(a.children[z].textContent) && !/\-/g.test(a.children[z].textContent)) {
+              if (toggle) {
+                return Number(a.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.children[z].textContent.replace(/[^0-9\.]/g, ''));
+              } else {
+                return Number(b.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(a.children[z].textContent.replace(/[^0-9\.]/g, ''));
+              }
+            } else {
+              if (a.children[z].textContent < b.children[z].textContent) {
+                return toggle ? -1 : 1;
+              }
+              if (a.children[z].textContent > b.children[z].textContent) {
+                return toggle ? 1 : -1;
+              }
+              return 0;
+            }
+          });
+          for (let div of arr) {
+            h.appendChild(div);
+          }
+          div_clone.appendChild(h);
+          instance.caseDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
+        });
+      } else {
+        div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+      }
+
       div_clone2.appendChild(div_clone3);
     }
 
@@ -389,11 +482,14 @@ ClientJs.prototype.infoArea = function (info) {
       upsideWhiteBar.style.borderBottom = "1px dashed #dddddd";
       upsideWhiteBar.style.height = String(this.module.height + this.module.initialLine) + ea;
 
+      upsideWhiteBar.setAttribute("sort", String(0));
       this.totalMother.appendChild(upsideWhiteBar);
     } else {
       this.cases[num] = ({ ...this.cases[num], ...obj });
       div_clone.appendChild(div_clone2);
     }
+
+    this.caseDoms.push(div_clone2);
     num++;
   }
 
