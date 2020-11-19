@@ -150,8 +150,15 @@ ProposalJs.below_events = {
       for (let i = 0; i < mothers.length; i++) {
         temp = mothers[i].querySelectorAll(".pp_designer_selected_box_contents_designers_input");
         keyBoo.unshift(false);
-        for (let j of temp) { if (j.checked) { key++; keyBoo.unshift(true); } }
-        if (!keyBoo[0]) { break; }
+        for (let j of temp) {
+          if (j.checked) {
+            key++;
+            keyBoo.unshift(true);
+          }
+        }
+        if (!keyBoo[0]) {
+          break;
+        }
       }
       e.preventDefault();
       if (e.keyCode === 13 || e.keyCode === 32) {
@@ -215,119 +222,170 @@ ProposalJs.below_events = {
   },
   fifth: {
     b2: async function fifth_click_button2(e) {
-      let designer = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_designer");
-      let desid = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_desid");
-
-      let result = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
-      let mother = this;
-      let div = document.createElement("DIV");
-      div.classList.add("blewpp_fifthevent_box");
-      let cancel = document.createElement("DIV");
-      cancel.id = "blewpp_fifthevent_cancelbox";
-      let div_clone;
-      async function click_event(e) {
-        if (this.id !== "blewpp_fifthevent_cancelbox") {
-
-          //general
-          let this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
-
-          //name
-          let today = new Date();
-          let new_name = document.getElementById("pp_title_sub_b").textContent.replace(/:/g, '').replace(/ /g, '') + ' ' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1));
-          result[0].setting.proposal[this_order].name = new_name;
-
-          //value
-          let obj = [];
-          let pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
-          let descriptions = document.querySelectorAll(".ppw_left_description_inbox_input");
-          let targetBoxes = document.querySelectorAll(".pp_designer_selected");
-          let general_str = '';
-          for (let pic of pictures) {
-            general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
-          }
-          general_str = general_str.slice(0, -10);
-
-          result[0].setting.proposal[this_order].photo = GeneralJs.tagParsing(general_str);
-
-          for (let i = 0; i < descriptions.length; i++) {
-            obj.push(descriptions[i].value);
-          }
-
-          result[0].setting.proposal[this_order].description = obj;
-
-          console.log(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ desid: desid }) + "&target=setting.proposal" + "&updateValue=" + JSON.stringify(result[0].setting.proposal), "/rawUpdateDesigner"));
+      const mother = this;
+      const designer = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_designer");
+      const desid = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_desid");
+      const result = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
+      try {
+        const loop_initial = 10;
+        const loop_margin = 37;
+        const loop_order = [ "s0", "s1", "s2", "s3", "s4" ];
+        let loop_css = new Array(loop_order.length);
+        for (let i = 0; i < loop_order.length; i++) {
+          loop_css[i] = loop_initial + (loop_margin * i);
         }
+        let div, cancel, div_clone;
+        let click_event, contextmenu_event;
+        let ea = "px";
 
-        //remove
-        let targets = document.querySelectorAll(".blewpp_fifthevent_box");
-        for (let node of targets) { node.remove(); }
-        document.getElementById("blewpp_fifthevent_cancelbox").remove();
-        mother.addEventListener("click", fifth_click_button2, { once: true });
-      }
+        div = document.createElement("DIV");
+        div.classList.add("blewpp_fifthevent_box");
 
-      async function contextmenu_event(e) {
-        if (e.cancelable) { e.preventDefault(); }
-        if (this.id !== "blewpp_fifthevent_cancelbox") {
-          //general
-          let this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
-          // Default 0
-          let descriptions = result[0].setting.proposal[this_order].description;
-          let default_setting = result[0].setting.proposal[this_order].photo;
-          function picturebox_make(dom) {
-            let div = document.createElement("DIV");
-            let div_clone, inbox;
-            inbox = div.cloneNode(true);
-            inbox.classList.add("ppw_left_picturebox_inbox");
-            for (let i = 0; i < default_setting.length; i++) {
-              div_clone = div.cloneNode(true);
-              div_clone.classList.add("ppw_left_picturebox_inbox_detail");
-              if (default_setting[i].unionPo !== "union") {
-                div_clone.addEventListener("click", ProposalJs.fifthPicturebox_union(), { once: true });
-              } else if (default_setting[i].unionPo === "union") {
-                div_clone.addEventListener("click", ProposalJs.fifthPicturebox_split(), { once: true });
+        cancel = document.createElement("DIV");
+        cancel.id = "blewpp_fifthevent_cancelbox";
+
+        click_event = async function (e) {
+          const today = new Date();
+          try {
+            let this_order;
+            let new_name;
+            let obj;
+            let pictures, descriptions;
+            let targetBoxes;
+            let general_str;
+            let targets;
+
+            if (this.id !== "blewpp_fifthevent_cancelbox") {
+
+              //general
+              this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
+
+              //name
+              new_name = document.getElementById("pp_title_sub_b").textContent.replace(/:/g, '').replace(/ /g, '') + ' ' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1));
+              result[0].setting.proposal[this_order].name = new_name;
+
+              //value
+              obj = [];
+              pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
+              descriptions = document.querySelectorAll(".ppw_left_description_inbox_input");
+              targetBoxes = document.querySelectorAll(".pp_designer_selected");
+              general_str = '';
+              for (let pic of pictures) {
+                general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
               }
-              div_clone.setAttribute("cus_info", GeneralJs.tagCoverting(default_setting[i]));
-              div_clone.classList.add("fifth_drag_img");
-              div_clone.style.cssText = default_setting[i].styleText;
-              inbox.appendChild(div_clone);
+              general_str = general_str.slice(0, -10);
+
+              result[0].setting.proposal[this_order].photo = GeneralJs.tagParsing(general_str);
+
+              for (let i = 0; i < descriptions.length; i++) {
+                obj.push(descriptions[i].value);
+              }
+
+              result[0].setting.proposal[this_order].description = obj;
+
+              console.log(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ desid: desid }) + "&target=setting.proposal" + "&updateValue=" + JSON.stringify(result[0].setting.proposal), "/rawUpdateDesigner"));
             }
-            dom.appendChild(inbox);
-          }
-          let pictureBox = document.querySelector(".ppw_left_picturebox");
-          while (pictureBox.firstChild) { pictureBox.removeChild(pictureBox.lastChild); }
-          picturebox_make(pictureBox);
-          ProposalJs.fifthDrag(".fifth_drag_img");
-          let descriptionBox = document.querySelector(".ppw_left_description");
-          let descriptionBox_inputs = descriptionBox.querySelectorAll("input");
-          for (let i = 0; i < descriptionBox_inputs.length; i++) {
-            descriptionBox_inputs[i].value = descriptions["description" + String(i)];
+
+            //remove
+            targets = document.querySelectorAll(".blewpp_fifthevent_box");
+            for (let node of targets) {
+              node.remove();
+            }
+            document.getElementById("blewpp_fifthevent_cancelbox").remove();
+            mother.addEventListener("click", fifth_click_button2, { once: true });
+
+          } catch (e) {
+            console.log(e);
           }
         }
-        //remove
-        let targets = document.querySelectorAll(".blewpp_fifthevent_box");
-        for (let node of targets) { node.remove(); }
-        document.getElementById("blewpp_fifthevent_cancelbox").remove();
-        document.getElementById("svgcirclered_b").style.opacity = "";
-        mother.addEventListener("click", fifth_click_button2, { once: true });
-      }
 
-      cancel.addEventListener("click", click_event, { once: true });
-      cancel.addEventListener("contextmenu", contextmenu_event, { once: true });
+        contextmenu_event = async function (e) {
+          let this_order;
+          let descriptions, default_setting;
+          let pictureBox;
+          let descriptionBox, descriptionBox_inputs;
+          let targets;
+          try {
 
-      this.parentElement.parentElement.parentElement.appendChild(cancel);
+            if (e.cancelable) {
+              e.preventDefault();
+            }
 
-      let loop_css = [ "top: -8px;", "top: -53px;", "top: -98px;", "top: -144px;", "top: -190px;" ];
-      let loop_order = [ "s0", "s1", "s2", "s3", "s4" ];
+            if (this.id !== "blewpp_fifthevent_cancelbox") {
 
-      for (let i = 0; i < loop_css.length; i++) {
-        div_clone = div.cloneNode(true);
-        div_clone.style.cssText = loop_css[i];
-        div_clone.textContent = result[0].setting.proposal[this_order].name;
-        div_clone.setAttribute("cus_order", loop_order[i]);
-        div_clone.addEventListener("click", click_event, { once: true });
-        div_clone.addEventListener("contextmenu", contextmenu_event, { once: true });
+              //general
+              this_order = Number(this.getAttribute("cus_order").replace(/^s/g, ''));
 
-        this.parentElement.appendChild(div_clone);
+              // Default 0
+              descriptions = result[0].setting.proposal[this_order].description;
+              default_setting = result[0].setting.proposal[this_order].photo;
+
+              pictureBox = document.querySelector(".ppw_left_picturebox");
+              while (pictureBox.firstChild) {
+                pictureBox.removeChild(pictureBox.lastChild);
+              }
+              const picturebox_make = function (dom) {
+                const div = document.createElement("DIV");
+                let div_clone, inbox;
+                inbox = div.cloneNode(true);
+                inbox.classList.add("ppw_left_picturebox_inbox");
+                for (let i = 0; i < default_setting.length; i++) {
+                  div_clone = div.cloneNode(true);
+                  div_clone.classList.add("ppw_left_picturebox_inbox_detail");
+                  if (default_setting[i].unionPo !== "union") {
+                    div_clone.addEventListener("click", ProposalJs.fifthPicturebox_union(), { once: true });
+                  } else if (default_setting[i].unionPo === "union") {
+                    div_clone.addEventListener("click", ProposalJs.fifthPicturebox_split(), { once: true });
+                  }
+                  div_clone.setAttribute("cus_info", GeneralJs.tagCoverting(default_setting[i]));
+                  div_clone.classList.add("fifth_drag_img");
+                  div_clone.style.cssText = default_setting[i].styleText;
+                  inbox.appendChild(div_clone);
+                }
+                dom.appendChild(inbox);
+              }
+              picturebox_make(pictureBox);
+
+              ProposalJs.fifthDrag(".fifth_drag_img");
+
+              descriptionBox = document.querySelector(".ppw_left_description");
+              descriptionBox_inputs = descriptionBox.querySelectorAll("input");
+              for (let i = 0; i < descriptionBox_inputs.length; i++) {
+                descriptionBox_inputs[i].value = descriptions[i];
+              }
+            }
+
+            //remove
+            targets = document.querySelectorAll(".blewpp_fifthevent_box");
+            for (let node of targets) {
+              node.remove();
+            }
+            document.getElementById("blewpp_fifthevent_cancelbox").remove();
+            mother.addEventListener("click", fifth_click_button2, { once: true });
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        cancel.addEventListener("click", click_event, { once: true });
+        cancel.addEventListener("contextmenu", contextmenu_event, { once: true });
+
+        this.parentElement.appendChild(cancel);
+
+        for (let i = 0; i < loop_css.length; i++) {
+          div_clone = div.cloneNode(true);
+          div_clone.style.top = String(loop_css[i] * -1) + ea;
+          div_clone.textContent = result[0].setting.proposal[i].name;
+          div_clone.setAttribute("cus_order", loop_order[i]);
+          div_clone.addEventListener("click", click_event, { once: true });
+          div_clone.addEventListener("contextmenu", contextmenu_event, { once: true });
+
+          this.parentElement.appendChild(div_clone);
+        }
+
+      } catch (e) {
+        console.log(e);
       }
     },
   },
@@ -336,26 +394,28 @@ ProposalJs.below_events = {
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
   const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
-
+  const { left, right } = this.mother.belowButtons.arrow;
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let style;
   let ea = 'px';
+  let listViewEvent, createViewEvent;
 
   reportIcon.style.opacity = '0.4';
   returnIcon.style.opacity = '0.4';
+  left.id = "hiddenListViewButton";
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.id = "blewpp_button" + String(3);
   div_clone.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    width: String(74.5) + ea,
+    width: String(75) + ea,
     height: String(44) + ea,
     top: String(31.5) + ea,
     right: String(49) + ea,
     background: "white",
     borderRadius: String(3) + ea,
-    fontSize: String(17.5) + ea,
+    fontSize: String(17) + ea,
     fontWeight: String(500) + ea,
     textAlign: "center",
     paddingTop: String(13) + ea,
@@ -385,10 +445,10 @@ ProposalJs.prototype.below_initial = function () {
   this.below_tong.set("button2", reportIcon);
   reportIcon.id = "blewpp_button" + String(2);
 
-  down.addEventListener("click", function (e) {
+  listViewEvent = function (e) {
     if (instance.toggleSetting.listCreate === 0) {
-      let mother = instance.createPannel;
-      let father = instance.listPannel;
+      const mother = instance.createPannel;
+      const father = instance.listPannel;
       father.classList.remove("listpp_fadeout");
       father.classList.add("listpp_fadein");
       instance.list_launching();
@@ -398,12 +458,12 @@ ProposalJs.prototype.below_initial = function () {
       instance.toggleSetting.listCreate = 1;
       instance.pastMaps = [];
     }
-  });
+  }
 
-  up.addEventListener("click", function (e) {
+  createViewEvent = function (e) {
     if (instance.toggleSetting.listCreate === 1) {
-      let mother = instance.createPannel;
-      let father = instance.listPannel;
+      const mother = instance.createPannel;
+      const father = instance.listPannel;
       father.classList.add("listpp_fadeout");
       father.classList.remove("listpp_fadein");
       mother.classList.remove("listpp_fadeout");
@@ -420,29 +480,21 @@ ProposalJs.prototype.below_initial = function () {
       instance.toggleSetting.load = 0;
       instance.pastMaps = [];
     }
-  });
+  }
+
+  down.addEventListener("click", listViewEvent);
+  up.addEventListener("click", createViewEvent);
+  left.addEventListener("click", listViewEvent);
 }
 
 ProposalJs.prototype.below_first = function () {
   const instance = this;
 
-  //general
-  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  //this.below_tong.get("button1").children[0].style.color = "#59af89";
-
-  //button
-  //this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
   if (this.toggleSetting.load === 0) {
-    //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
-  } else {
-    //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
-  }
-  //this.below_tong.get("button2").style.right = String(173) + "px";
-  //this.below_tong.get("button3").style.right = String(55) + "px";
-  this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.first.b2);
-  if (this.toggleSetting.load === 0) {
+    this.below_tong.get("button3").textContent = "Save";
     this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.save);
   } else {
+    this.below_tong.get("button3").textContent = "Update";
     this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.update);
   }
 
@@ -452,54 +504,35 @@ ProposalJs.prototype.below_first = function () {
   this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
   this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.designer);
   this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.client);
+  this.below_tong.get("search").focus();
 }
 
 ProposalJs.prototype.below_second = function (onoff) {
   const instance = this;
 
-  //general
-  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  //this.below_tong.get("button1").children[0].style.color = "#59af89";
-
   if (onoff === "on") {
 
-    //button
-    //this.below_tong.get("button2").style.width = String(108) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "서비스 상세";
     if (this.toggleSetting.load === 0) {
-      //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+      this.below_tong.get("button3").textContent = "Save";
     } else {
-      //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+      this.below_tong.get("button3").textContent = "Update";
     }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.second.b2);
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "서비스 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.designer);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.service);
+    this.below_tong.get("search").focus();
 
   } else {
 
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "고객 카드 보기";
     if (this.toggleSetting.load === 0) {
-      //this.below_tong.get("button3").children[0].textContent = "제안서 저장";
+      this.below_tong.get("button3").textContent = "Save";
     } else {
-      //this.below_tong.get("button3").children[0].textContent = "제안서 수정";
+      this.below_tong.get("button3").textContent = "Update";
     }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.first.b2);
 
     //search
     this.below_tong.get("search").setAttribute("placeholder", "고객 이름 검색...");
@@ -507,6 +540,8 @@ ProposalJs.prototype.below_second = function (onoff) {
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.designer);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.client);
+    this.below_tong.get("search").focus();
+
   }
 
 }
@@ -514,138 +549,121 @@ ProposalJs.prototype.below_second = function (onoff) {
 ProposalJs.prototype.below_third = function (onoff) {
   const instance = this;
 
-  //general
-  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  //this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.third.b2);
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
+    }
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "디자이너 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
+    this.below_tong.get("search").focus();
+
   } else {
-    //button
-    //this.below_tong.get("button2").style.width = String(108) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "서비스 상세";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.second.b2);
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
+    }
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "서비스 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.designer);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.service);
+    this.below_tong.get("search").focus();
+
   }
 }
 
 ProposalJs.prototype.below_fourth = function (onoff) {
   const instance = this;
 
-  //general
-  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  //this.below_tong.get("button1").children[0].style.color = "#59af89";
   if (onoff === "on") {
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.fourth.b2);
-    if (this.toggleSetting.load === 1) {
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
       this.below_tong.get("button3").removeEventListener("click", ProposalJs.below_events.save);
       this.below_tong.get("button3").addEventListener("click", ProposalJs.below_events.update);
     }
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "디자이너 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
+    this.below_tong.get("search").focus();
+
   } else {
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "디자이너 목록";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
-    this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.third.b2);
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
+    }
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "디자이너 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
+    this.below_tong.get("search").focus();
+
   }
 }
 
 ProposalJs.prototype.below_fifth = function (onoff) {
   const instance = this;
-  //general
-  //this.below_tong.get("button0").children[0].style.opacity = "0.4";
-  //this.below_tong.get("button1").children[0].style.color = "#59af89";
-  if (onoff === "on") {
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "세팅 저장하기";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
 
+  if (onoff === "on") {
+
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
+    }
+
+    this.below_tong.get("button2").style.opacity = '1';
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.first.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.second.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.third.b2);
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fourth.b2);
     this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.fifth.b2, { once: true });
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "디자이너 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
+
   } else {
-    //button
-    //this.below_tong.get("button2").style.width = String(126) + "px";
-    //this.below_tong.get("button2").style.right = String(173) + "px";
-    //this.below_tong.get("button3").style.right = String(55) + "px";
-    //this.below_tong.get("button2").children[0].textContent = "디자이너 카드";
-    //if (this.toggleSetting.load === 0) { this.below_tong.get("button3").children[0].textContent = "제안서 저장"; }
-    //else { this.below_tong.get("button3").children[0].textContent = "제안서 수정"; }
+
+    if (this.toggleSetting.load === 0) {
+      this.below_tong.get("button3").textContent = "Save";
+    } else {
+      this.below_tong.get("button3").textContent = "Update";
+    }
+
+    this.below_tong.get("button2").style.opacity = '0.4';
     this.below_tong.get("button2").removeEventListener("click", ProposalJs.below_events.fifth.b2, { once: true });
-    this.below_tong.get("button2").addEventListener("click", ProposalJs.below_events.fourth.b2);
+
     //search
     this.below_tong.get("search").setAttribute("placeholder", "디자이너 검색...");
     this.below_tong.get("search").value = "";
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.client);
     this.below_tong.get("search").removeEventListener("keyup", ProposalJs.below_events.search.service);
     this.below_tong.get("search").addEventListener("keyup", ProposalJs.below_events.search.designer);
+    this.below_tong.get("search").focus();
+
   }
 }
 
@@ -1657,11 +1675,15 @@ ProposalJs.prototype.fourthProcess = async function (num) {
 ProposalJs.prototype.fifthWhitesave = function (id) {
   const instance = this;
   return function (e) {
-    let obj = {}
-    let pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
-    let descriptions = document.querySelectorAll(".ppw_left_description_inbox_input");
-    let targetBoxes = document.querySelectorAll(".pp_designer_selected");
-    let general_str = '';
+    let pictures, descriptions, targetBoxes;
+    let obj, general_str;
+
+    obj = {};
+    pictures = document.querySelectorAll(".ppw_left_picturebox_inbox_detail");
+    descriptions = document.querySelectorAll(".ppw_left_description_inbox_input");
+    targetBoxes = document.querySelectorAll(".pp_designer_selected");
+    general_str = '';
+
     for (let pic of pictures) {
       general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
     }
@@ -1678,7 +1700,7 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
 }
 
 ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pictureSettings) {
-  let instance = this;
+  const instance = this;
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
   let leftMother, rightMother;
   let mother = whitebox;
@@ -2850,157 +2872,160 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
-  let target, temp, temp2, standard_id;
-  let temp_arr = [];
-  let temp_num = 0;
-  let result_obj = {};
-  let full_string = '';
-  let tempObj_raw, tempObj;
-  let tagParsingObj, descriptionObj, descriptionArr;
+  try {
+    let target, temp, temp2, standard_id;
+    let temp_arr = [];
+    let temp_num = 0;
+    let result_obj = {};
+    let full_string = '';
+    let tempObj_raw, tempObj;
+    let tagParsingObj, descriptionObj, descriptionArr;
 
-  if (!update) {
-    // 0 make proid
-    result_obj["desid"] = "";
-    result_obj["proposal.status"] = "작성중";
+    if (!update) {
+      // 0 make proid
+      result_obj["desid"] = "";
+      result_obj["proposal.status"] = "작성중";
 
-    // 1 client
-    target = document.getElementById("pp_firstprocess_box").children[0];
-    if (target.querySelector("#pp_title_sub_b") === null) {
-      alert("고객을 선택해주세요!");
+      // 1 client
+      target = document.getElementById("pp_firstprocess_box").children[0];
+      if (target.querySelector("#pp_title_sub_b") === null) {
+        alert("고객을 선택해주세요!");
+        return "fail";
+      } else {
+        target = target.querySelector("#pp_title_sub_b");
+        result_obj["cliid"] = target.getAttribute("cus_id");
+      }
+    }
+
+    // 2 service
+    target = document.getElementById("pp_secondprocess_box").children[0];
+    if (target.querySelector("#pp_title2_sub_b") === null) {
+      alert("서비스를 선택해주세요!");
       return "fail";
     } else {
-      target = target.querySelector("#pp_title_sub_b");
-      result_obj["cliid"] = target.getAttribute("cus_id");
+      target = target.querySelector("#pp_title2_sub_b");
+      tempObj_raw = target.getAttribute("cus_id");
+      tempObj = tempObj_raw.split(' ');
+
+      if (/^홈스/.test(tempObj[0])) {
+        result_obj["service.serid"] = "s2011_aa02s";
+      } else if (/^홈퍼/.test(tempObj[0])) {
+        result_obj["service.serid"] = "s2011_aa01s";
+      } else {
+        result_obj["service.serid"] = "s2011_aa03s";
+      }
+
+      if (/mini/gi.test(tempObj[1])) {
+        result_obj["service.xValue"] = "M";
+      } else if (/basic/gi.test(tempObj[1])) {
+        result_obj["service.xValue"] = "B";
+      } else {
+        result_obj["service.xValue"] = "P";
+      }
     }
-  }
 
-  // 2 service
-  target = document.getElementById("pp_secondprocess_box").children[0];
-  if (target.querySelector("#pp_title2_sub_b") === null) {
-    alert("서비스를 선택해주세요!");
-    return "fail";
-  } else {
-    target = target.querySelector("#pp_title2_sub_b");
-    tempObj_raw = target.getAttribute("cus_id");
-    tempObj = tempObj_raw.split(' ');
-
-    if (/^홈스/.test(tempObj[0])) {
-      result_obj["service.serid"] = "s2011_aa02s";
-    } else if (/^홈퍼/.test(tempObj[0])) {
-      result_obj["service.serid"] = "s2011_aa01s";
+    // 3 details
+    if (document.querySelectorAll('.pp_designer_selected').length === 0) {
+      alert("디자이너를 선택해주세요!");
+      return "fail";
     } else {
-      result_obj["service.serid"] = "s2011_aa03s";
-    }
+      temp = document.querySelectorAll('.pp_designer_selected');
 
-    if (/mini/gi.test(tempObj[1])) {
-      result_obj["service.xValue"] = "M";
-    } else if (/basic/gi.test(tempObj[1])) {
-      result_obj["service.xValue"] = "B";
-    } else {
-      result_obj["service.xValue"] = "P";
-    }
-  }
+      result_obj["proposal.detail"] = new Array(temp.length);
 
-  // 3 details
-  if (document.querySelectorAll('.pp_designer_selected').length === 0) {
-    alert("디자이너를 선택해주세요!");
-    return "fail";
-  } else {
-    temp = document.querySelectorAll('.pp_designer_selected');
-
-    result_obj["proposal.detail"] = new Array(temp.length);
-
-    for (let i = 0; i < temp.length; i++) {
-      result_obj["proposal.detail"][i] = {};
-      temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_designers_total");
-      result_obj["proposal.detail"][i].desid = false;
-      for (let input of temp2.querySelectorAll("input")) {
-        if (input.checked) {
-          result_obj["proposal.detail"][i].desid = input.value;
-        }
-      }
-      if (!result_obj["proposal.detail"][i].desid) {
-        alert("디자이너를 선택해주세요!");
-        return "fail";
-      }
-
-      temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_service_total");
-      for (let input of temp2.querySelectorAll("input")) {
-        if (input.checked) {
-          temp_arr.push(input.value);
-        }
-      }
-      if (temp_arr.length === 0) {
-        alert("금액의 종류와 양을 정확히 선택해주세요!");
-        return "fail";
-      }
-
-      temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
-
-      result_obj["proposal.detail"][i].fee = new Array(temp_num);
-
-      for (let f = 0; f < temp_num; f++) {
-        result_obj["proposal.detail"][i].fee[f] = {};
-        result_obj["proposal.detail"][i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
-        result_obj["proposal.detail"][i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
-        result_obj["proposal.detail"][i].fee[f].amount = 0;
-
-        temp2 = temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[f];
-        if (temp2.querySelector(".pp_designer_selected_box_contents_money_text").textContent === temp_arr[f]) {
-          result_obj["proposal.detail"][i].fee[f].amount = Number(temp2.querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
-        } else {
-          if (f === 0) {
-            result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[1].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
-          } else {
-            result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[0].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+      for (let i = 0; i < temp.length; i++) {
+        result_obj["proposal.detail"][i] = {};
+        temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_designers_total");
+        result_obj["proposal.detail"][i].desid = false;
+        for (let input of temp2.querySelectorAll("input")) {
+          if (input.checked) {
+            result_obj["proposal.detail"][i].desid = input.value;
           }
         }
-      }
+        if (!result_obj["proposal.detail"][i].desid) {
+          alert("디자이너를 선택해주세요!");
+          return "fail";
+        }
 
-      temp_num = 0;
-      temp_arr = [];
+        temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_service_total");
+        for (let input of temp2.querySelectorAll("input")) {
+          if (input.checked) {
+            temp_arr.push(input.value);
+          }
+        }
+        if (temp_arr.length === 0) {
+          alert("금액의 종류와 양을 정확히 선택해주세요!");
+          return "fail";
+        }
 
-      if (temp[i].querySelector(".pp_designer_selected_box_value").textContent === "") {
-        alert("사진을 선택해주세요!");
-        return "fail";
+        temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
+
+        result_obj["proposal.detail"][i].fee = new Array(temp_num);
+
+        for (let f = 0; f < temp_num; f++) {
+          result_obj["proposal.detail"][i].fee[f] = {};
+          result_obj["proposal.detail"][i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
+          result_obj["proposal.detail"][i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
+          result_obj["proposal.detail"][i].fee[f].amount = 0;
+
+          temp2 = temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[f];
+          if (temp2.querySelector(".pp_designer_selected_box_contents_money_text").textContent === temp_arr[f]) {
+            result_obj["proposal.detail"][i].fee[f].amount = Number(temp2.querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+          } else {
+            if (f === 0) {
+              result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[1].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+            } else {
+              result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[0].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
+            }
+          }
+        }
+
+        temp_num = 0;
+        temp_arr = [];
+
+        if (temp[i].querySelector(".pp_designer_selected_box_value").textContent === "") {
+          alert("사진을 선택해주세요!");
+          return "fail";
+        }
+        if (document.querySelector('.pp_fifth_whitebox') !== null) {
+          document.querySelector('.ppw_left_description_inbutton').click();
+        }
+        tagParsingObj = GeneralJs.tagParsing(temp[i].querySelector(".pp_designer_selected_box_value").textContent);
+        descriptionObj = tagParsingObj.pop();
+        descriptionArr = new Array(Object.keys(descriptionObj).length);
+        for (let z = 0; z < Object.keys(descriptionObj).length; z++) {
+          descriptionArr[z] = descriptionObj[Object.keys(descriptionObj)[z]];
+        }
+        result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
+        result_obj["proposal.detail"][i].description = descriptionArr;
       }
-      if (document.querySelector('.pp_fifth_whitebox') !== null) {
-        document.querySelector('.ppw_left_description_inbutton').click();
-      }
-      tagParsingObj = GeneralJs.tagParsing(temp[i].querySelector(".pp_designer_selected_box_value").textContent);
-      descriptionObj = tagParsingObj.pop();
-      descriptionArr = new Array(Object.keys(descriptionObj).length);
-      for (let z = 0; z < Object.keys(descriptionObj).length; z++) {
-        descriptionArr[z] = descriptionObj[Object.keys(descriptionObj)[z]];
-      }
-      result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
-      result_obj["proposal.detail"][i].description = descriptionArr;
     }
-  }
 
-  if (!update) {
-    await GeneralJs.ajaxPromise("updateQuery=" + JSON.stringify(result_obj), "/createProject");
-  } else {
-    standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
-    await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: standard_id }) + "&updateQuery=" + JSON.stringify(result_obj), "/rawUpdateProject");
-  }
+    if (!update) {
+      await GeneralJs.ajaxPromise("updateQuery=" + JSON.stringify(result_obj), "/createProject");
+    } else {
+      standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
+      await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: standard_id }) + "&updateQuery=" + JSON.stringify(result_obj), "/rawUpdateProject");
+    }
 
-  if (document.querySelector(".pp_fifth_cancelback") !== null) {
-    document.querySelector(".pp_fifth_cancelback").remove();
-  }
+    if (document.querySelector(".pp_fifth_cancelback") !== null) {
+      document.querySelector(".pp_fifth_cancelback").remove();
+    }
 
-  if (document.querySelector(".pp_fifth_whitebox") !== null) {
-    document.querySelector(".pp_fifth_whitebox").remove();
-  }
+    if (document.querySelector(".pp_fifth_whitebox") !== null) {
+      document.querySelector(".pp_fifth_whitebox").remove();
+    }
 
-  console.log(document.getElementById("blewpp_button0"))
+    document.getElementById("hiddenListViewButton").click();
 
-  // document.getElementById("blewpp_button0").click();
+    if (!update) {
+      return "success";
+    } else {
+      return "update success";
+    }
 
-  if (!update) {
-    return "success";
-  } else {
-    return "update success";
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -3065,7 +3090,6 @@ ProposalJs.prototype.cssInjection = function () {
   #belowyellow_back{width:200%;background:linear-gradient(43deg, rgba(221,221,221,0.9) 0%, rgba(236,236,236,0.9) 100%);}
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;}
   .belowcircle{top:-20px;}.navicircle{right:11px;}
-  #svgcirclegreen_b{right:7px;}#svgcircleyellow_b{right:25px;}#svgcirclered_b{right:43px;}#svgcirclegreen_n{top:51px;}#svgcircleyellow_n{top:33px;}#svgcirclered_n{top:15px;}
 
   /* initcolumn */
   #initcolumn{display:block;position:absolute;top:0;width:2480px;left:-2100px;height:7850px;background:#f7f7f7;z-index:3;opacity:0.87;box-shadow:1px 4px 7px -5px #aaaaaa;}
@@ -3799,18 +3823,18 @@ ProposalJs.prototype.cssInjection = function () {
     cursor: pointer;
     animation: blewpp_button_fadein 0.5s ease forwards;
     position: absolute;
-    right: 173px;
-    width: 92px;
-    padding: 11px;
-    padding-top: 8px;
+    right: 102px;
+    width: 67px;
+    padding: 9px;
+    padding-top: 6px;
     padding-right: 17px;
     padding-left: 17px;
-    background: #f7f7f7;
+    background: white;
     box-shadow: rgb(128,128,128) 1px 4px 7px -5px;
-    border-radius: 9px;
-    font-size: 15px;
-    font-weight: 200;
-    color: #808080;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #2fa678;
     text-align: center;
     z-index: 3;
   }
