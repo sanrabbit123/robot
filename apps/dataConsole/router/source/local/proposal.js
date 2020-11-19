@@ -393,13 +393,13 @@ ProposalJs.below_events = {
 
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
-  const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
-  const { left, right } = this.mother.belowButtons.arrow;
+  const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let style;
   let ea = 'px';
   let listViewEvent, createViewEvent;
 
+  extractIcon.style.opacity = '0.4';
   reportIcon.style.opacity = '0.4';
   returnIcon.style.opacity = '0.4';
   left.id = "hiddenListViewButton";
@@ -4118,7 +4118,7 @@ ProposalJs.prototype.cssInjection = function () {
 
 ProposalJs.prototype.launching = async function () {
   const instance = this;
-  const { left, right } = this.mother.belowButtons.arrow;
+  const { arrow: { left, right } } = this.mother.belowButtons;
   try {
 
     left.style.display = 'none';

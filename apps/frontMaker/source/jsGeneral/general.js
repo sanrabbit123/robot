@@ -1593,3 +1593,40 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
   div_back.addEventListener("click", cancelOrSubmitEvent(true));
   white_back.addEventListener("click", cancelOrSubmitEvent(false));
 }
+
+GeneralJs.prototype.todayMaker = function (startPoint = "month") {
+  const today = new Date();
+  let dayString = '';
+  if (startPoint === "month") {
+    if (today.getMonth() + 1 < 10) {
+      dayString += '0' + String(today.getMonth() + 1);
+    } else {
+      dayString += String(today.getMonth() + 1);
+    }
+    if (today.getDate() < 10) {
+      dayString += '0' + String(today.getDate());
+    } else {
+      dayString += String(today.getDate());
+    }
+    if (today.getHours() < 10) {
+      dayString += '0' + String(today.getHours());
+    } else {
+      dayString += String(today.getHours());
+    }
+  } else if (startPoint === "year") {
+    dayString += String(today.getFullYear()).slice(2, 4);
+    if (today.getMonth() + 1 < 10) {
+      dayString += '0' + String(today.getMonth() + 1);
+    } else {
+      dayString += String(today.getMonth() + 1);
+    }
+    if (today.getDate() < 10) {
+      dayString += '0' + String(today.getDate());
+    } else {
+      dayString += String(today.getDate());
+    }
+  } else {
+    throw new Error("invaild option");
+  }
+  return dayString;
+}

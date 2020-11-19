@@ -193,7 +193,21 @@ GeneralJs.prototype.belowButtons = {
   square: {
     up: null,
     down: null,
-  }
+    reportIcon: null,
+    returnIcon: null,
+  },
+  naviIcons: {
+    client: null,
+    proposal: null,
+    project: null,
+    designer: null,
+    contents: null,
+    service: null
+  },
+  sub: {
+    extractIcon: null,
+    talkIcon: null,
+  },
 }
 
 GeneralJs.prototype.totalContents = document.getElementById("totalcontents");
@@ -303,6 +317,38 @@ GeneralJs.prototype.returnLoading = function () {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="#59AF89"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="#009B6A"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="#59AF89"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="#009B6A"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="#59AF89"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="#009B6A"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="#59AF89"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="#59AF89"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="#59AF89"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="#59AF89"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="#59AF89"/></svg>`;
 }
 
+GeneralJs.prototype.returnTitleArr = function (color, height = 23) {
+  let arr, ratio;
+
+  ratio = [
+    1.1608416295982489,
+    1.1699145661229966,
+    1.5460354444679798,
+    1.5304667090305726,
+    1.6419896914495518,
+    1.4773000070606508,
+  ];
+
+  arr = [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93.208 80.293"><path d="M0 42.386v-0.833C0 18.954 15.83 3.541 36.97 3.541c17.912 0 31.242 8.748 33.013 27.077H52.696c-1.25-8.956-6.249-13.747-15.622-13.747 -11.768 0-19.266 9.165-19.266 24.577V42.281c0 15.413 7.082 24.369 19.371 24.369 9.269 0 15.725-4.686 17.079-14.267h16.559c-1.875 18.433-15.101 27.91-33.43 27.91C13.018 80.293 0 65.297 0 42.386z" fill="${color}"/><path d="M78.211 0h14.997v79.147h-14.997V0z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93.937 80.293"><path d="M0 4.687h25.724c18.12 0 28.43 8.019 28.43 23.744v0.417c0 15.726-10.935 23.224-27.909 23.224h-9.478v27.077H0V4.687zM25.307 40.303c8.228 0 12.602-3.958 12.602-11.352V28.535c0-7.915-4.583-11.039-12.602-11.039h-8.54v22.807H25.307z" fill="${color}"/><path d="M61.236 24.682h15.101v10.414c3.437-7.29 8.748-11.143 17.6-11.247v14.059c-11.143-0.104-17.6 3.541-17.6 13.955v27.285H61.236V24.682z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124.136 80.293"><path d="M0 42.386v-0.833C0 18.954 15.83 3.541 36.97 3.541c17.912 0 31.242 8.748 33.013 27.076H52.696c-1.25-8.956-6.249-13.746-15.622-13.746 -11.768 0-19.266 9.164-19.266 24.577V42.281c0 15.413 7.082 24.369 19.371 24.369 9.269 0 15.725-4.687 17.079-14.268H70.816c-1.875 18.434-15.1 27.91-33.429 27.91C13.018 80.293 0 65.297 0 42.386z" fill="${color}"/><path d="M74.773 64.047c0-12.705 11.664-17.496 28.327-17.496h6.145v-2.187c0-6.457-1.979-9.997-8.852-9.997 -5.936 0-8.644 3.02-9.269 7.706H76.856c0.938-12.914 11.143-18.642 24.473-18.642s22.807 5.416 22.807 20.204v35.512h-14.684v-6.561c-3.124 4.374-7.915 7.706-16.454 7.706C83.104 80.293 74.773 75.503 74.773 64.047zM109.244 60.09v-4.582h-5.832c-8.748 0-13.851 1.874-13.851 7.706 0 3.957 2.396 6.561 7.915 6.561C104.141 69.774 109.244 66.13 109.244 60.09z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.889 80.293"><path d="M0 4.687h24.369c26.14 0 39.053 14.163 39.053 36.449V41.969c0 22.286-13.018 37.179-39.156 37.179H0V4.687zM23.744 66.025c14.997 0 22.078-8.436 22.078-23.848V41.344c0-15.309-6.561-23.535-22.286-23.535h-6.665v48.217H23.744z" fill="${color}"/><path d="M68.318 52.592v-0.833c0-17.184 12.185-28.327 28.015-28.327 14.059 0 26.556 8.228 26.556 27.702v4.165H83.628c0.416 9.061 5.311 14.268 13.538 14.268 6.978 0 10.414-3.021 11.352-7.603h14.268c-1.771 11.769-11.144 18.329-26.036 18.329C80.295 80.293 68.318 69.983 68.318 52.592zM108.205 46.03c-0.521-8.227-4.687-12.185-11.872-12.185 -6.77 0-11.352 4.479-12.497 12.185H108.205z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 131.843 80.293"><path d="M0 42.386v-0.833C0 18.954 15.829 3.541 36.97 3.541c17.912 0 31.242 8.748 33.013 27.077H52.695c-1.25-8.956-6.249-13.747-15.621-13.747 -11.769 0-19.267 9.165-19.267 24.577V42.281c0 15.413 7.082 24.369 19.37 24.369 9.269 0 15.726-4.686 17.079-14.267h16.559c-1.874 18.433-15.101 27.91-33.429 27.91C13.018 80.293 0 65.297 0 42.386z" fill="${color}"/><path d="M74.462 52.487v-0.833c0-17.079 12.393-28.222 28.742-28.222 16.351 0 28.639 10.935 28.639 27.91v0.833c0 17.184-12.393 28.118-28.742 28.118C86.854 80.293 74.462 69.462 74.462 52.487zM116.534 52.279v-0.729c0-10.414-4.895-16.663-13.33-16.663 -8.331 0-13.33 6.041-13.33 16.455v0.833c0 10.414 4.791 16.663 13.33 16.663C111.64 68.837 116.534 62.589 116.534 52.279z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118.618 80.293"><path d="M0 55.819h16.142c0.729 6.666 3.541 12.185 14.579 12.185 7.395 0 12.289-4.062 12.289-9.893 0-5.937-3.124-8.02-14.059-9.686C9.893 45.927 2.082 40.198 2.082 25.827c0-12.705 10.623-22.182 27.077-22.182 16.767 0 26.556 7.498 27.91 22.287H41.552c-1.041-6.77-4.999-9.894-12.393-9.894 -7.395 0-11.144 3.437-11.144 8.436 0 5.311 2.396 7.811 13.852 9.477 18.016 2.291 27.284 7.186 27.284 22.599 0 13.226-10.83 23.744-28.431 23.744C10.31 80.293 0.937 70.712 0 55.819z" fill="${color}"/><path d="M64.049 52.592v-0.833c0-17.184 12.184-28.327 28.014-28.327 14.059 0 26.556 8.228 26.556 27.702v4.165H79.357c0.416 9.061 5.311 14.268 13.538 14.268 6.978 0 10.414-3.021 11.352-7.603h14.268c-1.771 11.769-11.144 18.329-26.036 18.329C76.024 80.293 64.049 69.983 64.049 52.592zM103.935 46.03c-0.521-8.227-4.687-12.185-11.872-12.185 -6.77 0-11.352 4.479-12.497 12.185H103.935z" fill="${color}"/></svg>`,
+  ];
+
+  return { heightRatio: ratio, svg: arr };
+}
+
+GeneralJs.prototype.returnExtract = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.679 388.43"><path d="M310.776 204.421h-67.473c-0.985 0-1.783 0.799-1.783 1.783v173.779c0 4.666-3.782 8.447-8.447 8.447H81.607c-4.665 0-8.447-3.782-8.447-8.447V206.204c0-0.985-0.799-1.783-1.783-1.783H3.903c-3.232 0-5.059-3.709-3.089-6.271L151.189 3.029c3.106-4.038 9.196-4.038 12.301 0l150.374 195.12C315.835 200.711 314.008 204.421 310.776 204.421z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnTalk = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 421.983 385.724"><path d="M45.862 380.211c-2.035 2.093-0.485 5.651 2.398 5.509 41.274-2.037 90.99-18.691 124.766-45.899 2.845-2.291 6.427-3.402 10.03-3.015 9.141 0.981 18.464 1.493 27.936 1.493 116.527 0 210.991-74.348 210.991-168.629S327.52 0 210.992 0 0 75.389 0 169.67c0 51.139 30.824 96.055 77.016 128.587 2.297 1.618 3.636 4.344 3.53 7.193C79.207 341.602 56.86 368.898 45.862 380.211z" fill="${color}"/></svg>`;
+}
+
 GeneralJs.prototype.returnLoadingIcon = function () {
   let icon = SvgTong.stringParsing(this.returnLoading());
   icon.classList.add("loading");
@@ -358,6 +404,7 @@ GeneralJs.prototype.greenBar = function () {
   let div_clone, div_clone2, svg_icon;
   let input_clone;
   let style = {};
+  let additionalStyle = {};
   let ea = "px";
   let margin, start, colors;
   let move;
@@ -382,6 +429,7 @@ GeneralJs.prototype.greenBar = function () {
   }
   this.below = div_clone;
 
+
   //circle
   margin = 18;
   start = 7;
@@ -395,6 +443,8 @@ GeneralJs.prototype.greenBar = function () {
     div_clone.insertAdjacentHTML(`beforeend`, this.returnCircle("right:" + String(start + (margin * i)) + ea, colors[i]));
   }
 
+
+  //arrow - left
   move = 300;
   top = 32;
   right = 38;
@@ -440,6 +490,8 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.arrow.left = div_clone2;
   div_clone.appendChild(div_clone2);
 
+
+  //arrow - right
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
   div_clone2.classList.add("hoverDefault");
@@ -479,6 +531,7 @@ GeneralJs.prototype.greenBar = function () {
   top = top;
   belowTop = top + 34;
 
+
   //report
   svg_icon = SvgTong.stringParsing(this.returnReport("#ffffff"));
   svg_icon.classList.add("hoverDefault");
@@ -497,18 +550,25 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.square.reportIcon = svg_icon;
   div_clone.appendChild(svg_icon);
 
+
   //return
   svg_icon = SvgTong.stringParsing(this.returnReturn("#ffffff"));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
   }
-  svg_icon.style.width = String(28) + ea;
-  svg_icon.style.height = String(27) + ea;
-  svg_icon.style.top = String(belowTop - 2) + ea;
-  svg_icon.style.right = String(iconRight - 3) + ea;
+  additionalStyle = {
+    width: String(28) + ea,
+    height: String(27) + ea,
+    top: String(belowTop - 2) + ea,
+    right: String(iconRight - 3) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
   this.belowButtons.square.returnIcon = svg_icon;
   div_clone.appendChild(svg_icon);
+
 
   //button C
   svg_icon = SvgTong.stringParsing(this.returnCinitial("#ffffff"));
@@ -516,12 +576,18 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in style) {
     svg_icon.style[i] = style[i];
   }
-  svg_icon.style.width = String(21) + ea;
-  svg_icon.style.height = String(24) + ea;
-  svg_icon.style.top = String(top - 1) + ea;
-  svg_icon.style.right = String(iconRight + 31) + ea;
+  additionalStyle = {
+    width: String(21) + ea,
+    height: String(24) + ea,
+    top: String(top - 1) + ea,
+    right: String(iconRight + 31) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
   this.belowButtons.square.up = svg_icon;
   div_clone.appendChild(svg_icon);
+
 
   //button R
   svg_icon = SvgTong.stringParsing(this.returnRinitial("#ffffff"));
@@ -529,15 +595,111 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in style) {
     svg_icon.style[i] = style[i];
   }
-  svg_icon.style.width = String(22) + ea;
-  svg_icon.style.height = String(22) + ea;
-  svg_icon.style.top = String(belowTop) + ea;
-  svg_icon.style.right = String(iconRight + 31) + ea;
+  additionalStyle = {
+    width: String(22) + ea,
+    height: String(22) + ea,
+    top: String(belowTop) + ea,
+    right: String(iconRight + 31) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
   this.belowButtons.square.down = svg_icon;
+  div_clone.appendChild(svg_icon);
+
+
+  //navigator icons
+  const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
+  let naviIconsHost, naviIconsLinks, naviIconsLeftException;
+
+  naviIconsHost = "http://127.0.0.1:8080";
+
+  naviIconsLinks = [
+    "/client",
+    "/proposal",
+    "/project",
+    "/design",
+    "/contents",
+    "/service",
+  ];
+
+  naviIconsLeftException = [
+    0,
+    2,
+    -2.5,
+    -1.5,
+    2,
+    3,
+  ];
+
+  for (let i = 0; i < naviIcons.length; i++) {
+    svg_icon = SvgTong.stringParsing(naviIcons[i]);
+    svg_icon.classList.add("hoverDefault");
+    for (let i in style) {
+      svg_icon.style[i] = style[i];
+    }
+    additionalStyle = {
+      right: "",
+      width: String(naviIconsRatio[i] * 23) + ea,
+      height: String(21.5) + ea,
+      top: String(((i % 2) === 1) ? belowTop - 2 : top - 1) + ea,
+      left: String(right + 12 + (Math.floor(i / 2) * 43.5) + (naviIconsLeftException[i])) + ea,
+    };
+    for (let i in additionalStyle) {
+      svg_icon.style[i] = additionalStyle[i];
+    }
+    GeneralJs.addHrefEvent(svg_icon, (naviIconsHost + naviIconsLinks[i]));
+    this.belowButtons.naviIcons[naviIconsLinks[i].replace(/^\//, '')] = svg_icon;
+    div_clone.appendChild(svg_icon);
+  }
+
+  //extract icon
+  svg_icon = SvgTong.stringParsing(this.returnExtract("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  additionalStyle = {
+    right: "",
+    width: String(25) + ea,
+    height: String(23) + ea,
+    top: String(top - 1) + ea,
+    left: String(iconRight + 46) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
+  this.belowButtons.sub.extractIcon = svg_icon;
+  div_clone.appendChild(svg_icon);
+
+
+  //talk icon
+  svg_icon = SvgTong.stringParsing(this.returnTalk("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  additionalStyle = {
+    right: "",
+    width: String(25) + ea,
+    height: String(24) + ea,
+    top: String(belowTop - 2) + ea,
+    left: String(iconRight + 46) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
+  this.belowButtons.sub.talkIcon = svg_icon;
   div_clone.appendChild(svg_icon);
 
   //search Input
   this.searchInput(div_clone);
   this.totalContents.appendChild(div_clone);
   this.searchInput.focus();
+
+
+  this.belowButtons.naviIcons.contents.style.opacity = String(0.4);
+  this.belowButtons.naviIcons.service.style.opacity = String(0.4);
+  this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
+
 }

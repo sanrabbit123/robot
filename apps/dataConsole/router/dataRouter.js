@@ -2,10 +2,14 @@ const DataRouter = function (MONGOC) {
   this.dir = process.cwd() + "/apps/dataConsole";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.patch = new DataPatch();
+  this.sheets = new GoogleSheet();
+  this.drive = new GoogleDrive();
   if (MONGOC !== undefined && MONGOC !== null) {
     this.mongo = MONGOC;
   }
@@ -612,158 +616,31 @@ DataRouter.prototype.rou_post_sendSlack = function () {
   return obj;
 }
 
-
-
-//DEV --------------------------------------------------------------------------
-//DEV --------------------------------------------------------------------------
-//DEV --------------------------------------------------------------------------
-
-
-DataRouter.prototype.rou_post_select = function () {
-  let instance = this;
-  let obj = { link: '/post_select' }
-  obj.func = async function (req, res) {
-    try {
-      let col_arr, temp, temp2, find_obj, where_obj, or_arr, rows, sort_obj;
-      col_arr = {}
-      if (req.body.col_arr !== 'all') {
-        temp = req.body.col_arr.split(',');
-        for (let i of temp) {
-          col_arr[i] = 1;
-        }
-      }
-      find_obj = {}
-      if (req.body.standard !== 'all' && req.body.standard !== 'multi') {
-        temp = {}
-        temp["$regex"] = new RegExp(req.body.where, 'gi');
-        find_obj[req.body.standard] = temp;
-      } else if (req.body.standard === 'multi') {
-        or_arr = []
-        where_obj = JSON.parse(req.body.where);
-        for (let z in where_obj) {
-          temp = {}
-          temp2 = {}
-          temp["$regex"] = new RegExp(where_obj[z], 'gi');
-          temp2[z] = temp;
-          or_arr.push(temp2);
-        }
-        find_obj["$or"] = or_arr;
-      }
-      sort_obj = {}
-      if (req.body.sort !== undefined && req.body.limit === undefined) {
-        sort_obj[req.body.sortStandard] = (req.body.sort === "DESC") ? -1 : 1;
-        rows = await instance.mongo.db("miro81").collection(req.body.title).find(find_obj).project(col_arr).sort(sort_obj).toArray();
-      } else if (req.body.sort === undefined && req.body.limit !== undefined) {
-        rows = await instance.mongo.db("miro81").collection(req.body.title).find(find_obj).project(col_arr).limit(Number(req.body.limit)).toArray();
-      } else if (req.body.sort !== undefined && req.body.limit !== undefined) {
-        sort_obj[req.body.sortStandard] = (req.body.sort === "DESC") ? -1 : 1;
-        rows = await instance.mongo.db("miro81").collection(req.body.title).find(find_obj).project(col_arr).sort(sort_obj).limit(Number(req.body.limit)).toArray();
-      } else {
-        rows = await instance.mongo.db("miro81").collection(req.body.title).find(find_obj).project(col_arr).toArray();
-      }
-      res.send(JSON.stringify(rows));
-    } catch (e) {
-      console.error("error", e.message);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_mongoFind = function () {
+DataRouter.prototype.rou_post_sendSheets = function () {
   const instance = this;
-  let obj = { link: '/post_mfind' }
+  const back = this.back;
+  const sheets = this.sheets;
+  const drive = this.drive;
+  let obj = {};
+  obj.link = "/sendSheets";
   obj.func = async function (req, res) {
     try {
-      let rows = await instance.mongo.db("miro81").collection(req.body.collection).find(JSON.parse(req.body.find1)).project(JSON.parse(req.body.find2)).toArray();
-      res.send(JSON.stringify(rows));
+      const values = JSON.parse(req.body.values);
+      let sheetsId, response;
+      if (req.body.newMake !== undefined) {
+        sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
+        await sheets.update_value_inPython(sheetsId, '', values, [ 0, 0 ]);
+        await sheets.setting_cleanView_inPython(sheetsId);
+        response = await drive.read_webView_inPython(sheetsId);
+      }
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ link: response }));
     } catch (e) {
       console.log(e);
     }
   }
   return obj;
 }
-
-DataRouter.prototype.rou_post_mongoUpdate = function () {
-  const instance = this;
-  let obj = { link: '/post_mupdate' }
-  obj.func = async function (req, res) {
-    try {
-      let whereQuery = {}
-      whereQuery[req.body.st] = req.body.i;
-      let updateQuery = {}
-      if ((/\[/g.test(req.body.v) && /\]/g.test(req.body.v)) || (/\{/g.test(req.body.v) && /\}/g.test(req.body.v))) {
-        updateQuery[req.body.c] = JSON.parse(req.body.v);
-      } else {
-        updateQuery[req.body.c] = req.body.v;
-      }
-      console.log(updateQuery)
-      await instance.mongo.db("miro81").collection(req.body.table).updateOne(whereQuery, { $set: updateQuery });
-      res.send("success");
-    } catch (e) {
-      console.error("error", e.message);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_update = function () {
-  const instance = this;
-  let obj = { link: '/post_update' }
-  obj.func = async function (req, res) {
-    try {
-      let whereQuery = {}
-      whereQuery[req.body.st] = req.body.i;
-      let updateQuery = {}
-      if ((/\[/g.test(req.body.v) && /\]/g.test(req.body.v)) || (/\{/g.test(req.body.v) && /\}/g.test(req.body.v))) {
-        updateQuery[req.body.c] = JSON.parse(req.body.v);
-      } else {
-        updateQuery[req.body.c] = req.body.v;
-      }
-      await instance.mongo.db("miro81").collection(req.body.table).updateOne(whereQuery, { $set: updateQuery });
-      res.send("success");
-
-    } catch (e) {
-      console.error("error", e.message);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_mongoDelete = function () {
-  const instance = this;
-  let obj = { link: '/post_mdelete' }
-  obj.func = async function (req, res) {
-    try {
-      let whereQuery = {}
-      whereQuery[req.body.st] = req.body.i;
-      await instance.mongo.db("miro81").collection(req.body.table).deleteOne(whereQuery);
-      res.send("delete success");
-    } catch (e) {
-      console.error("error", e.message);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_mongoInsert = function () {
-  const instance = this;
-  let obj = { link: '/post_minsert' }
-  obj.func = async function (req, res) {
-    try {
-      await instance.mongo.db("miro81").collection(req.body.collection).insertOne(JSON.parse(req.body.obj));
-      console.log(`insert success`);
-      res.send(`insert success`);
-    } catch (e) {
-      console.error("error", e.message);
-    }
-  }
-  return obj;
-}
-
-//DEV --------------------------------------------------------------------------
-//DEV --------------------------------------------------------------------------
-//DEV --------------------------------------------------------------------------
-
 
 //ROUTING ----------------------------------------------------------------------
 

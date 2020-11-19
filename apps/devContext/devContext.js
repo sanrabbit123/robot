@@ -875,6 +875,20 @@ class DevContext extends Array {
 
 
 
+
+
+
+      const sheet = new GoogleSheet();
+
+
+      await sheet.total_make();
+
+
+
+
+
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
@@ -882,8 +896,8 @@ class DevContext extends Array {
       // const app = new KakaoTalk();
       // await app.generateToken();
 
-      const back = new BackMaker();
-      await back.pastToMongo();
+      // const back = new BackMaker();
+      // await back.pastToMongo();
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p65", 16);

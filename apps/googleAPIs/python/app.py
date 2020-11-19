@@ -97,6 +97,16 @@ try:
         result = sheetsApp.updateValue(data["id"], data["range"], data["values"])
         print(result)
 
+    elif argv[1] == 'sheets' and argv[2] == 'create':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.createSheets(data["title"])
+        print(result)
+
+    elif argv[1] == 'sheets' and argv[2] == 'cleanView':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.cleanView(data["id"])
+        print(result)
+
     elif argv[1] == 'drive' and argv[2] == 'fileUpload':
         driveApp = GoogleDrive()
         result = driveApp.fileUpload(data["folder_id"], data["file"])

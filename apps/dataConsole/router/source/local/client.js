@@ -1753,7 +1753,7 @@ ClientJs.prototype.reportViewMaker = function () {
 
 ClientJs.prototype.addTransFormEvent = function () {
   const instance = this;
-  const { up, down, reportIcon, returnIcon } = this.mother.belowButtons.square;
+  const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
   up.addEventListener("click", this.cardViewMaker());
   down.addEventListener("click", this.rowViewMaker());
   reportIcon.addEventListener("click", this.reportViewMaker());
@@ -1802,6 +1802,215 @@ ClientJs.prototype.backGrayBar = function () {
   this.totalContents.appendChild(div_clone);
 }
 
+ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
+  const instance = this;
+  try {
+    return function () {
+      let div_clone;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+      let width;
+      let iframe;
+      let iframeLink;
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: "#404040",
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
+          height: String(window.innerHeight - instance.belowHeight) + ea,
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("fadeup");
+      div_clone.classList.add("totalWhite");
+      style = {
+        position: "fixed",
+        background: "white",
+        top: String(margin) + ea,
+        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px #808080",
+        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+        zIndex: String(2),
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      iframe = document.createElement("IFRAME");
+      iframe.setAttribute("src", link);
+      iframe.setAttribute("width", "90%");
+      iframe.setAttribute("height", "90%");
+      style = {
+        border: 0,
+        width: "calc(100% - 50px)",
+        height: "calc(100% - 60px)",
+        top: "30px",
+        left: "25px",
+        position: "absolute",
+        borderRadius: "5px",
+        overflow: "hidden",
+      };
+      for (let i in style) {
+        iframe.style[i] = style[i];
+      }
+      div_clone.appendChild(iframe);
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ClientJs.prototype.extractViewMaker = function (link) {
+  const instance = this;
+  return function (e) {
+    let tempFunc;
+    if (GeneralJs.stacks.whiteBox !== 1) {
+      if (instance.whiteBox !== null) {
+        tempFunc = instance.whiteCancelMaker(instance.extractViewMakerDetail(true, link), true);
+        tempFunc();
+      } else {
+        tempFunc = instance.extractViewMakerDetail(false, link);
+        tempFunc();
+      }
+    }
+  }
+}
+
+ClientJs.prototype.addExtractEvent = function () {
+  const instance = this;
+  const { sub: { extractIcon } } = this.mother.belowButtons;
+  const today = new Date();
+  const caseCopied = JSON.parse(JSON.stringify(this.cases));
+  caseCopied.shift();
+  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+  const map = DataPatch.clientMap();
+
+  let data;
+  let sendEvent;
+  let valuesArr;
+  let temp, temp2;
+
+  valuesArr = [];
+
+  temp2 = Object.keys(caseCopied[0]);
+  temp = [];
+  for (let i of temp2) {
+    temp.push(map[i].name);
+  }
+  valuesArr.push(temp);
+
+  for (let i = 0; i < caseCopied.length; i++) {
+    temp2 = Object.values(caseCopied[i]);
+    valuesArr.push(temp2);
+  }
+
+  data = '';
+  data += "values=";
+  data += JSON.stringify(valuesArr);
+  data += "&newMake=";
+  data += "true";
+  data += "&parentId=";
+  data += parentId;
+  data += "&sheetName=";
+  data += "fromDB_client_" + String(today.getFullYear()) + this.mother.todayMaker();
+
+  sendEvent = async function (e) {
+    try {
+      let div_clone, svg_clone;
+      let style;
+      let ea = "px";
+      let width;
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("justfadein");
+      style = {
+        position: "fixed",
+        zIndex: String(2),
+        background: "#404040",
+        opacity: String(0.2),
+        width: "100%",
+        height: "100%",
+        top: String(0),
+        left: String(0),
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      instance.totalMother.appendChild(div_clone);
+
+      width = 50;
+      svg_clone = instance.mother.returnLoadingIcon();
+      style = {
+        position: "fixed",
+        zIndex: String(2),
+        width: String(width) + ea,
+        height: String(width) + ea,
+        top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
+        left: "calc(50% - " + String((width / 2)) + ea + ")",
+      };
+      for (let i in style) {
+        svg_clone.style[i] = style[i];
+      }
+      instance.totalMother.appendChild(svg_clone);
+
+      GeneralJs.ajax(data, "/sendSheets", function (res) {
+        const link = JSON.parse(res).link;
+        div_clone.classList.remove("justfadein");
+        div_clone.classList.add("justfadeout");
+        svg_clone.style.opacity = "0";
+        GeneralJs.timeouts["extractPendingBack"] = setTimeout(function () {
+          let viewFunction;
+          instance.totalMother.removeChild(instance.totalMother.lastChild);
+          instance.totalMother.removeChild(instance.totalMother.lastChild);
+          viewFunction = instance.extractViewMaker(link);
+          viewFunction();
+          clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
+          GeneralJs.timeouts["extractPendingBack"] = null;
+        }, 401);
+      })
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  extractIcon.addEventListener("click", sendEvent);
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -1811,6 +2020,7 @@ ClientJs.prototype.launching = async function () {
     await this.spreadData();
     this.addTransFormEvent();
     this.addSearchEvent();
+    this.addExtractEvent();
   } catch (e) {
     console.log(e);
   }

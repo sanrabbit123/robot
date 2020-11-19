@@ -37,6 +37,15 @@ class GoogleSheet:
         self.app = service.spreadsheets()
 
 
+    def createSheets(self, title):
+        spreadsheet = {
+            'properties': {
+                'title': title
+            }
+        }
+        spreadsheet = self.app.create(body=spreadsheet, fields='spreadsheetId').execute()
+        return dumps({ "id": spreadsheet.get('spreadsheetId') })
+
     def getValue(self, id, range):
         result = self.app.values().get(spreadsheetId=id, range=range).execute()
         values = result.get('values', [])
@@ -47,3 +56,88 @@ class GoogleSheet:
         request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="RAW", body={ "range": range, "values": values })
         response = request.execute()
         return dumps({ "response": response })
+
+
+    def cleanView(self, id):
+        batch_update_spreadsheet_request_body = {
+            "requests": [
+                {
+                    "updateDimensionProperties": {
+                        "range": {
+                            "dimension": "COLUMNS",
+                            "startIndex": 0,
+                        },
+                        "properties": {
+                            "pixelSize": 120
+                        },
+                        "fields": "pixelSize"
+                    }
+                },
+                {
+                    "updateDimensionProperties": {
+                        "range": {
+                            "dimension": "ROWS",
+                            "startIndex": 0,
+                        },
+                        "properties": {
+                            "pixelSize": 30
+                        },
+                        "fields": "pixelSize"
+                    }
+                },
+                {
+                    "repeatCell": {
+                        "range": {
+                            "startRowIndex": 1,
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": {
+                                    "red": 1.0,
+                                    "green": 1.0,
+                                    "blue": 1.0
+                                },
+                                "horizontalAlignment" : "CENTER",
+                                "verticalAlignment": "MIDDLE",
+                                "textFormat": {
+                                    "fontSize": 10,
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+                    }
+                },
+                {
+                    "repeatCell": {
+                        "range": {
+                            "startRowIndex": 0,
+                            "endRowIndex": 1
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": {
+                                    "red": 166,
+                                    "green": 120,
+                                    "blue": 47
+                                },
+                                "horizontalAlignment" : "CENTER",
+                                "verticalAlignment": "MIDDLE",
+                                "textFormat": {
+                                    "foregroundColor": {
+                                        "red": 1.0,
+                                        "green": 1.0,
+                                        "blue": 1.0
+                                    },
+                                    "fontSize": 10,
+                                    "bold": True
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)"
+                    }
+                }
+            ]
+        }
+        request = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+        response = request.execute()
+        return dumps({ "message": "success" })

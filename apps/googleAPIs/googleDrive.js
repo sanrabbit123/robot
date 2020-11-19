@@ -1,5 +1,5 @@
 const GoogleDrive = function (credentials = "default") {
-  const GoogleAPIs = require("./googleAPIs.js");
+  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
   this.general = new GoogleAPIs(credentials);
   this.drive = {};
   this.dir = process.cwd() + "/apps/googleAPIs";
@@ -113,6 +113,16 @@ GoogleDrive.prototype.moveFolder = function (targetId, parent) {
         }
       });
   });
+}
+
+GoogleDrive.prototype.moveFile = async function (targetId, parent) {
+  const instance = this;
+  try {
+    this.drive = await this.general.get_app("drive");
+    return (await this.moveFolder(targetId, parent));
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
 GoogleDrive.prototype.makeFolder_andMove = async function (folderName, parent) {
