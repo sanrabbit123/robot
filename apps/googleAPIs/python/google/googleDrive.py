@@ -90,3 +90,10 @@ class GoogleDrive:
                 fields='webViewLink',
         ).execute()
         return dumps({ "link": webViewLink["webViewLink"] })
+
+    def webPublish(self, file_id):
+        revision = {}
+        revision['published'] = True
+        revision['publishAuto'] = True
+        self.app.revisions().update(fileId=file_id, revisionId='1', body=revision).execute()
+        return dumps({ "link": "https://docs.google.com/spreadsheets/d/" + file_id + "/pubhtml?widget=true&headers=false&embedded=true" })

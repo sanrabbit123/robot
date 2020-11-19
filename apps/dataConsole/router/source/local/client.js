@@ -1814,7 +1814,7 @@ ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
       let motherBoo;
       let width;
       let iframe;
-      let iframeLink;
+      let whiteArea;
 
       motherBoo = (instance.onView === "mother") ? true : false;
 
@@ -1883,6 +1883,24 @@ ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         iframe.style[i] = style[i];
       }
       div_clone.appendChild(iframe);
+
+
+      whiteArea = document.createElement("A");
+      style = {
+        border: 0,
+        width: "calc(100% - 50px)",
+        height: "calc(25% - 60px)",
+        top: "30px",
+        left: "25px",
+        position: "absolute",
+        cursor: "pointer",
+      };
+      for (let i in style) {
+        whiteArea.style[i] = style[i];
+      }
+      whiteArea.setAttribute('href', link);
+      whiteArea.setAttribute('target', '_blank');
+      div_clone.appendChild(whiteArea);
 
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);

@@ -127,5 +127,10 @@ try:
         result = driveApp.permissionsOn(data["targetId"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'webPublish':
+        driveApp = GoogleDrive()
+        result = driveApp.webPublish(data["targetId"])
+        print(result)
+
 except Exception as e:
     print(e)
