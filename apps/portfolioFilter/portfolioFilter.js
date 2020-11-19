@@ -324,17 +324,17 @@ PortfolioFilter.prototype.total_make = async function () {
 
     for (let f of fileList_780) {
       await drive.upload_inPython(folderId_780, f);
-      await drive.sleep(500);
+      await drive.sleep(400);
       console.log(`upload file ${f} done`);
     }
     for (let f of fileList_original) {
       await drive.upload_inPython(folderId_original, f);
-      await drive.sleep(500);
+      await drive.sleep(400);
       console.log(`upload file ${f} done`);
     }
     for (let f of fileList_png) {
       await drive.upload_inPython(thisFolderId, f);
-      await drive.sleep(500);
+      await drive.sleep(400);
       console.log(`upload file ${f} done`);
     }
 
