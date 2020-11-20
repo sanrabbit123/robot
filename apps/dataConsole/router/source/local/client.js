@@ -739,6 +739,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let lineHeightRatio;
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
+  let textAreas;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -849,14 +850,16 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   leftArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) - 1));
   div_clone2.appendChild(leftArrowBox);
 
-  //h initial button
-  hInitial = SvgTong.stringParsing(this.mother.returnArrow("left", "#00ff00"));
+  //h initial icon
+  hInitial = SvgTong.stringParsing(this.mother.returnHinitial("#2fa678"));
   for (let i in style) {
     hInitial.style[i] = style[i];
   }
-  hInitial.style.right = String(leftMargin + (leftMargin * (34 / 60))) + ea;
+  hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
+  hInitial.style.width = String(leftMargin * (10 / 60)) + ea;
   div_clone2.appendChild(hInitial);
 
+  //h initial button
   hInitialBox = GeneralJs.nodes.div.cloneNode(true);
   for (let i in style) {
     hInitialBox.style[i] = style[i];
@@ -865,8 +868,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
   hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
   hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  hInitialBox.style.background = "aqua";
-  hInitialBox.style.opacity = String(0.2);
   div_clone2.appendChild(hInitialBox);
 
   //bar
@@ -1145,13 +1146,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
   historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
-
-  let longText = ` 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:25:19 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼부부 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:35:04 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색
-  2020년 10월 27일 열림통화 부재중 문자 남김
-
-  2020년 10월 29일 열림통화 플친등록 문자 남김
-
-  2020년 10월 30일 열림통화 통화 지금 어려우시다고 함`;
+  textAreas = [];
 
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1230,7 +1225,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
 
     textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
-    textArea_clone.value = longText;
     style = {
       width: "100%",
       height: String(5000) + ea,
@@ -1263,6 +1257,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     });
 
     div_clone5.appendChild(textArea_clone);
+    textAreas.push(textArea_clone);
+
     div_clone4.appendChild(div_clone5);
     div_clone4.setAttribute("index", String(i));
     historyTongTarget[i].dom = div_clone4;
@@ -1284,6 +1280,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       propertyBox.style.opacity = String(1);
       historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+    }
+  });
+
+  //get textAreaTong
+  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
+    const dataArr = JSON.parse(res);
+    for (let i = 0; i < textAreas.length; i++) {
+      textAreas[i].value = dataArr[i];
     }
   });
 
@@ -1428,7 +1432,6 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     instance.whiteBox.index = index;
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
-
   }
 }
 
