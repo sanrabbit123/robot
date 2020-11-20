@@ -733,6 +733,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let motherHeight;
   let rightArrowBox, leftArrowBox;
   let rightArrow, leftArrow;
+  let hInitial, hInitialBox;
   let updateEventFunction;
   let contentsBoxHeight, contentsBoxBottom;
   let lineHeightRatio;
@@ -847,6 +848,26 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   leftArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   leftArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) - 1));
   div_clone2.appendChild(leftArrowBox);
+
+  //h initial button
+  hInitial = SvgTong.stringParsing(this.mother.returnArrow("left", "#00ff00"));
+  for (let i in style) {
+    hInitial.style[i] = style[i];
+  }
+  hInitial.style.right = String(leftMargin + (leftMargin * (34 / 60))) + ea;
+  div_clone2.appendChild(hInitial);
+
+  hInitialBox = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in style) {
+    hInitialBox.style[i] = style[i];
+  }
+  hInitialBox.style.right = String(leftMargin + (leftMargin * (31 / 60))) + ea;
+  hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  hInitialBox.style.background = "aqua";
+  hInitialBox.style.opacity = String(0.2);
+  div_clone2.appendChild(hInitialBox);
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -1250,17 +1271,21 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   historyBox.appendChild(div_clone3);
-
-
-
-
-
-
-
-
-
-
   div_clone2.appendChild(historyBox);
+
+  //h inital event
+  GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+  hInitialBox.addEventListener("click", function (e) {
+    if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
+      propertyBox.style.opacity = String(0);
+      historyBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
+      GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
+    } else {
+      propertyBox.style.opacity = String(1);
+      historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
+      GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+    }
+  });
 
   div_clone.appendChild(div_clone2);
 
