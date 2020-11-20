@@ -878,18 +878,34 @@ class DevContext extends Array {
 
 
 
-      const drive = new GoogleDrive();
-
-
-      console.log(await drive.webPublish_inPython("1SAefEZw5UmR-8n6rnMKm7fdCi4Fh0T6VZP70LkokoLc"));
-
-
-
 
 
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
+
+      // const client = "박신애";
+      // const pid = "p66";
+      // const rid = "re061";
+      // const links = [
+      //   "https://docs.google.com/document/d/1qP7tc69qssOHOKPn3maXDzVk9V7GPPsgMyNd-N-NYZg/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1FdjKRniZJbknFKsQND4IC8FUAd7rfw8sfvjilaVE_LM/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1ydf5oVv7MBMJ6mcIwpRsW0C4ffsRS-fz?usp=sharing",
+      // ];
+      // const webLinks = [
+      //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
+      //   "https://home-liaison.com/revdetail.php?qqq=" + rid,
+      // ];
+      // const channel = "502_sns_contents";
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
+
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel: "#200_web" });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel: "#200_web" });
+
+
+
 
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
 
@@ -900,9 +916,9 @@ class DevContext extends Array {
       // await back.pastToMongo();
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p65", 16);
+      // await filter.addtionalRepair("p66", 2);
 
-      // await this.spellCheck("p65");
+      // await this.spellCheck("p66");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

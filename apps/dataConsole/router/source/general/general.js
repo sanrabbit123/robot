@@ -266,7 +266,8 @@ GeneralJs.prototype.generalCss = function () {
   .totalMother::-webkit-scrollbar{display:none;}
   .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);background:white}
   .totalFather::-webkit-scrollbar{display:none;}
-
+  .noScrollBar{}
+  .noScrollBar::-webkit-scrollbar{display:none;}
   .reportScrollBox::-webkit-scrollbar{display:none;}
   `;
   styleTag.textContent = css;

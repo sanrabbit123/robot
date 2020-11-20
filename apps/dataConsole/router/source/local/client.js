@@ -724,15 +724,20 @@ ClientJs.prototype.cardViewMaker = function () {
 ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const { standard, info } = DataPatch.clientWhiteViewStandard();
-  let div_clone, div_clone2, div_clone3, div_clone4;
+  let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
+  let propertyBox, historyBox;
   let style;
   let ea = "px";
-  let titleHeight, leftMargin;
+  let titleHeight, titleFontSize, topMargin, leftMargin;
   let fontSize;
-  let motherHeight, segmentHeight;
+  let motherHeight;
   let rightArrowBox, leftArrowBox;
   let rightArrow, leftArrow;
   let updateEventFunction;
+  let contentsBoxHeight, contentsBoxBottom;
+  let lineHeightRatio;
+  let historyTongTarget, historyTargetHeightConst;
+  let visualSpecificMarginTop;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -747,15 +752,19 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone.style[i] = style[i];
   }
 
+  motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, ''));
+
   //title ------------------------------------------
 
-  titleHeight = 124;
-  leftMargin = 60;
+  leftMargin = (60 / 786) * motherHeight;
+  titleFontSize = (42 / 786) * motherHeight;
+  topMargin = leftMargin * (62 / 60);
+  titleHeight = (54 / 42) * titleFontSize;
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    top: String(0) + ea,
+    top: String(topMargin) + ea,
     left: String(0) + ea,
     width: "100%",
     height: String(titleHeight) + ea,
@@ -770,9 +779,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   style = {
     position: "absolute",
     color: "#404040",
-    fontSize: String(48) + ea,
+    fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(12) + ea,
+    bottom: String(leftMargin * (12 / 60)) + ea,
     left: String(leftMargin - 3) + ea,
   };
   for (let i in style) {
@@ -786,9 +795,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   style = {
     position: "absolute",
     color: "#2fa678",
-    fontSize: String(19) + ea,
-    bottom: String(12 + 5) + ea,
-    left: String(leftMargin + 136) + ea,
+    fontSize: String(titleFontSize * (19 / 42)) + ea,
+    bottom: String(leftMargin * (17 / 60)) + ea,
+    left: String(leftMargin * 3) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
@@ -799,8 +808,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
   style = {
     position: "absolute",
-    width: String(12) + ea,
-    bottom: String(12 + 5) + ea,
+    width: String(leftMargin * (12 / 60)) + ea,
+    bottom: String(leftMargin * (17 / 60)) + ea,
     right: String(leftMargin) + ea,
     cursor: "pointer",
   };
@@ -813,9 +822,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     rightArrowBox.style[i] = style[i];
   }
-  rightArrowBox.style.width = String(18) + ea;
-  rightArrowBox.style.height = String(20) + ea;
-  rightArrowBox.style.bottom = String(12 + 1) + ea;
+  rightArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  rightArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  rightArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   rightArrowBox.style.right = String(leftMargin - 3) + ea;
   rightArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) + 1));
   div_clone2.appendChild(rightArrowBox);
@@ -825,17 +834,17 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     leftArrow.style[i] = style[i];
   }
-  leftArrow.style.right = String(leftMargin + 12 + 6) + ea;
+  leftArrow.style.right = String(leftMargin + (leftMargin * (19 / 60))) + ea;
   div_clone2.appendChild(leftArrow);
 
   leftArrowBox = GeneralJs.nodes.div.cloneNode(true);
   for (let i in style) {
     leftArrowBox.style[i] = style[i];
   }
-  leftArrowBox.style.right = String(leftMargin + 12 + 3) + ea;
-  leftArrowBox.style.height = String(20) + ea;
-  leftArrowBox.style.width = String(18) + ea;
-  leftArrowBox.style.bottom = String(12 + 1) + ea;
+  leftArrowBox.style.right = String(leftMargin + (leftMargin * (15 / 60))) + ea;
+  leftArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  leftArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  leftArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   leftArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) - 1));
   div_clone2.appendChild(leftArrowBox);
 
@@ -856,28 +865,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   div_clone.appendChild(div_clone2);
 
-  //contents ---------------------------------------
+  //contents ---------------------------------------------------------------------------------
 
-  motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, '')) - titleHeight;
-  segmentHeight = (motherHeight - (leftMargin + 16)) / info.length;
-
-  if (segmentHeight <= 33.4) {
-    fontSize = segmentHeight / 1.9;
-  } else if (segmentHeight <= 34) {
-    fontSize = segmentHeight / 2.1;
-  } else if (segmentHeight > 34) {
-    fontSize = segmentHeight / 2.3;
-  }
-
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: "100%",
-    height: String(motherHeight) + ea,
-  };
-  for (let i in style) {
-    div_clone2.style[i] = style[i];
-  }
+  //property
+  contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
+  contentsBoxBottom = topMargin * 0.9;
+  lineHeightRatio = 29 / 16;
+  fontSize = (contentsBoxHeight / info.length) / lineHeightRatio;
 
   //contents event
   updateEventFunction = function () {
@@ -1011,15 +1005,37 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
   }
 
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: "100%",
+    height: String(contentsBoxHeight) + ea,
+    bottom: String(contentsBoxBottom) + ea,
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+
+  //propoerty box
+  propertyBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    left: String(leftMargin) + ea,
+    width: "calc(45% - " + String(leftMargin) + ea + ")",
+    height: "100%",
+  };
+  for (let i in style) {
+    propertyBox.style[i] = style[i];
+  }
 
   for (let i = 0; i < info.length; i++) {
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.setAttribute("index", info[i].target);
     style = {
       position: "absolute",
-      top: String(segmentHeight * (i + 1)) + ea,
-      left: String(leftMargin) + ea,
-      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+      top: String(fontSize * lineHeightRatio * i) + ea,
+      left: String(0) + ea,
+      width: "100%",
       height: String(16) + ea,
     };
     for (let i in style) {
@@ -1034,7 +1050,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       position: "absolute",
       top: String(0) + ea,
       left: String(0) + ea,
-      height: String(fontSize + 5) + ea,
+      width: String(fontSize * 9) + ea,
+      height: String(fontSize * (21 / 16)) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(700),
     };
@@ -1050,9 +1067,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       display: "inline-block",
       position: "absolute",
       top: String(0) + ea,
-      left: String(leftMargin * 2.5) + ea,
-      width: "calc(100% - " + String(leftMargin * 2.5) + ea + ")",
-      height: String(fontSize + 5) + ea,
+      left: String(fontSize * 9) + ea,
+      width: "calc(100% - " + String(fontSize * 9) + ea + ")",
+      height: String(fontSize * (21 / 16)) + ea,
       overflow: "scroll",
       fontSize: String(fontSize) + ea,
       fontWeight: String(300),
@@ -1064,28 +1081,188 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone4.addEventListener("contextmenu", updateEventFunction());
     div_clone3.appendChild(div_clone4);
 
-
-    div_clone2.appendChild(div_clone3);
+    propertyBox.appendChild(div_clone3);
   }
 
-  //index number
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = thisCase.index;
+  div_clone2.appendChild(propertyBox);
+
+  //history box
+  historyBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    bottom: String(32) + ea,
-    right: String(32) + ea,
-    fontSize: String(fontSize - 2) + ea,
-    color: "#2fa678",
+    height: "100%",
+    bottom: String(0) + ea,
+    right: String(leftMargin) + ea,
+    width: "calc(55% - " + String(leftMargin) + ea + ")",
+  };
+  for (let i in style) {
+    historyBox.style[i] = style[i];
+  }
+
+  //histoty title box
+  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone3.textContent = "HISTORY";
+  style = {
+    position: "absolute",
+    width: String(fontSize * 6) + ea,
+    height: "100%",
+    fontSize: String(fontSize) + ea,
+    fontWeight: String(700),
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone2.appendChild(div_clone3);
+  historyBox.appendChild(div_clone3);
 
+  //history text box tong
+  historyTongTarget = [
+    { name: "시공 관련", dom: null },
+    { name: "스타일링 관련", dom: null },
+    { name: "예산 관련", dom: null },
+    { name: "현장 관련", dom: null },
+    { name: "진행 현황", dom: null },
+  ];
+  visualSpecificMarginTop = fontSize * (1 / 5);
+  historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
+
+  let longText = ` 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:25:19 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼부부 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:35:04 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색
+  2020년 10월 27일 열림통화 부재중 문자 남김
+
+  2020년 10월 29일 열림통화 플친등록 문자 남김
+
+  2020년 10월 30일 열림통화 통화 지금 어려우시다고 함`;
+
+  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    left: String(fontSize * 6) + ea,
+    width: "calc(100% - " + String((fontSize * 6) + 1) + ea + ")",
+    height: "100%",
+    fontSize: String(fontSize) + ea,
+    fontWeight: String(300),
+  };
+  for (let i in style) {
+    div_clone3.style[i] = style[i];
+  }
+
+  for (let i = 0; i < historyTongTarget.length; i++) {
+
+    //margin box
+    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      width: "100%",
+      height: String(i === 0 ? fontSize * (1 / 5) : fontSize) + ea,
+    };
+    for (let i in style) {
+      div_clone4.style[i] = style[i];
+    }
+    div_clone3.appendChild(div_clone4);
+
+    //contents box
+    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      width: "100%",
+      marginTop: String(visualSpecificMarginTop) + ea,
+      height: "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(300),
+      border: "solid 1px #dddddd",
+      borderRadius: String(5) + ea,
+    };
+    for (let i in style) {
+      div_clone4.style[i] = style[i];
+    }
+
+    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone5.textContent = historyTongTarget[i].name;
+    style = {
+      position: "absolute",
+      top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
+      left: String(fontSize * (2 / 15.3027) * -1) + ea,
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(600),
+      color: "#404040",
+      background: "white",
+      paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
+      paddingRight: String(fontSize * (12 / 15.3027)) + ea,
+    };
+    for (let i in style) {
+      div_clone5.style[i] = style[i];
+    }
+    div_clone4.appendChild(div_clone5);
+
+    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone5.classList.add("noScrollBar");
+    style = {
+      position: "absolute",
+      bottom: String(0) + ea,
+      left: String(fontSize * (15 / 15.3027)) + ea,
+      background: "aqua",
+      width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
+      height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      div_clone5.style[i] = style[i];
+    }
+
+    textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
+    textArea_clone.value = longText;
+    style = {
+      width: "100%",
+      height: String(5000) + ea,
+      fontSize: String(fontSize * 0.9) + ea,
+      fontWeight: String(200),
+      color: "#aaaaaa",
+      border: String(0),
+      outline: String(0),
+      lineHeight: String(1.6),
+    };
+    for (let i in style) {
+      textArea_clone.style[i] = style[i];
+    }
+    textArea_clone.addEventListener("focus", function (e) {
+      const thisIndex = i;
+      for (let { dom } of historyTongTarget) {
+        if (Number(dom.getAttribute("index")) !== thisIndex) {
+          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        } else {
+          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        }
+      }
+      this.style.color = "#202020";
+    });
+    textArea_clone.addEventListener("blur", function (e) {
+      for (let { dom } of historyTongTarget) {
+        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+      }
+      this.style.color = "#cccccc";
+    });
+
+    div_clone5.appendChild(textArea_clone);
+    div_clone4.appendChild(div_clone5);
+    div_clone4.setAttribute("index", String(i));
+    historyTongTarget[i].dom = div_clone4;
+
+    div_clone3.appendChild(div_clone4);
+  }
+
+  historyBox.appendChild(div_clone3);
+
+
+
+
+
+
+
+
+
+
+  div_clone2.appendChild(historyBox);
 
   div_clone.appendChild(div_clone2);
-
 
   //end ---------------------------------------------
   mother.appendChild(div_clone);
