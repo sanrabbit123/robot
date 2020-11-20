@@ -758,7 +758,7 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload } = this.mother;
     try {
       await this.MONGOC.connect();
 
@@ -877,6 +877,114 @@ class DevContext extends Array {
 
 
 
+      /*
+
+      // Ghost to S3
+
+      const back = new BackMaker();
+      const Filter = back.idFilter("designer");
+
+      let fromArr, toArr;
+      let binaryDir;
+      let tempArr;
+      let pastDesidDir;
+      let tempDir, tempDirName;
+      let photoTargets;
+
+      fromArr = [];
+      toArr = [];
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.push("binary");
+      tempArr.push("rawDesigner");
+      tempArr.push("ghost");
+      pastDesidDir = await fileSystem(`readDir`, [ tempArr.join("/") ]);
+      shell.exec(`mkdir ${process.env.HOME}/tempGhost`);
+      shell.exec(`cp -r ${shellLink(tempArr.join("/"))} ${process.env.HOME}/tempGhost`);
+      for (let d of pastDesidDir) {
+        if (d !== `.DS_Store`) {
+          tempDirName = `${process.env.HOME}/tempGhost/ghost/${d}`;
+          photoTargets = await fileSystem(`readDir`, [ tempDirName ]);
+          for (let g of photoTargets) {
+            fromArr.push(`${tempDirName}/${g}`);
+          }
+        }
+      }
+      for (let i of fromArr) {
+        tempArr = i.split("/");
+        toArr.push(`rawDesigner/ghost/${Filter.pastToNew(tempArr[tempArr.length - 2])}/${tempArr[tempArr.length - 1]}`);
+      }
+      console.log(fromArr)
+      console.log(toArr)
+      await s3FileUpload(fromArr, toArr);
+      shell.exec(`rm -rf ${process.env.HOME}/tempGhost`);
+
+      */
+
+
+
+
+      let fromArr, toArr;
+      let binaryDir;
+      let tempArr;
+      let pastDesidDir;
+      let tempDir, tempDirName;
+      let photoTargets;
+      let temp;
+      let pid;
+
+      fromArr = [];
+      toArr = [];
+
+      tempArr = process.cwd().split("/");
+      tempArr.pop();
+      tempArr.pop();
+      tempArr.push("_NewWeb");
+      tempArr.push("poo");
+      tempArr.push("list_image");
+
+      pastDesidDir = await fileSystem(`readDir`, [ tempArr.join("/") ]);
+      shell.exec(`mkdir ${process.env.HOME}/tempPoo`);
+      shell.exec(`cp -r ${shellLink(tempArr.join("/"))} ${process.env.HOME}/tempPoo`);
+      for (let d of pastDesidDir) {
+        if (d !== `.DS_Store`) {
+          if (/^portp[ap]/.test(d)) {
+            tempDirName = `${process.env.HOME}/tempPoo/list_image/${d}`;
+            photoTargets = await fileSystem(`readDir`, [ tempDirName ]);
+            for (let g of photoTargets) {
+              if (/^b/.test(g)) {
+                fromArr.push(`${tempDirName}/${g}`);
+              }
+              if (/^t/.test(g)) {
+                fromArr.push(`${tempDirName}/${g}`);
+                fromArr.push(`${tempDirName}/mobile/mo${g}`);
+              }
+            }
+          }
+        }
+      }
+      for (let i of fromArr) {
+        tempArr = i.split("/");
+        temp = tempArr[tempArr.length - 1];
+        if (/^mo/.test(temp)) {
+          pid = tempArr[tempArr.length - 3].replace(/portp/, '');
+          toArr.push(`corePortfolio/listImage/${pid}/mobile/${tempArr[tempArr.length - 1]}`);
+        } else {
+          pid = tempArr[tempArr.length - 2].replace(/portp/, '');
+          toArr.push(`corePortfolio/listImage/${pid}/${tempArr[tempArr.length - 1]}`);
+        }
+      }
+      console.log(fromArr)
+      console.log(toArr)
+      await s3FileUpload(fromArr, toArr);
+      shell.exec(`rm -rf ${process.env.HOME}/tempPoo`);
+
+
+
+
+
+
 
 
 
@@ -905,15 +1013,20 @@ class DevContext extends Array {
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel: "#200_web" });
 
 
-
-
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
 
       // const app = new KakaoTalk();
       // await app.generateToken();
 
+      // const MONGOC = this.MONGOC;
+      // const contents = await MONGOC.db(`miro81`).collection(`contents_backup`).find({}).toArray();
+      // for (let c of contents) {
+      //   await MONGOC.db(`miro81`).collection(`contents`).insertOne(c);
+      // }
+
       // const back = new BackMaker();
       // await back.pastToMongo();
+      // await back.updateDesid();
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p66", 2);

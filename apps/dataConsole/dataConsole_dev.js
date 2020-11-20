@@ -36,6 +36,9 @@ DataConsole.prototype.connect = async function () {
     cookie: { maxAge: (2 * 365 * 24 * 60 * 60 * 1000) }
   }));
 
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const S3HOST = ADDRESS.s3info.host;
+
   try {
 
     await MONGOC.connect();
@@ -70,7 +73,7 @@ DataConsole.prototype.connect = async function () {
         fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
         execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
         execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, ('"use strict";' + "\n\n" + svgTongString + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString) ]);
+        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, ('"use strict";' + "\n\n" + "const S3HOST = \"" + S3HOST + "\";" + "\n\n" + svgTongString + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString) ]);
       }
     }
 

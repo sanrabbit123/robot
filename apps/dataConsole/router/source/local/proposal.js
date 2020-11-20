@@ -271,7 +271,7 @@ ProposalJs.below_events = {
               targetBoxes = document.querySelectorAll(".pp_designer_selected");
               general_str = '';
               for (let pic of pictures) {
-                general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
+                general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText.replace((new RegExp(S3HOST, "gi")), '') + "__split3__";
               }
               general_str = general_str.slice(0, -10);
 
@@ -339,7 +339,11 @@ ProposalJs.below_events = {
                   }
                   div_clone.setAttribute("cus_info", GeneralJs.tagCoverting(default_setting[i]));
                   div_clone.classList.add("fifth_drag_img");
-                  div_clone.style.cssText = default_setting[i].styleText;
+                  if (/url/.test(default_setting[i].styleText)) {
+                    div_clone.style.cssText = default_setting[i].styleText.replace(/url\(\"/gi, "url(\"" + S3HOST);
+                  } else {
+                    div_clone.style.cssText = default_setting[i].styleText;
+                  }
                   inbox.appendChild(div_clone);
                 }
                 dom.appendChild(inbox);
@@ -1685,7 +1689,7 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
     general_str = '';
 
     for (let pic of pictures) {
-      general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText + "__split3__";
+      general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText.replace((new RegExp(S3HOST, "gi")), '') + "__split3__";
     }
     for (let i = 0; i < descriptions.length; i++) {
       obj["description" + String(i)] = descriptions[i].value;
@@ -1753,7 +1757,11 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
         }
         div_clone.setAttribute("cus_info", GeneralJs.tagCoverting(default_setting[i]));
         div_clone.classList.add("fifth_drag_img");
-        div_clone.style.cssText = default_setting[i].styleText;
+        if (/url/.test(default_setting[i].styleText)) {
+          div_clone.style.cssText = default_setting[i].styleText.replace(/url\(\"/g, "url(\"" + S3HOST);
+        } else {
+          div_clone.style.cssText = default_setting[i].styleText;
+        }
         inbox.appendChild(div_clone);
       }
       dom.appendChild(inbox);
@@ -1793,7 +1801,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
   let sgTong = {
     s: [],
     g: [],
-  }
+  };
   let imgSrc, sgTrue;
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_right_totalbox");
@@ -1827,9 +1835,9 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
             img_clone = GeneralJs.nodes.img.cloneNode(true);
             img_clone.classList.add("ppw_right_picturebox_img");
             img_clone.classList.add("fifth_drag_img");
-            imgSrc = "/list_image/portp" + contents[j].contents.portfolio.pid + "/t" + String(k + 1) + contents[j].contents.portfolio.pid + ".jpg";
+            imgSrc = "/corePortfolio/listImage/" + contents[j].contents.portfolio.pid + "/t" + String(k + 1) + contents[j].contents.portfolio.pid + ".jpg";
             sgTrue = contents[j].photos.detail[k].gs;
-            img_clone.setAttribute("src", imgSrc);
+            img_clone.setAttribute("src", S3HOST + imgSrc);
             img_clone.setAttribute("cus_info", GeneralJs.tagCoverting({ imgSrc: imgSrc, sgTrue: sgTrue }));
             img_clone.setAttribute("draggable", "true");
             div_clone4.appendChild(img_clone);
@@ -1851,7 +1859,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
             img_clone.classList.add("fifth_drag_img");
             imgSrc = ghost[k].link;
             sgTrue = ghost[k].sgTrue;
-            img_clone.setAttribute("src", imgSrc);
+            img_clone.setAttribute("src", S3HOST + imgSrc);
             img_clone.setAttribute("cus_info", GeneralJs.tagCoverting({ imgSrc: imgSrc, sgTrue: sgTrue }));
             img_clone.setAttribute("draggable", "true");
             div_clone4.appendChild(img_clone);
@@ -2001,7 +2009,7 @@ ProposalJs.fifthDrag_funcs = function () {
     let data = GeneralJs.tagParsing(e.dataTransfer.getData("sun"));
     let jari = GeneralJs.tagParsing(this.getAttribute("cus_info"));
     if (jari.sgTrue === data.sgTrue) {
-      this.style.backgroundImage = "url('" + data.imgSrc + "')";
+      this.style.backgroundImage = "url('" + S3HOST + data.imgSrc + "')";
       jari.imgSrc = data.imgSrc;
       this.setAttribute("cus_info", GeneralJs.tagCoverting(jari));
     }

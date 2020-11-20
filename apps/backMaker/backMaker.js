@@ -231,7 +231,7 @@ BackMaker.prototype.idMaker = function (pastId) {
   return thisId;
 }
 
-BackMaker.prototype.idFilter = async function (button) {
+BackMaker.prototype.idFilter = function (button) {
   const instance = this;
   this.button = button;
   try {
@@ -239,6 +239,150 @@ BackMaker.prototype.idFilter = async function (button) {
     return Filter;
   } catch (e) {
     console.log(e);
+  }
+}
+
+BackMaker.prototype.updateDesid = async function () {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "designer";
+  const Filter = this.idFilter(this.button);
+  try {
+    await MONGOC.connect();
+    let temp;
+    let pastDesid, newDesid;
+    let newString;
+
+    // 1
+    let designers = await MONGOC.db(`miro81`).collection(this.button).find({}).toArray();
+    for (let d of designers) {
+      await MONGOC.db(`miro81`).collection(this.button).updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
+      console.log("success");
+    }
+
+
+    // 2
+    // const contents = await MONGOC.db(`miro81`).collection("contents").find({}).toArray();
+    // for (let d of contents) {
+    //   await MONGOC.db(`miro81`).collection("contents").updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
+    //   console.log("success");
+    // }
+
+
+    // 3
+    designers = await MONGOC.db(`miro81`).collection(this.button).find({}).toArray();
+    for (let { desid, setting: { proposal, ghost } } of designers) {
+
+      for (let { photo } of proposal) {
+        for (let photoObj of photo) {
+          if (photoObj.styleText !== undefined) {
+            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText) !== null) {
+              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText)[0];
+              pastDesid = temp.split("/")[2];
+              newDesid = Filter.pastToNew(pastDesid);
+              newString = "/rawDesigner/ghost/" + newDesid;
+              photoObj.styleText = photoObj.styleText.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
+            }
+            if ((/\/list_image\/portp/g).exec(photoObj.styleText) !== null) {
+              temp = (/\/list_image\/portp/g).exec(photoObj.styleText)[0];
+              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
+              photoObj.styleText = photoObj.styleText.replace(/\/list_image\/portp/g, newString);
+            }
+          }
+          if (photoObj.imgSrc !== undefined) {
+            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc) !== null) {
+              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc)[0];
+              pastDesid = temp.split("/")[2];
+              newDesid = Filter.pastToNew(pastDesid);
+              newString = "/rawDesigner/ghost/" + newDesid;
+              photoObj.imgSrc = photoObj.imgSrc.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
+            }
+            if ((/\/list_image\/portp/g).exec(photoObj.imgSrc) !== null) {
+              temp = (/\/list_image\/portp/g).exec(photoObj.imgSrc)[0];
+              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
+              photoObj.imgSrc = photoObj.imgSrc.replace(/\/list_image\/portp/g, newString);
+            }
+          }
+        }
+      }
+
+      for (let ghostObj of ghost) {
+        if ((/\/ghost\/de0[0-9][0-9]/g).exec(ghostObj.link) !== null) {
+          temp = (/\/ghost\/de0[0-9][0-9]/g).exec(ghostObj.link)[0];
+          pastDesid = temp.split("/")[2];
+          newDesid = Filter.pastToNew(pastDesid);
+          newString = "/rawDesigner/ghost/" + newDesid;
+          ghostObj.link = ghostObj.link.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
+        }
+      }
+
+      await MONGOC.db(`miro81`).collection("designer").updateOne({ desid }, { $set: { "setting.proposal": proposal, "setting.ghost": ghost } });
+      console.log("success");
+    }
+
+
+    // 4
+    let project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
+    for (let d of project) {
+      await MONGOC.db(`miro81`).collection("project").updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
+      console.log("success");
+    }
+    project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
+    for (let d of project) {
+      if (d.desid === null) {
+        await MONGOC.db(`miro81`).collection("project").updateOne({ proid: d.proid }, { $set: { desid: '' } });
+        console.log("success");
+      }
+    }
+
+
+    // 5
+    project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
+    for (let { proposal: { detail } } of project) {
+      for (let detailObj of detail) {
+        detailObj.desid = Filter.pastToNew(detailObj.desid);
+        for (let photoObj of detailObj.pictureSettings) {
+          if (photoObj.styleText !== undefined) {
+            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText) !== null) {
+              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText)[0];
+              pastDesid = temp.split("/")[2];
+              newDesid = Filter.pastToNew(pastDesid);
+              newString = "/rawDesigner/ghost/" + newDesid;
+              photoObj.styleText = photoObj.styleText.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
+            }
+            if ((/\/list_image\/portp/g).exec(photoObj.styleText) !== null) {
+              temp = (/\/list_image\/portp/g).exec(photoObj.styleText)[0];
+              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
+              photoObj.styleText = photoObj.styleText.replace(/\/list_image\/portp/g, newString);
+            }
+          }
+          if (photoObj.imgSrc !== undefined) {
+            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc) !== null) {
+              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc)[0];
+              pastDesid = temp.split("/")[2];
+              newDesid = Filter.pastToNew(pastDesid);
+              newString = "/rawDesigner/ghost/" + newDesid;
+              photoObj.imgSrc = photoObj.imgSrc.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
+            }
+            if ((/\/list_image\/portp/g).exec(photoObj.imgSrc) !== null) {
+              temp = (/\/list_image\/portp/g).exec(photoObj.imgSrc)[0];
+              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
+              photoObj.imgSrc = photoObj.imgSrc.replace(/\/list_image\/portp/g, newString);
+            }
+          }
+        }
+      }
+    }
+    for (let { proid, proposal } of project) {
+      await MONGOC.db(`miro81`).collection("project").updateOne({ proid }, { $set: { "proposal": proposal } });
+      console.log("success");
+    }
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
   }
 }
 

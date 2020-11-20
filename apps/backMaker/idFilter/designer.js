@@ -1,7 +1,7 @@
 const Filter = function () {}
 
-Filter.pastToNew = function (in) {
-  switch (in) {
+Filter.pastToNew = function (str) {
+  switch (str) {
     case "de000":
       return "d1701_aa01s";
       break;
@@ -134,8 +134,8 @@ Filter.pastToNew = function (in) {
   }
 }
 
-Filter.newToPast = function (in) {
-  switch (in) {
+Filter.newToPast = function (str) {
+  switch (str) {
     case "d1701_aa01s":
       return "de000";
       break;

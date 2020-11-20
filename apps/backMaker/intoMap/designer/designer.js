@@ -85,8 +85,8 @@ module.exports = function (tools) {
       scriptString = `const Filter = function () {}\n`;
       scriptString += `\n`;
 
-      scriptString += `Filter.pastToNew = function (in) {\n`;
-      scriptString += `${scriptSpace}switch (in) {\n`;
+      scriptString += `Filter.pastToNew = function (str) {\n`;
+      scriptString += `${scriptSpace}switch (str) {\n`;
       for (let { past_desid, desid } of orderTong) {
         scriptString += `${scriptSpace}${scriptSpace}case "${past_desid}":\n`;
         scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}return "${desid}";\n`;
@@ -97,8 +97,8 @@ module.exports = function (tools) {
 
       scriptString += `\n`;
 
-      scriptString += `Filter.newToPast = function (in) {\n`;
-      scriptString += `${scriptSpace}switch (in) {\n`;
+      scriptString += `Filter.newToPast = function (str) {\n`;
+      scriptString += `${scriptSpace}switch (str) {\n`;
       for (let { past_desid, desid } of orderTong) {
         scriptString += `${scriptSpace}${scriptSpace}case "${desid}":\n`;
         scriptString += `${scriptSpace}${scriptSpace}${scriptSpace}return "${past_desid}";\n`;
