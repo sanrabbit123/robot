@@ -145,6 +145,36 @@ DataRouter.prototype.rou_get_First = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_Address = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/tools/address";
+  obj.func = function (req, res) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
+        <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
+        let div_clone, img_clone;div_clone = document.createElement("DIV");img_clone = document.createElement("IMG");img_clone.setAttribute("src", "https://t1.daumcdn.net/postcode/resource/images/close.png");img_clone.setAttribute("id", "btnFoldWrap");div_clone.appendChild(img_clone);document.body.appendChild(div_clone);
+        new daum.Postcode({
+            oncomplete: function (data) {
+              let addr = '', extraAddr = '';
+              if (data.userSelectedType === 'R') {
+                addr = data.roadAddress;
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) { extraAddr += data.bname; }
+                if (data.buildingName !== '' && data.apartment === 'Y') { extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName); }
+                if (extraAddr !== '') { extraAddr = ' (' + extraAddr + ')'; }
+              } else { addr = data.jibunAddress; }
+              const detail = prompt("상세주소를 입력해주세요! : " + addr + extraAddr);
+              window.parent.postMessage(addr + extraAddr + " " + detail, '*');
+            }, width : '100%', height : '100%' }).embed(div_clone);</script></body></html>`;
+      res.set("Content-Type", "text/html");
+      res.send(html);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //POST ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_post_getDocuments = function () {

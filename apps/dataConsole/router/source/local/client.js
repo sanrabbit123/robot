@@ -256,7 +256,6 @@ ClientJs.prototype.infoArea = function (info) {
     cursor: "pointer",
   };
 
-
   if (info.search === null) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     for (let i in style) {
@@ -290,10 +289,86 @@ ClientJs.prototype.infoArea = function (info) {
       e.preventDefault();
       (eventFunction(left))(e);
 
-      let input_clone, cancel_inputBack, cancel_event;
+      const removeAllEvent = function () {
+        GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
+          while (document.querySelectorAll('.removeTarget').length !== 0) {
+            document.querySelectorAll('.removeTarget')[0].remove();
+          }
+          clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
+          GeneralJs.timeouts.whiteCardRemoveTargets = null;
+        }, 10);
+      }
+      const cancel_event = function (e) {
+        e.preventDefault();
+
+        let orginalDiv = this.parentNode;
+
+        removeAllEvent();
+        orginalDiv.style.overflow = "hidden";
+        window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+        GeneralJs.stacks["addressEvent"] = null;
+      }
+      const updateValueEvent = async function (e) {
+        let thisId, requestIndex, column;
+        let idDom;
+        let mothers, targetDom;
+        let orginalDiv = this.parentNode;
+        let finalValue;
+
+        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+
+          idDom = this.parentNode.parentNode;
+
+          idDom.setAttribute("active", "true");
+          thisId = idDom.getAttribute("class");
+          mothers = document.querySelectorAll('.' + thisId);
+          for (let i = 0; i < mothers.length; i++) {
+            if (mothers[i].hasAttribute("active")) {
+              if (mothers[i].getAttribute("active") === "true") {
+                targetDom = mothers[i];
+                requestIndex = i;
+              }
+            }
+          }
+          column = this.parentNode.getAttribute("column");
+
+          if (e.type === "keypress") {
+            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.childNodes[0].data);
+          } else if (e.type === "click") {
+            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), orginalDiv.childNodes[0].data);
+          } else if (e.type === "message") {
+            finalValue = GeneralJs.vaildValue(column, e.data, orginalDiv.childNodes[0].data);
+          }
+
+          await GeneralJs.updateValue({
+            thisId: thisId,
+            requestIndex: String(requestIndex),
+            column: column,
+            pastValue: orginalDiv.childNodes[0].data,
+            value: finalValue,
+            index: Number(idDom.getAttribute("index")),
+          });
+
+          instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
+          orginalDiv.textContent = finalValue;
+          idDom.setAttribute("active", "false");
+          removeAllEvent();
+          orginalDiv.style.overflow = "hidden";
+        }
+
+      }
+
+      let input_clone;
+      let button_clone;
+      let cancel_inputBack;
       let style;
       let ea = 'px';
       let paddingBottom;
+      let height;
+      let top;
+      let width;
+      let fontSize;
+      let iframe_clone;
 
       if (this.querySelector("input") === null) {
 
@@ -337,68 +412,115 @@ ClientJs.prototype.infoArea = function (info) {
           input_clone.style[i] = style[i];
         }
 
-        cancel_event = function (e) {
-          e.preventDefault();
-          GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
-            while (document.querySelectorAll('.removeTarget').length !== 0) {
-              document.querySelectorAll('.removeTarget')[0].remove();
-            }
-            clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
-            GeneralJs.timeouts.whiteCardRemoveTargets = null;
-          }, 10);
-        }
         cancel_inputBack.addEventListener("click", cancel_event);
         cancel_inputBack.addEventListener("contextmenu", cancel_event);
-        input_clone.addEventListener("keypress", async function (e) {
-          let thisId, requestIndex, column;
-          let idDom;
-          let mothers, targetDom;
-          let orginalDiv = this.parentNode;
-          let finalValue;
-
-          if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
-            idDom = this.parentNode.parentNode;
-
-            idDom.setAttribute("active", "true");
-            thisId = idDom.getAttribute("class");
-            mothers = document.querySelectorAll('.' + thisId);
-            for (let i = 0; i < mothers.length; i++) {
-              if (mothers[i].hasAttribute("active")) {
-                if (mothers[i].getAttribute("active") === "true") {
-                  targetDom = mothers[i];
-                  requestIndex = i;
-                }
-              }
-            }
-            column = this.parentNode.getAttribute("column");
-
-            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.textContent);
-
-            await GeneralJs.updateValue({
-              thisId: thisId,
-              requestIndex: String(requestIndex),
-              column: column,
-              pastValue: orginalDiv.textContent,
-              value: finalValue,
-              index: Number(idDom.getAttribute("index")),
-            });
-
-            instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
-            orginalDiv.textContent = finalValue;
-            idDom.setAttribute("active", "false");
-            cancel_inputBack.remove();
-            input_clone.remove();
-          }
-        });
+        input_clone.addEventListener("keypress", updateValueEvent);
 
         this.appendChild(input_clone);
-        GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
-          input_clone.focus();
-          clearTimeout(GeneralJs.timeouts.updateInputTimeout);
-          GeneralJs.timeouts.updateInputTimeout = null;
-        }, 200);
-      }
 
+        //items
+        const map = DataPatch.clientMap();
+        const thisMap = map[this.getAttribute("column")];
+
+        if (thisMap.items !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+
+          width = GeneralJs.calculationMenuWidth(fontSize, thisMap.items);
+
+          for (let i = 0; i < thisMap.items.length; i++) {
+            button_clone = GeneralJs.nodes.div.cloneNode(true);
+            button_clone.classList.add("removeTarget");
+            button_clone.textContent = thisMap.items[i];
+            button_clone.setAttribute("buttonValue", thisMap.items[i]);
+            style = {
+              position: "absolute",
+              top: String(((height * 1.9) * (i + 1)) - top) + ea,
+              left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+              width: String(width) + ea,
+              paddingTop: String(height * 0.3) + ea,
+              height: String(height * 1.4) + ea,
+              background: "#2fa678",
+              textAlign: "center",
+              fontSize: "inherit",
+              color: "#ffffff",
+              zIndex: String(3),
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              boxShadow: "0px 2px 11px -6px #2fa678",
+            };
+            for (let i in style) {
+              button_clone.style[i] = style[i];
+            }
+            button_clone.addEventListener("click", updateValueEvent);
+            this.appendChild(button_clone);
+          }
+
+        } else if (thisMap.address !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+          width = fontSize * 36;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+
+          style = {
+            position: "absolute",
+            top: String((height * 1.9) - top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            paddingTop: String(height * 0.3) + ea,
+            height: String(width * 0.9) + ea,
+            background: "white",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #aaaaaa",
+          };
+          for (let i in style) {
+            button_clone.style[i] = style[i];
+          }
+
+          iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
+          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("width", "100%");
+          iframe_clone.setAttribute("height", "100%");
+          iframe_clone.style.border = String(0);
+          iframe_clone.style.borderRadius = String(3) + ea;
+          button_clone.appendChild(iframe_clone);
+
+          GeneralJs.stacks["addressEvent"] = async function (e) {
+            updateValueEvent.call(button_clone, e);
+            window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+            GeneralJs.stacks["addressEvent"] = null;
+          }
+          window.addEventListener('message', GeneralJs.stacks["addressEvent"]);
+
+          this.appendChild(button_clone);
+
+        } else {
+
+          GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
+            input_clone.focus();
+            clearTimeout(GeneralJs.timeouts.updateInputTimeout);
+            GeneralJs.timeouts.updateInputTimeout = null;
+          }, 200);
+
+        }
+
+      }
     }
   }
 
@@ -900,10 +1022,97 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     return function (e) {
       e.preventDefault();
 
-      let input_clone, cancel_inputBack, cancel_event;
+      const removeAllEvent = function () {
+        GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
+          while (document.querySelectorAll('.removeTarget').length !== 0) {
+            document.querySelectorAll('.removeTarget')[0].remove();
+          }
+          clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
+          GeneralJs.timeouts.whiteCardRemoveTargets = null;
+        }, 10);
+      }
+      const cancel_event = function (e) {
+        e.preventDefault();
+
+        let orginalDiv = this.parentNode;
+
+        removeAllEvent();
+        orginalDiv.style.overflow = "hidden";
+        window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+        GeneralJs.stacks["addressEvent"] = null;
+      }
+      const updateValueEvent = async function (e) {
+        let grandMother, mother;
+        let thisId, requestIndex, column;
+        let targetDom;
+        let fatherTarget = null;
+        let orginalDiv = this.parentNode;
+        let finalValue;
+
+        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+          grandMother = instance.whiteBox.contentsBox;
+          mother = this.parentNode.parentNode;
+
+          thisId = grandMother.getAttribute("index");
+          requestIndex = grandMother.getAttribute("request");
+          column = mother.getAttribute("index");
+          for (let dom of document.querySelectorAll('.' + thisId)) {
+            if (Number(dom.getAttribute("index")) === thisCase["index"]) {
+              for (let ch of dom.children) {
+                if (ch.getAttribute("column") === column) {
+                  targetDom = ch;
+                }
+              }
+            }
+          }
+
+          if (e.type === "keypress") {
+            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.childNodes[0].data);
+          } else if (e.type === "click") {
+            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), orginalDiv.childNodes[0].data);
+          } else if (e.type === "message") {
+            finalValue = GeneralJs.vaildValue(column, e.data, orginalDiv.childNodes[0].data);
+          }
+
+          await GeneralJs.updateValue({
+            thisId: thisId,
+            requestIndex: requestIndex,
+            column: column,
+            pastValue: orginalDiv.childNodes[0].data,
+            value: finalValue,
+            index: thisCase["index"],
+          });
+
+          if (instance.totalFather !== null) {
+            for (let father of instance.totalFather.children) {
+              if (Number(father.getAttribute("index")) === thisCase["index"]) {
+                if (father.querySelector(".father_" + column) !== null) {
+                  fatherTarget = father.querySelector(".father_" + column);
+                }
+              }
+            }
+            if (fatherTarget !== null) {
+              fatherTarget.textContent = finalValue;
+            }
+          }
+          instance.cases[thisCase["index"]][column] = finalValue;
+          orginalDiv.textContent = finalValue;
+          targetDom.textContent = finalValue;
+
+          removeAllEvent();
+        }
+      }
+
+      let input_clone, cancel_inputBack;
       let style;
       let ea = 'px';
       let paddingBottom;
+      let button_clone;
+      let height;
+      let top;
+      let width;
+      let fontSize;
+      let iframe_clone;
 
       if (this.querySelector("input") === null) {
 
@@ -925,7 +1134,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         input_clone = GeneralJs.nodes.input.cloneNode(true);
         input_clone.classList.add("removeTarget");
-
         input_clone.setAttribute("type", "text");
         input_clone.setAttribute("value", this.textContent);
 
@@ -947,83 +1155,115 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           input_clone.style[i] = style[i];
         }
 
-        cancel_event = function (e) {
-          e.preventDefault();
-          GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
-            while (document.querySelectorAll('.removeTarget').length !== 0) {
-              document.querySelectorAll('.removeTarget')[0].remove();
-            }
-            clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
-            GeneralJs.timeouts.whiteCardRemoveTargets = null;
-          }, 10);
-        }
         cancel_inputBack.addEventListener("click", cancel_event);
         cancel_inputBack.addEventListener("contextmenu", cancel_event);
-        input_clone.addEventListener("keypress", async function (e) {
-          let grandMother, mother;
-          let thisId, requestIndex, column;
-          let targetDom;
-          let fatherTarget = null;
-          let orginalDiv = this.parentNode;
-          let finalValue;
-
-          if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
-            grandMother = this.parentNode.parentNode.parentNode.parentNode.parentNode;
-            mother = this.parentNode.parentNode;
-
-            thisId = grandMother.getAttribute("index");
-            requestIndex = grandMother.getAttribute("request");
-            column = mother.getAttribute("index");
-
-            for (let dom of document.querySelectorAll('.' + thisId)) {
-              if (Number(dom.getAttribute("index")) === thisCase["index"]) {
-                for (let ch of dom.children) {
-                  if (ch.getAttribute("column") === column) {
-                    targetDom = ch;
-                  }
-                }
-              }
-            }
-
-            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.textContent);
-
-            await GeneralJs.updateValue({
-              thisId: thisId,
-              requestIndex: requestIndex,
-              column: column,
-              pastValue: orginalDiv.textContent,
-              value: finalValue,
-              index: thisCase["index"],
-            });
-
-            if (instance.totalFather !== null) {
-              for (let father of instance.totalFather.children) {
-                if (Number(father.getAttribute("index")) === thisCase["index"]) {
-                  if (father.querySelector(".father_" + column) !== null) {
-                    fatherTarget = father.querySelector(".father_" + column);
-                  }
-                }
-              }
-              if (fatherTarget !== null) {
-                fatherTarget.textContent = finalValue;
-              }
-            }
-            instance.cases[thisCase["index"]][column] = finalValue;
-            orginalDiv.textContent = finalValue;
-            targetDom.textContent = finalValue;
-            cancel_inputBack.remove();
-            input_clone.remove();
-          }
-        });
+        input_clone.addEventListener("keypress", updateValueEvent);
 
         this.appendChild(input_clone);
-        GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
-          input_clone.focus();
-          clearTimeout(GeneralJs.timeouts.updateInputTimeout);
-          GeneralJs.timeouts.updateInputTimeout = null;
-        }, 200);
-      }
 
+        //items
+        const map = DataPatch.clientMap();
+        const thisMap = map[this.parentNode.getAttribute("index")];
+
+        if (thisMap.items !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+
+          width = GeneralJs.calculationMenuWidth(fontSize, thisMap.items);
+
+          for (let i = 0; i < thisMap.items.length; i++) {
+            button_clone = GeneralJs.nodes.div.cloneNode(true);
+            button_clone.classList.add("removeTarget");
+            button_clone.textContent = thisMap.items[i];
+            button_clone.setAttribute("buttonValue", thisMap.items[i]);
+            style = {
+              position: "absolute",
+              top: String(((height * 1.9) * (i + 1)) - top) + ea,
+              left: String(0) + ea,
+              width: String(width) + ea,
+              paddingTop: String(height * 0.3) + ea,
+              height: String(height * 1.4) + ea,
+              background: "#2fa678",
+              textAlign: "center",
+              fontSize: "inherit",
+              color: "#ffffff",
+              zIndex: String(3),
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              boxShadow: "0px 2px 11px -6px #2fa678",
+              cursor: "pointer",
+            };
+            for (let i in style) {
+              button_clone.style[i] = style[i];
+            }
+            button_clone.addEventListener("click", updateValueEvent);
+            this.appendChild(button_clone);
+          }
+
+        } else if (thisMap.address !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+          width = fontSize * 36;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+
+          style = {
+            position: "absolute",
+            top: String((height * 1.9) - top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            paddingTop: String(height * 0.3) + ea,
+            height: String(width * 0.9) + ea,
+            background: "white",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #aaaaaa",
+          };
+          for (let i in style) {
+            button_clone.style[i] = style[i];
+          }
+
+          iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
+          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("width", "100%");
+          iframe_clone.setAttribute("height", "100%");
+          iframe_clone.style.border = String(0);
+          iframe_clone.style.borderRadius = String(3) + ea;
+          button_clone.appendChild(iframe_clone);
+
+          GeneralJs.stacks["addressEvent"] = async function (e) {
+            updateValueEvent.call(button_clone, e);
+            window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+            GeneralJs.stacks["addressEvent"] = null;
+          }
+          window.addEventListener('message', GeneralJs.stacks["addressEvent"]);
+
+          this.appendChild(button_clone);
+
+        } else {
+
+          GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
+            input_clone.focus();
+            clearTimeout(GeneralJs.timeouts.updateInputTimeout);
+            GeneralJs.timeouts.updateInputTimeout = null;
+          }, 200);
+
+        }
+      }
     }
   }
 
@@ -1088,7 +1328,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-1.6 * (fontSize / 15)) + ea,
       left: String(fontSize * 9) + ea,
       width: "calc(100% - " + String(fontSize * 9) + ea + ")",
       height: String(fontSize * (21 / 16)) + ea,
@@ -1107,6 +1347,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   div_clone2.appendChild(propertyBox);
+  this.whiteBox.propertyBox = propertyBox;
 
   //history box
   historyBox = GeneralJs.nodes.div.cloneNode(true);
@@ -1268,6 +1509,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   historyBox.appendChild(div_clone3);
   div_clone2.appendChild(historyBox);
+  this.whiteBox.historyBox = historyBox;
 
   //h inital event
   GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
@@ -1454,14 +1696,18 @@ ClientJs.prototype.whiteViewMaker = function (index) {
 ClientJs.prototype.rowViewMaker = function () {
   const instance = this;
   return function (e) {
-    instance.totalFather.style.zIndex = String(-1);
-    instance.totalFather.classList.remove("fadein");
-    instance.totalFather.classList.add("fadeout");
+    if (instance.totalFather !== null) {
+      instance.totalFather.style.zIndex = String(-1);
+      instance.totalFather.classList.remove("fadein");
+      instance.totalFather.classList.add("fadeout");
+    }
     instance.totalMother.classList.remove("justfadeoutoriginal");
     instance.totalMother.classList.add("justfadeinoriginal");
     instance.onView = "mother";
     GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
-      instance.totalFather.remove();
+      if (instance.totalFather !== null) {
+        instance.totalFather.remove();
+      }
       instance.totalFather = null;
       instance.totalMother.classList.remove("justfadeinoriginal");
       clearTimeout(GeneralJs.timeouts.fadeinTimeout);
@@ -1493,6 +1739,9 @@ ClientJs.prototype.returnValueEventMaker = function () {
         nodeArr.push(node);
       }
     }
+    if (nodeArr.length === 0) {
+      return;
+    }
     nodeArr.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
     targetNode = nodeArr[Number(pastObj.requestIndex)];
     for (let node of targetNode.children) {
@@ -1503,8 +1752,7 @@ ClientJs.prototype.returnValueEventMaker = function () {
 
     //white
     if (document.querySelector(".totalWhite") !== null) {
-      white = document.querySelector(".totalWhite");
-      totalWhiteNode = white.children[0].children[1].children;
+      totalWhiteNode = instance.whiteBox.propertyBox.children;
       for (let node of totalWhiteNode) {
         if (node.getAttribute("index") === pastObj.column) {
           textTargets.push(node.children[1]);

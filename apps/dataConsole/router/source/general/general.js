@@ -185,6 +185,35 @@ GeneralJs.tagCoverting = function (obj) {
   return str;
 }
 
+
+GeneralJs.calculationWordWidth = function (fontSize, word) {
+  const filter = function (obj) {
+    const { number, sub, word } = obj;
+    return (word * 1) + (number * 0.4) + (sub * 0.1);
+  }
+  let temp;
+
+  temp = {};
+  temp.total = word.length;
+  temp.number = word.replace(/[^0-9]/g, '').length;
+  temp.sub = word.replace(/[^\.\,\_\^\~\'\"\:\;\/\\\*\!\?]/g, '').length;
+  temp.word = temp.total - temp.number - temp.sub;
+
+  return (filter(temp) + 1.4) * fontSize;
+}
+
+GeneralJs.calculationMenuWidth = function (fontSize, items) {
+  let wordLengthArr;
+
+  wordLengthArr = [];
+  for (let i = 0; i < items.length; i++) {
+    wordLengthArr.push(GeneralJs.calculationWordWidth(fontSize, items[i]));
+  }
+  wordLengthArr.sort((a, b) => { return b - a; });
+
+  return wordLengthArr[0];
+}
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
@@ -246,10 +275,13 @@ GeneralJs.prototype.generalCss = function () {
   .hoverDefault:hover{opacity:0.5;}
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
+  @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
+  @keyframes justfadeoutmiddle{from{opacity:0.6;}to{opacity:0;}}
   @keyframes justfadein{from{opacity:0;}to{opacity:0.3;}}
   @keyframes justfadeout{from{opacity:0.3;}to{opacity:0;}}
   @keyframes fadedown{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(20px);}}
   @keyframes fadeup{from{opacity:0;transform:translateY(20px);}to{opacity:0.95;transform:translateY(0px);}}
+  @keyframes fadeuplite{from{opacity:0;transform:translateY(5px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}

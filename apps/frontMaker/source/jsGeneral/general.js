@@ -93,6 +93,7 @@ GeneralJs.nodes = {
   textarea: document.createElement("TEXTAREA"),
   a: document.createElement('A'),
   label: document.createElement('LABEL'),
+  iframe: document.createElement('IFRAME'),
 }
 
 GeneralJs.deBounce = function (func, wait, immediate) {
