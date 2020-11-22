@@ -1,26 +1,9 @@
-GeneralJs.timeouts = {};
-
 GeneralJs.confirmKeyCode = [
   13,
   9,
 ];
 
 GeneralJs.updateHistoryTong = [];
-
-GeneralJs.objectToQuery = function (dataObj) {
-  let dataString;
-
-  dataString = '';
-  for (let i in dataObj) {
-    dataString += i.replace(/\=\&/g, '');
-    dataString += '=';
-    dataString += String(dataObj[i]).replace(/\=\&/g, '');
-    dataString += '&';
-  }
-  dataString = dataString.slice(0, -1);
-
-  return dataString;
-}
 
 GeneralJs.idOrderDecode = function (number) {
   const abc = `[ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ]`;
@@ -47,8 +30,18 @@ GeneralJs.idOrderDecode = function (number) {
 }
 
 GeneralJs.vaildValue = function (column, value, pastValue) {
-  const map = DataPatch.clientMap();
+  let map;
+  let filteredValue;
   let finalValue, valueTemp;
+  let tempBoo, tempFunction;
+
+  if (window.location.pathname === "/client") {
+    map = DataPatch.clientMap();
+  } else if (window.location.pathname === "/designer") {
+    map = DataPatch.designerMap();
+  } else if (window.location.pathname === "/designer") {
+    map = DataPatch.projectMap();
+  }
 
   switch (map[column].type) {
     case "string":
@@ -62,8 +55,9 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       }
       break;
     case "date":
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
-        finalValue = value;
+      filteredValue = DataPatch.toolsDateFilter(value);
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
+        finalValue = filteredValue;
       } else {
         finalValue = pastValue;
       }
@@ -73,6 +67,20 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       break;
     case "array":
       finalValue = value;
+      break;
+    case "object":
+      tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
+      tempBoo = tempFunction(value, pastValue, true);
+      if (tempBoo.boo) {
+        if (tempBoo.value !== null) {
+          finalValue = tempBoo.value;
+        } else {
+          finalValue = value;
+        }
+      } else {
+        finalValue = pastValue;
+      }
+      break;
     default:
       throw new Error("invaild type");
   }
@@ -89,7 +97,7 @@ GeneralJs.updateValue = async function (dataObj) {
     let dataString, response;
 
     GeneralJs.updateHistoryTong.unshift(dataObj);
-    dataString = GeneralJs.objectToQuery(dataObj);
+    dataString = GeneralJs.objectToRawquery(dataObj);
     response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
     if (response.message !== "success") {
       throw new Error("update error");
@@ -114,7 +122,7 @@ GeneralJs.returnValue = async function () {
       copiedObj = JSON.parse(JSON.stringify(pastObj));
       delete copiedObj.value;
       copiedObj.value = copiedObj.pastValue;
-      dataString = GeneralJs.objectToQuery(copiedObj);
+      dataString = GeneralJs.objectToRawquery(copiedObj);
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
       if (response.message !== "success") {
         throw new Error("return error");
@@ -185,21 +193,25 @@ GeneralJs.tagCoverting = function (obj) {
   return str;
 }
 
-
-GeneralJs.calculationWordWidth = function (fontSize, word) {
+GeneralJs.calculationWordWidth = function (fontSize, word, rawOption = false) {
   const filter = function (obj) {
-    const { number, sub, word } = obj;
-    return (word * 1) + (number * 0.4) + (sub * 0.1);
+    const { number, space, sub, word } = obj;
+    return (word * 1) + (number * 0.4) + (space * 0.18) + (sub * 0.1);
   }
   let temp;
 
   temp = {};
   temp.total = word.length;
   temp.number = word.replace(/[^0-9]/g, '').length;
+  temp.space = word.replace(/[^ ]/g, '').length;
   temp.sub = word.replace(/[^\.\,\_\^\~\'\"\:\;\/\\\*\!\?]/g, '').length;
-  temp.word = temp.total - temp.number - temp.sub;
+  temp.word = temp.total - temp.number - temp.space - temp.sub;
 
-  return (filter(temp) + 1.4) * fontSize;
+  if (!rawOption) {
+    return (filter(temp) + 1.4) * fontSize;
+  } else {
+    return filter(temp) * fontSize;
+  }
 }
 
 GeneralJs.calculationMenuWidth = function (fontSize, items) {

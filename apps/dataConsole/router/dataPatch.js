@@ -3,6 +3,193 @@ const DataPatch = function () {
   this.mother = new Mother();
 }
 
+//TOOL ------------------------------------------------------------------------------------------
+
+DataPatch.prototype.toolsDateFilter = function (value) {
+  let filteredValue, temp, tempArr, today;
+
+  if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+    filteredValue = "20" + value;
+  } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9] [0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\-[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\.[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\/[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9] [0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
+    today = new Date();
+    filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
+  } else {
+    filteredValue = value;
+  }
+
+  return filteredValue;
+}
+
 //CLIENT ----------------------------------------------------------------------------------------
 
 DataPatch.prototype.clientStandard = function () {
@@ -125,15 +312,18 @@ DataPatch.prototype.clientCardViewStandard = function () {
     info: [
       "timeline",
       "phone",
-      "budget",
-      "address",
     ],
     exceptionHeight: [
       false,
       false,
-      false,
-      true,
     ],
+    division: [
+      { name: "통화 전", },
+      { name: "제안서 전", },
+      { name: "제안서 후", },
+      { name: "진행", },
+      { name: "드랍", },
+    ]
   };
 
   return targetColumns;
@@ -174,6 +364,230 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.clientMap = function () {
+  const callHistoryToObject = function (value, pastValue, vaildMode) {
+    const filter = function (value) {
+      let filteredValue, temp, tempArr, today;
+
+      if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+        filteredValue = "20" + value;
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
+        today = new Date();
+        filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
+      } else {
+        filteredValue = value;
+      }
+
+      return filteredValue;
+    };
+    let arr = [];
+    let filteredValue;
+    let filteredArr = [];
+    let obj;
+    let temp, temp2;
+    let boo = false;
+
+    temp = value.split(", ");
+    for (let i of temp) {
+      filteredValue = filter(i);
+      filteredArr.push(filteredValue);
+      if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(filteredValue)) {
+        boo = true;
+      }
+    }
+
+    if (!boo) {
+      temp = filteredArr;
+    } else {
+      temp = pastValue.split(", ");
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: filteredArr.join(", ") };
+    }
+
+    if (temp[0] === '') {
+      return [];
+    }
+
+    for (let i of temp) {
+      temp2 = i.split("-");
+      obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
+      arr.push(obj);
+    }
+
+    return arr;
+  };
+
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
     cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
@@ -193,8 +607,8 @@ DataPatch.prototype.clientMap = function () {
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
     status: { name: "상태", position: "requests.0.analytics.response.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
-    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ "가벼운 문의", "타사 계약", "비용 문제", "직접 진행", "주변 반대", "알 수 없음" ], searchBoo: true, },
-    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "array", searchBoo: false, },
+    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
+    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, },
     movein: { name: "이사일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, },
@@ -352,7 +766,7 @@ DataPatch.prototype.designerWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.designerMap = function () {
-  const snsToObject = function (value, pastValue) {
+  const snsToObject = function (value, pastValue, vaildMode) {
     let arr = [];
     let obj;
     let temp, temp2;
@@ -376,6 +790,14 @@ DataPatch.prototype.designerMap = function () {
       temp = pastValue.split(" / ");
     }
 
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      return [];
+    }
+
     for (let i of temp) {
       obj = {};
       temp2 = i.split(" ");
@@ -385,9 +807,9 @@ DataPatch.prototype.designerMap = function () {
     }
 
     return arr;
-  }
+  };
 
-  const careerToObject = function (value, pastValue) {
+  const careerToObject = function (value, pastValue, vaildMode) {
     let obj = {};
     let boo = false;
     let temp;
@@ -402,6 +824,14 @@ DataPatch.prototype.designerMap = function () {
       temp = value.split(' ');
     } else {
       temp = pastValue.split(' ');
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      throw new Error("invaild value");
     }
 
     obj.startY = Number(temp[0].replace(/년/g, '').replace(/[^0-9\.\-]/g, ''));
@@ -423,9 +853,9 @@ DataPatch.prototype.designerMap = function () {
     obj.startM = Number(temp[1].replace(/월/g, '').replace(/[^0-9\.\-]/g, ''));
 
     return obj;
-  }
+  };
 
-  const accountToObject = function (value, pastValue) {
+  const accountToObject = function (value, pastValue, vaildMode) {
     let arr = [];
     let obj;
     let temp, temp2;
@@ -449,6 +879,14 @@ DataPatch.prototype.designerMap = function () {
       temp = pastValue.split(" / ");
     }
 
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      return [];
+    }
+
     for (let i of temp) {
       obj = {};
       temp2 = i.split(" ");
@@ -459,9 +897,9 @@ DataPatch.prototype.designerMap = function () {
     }
 
     return arr;
-  }
+  };
 
-  const filesToObject = function (value, pastValue) {
+  const filesToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -482,13 +920,22 @@ DataPatch.prototype.designerMap = function () {
       temp = pastValue.split(" / ");
     }
 
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      throw new Error("invaild value");
+    }
+
     obj = {};
     for (let i = 0; i < target.length; i++) {
       obj[target[i]] = /유/gi.test(temp[i]) ? true : false;
     }
 
     return obj;
-  }
+  };
+
   const map = {
     designer: { name: "성함", position: "designer", type: "string", searchBoo: true, },
     desid: { name: "아이디", position: "desid", type: "string", searchBoo: true, },
@@ -499,12 +946,12 @@ DataPatch.prototype.designerMap = function () {
     address: { name: "주소", position: "information.address", type: "array", searchBoo: true, },
     showRoom: { name: "쇼룸", position: "information.personalSystem.showRoom", type: "boolean", searchBoo: true, },
     webPage: { name: "웹페이지", position: "information.personalSystem.webPage", type: "array", searchBoo: true, },
-    sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
-    career: { name: "경력", position: "information.business.career", type: "object", objectFunction: careerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
-    account: { name: "계좌번호", position: "information.business.account", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
+    sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    career: { name: "경력", position: "information.business.career", type: "object", objectFunction: careerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    account: { name: "계좌번호", position: "information.business.account", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     classification: { name: "사업자 분류", position: "information.business.businessInfo.classification", type: "string", searchBoo: true, },
     businessNumber: { name: "사업자 등록번호", position: "information.business.businessInfo.businessNumber", type: "string", searchBoo: true, },
-    files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
+    files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     percentage: { name: "수수료", position: "information.business.service.cost.percentage", type: "number", searchBoo: true, },
     partner: { name: "시공사", position: "information.business.service.contruct.partner", type: "string", searchBoo: true, },
     method: { name: "시공 방식", position: "information.business.service.contruct.method", type: "string", searchBoo: true, },
@@ -724,7 +1171,7 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.projectMap = function () {
-  const accountToObject = function (value, pastValue) {
+  const accountToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -742,6 +1189,14 @@ DataPatch.prototype.projectMap = function () {
       temp = value.split(" / ");
     } else {
       temp = pastValue.split(" / ");
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      throw new Error("invaild value");
     }
 
     obj = {};
@@ -750,9 +1205,9 @@ DataPatch.prototype.projectMap = function () {
     obj.proof = temp[2].replace(/^증빙 /, '');
 
     return obj;
-  }
+  };
 
-  const methodToObject = function (value, pastValue) {
+  const methodToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -772,13 +1227,21 @@ DataPatch.prototype.projectMap = function () {
       temp = pastValue.split(" / ");
     }
 
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (temp[0] === '') {
+      throw new Error("invaild value");
+    }
+
     obj = {};
     obj.method = temp[0].replace(/^결제방법 /, '');
     obj.to = temp[1].replace(/^수신자 /, '');
     obj.proof = temp[2].replace(/^증빙 /, '');
 
     return obj;
-  }
+  };
 
   const map = {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
@@ -788,20 +1251,20 @@ DataPatch.prototype.projectMap = function () {
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, },
-    firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
+    firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainGuide: { name: "잔금 안내", position: "process.contract.remain.guide", type: "date", searchBoo: true, },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, },
     remainVat: { name: "VAT", position: "process.contract.remain.calculation.amount.vat", type: "number", searchBoo: true, },
     remainConsumer: { name: "소비자가", position: "process.contract.remain.calculation.amount.consumer", type: "number", searchBoo: true, },
-    remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
+    remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, },
     meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, },
     method: { name: "정산 방식", position: "process.calculation.method", type: "string", searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
-    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue\) \{/gi, ''), searchBoo: true, },
+    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     paymentsTotalAmount: { name: "정산 총금액", position: "process.calculation.payments.totalAmount", type: "number", searchBoo: true, },
     paymentsFirstAmount: { name: "디자이너 선금", position: "process.calculation.payments.first.amount", type: "number", searchBoo: true, },
     paymentsFirstDate: { name: "선금 지급일", position: "process.calculation.payments.first.date", type: "date", searchBoo: true, },

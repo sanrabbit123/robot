@@ -14,6 +14,8 @@ GeneralJs.events = {};
 
 GeneralJs.stacks = {};
 
+GeneralJs.timeouts = {};
+
 GeneralJs.boos = {
   scroll: true,
 };
@@ -222,6 +224,21 @@ GeneralJs.addHrefEvent = function (dom, to) {
   dom.addEventListener("click", function (e) {
     window.location.href = to;
   });
+}
+
+GeneralJs.objectToRawquery = function (dataObj) {
+  let dataString;
+
+  dataString = '';
+  for (let i in dataObj) {
+    dataString += i.replace(/\=\&/g, '');
+    dataString += '=';
+    dataString += String(dataObj[i]).replace(/\=\&/g, '');
+    dataString += '&';
+  }
+  dataString = dataString.slice(0, -1);
+
+  return dataString;
 }
 
 GeneralJs.objectToQuery = function (obj) {

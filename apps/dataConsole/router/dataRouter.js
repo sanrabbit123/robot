@@ -28,7 +28,7 @@ DataRouter.baseMaker = function (target) {
   dataPatchScript = `const DataPatch = new Function();\n`;
   if (target === "client") {
     for (let i of prototypes) {
-      if (/^client/.test(i)) {
+      if (/^client/.test(i) || /^tools/.test(i)) {
         dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
       }
     }
@@ -383,9 +383,11 @@ DataRouter.prototype.rou_post_updateClient = function () {
           for (let i of valueTemp) {
             finalValue.push(i);
           }
+          break;
         case "object":
-          tempFunction = new Function("value", "pastValue", map[column].objectFunction);
-          finalValue = tempFunction(value, pastValue);
+          tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
+          finalValue = tempFunction(value, pastValue, false);
+          break;
         default:
           throw new Error("invaild type");
       }

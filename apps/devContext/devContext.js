@@ -924,6 +924,9 @@ class DevContext extends Array {
 
 
 
+      /*
+
+      //poo and ghost to s3
 
       let fromArr, toArr;
       let binaryDir;
@@ -980,11 +983,12 @@ class DevContext extends Array {
       await s3FileUpload(fromArr, toArr);
       shell.exec(`rm -rf ${process.env.HOME}/tempPoo`);
 
+      */
 
 
 
-
-
+      const back = new BackMaker();
+      console.log((await back.getClientById("c2011_aa33s")).requests[0].analytics);
 
 
 

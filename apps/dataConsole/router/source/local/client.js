@@ -314,6 +314,7 @@ ClientJs.prototype.infoArea = function (info) {
         let mothers, targetDom;
         let orginalDiv = this.parentNode;
         let finalValue;
+        let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
 
@@ -332,19 +333,25 @@ ClientJs.prototype.infoArea = function (info) {
           }
           column = this.parentNode.getAttribute("column");
 
+          if (orginalDiv.childNodes[0] !== undefined && orginalDiv.childNodes[0].nodeType === 3) {
+            pastRawData = orginalDiv.childNodes[0].data;
+          } else {
+            pastRawData = '';
+          }
+
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
           } else if (e.type === "click") {
-            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
-            finalValue = GeneralJs.vaildValue(column, e.data, orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
 
           await GeneralJs.updateValue({
             thisId: thisId,
             requestIndex: String(requestIndex),
             column: column,
-            pastValue: orginalDiv.childNodes[0].data,
+            pastValue: pastRawData,
             value: finalValue,
             index: Number(idDom.getAttribute("index")),
           });
@@ -678,14 +685,19 @@ ClientJs.prototype.spreadData = async function (search = null) {
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
   const { cases, totalContents, totalMother } = this;
+
   return function (e) {
+
     if (instance.totalFather !== null) {
+
       instance.totalFather.style.zIndex = String(1);
       instance.totalMother.classList.remove("justfadeinoriginal");
       instance.totalMother.classList.add("justfadeoutoriginal");
       instance.totalFather.classList.remove("fadeout");
       instance.totalFather.classList.add("fadein");
+
     } else {
+
       totalMother.classList.add("justfadeoutoriginal");
 
       let temp;
@@ -696,28 +708,33 @@ ClientJs.prototype.cardViewMaker = function () {
       let size, margin;
       let ea = "px";
       let num;
+      let cardWidthConstant;
       let intend, totalWidth;
       let lineHeight, titleTop, startTop;
       let divideNumber;
-      let fontSize;
+      let fontSize, nameFontSize;
       let fixedHeightSize;
       let exceptionMargin;
 
+      //total father div
       totalFather = GeneralJs.nodes.div.cloneNode(true);
       totalFather.classList.add("totalFather");
 
-      margin = 20;
-      lineHeight = 22;
-      divideNumber = Math.floor((window.innerWidth - (margin * 2.5)) / (margin + 240));
+      margin = 12;
+      lineHeight = 20;
+      cardWidthConstant = 170;
+      divideNumber = Math.floor((window.innerWidth - (margin * 2.5)) / (margin + cardWidthConstant));
       size = (window.innerWidth - (margin * (divideNumber + 2.5))) / divideNumber;
-      fixedHeightSize = 230;
-      intend = 25;
-      titleTop = 20;
-      startTop = titleTop + 31;
+      fixedHeightSize = 110;
+      intend = 22;
+      titleTop = 14;
+      startTop = titleTop + 16;
       exceptionMargin = 12;
-      fontSize = 14;
+      fontSize = 13;
+      nameFontSize = fontSize + 4;
       totalWidth = size - (intend * 2) - 1;
 
+      //style maker
       style = {
         display: "inline-block",
         position: "relative",
@@ -731,8 +748,8 @@ ClientJs.prototype.cardViewMaker = function () {
 
       nameStyle = {
         position: "absolute",
-        fontSize: String(fontSize + 9) + ea,
-        fontWeight: String(200),
+        fontSize: String(nameFontSize) + ea,
+        fontWeight: String(500),
         top: String(titleTop) + ea,
         left: String(intend) + ea,
         color: "#404040",
@@ -742,9 +759,8 @@ ClientJs.prototype.cardViewMaker = function () {
       cliidStyle = {
         position: "absolute",
         fontSize: String(fontSize) + ea,
-        fontWeight: String(600),
-        top: String(titleTop + 12) + ea,
-        left: String(94) + ea,
+        fontWeight: String(200),
+        top: String(titleTop + (nameFontSize - fontSize + 1)) + ea,
         color: "#2fa678",
         cursor: "pointer",
       };
@@ -752,12 +768,13 @@ ClientJs.prototype.cardViewMaker = function () {
       barStyle = {
         position: "absolute",
         background: "#ececec",
-        top: String(startTop + 5) + ea,
+        top: String(startTop + 13) + ea,
         left: String(intend) + ea,
         width: String(totalWidth) + ea,
         height: String(1) + ea,
       };
 
+      //info style
       styles = [];
       for (let i = 0; i < DataPatch.clientCardViewStandard().info.length; i++) {
         temp = {
@@ -773,6 +790,7 @@ ClientJs.prototype.cardViewMaker = function () {
         styles.push(temp);
       }
 
+      //make card
       num = 0;
       for (let obj of cases) {
         if (num !== 0) {
@@ -791,6 +809,7 @@ ClientJs.prototype.cardViewMaker = function () {
           div_clone.appendChild(div_clone2);
 
           //cliid
+          cliidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
           div_clone2 = GeneralJs.nodes.div.cloneNode(true);
           div_clone2.textContent = obj.cliid;
           for (let i in cliidStyle) {
@@ -806,6 +825,7 @@ ClientJs.prototype.cardViewMaker = function () {
           }
           div_clone.appendChild(div_clone2);
 
+          //sub info
           for (let j = 0; j < DataPatch.clientCardViewStandard().info.length; j++) {
             div_clone2 = GeneralJs.nodes.div.cloneNode(true);
             div_clone2.classList.add("father_" + DataPatch.clientCardViewStandard().info[j]);
@@ -1048,6 +1068,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let fatherTarget = null;
         let orginalDiv = this.parentNode;
         let finalValue;
+        let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
@@ -1066,19 +1087,25 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
 
+          if (orginalDiv.childNodes[0] !== undefined && orginalDiv.childNodes[0].nodeType === 3) {
+            pastRawData = orginalDiv.childNodes[0].data;
+          } else {
+            pastRawData = '';
+          }
+
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
           } else if (e.type === "click") {
-            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
-            finalValue = GeneralJs.vaildValue(column, e.data, orginalDiv.childNodes[0].data);
+            finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
 
           await GeneralJs.updateValue({
             thisId: thisId,
             requestIndex: requestIndex,
             column: column,
-            pastValue: orginalDiv.childNodes[0].data,
+            pastValue: pastRawData,
             value: finalValue,
             index: thisCase["index"],
           });
@@ -2161,7 +2188,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
       mother.removeChild(mother.lastChild);
       loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
       loadingIcon.style.opacity = "1";
-      GeneralJs.ajax(GeneralJs.objectToQuery(queryObj), "/getClientReport", function (data) {
+      GeneralJs.ajax(GeneralJs.objectToRawquery(queryObj), "/getClientReport", function (data) {
         loadingIcon.style.opacity = "0";
         const scrollBox = instance.reportScrollBox(data, motherWidth);
         mother.appendChild(scrollBox);
