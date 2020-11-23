@@ -1228,7 +1228,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const { standard, info } = DataPatch.designerWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
-  let propertyBox, historyBox;
+  let propertyBox, portfolioBox;
   let style;
   let ea = "px";
   let titleHeight, titleFontSize, topMargin, leftMargin;
@@ -1396,7 +1396,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
   lineHeightRatio = 29 / 16;
-  fontSize = (contentsBoxHeight / info.length) / lineHeightRatio;
+  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + (9 / 16));
 
   //contents event
   updateEventFunction = function () {
@@ -1737,8 +1737,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(propertyBox);
   this.whiteBox.propertyBox = propertyBox;
 
-  //history box
-  historyBox = GeneralJs.nodes.div.cloneNode(true);
+  //contents box
+  portfolioBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
     height: "100%",
@@ -1747,177 +1747,91 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     width: "calc(55% - " + String(leftMargin) + ea + ")",
   };
   for (let i in style) {
-    historyBox.style[i] = style[i];
+    portfolioBox.style[i] = style[i];
   }
 
-  //histoty title box
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = "HISTORY";
-  style = {
-    position: "absolute",
-    width: String(fontSize * 6) + ea,
-    height: "100%",
-    fontSize: String(fontSize) + ea,
-    fontWeight: String(700),
-  };
-  for (let i in style) {
-    div_clone3.style[i] = style[i];
-  }
-  historyBox.appendChild(div_clone3);
+  //contents
+  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getContents", function (data) {
+    const contents = JSON.parse(data);
+    let totalTong;
+    let div_clone, div_clone2, div_clone3;
+    let img_clone;
+    let style = {};
+    let ea = "px";
 
-  //history text box tong
-  historyTongTarget = [
-    { name: "시공 관련", dom: null },
-    { name: "스타일링 관련", dom: null },
-    { name: "예산 관련", dom: null },
-    { name: "현장 관련", dom: null },
-    { name: "진행 현황", dom: null },
-  ];
-  visualSpecificMarginTop = fontSize * (1 / 5);
-  historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
-  textAreas = [];
+    totalTong = GeneralJs.nodes.div.cloneNode(true);
 
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    left: String(fontSize * 6) + ea,
-    width: "calc(100% - " + String((fontSize * 6) + 1) + ea + ")",
-    height: "100%",
-    fontSize: String(fontSize) + ea,
-    fontWeight: String(300),
-  };
-  for (let i in style) {
-    div_clone3.style[i] = style[i];
-  }
+    for (let i = 0; i < contents.length; i++) {
 
-  for (let i = 0; i < historyTongTarget.length; i++) {
+      //unit tong
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {};
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
 
-    //margin box
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      width: "100%",
-      height: String(i === 0 ? fontSize * (1 / 5) : fontSize) + ea,
-    };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
-    }
-    div_clone3.appendChild(div_clone4);
+      //title
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.textContent = contents[i].contents.portfolio.pid + " : " + contents[i].contents.portfolio.title.main;
+      style = {};
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      div_clone.appendChild(div_clone2);
 
-    //contents box
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      width: "100%",
-      marginTop: String(visualSpecificMarginTop) + ea,
-      height: "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(300),
-      border: "solid 1px #dddddd",
-      borderRadius: String(5) + ea,
-    };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
-    }
+      //picture tong
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      style = {};
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
 
-    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone5.textContent = historyTongTarget[i].name;
-    style = {
-      position: "absolute",
-      top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
-      left: String(fontSize * (2 / 15.3027) * -1) + ea,
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(600),
-      color: "#404040",
-      background: "white",
-      paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
-      paddingRight: String(fontSize * (12 / 15.3027)) + ea,
-    };
-    for (let i in style) {
-      div_clone5.style[i] = style[i];
-    }
-    div_clone4.appendChild(div_clone5);
+      //picture scroll box
+      div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+      style = {};
+      for (let j in style) {
+        div_clone3.style[j] = style[j];
+      }
 
-    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone5.classList.add("noScrollBar");
-    style = {
-      position: "absolute",
-      bottom: String(0) + ea,
-      left: String(fontSize * (15 / 15.3027)) + ea,
-      background: "aqua",
-      width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
-      height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
-      overflow: "scroll",
-    };
-    for (let i in style) {
-      div_clone5.style[i] = style[i];
-    }
-
-    textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
-    style = {
-      width: "100%",
-      height: String(5000) + ea,
-      fontSize: String(fontSize * 0.9) + ea,
-      fontWeight: String(200),
-      color: "#aaaaaa",
-      border: String(0),
-      outline: String(0),
-      lineHeight: String(1.6),
-    };
-    for (let i in style) {
-      textArea_clone.style[i] = style[i];
-    }
-    textArea_clone.addEventListener("focus", function (e) {
-      const thisIndex = i;
-      for (let { dom } of historyTongTarget) {
-        if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
+      //pictures
+      for (let j = 0; j < contents[i].photos.detail.length; j++) {
+        img_clone = GeneralJs.nodes.img.cloneNode(true);
+        img_clone.src = S3HOST + "/corePortfolio/listImage/" + contents[i].contents.portfolio.pid + "/t" + String(contents[i].photos.detail[j].index) + contents[i].contents.portfolio.pid + ".jpg";
+        style = {};
+        if (contents[i].photos.detail[j].gs === 'g') {
+          style = {};
         } else {
-          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+          style = {};
         }
+        for (let k in style) {
+          img_clone.style[k] = style[k];
+        }
+        div_clone3.appendChild(img_clone);
       }
-      this.style.color = "#202020";
-    });
-    textArea_clone.addEventListener("blur", function (e) {
-      for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
-      }
-      this.style.color = "#cccccc";
-    });
 
-    div_clone5.appendChild(textArea_clone);
-    textAreas.push(textArea_clone);
+      div_clone2.appendChild(div_clone3);
+      div_clone.appendChild(div_clone2);
 
-    div_clone4.appendChild(div_clone5);
-    div_clone4.setAttribute("index", String(i));
-    historyTongTarget[i].dom = div_clone4;
+      //unit tong end
+      totalTong.appendChild(div_clone);
+    }
+    portfolioBox.appendChild(totalTong);
+  });
 
-    div_clone3.appendChild(div_clone4);
-  }
-
-  historyBox.appendChild(div_clone3);
-  div_clone2.appendChild(historyBox);
-  this.whiteBox.historyBox = historyBox;
+  div_clone2.appendChild(portfolioBox);
+  this.whiteBox.portfolioBox = portfolioBox;
 
   //h inital event
   GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
   hInitialBox.addEventListener("click", function (e) {
     if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
       propertyBox.style.opacity = String(0);
-      historyBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
+      portfolioBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
     } else {
       propertyBox.style.opacity = String(1);
-      historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
+      portfolioBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-    }
-  });
-
-  //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
-    const dataArr = JSON.parse(res);
-    for (let i = 0; i < textAreas.length; i++) {
-      textAreas[i].value = dataArr[i];
     }
   });
 

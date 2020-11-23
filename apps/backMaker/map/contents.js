@@ -81,7 +81,7 @@ module.exports = {
       first: 0,
       last: 0,
       detail: [
-        { index: 0, gs: 'g' },
+        { index: 1, gs: 'g' },
       ],
     }
   }
