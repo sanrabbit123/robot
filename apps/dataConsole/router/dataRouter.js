@@ -68,6 +68,7 @@ DataRouter.prototype.getDateMatrix = async function (length = 6) {
     let year, month;
     let day0, day1, day2;
     let dateString0, dateString1;
+    let resultArr, middleResultArr, resultFactorArr;
 
     resultArr = [];
     for (let j = 0; j < dateMatrix.length; j++) {
@@ -80,29 +81,27 @@ DataRouter.prototype.getDateMatrix = async function (length = 6) {
 
       middleResultArr = [];
       for (let i = 0; i < dateMatrix[j].length; i++) {
-        resultFatorArr = [];
+        resultFactorArr = [];
 
         day0 = dateMatrix[j][i][0];
-        resultFatorArr.push(new Date(year, month - 1, day0));
+        resultFactorArr.push(new Date(year, month - 1, day0));
 
         day1 = dateMatrix[j][i][dateMatrix[j][i].length - 1];
-        resultFatorArr.push(new Date(year, month - 1, day1));
+        resultFactorArr.push(new Date(year, month - 1, day1));
 
         if (i !== dateMatrix[j].length - 1) {
           day2 = dateMatrix[j][i + 1][0];
-          resultFatorArr.push(new Date(year, month - 1, day2));
+          resultFactorArr.push(new Date(year, month - 1, day2));
         } else {
           day2 = 1;
           if (month === 12) {
-            resultFatorArr.push(new Date(year + 1, 0, day2));
+            resultFactorArr.push(new Date(year + 1, 0, day2));
           } else {
-            resultFatorArr.push(new Date(year, month, day2));
+            resultFactorArr.push(new Date(year, month, day2));
           }
         }
-
-        middleResultArr.push(resultFatorArr);
+        middleResultArr.push(resultFactorArr);
       }
-
       resultArr.push(middleResultArr);
     }
 

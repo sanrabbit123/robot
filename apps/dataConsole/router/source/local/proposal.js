@@ -1998,22 +1998,35 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
 }
 
 ProposalJs.fifthDrag_funcs = function () {
-  function dragstart_event(e) {
+  const dragstart_event = function (e) {
     e.dataTransfer.setData("sun", this.getAttribute("cus_info"));
   }
-  function dragend_event(e) { this.style.opacity = ""; }
-  function dragenter_event(e) { this.style.opacity = "0.4"; }
-  function dragleave_event(e) { this.style.opacity = ""; }
-  function dragover_event(e) { e.preventDefault(); }
-  function drop_event(e) { e.preventDefault(); if (e.target.nodeName === "DIV") {
-    let data = GeneralJs.tagParsing(e.dataTransfer.getData("sun"));
-    let jari = GeneralJs.tagParsing(this.getAttribute("cus_info"));
-    if (jari.sgTrue === data.sgTrue) {
-      this.style.backgroundImage = "url('" + S3HOST + data.imgSrc + "')";
-      jari.imgSrc = data.imgSrc;
-      this.setAttribute("cus_info", GeneralJs.tagCoverting(jari));
+  const dragend_event = function (e) {
+    this.style.opacity = "";
+  }
+  const dragenter_event = function (e) {
+    this.style.opacity = "0.4";
+  }
+  const dragleave_event = function (e) {
+    this.style.opacity = "";
+  }
+  const dragover_event = function (e) {
+    e.preventDefault();
+  }
+  const drop_event = function (e) {
+    e.preventDefault();
+    if (e.target.nodeName === "DIV") {
+      let data = GeneralJs.tagParsing(e.dataTransfer.getData("sun"));
+      let jari = GeneralJs.tagParsing(this.getAttribute("cus_info"));
+      if (jari.sgTrue === data.sgTrue) {
+        this.style.backgroundImage = "url('" + S3HOST + data.imgSrc + "')";
+        jari.imgSrc = data.imgSrc;
+        this.setAttribute("cus_info", GeneralJs.tagCoverting(jari));
+      }
     }
-  } this.style.opacity = ""; }
+    this.style.opacity = "";
+  }
+
   return [ dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event ];
 }
 

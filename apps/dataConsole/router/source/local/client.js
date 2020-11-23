@@ -16,6 +16,7 @@ const ClientJs = function () {
   this.cases = [];
   this.totalMother = null;
   this.totalFather = null;
+  this.totalFatherChildren = [];
   this.onView = "mother";
 }
 
@@ -301,10 +302,10 @@ ClientJs.prototype.infoArea = function (info) {
       const cancel_event = function (e) {
         e.preventDefault();
 
-        let orginalDiv = this.parentNode;
+        let originalDiv = this.parentNode;
 
         removeAllEvent();
-        orginalDiv.style.overflow = "hidden";
+        originalDiv.style.overflow = "hidden";
         window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
         GeneralJs.stacks["addressEvent"] = null;
       }
@@ -312,7 +313,7 @@ ClientJs.prototype.infoArea = function (info) {
         let thisId, requestIndex, column;
         let idDom;
         let mothers, targetDom;
-        let orginalDiv = this.parentNode;
+        let originalDiv = this.parentNode;
         let finalValue;
         let pastRawData;
 
@@ -333,8 +334,8 @@ ClientJs.prototype.infoArea = function (info) {
           }
           column = this.parentNode.getAttribute("column");
 
-          if (orginalDiv.childNodes[0] !== undefined && orginalDiv.childNodes[0].nodeType === 3) {
-            pastRawData = orginalDiv.childNodes[0].data;
+          if (originalDiv.childNodes[0] !== undefined && originalDiv.childNodes[0].nodeType === 3) {
+            pastRawData = originalDiv.childNodes[0].data;
           } else {
             pastRawData = '';
           }
@@ -357,10 +358,10 @@ ClientJs.prototype.infoArea = function (info) {
           });
 
           instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
-          orginalDiv.textContent = finalValue;
+          originalDiv.textContent = finalValue;
           idDom.setAttribute("active", "false");
           removeAllEvent();
-          orginalDiv.style.overflow = "hidden";
+          originalDiv.style.overflow = "hidden";
         }
 
       }
@@ -684,9 +685,9 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
-  const { cases, totalContents, totalMother } = this;
 
-  return function (e) {
+  return async function (e) {
+    const { cases, totalContents, totalMother } = instance;
 
     if (instance.totalFather !== null) {
 
@@ -704,7 +705,8 @@ ClientJs.prototype.cardViewMaker = function () {
       let totalFather;
       let nameStyle, cliidStyle, barStyle;
       let style, styles;
-      let div_clone, div_clone2;
+      let areaStyle, areaNameStyle, areaTongStyle;
+      let div_clone, div_clone2, div_clone3;
       let size, margin;
       let ea = "px";
       let num;
@@ -715,6 +717,11 @@ ClientJs.prototype.cardViewMaker = function () {
       let fontSize, nameFontSize;
       let fixedHeightSize;
       let exceptionMargin;
+      let whereQuery;
+      let tempResult, tempBoo;
+      let division, divisionName;
+      let updateState;
+      let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
 
       //total father div
       totalFather = GeneralJs.nodes.div.cloneNode(true);
@@ -723,11 +730,11 @@ ClientJs.prototype.cardViewMaker = function () {
       margin = 12;
       lineHeight = 20;
       cardWidthConstant = 170;
-      divideNumber = Math.floor((window.innerWidth - (margin * 2.5)) / (margin + cardWidthConstant));
-      size = (window.innerWidth - (margin * (divideNumber + 2.5))) / divideNumber;
-      fixedHeightSize = 110;
+      divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
+      size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
+      fixedHeightSize = 107;
       intend = 22;
-      titleTop = 14;
+      titleTop = 13;
       startTop = titleTop + 16;
       exceptionMargin = 12;
       fontSize = 13;
@@ -742,8 +749,9 @@ ClientJs.prototype.cardViewMaker = function () {
         height: String(fixedHeightSize) + ea,
         marginLeft: String(margin) + ea,
         marginTop: String(margin) + ea,
-        background: "#f7f7f7",
+        background: "#ffffff",
         borderRadius: String(5) + ea,
+        cursor: "pointer",
       };
 
       nameStyle = {
@@ -760,7 +768,7 @@ ClientJs.prototype.cardViewMaker = function () {
         position: "absolute",
         fontSize: String(fontSize) + ea,
         fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 1)) + ea,
+        top: String(titleTop + (nameFontSize - fontSize + 2)) + ea,
         color: "#2fa678",
         cursor: "pointer",
       };
@@ -790,10 +798,319 @@ ClientJs.prototype.cardViewMaker = function () {
         styles.push(temp);
       }
 
+      //area style
+      areaStyle = {
+        position: "relative",
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(margin * 1.75) + ea,
+        paddingTop: String(margin * 1.2) + ea,
+        paddingBottom: String(margin * 1.2) + ea,
+        paddingRight: String(margin * 1.2) + ea,
+        paddingLeft: String(margin * 10) + ea,
+        border: "1px dashed #2fa678",
+        borderRadius: String(5) + ea,
+      };
+
+      areaNameStyle = {
+        position: "absolute",
+        top: String(margin * 0.9) + ea,
+        left: String(margin * 1.7) + ea,
+        fontSize: String(21) + ea,
+        fontWeight: String(200),
+        color: "#2fa678",
+      };
+
+      areaTongStyle = {
+        position: "relative",
+        paddingBottom: String(margin) + ea,
+        minHeight: String(fixedHeightSize + margin) + ea,
+        background: "#f2f2f2",
+        borderRadius: String(5) + ea,
+      };
+
+
+      //update value
+      updateState = async function (from, to) {
+        try {
+          let toValue;
+          let cliid, originalStatus, index;
+          let motherDiv, originalDiv;
+          let requests, requestIndex;
+          let column;
+          let finalValue;
+
+          cliid = from.getAttribute("cliid");
+          index = from.getAttribute("index");
+          originalStatus = from.getAttribute("thisStatus");
+          from.setAttribute("thisStatus", to);
+          if (to === "드랍") {
+            from.setAttribute("dropDetail", originalStatus);
+          } else if (from.hasAttribute("dropDetail")) {
+            from.setAttribute("dropDetail", "");
+          }
+
+          requests = [];
+          for (let i = 1; i < instance.cases.length; i++) {
+            if (instance.cases[i].cliid === cliid) {
+              requests.push(instance.cases[i]);
+            }
+          }
+          for (let i = 0; i < requests.length; i++) {
+            if (requests[i] === instance.cases[Number(index)]) {
+              requestIndex = i;
+            }
+          }
+
+          column = "status";
+
+          motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
+          for (let i = 0; i < motherDiv.children.length; i++) {
+            if (motherDiv.children[i].getAttribute("column") === column) {
+              originalDiv = motherDiv.children[i];
+            }
+          }
+
+          if (to === "통화 전") {
+            toValue = "응대중";
+          } else if (to === "제안 전") {
+            toValue = "응대중";
+          } else if (to === "제안 후") {
+            toValue = "응대중";
+          } else if (to === "진행") {
+            toValue = "진행";
+          } else if (to === "드랍") {
+            toValue = "드랍";
+          }
+
+          finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
+
+          await GeneralJs.updateValue({
+            thisId: cliid,
+            requestIndex: requestIndex,
+            column: column,
+            pastValue: originalStatus,
+            value: finalValue,
+            index: Number(index),
+          });
+
+          instance.cases[Number(index)][column] = finalValue;
+          originalDiv.textContent = finalValue;
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      //drag and drop events
+      dragstart_event = function (e) {
+        e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
+      }
+
+      dragend_event = function (e) {
+        e.preventDefault();
+      }
+
+      dragenter_event = function (e) {
+        e.preventDefault();
+      }
+
+      dragleave_event = function (e) {
+        e.preventDefault();
+      }
+
+      dragover_event = function (e) {
+        e.preventDefault();
+      }
+
+      drop_event = async function (e) {
+        try {
+          e.preventDefault();
+          const index = e.dataTransfer.getData("dragData");
+          const targetDom = instance.totalFatherChildren[Number(index) - 1];
+          const status = targetDom.getAttribute("thisStatus");
+          let area, dropDetail;
+          if (e.target.hasAttribute("kinds")) {
+            if (e.target.getAttribute("kinds") === "area") {
+              area = e.target;
+            } else {
+              area = e.target.parentElement;
+            }
+          } else {
+            area = e.target.parentElement.parentElement;
+          }
+
+          if (area.getAttribute("name") === "통화 전") {
+            if (status === "통화 전") {
+              //pass
+            } else if (status === "제안 전") {
+              alert("통화 기록은 되돌릴 수 없습니다!");
+            } else if (status === "제안 후") {
+              alert("통화 기록은 되돌릴 수 없습니다!");
+            } else if (status === "진행") {
+              alert("통화 기록은 되돌릴 수 없습니다!");
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail !== "통화 전") {
+                alert("통화 기록은 되돌릴 수 없습니다!");
+              } else {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "통화 전");
+              }
+            }
+
+          } else if (area.getAttribute("name") === "제안 전") {
+            if (status === "통화 전") {
+              alert("통화 기록을 기입해주세요!");
+            } else if (status === "제안 전") {
+              //pass
+            } else if (status === "제안 후") {
+              alert("제안 기록은 되돌릴 수 없습니다!");
+            } else if (status === "진행") {
+              alert("제안 기록은 되돌릴 수 없습니다!");
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "통화 전") {
+                alert("통화 기록을 기입해주세요!");
+              } else if (dropDetail === "제안 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "제안 전");
+              } else if (dropDetail === "제안 후") {
+                alert("제안 기록은 되돌릴 수 없습니다!");
+              } else if (dropDetail === "진행") {
+                alert("제안 기록은 되돌릴 수 없습니다!");
+              }
+            }
+
+          } else if (area.getAttribute("name") === "제안 후") {
+            if (status === "통화 전") {
+              alert("통화 기록을 기입해주세요!");
+            } else if (status === "제안 전") {
+              alert("제안서를 작성해주세요!");
+            } else if (status === "제안 후") {
+              //pass
+            } else if (status === "진행") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "제안 후");
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "통화 전") {
+                alert("통화 기록을 기입해주세요!");
+              } else if (dropDetail === "제안 전") {
+                alert("제안서를 작성해주세요!");
+              } else if (dropDetail === "제안 후") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "제안 후");
+              } else if (dropDetail === "진행") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "제안 후");
+              }
+            }
+
+          } else if (area.getAttribute("name") === "진행") {
+            if (status === "통화 전") {
+              alert("통화 기록을 기입해주세요!");
+            } else if (status === "제안 전") {
+              alert("제안서를 작성해주세요!");
+            } else if (status === "제안 후") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "진행");
+            } else if (status === "진행") {
+              //pass
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "통화 전") {
+                alert("통화 기록을 기입해주세요!");
+              } else if (dropDetail === "제안 전") {
+                alert("제안서를 작성해주세요!");
+              } else if (dropDetail === "제안 후") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "진행");
+              } else if (dropDetail === "진행") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "진행");
+              }
+            }
+
+          } else if (area.getAttribute("name") === "드랍") {
+            if (status === "통화 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "제안 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "제안 후") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "진행") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "드랍") {
+              //pass
+            }
+          }
+
+          e.stopPropagation();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+      //make division
+      division = new Map();
+      divisionName = [
+        "통화 전",
+        "제안 전",
+        "제안 후",
+        "진행",
+        "드랍",
+      ];
+      for (let i = 0; i < divisionName.length; i++) {
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in areaStyle) {
+          div_clone.style[i] = areaStyle[i];
+        }
+
+        //title
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.textContent = divisionName[i];
+        for (let i in areaNameStyle) {
+          div_clone2.style[i] = areaNameStyle[i];
+        }
+        div_clone.appendChild(div_clone2);
+
+        //tong
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in areaTongStyle) {
+          div_clone2.style[i] = areaTongStyle[i];
+        }
+        div_clone.appendChild(div_clone2);
+        div_clone2.setAttribute("kinds", "area");
+        div_clone2.setAttribute("name", divisionName[i]);
+        division.set(divisionName[i], div_clone2);
+
+        totalFather.appendChild(div_clone);
+
+        div_clone2.addEventListener("dragenter", dragenter_event);
+        div_clone2.addEventListener("dragleave", dragleave_event);
+        div_clone2.addEventListener("dragover", dragover_event);
+        div_clone2.addEventListener("drop", drop_event);
+      }
+
       //make card
+      instance.totalFatherChildren = [];
+
+      whereQuery = {};
+      whereQuery["$or"] = [];
+      for (let i = 1; i < cases.length; i++) {
+        whereQuery["$or"].push({ cliid: cases[i].cliid });
+      }
+      tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
+
       num = 0;
       for (let obj of cases) {
         if (num !== 0) {
+
           div_clone = GeneralJs.nodes.div.cloneNode(true);
           for (let i in style) {
             div_clone.style[i] = style[i];
@@ -837,16 +1154,60 @@ ClientJs.prototype.cardViewMaker = function () {
           }
 
           div_clone.setAttribute("index", String(num));
+          div_clone.setAttribute("kinds", "card");
           div_clone.setAttribute("cliid", obj.cliid);
-          totalFather.appendChild(div_clone);
+
+          tempBoo = false;
+          for (let { cliid } of tempResult) {
+            if (obj.cliid === cliid) {
+              tempBoo = true;
+            }
+          }
+
+          if (obj.status === "응대중" && obj.callHistory === "") {
+            div_clone.setAttribute("thisStatus", "통화 전");
+            division.get("통화 전").appendChild(div_clone);
+          } else if (obj.status === "응대중" && !tempBoo) {
+            div_clone.setAttribute("thisStatus", "제안 전");
+            division.get("제안 전").appendChild(div_clone);
+          } else if (obj.status === "응대중" && tempBoo) {
+            div_clone.setAttribute("thisStatus", "제안 후");
+            division.get("제안 후").appendChild(div_clone);
+          } else if (obj.status === "진행") {
+            div_clone.setAttribute("thisStatus", "진행");
+            division.get("진행").appendChild(div_clone);
+          } else if (obj.status === "드랍") {
+            div_clone.setAttribute("thisStatus", "드랍");
+            if (obj.callHistory === "") {
+              div_clone.setAttribute("dropDetail", "통화 전");
+            } else if (!tempBoo) {
+              div_clone.setAttribute("dropDetail", "제안 전");
+            } else {
+              div_clone.setAttribute("dropDetail", "제안 후");
+            }
+            division.get("드랍").appendChild(div_clone);
+          } else if (obj.status === "완료") {
+            div_clone.setAttribute("thisStatus", "드랍");
+            div_clone.setAttribute("dropDetail", "제안 후");
+            division.get("드랍").appendChild(div_clone);
+          } else {
+            throw new Error("invaild status");
+          }
+
+          div_clone.setAttribute("draggable", "true");
+          div_clone.addEventListener("dragstart", dragstart_event);
+          div_clone.addEventListener("dragend", dragend_event);
+          div_clone.addEventListener("dragenter", dragenter_event);
+          div_clone.addEventListener("dragleave", dragleave_event);
+
+          instance.totalFatherChildren.push(div_clone);
         }
         num++;
       }
 
-      totalFather.style.paddingTop = String(margin * 0.75) + ea;
       totalFather.style.paddingLeft = String(margin * 0.75) + ea;
       totalFather.style.paddingRight = String(margin * 0.75) + ea;
-      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px - " + String(margin * 0.75) + ea + ")";
+      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px)";
       totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
       totalFather.style.zIndex = String(1);
 
@@ -1054,10 +1415,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const cancel_event = function (e) {
         e.preventDefault();
 
-        let orginalDiv = this.parentNode;
+        let originalDiv = this.parentNode;
 
         removeAllEvent();
-        orginalDiv.style.overflow = "hidden";
+        originalDiv.style.overflow = "hidden";
         window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
         GeneralJs.stacks["addressEvent"] = null;
       }
@@ -1066,7 +1427,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let thisId, requestIndex, column;
         let targetDom;
         let fatherTarget = null;
-        let orginalDiv = this.parentNode;
+        let originalDiv = this.parentNode;
         let finalValue;
         let pastRawData;
 
@@ -1087,8 +1448,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
 
-          if (orginalDiv.childNodes[0] !== undefined && orginalDiv.childNodes[0].nodeType === 3) {
-            pastRawData = orginalDiv.childNodes[0].data;
+          if (originalDiv.childNodes[0] !== undefined && originalDiv.childNodes[0].nodeType === 3) {
+            pastRawData = originalDiv.childNodes[0].data;
           } else {
             pastRawData = '';
           }
@@ -1111,7 +1472,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           });
 
           if (instance.totalFather !== null) {
-            for (let father of instance.totalFather.children) {
+            for (let father of instance.totalFatherChildren) {
               if (Number(father.getAttribute("index")) === thisCase["index"]) {
                 if (father.querySelector(".father_" + column) !== null) {
                   fatherTarget = father.querySelector(".father_" + column);
@@ -1123,7 +1484,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
           instance.cases[thisCase["index"]][column] = finalValue;
-          orginalDiv.textContent = finalValue;
+          originalDiv.textContent = finalValue;
           targetDom.textContent = finalValue;
 
           removeAllEvent();
@@ -1733,6 +2094,7 @@ ClientJs.prototype.rowViewMaker = function () {
     instance.onView = "mother";
     GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
       if (instance.totalFather !== null) {
+        instance.totalFatherChildren = [];
         instance.totalFather.remove();
       }
       instance.totalFather = null;
@@ -1789,9 +2151,8 @@ ClientJs.prototype.returnValueEventMaker = function () {
 
     //father
     if (document.querySelector(".totalFather") !== null) {
-      father = document.querySelector(".totalFather");
       nodeArr = [];
-      for (let node of father.children) {
+      for (let node of instance.totalFatherChildren) {
         if (node.getAttribute("cliid") === pastObj.thisId) {
           nodeArr.push(node);
         }
@@ -2344,9 +2705,23 @@ ClientJs.prototype.addSearchEvent = function () {
     if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
       this.value = this.value.replace(/[ \n]/g, '');
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
-        instance.totalFather.remove();
-        instance.totalFather = null;
+        instance.totalFather.style.zIndex = String(-1);
+        instance.totalFather.classList.remove("fadein");
+        instance.totalFather.classList.add("fadeout");
+
+        instance.totalMother.classList.remove("justfadeoutoriginal");
+        instance.totalMother.classList.add("justfadeinoriginal");
+
+        GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
+          instance.totalFatherChildren = [];
+          instance.totalFather.remove();
+          instance.totalFather = null;
+          instance.totalMother.classList.remove("justfadeinoriginal");
+          clearTimeout(GeneralJs.timeouts.fadeinTimeout);
+          GeneralJs.timeouts.fadeinTimeout = null;
+        }, 401);
       }
+
       instance.whiteBox = null;
       instance.onView = "mother";
       await instance.spreadData(this.value);
@@ -2507,47 +2882,47 @@ ClientJs.prototype.extractViewMaker = function (link) {
 ClientJs.prototype.addExtractEvent = function () {
   const instance = this;
   const { sub: { extractIcon } } = this.mother.belowButtons;
-  const today = new Date();
-  const caseCopied = JSON.parse(JSON.stringify(this.cases));
-  caseCopied.shift();
-  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-  const map = DataPatch.clientMap();
-
-  let data;
   let sendEvent;
-  let valuesArr;
-  let temp, temp2;
-
-  valuesArr = [];
-
-  temp2 = Object.keys(caseCopied[0]);
-  temp = [];
-  for (let i of temp2) {
-    temp.push(map[i].name);
-  }
-  valuesArr.push(temp);
-
-  for (let i = 0; i < caseCopied.length; i++) {
-    temp2 = Object.values(caseCopied[i]);
-    valuesArr.push(temp2);
-  }
-
-  data = '';
-  data += "values=";
-  data += JSON.stringify(valuesArr);
-  data += "&newMake=";
-  data += "true";
-  data += "&parentId=";
-  data += parentId;
-  data += "&sheetName=";
-  data += "fromDB_client_" + String(today.getFullYear()) + this.mother.todayMaker();
 
   sendEvent = async function (e) {
     try {
+      const today = new Date();
+      const caseCopied = JSON.parse(JSON.stringify(instance.cases));
+      caseCopied.shift();
+      const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+      const map = DataPatch.clientMap();
+
+      let data;
+      let valuesArr;
+      let temp, temp2;
       let div_clone, svg_clone;
       let style;
       let ea = "px";
       let width;
+
+      valuesArr = [];
+
+      temp2 = Object.keys(caseCopied[0]);
+      temp = [];
+      for (let i of temp2) {
+        temp.push(map[i].name);
+      }
+      valuesArr.push(temp);
+
+      for (let i = 0; i < caseCopied.length; i++) {
+        temp2 = Object.values(caseCopied[i]);
+        valuesArr.push(temp2);
+      }
+
+      data = '';
+      data += "values=";
+      data += JSON.stringify(valuesArr).replace(/&/g, '').replace(/=/g, '');
+      data += "&newMake=";
+      data += "true";
+      data += "&parentId=";
+      data += parentId;
+      data += "&sheetName=";
+      data += "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker();
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.classList.add("justfadein");
