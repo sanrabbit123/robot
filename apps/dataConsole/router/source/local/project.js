@@ -427,7 +427,7 @@ ProjectJs.prototype.infoArea = function (info) {
         this.appendChild(input_clone);
 
         //items
-        const map = DataPatch.clientMap();
+        const map = DataPatch.projectMap();
         const thisMap = map[this.getAttribute("column")];
 
         if (thisMap.items !== undefined) {
@@ -502,7 +502,7 @@ ProjectJs.prototype.infoArea = function (info) {
           }
 
           iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
-          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("src", window.location.protocol + "//" + window.location.host + "/tools/address");
           iframe_clone.setAttribute("width", "100%");
           iframe_clone.setAttribute("height", "100%");
           iframe_clone.style.border = String(0);
@@ -648,8 +648,6 @@ ProjectJs.prototype.spreadData = async function (search = null) {
 
     if (search === null) {
 
-
-
       projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
 
       cliidArr = [];
@@ -709,13 +707,6 @@ ProjectJs.prototype.spreadData = async function (search = null) {
 
         p.info.service = serviceWording;
       }
-
-
-
-
-
-      console.log(projects)
-
 
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchProjects"));
@@ -860,12 +851,12 @@ ProjectJs.prototype.cardViewMaker = function () {
 
       //info style
       styles = [];
-      for (let i = 0; i < DataPatch.clientCardViewStandard().info.length; i++) {
+      for (let i = 0; i < DataPatch.projectCardViewStandard().info.length; i++) {
         temp = {
           position: "absolute",
           fontSize: String(fontSize) + ea,
           fontWeight: String(500),
-          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0)) + ea,
+          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.projectCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0)) + ea,
           left: String(intend) + ea,
           width: String(totalWidth) + ea,
           color: "#404040",
@@ -1219,10 +1210,10 @@ ProjectJs.prototype.cardViewMaker = function () {
           div_clone.appendChild(div_clone2);
 
           //sub info
-          for (let j = 0; j < DataPatch.clientCardViewStandard().info.length; j++) {
+          for (let j = 0; j < DataPatch.projectCardViewStandard().info.length; j++) {
             div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.classList.add("father_" + DataPatch.clientCardViewStandard().info[j]);
-            div_clone2.textContent = obj[DataPatch.clientCardViewStandard().info[j]];
+            div_clone2.classList.add("father_" + DataPatch.projectCardViewStandard().info[j]);
+            div_clone2.textContent = obj[DataPatch.projectCardViewStandard().info[j]];
             for (let i in styles[j]) {
               div_clone2.style[i] = styles[j][i];
             }
@@ -1302,7 +1293,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
-  const { standard, info } = DataPatch.clientWhiteViewStandard();
+  const { standard, info } = DataPatch.projectWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
   let style;
@@ -1626,7 +1617,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         this.appendChild(input_clone);
 
         //items
-        const map = DataPatch.clientMap();
+        const map = DataPatch.projectMap();
         const thisMap = map[this.parentNode.getAttribute("index")];
 
         if (thisMap.items !== undefined) {
@@ -1702,7 +1693,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
-          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("src", window.location.protocol + "//" + window.location.host + "/tools/address");
           iframe_clone.setAttribute("width", "100%");
           iframe_clone.setAttribute("height", "100%");
           iframe_clone.style.border = String(0);
@@ -2966,7 +2957,7 @@ ProjectJs.prototype.addExtractEvent = function () {
       const caseCopied = JSON.parse(JSON.stringify(instance.cases));
       caseCopied.shift();
       const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-      const map = DataPatch.clientMap();
+      const map = DataPatch.projectMap();
 
       let data;
       let valuesArr;

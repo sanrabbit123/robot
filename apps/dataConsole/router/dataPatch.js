@@ -616,7 +616,6 @@ DataPatch.prototype.clientMap = function () {
   return map;
 }
 
-
 //DESIGNER --------------------------------------------------------------------------------------
 
 DataPatch.prototype.designerStandard = function () {
@@ -984,13 +983,11 @@ DataPatch.prototype.projectStandard = function () {
     },
     designer: {
       name: "디자이너",
-      width: 50,
-      left: 30,
+      width: 80,
     },
     service: {
       name: "서비스",
-      width: 50,
-      left: 30,
+      width: 120,
     },
     firstGuide: {
       name: "계약금 안내",
@@ -998,100 +995,99 @@ DataPatch.prototype.projectStandard = function () {
     },
     firstDate: {
       name: "계약금 입금",
-      width: 120,
+      width: 100,
     },
     firstAmount: {
       name: "계약금",
-      width: 180,
+      width: 100,
     },
     firstInfo: {
       name: "계약금 정보",
-      width: 250,
+      width: 300,
     },
     remainGuide: {
       name: "잔금 안내",
-      width: 80,
+      width: 100,
     },
     remainDate: {
       name: "잔금 입금",
-      width: 250,
+      width: 100,
     },
     remainSupply: {
       name: "공급가",
-      width: 180,
+      width: 100,
     },
     remainVat: {
       name: "VAT",
-      width: 120,
+      width: 100,
     },
     remainConsumer: {
       name: "소비자가",
-      width: 250,
+      width: 100,
     },
     remainInfo: {
       name: "잔금 정보",
-      width: 50,
-      left: 30,
+      width: 300,
     },
     formGuide: {
       name: "계약 안내",
       width: 100,
     },
     formDateFrom: {
-      name: "프로젝트 시작일",
-      width: 120,
+      name: "시작일",
+      width: 100,
     },
     formDateTo: {
-      name: "프로젝트 종료일",
-      width: 180,
+      name: "종료일",
+      width: 100,
     },
     meetingDate: {
       name: "1차 미팅",
-      width: 250,
+      width: 100,
     },
     method: {
       name: "정산 방식",
-      width: 80,
+      width: 100,
     },
     percentage: {
       name: "수수료",
-      width: 250,
+      width: 80,
     },
     calculationInfo: {
       name: "정산 정보",
-      width: 180,
+      width: 300,
     },
     paymentsTotalAmount: {
       name: "정산 총금액",
-      width: 120,
+      width: 100,
     },
     paymentsFirstAmount: {
       name: "디자이너 선금",
-      width: 250,
+      width: 100,
     },
     paymentsFirstDate: {
       name: "선금 지급일",
-      width: 180,
+      width: 100,
     },
     paymentsRemainAmount: {
       name: "디자이너 잔금",
-      width: 250,
+      width: 100,
     },
     paymentsRemainDate: {
       name: "잔금 지급일",
-      width: 250,
+      width: 100,
     },
     contentsPhotoDate: {
       name: "촬영일",
-      width: 80,
+      width: 100,
     },
     photographer: {
       name: "촬영 작가",
-      width: 120,
+      width: 80,
     },
     interviewer: {
       name: "인터뷰어",
-      width: 120,
+      width: 80,
     },
   };
 
@@ -1112,9 +1108,6 @@ DataPatch.prototype.projectCardViewStandard = function () {
     ],
     info: [
       "designer",
-      "remainDate",
-      "remainConsumer",
-      "formDateFrom",
       "formDateTo",
     ],
     exceptionHeight: [

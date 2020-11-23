@@ -661,7 +661,7 @@ GeneralJs.prototype.greenBar = function () {
   const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
   let naviIconsHost, naviIconsLinks, naviIconsLeftException;
 
-  naviIconsHost = "http://127.0.0.1:8080";
+  naviIconsHost = window.location.protocol + "//" + window.location.host;
 
   naviIconsLinks = [
     "/client",

@@ -26,11 +26,9 @@ DataRouter.baseMaker = function (target) {
   prototypes = Object.keys(DataPatch.prototype);
 
   dataPatchScript = `const DataPatch = new Function();\n`;
-  if (target === "client") {
-    for (let i of prototypes) {
-      if (/^client/.test(i) || /^tools/.test(i)) {
-        dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-      }
+  for (let i of prototypes) {
+    if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
+      dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
     }
   }
   html = `<!DOCTYPE html>

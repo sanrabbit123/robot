@@ -502,7 +502,7 @@ ClientJs.prototype.infoArea = function (info) {
           }
 
           iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
-          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("src", window.location.protocol + "//" + window.location.host + "/tools/address");
           iframe_clone.setAttribute("width", "100%");
           iframe_clone.setAttribute("height", "100%");
           iframe_clone.style.border = String(0);
@@ -1626,7 +1626,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
-          iframe_clone.setAttribute("src", "http://127.0.0.1:8080/tools/address");
+          iframe_clone.setAttribute("src", window.location.protocol + "//" + window.location.host + "/tools/address");
           iframe_clone.setAttribute("width", "100%");
           iframe_clone.setAttribute("height", "100%");
           iframe_clone.style.border = String(0);
