@@ -238,7 +238,7 @@ GeneralJs.tagCoverting = function (obj) {
 GeneralJs.calculationWordWidth = function (fontSize, word, rawOption = false) {
   const filter = function (obj) {
     const { number, space, sub, word } = obj;
-    return (word * 1) + (number * 0.4) + (space * 0.18) + (sub * 0.1);
+    return (word * 1) + (number * 0.6) + (space * 0.18) + (sub * 0.2);
   }
   let temp;
 
