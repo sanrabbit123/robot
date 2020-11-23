@@ -39,7 +39,7 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
     map = DataPatch.clientMap();
   } else if (window.location.pathname === "/designer") {
     map = DataPatch.designerMap();
-  } else if (window.location.pathname === "/designer") {
+  } else if (window.location.pathname === "/project") {
     map = DataPatch.projectMap();
   }
 
@@ -98,7 +98,15 @@ GeneralJs.updateValue = async function (dataObj) {
 
     GeneralJs.updateHistoryTong.unshift(dataObj);
     dataString = GeneralJs.objectToRawquery(dataObj);
-    response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+
+    if (window.location.pathname === "/client") {
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+    } else if (window.location.pathname === "/designer") {
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
+    } else if (window.location.pathname === "/project") {
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
+    }
+
     if (response.message !== "success") {
       throw new Error("update error");
     }
@@ -138,6 +146,40 @@ GeneralJs.returnValue = async function () {
 
 GeneralJs.queryFilter = function (str) {
   return str.replace(/ &/g, ',').replace(/&/g, ',').replace(/=/g, '');
+}
+
+GeneralJs.compareDate = function (date) {
+  const today = new Date();
+  let todayYear, todayMonth, todayDate;
+  let targetYear, targetMonth, targetDate;
+  let tempArr;
+
+  todayYear = today.getFullYear();
+  todayMonth = today.getMonth();
+  todayDate = today.getDate();
+
+  if (typeof date === "string") {
+    tempArr = date.split('-');
+    targetYear = Number(tempArr[0]);
+    targetMonth = Number(tempArr[1].replace(/^0/, '')) - 1;
+    targetDate = Number(tempArr[2].replace(/^0/, ''));
+  } else {
+    targetYear = date.getFullYear();
+    targetMonth = date.getMonth();
+    targetDate = date.getDate();
+  }
+
+  if (((todayYear * 12) + todayMonth) > ((targetYear * 12) + targetMonth)) {
+    return false;
+  } else if (((todayYear * 12) + todayMonth) === ((targetYear * 12) + targetMonth)) {
+    if (todayDate > targetDate) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
+  }
 }
 
 GeneralJs.tagParsing = function (target) {

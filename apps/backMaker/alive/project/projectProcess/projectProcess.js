@@ -1,6 +1,6 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
-const { DateParse } = require(GENERAL_DIR + "/generator.js");
+const { DateParse, Menu } = require(GENERAL_DIR + "/generator.js");
 
 // calculation ----------------------------------------------------------------------------------
 
@@ -503,7 +503,7 @@ Contract.prototype.toNormal = function () {
 // main ----------------------------------------------------------------------------------
 
 const ProjectProcess = function (json) {
-  this.status = json.status;
+  this.status = new Menu(json.status, [ '대기', '진행중', '완료', '홀딩', '드랍' ], false);
   this.contract = new Contract(json.contract);
   this.design = new Design(json.design);
   this.calculation = new Calculation(json.calculation);
@@ -511,7 +511,7 @@ const ProjectProcess = function (json) {
 
 ProjectProcess.prototype.toNormal = function () {
   let obj = {};
-  obj.status = this.status;
+  obj.status = this.status.toNormal();
   obj.contract = this.contract.toNormal();
   obj.design = this.design.toNormal();
   obj.calculation = this.calculation.toNormal();

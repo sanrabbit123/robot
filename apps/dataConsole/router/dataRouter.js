@@ -325,19 +325,27 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_updateClient = function () {
+DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   let obj = {};
-  obj.link = "/updateClient";
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject" ];
   obj.func = async function (req, res) {
     try {
       const { thisId, requestIndex, column, value, pastValue } = req.body;
-      const map = instance.patch.clientMap();
+      let map;
       let whereQuery, updateQuery;
       let message;
       let finalValue, valueTemp;
       let temp, temp2, temp3;
       let tempFunction;
+
+      if (req.url === "/updateClient") {
+        map = instance.patch.clientMap();
+      } else if (req.url === "/updateDesigner") {
+        map = instance.patch.designerMap();
+      } else if (req.url === "/updateProject") {
+        map = instance.patch.projectMap();
+      }
 
       switch (map[column].type) {
         case "string":
@@ -355,11 +363,13 @@ DataRouter.prototype.rou_post_updateClient = function () {
             if (value.length === 10) {
               temp = value.split('-');
               finalValue = new Date(Number(temp[0]), Number(temp[1].replace(/^0/, '')) - 1, Number(temp[2].replace(/^0/, '')));
-            } else {
+            } else if (value.length === 19) {
               temp = value.split(' ');
               temp2 = temp[0].split('-');
               temp3 = temp[1].split(':');
               finalValue = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '')) - 1, Number(temp2[2].replace(/^0/, '')), Number(temp3[0].replace(/^0/, '')), Number(temp3[1].replace(/^0/, '')), Number(temp3[2].replace(/^0/, '')));
+            } else {
+              finalValue = new Date(pastValue);
             }
           } else {
             finalValue = new Date(pastValue);
@@ -393,9 +403,21 @@ DataRouter.prototype.rou_post_updateClient = function () {
       updateQuery[map[column].position.replace(/\.0\./, ("." + requestIndex + "."))] = finalValue;
 
       whereQuery = {};
-      whereQuery[map.cliid.position] = thisId;
+      if (req.url === "/updateClient") {
+        whereQuery[map.cliid.position] = thisId;
+      } else if (req.url === "/updateDesigner") {
+        whereQuery[map.desid.position] = thisId;
+      } else if (req.url === "/updateProject") {
+        whereQuery[map.proid.position] = thisId;
+      }
 
-      message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      if (req.url === "/updateClient") {
+        message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/updateDesigner") {
+        message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/updateProject") {
+        message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      }
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));

@@ -987,8 +987,6 @@ class DevContext extends Array {
 
 
 
-      const back = new BackMaker();
-      console.log((await back.getClientById("c2011_aa33s")).requests[0].analytics);
 
 
 

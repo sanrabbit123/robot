@@ -547,7 +547,7 @@ ProjectJs.prototype.infoArea = function (info) {
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.setAttribute("index", String(num));
     if (num !== 0) {
-      div_clone2.classList.add(this.cases[num].cliid);
+      div_clone2.classList.add(this.cases[num].proid);
     }
 
     for (let i in style2) {
@@ -770,7 +770,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
       let temp;
       let totalFather;
-      let nameStyle, cliidStyle, barStyle;
+      let nameStyle, proidStyle, barStyle;
       let style, styles;
       let areaStyle, areaNameStyle, areaTongStyle;
       let div_clone, div_clone2, div_clone3;
@@ -831,7 +831,7 @@ ProjectJs.prototype.cardViewMaker = function () {
         cursor: "pointer",
       };
 
-      cliidStyle = {
+      proidStyle = {
         position: "absolute",
         fontSize: String(fontSize) + ea,
         fontWeight: String(200),
@@ -1126,10 +1126,13 @@ ProjectJs.prototype.cardViewMaker = function () {
       //make division
       division = new Map();
       divisionName = [
-        "통화 전",
-        "제안 전",
-        "제안 후",
-        "진행",
+        "계약 전",
+        "미팅 전",
+        "잔금 전",
+        "촬영 전",
+        "공유 전",
+        "완료",
+        "홀딩",
         "드랍",
       ];
       for (let i = 0; i < divisionName.length; i++) {
@@ -1167,13 +1170,6 @@ ProjectJs.prototype.cardViewMaker = function () {
       //make card
       instance.totalFatherChildren = [];
 
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let i = 1; i < cases.length; i++) {
-        whereQuery["$or"].push({ cliid: cases[i].cliid });
-      }
-      tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
-
       num = 0;
       for (let obj of cases) {
         if (num !== 0) {
@@ -1192,12 +1188,12 @@ ProjectJs.prototype.cardViewMaker = function () {
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
           div_clone.appendChild(div_clone2);
 
-          //cliid
-          cliidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
+          //proid
+          proidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
           div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.cliid;
-          for (let i in cliidStyle) {
-            div_clone2.style[i] = cliidStyle[i];
+          div_clone2.textContent = obj.proid;
+          for (let i in proidStyle) {
+            div_clone2.style[i] = proidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
           div_clone.appendChild(div_clone2);
@@ -1222,41 +1218,70 @@ ProjectJs.prototype.cardViewMaker = function () {
 
           div_clone.setAttribute("index", String(num));
           div_clone.setAttribute("kinds", "card");
-          div_clone.setAttribute("cliid", obj.cliid);
+          div_clone.setAttribute("proid", obj.proid);
 
-          tempBoo = false;
-          for (let { cliid } of tempResult) {
-            if (obj.cliid === cliid) {
-              tempBoo = true;
-            }
-          }
+          if (/^18/.test(obj.firstDate)) {
 
-          if (obj.status === "응대중" && obj.callHistory === "") {
-            div_clone.setAttribute("thisStatus", "통화 전");
-            division.get("통화 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && !tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 전");
-            division.get("제안 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 후");
-            division.get("제안 후").appendChild(div_clone);
-          } else if (obj.status === "진행") {
-            div_clone.setAttribute("thisStatus", "진행");
-            division.get("진행").appendChild(div_clone);
-          } else if (obj.status === "드랍") {
-            div_clone.setAttribute("thisStatus", "드랍");
-            if (obj.callHistory === "") {
-              div_clone.setAttribute("dropDetail", "통화 전");
-            } else if (!tempBoo) {
-              div_clone.setAttribute("dropDetail", "제안 전");
-            } else {
-              div_clone.setAttribute("dropDetail", "제안 후");
-            }
-            division.get("드랍").appendChild(div_clone);
+            div_clone.setAttribute("thisStatus", "계약 전");
+            division.get("계약 전").appendChild(div_clone);
+
+          } else if (/^18/.test(obj.meetingDate) || GeneralJs.compareDate(obj.meetingDate)) {
+
+            div_clone.setAttribute("thisStatus", "미팅 전");
+            division.get("미팅 전").appendChild(div_clone);
+
+          } else if (/^18/.test(obj.remainDate)) {
+
+            div_clone.setAttribute("thisStatus", "잔금 전");
+            division.get("잔금 전").appendChild(div_clone);
+
+          } else if (/^18/.test(obj.contentsPhotoDate) || GeneralJs.compareDate(obj.contentsPhotoDate)) {
+
+            div_clone.setAttribute("thisStatus", "촬영 전");
+            division.get("촬영 전").appendChild(div_clone);
+
+          } else if (obj.status === "진행중") {
+
+            div_clone.setAttribute("thisStatus", "공유 전");
+            division.get("공유 전").appendChild(div_clone);
+
           } else if (obj.status === "완료") {
+
+            div_clone.setAttribute("thisStatus", "완료");
+            division.get("완료").appendChild(div_clone);
+
+          } else if (obj.status === "홀딩") {
+
+            div_clone.setAttribute("thisStatus", "홀딩");
+            if (/^18/.test(obj.firstDate)) {
+              div_clone.setAttribute("dropDetail", "계약 전");
+            } else if (/^18/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
+              div_clone.setAttribute("dropDetail", "미팅 전");
+            } else if (/^18/.test(obj.remainDate)) {
+              div_clone.setAttribute("dropDetail", "잔금 전");
+            } else if (/^18/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
+              div_clone.setAttribute("dropDetail", "촬영 전");
+            } else {
+              div_clone.setAttribute("dropDetail", "공유 전");
+            }
+            division.get("홀딩").appendChild(div_clone);
+
+          } else if (obj.status === "드랍") {
+
             div_clone.setAttribute("thisStatus", "드랍");
-            div_clone.setAttribute("dropDetail", "제안 후");
+            if (/^18/.test(obj.firstDate)) {
+              div_clone.setAttribute("dropDetail", "계약 전");
+            } else if (/^18/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
+              div_clone.setAttribute("dropDetail", "미팅 전");
+            } else if (/^18/.test(obj.remainDate)) {
+              div_clone.setAttribute("dropDetail", "잔금 전");
+            } else if (/^18/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
+              div_clone.setAttribute("dropDetail", "촬영 전");
+            } else {
+              div_clone.setAttribute("dropDetail", "공유 전");
+            }
             division.get("드랍").appendChild(div_clone);
+
           } else {
             throw new Error("invaild status");
           }

@@ -1005,6 +1005,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "계약금 정보",
       width: 300,
     },
+    meetingDate: {
+      name: "1차 미팅",
+      width: 100,
+    },
     remainGuide: {
       name: "잔금 안내",
       width: 100,
@@ -1039,10 +1043,6 @@ DataPatch.prototype.projectStandard = function () {
     },
     formDateTo: {
       name: "종료일",
-      width: 100,
-    },
-    meetingDate: {
-      name: "1차 미팅",
       width: 100,
     },
     method: {
@@ -1108,12 +1108,9 @@ DataPatch.prototype.projectCardViewStandard = function () {
     ],
     info: [
       "designer",
-      "formDateTo",
+      "remainDate",
     ],
     exceptionHeight: [
-      false,
-      false,
-      false,
       false,
       false,
     ],
@@ -1136,6 +1133,7 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "계약금 입금", target: "firstDate" },
       { name: "계약금", target: "firstAmount" },
       { name: "계약금 정보", target: "firstInfo" },
+      { name: "1차 미팅", target: "meetingDate" },
       { name: "잔금 안내", target: "remainGuide" },
       { name: "잔금 입금", target: "remainDate" },
       { name: "공급가", target: "remainSupply" },
@@ -1145,7 +1143,6 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "계약 안내", target: "formGuide" },
       { name: "프로젝트 시작일", target: "formDateFrom" },
       { name: "프로젝트 종료일", target: "formDateTo" },
-      { name: "1차 미팅", target: "meetingDate" },
       { name: "정산 방식", target: "method" },
       { name: "수수료", target: "percentage" },
       { name: "정산 정보", target: "calculationInfo" },
@@ -1240,11 +1237,12 @@ DataPatch.prototype.projectMap = function () {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
-    status: { name: "진행 상태", position: "process.status", type: "string", searchBoo: true, },
+    status: { name: "진행 상태", position: "process.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, },
     firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, },
     remainGuide: { name: "잔금 안내", position: "process.contract.remain.guide", type: "date", searchBoo: true, },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, },
@@ -1254,7 +1252,6 @@ DataPatch.prototype.projectMap = function () {
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, },
-    meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, },
     method: { name: "정산 방식", position: "process.calculation.method", type: "string", searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
     calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
