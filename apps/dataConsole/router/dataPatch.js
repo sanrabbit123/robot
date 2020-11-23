@@ -977,6 +977,11 @@ DataPatch.prototype.projectStandard = function () {
   };
 
   model.info = {
+    status: {
+      name: "상태",
+      width: 50,
+      left: 30,
+    },
     designer: {
       name: "디자이너",
       width: 50,
@@ -984,11 +989,6 @@ DataPatch.prototype.projectStandard = function () {
     },
     service: {
       name: "서비스",
-      width: 50,
-      left: 30,
-    },
-    status: {
-      name: "진행 상태",
       width: 50,
       left: 30,
     },
@@ -1136,9 +1136,9 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       "proid",
     ],
     info: [
+      { name: "진행 상태", target: "status" },
       { name: "디자이너", target: "designer" },
       { name: "서비스", target: "service" },
-      { name: "진행 상태", target: "status" },
       { name: "계약금 안내", target: "firstGuide" },
       { name: "계약금 입금", target: "firstDate" },
       { name: "계약금", target: "firstAmount" },
