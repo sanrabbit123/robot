@@ -601,8 +601,8 @@ DataPatch.prototype.clientMap = function () {
     pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
     room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
     bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
-    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", searchBoo: false, },
-    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", searchBoo: false, },
+    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
     expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: true, },
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
@@ -636,7 +636,7 @@ DataPatch.prototype.designerStandard = function () {
   model.info = {
     status: {
       name: "계약 상태",
-      width: 50,
+      width: 100,
       left: 30,
     },
     date: {
@@ -653,7 +653,7 @@ DataPatch.prototype.designerStandard = function () {
     },
     address: {
       name: "주소",
-      width: 250,
+      width: 280,
     },
     showRoom: {
       name: "쇼룸",
@@ -661,15 +661,15 @@ DataPatch.prototype.designerStandard = function () {
     },
     webPage: {
       name: "웹페이지",
-      width: 250,
+      width: 300,
     },
     sns: {
       name: "SNS",
-      width: 180,
+      width: 500,
     },
     career: {
       name: "경력",
-      width: 120,
+      width: 80,
     },
     account: {
       name: "계좌번호",
@@ -677,15 +677,15 @@ DataPatch.prototype.designerStandard = function () {
     },
     classification: {
       name: "사업자 분류",
-      width: 180,
+      width: 120,
     },
     businessNumber: {
       name: "사업자 등록번호",
-      width: 250,
+      width: 180,
     },
     files: {
       name: "파일 유무",
-      width: 250,
+      width: 300,
     },
     percentage: {
       name: "수수료",
@@ -943,7 +943,7 @@ DataPatch.prototype.designerMap = function () {
     phone: { name: "연락처", position: "information.phone", type: "string", searchBoo: true, },
     email: { name: "이메일", position: "information.email", type: "string", searchBoo: true, },
     address: { name: "주소", position: "information.address", type: "array", searchBoo: true, },
-    showRoom: { name: "쇼룸", position: "information.personalSystem.showRoom", type: "boolean", searchBoo: true, },
+    showRoom: { name: "쇼룸", position: "information.personalSystem.showRoom", type: "boolean", items: [ "true", "false" ], searchBoo: true, },
     webPage: { name: "웹페이지", position: "information.personalSystem.webPage", type: "array", searchBoo: true, },
     sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     career: { name: "경력", position: "information.business.career", type: "object", objectFunction: careerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },

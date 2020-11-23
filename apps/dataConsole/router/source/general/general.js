@@ -131,7 +131,15 @@ GeneralJs.returnValue = async function () {
       delete copiedObj.value;
       copiedObj.value = copiedObj.pastValue;
       dataString = GeneralJs.objectToRawquery(copiedObj);
-      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+
+      if (window.location.pathname === "/client") {
+        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateClient"));
+      } else if (window.location.pathname === "/designer") {
+        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
+      } else if (window.location.pathname === "/project") {
+        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
+      }
+
       if (response.message !== "success") {
         throw new Error("return error");
       }
@@ -244,7 +252,7 @@ GeneralJs.calculationWordWidth = function (fontSize, word, rawOption = false) {
 
   temp = {};
   temp.total = word.length;
-  temp.number = word.replace(/[^0-9]/g, '').length;
+  temp.number = word.replace(/[^0-9a-z]/g, '').length;
   temp.space = word.replace(/[^ ]/g, '').length;
   temp.sub = word.replace(/[^\.\,\_\^\~\'\"\:\;\/\\\*\!\?]/g, '').length;
   temp.word = temp.total - temp.number - temp.space - temp.sub;
@@ -709,7 +717,7 @@ GeneralJs.prototype.greenBar = function () {
     "/client",
     "/proposal",
     "/project",
-    "/design",
+    "/designer",
     "/contents",
     "/service",
   ];
