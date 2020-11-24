@@ -30,18 +30,18 @@ GeneralJs.ajax = function (data, url, callback) {
       if (!/Exception occur/g.test(data)) {
         callback(data);
       } else {
-        // window.location = "https://home-liaison.com/about.php";
+        window.location = "https://home-liaison.com/about.php";
       }
     } else if (xhr.status >= 500) {
-      // window.location = "https://home-liaison.com/about.php";
+      window.location = "https://home-liaison.com/about.php";
     } else if (xhr.status >= 402 && xhr.status <= 420) {
-      // window.location = "https://home-liaison.com/about.php";
+      window.location = "https://home-liaison.com/about.php";
     } else if(xhr.status === 400 || xhr.status === 401) {
-      // window.location = "https://home-liaison.com/about.php";
+      window.location = "https://home-liaison.com/about.php";
     }
   }
   xhr.onerror = function () {
-    // window.location = "https://home-liaison.com/about.php";
+    window.location = "https://home-liaison.com/about.php";
   }
   if (typeof data === "string") {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

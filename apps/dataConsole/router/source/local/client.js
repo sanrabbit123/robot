@@ -1688,8 +1688,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       width: "100%",
       height: String(16) + ea,
     };
-    for (let i in style) {
-      div_clone3.style[i] = style[i];
+    for (let j in style) {
+      div_clone3.style[j] = style[j];
     }
 
     //column name
@@ -1705,8 +1705,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize: String(fontSize) + ea,
       fontWeight: String(700),
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
     div_clone3.appendChild(div_clone4);
 
@@ -1724,8 +1724,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize: String(fontSize) + ea,
       fontWeight: String(300),
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
     div_clone4.addEventListener("click", updateEventFunction());
     div_clone4.addEventListener("contextmenu", updateEventFunction());
@@ -1799,8 +1799,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       width: "100%",
       height: String(i === 0 ? fontSize * (1 / 5) : fontSize) + ea,
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
     div_clone3.appendChild(div_clone4);
 
@@ -1816,8 +1816,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       border: "solid 1px #dddddd",
       borderRadius: String(5) + ea,
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
 
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
@@ -1833,8 +1833,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
     };
-    for (let i in style) {
-      div_clone5.style[i] = style[i];
+    for (let j in style) {
+      div_clone5.style[j] = style[j];
     }
     div_clone4.appendChild(div_clone5);
 
@@ -1849,8 +1849,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
       overflow: "scroll",
     };
-    for (let i in style) {
-      div_clone5.style[i] = style[i];
+    for (let j in style) {
+      div_clone5.style[j] = style[j];
     }
 
     textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
@@ -1864,8 +1864,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       outline: String(0),
       lineHeight: String(1.6),
     };
-    for (let i in style) {
-      textArea_clone.style[i] = style[i];
+    for (let j in style) {
+      textArea_clone.style[j] = style[j];
     }
     textArea_clone.addEventListener("focus", function (e) {
       const thisIndex = i;
@@ -2990,6 +2990,16 @@ ClientJs.prototype.launching = async function () {
     this.addTransFormEvent();
     this.addSearchEvent();
     this.addExtractEvent();
+
+    const getObj = GeneralJs.returnGet();
+    if (getObj.cliid !== undefined) {
+      for (let dom of this.standardDoms) {
+        if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
+          dom.click();
+        }
+      }
+    }
+
   } catch (e) {
     console.log(e);
   }

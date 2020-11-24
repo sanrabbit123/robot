@@ -1940,6 +1940,9 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let z = 0; z < pairs.length; z++) {
         div_clone6 = GeneralJs.nodes.div.cloneNode(true);
         div_clone6.classList.add("hoverDefault");
+        div_clone6.addEventListener("click", function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + pairs[z].proid, "_blank");
+        });
         div_clone6.insertAdjacentHTML('beforeend', pairs[z].name + ' <b style="color:#2fa678;font-size:' + String(fontSize - 5) + ea + '" >' + pairs[z].proid + '</b>');
         style = {
           display: "inline-block",
@@ -3250,6 +3253,15 @@ DesignerJs.prototype.launching = async function () {
     this.addTransFormEvent();
     this.addSearchEvent();
     this.addExtractEvent();
+
+    const getObj = GeneralJs.returnGet();
+    if (getObj.desid !== undefined) {
+      for (let dom of this.standardDoms) {
+        if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
+          dom.click();
+        }
+      }
+    }
   } catch (e) {
     console.log(e);
   }
