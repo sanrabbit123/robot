@@ -106,17 +106,17 @@ class Client:
         if element.movein != None and isinstance(element.movein, NotionDate):
             dic["movein"] = str(element.movein.start)
         else:
-            dic["movein"] = "9999-09-09"
+            dic["movein"] = "1800-01-01"
 
         if element.precheck != None and isinstance(element.precheck, NotionDate):
             dic["precheck"] = str(element.precheck.start)
         else:
-            dic["precheck"] = "9999-09-09"
+            dic["precheck"] = "1800-01-01"
 
         if element.empty != None and isinstance(element.empty, NotionDate):
             dic["empty"] = str(element.empty.start)
         else:
-            dic["empty"] = "9999-09-09"
+            dic["empty"] = "1800-01-01"
 
         if element.service != None and type(element.service) == list:
             dic["service"] = element.service

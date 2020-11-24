@@ -1673,7 +1673,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   style = {
     position: "absolute",
     left: String(leftMargin) + ea,
-    width: "calc(45% - " + String(leftMargin) + ea + ")",
+    width: "calc(45% - " + String(leftMargin + 30) + ea + ")",
     height: "100%",
   };
   for (let i in style) {
@@ -1912,7 +1912,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         top: String(areaTop) + ea,
         left: String(fontSize * 9) + ea,
         padding: String(margin) + ea,
-        width: "calc(100% - " + String((fontSize * 9) + 30 + (margin * 2)) + ea + ")",
+        width: "calc(100% - " + String((fontSize * 9) + (margin * 2)) + ea + ")",
         height: String(Math.abs(contentsBoxHeight) - Math.abs(areaMotherTop) + Math.abs(areaTop) - (margin * 2)) + ea,
         background: "#f7f7f7",
         borderRadius: String(4) + ea,
@@ -1951,7 +1951,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           fontWeight: String(600),
           background: "white",
           paddingTop: String(margin / 2) + ea,
-          paddingBottom: String(margin / 2) + ea,
+          paddingBottom: String(margin * 0.65) + ea,
           paddingRight: String(margin) + ea,
           paddingLeft: String(margin) + ea,
           marginRight: String(margin / 2) + ea,
