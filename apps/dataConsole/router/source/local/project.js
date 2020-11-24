@@ -1387,7 +1387,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
   div_clone2.appendChild(div_clone3);
 
-  //cliid
+  //proid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[1]];
   style = {
@@ -1761,6 +1761,22 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   //propoerty box
+
+  /**********************************************************************************/
+  /**********************************************************************************/
+  /**********************************************************************************/
+  /**********************************************************************************/
+  /*
+
+
+  MUST MAKE property subTarget and subTitle system
+
+
+  */
+  /**********************************************************************************/
+  /**********************************************************************************/
+  /**********************************************************************************/
+
   propertyBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
@@ -2123,7 +2139,7 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     div_clone.classList.add("totalWhite");
 
     indexArr = [];
-    for (let dom of document.querySelectorAll('.' + thisCase["cliid"])) {
+    for (let dom of document.querySelectorAll('.' + thisCase["proid"])) {
       indexArr.push(Number(dom.getAttribute("index")));
     }
     indexArr.sort((a, b) => { return a - b; });
@@ -2133,7 +2149,7 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       }
     }
 
-    div_clone.setAttribute("index", thisCase["cliid"]);
+    div_clone.setAttribute("index", thisCase["proid"]);
     div_clone.setAttribute("request", String(requestIndex));
 
     style = {
@@ -2247,7 +2263,7 @@ ProjectJs.prototype.returnValueEventMaker = function () {
     if (document.querySelector(".totalFather") !== null) {
       nodeArr = [];
       for (let node of instance.totalFatherChildren) {
-        if (node.getAttribute("cliid") === pastObj.thisId) {
+        if (node.getAttribute("proid") === pastObj.thisId) {
           nodeArr.push(node);
         }
       }
