@@ -743,6 +743,49 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_realtimeDesigner = function () {
+  const instance = this;
+  const back = this.back;
+  const sheets = this.sheets;
+  const drive = this.drive;
+  let obj = {};
+  obj.link = "/realtimeDesigner";
+  obj.func = async function (req, res) {
+    try {
+      const desid = req.body.desid;
+      const today = new Date();
+      let futureConst;
+      let futureArr;
+      let resultArr;
+      let num;
+
+      futureConst = 5;
+      futureArr = [];
+
+      for (let i = 0; i < futureConst; i++) {
+        futureArr.push({ year: today.getFullYear(), month: today.getMonth() + 1 + i, onoff: ((i === 0 || i === 3 || i === 4) ? true : false), })
+      }
+
+      resultArr = new Array(futureConst);
+      num = 0;
+      for (let obj of futureArr) {
+        if (obj.month > 12) {
+          obj.year = obj.year + 1;
+          obj.month = obj.month - 12;
+        }
+        resultArr[futureConst - 1 - num] = obj;
+        num++;
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(resultArr));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.getAll = function () {

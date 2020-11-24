@@ -1243,6 +1243,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
+  let fixedFontSizeConst;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1396,7 +1397,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
   lineHeightRatio = 29 / 16;
-  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + (9 / 16));
+  fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
+  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
 
   //contents event
   updateEventFunction = function () {
@@ -1688,8 +1690,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       width: "100%",
       height: String(16) + ea,
     };
-    for (let i in style) {
-      div_clone3.style[i] = style[i];
+    for (let j in style) {
+      div_clone3.style[j] = style[j];
     }
 
     //column name
@@ -1705,8 +1707,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize: String(fontSize) + ea,
       fontWeight: String(700),
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
     div_clone3.appendChild(div_clone4);
 
@@ -1724,8 +1726,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize: String(fontSize) + ea,
       fontWeight: String(300),
     };
-    for (let i in style) {
-      div_clone4.style[i] = style[i];
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
     }
     div_clone4.addEventListener("click", updateEventFunction());
     div_clone4.addEventListener("contextmenu", updateEventFunction());
@@ -1739,83 +1741,427 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //contents box
   portfolioBox = GeneralJs.nodes.div.cloneNode(true);
+  portfolioBox.classList.add("noScrollBar");
   style = {
     position: "absolute",
     height: "100%",
     bottom: String(0) + ea,
     right: String(leftMargin) + ea,
     width: "calc(55% - " + String(leftMargin) + ea + ")",
+    overflow: "scroll",
+    borderBottom: "1px solid #dddddd",
   };
   for (let i in style) {
     portfolioBox.style[i] = style[i];
   }
 
-  //contents
-  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getContents", function (data) {
-    const contents = JSON.parse(data);
-    let totalTong;
-    let div_clone, div_clone2, div_clone3;
-    let img_clone;
-    let style = {};
-    let ea = "px";
+  //realtime
+  GeneralJs.ajax("desid=" + thisCase[standard[1]], "/realtimeDesigner", function (data) {
+    const dateArr = JSON.parse(data);
+    let div_clone3, div_clone4, div_clone5;
 
-    totalTong = GeneralJs.nodes.div.cloneNode(true);
+    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone3.setAttribute("index", "realtimeDesigner");
+    style = {
+      position: "absolute",
+      top: String(fontSize * lineHeightRatio * info.length) + ea,
+      left: String(0) + ea,
+      width: "100%",
+      height: String(16) + ea,
+    };
+    for (let j in style) {
+      div_clone3.style[j] = style[j];
+    }
 
-    for (let i = 0; i < contents.length; i++) {
+    //column name
+    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone4.textContent = "가능 일정";
+    style = {
+      display: "inline-block",
+      position: "absolute",
+      top: String(0) + ea,
+      left: String(0) + ea,
+      width: String(fontSize * 9) + ea,
+      height: String(fontSize * (21 / 16)) + ea,
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(700),
+    };
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
+    }
+    div_clone3.appendChild(div_clone4);
 
-      //unit tong
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      style = {};
+    //value
+    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      display: "inline-block",
+      position: "absolute",
+      top: String(-1.6 * (fontSize / 15)) + ea,
+      left: String(fontSize * 9) + ea,
+      width: "calc(100% - " + String(fontSize * 9) + ea + ")",
+      height: String(fontSize * (21 / 16)) + ea,
+      overflow: "scroll",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(300),
+    };
+    for (let j in style) {
+      div_clone4.style[j] = style[j];
+    }
+
+    for (let j = 0; j < dateArr.length; j++) {
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone5.textContent = String(dateArr[j].year).slice(2) + '년' + ' ' + String(dateArr[j].month) + '월';
+      style = {
+        display: "inline-block",
+        position: "relative",
+        top: String(-1.6 * (fontSize / 15)) + ea,
+        marginRight: String(14) + ea,
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(300),
+        cursor: "pointer",
+        color: (dateArr[j].onoff ? "#2fa678" : "#bbbbbb"),
+      };
       for (let j in style) {
-        div_clone.style[j] = style[j];
+        div_clone5.style[j] = style[j];
+      }
+      div_clone5.setAttribute("onoff", (dateArr[j].onoff ? "true" : "false"))
+      div_clone5.addEventListener("click", function (e) {
+        if (this.getAttribute("onoff") === "true") {
+          this.style.color = "#bbbbbb";
+          this.setAttribute("onoff", "false");
+        } else {
+          this.style.color = "#2fa678";
+          this.setAttribute("onoff", "true");
+        }
+      });
+      div_clone4.appendChild(div_clone5);
+    }
+
+    div_clone3.appendChild(div_clone4);
+    propertyBox.appendChild(div_clone3);
+  });
+
+  //projects
+  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ "$or": [ { desid: thisCase[standard[1]], "process.status": "진행중" }, { desid: thisCase[standard[1]], "process.status": "대기" } ] }), "/getProjects", async function (data) {
+    try {
+      const projects = JSON.parse(data);
+
+      let clients, pairs;
+      let div_clone3, div_clone4, div_clone5, div_clone6;
+      let areaMotherTop, areaTop;
+      let margin;
+      let whereQuery;
+      whereQuery = {};
+      whereQuery["$or"] = [];
+      for (let p of projects) {
+        whereQuery["$or"].push({ cliid: p.cliid });
       }
 
-      //title
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.textContent = contents[i].contents.portfolio.pid + " : " + contents[i].contents.portfolio.title.main;
-      style = {};
-      for (let j in style) {
-        div_clone2.style[j] = style[j];
-      }
-      div_clone.appendChild(div_clone2);
-
-      //picture tong
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      style = {};
-      for (let j in style) {
-        div_clone2.style[j] = style[j];
+      pairs = [];
+      if (whereQuery["$or"].length > 0) {
+        clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getClients"));
+        for (let p of projects) {
+          for (let c of clients) {
+            if (p.cliid === c.cliid) {
+              pairs.push({ proid: p.proid, name: c.name });
+            }
+          }
+        }
       }
 
-      //picture scroll box
+      areaMotherTop = fontSize * lineHeightRatio * (info.length + 2);
+      areaTop = (-1.6 * (fontSize / 15)) - 0.9;
+      margin = 10;
+
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-      style = {};
+      div_clone3.setAttribute("index", "realtimeProjects");
+      style = {
+        position: "absolute",
+        top: String(areaMotherTop) + ea,
+        left: String(0) + ea,
+        width: "100%",
+        height: String(16) + ea,
+      };
       for (let j in style) {
         div_clone3.style[j] = style[j];
       }
 
-      //pictures
-      for (let j = 0; j < contents[i].photos.detail.length; j++) {
-        img_clone = GeneralJs.nodes.img.cloneNode(true);
-        img_clone.src = S3HOST + "/corePortfolio/listImage/" + contents[i].contents.portfolio.pid + "/t" + String(contents[i].photos.detail[j].index) + contents[i].contents.portfolio.pid + ".jpg";
-        style = {};
-        if (contents[i].photos.detail[j].gs === 'g') {
-          style = {};
-        } else {
-          style = {};
+      //column name
+      div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone4.textContent = "진행중 프로젝트";
+      style = {
+        display: "inline-block",
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(fontSize * 9) + ea,
+        height: String(fontSize * (21 / 16)) + ea,
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(700),
+      };
+      for (let j in style) {
+        div_clone4.style[j] = style[j];
+      }
+      div_clone3.appendChild(div_clone4);
+
+      //value area
+      div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        display: "inline-block",
+        position: "absolute",
+        top: String(areaTop) + ea,
+        left: String(fontSize * 9) + ea,
+        padding: String(margin) + ea,
+        width: "calc(100% - " + String((fontSize * 9) + 30 + (margin * 2)) + ea + ")",
+        height: String(Math.abs(contentsBoxHeight) - Math.abs(areaMotherTop) + Math.abs(areaTop) - (margin * 2)) + ea,
+        background: "#f7f7f7",
+        borderRadius: String(4) + ea,
+      };
+      for (let j in style) {
+        div_clone4.style[j] = style[j];
+      }
+      //value scroll box
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone5.classList.add("noScrollBar");
+      style = {
+        display: "inline-block",
+        position: "absolute",
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        width: "calc(100% - " + String(margin * 2) + ea + ")",
+        height: "calc(100% - " + String(margin * 2) + ea + ")",
+        overflow: "scroll",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+      div_clone4.appendChild(div_clone5);
+      //value detail
+      for (let z = 0; z < pairs.length; z++) {
+        div_clone6 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone6.classList.add("hoverDefault");
+        div_clone6.insertAdjacentHTML('beforeend', pairs[z].name + ' <b style="color:#2fa678;font-size:' + String(fontSize - 5) + ea + '" >' + pairs[z].proid + '</b>');
+        style = {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(fontSize - 2.5) + ea,
+          fontWeight: String(600),
+          background: "white",
+          paddingTop: String(margin / 2) + ea,
+          paddingBottom: String(margin / 2) + ea,
+          paddingRight: String(margin) + ea,
+          paddingLeft: String(margin) + ea,
+          marginRight: String(margin / 2) + ea,
+          marginBottom: String(margin / 2) + ea,
+          borderRadius: String(3) + ea,
+        };
+        for (let j in style) {
+          div_clone6.style[j] = style[j];
         }
-        for (let k in style) {
-          img_clone.style[k] = style[k];
-        }
-        div_clone3.appendChild(img_clone);
+        div_clone5.appendChild(div_clone6);
+      }
+      div_clone4.appendChild(div_clone5);
+      div_clone3.appendChild(div_clone4);
+      propertyBox.appendChild(div_clone3);
+
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  //contents
+  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getContents", async function (data) {
+    try {
+      const contents = JSON.parse(data);
+      let totalTong;
+      let div_clone, div_clone2, div_clone3;
+      let img_clone;
+      let style = {};
+      let ea = "px";
+      let height, margin, fontSize, titleHeight, totalWidth;
+      let tempNumber;
+      let ghost;
+
+      totalTong = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+      };
+      for (let i in style) {
+        totalTong.style[i] = style[i];
       }
 
-      div_clone2.appendChild(div_clone3);
-      div_clone.appendChild(div_clone2);
+      height = 200;
+      margin = 20;
+      fontSize = 15;
+      titleHeight = fontSize + 5;
 
-      //unit tong end
-      totalTong.appendChild(div_clone);
+      for (let i = 0; i < contents.length + 1; i++) {
+
+        //unit tong
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "relative",
+          width: "100%",
+          height: String(height) + ea,
+          borderRadius: String(3) + ea,
+          marginBottom: String(margin) + ea,
+        };
+        for (let j in style) {
+          div_clone.style[j] = style[j];
+        }
+
+        //title
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.classList.add("hoverDefault");
+        if (i !== contents.length) {
+          div_clone2.textContent = contents[i].contents.portfolio.pid + " : " + contents[i].contents.portfolio.title.main;
+        } else {
+          div_clone2.textContent = "기타 미등록 포트폴리오";
+        }
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          fontSize: String(fontSize) + ea,
+          fontWeight: String(600),
+          color: "#404040",
+          width: "100%",
+          height: String(titleHeight) + ea,
+          cursor: "pointer",
+        };
+        for (let j in style) {
+          div_clone2.style[j] = style[j];
+        }
+        if (i !== contents.length) {
+          div_clone2.addEventListener("click", function (e) {
+            window.open("https://home-liaison.com/portdetail.php?qqq=" + contents[i].contents.portfolio.pid, "_blank");
+          });
+        }
+        div_clone.appendChild(div_clone2);
+
+        //picture tong
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.classList.add("noScrollBar");
+        style = {
+          position: "relative",
+          top: String(titleHeight + (margin / 2)) + ea,
+          left: String(0) + ea,
+          background: "#f7f7f7",
+          borderRadius: String(4) + ea,
+          width: "100%",
+          height: String(height - (titleHeight + (margin / 2))) + ea,
+          overflow: "scroll"
+        };
+        for (let j in style) {
+          div_clone2.style[j] = style[j];
+        }
+
+        //picture scroll box
+        div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "relative",
+          width: String(5000) + ea,
+          height: String(height - (titleHeight + (margin / 2)) - margin) + ea,
+          top: String(margin / 2) + ea,
+          left: String(margin / 2) + ea,
+        };
+        for (let j in style) {
+          div_clone3.style[j] = style[j];
+        }
+
+        //pictures
+        totalWidth = 0;
+        if (i !== contents.length) {
+
+          for (let j = 0; j < contents[i].photos.detail.length; j++) {
+            img_clone = GeneralJs.nodes.img.cloneNode(true);
+            img_clone.src = S3HOST + "/corePortfolio/listImage/" + contents[i].contents.portfolio.pid + "/t" + String(contents[i].photos.detail[j].index) + contents[i].contents.portfolio.pid + ".jpg";
+            img_clone.addEventListener("dblclick", function (e) {
+              e.preventDefault();
+              window.open(S3HOST + "/corePortfolio/original/" + contents[i].contents.portfolio.pid + "/i" + String(contents[i].photos.detail[j].index) + contents[i].contents.portfolio.pid + ".jpg", "_blank");
+            });
+            img_clone.classList.add("hoverDefault_lite");
+            style = {
+              display: "inline-block",
+              position: "relative",
+              height: String(height - (titleHeight + (margin / 2)) - margin) + ea,
+              marginRight: String(margin / 2) + ea,
+              borderRadius: String(3) + ea,
+              cursor: "pointer",
+            };
+            if (j === contents[i].photos.detail.length - 1) {
+              delete style.marginRight;
+            }
+
+            if (contents[i].photos.detail[j].gs === 'g') {
+              tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (297 / 210);
+              style.width = String(tempNumber) + ea;
+            } else {
+              tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (210 / 297);
+              style.width = String(tempNumber) + ea;
+            }
+            totalWidth = tempNumber + totalWidth + (margin / 2);
+
+            for (let k in style) {
+              img_clone.style[k] = style[k];
+            }
+            div_clone3.appendChild(img_clone);
+          }
+
+        } else {
+
+          ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
+
+          for (let j = 0; j < ghost.length; j++) {
+            img_clone = GeneralJs.nodes.img.cloneNode(true);
+            img_clone.src = S3HOST + ghost[j].link;
+            img_clone.addEventListener("dblclick", function (e) {
+              e.preventDefault();
+              window.open(S3HOST + ghost[j].link, "_blank");
+            });
+            img_clone.classList.add("hoverDefault_lite");
+            style = {
+              display: "inline-block",
+              position: "relative",
+              height: String(height - (titleHeight + (margin / 2)) - margin) + ea,
+              marginRight: String(margin / 2) + ea,
+              borderRadius: String(3) + ea,
+              cursor: "pointer",
+            };
+            if (j === ghost.length - 1) {
+              delete style.marginRight;
+            }
+
+            if (ghost.sgTrue === 'g') {
+              tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (297 / 210);
+              style.width = String(tempNumber) + ea;
+            } else {
+              tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (210 / 297);
+              style.width = String(tempNumber) + ea;
+            }
+            totalWidth = tempNumber + totalWidth + (margin / 2);
+
+            for (let k in style) {
+              img_clone.style[k] = style[k];
+            }
+            div_clone3.appendChild(img_clone);
+          }
+
+        }
+
+        div_clone3.style.width = String(totalWidth) + ea;
+
+        div_clone2.appendChild(div_clone3);
+        div_clone.appendChild(div_clone2);
+
+        //unit tong end
+        totalTong.appendChild(div_clone);
+      }
+      portfolioBox.appendChild(totalTong);
+
+    } catch (e) {
+      console.log(e);
     }
-    portfolioBox.appendChild(totalTong);
   });
 
   div_clone2.appendChild(portfolioBox);

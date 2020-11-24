@@ -1335,6 +1335,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
+  let fixedFontSizeConst;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1488,7 +1489,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
   lineHeightRatio = 29 / 16;
-  fontSize = (contentsBoxHeight / info.length) / lineHeightRatio;
+  fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
+  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
 
   //contents event
   updateEventFunction = function () {

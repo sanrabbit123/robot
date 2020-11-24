@@ -747,7 +747,6 @@ DataPatch.prototype.designerWhiteViewStandard = function () {
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
       { name: "주소", target: "address" },
-      { name: "쇼룸", target: "showRoom" },
       { name: "웹페이지", target: "webPage" },
       { name: "SNS", target: "sns" },
       { name: "경력", target: "career" },
