@@ -51,17 +51,24 @@ except Exception as e:
 from tool.client import Client
 from notion.client import NotionClient
 
+from tool.notionCommunication import NotionCommunication
+
 try:
+    token = "4ee0b524880811dd4a6533b5a1e4fa9e7ccee21d23b292994d84b430a48e593d271c820729ab4eed3c91f0d2a94669126eb8eed37ca8ac1e82a01ab21772f252b6898d893207275046b50eeeefd6"
+    host = "homeliaison"
+    pathDic = returnModulepath()
+    tempPath = pathDic["robot"] + "/temp"
+    data = getBridge()
+
     app = NotionClient(token_v2="671489b54b004ebe2d266be5e21154f69dda7373ed8ba6c70747b506bce158b094a8b8cdb990007c989b874aafa8dfb7cda655bd98d902a44399ae6797f21cbbdd23504409a0349107068db13406")
     clientInstance = Client(app)
-    data = getBridge()
 
     if argv[1] == 'single':
         newId = clientInstance.createElement(data)
         resultDic = clientInstance.toDictionary(newId)
         print(dumps(resultDic))
 
-    if argv[1] == 'multiple':
+    elif argv[1] == 'multiple':
         idArr = clientInstance.createElementsAll(data)
         resultArr = []
         for id in idArr:
@@ -69,18 +76,23 @@ try:
             resultArr.append(tempDic)
         print(dumps(resultArr))
 
-    if argv[1] == 'getById':
+    elif argv[1] == 'getById':
         resultDic = clientInstance.toDictionary(data["id"])
         print(dumps(resultDic))
 
-    if argv[1] == 'getAll':
+    elif argv[1] == 'getAll':
         arr = clientInstance.getAllRows()
         print(dumps(arr))
 
-    if argv[1] == 'updateOne':
+    elif argv[1] == 'updateOne':
         target = clientInstance.getElementById(data["notionId"])
         clientInstance.updateElement(target, data)
         print(dumps({ "id": data["notionId"], "update": "success" }))
+
+    elif argv[1] == 'blockToJson':
+        notionInstance = NotionCommunication(token=token, host=host, tempDir=tempPath)
+        filelist = notionInstance.blockToJson(data["blockInfo"])
+        print(dumps({ "resultFileList": fileList }))
 
 except Exception as e:
     print(e)

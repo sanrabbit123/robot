@@ -6,6 +6,40 @@ const NotionAPIs = function () {
   this.pythonApp = this.dir + "/python/app.py";
 }
 
+NotionAPIs.prototype.blockToJson = async function (obj) {
+  const instance = this;
+  try {
+    return (await this.mother.pythonExecute(this.pythonApp, [ "blockToJson" ], obj));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.prototype.getCxCards = async function () {
+  const instance = this;
+  try {
+    const obj = {
+      blockInfo: {
+        blockId: "0da6f7d0806945a3919127b4171adde9",
+        targetColumns: [
+          { regex: "신규", name: "newClient" },
+          { regex: "프로젝트", name: "projectContents" },
+          { regex: "장기", name: "oldClient" },
+          { regex: "드랍", name: "dropClient" },
+          { regex: "완료", name: "completeClient" },
+          { regex: "디자이너", name: "designer" },
+        ],
+      },
+    };
+    const fileList = await this.blockToJson(obj);
+    
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 NotionAPIs.prototype.addNewRow = async function (obj) {
   const instance = this;
   try {
@@ -256,7 +290,6 @@ NotionAPIs.prototype.clientFilter = async function () {
     console.log(`client filter done`);
   }
 }
-
 
 NotionAPIs.prototype.launching = async function (cliid = "latest") {
   const instance = this;
