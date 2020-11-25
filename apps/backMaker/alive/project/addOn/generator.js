@@ -3,6 +3,15 @@ const Project = require(PROJECT_DIR + "/project.js");
 
 class Projects extends Array {
 
+  toNormal() {
+    let tong;
+    tong = [];
+    for (let i of this) {
+      tong.push(i.toNormal());
+    }
+    return tong;
+  }
+
 }
 
 const widthTools = function (Project) {

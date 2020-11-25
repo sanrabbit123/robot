@@ -12,6 +12,7 @@ const ProposalJs = function () {
   this.totalTong.fifthScrollmove = {};
   this.below_tong = new Map();
   this.list_domBox = new Map();
+  this.listSearchInput = null;
 }
 
 ProposalJs.prototype.totalInitial = function () {
@@ -69,24 +70,6 @@ ProposalJs.prototype.toggleSetting = {
   fourth: 0,
   listCreate: 0,
   load: 0,
-}
-
-ProposalJs.auto_comma = function (str) {
-  let num = str.replace(/[^0-9]/g, '');
-  let tmp = '';
-  if (num.length < 4) {
-    return num;
-  } else if (num.length < 7) {
-    tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-    return tmp;
-  } else if (num.length < 10) {
-    tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return tmp;
-  } else {
-    tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return tmp;
-  }
-  return num;
 }
 
 ProposalJs.below_events = {
@@ -481,6 +464,8 @@ ProposalJs.prototype.below_initial = function () {
         temp_dom.removeEventListener("click", ProposalJs.below_events.update);
         temp_dom.setAttribute("cus_id", "");
       }
+      instance.listSearchInput.remove();
+      instance.mother.searchInput.style.display = "";
       instance.toggleSetting.load = 0;
       instance.pastMaps = [];
     }
@@ -1196,10 +1181,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     if (this.value === '') { this.value = "0"; }
     if (e.type === "keyup") {
       if (e.keyCode === 13 || e.keyCode === 9) {
-        this.value = ProposalJs.auto_comma(this.value);
+        this.value = GeneralJs.autoComma(this.value);
       }
     } else if (e.type === "blur") {
-      this.value = ProposalJs.auto_comma(this.value);
+      this.value = GeneralJs.autoComma(this.value);
     }
     this.style.width = String(0.85 * this.value.length) + "vh";
     if (this.value.replace(/,/g, '').length < 7) {
@@ -1239,7 +1224,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     if (typeof onoff === "string") {
       input_clone.value = "2,000,000";
     } else {
-      input_clone.value = ProposalJs.auto_comma(String(onoff.fee[s].amount));
+      input_clone.value = GeneralJs.autoComma(String(onoff.fee[s].amount));
     }
     input_clone.style.width = String(0.85 * input_clone.value.length) + "vh";
     input_clone.addEventListener("keyup", fourth.events.money);
@@ -1256,6 +1241,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   fourth.events.designer = function (e) {
+    const desid = this.getAttribute("cus_desid");
+    const thisNum = this.getAttribute("cus_num");
     const getnode = function (num, boo = true) {
       if (boo) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[num].style;
@@ -1279,6 +1266,51 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     if (target.textContent !== "") {
       target.textContent = '';
     }
+
+    GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners", function (raw_designers) {
+      const { information: { business: { service: { cost: { matrix: { service } } } } } } = JSON.parse(raw_designers)[0];
+      const inputTargets = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
+      const inputTarget = inputTargets[Number(thisNum)];
+      if (service.length > 0) {
+        GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ cliid: document.getElementById("pp_title_sub_b").getAttribute("cus_id") }), "/getClients", function (raw_clients) {
+          const client = JSON.parse(raw_clients)[0];
+          let data = '';
+          let rawService, serviceTarget;
+
+          rawService = document.getElementById("pp_title2_sub_b").getAttribute("cus_id");
+          serviceTarget = [];
+          if (/홈퍼/g.test(rawService)) {
+            serviceTarget.push(0);
+          } else if (/홈스/g.test(rawService)) {
+            serviceTarget.push(1);
+          } else if (/토탈/g.test(rawService) || /설계/g.test(rawService)) {
+            serviceTarget.push(2);
+          }
+          if (/mini/g.test(rawService)) {
+            serviceTarget.push('M');
+          } else if (/basic/g.test(rawService)) {
+            serviceTarget.push('B');
+          } else if (/pre/g.test(rawService)) {
+            serviceTarget.push('P');
+          }
+
+          data += "serviceArr=";
+          data += JSON.stringify(service);
+          data += "&pyeong=";
+          data += String(client.requests[0].request.space.pyeong);
+          data += "&thisService=";
+          data += JSON.stringify(serviceTarget);
+
+          GeneralJs.ajax(data, "/calculateService", function (raw_result) {
+            const { result } = JSON.parse(raw_result);
+            inputTarget.value = GeneralJs.autoComma(result);
+          });
+        });
+      } else {
+        inputTarget.value = GeneralJs.autoComma(0);
+      }
+
+    });
   }
 
   fourth.events.service = function (e) {
@@ -1351,6 +1383,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
 
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
+      div_clone3.setAttribute("cus_desid", designer.standard.desid);
       div_clone3.setAttribute("cus_value", designer.standard.designer);
       div_clone3.setAttribute("cus_num", String(n));
       div_clone3.addEventListener("click", fourth.events.designer);
@@ -1555,9 +1588,17 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         target1 = document.querySelectorAll(".pp_designer_selected_box_contents_service > label > .garim");
         target2 = document.querySelectorAll(".pp_designer_selected_box_contents_selection");
         target3 = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
-        for (let node of target0) { node.addEventListener("click", fourth.events.designer); }
-        for (let node of target1) { if (node.getAttribute("cus_value") !== "부분 공간") { node.addEventListener("click", fourth.events.service); } }
-        for (let node of target2) { node.addEventListener("click", fourth.events.popup); }
+        for (let node of target0) {
+          node.addEventListener("click", fourth.events.designer);
+        }
+        for (let node of target1) {
+          if (node.getAttribute("cus_value") !== "부분 공간") {
+            node.addEventListener("click", fourth.events.service);
+          }
+        }
+        for (let node of target2) {
+          node.addEventListener("click", fourth.events.popup);
+        }
         for (let node of target3) {
           node.addEventListener("keyup", fourth.events.money);
           node.addEventListener("blur", fourth.events.money);
@@ -1574,8 +1615,14 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         target1 = document.querySelectorAll(".pp_designer_selected_box_contents_service > label > .garim");
         target2 = document.querySelectorAll(".pp_designer_selected_box_contents_selection");
         target3 = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
-        for (let node of target0) { node.addEventListener("click", fourth.events.designer); }
-        for (let node of target1) { if (node.getAttribute("cus_value") !== "부분 공간") { node.addEventListener("click", fourth.events.service); } }
+        for (let node of target0) {
+          node.addEventListener("click", fourth.events.designer);
+        }
+        for (let node of target1) {
+          if (node.getAttribute("cus_value") !== "부분 공간") {
+            node.addEventListener("click", fourth.events.service);
+          }
+        }
         for (let node of target2) { node.addEventListener("click", fourth.events.popup); }
         for (let node of target3) {
           node.addEventListener("keyup", fourth.events.money);
@@ -1878,14 +1925,14 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
       }
       //buttonup
       else if (i === 2) {
-        img_clone2  = GeneralJs.nodes.img.cloneNode(true);
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", "#2fa678"));
         img_clone2.classList.add("ppw_right_buttonup_img_left");
-        img_clone2.src = "/list_svg/triangle1.svg";
         div_clone3.appendChild(img_clone2);
-        img_clone2  = GeneralJs.nodes.img.cloneNode(true);
+
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("right", "#2fa678"));
         img_clone2.classList.add("ppw_right_buttonup_img_right");
-        img_clone2.src = "/list_svg/triangle2.svg";
         div_clone3.appendChild(img_clone2);
+
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
         div_clone4.classList.add("ppw_right_buttonup_div_left");
         div_clone4.addEventListener("click", this.fifthScrollX("click", { direction: "left", order: j, id: id, }));
@@ -1935,7 +1982,7 @@ ProposalJs.prototype.fifthScrollX = function (method, options) {
       let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
       let result;
       if (options.direction === "left") {
-        result = Math.abs(974 - left) - 400;
+        result = Math.abs(974 - left) - 500;
       } else {
         result = Math.abs(974 - left) + 400;
       }
@@ -1948,7 +1995,7 @@ ProposalJs.prototype.fifthScrollX = function (method, options) {
         let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
         let result;
         if (options.direction === "left") {
-          result = Math.abs(974 - left) - 100;
+          // result = Math.abs(974 - left) - 100;
         } else {
           result = Math.abs(974 - left) + 100;
         }
@@ -2202,8 +2249,8 @@ ProposalJs.prototype.list_initial = function () {
   let div_clone, div_clone2;
   let classes, mapname;
 
-  classes = [ "listpp_searchBar", "listpp_leftBar", "listpp_mainArea" ];
-  mapname = [ "검색창", "제안 현황", "메인 리스트" ];
+  classes = [ "listpp_leftBar", "listpp_mainArea" ];
+  mapname = [ "제안 현황", "메인 리스트" ];
 
   for (let i = 0; i < classes.length; i++) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2217,17 +2264,13 @@ ProposalJs.prototype.list_initial = function () {
 ProposalJs.prototype.list_searchBar = async function () {
   const instance = this;
   try {
-    let parent;
-    let div_clone, div_clone2, img_clone, input_clone;
+    let parent, input_clone;
 
-    parent = this.list_domBox.get("검색창");
-    img_clone = GeneralJs.nodes.img.cloneNode(true);
-    img_clone.src = "/list_svg/porporpor/search/searbae01.svg";
-    img_clone.classList.add("listpp_searchBar_img");
-    parent.appendChild(img_clone);
-    input_clone = GeneralJs.nodes.input.cloneNode(true);
-    input_clone.setAttribute("type", "text");
-    input_clone.classList.add("listpp_searchBar_input");
+    parent = this.mother.searchInput.parentNode;
+    input_clone = this.mother.searchInput.cloneNode(true);
+    input_clone.setAttribute("placeholder", "제안서 검색...");
+    this.mother.searchInput.style.display = "none";
+
     input_clone.addEventListener("keypress", async function (e) {
       let parent;
       let entireList;
@@ -2277,7 +2320,10 @@ ProposalJs.prototype.list_searchBar = async function () {
 
       }
     });
+
     parent.appendChild(input_clone);
+    this.listSearchInput = input_clone;
+    this.listSearchInput.focus();
 
   } catch (e) {
     console.log(e);
@@ -2309,22 +2355,19 @@ ProposalJs.prototype.list_leftBar = function (obj) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("listpp_leftBar_totalbox");
     for (let i = 0; i < Object.keys(designers).length; i++) {
+
       //designer id
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("listpp_leftBar_detail_id");
-
       div_clone2.textContent = Object.keys(designers)[i];
       div_clone.appendChild(div_clone2);
+
       //designer name
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("listpp_leftBar_detail");
       div_clone2.textContent = designers[Object.keys(designers)[i]];
       div_clone.appendChild(div_clone2);
-      //designer bar
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("listpp_leftBar_detail_bar");
-      div_clone2.style.top = String(7.5 + (34 * i)) + "px";
-      div_clone.appendChild(div_clone2);
+
       //designer number
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("listpp_leftBar_detail_num");
@@ -3874,50 +3917,11 @@ ProposalJs.prototype.cssInjection = function () {
     left: 0;
   }
 
-  .listpp_searchBar{
-    width: 588px;
-    position: fixed;
-    height: 80px;
-    top: 0px;
-    right: 0px;
-    z-index: 1;
-    background: #fff;
-    transition: background 0s;
-    overflow: visible;
-  }
-
-  .listpp_searchBar_img{
-    width: 560px;
-    height: 35px;
-    right: 28px;
-    top: 30px;
-    position: absolute;
-    mix-blend-mode: multiply;
-  }
-
-  .listpp_searchBar_input{
-    position: absolute;
-    top: 29.5px;
-    right: 28px;
-    width: 548px;
-    height: 36px;
-    outline: none;
-    font-family: 'sandoll';
-    border: 0;
-    font-weight: 500;
-    background: transparent;
-    color: #505050;
-    letter-spacing: -0.2px;
-    padding-bottom: 3px;
-    font-size:14.5px;
-  }
-
-
   .listpp_leftBar{
     display: block;
     position: absolute;
     top: 0px;
-    width: 190px;
+    width: 210px;
     left: 0px;
     height: 100%;
     background: #f7f7f7;
@@ -3928,10 +3932,10 @@ ProposalJs.prototype.cssInjection = function () {
 
   .listpp_leftBar_totalbox{
     position: absolute;
-    top: 116px;
-    left: 14%;
-    width: 72%;
-    height: calc(100% - 116px);
+    top: 43px;
+    left: 12.5%;
+    width: 73%;
+    height: calc(100% - 43px);
     overflow: scroll;
   }
   .listpp_leftBar_totalbox::-webkit-scrollbar{display:none;}
@@ -3954,11 +3958,11 @@ ProposalJs.prototype.cssInjection = function () {
   .listpp_leftBar_detail{
     width: 31%;
     font-weight: 600;
-    margin-left: 2%;
+    margin-left: 24%;
   }
 
   .listpp_leftBar_detail_num{
-    width: 30%;
+    width: 10%;
     font-weight: 500;
     text-align: end;
     top:-1px;
@@ -3974,10 +3978,10 @@ ProposalJs.prototype.cssInjection = function () {
 
   .listpp_mainArea{
     position: relative;
-    top: 106px;
-    left: 228px;
-    width: calc(100% - 244px);
-    height: calc(100% - 104px);
+    top: 34px;
+    left: 241px;
+    width: calc(100% - 257px);
+    height: calc(100% - 34px);
     overflow: scroll;
   }
   .listpp_mainArea::-webkit-scrollbar{display:none;}
@@ -4013,12 +4017,11 @@ ProposalJs.prototype.cssInjection = function () {
     margin-left: 4px;
     width: 39px;
     top: 3.2px;
-    left: 86px;
+    left: 81px;
   }
   .listpp_mainArea_tong_name:hover{
     opacity:0.5;
   }
-
 
   .listpp_mainArea_tong_details{
     display: inline-block;
@@ -4027,19 +4030,18 @@ ProposalJs.prototype.cssInjection = function () {
     top: 0px;
     background: #f7f7f7;
     height: calc(100% - 5px);
-    width: calc(100% - 248px);
+    width: calc(100% - 245px);
     padding-left: 11px;
     padding-top: 4px;
     border-radius: 5px;
     overflow: scroll;
     font-weight: 300;
-    right: 98px;
+    right: 99px;
     line-height: 1.7;
   }
   .listpp_mainArea_tong_details:hover{
     opacity:0.5;
   }
-
 
   .listpp_mainArea_tong_details > b {
     margin-left: 2px;

@@ -716,20 +716,8 @@ DataPatch.prototype.designerCardViewStandard = function () {
       "designer",
       "desid",
     ],
-    info: [
-      "date",
-      "phone",
-      "email",
-      "account",
-      "percentage",
-    ],
-    exceptionHeight: [
-      false,
-      false,
-      false,
-      false,
-      false,
-    ],
+    info: [],
+    exceptionHeight: [],
   };
 
   return targetColumns;

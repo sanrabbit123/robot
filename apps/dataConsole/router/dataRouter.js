@@ -249,7 +249,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         res.send(JSON.stringify({ standard, data }));
       } else {
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify(raw_data));
+        res.send(JSON.stringify(raw_data.toNormal()));
       }
     } catch (e) {
       console.log(e);
@@ -267,8 +267,10 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       let standard;
       let map, mapArr;
       let searchQuery, searchArr, tempObj, tempObj2;
+      let whereQuery;
       let data;
       let rawJson;
+      let filteredArr;
 
       if (req.url === "/searchClients") {
         standard = instance.patch.clientStandard();
@@ -285,7 +287,6 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
       searchQuery = {};
       searchArr = [];
-
       for (let { position, searchBoo } of mapArr) {
         if (searchBoo) {
           tempObj = {};
@@ -299,13 +300,69 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
           searchArr.push(tempObj2);
         }
       }
-
       searchQuery["$or"] = searchArr;
 
       if (req.url === "/searchClients") {
         rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
       } else if (req.url === "/searchProjects") {
         rawJson = await instance.back.getProjectsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+        if (/\/project/g.test(req.headers.referer)) {
+          if (rawJson.length === 0) {
+            mapArr = Object.values(instance.patch.clientMap());
+            searchQuery = {};
+            searchArr = [];
+            for (let { position, searchBoo } of mapArr) {
+              if (searchBoo) {
+                tempObj = {};
+                tempObj2 = {};
+                if (req.body.query !== "") {
+                  tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                } else {
+                  tempObj["$regex"] = new RegExp('.', 'gi');
+                }
+                tempObj2[position] = tempObj["$regex"];
+                searchArr.push(tempObj2);
+              }
+            }
+            searchQuery["$or"] = searchArr;
+            if (req.body.query !== "") {
+              rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+            } else {
+              rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+            }
+
+            whereQuery = {};
+            whereQuery["$or"] = [];
+            for (let client of rawJson) {
+              whereQuery["$or"].push({ cliid: client.cliid });
+            }
+
+            if (whereQuery["$or"].length > 0) {
+              rawJson = await instance.back.getProjectsByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
+            } else {
+              rawJson = [];
+            }
+
+          }
+          filteredArr = [];
+          for (let obj of rawJson) {
+            if (obj.desid !== "") {
+              filteredArr.push(obj);
+            }
+          }
+          filteredArr.flatDeath = function () {
+            let tong, tempArr;
+            tong = [];
+            for (let i of this) {
+              tempArr = i.flatDeath();
+              for (let j of tempArr) {
+                tong.push(j);
+              }
+            }
+            return tong;
+          }
+          rawJson = filteredArr;
+        }
       } else if (req.url === "/searchDesigners") {
         rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
       }
@@ -316,7 +373,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         res.send(JSON.stringify({ standard, data }));
       } else {
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify(rawJson));
+        res.send(JSON.stringify(rawJson.toNormal()));
       }
     } catch (e) {
       console.log(e);
@@ -785,6 +842,63 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_calculateService = function () {
+  const instance = this;
+  const back = this.back;
+  const sheets = this.sheets;
+  const drive = this.drive;
+  let obj = {};
+  obj.link = "/calculateService";
+  obj.func = async function (req, res) {
+    try {
+      let { serviceArr, pyeong, thisService } = req.body;
+
+      serviceArr = JSON.parse(serviceArr);
+      pyeong = Number(pyeong);
+      thisService = JSON.parse(thisService);
+
+      const service = await instance.back.getServiceById(serviceArr[thisService[0]].serid);
+      const { x, y } = service.standard;
+      const matrix = service.getMatrixByNumber(serviceArr[thisService[0]].case);
+      let xNum, yNum;
+      let result;
+
+      for (let i = 0; i < x.length; i++) {
+        if (x[i] === thisService[1]) {
+          xNum = i;
+        }
+      }
+
+      for (let i = 0; i < y.length; i++) {
+        if (y[i][0] <= pyeong) {
+          if (y[i][1] > pyeong) {
+            yNum = i;
+          }
+        }
+      }
+
+      if (typeof matrix[yNum][xNum] === "string") {
+        result = pyeong * Number(matrix[yNum][xNum].replace(/py/gi, ''));
+      } else {
+        result = matrix[yNum][xNum];
+      }
+
+      if (Math.floor(result) === 0) {
+        result = 0;
+      } else {
+        result = Math.round(result) * 10000;
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ result }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 

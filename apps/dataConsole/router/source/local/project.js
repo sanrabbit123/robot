@@ -647,69 +647,75 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, casesTargets;
 
     if (search === null) {
-
       projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
-
-      cliidArr = [];
-      desidArr = [];
-      for (let i = 0; i < projects.data.length; i++) {
-        cliidArr.push(projects.data[i].middle.cliid);
-        desidArr.push(projects.data[i].middle.desid);
-      }
-
-      cliidSet = new Set(cliidArr);
-      desidSet = new Set(desidArr);
-
-      cliidArr = Array.from(cliidSet);
-      desidArr = Array.from(desidSet);
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (var i = 0; i < cliidArr.length; i++) {
-        whereQuery["$or"].push({ cliid: cliidArr[i] });
-      }
-      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getClients"));
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (var i = 0; i < desidArr.length; i++) {
-        whereQuery["$or"].push({ desid: desidArr[i] });
-      }
-      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
-
-      for (let p of projects.data) {
-        for (let c of clients) {
-          if (p.middle.cliid === c.cliid) {
-            p.standard.name = c.name;
-          }
-        }
-        for (let d of designers) {
-          if (p.middle.desid === d.desid) {
-            p.info.designer = d.designer;
-          }
-        }
-
-        if (p.middle.serid === "s2011_aa01s") {
-          serviceWording = "홈퍼니싱";
-        } else if (p.middle.serid === "s2011_aa02s") {
-          serviceWording = "홈스타일링";
-        } else if (p.middle.serid === "s2011_aa03s") {
-          serviceWording = "토탈 스타일링";
-        }
-
-        if (p.middle.xValue === 'M') {
-          serviceWording += " mini";
-        } else if (p.middle.xValue === 'B') {
-          serviceWording += " basic";
-        } else if (p.middle.xValue === 'P') {
-          serviceWording += " premium";
-        }
-
-        p.info.service = serviceWording;
-      }
-
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchProjects"));
+    }
+
+    cliidArr = [];
+    desidArr = [];
+    for (let i = 0; i < projects.data.length; i++) {
+      cliidArr.push(projects.data[i].middle.cliid);
+      desidArr.push(projects.data[i].middle.desid);
+    }
+
+    cliidSet = new Set(cliidArr);
+    desidSet = new Set(desidArr);
+
+    cliidArr = Array.from(cliidSet);
+    desidArr = Array.from(desidSet);
+
+    whereQuery = {};
+    whereQuery["$or"] = [];
+    for (var i = 0; i < cliidArr.length; i++) {
+      whereQuery["$or"].push({ cliid: cliidArr[i] });
+    }
+    if (whereQuery["$or"].length > 0) {
+      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getClients"));
+    } else {
+      clients = [];
+    }
+
+    whereQuery = {};
+    whereQuery["$or"] = [];
+    for (var i = 0; i < desidArr.length; i++) {
+      whereQuery["$or"].push({ desid: desidArr[i] });
+    }
+    if (whereQuery["$or"].length > 0) {
+      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
+    } else {
+      designers = [];
+    }
+
+    for (let p of projects.data) {
+      for (let c of clients) {
+        if (p.middle.cliid === c.cliid) {
+          p.standard.name = c.name;
+        }
+      }
+      for (let d of designers) {
+        if (p.middle.desid === d.desid) {
+          p.info.designer = d.designer;
+        }
+      }
+
+      if (p.middle.serid === "s2011_aa01s") {
+        serviceWording = "홈퍼니싱";
+      } else if (p.middle.serid === "s2011_aa02s") {
+        serviceWording = "홈스타일링";
+      } else if (p.middle.serid === "s2011_aa03s") {
+        serviceWording = "토탈 스타일링";
+      }
+
+      if (p.middle.xValue === 'M') {
+        serviceWording += " mini";
+      } else if (p.middle.xValue === 'B') {
+        serviceWording += " basic";
+      } else if (p.middle.xValue === 'P') {
+        serviceWording += " premium";
+      }
+
+      p.info.service = serviceWording;
     }
 
     const { standard, data } = projects;
@@ -2914,13 +2920,15 @@ ProjectJs.prototype.addTransFormEvent = function () {
   returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
-ProjectJs.prototype.addSearchEvent = function () {
+ProjectJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
-  const input = this.searchInput;
-
-  input.addEventListener("keypress", async function (e) {
+  return async function (e) {
     if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
-      this.value = this.value.replace(/[ \n]/g, '');
+
+      if (search === null) {
+        this.value = this.value.replace(/[ \n]/g, '');
+      }
+
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
         instance.totalFather.style.zIndex = String(-1);
         instance.totalFather.classList.remove("fadein");
@@ -2941,10 +2949,21 @@ ProjectJs.prototype.addSearchEvent = function () {
 
       instance.whiteBox = null;
       instance.onView = "mother";
-      await instance.spreadData(this.value);
-    }
-  });
 
+      if (search === null) {
+        await instance.spreadData(this.value);
+      } else {
+        await instance.spreadData(search);
+      }
+
+    }
+  }
+}
+
+ProjectJs.prototype.addSearchEvent = function () {
+  const instance = this;
+  const input = this.searchInput;
+  input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
 ProjectJs.prototype.backGrayBar = function () {
@@ -3209,13 +3228,28 @@ ProjectJs.prototype.launching = async function () {
     this.addExtractEvent();
 
     const getObj = GeneralJs.returnGet();
+    let getTarget;
+    let tempFunction;
+
+    getTarget = null;
     if (getObj.proid !== undefined) {
       for (let dom of this.standardDoms) {
         if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
-          dom.click();
+          getTarget = dom;
         }
       }
+      if (getTarget === null) {
+        tempFunction = this.makeSearchEvent(getObj.proid);
+        await tempFunction({ keyCode: 13 });
+        for (let dom of this.standardDoms) {
+          if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
+            getTarget = dom;
+          }
+        }
+      }
+      getTarget.click();
     }
+
   } catch (e) {
     console.log(e);
   }

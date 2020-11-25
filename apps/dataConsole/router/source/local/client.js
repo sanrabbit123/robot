@@ -2697,13 +2697,15 @@ ClientJs.prototype.addTransFormEvent = function () {
   returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
-ClientJs.prototype.addSearchEvent = function () {
+ClientJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
-  const input = this.searchInput;
-
-  input.addEventListener("keypress", async function (e) {
+  return async function (e) {
     if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
-      this.value = this.value.replace(/[ \n]/g, '');
+
+      if (search === null) {
+        this.value = this.value.replace(/[ \n]/g, '');
+      }
+
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
         instance.totalFather.style.zIndex = String(-1);
         instance.totalFather.classList.remove("fadein");
@@ -2724,10 +2726,21 @@ ClientJs.prototype.addSearchEvent = function () {
 
       instance.whiteBox = null;
       instance.onView = "mother";
-      await instance.spreadData(this.value);
-    }
-  });
 
+      if (search === null) {
+        await instance.spreadData(this.value);
+      } else {
+        await instance.spreadData(search);
+      }
+
+    }
+  }
+}
+
+ClientJs.prototype.addSearchEvent = function () {
+  const instance = this;
+  const input = this.searchInput;
+  input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
 ClientJs.prototype.backGrayBar = function () {
@@ -2992,12 +3005,26 @@ ClientJs.prototype.launching = async function () {
     this.addExtractEvent();
 
     const getObj = GeneralJs.returnGet();
+    let getTarget;
+    let tempFunction;
+
+    getTarget = null;
     if (getObj.cliid !== undefined) {
       for (let dom of this.standardDoms) {
         if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
-          dom.click();
+          getTarget = dom;
         }
       }
+      if (getTarget === null) {
+        tempFunction = this.makeSearchEvent(getObj.cliid);
+        await tempFunction({ keyCode: 13 });
+        for (let dom of this.standardDoms) {
+          if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
+            getTarget = dom;
+          }
+        }
+      }
+      getTarget.click();
     }
 
   } catch (e) {

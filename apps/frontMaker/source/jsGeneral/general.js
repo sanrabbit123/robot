@@ -367,6 +367,71 @@ GeneralJs.toPhotoUpload = async function (name, phone) {
   }
 }
 
+GeneralJs.addScrollXEvent = function (node, name = "") {
+  const today = new Date();
+  const todayConst = String(today.getFullYear()) + String(today.getMonth() + 1) + String(today.getDate());
+
+  if (name === "") {
+    name = node.nodeName + "_" + String(today.getTime() + Math.round(Math.random() * 1000));
+  }
+  const keyName = name + "_" + todayConst;
+  const variablesName = {
+    isDown: "isDown" + '_' + keyName,
+    startX: "startX" + '_' + keyName,
+    scrollLeft: "scrollLeft" + '_' + keyName,
+    mouseDown: "mouseDown" + '_' + keyName,
+    mouseLeave: "mouseLeave" + '_' + keyName,
+    mouseUp: "mouseUp" + '_' + keyName,
+    mouseMove: "mouseMove" + '_' + keyName,
+    events: [
+      { target: "mousedown", name: "mouseDown" + '_' + keyName, },
+      { target: "mouseleave", name: "mouseLeave" + '_' + keyName, },
+      { target: "mouseup", name: "mouseUp" + '_' + keyName, },
+      { target: "mousemove", name: "mouseMove" + '_' + keyName, },
+    ],
+  };
+
+  GeneralJs.stacks[variablesName.isDown] = false;
+  GeneralJs.stacks[variablesName.startX] = 0;
+  GeneralJs.stacks[variablesName.scrollLeft] = 0;
+
+  GeneralJs.events[variablesName.mouseDown] = function (e) {
+    GeneralJs.stacks[variablesName.isDown] = true;
+    GeneralJs.stacks[variablesName.startX] = e.pageX - node.offsetLeft;
+    GeneralJs.stacks[variablesName.scrollLeft] = node.scrollLeft;
+    node.style.cursor = "grabbing";
+  }
+
+  GeneralJs.events[variablesName.mouseLeave] = function (e) {
+    GeneralJs.stacks[variablesName.isDown] = false;
+    node.style.cursor = "pointer";
+  }
+
+  GeneralJs.events[variablesName.mouseUp] = function (e) {
+    GeneralJs.stacks[variablesName.isDown] = false;
+    node.style.cursor = "pointer";
+  }
+
+  GeneralJs.events[variablesName.mouseMove] = function (e) {
+    let x, walk;
+    if (!GeneralJs.stacks[variablesName.isDown]) {
+      return;
+    }
+    e.preventDefault();
+    x = e.pageX - node.offsetLeft;
+    walk = x - GeneralJs.stacks[variablesName.startX];
+    node.scrollLeft = GeneralJs.stacks[variablesName.scrollLeft] - walk;
+    node.style.cursor = "grabbing";
+  }
+
+  node.addEventListener("mousedown", GeneralJs.events[variablesName.mouseDown]);
+  node.addEventListener("mouseleave", GeneralJs.events[variablesName.mouseLeave]);
+  node.addEventListener("mouseup", GeneralJs.events[variablesName.mouseUp]);
+  node.addEventListener("mousemove", GeneralJs.events[variablesName.mouseMove]);
+
+  return variablesName;
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

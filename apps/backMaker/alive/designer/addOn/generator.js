@@ -3,6 +3,15 @@ const Designer = require(DESIGNER_DIR + "/designer.js");
 
 class Designers extends Array {
 
+  toNormal() {
+    let tong;
+    tong = [];
+    for (let i of this) {
+      tong.push(i.toNormal());
+    }
+    return tong;
+  }
+
 }
 
 const widthTools = function (Designer) {

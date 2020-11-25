@@ -19,6 +19,15 @@ class Clients extends Array {
     return arr.join(',');
   }
 
+  toNormal() {
+    let tong;
+    tong = [];
+    for (let i of this) {
+      tong.push(i.toNormal());
+    }
+    return tong;
+  }
+
 }
 
 const widthTools = function (Client) {
