@@ -1289,6 +1289,10 @@ ProjectJs.prototype.cardViewMaker = function () {
             division.get("드랍").appendChild(div_clone);
 
           } else {
+            console.log(obj.firstDate)
+            console.log(obj.meetingDate)
+            console.log(obj.remainDate)
+            console.log(obj.contentsPhotoDate)
             throw new Error("invaild status : " + obj.status);
           }
 
