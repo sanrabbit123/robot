@@ -1289,7 +1289,7 @@ ProjectJs.prototype.cardViewMaker = function () {
             division.get("드랍").appendChild(div_clone);
 
           } else {
-            throw new Error("invaild status");
+            throw new Error("invaild status : " + obj.status);
           }
 
           div_clone.setAttribute("draggable", "true");
