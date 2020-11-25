@@ -1226,22 +1226,22 @@ ProjectJs.prototype.cardViewMaker = function () {
           div_clone.setAttribute("kinds", "card");
           div_clone.setAttribute("proid", obj.proid);
 
-          if (/^18/.test(obj.firstDate)) {
+          if (/^1[6789]/.test(obj.firstDate)) {
 
             div_clone.setAttribute("thisStatus", "계약 전");
             division.get("계약 전").appendChild(div_clone);
 
-          } else if (/^18/.test(obj.meetingDate) || GeneralJs.compareDate(obj.meetingDate)) {
+          } else if (/^1[6789]/.test(obj.meetingDate) || GeneralJs.compareDate(obj.meetingDate)) {
 
             div_clone.setAttribute("thisStatus", "미팅 전");
             division.get("미팅 전").appendChild(div_clone);
 
-          } else if (/^18/.test(obj.remainDate)) {
+          } else if (/^1[6789]/.test(obj.remainDate)) {
 
             div_clone.setAttribute("thisStatus", "잔금 전");
             division.get("잔금 전").appendChild(div_clone);
 
-          } else if (/^18/.test(obj.contentsPhotoDate) || GeneralJs.compareDate(obj.contentsPhotoDate)) {
+          } else if (/^1[6789]/.test(obj.contentsPhotoDate) || GeneralJs.compareDate(obj.contentsPhotoDate)) {
 
             div_clone.setAttribute("thisStatus", "촬영 전");
             division.get("촬영 전").appendChild(div_clone);
@@ -1259,13 +1259,13 @@ ProjectJs.prototype.cardViewMaker = function () {
           } else if (obj.status === "홀딩") {
 
             div_clone.setAttribute("thisStatus", "홀딩");
-            if (/^18/.test(obj.firstDate)) {
+            if (/^1[6789]/.test(obj.firstDate)) {
               div_clone.setAttribute("dropDetail", "계약 전");
-            } else if (/^18/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
+            } else if (/^1[6789]/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
               div_clone.setAttribute("dropDetail", "미팅 전");
-            } else if (/^18/.test(obj.remainDate)) {
+            } else if (/^1[6789]/.test(obj.remainDate)) {
               div_clone.setAttribute("dropDetail", "잔금 전");
-            } else if (/^18/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
+            } else if (/^1[6789]/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
               div_clone.setAttribute("dropDetail", "촬영 전");
             } else {
               div_clone.setAttribute("dropDetail", "공유 전");
@@ -1275,13 +1275,13 @@ ProjectJs.prototype.cardViewMaker = function () {
           } else if (obj.status === "드랍") {
 
             div_clone.setAttribute("thisStatus", "드랍");
-            if (/^18/.test(obj.firstDate)) {
+            if (/^1[6789]/.test(obj.firstDate)) {
               div_clone.setAttribute("dropDetail", "계약 전");
-            } else if (/^18/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
+            } else if (/^1[6789]/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
               div_clone.setAttribute("dropDetail", "미팅 전");
-            } else if (/^18/.test(obj.remainDate)) {
+            } else if (/^1[6789]/.test(obj.remainDate)) {
               div_clone.setAttribute("dropDetail", "잔금 전");
-            } else if (/^18/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
+            } else if (/^1[6789]/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
               div_clone.setAttribute("dropDetail", "촬영 전");
             } else {
               div_clone.setAttribute("dropDetail", "공유 전");
@@ -1289,10 +1289,6 @@ ProjectJs.prototype.cardViewMaker = function () {
             division.get("드랍").appendChild(div_clone);
 
           } else {
-            console.log(obj.firstDate)
-            console.log(obj.meetingDate)
-            console.log(obj.remainDate)
-            console.log(obj.contentsPhotoDate)
             throw new Error("invaild status : " + obj.status);
           }
 
