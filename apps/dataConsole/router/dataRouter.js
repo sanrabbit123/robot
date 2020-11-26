@@ -20,6 +20,7 @@ const DataRouter = function (MONGOC) {
 
 DataRouter.baseMaker = function (target) {
   const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let dataPatchScript, html;
   let prototypes;
 
@@ -36,15 +37,93 @@ DataRouter.baseMaker = function (target) {
     <head>
       <meta charset="utf-8">
       <title></title>
-      <link href="/font/fonts.css" rel="stylesheet">
-      <style></style>
+      <style>
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
+            font-weight: 800;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
+            font-weight: 200;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
+            font-weight: 100;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
+            font-weight: 900;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'sandoll';
+            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Futura';
+            src: url('${ADDRESS.s3info.host}/font/futura/Futura-Medium.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/futura/Futura-Medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Futura';
+            src: url('${ADDRESS.s3info.host}/font/futura/Futura-Bold.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/font/futura/Futura-Bold.woff') format('woff');
+            font-weight: 600;
+            font-style: normal;
+        }
+      </style>
       <script>${dataPatchScript}</script>
     </head>
     <body>
       <div id="totalcontents"></div>
       <script src="${target}.js"></script>
     </body>
-  </html>`
+  </html>`;
+  
   return html;
 }
 

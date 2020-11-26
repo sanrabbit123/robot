@@ -35,6 +35,7 @@ DataConsole.prototype.connect = async function () {
     saveUninitialized: true,
     cookie: { maxAge: (2 * 365 * 24 * 60 * 60 * 1000) }
   }));
+  app.use(express.static(process.env.HOME + '/static'));
 
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const S3HOST = ADDRESS.s3info.host;
