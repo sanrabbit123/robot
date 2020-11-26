@@ -3,7 +3,7 @@ const ProjectJs = function () {
   this.totalContents = this.mother.totalContents;
   this.module = {
     paddingTop: 38,
-    height: 20,
+    height: 18,
     marginBottom: 18,
     initialLine: 14,
     initialMargin: 14,
