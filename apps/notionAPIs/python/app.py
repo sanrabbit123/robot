@@ -54,14 +54,13 @@ from notion.client import NotionClient
 from tool.notionCommunication import NotionCommunication
 
 try:
-    token = "4ee0b524880811dd4a6533b5a1e4fa9e7ccee21d23b292994d84b430a48e593d271c820729ab4eed3c91f0d2a94669126eb8eed37ca8ac1e82a01ab21772f252b6898d893207275046b50eeeefd6"
-    host = "homeliaison"
+    token = "a28a19d68caead0baa5bf2c8f46d1c58e00a62ea3ffa02a45dd3f9f26587e5d6a741a16f367732aa9031163e77728aead6e3e902fe3711c00cee3e083db43cc25df07d9de7083f152c962cabfc24"
     pathDic = returnModulepath()
     tempPath = pathDic["robot"] + "/temp"
     data = getBridge()
 
-    app = NotionClient(token_v2="671489b54b004ebe2d266be5e21154f69dda7373ed8ba6c70747b506bce158b094a8b8cdb990007c989b874aafa8dfb7cda655bd98d902a44399ae6797f21cbbdd23504409a0349107068db13406")
-    clientInstance = Client(app)
+    # app = NotionClient(token_v2="671489b54b004ebe2d266be5e21154f69dda7373ed8ba6c70747b506bce158b094a8b8cdb990007c989b874aafa8dfb7cda655bd98d902a44399ae6797f21cbbdd23504409a0349107068db13406")
+    # clientInstance = Client(app)
 
     if argv[1] == 'single':
         newId = clientInstance.createElement(data)
@@ -90,9 +89,19 @@ try:
         print(dumps({ "id": data["notionId"], "update": "success" }))
 
     elif argv[1] == 'blockToJson':
-        notionInstance = NotionCommunication(token=token, host=host, tempDir=tempPath)
-        filelist = notionInstance.blockToJson(data["blockInfo"])
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        fileList = notionInstance.blockToJson(data["blockInfo"])
         print(dumps({ "resultFileList": fileList }))
+
+    elif argv[1] == 'getAllRows':
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        allRows = notionInstance.getAllRows(data["blockInfo"])
+        print(allRows)
+
+    elif argv[1] == 'setConsoleLink':
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        notionInstance.setConsoleLink(data["blockInfo"])
+        print(dumps({ "message": "done" }))
 
 except Exception as e:
     print(e)

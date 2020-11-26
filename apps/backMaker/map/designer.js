@@ -9,6 +9,7 @@ module.exports = {
       },
       phone: "",
       email: "",
+      notionId: "",
       address: [],
       personalSystem: {
         showRoom: false,
@@ -65,7 +66,7 @@ module.exports = {
               }
             ]
           },
-          contruct: {
+          construct: {
             partner: "",
             method: "",
           },

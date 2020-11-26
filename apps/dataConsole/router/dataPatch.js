@@ -939,8 +939,8 @@ DataPatch.prototype.designerMap = function () {
     businessNumber: { name: "사업자 등록번호", position: "information.business.businessInfo.businessNumber", type: "string", searchBoo: true, },
     files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     percentage: { name: "수수료", position: "information.business.service.cost.percentage", type: "number", searchBoo: true, },
-    partner: { name: "시공사", position: "information.business.service.contruct.partner", type: "string", searchBoo: true, },
-    method: { name: "시공 방식", position: "information.business.service.contruct.method", type: "string", searchBoo: true, },
+    partner: { name: "시공사", position: "information.business.service.construct.partner", type: "string", searchBoo: true, },
+    method: { name: "시공 방식", position: "information.business.service.construct.method", type: "string", searchBoo: true, },
   };
   return map;
 }

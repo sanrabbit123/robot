@@ -986,8 +986,26 @@ class DevContext extends Array {
       */
 
 
+      /*
+
+      //notion id into mongo
+
+      const back = new BackMaker();
+      const notion = new NotionAPIs();
+      const notionMap = await notion.getCxCards();
+      for (let i in notionMap) {
+        if (/^c/.test(i)) {
+          await back.updateClient([ { cliid: i }, { "requests.0.request.notionId": notionMap[i].id } ], { selfMongo: this.MONGOC });
+        } else {
+          await back.updateDesigner([ { desid: i }, { "information.notionId": notionMap[i].id } ], { selfMongo: this.MONGOC });
+        }
+      }
+
+      */
 
 
+      const notion = new NotionAPIs();
+      const notionMap = await notion.getCxCards();
 
 
 
@@ -1013,7 +1031,6 @@ class DevContext extends Array {
 
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel: "#200_web" });
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel: "#200_web" });
-
 
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
 

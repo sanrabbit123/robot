@@ -247,12 +247,12 @@ Cost.prototype.toNormal = function () {
   return obj;
 }
 
-const Contruct = function (json) {
+const Construct = function (json) {
   this.partner = json.partner;
   this.method = json.method;
 }
 
-Contruct.prototype.toNormal = function () {
+Construct.prototype.toNormal = function () {
   let obj = {};
   obj.partner = this.partner;
   obj.method = this.method;
@@ -261,13 +261,13 @@ Contruct.prototype.toNormal = function () {
 
 const Service = function (json) {
   this.cost = new Cost(json.cost);
-  this.contruct = new Contruct(json.contruct);
+  this.construct = new Construct(json.construct);
 }
 
 Service.prototype.toNormal = function () {
   let obj = {};
   obj.cost = this.cost.toNormal();
-  obj.contruct = this.contruct.toNormal();
+  obj.construct = this.construct.toNormal();
   return obj;
 }
 
@@ -299,6 +299,7 @@ const DesignerInformation = function (json) {
   this.contract = new Contract(json.contract);
   this.phone = json.phone;
   this.email = json.email;
+  this.notionId = json.notionId;
   this.address = new Addresses();
   for (let i of json.address) {
     tempInstance = new Address(i);
@@ -313,6 +314,7 @@ DesignerInformation.prototype.toNormal = function () {
   obj.contract = this.contract.toNormal();
   obj.phone = this.phone;
   obj.email = this.email;
+  obj.notionId = this.notionId;
   obj.address = this.address.toNormal();
   obj.personalSystem = this.personalSystem.toNormal();
   obj.business = this.business.toNormal();

@@ -1,8 +1,6 @@
 const BackMaker = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
-  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
   this.mother = new Mother();
-  this.notion = new NotionAPIs();
   this.dir = process.cwd() + "/apps/backMaker";
   this.mapDir = this.dir + "/map";
   this.pastDir = this.dir + "/intoMap";
@@ -413,7 +411,7 @@ BackMaker.prototype.pastToJson = async function (cliid = "entire") {
   const { fileSystem, mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const map = require(`${this.pastDir}/${this.button}/${this.button}.js`);
-  const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: this.notion, Filters: BackMaker.filters });
+  const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: {}, Filters: BackMaker.filters });
   try {
     let row, tempArr, queryObj;
 
@@ -478,7 +476,7 @@ BackMaker.prototype.subLogicToJson = async function (tong) {
     }}
 
     for (let i = 0; i < funcs.length; i++) {
-      tempFunc = (funcs[i])({ Mother: this.mother, Notion: this.notion, Filters: BackMaker.filters });
+      tempFunc = (funcs[i])({ Mother: this.mother, Notion: {}, Filters: BackMaker.filters });
       tong = await tempFunc(tong);
     }
 
@@ -835,9 +833,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
                   gender: null
                 },
                 campaign: "",
-                history: [
-                  { time: new Date(1800, 0, 1), page: "", page_raw: "" },
-                ],
+                history: [],
               },
               response: {
                 status: "응대중",
@@ -1192,17 +1188,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
             },
             contents: {
               suggestion: "Designer's\nSuggestion",
-              detail: [
-                {
-                  photoKey: 0,
-                  title: "",
-                  contents: "",
-                  smallTalk: {
-                    title: "",
-                    contents: "",
-                  },
-                },
-              ],
+              detail: [],
             }
           },
           review: {
@@ -1217,27 +1203,14 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
               order: 0,
             },
             contents: {
-              detail: [
-                {
-                  type: "",
-                  photos: [],
-                  contents: [
-                    {
-                      question: "",
-                      answer: "",
-                    }
-                  ]
-                },
-              ],
+              detail: [],
             }
           }
         },
         photos: {
           first: 0,
           last: 0,
-          detail: [
-            { index: 0, gs: 'g' },
-          ],
+          detail: [],
         }
       }
     };
@@ -1527,7 +1500,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "designer";
   try {
-    let dummy, latestClient;
+    let dummy, dummySetting, latestClient;
 
     latestClient = await this.getLatestDesigner(option);
     dummy = {
@@ -1541,26 +1514,19 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
           },
           phone: "",
           email: "",
+          notionId: "",
           address: [],
           personalSystem: {
             showRoom: false,
             webPage: [],
-            sns: [
-              { kind: "", href: "" },
-            ],
+            sns: [],
           },
           business: {
             career: {
               startY: 0,
               startM: 0,
             },
-            account: [
-              {
-                bankName: "",
-                accountNumber: "",
-                to: "",
-              }
-            ],
+            account: [],
             businessInfo: {
               classification: "",
               businessNumber: "",
@@ -1590,14 +1556,9 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
                   online: true
                 },
                 percentage: 0,
-                percentageHistory: [
-                  {
-                    date: { start: new Date(1800, 0, 1), end: new Date(1800, 0, 1) },
-                    percentage: 0,
-                  }
-                ]
+                percentageHistory: []
               },
-              contruct: {
+              construct: {
                 partner: "",
                 method: "",
               },
@@ -1620,12 +1581,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
           },
         },
         realTime: {
-          availableDate: [
-            {
-              startDate: "",
-              endDate: "",
-            }
-          ],
+          availableDate: [],
         },
         setting: {
           front: {
@@ -1640,35 +1596,60 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
             },
             order: 0,
           },
-          proposal: [
-            {
-              name: "",
-              photo: [
-                {
-                  position: "",
-                  sgTrue: "",
-                  unionPo: "",
-                  styleText: "",
-                  imgSrc: ""
-                },
-              ],
-              description: [
-                "",
-                "",
-                "",
-              ]
-            }
-          ],
-          ghost: [
-            {
-              link: "",
-              sgTrue: ""
-            },
-          ],
+          proposal: [],
+          ghost: [],
         },
       },
     };
+
+    dummySetting = function (num) {
+      let settingObj = {
+          name : "기본 세팅 " + String(num),
+          photo : [
+            {
+              position: "0",
+              sgTrue: "g",
+              unionPo: "union",
+              styleText: "width: 66.5%;height: 66%;top: 0%;left: 0%;"
+            },
+            {
+              position: "1",
+              sgTrue: "s",
+              unionPo: "right",
+              styleText: "width: 32.8%;height: 66%;top: 0%;left: 67.2%;"
+            },
+            {
+              position: "2",
+              sgTrue: "g",
+              unionPo: "union",
+              styleText: "width: 32.8%;height: 33%;top: 67%;left: 0%;"
+            },
+            {
+              position: "3",
+              sgTrue: "g",
+              unionPo: "union",
+              styleText: "width: 33%;height: 33%;top: 67%;left: 33.5%;"
+            },
+            {
+              position: "4",
+              sgTrue: "g",
+              unionPo: "union",
+              styleText: "width: 32.8%;height: 33%;top: 67%;left: 67.2%;"
+            }
+          ],
+          description : [
+            "NULL",
+            "NULL",
+            "NULL"
+          ]
+      };
+      return JSON.parse(JSON.stringify(settingObj));
+    }
+
     dummy.structure.desid = this.idMaker(latestClient.desid);
+    for (let i = 0; i < 5; i++) {
+      dummy.structure.setting.proposal.push(dummySetting(i));
+    }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
@@ -1944,143 +1925,74 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         proposal: {
           status: "",
           date: new Date(1800, 0, 1),
-          detail: [
-            {
-              desid: "",
-              fee: [
-                {
-                  method: "offline",
-                  partial: false,
-                  amount: 0
-                }
-              ],
-              pictureSettings: [
-                {
-                  position: "",
-                  sgTrue: "",
-                  unionPo: "",
-                  styleText: "",
-                  imgSrc: ""
-                },
-              ],
-              description: [
-                "",
-                "",
-                "",
-              ]
-            }
-          ],
+          detail: [],
         },
         process: {
-          status: "드랍", // [ '드랍', '진행', '응대중', '완료' ]
+          status: "드랍",
           contract: {
             first: {
-              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
-              date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+              guide: new Date(1800, 0, 1),
+              date: new Date(1800, 0, 1),
               calculation: {
-                amount: 0, // from contract
+                amount: 0,
                 info: {
-                  method: "", // from contract
-                  proof: "", // from contract
-                  to: "", // from contract
+                  method: "",
+                  proof: "",
+                  to: "",
                 }
               },
             },
             remain: {
-              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
-              date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+              guide: new Date(1800, 0, 1),
+              date: new Date(1800, 0, 1),
               calculation: {
                 amount: {
-                  supply: 0, // from contract
-                  vat: 0, // from contract
-                  consumer: 0, // from contract
+                  supply: 0,
+                  vat: 0,
+                  consumer: 0,
                 },
                 info: {
-                  method: "", // from contract
-                  proof: "", // from contract
-                  to: "", // from contract
+                  method: "",
+                  proof: "",
+                  to: "",
                 }
               },
             },
             form: {
-              id: "", // eform api in button in notion (to mongo / to notion)
-              guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
+              id: "",
+              guide: new Date(1800, 0, 1),
               date: {
-                from: new Date(1800, 0, 1), // from contract
-                to: new Date(1800, 0, 1), // from contract
+                from: new Date(1800, 0, 1),
+                to: new Date(1800, 0, 1),
               }
             },
             meeting: {
-              date: new Date(1800, 0, 1), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
-              pastDesigners: [
-                { desid: "" },
-              ]
+              date: new Date(1800, 0, 1),
+              pastDesigners: []
             },
           },
           design: {
             proposal: {
               provided: false,
               limit: null,
-              detail: [
-                {
-                  date: new Date(1800, 0, 1),
-                }
-              ]
+              detail: []
             },
             construct: {
               provided: false,
-              detail: [
-                {
-                  name: "",
-                  provider: "HomeLiaison",
-                  form: {
-                    id: "",
-                    date: {
-                      from: new Date(1800, 0, 1),
-                      to: new Date(1800, 0, 1),
-                    }
-                  },
-                  calculation: {
-                    amount: {
-                      detail: [
-                        {
-                          name: "",
-                          amount: 0,
-                        }
-                      ],
-                      total: 0,
-                    },
-                    percentage: 5,
-                    info: {
-                      account: "",
-                      proof: "",
-                      to: "",
-                    }
-                  }
-                },
-              ],
+              detail: [],
             },
             purchase: {
               provided: false,
-              detail: [
-                {
-                  name: "",
-                  provider: "HomeLiaison",
-                  link: "",
-                  calculation: {
-                    amount: 0,
-                  }
-                },
-              ],
+              detail: [],
             },
           },
           calculation: {
             method: "",
             percentage: 0,
             info: {
-              account: "", // from contract
-              proof: "", // from contract
-              to: "", // from contract
+              account: "",
+              proof: "",
+              to: "",
             },
             payments: {
               totalAmount: 0,
@@ -2107,6 +2019,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         },
       }
     };
+
     dummy.structure.proid = this.idMaker(latestClient.proid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {

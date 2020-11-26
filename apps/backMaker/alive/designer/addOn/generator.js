@@ -80,7 +80,7 @@ const widthTools = function (Designer) {
     let temp;
 
     const { designer, desid } = designer_raw;
-    const { contract: { status, date }, phone, email, address, personalSystem: { showRoom, webPage, sns }, business: { career, account, businessInfo: { classification, businessNumber, files }, service: { cost: { percentage }, contruct: { partner, method } } } } = designer_raw.information;
+    const { contract: { status, date }, phone, email, address, personalSystem: { showRoom, webPage, sns }, business: { career, account, businessInfo: { classification, businessNumber, files }, service: { cost: { percentage }, construct: { partner, method } } } } = designer_raw.information;
 
     temp = {};
     temp.standard = {

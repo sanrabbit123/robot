@@ -132,6 +132,7 @@ module.exports = function (tools) {
 
         information.phone = past.b2_phone;
         information.email = past.b3_email;
+        information.notionId = "";
 
         tempArr = past.b5_address.split("__________split__________");
         information.address = [];
@@ -209,7 +210,7 @@ module.exports = function (tools) {
           percentageHistory: []
         };
         information.business.service.cost.percentage = Number(past.c1_fees.replace(/\%$/, '').replace(/[^0-9]/g, ''));
-        information.business.service.contruct = {
+        information.business.service.construct = {
           partner: "",
           method: "",
         };

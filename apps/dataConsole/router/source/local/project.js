@@ -172,6 +172,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
+      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(proid, num));
     }
 
     if (num !== 0) {
@@ -1192,6 +1193,7 @@ ProjectJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = nameStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
+          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.proid, num));
           div_clone.appendChild(div_clone2);
 
           //proid
@@ -1202,6 +1204,7 @@ ProjectJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = proidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
+          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.proid, num));
           div_clone.appendChild(div_clone2);
 
           //bar
@@ -1342,6 +1345,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let visualSpecificMarginTop;
   let textAreas;
   let fixedFontSizeConst;
+  let notionEvent;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1357,6 +1361,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, ''));
+  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
 
   //title ------------------------------------------
 
@@ -1380,6 +1385,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //name
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[0]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#404040",
@@ -1391,11 +1397,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //proid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[1]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#2fa678",
@@ -1406,6 +1414,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -3216,6 +3225,39 @@ ProjectJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
+ProjectJs.prototype.makeNotionEvent = function (id, index) {
+  const instance = this;
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+
+    let indexArr, requestIndex;
+
+    index = Number(index);
+    indexArr = [];
+    for (let dom of document.querySelectorAll('.' + id)) {
+      indexArr.push(Number(dom.getAttribute("index")));
+    }
+    indexArr.sort((a, b) => { return a - b; });
+    for (let z = 0; z < indexArr.length; z++) {
+      if (indexArr[z] === index) {
+        requestIndex = z;
+      }
+    }
+
+    const projects = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: id }), "/getProjects");
+    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: JSON.parse(projects)[0].cliid }), "/getClients");
+    const client = JSON.parse(clients)[0];
+    const notionId = client.requests[requestIndex].request.notionId;
+    if (notionId !== '') {
+      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
+    } else {
+      alert("노션에 정보가 없습니다!");
+    }
+  }
+}
+
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -3247,6 +3289,14 @@ ProjectJs.prototype.launching = async function () {
           }
         }
       }
+    } else if (getObj.cliid !== undefined) {
+      tempFunction = this.makeSearchEvent(getObj.cliid);
+      await tempFunction({ keyCode: 13 });
+      if (this.standardDoms.length > 1) {
+        getTarget = this.standardDoms[1];
+      }
+    }
+    if (getTarget !== null) {
       getTarget.click();
     }
 

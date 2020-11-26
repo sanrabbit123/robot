@@ -5,10 +5,10 @@ from json import dumps, loads
 
 class NotionCommunication:
 
-    def __init__(self, token, host="homeliaison", tempDir="."):
+    def __init__(self, token, tempDir="."):
         self.token = token
         self.client = NotionClient(token_v2=self.token)
-        self.host = "https://www.notion.so" + "/" + host
+        self.host = "https://www.notion.so"
         self.tempDir = tempDir
 
     def getPageLink(self, obj):
@@ -17,12 +17,13 @@ class NotionCommunication:
     def notionDateToString(self, instance):
         return str(instance.start.strftime('%Y-%m-%d'))
 
-    def cardToObject(self, obj):
+    def cardToObject(self, obj, motherId=""):
         id = RegExp.sub('-', '', obj.id)
         link = self.getPageLink(obj)
         card = self.client.get_block(link)
         properties = card.get_all_properties()
         dic = {}
+        dic["parentId"] = motherId
         dic["rawId"] = obj.id
         dic["id"] = id
         for key, value in properties.items():
@@ -46,7 +47,7 @@ class NotionCommunication:
         allRow = page.collection.get_rows()
         resultArr = []
         for i in allRow:
-            resultArr.append(self.cardToObject(i))
+            resultArr.append(self.cardToObject(i, motherId=id))
         fileName = self.tempDir + "/row_" + name + "_toObjectArr_" + RegExp.sub('-', '', datetime.today().strftime('%Y-%m-%d')) + ".json"
         with open(fileName, "w", encoding='utf-8') as f:
             f.write(dumps(resultArr, indent=2, sort_keys=True, ensure_ascii=False))
@@ -62,7 +63,7 @@ class NotionCommunication:
             fileList.append(self.collectionToJson(RegExp.sub('-', '', dic["id"]), dic["name"]))
         return fileList
 
-    def blockToJson(self, dataObj):
+    def selectTargets(self, dataObj):
         # dataObj = {
         #     "blockId": "0da6f7d0806945a3919127b4171adde9",
         #     "targetColumns": [
@@ -74,6 +75,7 @@ class NotionCommunication:
         #         { "regex": "디자이너", "name": "designer" },
         #     ]
         # }
+
         page = self.client.get_block(self.host + "/" + dataObj["blockId"])
         targetCollections = []
         for i in page.children:
@@ -86,21 +88,34 @@ class NotionCommunication:
                 if RegExp.search(i["regex"], j.title) != None:
                     idArr.append({ "name": i["name"], "id": RegExp.sub('-', '', j.id) })
 
+        return idArr
+
+    def blockToJson(self, dataObj):
+        idArr = self.selectTargets(dataObj)
         fileList = self.collectionsToJson(idArr)
         return fileList
 
+    def getAllRows(self, dataObj):
+        idArr = self.selectTargets(dataObj)
 
-data = {
-    "blockId": "0da6f7d0806945a3919127b4171adde9",
-    "targetColumns": [
-        { "regex": "신규", "name": "newClient" },
-        { "regex": "프로젝트", "name": "projectContents" },
-        { "regex": "장기", "name": "oldClient" },
-        { "regex": "드랍", "name": "dropClient" },
-        { "regex": "완료", "name": "completeClient" },
-        { "regex": "디자이너", "name": "designer" },
-    ]
-}
+        resultArr = []
+        for dic in idArr:
+            page = self.client.get_block(self.host + "/" + RegExp.sub('-', '', dic["id"]))
+            allRow = page.collection.get_rows()
+            for i in allRow:
+                resultArr.append(i)
 
-app = NotionCommunication(token="4ee0b524880811dd4a6533b5a1e4fa9e7ccee21d23b292994d84b430a48e593d271c820729ab4eed3c91f0d2a94669126eb8eed37ca8ac1e82a01ab21772f252b6898d893207275046b50eeeefd6", host="homeliaison")
-app.blockToJson(data)
+        return resultArr
+
+    def setConsoleLink(self, dataObj):
+        resultArr = self.getAllRows(dataObj)
+        for i in resultArr:
+            try:
+                if i.cliid != '':
+                    if i.status == '현장 미팅' or i.status == '잔금 대기' or i.status == '계약서' or i.status == '프로젝트 진행' or i.status == '디자인 제안' or i.status == '시공 제안' or i.status == '스타일링 제안':
+                        i.console = "http://127.0.0.1:8080/project?cliid=" + i.cliid
+                    else:
+                        i.console = "http://127.0.0.1:8080/client?cliid=" + i.cliid
+            except Exception as e:
+                if i.desid != '':
+                    i.console = "http://127.0.0.1:8080/designer?desid=" + i.desid

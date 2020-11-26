@@ -172,6 +172,7 @@ ClientJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
+      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(cliid, num));
     }
 
     if (num !== 0) {
@@ -1123,6 +1124,7 @@ ClientJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = nameStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
+          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
           div_clone.appendChild(div_clone2);
 
           //cliid
@@ -1133,6 +1135,7 @@ ClientJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = cliidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
+          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
           div_clone.appendChild(div_clone2);
 
           //bar
@@ -1243,6 +1246,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
+  let notionEvent;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1265,6 +1269,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
+  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1281,6 +1286,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //name
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[0]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#404040",
@@ -1288,25 +1294,30 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     fontWeight: String(600),
     bottom: String(leftMargin * (12 / 60)) + ea,
     left: String(leftMargin - 3) + ea,
+    cursor: "pointer",
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //cliid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[1]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#2fa678",
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (17 / 60)) + ea,
     left: String(leftMargin * 3) + ea,
+    cursor: "pointer",
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -2993,6 +3004,38 @@ ClientJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
+ClientJs.prototype.makeNotionEvent = function (id, index) {
+  const instance = this;
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+
+    let indexArr, requestIndex;
+
+    index = Number(index);
+    indexArr = [];
+    for (let dom of document.querySelectorAll('.' + id)) {
+      indexArr.push(Number(dom.getAttribute("index")));
+    }
+    indexArr.sort((a, b) => { return a - b; });
+    for (let z = 0; z < indexArr.length; z++) {
+      if (indexArr[z] === index) {
+        requestIndex = z;
+      }
+    }
+
+    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: id }), "/getClients");
+    const client = JSON.parse(clients)[0];
+    const notionId = client.requests[requestIndex].request.notionId;
+    if (notionId !== '') {
+      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
+    } else {
+      alert("노션에 정보가 없습니다!");
+    }
+  }
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -3024,7 +3067,9 @@ ClientJs.prototype.launching = async function () {
           }
         }
       }
-      getTarget.click();
+      if (getTarget !== null) {
+        getTarget.click();
+      }
     }
 
   } catch (e) {

@@ -172,6 +172,7 @@ DesignerJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
+      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(desid, num));
     }
 
     if (num !== 0) {
@@ -719,6 +720,7 @@ DesignerJs.prototype.cardViewMaker = function () {
       let whereQuery;
       let tempResult, tempResult2, tempInfo, tempTarget, tempArr;
       let division, divisionName;
+      let makeNotionEvent;
 
       //total father div
       totalFather = GeneralJs.nodes.div.cloneNode(true);
@@ -736,6 +738,34 @@ DesignerJs.prototype.cardViewMaker = function () {
       fontSize = 13;
       nameFontSize = fontSize + 4;
       totalWidth = size - (intend * 2) - 1;
+      makeNotionEvent = function (obj) {
+        return async function (e) {
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+
+          let thisCliid, requestIndex;
+
+          const projects = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: obj.proid }), "/getProjects");
+          thisCliid = JSON.parse(projects)[0].cliid;
+
+          const tempProjects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: thisCliid }), "/getProjects"));
+          for (let z = 0; z < tempProjects.length; z++) {
+            if (tempProjects[z].proid === obj.proid) {
+              requestIndex = z;
+            }
+          }
+
+          const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: thisCliid }), "/getClients");
+          const client = JSON.parse(clients)[0];
+          const notionId = client.requests[requestIndex].request.notionId;
+          if (notionId !== '') {
+            window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
+          } else {
+            alert("노션에 정보가 없습니다!");
+          }
+        }
+      }
 
       //style maker
       style = {
@@ -906,6 +936,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         div_clone2.addEventListener("click", function (e) {
           window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
         });
+        div_clone2.addEventListener("contextmenu", makeNotionEvent(obj));
         div_clone.appendChild(div_clone2);
 
         //proid
@@ -918,6 +949,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         div_clone2.addEventListener("click", function (e) {
           window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
         });
+        div_clone2.addEventListener("contextmenu", makeNotionEvent(obj));
         div_clone.appendChild(div_clone2);
 
         //bar
@@ -995,6 +1027,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let visualSpecificMarginTop;
   let textAreas;
   let fixedFontSizeConst;
+  let notionEvent;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1017,6 +1050,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
+  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1033,6 +1067,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //name
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[0]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#404040",
@@ -1044,11 +1079,13 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //desid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[1]];
+  div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: "#2fa678",
@@ -1059,6 +1096,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -3006,6 +3044,38 @@ DesignerJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
+DesignerJs.prototype.makeNotionEvent = function (id, index) {
+  const instance = this;
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+
+    let indexArr, requestIndex;
+
+    index = Number(index);
+    indexArr = [];
+    for (let dom of document.querySelectorAll('.' + id)) {
+      indexArr.push(Number(dom.getAttribute("index")));
+    }
+    indexArr.sort((a, b) => { return a - b; });
+    for (let z = 0; z < indexArr.length; z++) {
+      if (indexArr[z] === index) {
+        requestIndex = z;
+      }
+    }
+
+    const designers = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: id }), "/getDesigners");
+    const designer = JSON.parse(designers)[0];
+    const notionId = designer.information.notionId;
+    if (notionId !== '') {
+      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
+    } else {
+      alert("노션에 정보가 없습니다!");
+    }
+  }
+}
+
 DesignerJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -3037,7 +3107,9 @@ DesignerJs.prototype.launching = async function () {
           }
         }
       }
-      getTarget.click();
+      if (getTarget !== null) {
+        getTarget.click();
+      }
     }
 
   } catch (e) {

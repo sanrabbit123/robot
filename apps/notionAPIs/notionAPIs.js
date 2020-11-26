@@ -1,6 +1,8 @@
 const NotionAPIs = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   this.mother = new Mother();
+  this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/notionAPIs";
   this.jsonDir = this.dir + "/json";
   this.pythonApp = this.dir + "/python/app.py";
@@ -15,8 +17,18 @@ NotionAPIs.prototype.blockToJson = async function (obj) {
   }
 }
 
+NotionAPIs.prototype.updateConsoleLink = async function (obj) {
+  const instance = this;
+  try {
+    return (await this.mother.pythonExecute(this.pythonApp, [ "setConsoleLink" ], obj));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 NotionAPIs.prototype.getCxCards = async function () {
   const instance = this;
+  const { fileSystem } = this.mother;
   try {
     const obj = {
       blockInfo: {
@@ -31,10 +43,50 @@ NotionAPIs.prototype.getCxCards = async function () {
         ],
       },
     };
-    const fileList = await this.blockToJson(obj);
-    
+    await this.updateConsoleLink(obj);
+    const { resultFileList } = await this.blockToJson(obj);
 
+    let tempArr;
+    let middleTong, finalTong;
 
+    middleTong = [];
+    for (let f of resultFileList) {
+      tempArr = JSON.parse(await fileSystem(`readString`, [ f ]));
+      for (let i of tempArr) {
+        middleTong.push(i);
+      }
+    }
+
+    finalTong = {};
+    for (let m of middleTong) {
+      if (m.cliid !== undefined && m.cliid !== '') {
+        finalTong[m.cliid] = {};
+        finalTong[m.cliid]["id"] = m.parentId + '-' + m.id;
+        finalTong[m.cliid]["data"] = m;
+      } else if (m.desid !== undefined && m.desid !== '') {
+        finalTong[m.desid] = {};
+        finalTong[m.desid]["id"] = m.parentId + '-' + m.id;
+        finalTong[m.desid]["data"] = m;
+      }
+    }
+
+    const DesidFilter = this.back.idFilter("designer");
+    for (let i in finalTong) {
+      if (/^d/.test(i)) {
+        finalTong[DesidFilter.pastToNew(i)] = finalTong[i];
+      }
+    }
+
+    for (let i in finalTong) {
+      if (/^de/.test(i)) {
+        delete finalTong[i];
+      }
+    }
+
+    console.log(finalTong);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/notionTong.json`, JSON.stringify(finalTong, null, 2) ]);
+
+    return finalTong;
   } catch (e) {
     console.log(e);
   }
