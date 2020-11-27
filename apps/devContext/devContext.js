@@ -1004,38 +1004,97 @@ class DevContext extends Array {
       */
 
 
-      const notion = new NotionAPIs();
-      const notionMap = await notion.getCxCards();
+      // const notion = new NotionAPIs();
+      // const notionMap = await notion.getCxCards();
+
+
+
+
+      let targetDir, targetDirList;
+      let fromArr, toArr;
+
+      this.pid = "p67";
+      this.resultFolder = process.env.HOME + "/contentsMaker/result";
+
+      targetDir = `${this.resultFolder}/${this.pid}code/portp${this.pid}`;
+      targetDirList = await fileSystem(`readDir`, [ targetDir ]);
+
+      fromArr = [];
+      toArr = [];
+      for (let i of targetDirList) {
+        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+          fromArr.push(targetDir + "/" + i);
+          toArr.push(`corePortfolio/listImage/${this.pid}/${i}`);
+        }
+      }
+
+      targetDir = `${this.resultFolder}/${this.pid}code/portp${this.pid}/mobile`;
+      targetDirList = await fileSystem(`readDir`, [ targetDir ]);
+
+      for (let i of targetDirList) {
+        if (i !== `.DS_Store`) {
+          fromArr.push(targetDir + "/" + i);
+          toArr.push(`corePortfolio/listImage/${this.pid}/mobile/${i}`);
+        }
+      }
+
+      console.log(fromArr);
+      console.log(toArr);
+
+      await this.mother.s3FileUpload(fromArr, toArr);
+
+
 
 
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
-      // const client = "박신애";
-      // const pid = "p66";
-      // const rid = "re061";
-      // const links = [
-      //   "https://docs.google.com/document/d/1qP7tc69qssOHOKPn3maXDzVk9V7GPPsgMyNd-N-NYZg/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1FdjKRniZJbknFKsQND4IC8FUAd7rfw8sfvjilaVE_LM/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1ydf5oVv7MBMJ6mcIwpRsW0C4ffsRS-fz?usp=sharing",
-      // ];
-      // const webLinks = [
-      //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
-      //   "https://home-liaison.com/revdetail.php?qqq=" + rid,
-      // ];
-      // const channel = "502_sns_contents";
+      /*
+
+      // contents upload
+
+      const client = "백향목";
+      const pid = "p67";
+      const rid = "re062";
+      const links = [
+        "https://docs.google.com/document/d/1PITuKqPNFROknT-7n88nosp77VH-zh0pZIrMcvyxmgk/edit?usp=sharing",
+        "https://docs.google.com/document/d/1sy2X1NHaH9gShLbKtxy-TgNJAoStA-EM4Ln80UKuf3U/edit?usp=sharing",
+        "https://drive.google.com/drive/folders/16kBX8SqddIDzQzju041GGOzHwLpQyqWz?usp=sharing",
+      ];
+      const webLinks = [
+        "https://home-liaison.com/portdetail.php?qqq=" + pid,
+        "https://home-liaison.com/revdetail.php?qqq=" + rid,
+      ];
+      let channel;
+
+
+      // 1
+      // channel = "#502_sns_contents";
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
 
-      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel: "#200_web" });
-      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel: "#200_web" });
+      // 2
+      channel = "#200_web";
+      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
+
+      */
+
+
+
+      // card setting
 
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
 
+
+      // kakao token
+
       // const app = new KakaoTalk();
       // await app.generateToken();
+
+
 
       // const MONGOC = this.MONGOC;
       // const contents = await MONGOC.db(`miro81`).collection(`contents_backup`).find({}).toArray();
@@ -1043,14 +1102,21 @@ class DevContext extends Array {
       //   await MONGOC.db(`miro81`).collection(`contents`).insertOne(c);
       // }
 
+
+
       // const back = new BackMaker();
       // await back.pastToMongo();
       // await back.updateDesid();
 
+
+
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p66", 2);
 
-      // await this.spellCheck("p66");
+
+
+
+      // await this.spellCheck("p67");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

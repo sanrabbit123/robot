@@ -242,7 +242,7 @@ AiContents.prototype.query_maker = async function (result) {
     this.queryObj.pordeta_query += `'${this.text.p_info.slide}',`;
     this.queryObj.pordeta_query += `'${query_wording}',`;
     this.queryObj.pordeta_query += `'${query_wordingkey}',`;
-    this.queryObj.pordeta_query += `'${this.text.designer}',`;
+    this.queryObj.pordeta_query += `'${result.past_desid}',`;
     this.queryObj.pordeta_query += `'${result.designer}',`;
     this.queryObj.pordeta_query += `'${this.text.sub_titles.portivec.main}',`;
     this.queryObj.pordeta_query += `'',`;
@@ -252,7 +252,7 @@ AiContents.prototype.query_maker = async function (result) {
     this.queryObj.porlist_query += `'${this.text.p_id}',`;
     this.queryObj.porlist_query += `'${String(this.text.p_info.photodae[0])}',`;
     this.queryObj.porlist_query += `'${String(this.text.p_info.photodae[1])}',`;
-    this.queryObj.porlist_query += `'${this.text.designer}',`;
+    this.queryObj.porlist_query += `'${result.past_desid}',`;
     this.queryObj.porlist_query += `'${result.designer}',`;
     this.queryObj.porlist_query += `'${this.text.sub_titles.portivec.region}',`;
     this.queryObj.porlist_query += `'${this.text.p_info.service}',`;
@@ -291,7 +291,7 @@ AiContents.prototype.query_maker = async function (result) {
       this.queryObj.revdeta_query += `'${review_photo_setting.gs}',`;
       this.queryObj.revdeta_query += `'${String(this.text.r_info.photodae[0])} ${String(this.text.r_info.photodae[1])}',`;
       this.queryObj.revdeta_query += `'${review_photo_setting.key}',`;
-      this.queryObj.revdeta_query += `'${this.text.designer}',`;
+      this.queryObj.revdeta_query += `'${result.past_desid}',`;
       this.queryObj.revdeta_query += `'${this.text.sub_titles.revivec.main}',`;
       this.queryObj.revdeta_query += `'');`;
       this.queryObj.revlist_query = `INSERT INTO revlist (revid,porlid,review_photo,order_function) VALUES ('${this.text.r_id}','${this.text.p_id}','${String(this.text.r_info.photodae[1])}','${String(this.text.r_info.order)}');`;
@@ -307,6 +307,7 @@ AiContents.prototype.total_make = async function () {
   const instance = this;
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
+  const Filter = this.back.idFilter("designer");
   try {
     let targetContents = await this.back.getContentsByPid(this.portfolioNum);
     this.text = targetContents.toAiState();
@@ -318,7 +319,13 @@ AiContents.prototype.total_make = async function () {
     await this.photo_list();
     await this.makeAnd_execute();
 
-    const result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: this.text.designer });
+    let result;
+    if (/^de/.test(this.text.designer)) {
+      result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: this.text.designer });
+    } else {
+      result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: Filter.newToPast(this.text.designer) });
+    }
+
     await this.query_maker(result);
     console.log(`done`);
 
@@ -441,8 +448,11 @@ AiContents.prototype.to_poo = async function () {
     p_id = `none`;
     r_id = `none`;
     for (let i = 0; i < arr.length; i++) {
-      if (/^[ap][0-9]+/g.test(arr[i])) { p_id = arr[i].replace(/code/g, ''); }
-      else if (/^re[0-9]+/g.test(arr[i])) { r_id = arr[i].replace(/code/g, ''); }
+      if (/^[ap][0-9]+/g.test(arr[i])) {
+        p_id = arr[i].replace(/code/g, '');
+      } else if (/^re[0-9]+/g.test(arr[i])) {
+        r_id = arr[i].replace(/code/g, '');
+      }
     }
 
     //move svgs and ai delete
@@ -497,6 +507,38 @@ AiContents.prototype.to_poo = async function () {
       scpMsg += `scp -r ${pooPath.revrev} miro81@home-liaison.com:/miro81/www/list_svg/;`;
       scpMsg += `scp -i ${process.env.HOME}/database.pem -r ${pooPath.revrev} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
     }
+
+
+    //to S3
+    let s3TargetDir, s3TargetDirList;
+    let fromArr, toArr;
+
+    s3TargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}`;
+    s3TargetDirList = await fileSystem(`readDir`, [ s3TargetDir ]);
+
+    fromArr = [];
+    toArr = [];
+    for (let i of s3TargetDirList) {
+      if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+        fromArr.push(s3TargetDir + "/" + i);
+        toArr.push(`corePortfolio/listImage/${p_id}/${i}`);
+      }
+    }
+
+    s3TargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}/mobile`;
+    s3TargetDirList = await fileSystem(`readDir`, [ s3TargetDir ]);
+
+    for (let i of s3TargetDirList) {
+      if (i !== `.DS_Store`) {
+        fromArr.push(s3TargetDir + "/" + i);
+        toArr.push(`corePortfolio/listImage/${p_id}/mobile/${i}`);
+      }
+    }
+
+    console.log(fromArr);
+    console.log(toArr);
+
+    await this.mother.s3FileUpload(fromArr, toArr);
 
     //view scp
     console.log(scpMsg);

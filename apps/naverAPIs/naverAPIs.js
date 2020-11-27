@@ -135,6 +135,9 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "구성비", "가성비" ],
     [ "제안해 주셔서", "제안해주셔서" ],
     [ "스타일 대로", "스타일대로" ],
+    [ "비비드 한", "비비드한" ],
+    [ "콘셉트", "컨셉" ],
+    [ "셀렉 해", "셀렉해" ],
   ];
   try {
     let resultArr = [];
