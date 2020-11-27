@@ -1,10 +1,8 @@
 const MapMaker = function (app) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
-
   this.sourceDir = `${process.env.HOME}/contentsMaker/result`;
   this.dir = `${process.cwd()}/apps/mapMaker`;
-
   this.app = app;
   this.svgTong = {};
   this.pngTong = {};
