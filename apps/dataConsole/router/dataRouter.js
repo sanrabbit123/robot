@@ -123,7 +123,7 @@ DataRouter.baseMaker = function (target) {
       <script src="${target}.js"></script>
     </body>
   </html>`;
-  
+
   return html;
 }
 

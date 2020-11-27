@@ -42,6 +42,24 @@ SvgTong.stringParsing = function (str) {
   return resultDom.childNodes[0];
 }
 
+SvgTong.getRatio = function (svgDom) {
+  if (typeof svgDom === "string") {
+    svgDom = SvgTong.stringParsing(svgDom);
+  } else if (svgDom === undefined) {
+    throw new Error("invaild svg");
+  }
+
+  let viewBoxString, viewBoxArr;
+
+  viewBoxString = svgDom.getAttribute("viewBox");
+  if (viewBoxString === undefined || viewBoxString === null) {
+    throw new Error("invaild svg");
+  }
+  viewBoxArr = viewBoxString.split(' ');
+
+  return (Number(viewBoxArr[2]) / Number(viewBoxArr[3]));
+}
+
 SvgTong.parsing = function (obj) {
   let tempArr = obj.src.split('/');
   let target = tempArr[tempArr.length - 1].replace(/\.svg$/, '');

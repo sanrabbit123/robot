@@ -1008,41 +1008,7 @@ class DevContext extends Array {
       // const notionMap = await notion.getCxCards();
 
 
-
-
-      let targetDir, targetDirList;
-      let fromArr, toArr;
-
-      this.pid = "p67";
-      this.resultFolder = process.env.HOME + "/contentsMaker/result";
-
-      targetDir = `${this.resultFolder}/${this.pid}code/portp${this.pid}`;
-      targetDirList = await fileSystem(`readDir`, [ targetDir ]);
-
-      fromArr = [];
-      toArr = [];
-      for (let i of targetDirList) {
-        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
-          fromArr.push(targetDir + "/" + i);
-          toArr.push(`corePortfolio/listImage/${this.pid}/${i}`);
-        }
-      }
-
-      targetDir = `${this.resultFolder}/${this.pid}code/portp${this.pid}/mobile`;
-      targetDirList = await fileSystem(`readDir`, [ targetDir ]);
-
-      for (let i of targetDirList) {
-        if (i !== `.DS_Store`) {
-          fromArr.push(targetDir + "/" + i);
-          toArr.push(`corePortfolio/listImage/${this.pid}/mobile/${i}`);
-        }
-      }
-
-      console.log(fromArr);
-      console.log(toArr);
-
-      await this.mother.s3FileUpload(fromArr, toArr);
-
+      await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
 
 
 

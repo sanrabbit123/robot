@@ -326,7 +326,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
         }
 
-
         //to slack
         if (clientObj["a20_phone"] !== "010-2747-3403") {
           slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
