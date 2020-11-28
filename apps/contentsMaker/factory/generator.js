@@ -83,4 +83,16 @@ module.exports = {
       return h;
     },
   },
+  console_maker: {
+    exec: async function (options, sw) {
+      let h = '';
+      h += require(`${process.cwd()}/apps/contentsMaker/factory/script/general.js`).exec(options, 'N');
+      h += require(`${process.cwd()}/apps/contentsMaker/factory/script/contents_maker/mileo.js`).exec(options);
+      h += await options.fileSystem(`readString`, [ `${options.script_dir}/${sw}.js` ]);
+      h += "\nconst main = new ExecMain(text, \"" + options.home_dir + "/result/" + sw + "\", " + JSON.stringify(options.etc) + ");";
+      h += "\nmain.start(\"" + options.dayString + "\");\n";
+      h += "\nmain.echo();\n";
+      return h;
+    },
+  },
 }

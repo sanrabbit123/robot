@@ -94,15 +94,35 @@ Mother.prototype.fontFilter = function (arg) {
   } else if (str === "SDGothicNeoa-iHv" || (/sandoll/gi.test(str) && /900/gi.test(str))) {
     return "SDGothicNeoa-iHv";
   } else if (str === "Graphik-Light" || (/graphik/gi.test(str) && /100/gi.test(str)) || (/graphik/gi.test(str) && /light/gi.test(str))) {
-    return "Graphik-Light";
+    if (/italic/gi.test(str)) {
+      return "Graphik-LightItalic";
+    } else {
+      return "Graphik-Light";
+    }
   } else if (str === "Graphik-Regular" || (/graphik/gi.test(str) && /200/gi.test(str)) || (/graphik/gi.test(str) && /regular/gi.test(str))) {
-    return "Graphik-Regular";
+    if (/italic/gi.test(str)) {
+      return "Graphik-RegularItalic";
+    } else {
+      return "Graphik-Regular";
+    }
   } else if (str === "Graphik-Medium" || (/graphik/gi.test(str) && /300/gi.test(str)) || (/graphik/gi.test(str) && /medium/gi.test(str))) {
-    return "Graphik-Medium";
+    if (/italic/gi.test(str)) {
+      return "Graphik-MediumItalic";
+    } else {
+      return "Graphik-Medium";
+    }
   } else if (str === "Graphik-Semibold" || (/graphik/gi.test(str) && /400/gi.test(str)) || (/graphik/gi.test(str) && /semibold/gi.test(str))) {
-    return "Graphik-Semibold";
+    if (/italic/gi.test(str)) {
+      return "Graphik-SemiboldItalic";
+    } else {
+      return "Graphik-Semibold";
+    }
   } else if (str === "Graphik-Bold" || (/graphik/gi.test(str) && /500/gi.test(str)) || (/graphik/gi.test(str) && /bold/gi.test(str))) {
-    return "Graphik-Bold";
+    if (/italic/gi.test(str)) {
+      return "Graphik-BoldItalic";
+    } else {
+      return "Graphik-Bold";
+    }
   } else {
     return arg;
   }
@@ -692,7 +712,7 @@ Mother.prototype.white_box = function (force = false, fixOption = {}) {
   let rec = app.activeDocument.pathItems.rectangle(top, left, width, height);
   rec.strokeColor = new NoColor();
   rec.fillColor = this.colorpick("#ffffff");
-  rec.zOrder(ZOrderMethod.SENDTOBACK)
+  rec.zOrder(ZOrderMethod.SENDTOBACK);
 
 }
 

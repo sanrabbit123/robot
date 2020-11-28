@@ -22,7 +22,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
   try {
 
     //init setting
-    let mapMaker, temp_scriptString, front_options;
+    let mapMaker, temp_scriptString;
     const MapMaker = require(`${this.links.mapMaker}/mapMaker.js`);
     mapMaker = new MapMaker(sw);
     shell.exec(`mkdir ${shellLink(home_dir)}/result/${sw}`);
@@ -70,7 +70,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     let resBinaryDirPathMother, resBinaryDirPath;
     let resBinaryDirMother, resBinaryDir;
     resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
-    resBinaryDirPathMother = `${process.cwd()}/binary/frontMaker/`;
+    resBinaryDirPathMother = `${process.cwd()}/binary/frontMaker`;
     resBinaryDirPath = `${resBinaryDirPathMother}/${sw}`;
     resBinaryDirMother = await fileSystem(`readDir`, [ resBinaryDirPathMother ]);
     if (!resBinaryDirMother.includes(sw)) {

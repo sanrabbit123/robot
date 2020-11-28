@@ -90,6 +90,12 @@ Robot.prototype.frontUpdate = function () {
   fobot.totalUpdate();
 }
 
+Robot.prototype.consoleSource = function () {
+  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
+  let cobot = new AiConsole();
+  cobot.console_maker();
+}
+
 Robot.prototype.getConsulting = async function (sw = "1", cliid = "latest") {
   try {
     const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
@@ -175,6 +181,10 @@ Robot.prototype.launching = async function () {
 
     } else if (process.argv[2] === "frontupdate") {
       this.frontUpdate();
+
+    } else if (process.argv[2] === "consolesource") {
+
+      this.consoleSource();
 
     } else if (process.argv[2] === "consulting") {
       if (process.argv[3] !== "pack" && process.argv[3] !== "webpack") {
