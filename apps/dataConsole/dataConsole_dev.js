@@ -4,6 +4,60 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
 }
 
+DataConsole.prototype.renderStatic = async function (staticFolder) {
+  const instance = this;
+  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const S3HOST = ADDRESS.s3info.host;
+  try {
+
+    //set static
+    const staticDir = `${this.dir}/router/source/local`;
+    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
+    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+    }
+
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString;
+    let code0, code1;
+    let result;
+
+    s3String = "const S3HOST = \"" + S3HOST + "\";";
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+
+    for (let i of staticDirList) {
+      svgTongItemsString = null;
+      if (i !== `.DS_Store`) {
+        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
+        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+        fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+        if (/\/<%map%>\//g.test(fileString)) {
+          fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+            return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
+          });
+          svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
+        }
+        code0 = s3String + "\n\n" + svgTongString;
+        code1 = generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString;
+        if (svgTongItemsString === null) {
+          result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
+        } else {
+          result = (await babelSystem(code0)) + "\n\n" + svgTongItemsString + "\n\n" + (await babelSystem(code1));
+        }
+        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, (polyfillString + "\n\n" + result) ]);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
@@ -23,6 +77,7 @@ DataConsole.prototype.connect = async function () {
     collection: "sessions"
   });
   const useragent = require('express-useragent');
+  const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -35,11 +90,7 @@ DataConsole.prototype.connect = async function () {
     saveUninitialized: true,
     cookie: { maxAge: (2 * 365 * 24 * 60 * 60 * 1000) }
   }));
-  app.use(express.static(process.env.HOME + '/static'));
-
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const S3HOST = ADDRESS.s3info.host;
-
+  app.use(express.static(staticFolder));
   try {
 
     await MONGOC.connect();
@@ -56,27 +107,7 @@ DataConsole.prototype.connect = async function () {
     }
 
     //set static
-    const staticDir = `${this.dir}/router/source/local`;
-    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
-    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
-
-    let svgTongString, generalString, consoleGeneralString, execString, fileString;
-
-    if (!homeDirList.includes(`static`)) {
-      shell.exec(`mkdir ${shellLink(process.env.HOME)}/static`);
-    }
-    for (let i of staticDirList) {
-      if (i !== `.DS_Store`) {
-        svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
-        generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-        generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
-        consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
-        fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
-        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
-        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, ('"use strict";' + "\n\n" + "const S3HOST = \"" + S3HOST + "\";" + "\n\n" + svgTongString + "\n\n" + generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString) ]);
-      }
-    }
+    await this.renderStatic(staticFolder);
 
     //server on
     http.createServer(app).listen(3000, () => { console.log(`connect 3000`) });

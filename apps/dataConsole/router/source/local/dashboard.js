@@ -24,6 +24,7 @@ class MapArray extends Array {
 
 const DashboardJs = function () {
   this.mother = new GeneralJs();
+  this.map = /<%map%>/;
   this.totalContents = this.mother.totalContents;
   this.margin = 14;
   this.borderRadius = 22;
