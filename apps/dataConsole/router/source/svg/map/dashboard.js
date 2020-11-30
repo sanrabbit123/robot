@@ -23,7 +23,6 @@ module.exports = {
         "titleMarketing_4rspot561_113013.svg",
         "titleContents_4rspot131_113013.svg",
         "titleDesign_3rspot11_113013.svg",
-        "titleDesigner_4rspot1_113013.svg",
         "titleFrontend_4rspot139_113013.svg",
         "titleBackend_3rspot951_113013.svg",
         "titleOperation_4rspot528_113013.svg"

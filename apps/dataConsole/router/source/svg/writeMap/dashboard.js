@@ -9,7 +9,7 @@ module.exports = function(map, source_rawArr) {
 
   titles.src = [];
   for (let i of titles.items) {
-    temp_reg = new RegExp("^title" + i);
+    temp_reg = new RegExp("^title" + i + '_');
     for (let z of source_rawArr) { if (temp_reg.test(z)) {
       titles.src.push(z);
       svgTong.sync.push(z);
