@@ -7,6 +7,7 @@ module.exports = function(map, source_rawArr) {
 
   const { main: { titles, subTitles } } = map;
 
+  titles.src = [];
   for (let i of titles.items) {
     temp_reg = new RegExp("^title" + i);
     for (let z of source_rawArr) { if (temp_reg.test(z)) {
@@ -15,11 +16,13 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
+
   for (let i of titles.items) {
     if (i !== "Calendar" && i !== "Navigation") {
       num = 0;
+      subTitles[i.toLowerCase()].src = [];
       for (let j of subTitles[i.toLowerCase()].items) {
-        temp_reg = new RegExp("^subTitle" + i + String(num));
+        temp_reg = new RegExp("^subTitle" + i + String(num) + '_');
         for (let z of source_rawArr) { if (temp_reg.test(z)) {
           subTitles[i.toLowerCase()].src.push(z);
           svgTong.sync.push(z);

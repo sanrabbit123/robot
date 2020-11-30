@@ -17,7 +17,7 @@ ExecMain.prototype.titleMaker = function () {
     tempObj = this.mother.return_englishMaxMin(temp);
     rectangle = this_ai.pathItems.rectangle(tempObj.max, this.mother.return_left(temp), this.mother.return_width(temp), Math.abs(tempObj.max - tempObj.min));
     rectangle.strokeColor = new NoColor();
-    rectangle.fillColor = this.mother.colorpick("#ffffff");
+    rectangle.fillColor = new NoColor();
     rectangle.zOrder(ZOrderMethod.SENDTOBACK);
 
     this.mother.fit_box();
