@@ -58,5 +58,9 @@ try:
         dateApp = DateCalculation(data["length"])
         print(dumps(dateApp.getDateMatrix()))
 
+    if argv[1] == 'dateMatrixFullSet':
+        dateApp = DateCalculation(data["length"])
+        print(dumps(dateApp.getDateMatrix(fullSet=True, future=True)))
+
 except Exception as e:
     print(e)

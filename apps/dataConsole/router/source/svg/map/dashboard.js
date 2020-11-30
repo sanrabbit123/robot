@@ -2,8 +2,8 @@ module.exports = {
   "main": {
     "titles": {
       "items": [
-        "Calendar",
-        "Navigation",
+        "Projects",
+        "Daily",
         "Customer",
         "Designer",
         "Construct",
@@ -15,20 +15,32 @@ module.exports = {
         "Operation"
       ],
       "src": [
-        "titleCalendar_4rspot158_113013.svg",
-        "titleNavigation_4rspot832_113013.svg",
-        "titleCustomer_4rspot492_113013.svg",
-        "titleDesigner_4rspot1_113013.svg",
-        "titleConstruct_4rspot531_113013.svg",
-        "titleMarketing_4rspot561_113013.svg",
-        "titleContents_4rspot131_113013.svg",
-        "titleDesign_3rspot11_113013.svg",
-        "titleFrontend_4rspot139_113013.svg",
-        "titleBackend_3rspot951_113013.svg",
-        "titleOperation_4rspot528_113013.svg"
+        "titleProjects_3rspot66_120101.svg",
+        "titleDaily_2rspot256_120101.svg",
+        "titleCustomer_4rspot492_120101.svg",
+        "titleDesigner_4rspot1_120101.svg",
+        "titleConstruct_4rspot531_120101.svg",
+        "titleMarketing_4rspot561_120101.svg",
+        "titleContents_4rspot131_120101.svg",
+        "titleDesign_3rspot11_120101.svg",
+        "titleFrontend_4rspot139_120101.svg",
+        "titleBackend_3rspot951_120101.svg",
+        "titleOperation_4rspot528_120101.svg"
+      ],
+      "lightSrc": [
+        "lightTitleProjects_3rspot654_120101.svg",
+        "lightTitleDaily_2rspot189_120101.svg",
+        "lightTitleCustomer_4rspot515_120101.svg",
+        "lightTitleDesigner_4rspot04_120101.svg",
+        "lightTitleConstruct_4rspot541_120101.svg",
+        "lightTitleMarketing_4rspot514_120101.svg",
+        "lightTitleContents_4rspot18_120101.svg",
+        "lightTitleDesign_3rspot068_120101.svg",
+        "lightTitleFrontend_4rspot055_120101.svg",
+        "lightTitleBackend_3rspot854_120101.svg",
+        "lightTitleOperation_4rspot57_120101.svg"
       ]
     },
-    "navigation": {},
     "subTitles": {
       "customer": {
         "items": [
@@ -46,18 +58,18 @@ module.exports = {
           "고객 관련 회의록"
         ],
         "src": [
-          "subTitleCustomer0_7rspot069_113013.svg",
-          "subTitleCustomer1_4rspot859_113013.svg",
-          "subTitleCustomer2_3rspot912_113013.svg",
-          "subTitleCustomer3_6rspot804_113013.svg",
-          "subTitleCustomer4_4rspot834_113013.svg",
-          "subTitleCustomer5_7rspot666_113013.svg",
-          "subTitleCustomer6_7rspot666_113013.svg",
-          "subTitleCustomer7_6rspot812_113013.svg",
-          "subTitleCustomer8_6rspot784_113013.svg",
-          "subTitleCustomer9_3rspot889_113013.svg",
-          "subTitleCustomer10_3rspot9_113013.svg",
-          "subTitleCustomer11_7rspot017_113013.svg"
+          "subTitleCustomer0_7rspot069_120101.svg",
+          "subTitleCustomer1_4rspot859_120101.svg",
+          "subTitleCustomer2_3rspot912_120101.svg",
+          "subTitleCustomer3_6rspot804_120101.svg",
+          "subTitleCustomer4_4rspot834_120101.svg",
+          "subTitleCustomer5_7rspot666_120101.svg",
+          "subTitleCustomer6_7rspot666_120101.svg",
+          "subTitleCustomer7_6rspot812_120101.svg",
+          "subTitleCustomer8_6rspot784_120101.svg",
+          "subTitleCustomer9_3rspot889_120101.svg",
+          "subTitleCustomer10_3rspot9_120101.svg",
+          "subTitleCustomer11_7rspot017_120101.svg"
         ]
       },
       "designer": {
@@ -76,18 +88,18 @@ module.exports = {
           "디자이너 관련 회의록"
         ],
         "src": [
-          "subTitleDesigner0_4rspot908_113013.svg",
-          "subTitleDesigner1_8rspot038_113013.svg",
-          "subTitleDesigner2_8rspot032_113013.svg",
-          "subTitleDesigner3_6rspot661_113013.svg",
-          "subTitleDesigner4_7rspot755_113013.svg",
-          "subTitleDesigner5_7rspot755_113013.svg",
-          "subTitleDesigner6_6rspot662_113013.svg",
-          "subTitleDesigner7_5rspot8_113013.svg",
-          "subTitleDesigner8_5rspot757_113013.svg",
-          "subTitleDesigner9_7rspot895_113013.svg",
-          "subTitleDesigner10_7rspot006_113013.svg",
-          "subTitleDesigner11_8rspot828_113013.svg"
+          "subTitleDesigner0_4rspot908_120101.svg",
+          "subTitleDesigner1_8rspot038_120101.svg",
+          "subTitleDesigner2_8rspot032_120101.svg",
+          "subTitleDesigner3_6rspot661_120101.svg",
+          "subTitleDesigner4_7rspot755_120101.svg",
+          "subTitleDesigner5_7rspot755_120101.svg",
+          "subTitleDesigner6_6rspot662_120101.svg",
+          "subTitleDesigner7_5rspot8_120101.svg",
+          "subTitleDesigner8_5rspot757_120101.svg",
+          "subTitleDesigner9_7rspot895_120101.svg",
+          "subTitleDesigner10_7rspot006_120101.svg",
+          "subTitleDesigner11_8rspot828_120101.svg"
         ]
       },
       "construct": {
@@ -102,14 +114,14 @@ module.exports = {
           "시공 수수료 현황"
         ],
         "src": [
-          "subTitleConstruct0_4rspot843_113013.svg",
-          "subTitleConstruct1_6rspot723_113013.svg",
-          "subTitleConstruct2_8rspot03_113013.svg",
-          "subTitleConstruct3_7rspot087_113013.svg",
-          "subTitleConstruct4_6rspot84_113013.svg",
-          "subTitleConstruct5_7rspot939_113013.svg",
-          "subTitleConstruct6_7rspot013_113013.svg",
-          "subTitleConstruct7_7rspot094_113013.svg"
+          "subTitleConstruct0_4rspot843_120101.svg",
+          "subTitleConstruct1_6rspot723_120101.svg",
+          "subTitleConstruct2_8rspot03_120101.svg",
+          "subTitleConstruct3_7rspot087_120101.svg",
+          "subTitleConstruct4_6rspot84_120101.svg",
+          "subTitleConstruct5_7rspot939_120101.svg",
+          "subTitleConstruct6_7rspot013_120101.svg",
+          "subTitleConstruct7_7rspot094_120101.svg"
         ]
       },
       "marketing": {
@@ -128,18 +140,18 @@ module.exports = {
           "마케팅 회의록"
         ],
         "src": [
-          "subTitleMarketing0_8rspot995_113013.svg",
-          "subTitleMarketing1_8rspot995_113013.svg",
-          "subTitleMarketing2_7rspot932_113013.svg",
-          "subTitleMarketing3_7rspot93_113013.svg",
-          "subTitleMarketing4_7rspot143_113013.svg",
-          "subTitleMarketing5_8rspot063_113013.svg",
-          "subTitleMarketing6_3rspot901_113013.svg",
-          "subTitleMarketing7_8rspot2_113013.svg",
-          "subTitleMarketing8_8rspot2_113013.svg",
-          "subTitleMarketing9_10rspot139_113013.svg",
-          "subTitleMarketing10_6rspot953_113013.svg",
-          "subTitleMarketing11_5rspot776_113013.svg"
+          "subTitleMarketing0_8rspot995_120101.svg",
+          "subTitleMarketing1_8rspot995_120101.svg",
+          "subTitleMarketing2_7rspot932_120101.svg",
+          "subTitleMarketing3_7rspot93_120101.svg",
+          "subTitleMarketing4_7rspot143_120101.svg",
+          "subTitleMarketing5_8rspot063_120101.svg",
+          "subTitleMarketing6_3rspot901_120101.svg",
+          "subTitleMarketing7_8rspot2_120101.svg",
+          "subTitleMarketing8_8rspot2_120101.svg",
+          "subTitleMarketing9_10rspot139_120101.svg",
+          "subTitleMarketing10_6rspot953_120101.svg",
+          "subTitleMarketing11_5rspot776_120101.svg"
         ]
       },
       "contents": {
@@ -158,18 +170,18 @@ module.exports = {
           "컨텐츠 관련 원본 파일"
         ],
         "src": [
-          "subTitleContents0_8rspot202_113013.svg",
-          "subTitleContents1_7rspot998_113013.svg",
-          "subTitleContents2_8rspot792_113013.svg",
-          "subTitleContents3_5rspot794_113013.svg",
-          "subTitleContents4_8rspot023_113013.svg",
-          "subTitleContents5_8rspot907_113013.svg",
-          "subTitleContents6_8rspot023_113013.svg",
-          "subTitleContents7_8rspot907_113013.svg",
-          "subTitleContents8_6rspot055_113013.svg",
-          "subTitleContents9_6rspot029_113013.svg",
-          "subTitleContents10_9rspot163_113013.svg",
-          "subTitleContents11_9rspot163_113013.svg"
+          "subTitleContents0_8rspot202_120101.svg",
+          "subTitleContents1_7rspot998_120101.svg",
+          "subTitleContents2_8rspot792_120101.svg",
+          "subTitleContents3_5rspot794_120101.svg",
+          "subTitleContents4_8rspot023_120101.svg",
+          "subTitleContents5_8rspot907_120101.svg",
+          "subTitleContents6_8rspot023_120101.svg",
+          "subTitleContents7_8rspot907_120101.svg",
+          "subTitleContents8_6rspot055_120101.svg",
+          "subTitleContents9_6rspot029_120101.svg",
+          "subTitleContents10_9rspot163_120101.svg",
+          "subTitleContents11_9rspot163_120101.svg"
         ]
       },
       "design": {
@@ -188,18 +200,18 @@ module.exports = {
           "디자인 회의록"
         ],
         "src": [
-          "subTitleDesign0_4rspot76_113013.svg",
-          "subTitleDesign1_4rspot771_113013.svg",
-          "subTitleDesign2_9rspot778_113013.svg",
-          "subTitleDesign3_8rspot876_113013.svg",
-          "subTitleDesign4_9rspot1_113013.svg",
-          "subTitleDesign5_9rspot11_113013.svg",
-          "subTitleDesign6_9rspot11_113013.svg",
-          "subTitleDesign7_7rspot543_113013.svg",
-          "subTitleDesign8_6rspot869_113013.svg",
-          "subTitleDesign9_6rspot675_113013.svg",
-          "subTitleDesign10_13rspot161_113013.svg",
-          "subTitleDesign11_5rspot757_113013.svg"
+          "subTitleDesign0_4rspot76_120101.svg",
+          "subTitleDesign1_4rspot771_120101.svg",
+          "subTitleDesign2_9rspot778_120101.svg",
+          "subTitleDesign3_8rspot876_120101.svg",
+          "subTitleDesign4_9rspot1_120101.svg",
+          "subTitleDesign5_9rspot11_120101.svg",
+          "subTitleDesign6_9rspot11_120101.svg",
+          "subTitleDesign7_7rspot543_120101.svg",
+          "subTitleDesign8_6rspot869_120101.svg",
+          "subTitleDesign9_6rspot675_120101.svg",
+          "subTitleDesign10_13rspot161_120101.svg",
+          "subTitleDesign11_5rspot757_120101.svg"
         ]
       },
       "frontend": {
@@ -218,18 +230,18 @@ module.exports = {
           "새로운 UX 및 기능 탑재 기획"
         ],
         "src": [
-          "subTitleFrontend0_10rspot178_113013.svg",
-          "subTitleFrontend1_12rspot395_113013.svg",
-          "subTitleFrontend2_8rspot552_113013.svg",
-          "subTitleFrontend3_11rspot766_113013.svg",
-          "subTitleFrontend4_11rspot207_113013.svg",
-          "subTitleFrontend5_7rspot217_113013.svg",
-          "subTitleFrontend6_7rspot036_113013.svg",
-          "subTitleFrontend7_7rspot926_113013.svg",
-          "subTitleFrontend8_7rspot078_113013.svg",
-          "subTitleFrontend9_11rspot459_113013.svg",
-          "subTitleFrontend10_9rspot479_113013.svg",
-          "subTitleFrontend11_11rspot732_113013.svg"
+          "subTitleFrontend0_10rspot178_120101.svg",
+          "subTitleFrontend1_12rspot395_120101.svg",
+          "subTitleFrontend2_8rspot552_120101.svg",
+          "subTitleFrontend3_11rspot766_120101.svg",
+          "subTitleFrontend4_11rspot207_120101.svg",
+          "subTitleFrontend5_7rspot217_120101.svg",
+          "subTitleFrontend6_7rspot036_120101.svg",
+          "subTitleFrontend7_7rspot926_120101.svg",
+          "subTitleFrontend8_7rspot078_120101.svg",
+          "subTitleFrontend9_11rspot459_120101.svg",
+          "subTitleFrontend10_9rspot479_120101.svg",
+          "subTitleFrontend11_11rspot732_120101.svg"
         ]
       },
       "backend": {
@@ -248,18 +260,18 @@ module.exports = {
           "새로운 모듈 기획"
         ],
         "src": [
-          "subTitleBackend0_12rspot998_113013.svg",
-          "subTitleBackend1_12rspot26_113013.svg",
-          "subTitleBackend2_9rspot106_113013.svg",
-          "subTitleBackend3_5rspot743_113013.svg",
-          "subTitleBackend4_11rspot126_113013.svg",
-          "subTitleBackend5_9rspot27_113013.svg",
-          "subTitleBackend6_7rspot236_113013.svg",
-          "subTitleBackend7_5rspot447_113013.svg",
-          "subTitleBackend8_6rspot699_113013.svg",
-          "subTitleBackend9_8rspot892_113013.svg",
-          "subTitleBackend10_9rspot968_113013.svg",
-          "subTitleBackend11_6rspot939_113013.svg"
+          "subTitleBackend0_12rspot998_120101.svg",
+          "subTitleBackend1_12rspot26_120101.svg",
+          "subTitleBackend2_9rspot106_120101.svg",
+          "subTitleBackend3_5rspot743_120101.svg",
+          "subTitleBackend4_11rspot126_120101.svg",
+          "subTitleBackend5_9rspot27_120101.svg",
+          "subTitleBackend6_7rspot236_120101.svg",
+          "subTitleBackend7_5rspot447_120101.svg",
+          "subTitleBackend8_6rspot699_120101.svg",
+          "subTitleBackend9_8rspot892_120101.svg",
+          "subTitleBackend10_9rspot968_120101.svg",
+          "subTitleBackend11_6rspot939_120101.svg"
         ]
       },
       "operation": {
@@ -274,17 +286,36 @@ module.exports = {
           "홈리에종 주간 회의록"
         ],
         "src": [
-          "subTitleOperation0_5rspot802_113013.svg",
-          "subTitleOperation1_7rspot933_113013.svg",
-          "subTitleOperation2_7rspot957_113013.svg",
-          "subTitleOperation3_11rspot108_113013.svg",
-          "subTitleOperation4_7rspot933_113013.svg",
-          "subTitleOperation5_7rspot933_113013.svg",
-          "subTitleOperation6_7rspot069_113013.svg",
-          "subTitleOperation7_8rspot89_113013.svg"
+          "subTitleOperation0_5rspot802_120101.svg",
+          "subTitleOperation1_7rspot933_120101.svg",
+          "subTitleOperation2_7rspot957_120101.svg",
+          "subTitleOperation3_11rspot108_120101.svg",
+          "subTitleOperation4_7rspot933_120101.svg",
+          "subTitleOperation5_7rspot933_120101.svg",
+          "subTitleOperation6_7rspot069_120101.svg",
+          "subTitleOperation7_8rspot89_120101.svg"
         ]
       }
     }
   },
-  "sub": {}
+  "sub": {
+    "on": {
+      "words": [
+        "Idea",
+        "OnStage",
+        "OnGoing",
+        "CheckList",
+        "Problems",
+        "Solution"
+      ],
+      "src": [
+        "onIdea_1rspot728_120101.svg",
+        "onOnStage_3rspot841_120101.svg",
+        "onOnGoing_3rspot93_120101.svg",
+        "onCheckList_4rspot235_120101.svg",
+        "onProblems_4rspot0_120101.svg",
+        "onSolution_3rspot489_120101.svg"
+      ]
+    }
+  }
 }

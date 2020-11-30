@@ -14,6 +14,7 @@ const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
 const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
+const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
 
 class DevContext extends Array {
 
@@ -1008,8 +1009,10 @@ class DevContext extends Array {
       // const notionMap = await notion.getCxCards();
 
 
-      await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
+      // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
 
+      const app = new DataRouter();
+      await app.getCalendar();
 
 
 

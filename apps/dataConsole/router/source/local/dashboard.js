@@ -28,18 +28,102 @@ const DashboardJs = function () {
   this.totalContents = this.mother.totalContents;
   this.margin = 14;
   this.borderRadius = 22;
+  this.standardItemNames = [];
+  let { main: { titles: { items } } } = this.map;
+  for (let i = 0; i < items.length; i++) {
+    this.standardItemNames.push(items[i]);
+  }
 }
 
 DashboardJs.prototype.svgTitles = function (color) {
   const instance = this;
-  const { items, src } = this.map.main.titles;
+  const { items, src, lightSrc } = this.map.main.titles;
+
   let targetArr = [];
   for (let i = 0; i < items.length; i++) {
     targetArr.push({ name: items[i], svg: SvgTong[src[i].replace(/\.svg$/, '')] });
   }
   const resultArr = new MapArray(targetArr);
   this.titleMap = resultArr;
+
+  targetArr = [];
+  for (let i = 0; i < items.length; i++) {
+    targetArr.push({ name: items[i], svg: SvgTong[lightSrc[i].replace(/\.svg$/, '')] });
+  }
+  const lightArr = new MapArray(targetArr);
+  this.titleLightMap = lightArr;
+
   return resultArr;
+}
+
+DashboardJs.prototype.projectStatus = async function (dom) {
+  const instance = this;
+  const [ svgTitle, mainArea ] = dom.children;
+  const { main: { titles: { items, src } } } = this.map;
+  while (mainArea.firstChild) {
+    mainArea.removeChild(mainArea.lastChild);
+  }
+  try {
+    let div_clone;
+    let svg_clone;
+    let style, svgStyle;
+    let ea = "px";
+    let margin, height;
+
+    margin = 8;
+    height = 20;
+
+    style = {
+      position: "relative",
+      display: "inline-block",
+      width: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
+      height: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
+      background: "white",
+      borderRadius: String(5) + ea,
+      marginRight: String(margin) + ea,
+      marginBottom: String(margin) + ea,
+    };
+
+    svgStyle = {
+      position: "absolute",
+      height: String(height) + ea,
+    };
+
+    for (let i = 2; i < items.length; i++) {
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
+      if (((i - 1) % 3) === 0) {
+        div_clone.style.marginRight = String(0);
+      }
+      if (i > items.length - 4) {
+        div_clone.style.marginBottom = String(0);
+      }
+      div_clone.setAttribute("name", items[i]);
+
+      svg_clone = SvgTong.stringParsing(this.titleLightMap.map.get(items[i]))
+      for (let j in svgStyle) {
+        svg_clone.style[j] = svgStyle[j];
+      }
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
+      div_clone.appendChild(svg_clone);
+      mainArea.appendChild(div_clone);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DashboardJs.prototype.dailyBoard = async function (dom) {
+  const instance = this;
+  try {
+    console.log(dom);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DashboardJs.prototype.spreadMatrix = function () {
@@ -500,10 +584,13 @@ DashboardJs.prototype.spreadMatrix = function () {
     ];
 
     return function (e) {
+
       for (let i = 0; i < instance.matrixDoms.length; i++) {
+
         for (let j in targetArr[index][0][i]) {
           instance.matrixDoms[i].dom.style[j] = targetArr[index][0][i][j];
         }
+
         for (let j in targetArr[index][1][i]) {
           if (targetArr[index][1][i][j] === "leftSvgCalculation") {
             instance.matrixDoms[i].dom.children[0].style[j] = "calc(50% - " + String((SvgTong.getRatio(instance.matrixDoms[i].dom.children[0]) * smallSvgHeight) / 2) + ea + ")";
@@ -511,38 +598,57 @@ DashboardJs.prototype.spreadMatrix = function () {
             instance.matrixDoms[i].dom.children[0].style[j] = targetArr[index][1][i][j];
           }
         }
+
         instance.matrixDoms[i].dom.children[1].style.transition = "all 0s ease";
         instance.matrixDoms[i].dom.children[1].style.opacity = String(0);
-        for (let j = 0; j < instance.matrixDoms[i].dom.children[1].children.length; j++) {
-          for (let k in categoryDetailBoxStyle1) {
-            instance.matrixDoms[i].dom.children[1].children[j].style[k] = categoryDetailBoxStyle1[k];
-          }
-          if (j % 4 === 3) {
-            instance.matrixDoms[i].dom.children[1].children[j].style.marginRight = "0";
-          }
-          if (j > 7) {
-            instance.matrixDoms[i].dom.children[1].children[j].style.marginBottom = "0";
-          }
-          if (instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg') !== null) {
-            instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg').style.display = "none";
+
+        if (instance.matrixDoms[i].name !== instance.standardItemNames[0] && instance.matrixDoms[i].name !== instance.standardItemNames[1]) {
+          for (let j = 0; j < instance.matrixDoms[i].dom.children[1].children.length; j++) {
+            for (let k in categoryDetailBoxStyle1) {
+              instance.matrixDoms[i].dom.children[1].children[j].style[k] = categoryDetailBoxStyle1[k];
+            }
+            if (j % 4 === 3) {
+              instance.matrixDoms[i].dom.children[1].children[j].style.marginRight = "0";
+            }
+            if (j > 7) {
+              instance.matrixDoms[i].dom.children[1].children[j].style.marginBottom = "0";
+            }
+            if (instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg') !== null) {
+              instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg').style.display = "none";
+            }
           }
         }
+
       }
+
+      if (instance.matrixDoms[index].name === instance.standardItemNames[0]) {
+        instance.projectStatus(instance.matrixDoms[index].dom);
+      }
+
+      if (instance.matrixDoms[index].name === instance.standardItemNames[1]) {
+        instance.dailyBoard(instance.matrixDoms[index].dom);
+      }
+
       GeneralJs.stacks["matrixTimeout"] = setTimeout(function () {
+
         for (let i = 0; i < instance.matrixDoms.length; i++) {
           instance.matrixDoms[i].dom.children[1].style.opacity = String(1);
           instance.matrixDoms[i].dom.children[1].style.transition = "all 0.5s ease";
         }
-        for (let i = 0; i < instance.matrixDoms[index].dom.children[1].children.length; i++) {
-          if (instance.matrixDoms[index].dom.children[1].children[i].querySelector('svg') !== null) {
-            instance.matrixDoms[index].dom.children[1].children[i].querySelector('svg').style.display = "block";
+
+        if (instance.matrixDoms[index].name !== instance.standardItemNames[0] && instance.matrixDoms[index].name !== instance.standardItemNames[1]) {
+          for (let i = 0; i < instance.matrixDoms[index].dom.children[1].children.length; i++) {
+            if (instance.matrixDoms[index].dom.children[1].children[i].querySelector('svg') !== null) {
+              instance.matrixDoms[index].dom.children[1].children[i].querySelector('svg').style.display = "block";
+            }
           }
         }
+
         clearTimeout(GeneralJs.stacks["matrixTimeout"]);
         GeneralJs.stacks["matrixTimeout"] = null;
       }, 501);
-    }
 
+    }
   }
 
   matrixMother = GeneralJs.nodes.div.cloneNode(true);
@@ -569,18 +675,21 @@ DashboardJs.prototype.spreadMatrix = function () {
 
       instance.matrixDoms[i].dom.children[1].style.transition = "all 0s ease";
       instance.matrixDoms[i].dom.children[1].style.opacity = String(0);
-      for (let j = 0; j < instance.matrixDoms[i].dom.children[1].children.length; j++) {
-        for (let k in categoryDetailBoxStyle0) {
-          instance.matrixDoms[i].dom.children[1].children[j].style[k] = categoryDetailBoxStyle0[k];
-        }
-        if (j % 4 === 3) {
-          instance.matrixDoms[i].dom.children[1].children[j].style.marginRight = "0";
-        }
-        if (j > 7) {
-          instance.matrixDoms[i].dom.children[1].children[j].style.marginBottom = "0";
-        }
-        if (instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg') !== null) {
-          instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg').style.display = "none";
+
+      if (instance.matrixDoms[i].name !== instance.standardItemNames[0] && instance.matrixDoms[i].name !== instance.standardItemNames[1]) {
+        for (let j = 0; j < instance.matrixDoms[i].dom.children[1].children.length; j++) {
+          for (let k in categoryDetailBoxStyle0) {
+            instance.matrixDoms[i].dom.children[1].children[j].style[k] = categoryDetailBoxStyle0[k];
+          }
+          if (j % 4 === 3) {
+            instance.matrixDoms[i].dom.children[1].children[j].style.marginRight = "0";
+          }
+          if (j > 7) {
+            instance.matrixDoms[i].dom.children[1].children[j].style.marginBottom = "0";
+          }
+          if (instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg') !== null) {
+            instance.matrixDoms[i].dom.children[1].children[j].querySelector('svg').style.display = "none";
+          }
         }
       }
 
@@ -616,32 +725,34 @@ DashboardJs.prototype.spreadMatrix = function () {
       div_clone2.style[j] = categoryBoxStyle[j];
     }
 
-    for (let j = 0; j < 12; j++) {
-      div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-      for (let k in categoryDetailBoxStyle0) {
-        div_clone3.style[k] = categoryDetailBoxStyle0[k];
-      }
-      if (j % 4 === 3) {
-        div_clone3.style.marginRight = "0";
-      }
-      if (j > 7) {
-        div_clone3.style.marginBottom = "0";
-      }
-      if (matrixInfo[i].name.toLowerCase() !== "calendar" && matrixInfo[i].name.toLowerCase() !== "navigation") {
-        if (this.map.main.subTitles[matrixInfo[i].name.toLowerCase()].src[j] !== undefined) {
-          svg_clone2 = SvgTong.stringParsing(SvgTong[this.map.main.subTitles[matrixInfo[i].name.toLowerCase()].src[j].replace(/\.svg$/, '')]);
-          detailSvgWordingHeight = 20;
-          detailSvgWordingWidth = SvgTong.getRatio(svg_clone2) * detailSvgWordingHeight;
-          svg_clone2.style.position = "absolute";
-          svg_clone2.style.height = String(detailSvgWordingHeight) + ea;
-          svg_clone2.style.width = String(detailSvgWordingWidth) + ea;
-          svg_clone2.style.top = "calc(50% - " + String((detailSvgWordingHeight / 2) + 4) + ea + ")";
-          svg_clone2.style.left = "calc(50% - " + String(detailSvgWordingWidth / 2) + ea + ")";
-          svg_clone2.style.display = "none";
-          div_clone3.appendChild(svg_clone2);
+    if (div_clone.getAttribute("name") !== this.standardItemNames[0] && div_clone.getAttribute("name") !== this.standardItemNames[1]) {
+      for (let j = 0; j < 12; j++) {
+        div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+        for (let k in categoryDetailBoxStyle0) {
+          div_clone3.style[k] = categoryDetailBoxStyle0[k];
         }
+        if (j % 4 === 3) {
+          div_clone3.style.marginRight = "0";
+        }
+        if (j > 7) {
+          div_clone3.style.marginBottom = "0";
+        }
+        if (matrixInfo[i].name !== this.standardItemNames[0] && matrixInfo[i].name !== this.standardItemNames[1]) {
+          if (this.map.main.subTitles[matrixInfo[i].name.toLowerCase()].src[j] !== undefined) {
+            svg_clone2 = SvgTong.stringParsing(SvgTong[this.map.main.subTitles[matrixInfo[i].name.toLowerCase()].src[j].replace(/\.svg$/, '')]);
+            detailSvgWordingHeight = 20;
+            detailSvgWordingWidth = SvgTong.getRatio(svg_clone2) * detailSvgWordingHeight;
+            svg_clone2.style.position = "absolute";
+            svg_clone2.style.height = String(detailSvgWordingHeight) + ea;
+            svg_clone2.style.width = String(detailSvgWordingWidth) + ea;
+            svg_clone2.style.top = "calc(50% - " + String((detailSvgWordingHeight / 2) + 5) + ea + ")";
+            svg_clone2.style.left = "calc(50% - " + String(detailSvgWordingWidth / 2) + ea + ")";
+            svg_clone2.style.display = "none";
+            div_clone3.appendChild(svg_clone2);
+          }
+        }
+        div_clone2.appendChild(div_clone3);
       }
-      div_clone2.appendChild(div_clone3);
     }
 
     div_clone.appendChild(div_clone2);

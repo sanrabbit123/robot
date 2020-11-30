@@ -5,7 +5,7 @@ module.exports = function(map, source_rawArr) {
   svgTong.async = [];
   pngTong = [];
 
-  const { main: { titles, subTitles } } = map;
+  const { main: { titles, subTitles }, sub: { on } } = map;
 
   titles.src = [];
   for (let i of titles.items) {
@@ -16,9 +16,17 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
+  titles.lightSrc = [];
+  for (let i of titles.items) {
+    temp_reg = new RegExp("^lightTitle" + i + '_');
+    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+      titles.lightSrc.push(z);
+      svgTong.sync.push(z);
+    }}
+  }
 
   for (let i of titles.items) {
-    if (i !== "Calendar" && i !== "Navigation") {
+    if (i !== "Projects" && i !== "Daily") {
       num = 0;
       subTitles[i.toLowerCase()].src = [];
       for (let j of subTitles[i.toLowerCase()].items) {
@@ -30,6 +38,15 @@ module.exports = function(map, source_rawArr) {
         num++;
       }
     }
+  }
+
+  on.src = [];
+  for (let i of on.words) {
+    temp_reg = new RegExp("^on" + i + '_');
+    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+      on.src.push(z);
+      svgTong.sync.push(z);
+    }}
   }
 
   return { map: map, svgTong: svgTong, pngTong: pngTong }

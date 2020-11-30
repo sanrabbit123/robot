@@ -31,9 +31,38 @@ class DateCalculation:
 
         return targets
 
-    def getDateMatrix(self):
+
+    def monthHence(self):
+        year = self.todayArr[0]
+        month = self.todayArr[1]
+        day = self.todayArr[2]
+
+        monthTargets = []
+        for i in range(self.length):
+            if ((month + i) % 12) != 0:
+                monthTargets.append({ "year": year + ((month + i) // 12), "month": (month + i) % 12 })
+            else:
+                monthTargets.append({ "year": year + ((month + i) // 12) - 1, "month": 12 })
+
+        targets = []
+        for dic in monthTargets:
+            result = calendar.monthrange(dic["year"], dic["month"])
+            targets.append({ "year": dic["year"], "month": dic["month"], "startDay": result[0], "lastDate": result[1] })
+
+        return targets
+
+
+    def getDateMatrix(self, fullSet=False, future=False):
         dateMatrix = []
+        dateMatrixFullSet = []
         targetArr = self.monthAgo()
+
+        if future == True:
+            targetArr2 = self.monthHence()
+            for i in range(targetArr2.__len__()):
+                if i != 0:
+                    targetArr.insert(0, targetArr2[i])
+
         for dic in targetArr:
             dateMatrixfator = []
             leftDates = dic["lastDate"] - (7 - dic["startDay"])
@@ -52,5 +81,9 @@ class DateCalculation:
             if lastweek.__len__() != 0:
                 dateMatrixfator.append(lastweek)
             dateMatrix.append(dateMatrixfator)
+            dateMatrixFullSet.append({ "year": dic["year"], "month": dic["month"], "weeks": dateMatrixfator })
 
-        return dateMatrix
+        if fullSet:
+            return dateMatrixFullSet
+        else:
+            return dateMatrix

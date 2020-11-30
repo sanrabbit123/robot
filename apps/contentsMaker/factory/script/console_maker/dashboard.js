@@ -3,12 +3,68 @@ ExecMain.prototype.titleMaker = function () {
   let this_ai, from, to, contents, temp, tempObj;
 
   for (let i of items) {
+
+    //title
     this_ai = this.createDoc();
     from = "general";
     to = "title" + i;
     contents = i;
     exception = {
       font: "Graphik-MediumItalic",
+    };
+    this.setCreateSetting({ from: from, to: to, exception: exception });
+    this.setParagraph({ from: contents, to: to, });
+    temp = this.createElements(this_ai, this.createSetting[to]);
+
+    tempObj = this.mother.return_englishMaxMin(temp);
+    rectangle = this_ai.pathItems.rectangle(tempObj.max, this.mother.return_left(temp), this.mother.return_width(temp), Math.abs(tempObj.max - tempObj.min));
+    rectangle.strokeColor = new NoColor();
+    rectangle.fillColor = new NoColor();
+    rectangle.zOrder(ZOrderMethod.SENDTOBACK);
+
+    this.mother.fit_box();
+
+    app.doScript("expandall", "contents_maker");
+    this.saveSvg(this_ai, to);
+
+    //light title
+    this_ai = this.createDoc();
+    from = "general";
+    to = "lightTitle" + i;
+    contents = i;
+    exception = {
+      font: "Graphik-Medium",
+    };
+    this.setCreateSetting({ from: from, to: to, exception: exception });
+    this.setParagraph({ from: contents, to: to, });
+    temp = this.createElements(this_ai, this.createSetting[to]);
+
+    tempObj = this.mother.return_englishMaxMin(temp);
+    rectangle = this_ai.pathItems.rectangle(tempObj.max, this.mother.return_left(temp), this.mother.return_width(temp), Math.abs(tempObj.max - tempObj.min));
+    rectangle.strokeColor = new NoColor();
+    rectangle.fillColor = new NoColor();
+    rectangle.zOrder(ZOrderMethod.SENDTOBACK);
+
+    this.mother.fit_box();
+
+    app.doScript("expandall", "contents_maker");
+    this.saveSvg(this_ai, to);
+
+  }
+
+}
+
+ExecMain.prototype.onMaker = function () {
+  const { sub: { on: { words } } } = this.text;
+  let this_ai, from, to, contents, temp, tempObj;
+
+  for (let i of words) {
+    this_ai = this.createDoc();
+    from = "general";
+    to = "on" + i;
+    contents = i;
+    exception = {
+      font: "Graphik-Light",
     };
     this.setCreateSetting({ from: from, to: to, exception: exception });
     this.setParagraph({ from: contents, to: to, });
@@ -35,7 +91,7 @@ ExecMain.prototype.subTitleMaker = function () {
   let num;
 
   for (let i of items) {
-    if (i !== "Calendar" && i !== "Navigation") {
+    if (i !== "Projects" && i !== "Daily") {
       num = 0;
       for (let j of subTitles[i.toLowerCase()].items) {
         this_ai = this.createDoc();
@@ -44,10 +100,10 @@ ExecMain.prototype.subTitleMaker = function () {
         contents = j;
         exception = {
           font: "SDGothicNeoa-bUltLt",
-          color: "#2fa678",
+          color: "#303030",
         };
         this.setCreateSetting({ from: from, to: to, exception: exception });
-        this.setParagraph({ from: contents, to: to, });
+        this.setParagraph({ from: contents, to: to });
         this.createElements(this_ai, this.createSetting[to]);
 
         this.mother.fit_box();
@@ -65,4 +121,5 @@ ExecMain.prototype.start = function (dayString) {
   this.dayString = dayString;
   this.titleMaker();
   this.subTitleMaker();
+  this.onMaker();
 }

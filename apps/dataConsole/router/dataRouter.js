@@ -188,6 +188,16 @@ DataRouter.prototype.getDateMatrix = async function (length = 6) {
   }
 }
 
+DataRouter.prototype.getCalendar = async function (length = 12) {
+  const instance = this;
+  try {
+    const dateMatrix = await this.mother.pythonExecute(this.pythonApp, [ "dateMatrixFullSet" ], { length });
+    return dateMatrix;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_get_Root = function () {
@@ -978,6 +988,21 @@ DataRouter.prototype.rou_post_calculateService = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_calendarArr = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/calendarArr";
+  obj.func = async function (req, res) {
+    try {
+      const resultArr = await instance.getCalendar(Number(req.body.length));
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(resultArr));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 
