@@ -2429,6 +2429,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   let contentsBoxDetailProidStyle, contentsBoxDetailNameStyle, contentsBoxDetailBarStyle, contentsBoxDetailDateStyle, contentsBoxDetailAmountStyle;
   let contentsBoxDetailFontSize, contentsBoxDetailContentsMargin;
   let people, money;
+  let widthDomTargets, widthDomTargetsObj, widthDomTargetsObjDetail;
 
   boxTitles = [
     { title: "입금 대기", date: false, },
@@ -2464,7 +2465,11 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
     scrollBox.style[z] = style[z];
   }
 
+  widthDomTargets = [];
   for (let i = 0; i < boxTitles.length; i++) {
+
+    widthDomTargetsObj = {};
+    widthDomTargetsObj.boxNum = i;
 
     //numbers
     titleTop = 18;
@@ -2546,7 +2551,9 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
 
     people = 0;
     money = 0;
+    widthDomTargetsObj.items = [];
     for (let { proid, name, date, amount } of report.projects[i]) {
+      widthDomTargetsObjDetail = { proid: null, name: null, bar: null, date: null, amount: null };
       contentsBoxDetail = GeneralJs.nodes.div.cloneNode(true);
       contentsBoxDetail.classList.add("hoverDefault_lite");
       style = {
@@ -2578,6 +2585,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       }
       contentsBoxDetailProid.textContent = proid;
       contentsBoxDetail.appendChild(contentsBoxDetailProid);
+      widthDomTargetsObjDetail.proid = contentsBoxDetailProid;
 
       //name
       contentsBoxDetailName = GeneralJs.nodes.div.cloneNode(true);
@@ -2593,6 +2601,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       }
       contentsBoxDetailName.textContent = name;
       contentsBoxDetail.appendChild(contentsBoxDetailName);
+      widthDomTargetsObjDetail.name = contentsBoxDetailName;
 
       //bar
       contentsBoxDetailBar = GeneralJs.nodes.div.cloneNode(true);
@@ -2608,6 +2617,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
         contentsBoxDetailBar.style[z] = contentsBoxDetailBarStyle[z];
       }
       contentsBoxDetail.appendChild(contentsBoxDetailBar);
+      widthDomTargetsObjDetail.bar = contentsBoxDetailBar;
 
       //date
       contentsBoxDetailDate = GeneralJs.nodes.div.cloneNode(true);
@@ -2624,6 +2634,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       }
       contentsBoxDetailDate.textContent = date;
       contentsBoxDetail.appendChild(contentsBoxDetailDate);
+      widthDomTargetsObjDetail.date = contentsBoxDetailDate;
 
       //amount
       contentsBoxDetailAmount = GeneralJs.nodes.div.cloneNode(true);
@@ -2639,6 +2650,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       }
       contentsBoxDetailAmount.textContent = amount;
       contentsBoxDetail.appendChild(contentsBoxDetailAmount);
+      widthDomTargetsObjDetail.amount = contentsBoxDetailAmount;
 
       contentsBoxDetail.addEventListener("click", function (e) {
         window.open(window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid, "_blank");
@@ -2647,6 +2659,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
 
       money = money + Number(amount.replace(/[^0-9]/g, ''));
       people++;
+      widthDomTargetsObj.items.push(widthDomTargetsObjDetail);
     }
 
     div_clone.appendChild(contentsBox);
@@ -2668,30 +2681,71 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
     div_clone.appendChild(summaryBox);
 
     scrollBox.appendChild(div_clone);
+
+    widthDomTargets.push(widthDomTargetsObj);
   }
+
+
+
+  GeneralJs.timeouts["projectReportDomWidthTimeout"] = setTimeout(function () {
+    let temp;
+    let ea = "px";
+    let visualSpecific = 3;
+    let tempWidth;
+    let margin;
+
+    for (let i = 0; i < widthDomTargets.length; i++) {
+      for (let { amount, bar, date, name, proid } of widthDomTargets[i].items) {
+        margin = Number(proid.style.left.replace(/px/gi, ''));
+        name.style.left = String((margin * 2) + proid.getBoundingClientRect().width - visualSpecific) + ea;
+        date.style.right = String((margin * 2) + amount.getBoundingClientRect().width - visualSpecific) + ea;
+        tempWidth = 0;
+        tempWidth += Number(name.style.left.replace(/px/gi, '')) + name.getBoundingClientRect().width;
+        tempWidth += Number(date.style.right.replace(/px/gi, '')) + date.getBoundingClientRect().width;
+        bar.style.width = "calc(100% - " + String(tempWidth + (margin * 2)) + ea + ")";
+        bar.style.left = String(Number(name.style.left.replace(/px/gi, '')) + name.getBoundingClientRect().width + margin) + ea;
+      }
+    }
+
+    clearTimeout(GeneralJs.timeouts["projectReportDomWidthTimeout"]);
+    GeneralJs.timeouts["projectReportDomWidthTimeout"] = null;
+  }, 0);
 
   return scrollBox;
 }
 
 ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const instance = this;
+  const zeroAddition = function (number) {
+    if (typeof number === 'string') {
+      number = Number(number);
+    }
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
     input_clone.style.color = "#404040";
-    if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
-      if (/[0-9][0-9][0-9][0-9]\-[0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
-        target.value = target.value.slice(0, 5) + '0' + target.value.slice(5);
-      } else if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9]/.test(target.value)) {
-        target.value = target.value.slice(0, -1) + '0' + target.value.slice(-1);
-      } else if (/[0-9][0-9][0-9][0-9]\-[0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9]/.test(target.value)) {
-        target.value = target.value.slice(0, 5) + '0' + target.value.slice(5);
-        target.value = target.value.slice(0, -1) + '0' + target.value.slice(-1);
+    if (!/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+      valueArr0 = target.value.split(" ~ ");
+      valueArr1 = valueArr0[0].split("-");
+      if (valueArr0[1] !== undefined) {
+        valueArr2 = valueArr0[1].split("-");
+        if (valueArr1.length === 3 && valueArr2.length === 3) {
+          target.value = String(valueArr1[0]) + '-' + zeroAddition(valueArr1[1]) + '-' + zeroAddition(valueArr1[2]) + ' ~ ' + String(valueArr2[0]) + '-' + zeroAddition(valueArr2[1]) + '-' + zeroAddition(valueArr2[2]);
+        } else {
+          target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+        }
       } else {
         target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
       }
     }
-    target.value = (/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+    target.value = (/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+
     valueArr0 = target.value.split(" ~ ");
     valueArr1 = valueArr0[0].split("-");
     valueArr2 = valueArr0[1].split("-");
@@ -2704,27 +2758,11 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
       target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
     }
-    if (Number(valueArr1[0]) < 2019) {
-      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-    }
-    if ((Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, '')) > (today.getFullYear() * 12) + (today.getMonth() + 1)) {
+    if (Number(valueArr1[0]) < 19) {
       target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
     }
 
     GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
-
-    valueArr0 = target.value.split(" ~ ");
-    valueArr1 = valueArr0[0].split("-");
-    valueArr2 = valueArr0[1].split("-");
-
-    return { startYear: valueArr1[0], startMonth: valueArr1[1], endYear: valueArr2[0], endMonth: valueArr2[1], };
-  }
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return "0" + String(number);
-    } else {
-      return String(number);
-    }
   }
   const response = JSON.parse(data);
   const todayString = response.today;
@@ -2783,12 +2821,11 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
   });
   input_clone.addEventListener("blur", function (e) {
-    // vaildValue(this);
-    input_clone.style.color = "#404040";
+    vaildValue(this);
   });
   input_clone.addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
-      // const queryObj = vaildValue(this);
+      vaildValue(this);
       const today = new Date();
       const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
       const dateArr = this.value.split(" ~ ");
@@ -2930,9 +2967,6 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
 
       startDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[0]);
       endDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[1]);
-
-      startDay = "2020-11-05";
-      endDay = "2020-11-15";
 
       GeneralJs.ajax("today=" + todayString + "&start=" + startDay + "&end=" + endDay, "/getProjectReport", function (data) {
         svg_icon.style.opacity = "0";
