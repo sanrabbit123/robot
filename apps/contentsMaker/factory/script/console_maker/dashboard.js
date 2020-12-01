@@ -51,7 +51,6 @@ ExecMain.prototype.titleMaker = function () {
     this.saveSvg(this_ai, to);
 
   }
-
 }
 
 ExecMain.prototype.onMaker = function () {
@@ -91,7 +90,7 @@ ExecMain.prototype.subTitleMaker = function () {
   let num;
 
   for (let i of items) {
-    if (i !== "Projects" && i !== "Daily") {
+    if (i !== "OnCategory" && i !== "OnManager") {
       num = 0;
       for (let j of subTitles[i.toLowerCase()].items) {
         this_ai = this.createDoc();
@@ -117,9 +116,33 @@ ExecMain.prototype.subTitleMaker = function () {
   }
 }
 
+ExecMain.prototype.numberMaker = function () {
+  let this_ai, from, to, contents, temp, tempObj;
+
+  for (let i = 0; i < 10; i++) {
+    this_ai = this.createDoc();
+    from = "general";
+    to = "number" + String(i);
+    contents = String(i);
+    exception = {
+      font: "Graphik-Light",
+      color: "#2fa678",
+    };
+    this.setCreateSetting({ from: from, to: to, exception: exception });
+    this.setParagraph({ from: contents, to: to });
+    this.createElements(this_ai, this.createSetting[to]);
+
+    this.mother.fit_box();
+
+    app.doScript("expandall", "contents_maker");
+    this.saveSvg(this_ai, to);
+  }
+}
+
 ExecMain.prototype.start = function (dayString) {
   this.dayString = dayString;
   this.titleMaker();
   this.subTitleMaker();
   this.onMaker();
+  this.numberMaker();
 }

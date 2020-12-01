@@ -26,7 +26,7 @@ module.exports = function(map, source_rawArr) {
   }
 
   for (let i of titles.items) {
-    if (i !== "Projects" && i !== "Daily") {
+    if (i !== "OnCategory" && i !== "OnManager") {
       num = 0;
       subTitles[i.toLowerCase()].src = [];
       for (let j of subTitles[i.toLowerCase()].items) {
@@ -45,6 +45,15 @@ module.exports = function(map, source_rawArr) {
     temp_reg = new RegExp("^on" + i + '_');
     for (let z of source_rawArr) { if (temp_reg.test(z)) {
       on.src.push(z);
+      svgTong.sync.push(z);
+    }}
+  }
+
+  map.sub.numbers = new Array(10);
+  for (let i = 0; i < 10; i++) {
+    temp_reg = new RegExp("^number" + String(i) + '_');
+    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+      map.sub.numbers[i] = z;
       svgTong.sync.push(z);
     }}
   }

@@ -14,7 +14,6 @@ class MapArray extends Array {
         anotherKey = i;
       }
     }
-
     for (let obj of this) {
       thisMap.set(obj.name, obj[anotherKey]);
     }
@@ -59,19 +58,23 @@ DashboardJs.prototype.svgTitles = function (color) {
 DashboardJs.prototype.projectStatus = async function (dom) {
   const instance = this;
   const [ svgTitle, mainArea ] = dom.children;
-  const { main: { titles: { items, src } } } = this.map;
+  const { main: { titles: { items, src } }, sub: { on: { src: onSrc } } } = this.map;
   while (mainArea.firstChild) {
     mainArea.removeChild(mainArea.lastChild);
   }
   try {
-    let div_clone;
+    let div_clone, div_clone2;
     let svg_clone;
     let style, svgStyle;
     let ea = "px";
     let margin, height;
+    let top;
+    let height2;
 
     margin = 8;
     height = 20;
+    height2 = height * 0.9;
+    top = 25;
 
     style = {
       position: "relative",
@@ -84,13 +87,37 @@ DashboardJs.prototype.projectStatus = async function (dom) {
       marginBottom: String(margin) + ea,
     };
 
+    barStyle = {
+      position: "absolute",
+      borderBottom: "1px solid #dddddd",
+      height: String(0) + ea,
+      width: "calc(100% - " + String((top) * 2) + ea + ")",
+      left: String(top) + ea,
+      top: String(top + height + margin) + ea,
+    };
+
+    contentsStyle = {
+      position: "relative",
+      height: "calc(52% - " + String(top / 3) + ea + ")",
+      width: "calc(100% - " + String(top * 2) + ea + ")",
+      left: String(top) + ea,
+      top: "38%",
+    };
+
     svgStyle = {
       position: "absolute",
       height: String(height) + ea,
+      top: String(top) + ea,
+      left: String(top) + ea,
     };
+
+    svgSubStyle = JSON.parse(JSON.stringify(svgStyle));
+    svgSubStyle.height = String(height2) + ea;
+    svgSubStyle.left = String(0) + ea;
 
     for (let i = 2; i < items.length; i++) {
 
+      //white tong
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       for (let j in style) {
         div_clone.style[j] = style[j];
@@ -103,12 +130,86 @@ DashboardJs.prototype.projectStatus = async function (dom) {
       }
       div_clone.setAttribute("name", items[i]);
 
+      //title
       svg_clone = SvgTong.stringParsing(this.titleLightMap.map.get(items[i]))
       for (let j in svgStyle) {
         svg_clone.style[j] = svgStyle[j];
       }
       svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
       div_clone.appendChild(svg_clone);
+
+      //bar
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let j in barStyle) {
+        div_clone2.style[j] = barStyle[j];
+      }
+      div_clone.appendChild(div_clone2);
+
+      //contents
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let j in contentsStyle) {
+        div_clone2.style[j] = contentsStyle[j];
+      }
+
+      //idea
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[0].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "0";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      //on stage
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[1].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "calc(50% - " + String(height * 0.5) + ea + ")";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      //on going
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[2].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "calc(100% - " + svgSubStyle.height + ")";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      //daily
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[3].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "0";
+      svg_clone.style.left = "50%";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      //problems
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[4].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "calc(50% - " + String(height * 0.5) + ea + ")";
+      svg_clone.style.left = "50%";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      //Referrer
+      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[5].replace(/\.svg$/, '')]);
+      for (let j in svgSubStyle) {
+        svg_clone.style[j] = svgSubStyle[j];
+      }
+      svg_clone.style.top = "calc(100% - " + svgSubStyle.height + ")";
+      svg_clone.style.left = "50%";
+      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+      div_clone2.appendChild(svg_clone);
+
+      div_clone.appendChild(div_clone2);
+
       mainArea.appendChild(div_clone);
     }
 
