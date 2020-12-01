@@ -393,11 +393,10 @@ GeneralJs.prototype.generalCss = function () {
   .totalFather::-webkit-scrollbar{display:none;}
   .noScrollBar{}
   .noScrollBar::-webkit-scrollbar{display:none;}
-  .reportScrollBox::-webkit-scrollbar{display:none;}
   .font0{font-size:0}
   .font24{font-size:24px}
   `;
-  styleTag.textContent = css;
+  styleTag.insertAdjacentHTML(`beforeend`, css);
 }
 
 GeneralJs.prototype.returnCircle = function (cssString, color) {

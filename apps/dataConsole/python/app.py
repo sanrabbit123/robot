@@ -62,5 +62,9 @@ try:
         dateApp = DateCalculation(data["length"])
         print(dumps(dateApp.getDateMatrix(fullSet=True, future=True)))
 
+    if argv[1] == 'thisWeek':
+        dateApp = DateCalculation(2)
+        print(dumps(dateApp.thisWeek(data["today"])))
+
 except Exception as e:
     print(e)

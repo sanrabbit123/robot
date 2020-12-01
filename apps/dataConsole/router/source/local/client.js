@@ -2213,7 +2213,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
-  scrollBox.classList.add("reportScrollBox");
+  scrollBox.classList.add("noScrollBar");
   entireMargin = margin * 2;
   style = {
     position: "relative",
@@ -2507,7 +2507,18 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   const scrollBox = this.reportScrollBox(data, motherWidth);
   const today = new Date();
+  let todayString;
   let top, height, margin;
+
+  //today range
+  todayString = '';
+  todayString += today.getMonth() - 7 < 0 ? String(today.getFullYear() - 1) : String(today.getFullYear());
+  todayString += '-';
+  todayString += today.getMonth() - 7 < 0 ? zeroAddition(13 + today.getMonth() - 7) : zeroAddition(today.getMonth() - 7 + 1);
+  todayString += " ~ ";
+  todayString += String(today.getFullYear());
+  todayString += '-';
+  todayString += zeroAddition(today.getMonth() + 1);
 
   //numbers
   top = 0;
@@ -2545,7 +2556,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     input_clone.style[i] = inputStyle[i];
   }
   input_clone.setAttribute("type", "text");
-  input_clone.setAttribute("value", "2020-04 ~ 2020-11");
+  input_clone.setAttribute("value", todayString);
   input_clone.addEventListener("focus", function (e) {
     input_clone.style.color = "#2fa678";
     GeneralJs.stacks.reportBoxStartDayInputValue = this.value;

@@ -2417,25 +2417,40 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
   let margin;
   let scrollBox, boxTop, boxWidth, boxHeight, boxNumber;
   let titleBox, titleTop;
-  let matrixTop, matrixBox, matrixWidth, matrixBoxMargin, matrixHeight;
-  let matrixStyle0, matrixStyle1;
-  let matrixFontSize;
-  let matrixOuterLine, matrixInnerLine;
-  let columnTop, columnLineHeight, columnPaddingTop;
-  let reportNumber;
+  let matrixWidth, matrixBoxMargin;
   let grayBar;
-  let summaryBox, summaryTong;
+  let boxTitles;
+  let contentsBox;
+  let contentsBoxMargin;
+  let summaryBox;
+  let contentsBoxDetail;
+  let contentsBoxDetailMargin;
+  let contentsBoxDetailProid, contentsBoxDetailName, contentsBoxDetailBar, contentsBoxDetailDate, contentsBoxDetailAmount;
+  let contentsBoxDetailProidStyle, contentsBoxDetailNameStyle, contentsBoxDetailBarStyle, contentsBoxDetailDateStyle, contentsBoxDetailAmountStyle;
+  let contentsBoxDetailFontSize, contentsBoxDetailContentsMargin;
+  let people, money;
 
-  margin = 18;
-  boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
-  boxHeight = 400;
-  boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
+  boxTitles = [
+    { title: "입금 대기", date: false, },
+    { title: "입금 내역", date: true, },
+    { title: "정산 대기", date: false, },
+    { title: "정산 내역", date: true, },
+  ];
+
+  margin = 12;
+  if (motherWidth < 900) {
+    boxNumber = 1;
+  } else {
+    boxNumber = 2;
+  }
+  boxHeight = "calc(50% - " + String(margin * 1.6) + ea + ")";
+  boxWidth = (motherWidth - (margin * (boxNumber + 1 + 4))) / boxNumber;
   boxTop = 90;
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
-  scrollBox.classList.add("reportScrollBox");
-  entireMargin = margin * 2;
+  scrollBox.classList.add("noScrollBar");
+  entireMargin = margin * 3;
   style = {
     position: "relative",
     top: String(boxTop) + ea,
@@ -2449,25 +2464,17 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
     scrollBox.style[z] = style[z];
   }
 
-  for (let i = 0; i < report.length; i++) {
+  for (let i = 0; i < boxTitles.length; i++) {
 
     //numbers
     titleTop = 18;
-    columnTop = 0;
-    columnLineHeight = 30;
-    columnPaddingTop = 7;
-    matrixFontSize = 14.5;
-    matrixInnerLine = "1px solid #ececec";
-    matrixOuterLine = "1px solid #cccccc";
-    matrixTop = titleTop + 40;
+    titleFontSize = 17;
+    contentsBoxMargin = 17;
+    contentsBoxDetailMargin = 10;
     matrixBoxMargin = 23;
     matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
-    matrixHeight = 240;
-    summaryTong = {
-      client: 0,
-      proposal: 0,
-      contract: 0,
-    };
+    contentsBoxDetailFontSize = 15;
+    contentsBoxDetailContentsMargin = 13;
 
     //gray card
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2475,7 +2482,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       display: "inline-block",
       position: "relative",
       width: String(boxWidth) + ea,
-      height: String(boxHeight) + ea,
+      height: boxHeight,
       overflow: "scroll",
       marginRight: String(margin) + ea,
       marginBottom: String(margin) + ea,
@@ -2493,7 +2500,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       position: "absolute",
       width: String(matrixWidth) + ea,
       right: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + 14) + ea,
+      top: String(titleTop + 11) + ea,
       height: String(0),
       borderTop: "1px solid #dddddd",
     };
@@ -2507,159 +2514,157 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
     style = {
       position: "absolute",
       paddingRight: String(12) + ea,
-      fontSize: String(matrixFontSize + 6) + ea,
+      fontSize: String(titleFontSize) + ea,
       left: String(matrixBoxMargin + 1) + ea,
       top: String(titleTop) + ea,
-      fontWeight: String(200),
+      fontWeight: String(600),
       background: "#f7f7f7",
     };
     for (let z in style) {
       titleBox.style[z] = style[z];
     }
-    titleBox.textContent = `${report[i][0].startDay.split('-')[0]}-${report[i][0].startDay.split('-')[1]}`;
+    titleBox.textContent = boxTitles[i].title;
     div_clone.appendChild(titleBox);
 
-    //matrix
-    matrixBox = GeneralJs.nodes.div.cloneNode(true);
+    //contents box
+    contentsBox = GeneralJs.nodes.div.cloneNode(true);
+    contentsBox.classList.add("noScrollBar");
     style = {
-      position: "relative",
+      position: "absolute",
+      left: String(matrixBoxMargin + 1) + ea,
+      top: String(titleTop + titleFontSize + contentsBoxMargin) + ea,
       width: String(matrixWidth) + ea,
-      height: String(matrixHeight) + ea,
-      top: String(matrixTop) + ea,
-      left: String(matrixBoxMargin) + ea,
+      paddingTop: String(contentsBoxDetailMargin) + ea,
+      height: "calc(100% - " + String(((titleTop + titleFontSize + contentsBoxMargin) * 2) + 11 + contentsBoxDetailMargin) + ea + ")",
+      border: "1px solid #dddddd",
       borderRadius: String(5) + ea,
-      border: matrixOuterLine,
-      overflow: "hidden",
+      overflow: "scroll",
     };
     for (let z in style) {
-      matrixBox.style[z] = style[z];
+      contentsBox.style[z] = style[z];
     }
 
-    //case name
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle0 = {
-      position: "absolute",
-      fontSize: String(matrixFontSize) + ea,
-      fontWeight: String(600),
-      width: String(matrixWidth * (2 / 5)) + ea,
-      textAlign: "center",
-      left: String(0) + ea,
-      paddingTop: String(columnPaddingTop) + ea,
-      top: String(columnTop) + ea,
-      height: String(columnLineHeight) + ea,
-      borderBottom: matrixInnerLine,
-      background: "white",
-    };
-    for (let z in matrixStyle0) {
-      div_clone2.style[z] = matrixStyle0[z];
+    people = 0;
+    money = 0;
+    for (let { proid, name, date, amount } of report.projects[i]) {
+      contentsBoxDetail = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetail.classList.add("hoverDefault_lite");
+      style = {
+        position: "relative",
+        background: "white",
+        width: "calc(100% - " + String(contentsBoxDetailMargin * 2) + ea + ")",
+        height: String(contentsBoxDetailMargin * 3.5) + ea,
+        borderRadius: String(5) + ea,
+        marginBottom: String(contentsBoxDetailMargin) + ea,
+        marginLeft: String(contentsBoxDetailMargin) + ea,
+        cursor: "pointer",
+      };
+      for (let z in style) {
+        contentsBoxDetail.style[z] = style[z];
+      }
+
+      //proid
+      contentsBoxDetailProid = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetailProidStyle = {
+        position: "absolute",
+        top: String(6.5) + ea,
+        left: String(contentsBoxDetailContentsMargin) + ea,
+        fontSize: String(contentsBoxDetailFontSize) + ea,
+        fontWeight: String(200),
+        color: "#2fa678",
+      };
+      for (let z in contentsBoxDetailProidStyle) {
+        contentsBoxDetailProid.style[z] = contentsBoxDetailProidStyle[z];
+      }
+      contentsBoxDetailProid.textContent = proid;
+      contentsBoxDetail.appendChild(contentsBoxDetailProid);
+
+      //name
+      contentsBoxDetailName = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetailNameStyle = {
+        position: "absolute",
+        top: String(6.5) + ea,
+        left: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (contentsBoxDetailContentsMargin * 2)) + ea,
+        fontSize: String(contentsBoxDetailFontSize) + ea,
+        fontWeight: String(500),
+      };
+      for (let z in contentsBoxDetailNameStyle) {
+        contentsBoxDetailName.style[z] = contentsBoxDetailNameStyle[z];
+      }
+      contentsBoxDetailName.textContent = name;
+      contentsBoxDetail.appendChild(contentsBoxDetailName);
+
+      //bar
+      contentsBoxDetailBar = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetailBarStyle = {
+        position: "absolute",
+        top: String(16.5) + ea,
+        left: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, name) * 0.58) + (contentsBoxDetailContentsMargin * 3)) + ea,
+        height: String(0),
+        width: "calc(100% - " + String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, name) * 0.58) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, date) * 0.72) + (GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, amount) * 0.81) + (contentsBoxDetailContentsMargin * 5)) + ea + ")",
+        borderBottom: "1px solid #eeeeee",
+      };
+      for (let z in contentsBoxDetailBarStyle) {
+        contentsBoxDetailBar.style[z] = contentsBoxDetailBarStyle[z];
+      }
+      contentsBoxDetail.appendChild(contentsBoxDetailBar);
+
+      //date
+      contentsBoxDetailDate = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetailDateStyle = {
+        position: "absolute",
+        top: String(6.5) + ea,
+        right: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, amount) * 0.81) + (contentsBoxDetailContentsMargin * 2)) + ea,
+        fontSize: String(contentsBoxDetailFontSize) + ea,
+        fontWeight: String(200),
+        opacity: (boxTitles[i].date ? String(1) : String(0.2)),
+      };
+      for (let z in contentsBoxDetailDateStyle) {
+        contentsBoxDetailDate.style[z] = contentsBoxDetailDateStyle[z];
+      }
+      contentsBoxDetailDate.textContent = date;
+      contentsBoxDetail.appendChild(contentsBoxDetailDate);
+
+      //amount
+      contentsBoxDetailAmount = GeneralJs.nodes.div.cloneNode(true);
+      contentsBoxDetailAmountStyle = {
+        position: "absolute",
+        top: String(6.5) + ea,
+        right: String(contentsBoxDetailContentsMargin) + ea,
+        fontSize: String(contentsBoxDetailFontSize) + ea,
+        fontWeight: String(500),
+      };
+      for (let z in contentsBoxDetailAmountStyle) {
+        contentsBoxDetailAmount.style[z] = contentsBoxDetailAmountStyle[z];
+      }
+      contentsBoxDetailAmount.textContent = amount;
+      contentsBoxDetail.appendChild(contentsBoxDetailAmount);
+
+      contentsBoxDetail.addEventListener("click", function (e) {
+        window.open(window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid, "_blank");
+      });
+      contentsBox.appendChild(contentsBoxDetail);
+
+      money = money + Number(amount.replace(/[^0-9]/g, ''));
+      people++;
     }
-    matrixBox.appendChild(div_clone2);
 
-    //client
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1 = JSON.parse(JSON.stringify(matrixStyle0));
-    matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
-    matrixStyle1.width = String(matrixWidth * (1 / 5)) + ea;
-    matrixStyle1.borderLeft = matrixInnerLine;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "문의";
-    matrixBox.appendChild(div_clone2);
-
-    //proposal
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "제안";
-    matrixBox.appendChild(div_clone2);
-
-    //contract
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "계약";
-    matrixBox.appendChild(div_clone2);
-
-    reportNumber = 0;
-    for (let { startDay, endDay, client, proposal, contract } of report[i]) {
-
-      columnTop = columnTop + columnLineHeight + columnPaddingTop;
-
-      //case name
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle0.top = String(columnTop) + ea;
-      matrixStyle0.background = "";
-      if (reportNumber === report[i].length - 1) {
-        matrixStyle0.borderBottom = '';
-      }
-      for (let z in matrixStyle0) {
-        div_clone2.style[z] = matrixStyle0[z];
-      }
-      div_clone2.textContent = `${startDay.split('-')[2]} ~ ${endDay.split('-')[2]}`;
-      matrixBox.appendChild(div_clone2);
-
-      //client
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.top = String(columnTop) + ea;
-      matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
-      matrixStyle1.background = "";
-      matrixStyle1.fontWeight = String(200);
-      if (reportNumber === report[i].length - 1) {
-        matrixStyle1.borderBottom = '';
-      }
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(client);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.client += client;
-
-      //proposal
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(proposal);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.proposal += proposal;
-
-      //contract
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(contract);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.contract += contract;
-
-      reportNumber++;
-    }
-    matrixBox.style.height = String(columnTop + columnLineHeight + columnPaddingTop) + ea;
-    div_clone.appendChild(matrixBox);
+    div_clone.appendChild(contentsBox);
 
     //summary
     summaryBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      width: String(matrixWidth) + ea,
-      fontSize: String(matrixFontSize + 6) + ea,
-      left: String(matrixBoxMargin) + ea,
-      bottom: String(titleTop + 8) + ea,
+      fontSize: String(titleFontSize + 4) + ea,
+      right: String(matrixBoxMargin) + ea,
+      bottom: String(titleTop + (margin / 2) - 2) + ea,
       fontWeight: String(200),
-      textAlign: "right",
+      background: "#f7f7f7",
     };
     for (let z in style) {
       summaryBox.style[z] = style[z];
     }
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${String(summaryTong.contract)}</b>명`);
+    summaryBox.textContent = String(people) + "명 / " + GeneralJs.autoComma(money) + "원";
     div_clone.appendChild(summaryBox);
 
     scrollBox.appendChild(div_clone);
@@ -2721,14 +2726,20 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
       return String(number);
     }
   }
+  const response = JSON.parse(data);
+  const todayString = response.today;
+  const dateRange = response.dateRange;
 
+  let todayArr = todayString.split('-');
+  let todayRange;
   let div_clone, div_clone2, input_clone;
   let style, inputStyle;
   let ea = "px";
   let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   const scrollBox = this.reportScrollBox(data, motherWidth);
-  const today = new Date();
   let top, height, margin;
+
+  todayRange = response.startDay.slice(2) + " ~ " + response.endDay.slice(2);
 
   //numbers
   top = 0;
@@ -2766,22 +2777,28 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     input_clone.style[i] = inputStyle[i];
   }
   input_clone.setAttribute("type", "text");
-  input_clone.setAttribute("value", "2020-04 ~ 2020-11");
+  input_clone.setAttribute("value", todayRange);
   input_clone.addEventListener("focus", function (e) {
     input_clone.style.color = "#2fa678";
     GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
   });
   input_clone.addEventListener("blur", function (e) {
-    vaildValue(this);
+    // vaildValue(this);
+    input_clone.style.color = "#404040";
   });
   input_clone.addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
-      const queryObj = vaildValue(this);
+      // const queryObj = vaildValue(this);
+      const today = new Date();
+      const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+      const dateArr = this.value.split(" ~ ");
+      const startDay = '20' + dateArr[0];
+      const endDay = '20' + dateArr[1];
       input_clone.blur();
       mother.removeChild(mother.lastChild);
       loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
       loadingIcon.style.opacity = "1";
-      GeneralJs.ajax(GeneralJs.objectToRawquery(queryObj), "/getClientReport", function (data) {
+      GeneralJs.ajax("today=" + todayString + "&start=" + startDay + "&end=" + endDay, "/getProjectReport", function (data) {
         loadingIcon.style.opacity = "0";
         const scrollBox = instance.reportScrollBox(data, motherWidth);
         mother.appendChild(scrollBox);
@@ -2804,7 +2821,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   for (let i in style) {
     div_clone2.style[i] = style[i];
   }
-  div_clone2.textContent = "today : " + String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+  div_clone2.textContent = "today : " + todayString;
   div_clone.appendChild(div_clone2);
 
   //end
@@ -2816,6 +2833,15 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
 ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
+  const today = new Date();
+  const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
   try {
     return function () {
       let div_clone, svg_icon;
@@ -2825,6 +2851,8 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
       let domTargets;
       let motherBoo;
       let width;
+      let defaultWeek;
+      let startDay, endDay;
 
       motherBoo = (instance.onView === "mother") ? true : false;
 
@@ -2892,7 +2920,21 @@ ProjectJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("month=8", "/getClientReport", function (data) {
+      defaultWeek = [];
+      if (today.getDay() !== 0) {
+        defaultWeek.push(today.getDate() - today.getDay() + 1 < 1 ? 1 : today.getDate() - today.getDay() + 1);
+      } else {
+        defaultWeek.push(today.getDate() - 7 + 1 < 1 ? 1 : today.getDate() - 7 + 1);
+      }
+      defaultWeek.push((today.getDay() !== 0) ? today.getDate() + (7 - today.getDay()) : today.getDate());
+
+      startDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[0]);
+      endDay = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(defaultWeek[1]);
+
+      startDay = "2020-11-05";
+      endDay = "2020-11-15";
+
+      GeneralJs.ajax("today=" + todayString + "&start=" + startDay + "&end=" + endDay, "/getProjectReport", function (data) {
         svg_icon.style.opacity = "0";
         instance.reportContents(data, div_clone, svg_icon);
       });

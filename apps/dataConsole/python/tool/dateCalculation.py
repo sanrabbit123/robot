@@ -87,3 +87,18 @@ class DateCalculation:
             return dateMatrixFullSet
         else:
             return dateMatrix
+
+
+    def thisWeek(self, todayString):
+        matrixBox = self.getDateMatrix(fullSet=False, future=False)
+
+        todayArr = todayString.split('-')
+        thisDate = int(todayArr[2])
+
+        for i in range(matrixBox[0].__len__()):
+            for j in range(matrixBox[0][i].__len__()):
+                if matrixBox[0][i][j] == thisDate:
+                    x = i
+                    y = j
+
+        return matrixBox[0][x]

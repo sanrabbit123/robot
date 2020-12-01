@@ -134,6 +134,41 @@ DataRouter.queryFilter = function (str) {
   return str;
 }
 
+DataRouter.dateToString = function (obj) {
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return "0" + String(number);
+    } else {
+      return String(number);
+    }
+  }
+  return `${String(obj.getFullYear())}-${zeroAddition(obj.getMonth() + 1)}-${zeroAddition(obj.getDate())}`;
+}
+
+DataRouter.autoComma = function (str) {
+  if (typeof str === "number") {
+    str = String(str);
+  }
+  let minus;
+  if (/\-/g.test(str)) { minus = /\-/g.exec(str)[0]; }
+  else { minus = ''; }
+  let num = str.replace(/[^0-9]/g, '');
+  let tmp = '';
+  if (num.length < 4) {
+    return minus + num;
+  } else if (num.length < 7) {
+    tmp += num.slice(-6, -3) + ',' + num.slice(-3);
+    return minus + tmp;
+  } else if (num.length < 10) {
+    tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    return minus + tmp;
+  } else {
+    tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    return minus + tmp;
+  }
+  return minus + num;
+}
+
 //GENERAL METHODS ---------------------------------------------------------------------------------
 
 DataRouter.prototype.getDateMatrix = async function (length = 6) {
@@ -752,6 +787,143 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getProjectReport = function () {
+  const instance = this;
+  const back = this.back;
+  const zeroAddition = function (number) {
+    if (number < 10) {
+      return `0${String(number)}`;
+    } else {
+      return String(number);
+    }
+  }
+
+  let obj = {};
+  obj.link = "/getProjectReport";
+  obj.func = async function (req, res) {
+    try {
+      let target;
+      let resultObj;
+      let temp, temp2;
+      let tempObj, tempArr;
+      let startDay;
+      let endDay;
+      let searchQuery0, searchQuery1, searchQuery2, searchQuery3, searchQuery4, projects;
+      let cliidArr, desidArr;
+
+      resultObj = {};
+      resultObj.today = req.body.today;
+      startDay = new Date(Number(req.body.start.split("-")[0]), Number(req.body.start.split("-")[1].replace(/^0/, '')) - 1, Number(req.body.start.split("-")[2].replace(/^0/, '')));
+      endDay = new Date(Number(req.body.end.split("-")[0]), Number(req.body.end.split("-")[1].replace(/^0/, '')) - 1, Number(req.body.end.split("-")[2].replace(/^0/, '')));
+      resultObj.startDay = req.body.start;
+      resultObj.endDay = req.body.end;
+
+      resultObj.dateRange = [];
+      for (let i = Number(req.body.start.split("-")[2].replace(/^0/, '')); i < Number(req.body.end.split("-")[2].replace(/^0/, '')) + 1; i++) {
+        resultObj.dateRange.push(i);
+      }
+
+      resultObj.projects = [];
+      for (let i = 0; i < 4; i++) {
+
+        if (i === 0) {
+          searchQuery0 = { "process.contract.remain.date": { "$lt": new Date(2000, 0, 1) } };
+          searchQuery1 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
+        } else if (i === 1) {
+          searchQuery0 = { "process.contract.remain.date": { "$gte": startDay, "$lt": endDay } };
+          searchQuery1 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
+        } else if (i === 2) {
+          searchQuery3 = { "process.contract.remain.date": { "$gte": new Date(2000, 0, 1) } };
+          searchQuery0 = { "process.calculation.payments.remain.date": { "$lt": new Date(2000, 0, 1) } };
+          searchQuery1 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery0, searchQuery1, searchQuery3 ] };
+        } else if (i === 3) {
+          searchQuery0 = { "process.calculation.payments.first.date": { "$gte": startDay, "$lt": endDay } };
+          searchQuery1 = { "process.calculation.payments.remain.date": { "$gte": startDay, "$lt": endDay } };
+          searchQuery4 = { "$or": [ searchQuery0, searchQuery1 ] };
+          searchQuery3 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
+        }
+        temp = await back.getProjectsByQuery(searchQuery2, { selfMongo: instance.mongo });
+
+        cliidArr = [];
+        desidArr = [];
+        for (let j = 0; j < temp.length; j++) {
+          cliidArr.push({ cliid: temp[j].cliid });
+          desidArr.push({ desid: temp[j].desid });
+        }
+
+        if (i < 2) {
+          if (cliidArr.length > 0) {
+            temp2 = await back.getClientsByQuery({ "$or": cliidArr }, { selfMongo: instance.mongo });
+          } else {
+            temp2 = [];
+          }
+        } else {
+          if (desidArr.length > 0) {
+            temp2 = await back.getDesignersByQuery({ "$or": desidArr }, { selfMongo: instance.mongo });
+          } else {
+            temp2 = [];
+          }
+        }
+
+        tempArr = [];
+        for (let j = 0; j < temp.length; j++) {
+          tempObj = {};
+          tempObj.date = "1001-01-01";
+          tempObj.proid = temp[j].proid;
+
+          if (i === 0) {
+            for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].cliid === temp[j].cliid) {
+                tempObj.name = temp2[z].name;
+              }
+            }
+            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.amount.consumer) + "만원";
+          } else if (i === 1) {
+            for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].cliid === temp[j].cliid) {
+                tempObj.name = temp2[z].name;
+              }
+            }
+            tempObj.date = DataRouter.dateToString(temp[j].process.contract.remain.date);
+            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.amount.consumer) + "만원";
+          } else if (i === 2) {
+            for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].desid === temp[j].desid) {
+                tempObj.name = temp2[z].designer;
+              }
+            }
+            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
+          } else if (i === 3) {
+            for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].desid === temp[j].desid) {
+                tempObj.name = temp2[z].designer;
+              }
+            }
+            tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.remain.date);
+            if (/^1[6789]/.test(tempObj.date)) {
+              tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.first.date);
+            }
+            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
+          }
+
+          tempArr.push(tempObj);
+        }
+        resultObj.projects.push(tempArr);
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(resultObj));
     } catch (e) {
       console.log(e);
     }
