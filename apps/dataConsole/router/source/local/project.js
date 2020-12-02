@@ -200,6 +200,7 @@ ProjectJs.prototype.standardBar = function (standard) {
 
 ProjectJs.prototype.infoArea = function (info) {
   const instance = this;
+  const map = DataPatch.projectMap();
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -359,7 +360,11 @@ ProjectJs.prototype.infoArea = function (info) {
           });
 
           instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
-          originalDiv.textContent = finalValue;
+          if (GeneralJs.moneyBoo(column)) {
+            originalDiv.textContent = GeneralJs.autoComma(finalValue);
+          } else {
+            originalDiv.textContent = finalValue;
+          }
           idDom.setAttribute("active", "false");
           removeAllEvent();
           originalDiv.style.overflow = "hidden";
@@ -557,7 +562,17 @@ ProjectJs.prototype.infoArea = function (info) {
 
     for (let z = 0; z < columns.length; z++) {
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone3.textContent = obj[columns[z]];
+
+      if (num === 0) {
+        div_clone3.textContent = obj[columns[z]];
+      } else {
+        if (map[columns[z]].moneyBoo !== undefined) {
+          div_clone3.textContent = GeneralJs.autoComma(obj[columns[z]]);
+        } else {
+          div_clone3.textContent = obj[columns[z]];
+        }
+      }
+
       for (let i in style3) {
         div_clone3.style[i] = style3[i];
       }
@@ -762,6 +777,12 @@ ProjectJs.prototype.cardViewMaker = function () {
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
+
+    if (instance.whiteBox !== null) {
+      if (GeneralJs.stacks.whiteBox !== 1) {
+        instance.whiteBox.cancelBox.click();
+      }
+    }
 
     if (instance.totalFather !== null) {
 
@@ -1327,6 +1348,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
+  const map = DataPatch.projectMap();
   const { standard, info } = DataPatch.projectWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -1589,12 +1611,21 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               }
             }
             if (fatherTarget !== null) {
-              fatherTarget.textContent = finalValue;
+              if (map[column].moneyBoo === true) {
+                fatherTarget.textContent = GeneralJs.autoComma(finalValue);
+              } else {
+                fatherTarget.textContent = finalValue;
+              }
             }
           }
           instance.cases[thisCase["index"]][column] = finalValue;
-          originalDiv.textContent = finalValue;
-          targetDom.textContent = finalValue;
+          if (map[column].moneyBoo === true) {
+            originalDiv.textContent = GeneralJs.autoComma(finalValue);
+            targetDom.textContent = GeneralJs.autoComma(finalValue);
+          } else {
+            originalDiv.textContent = finalValue;
+            targetDom.textContent = finalValue;
+          }
 
           removeAllEvent();
         }
@@ -1659,7 +1690,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         this.appendChild(input_clone);
 
         //items
-        const map = DataPatch.projectMap();
         const thisMap = map[this.parentNode.getAttribute("index")];
 
         if (thisMap.items !== undefined) {
@@ -1837,7 +1867,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     //value
     div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone4.textContent = thisCase[info[i].target];
+    if (map[info[i].target].moneyBoo !== undefined) {
+      div_clone4.textContent = GeneralJs.autoComma(thisCase[info[i].target]);
+    } else {
+      div_clone4.textContent = thisCase[info[i].target];
+    }
     style = {
       display: "inline-block",
       position: "absolute",

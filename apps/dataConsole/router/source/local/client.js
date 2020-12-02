@@ -32,6 +32,7 @@ ClientJs.prototype.standardBar = function (standard) {
     cliid: standard.standard.cliid.name,
     name: standard.standard.name.name
   };
+
   target = standard.data;
   if (standard.search === null) {
     target.unshift(temp);
@@ -689,6 +690,12 @@ ClientJs.prototype.cardViewMaker = function () {
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
+
+    if (instance.whiteBox !== null) {
+      if (GeneralJs.stacks.whiteBox !== 1) {
+        instance.whiteBox.cancelBox.click();
+      }
+    }
 
     if (instance.totalFather !== null) {
 

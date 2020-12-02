@@ -690,6 +690,12 @@ DesignerJs.prototype.cardViewMaker = function () {
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
 
+    if (instance.whiteBox !== null) {
+      if (GeneralJs.stacks.whiteBox !== 1) {
+        instance.whiteBox.cancelBox.click();
+      }
+    }
+
     if (instance.totalFather !== null) {
 
       instance.totalFather.style.zIndex = String(1);

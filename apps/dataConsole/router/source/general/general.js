@@ -306,6 +306,24 @@ GeneralJs.autoComma = function (str) {
   return minus + num;
 }
 
+GeneralJs.moneyBoo = function (column) {
+  let map;
+  if (window.location.pathname === "/client") {
+    map = DataPatch.clientMap();
+  } else if (window.location.pathname === "/designer") {
+    map = DataPatch.designerMap();
+  } else if (window.location.pathname === "/project") {
+    map = DataPatch.projectMap();
+  }
+  if (map[column] === undefined || map[column].moneyBoo === undefined) {
+    return false;
+  } else if (map[column].moneyBoo === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 GeneralJs.prototype.belowButtons = {
   arrow: {
