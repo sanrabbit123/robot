@@ -400,7 +400,7 @@ GeneralJs.prototype.generalCss = function () {
 }
 
 GeneralJs.prototype.returnCircle = function (cssString, color) {
-  return `<svg class="circle" style="${cssString}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="circle" style="${cssString}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
 }
 
 GeneralJs.prototype.returnBigArrow = function (color) {

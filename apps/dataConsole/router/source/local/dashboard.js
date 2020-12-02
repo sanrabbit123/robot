@@ -55,175 +55,452 @@ DashboardJs.prototype.svgTitles = function (color) {
   return resultArr;
 }
 
-DashboardJs.prototype.projectStatus = async function (dom) {
+DashboardJs.prototype.projectStatus = async function (on = true) {
   const instance = this;
-  const [ svgTitle, mainArea ] = dom.children;
-  const { main: { titles: { items, src } }, sub: { on: { src: onSrc } } } = this.map;
+  const [ svgTitle, mainArea ] = this.matrixDoms[0].dom.children;
+  const { main: { titles: { items, src } }, sub: { on: { src: onSrc }, numbers } } = this.map;
   while (mainArea.firstChild) {
     mainArea.removeChild(mainArea.lastChild);
   }
-  try {
-    let div_clone, div_clone2;
-    let svg_clone;
-    let style, svgStyle;
-    let ea = "px";
-    let margin, height;
-    let top;
-    let height2;
+  mainArea.style.background = "#dddddd";
+  if (on) {
+    mainArea.style.background = "";
+    try {
+      let div_clone, div_clone2, div_clone3, svg_clone;
+      let style;
+      let barStyle, svgStyle, contentsStyle, svgSubStyle, detailBarStyle, detailNumberStyle;
+      let ea = "px";
+      let margin, height, top, height2;
+      let detailsTop;
+      let detailMargin;
+      let middleMargin;
 
-    margin = 8;
-    height = 20;
-    height2 = height * 0.9;
-    top = 25;
+      margin = (8 / 976) * window.innerHeight;
+      height = (20 / 976) * window.innerHeight;
+      height2 = height * 0.9;
+      top = (25 / 976) * window.innerHeight;
+      detailsTop = [
+        String(0) + '%',
+        "calc(50% - " + String(height * 0.5) + ea + ")",
+        "calc(100% - " + String(height2) + ea + ")"
+      ];
+      detailMargin = (10 / 976) * window.innerHeight;
+      middleMargin = (2.5 / 976) * window.innerHeight;
 
-    style = {
-      position: "relative",
-      display: "inline-block",
-      width: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
-      height: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
-      background: "white",
-      borderRadius: String(5) + ea,
-      marginRight: String(margin) + ea,
-      marginBottom: String(margin) + ea,
-    };
+      style = {
+        position: "relative",
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
+        height: "calc(calc(100% - " + String(margin * 2) + ea + ") / 3)",
+        background: "white",
+        borderRadius: String(5) + ea,
+        marginRight: String(margin) + ea,
+        marginBottom: String(margin) + ea,
+      };
 
-    barStyle = {
-      position: "absolute",
-      borderBottom: "1px solid #dddddd",
-      height: String(0) + ea,
-      width: "calc(100% - " + String((top) * 2) + ea + ")",
-      left: String(top) + ea,
-      top: String(top + height + margin) + ea,
-    };
+      barStyle = {
+        position: "absolute",
+        borderBottom: "1px solid #dddddd",
+        height: String(0) + ea,
+        width: "calc(100% - " + String((top) * 2) + ea + ")",
+        left: String(top) + ea,
+        top: String(top + height + margin) + ea,
+      };
 
-    contentsStyle = {
-      position: "relative",
-      height: "calc(52% - " + String(top / 3) + ea + ")",
-      width: "calc(100% - " + String(top * 2) + ea + ")",
-      left: String(top) + ea,
-      top: "38%",
-    };
+      contentsStyle = {
+        position: "relative",
+        height: "calc(51% - " + String(top / 3) + ea + ")",
+        width: "calc(100% - " + String(top * 2) + ea + ")",
+        left: String(top) + ea,
+        top: "39%",
+      };
 
-    svgStyle = {
-      position: "absolute",
-      height: String(height) + ea,
-      top: String(top) + ea,
-      left: String(top) + ea,
-    };
+      svgStyle = {
+        position: "absolute",
+        height: String(height) + ea,
+        top: String(top) + ea,
+        left: String(top) + ea,
+      };
 
-    svgSubStyle = JSON.parse(JSON.stringify(svgStyle));
-    svgSubStyle.height = String(height2) + ea;
-    svgSubStyle.left = String(0) + ea;
+      svgSubStyle = JSON.parse(JSON.stringify(svgStyle));
+      svgSubStyle.height = String(height2) + ea;
+      svgSubStyle.left = String(0) + ea;
 
-    for (let i = 2; i < items.length; i++) {
+      detailBarStyle = {
+        position: "absolute",
+        borderBottom: "1px dashed #2fa678",
+        height: String(0),
+        opacity: String(0.4),
+      };
 
-      //white tong
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      for (let j in style) {
-        div_clone.style[j] = style[j];
+      detailNumberStyle = {
+        position: "absolute",
+        height: String(height2) + ea,
+      };
+
+      for (let i = 2; i < items.length; i++) {
+
+        //white tong
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in style) {
+          div_clone.style[j] = style[j];
+        }
+        if (((i - 1) % 3) === 0) {
+          div_clone.style.marginRight = String(0);
+        }
+        if (i > items.length - 4) {
+          div_clone.style.marginBottom = String(0);
+        }
+        div_clone.setAttribute("name", items[i]);
+
+        //title
+        svg_clone = SvgTong.stringParsing(this.titleLightMap.map.get(items[i]))
+        for (let j in svgStyle) {
+          svg_clone.style[j] = svgStyle[j];
+        }
+        svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
+        div_clone.appendChild(svg_clone);
+
+        //title bar
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in barStyle) {
+          div_clone2.style[j] = barStyle[j];
+        }
+        div_clone.appendChild(div_clone2);
+
+        //contents box
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in contentsStyle) {
+          div_clone2.style[j] = contentsStyle[j];
+        }
+
+        //details
+        for (let j = 0; j < onSrc.length; j++) {
+
+          //detail title
+          svg_clone = SvgTong.stringParsing(SvgTong[onSrc[j].replace(/\.svg$/, '')]);
+          for (let k in svgSubStyle) {
+            svg_clone.style[k] = svgSubStyle[k];
+          }
+          svg_clone.style.top = detailsTop[j % (onSrc.length / 2)];
+          svg_clone.style.left = ((j >= onSrc.length / 2) ? String(50 + middleMargin) : String(0)) + '%';
+          svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+          div_clone2.appendChild(svg_clone);
+
+          //detail bar
+          div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+          for (let k in detailBarStyle) {
+            div_clone3.style[k] = detailBarStyle[k];
+          }
+          div_clone3.style.top = "calc(" + detailsTop[j % (onSrc.length / 2)] + " + " + String(height2 / 2) + ea + ' - ' + String(2) + ea + ")";
+          div_clone3.style.left = "calc(" + svg_clone.style.width + ' + ' + (((j >= onSrc.length / 2) ? String(50 + middleMargin) : String(0)) + '%') + ' + ' + String(detailMargin) + ea + ")";
+          div_clone3.style.width = "calc(" + String(50 - middleMargin) + "% - " + String(SvgTong.getRatio(svg_clone) * height2) + ea + ")";
+          div_clone2.appendChild(div_clone3);
+
+          //detail number
+          svg_clone = SvgTong.stringParsing(SvgTong[numbers[0].replace(/\.svg$/, '')]);
+          for (let k in detailNumberStyle) {
+            svg_clone.style[k] = detailNumberStyle[k];
+          }
+          svg_clone.style.top = detailsTop[j % (onSrc.length / 2)];
+          svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+          svg_clone.style.left = "calc(" + ((j >= onSrc.length / 2) ? String(100) : String(50 - middleMargin)) + '%' + " - " + svg_clone.style.width + ")";
+          div_clone2.appendChild(svg_clone);
+
+          div_clone3.style.width = "calc(" + div_clone3.style.width + " - " + svg_clone.style.width + " - " + String(detailMargin * 2) + ea + ")";
+
+        }
+
+        div_clone.appendChild(div_clone2);
+        mainArea.appendChild(div_clone);
       }
-      if (((i - 1) % 3) === 0) {
-        div_clone.style.marginRight = String(0);
-      }
-      if (i > items.length - 4) {
-        div_clone.style.marginBottom = String(0);
-      }
-      div_clone.setAttribute("name", items[i]);
 
-      //title
-      svg_clone = SvgTong.stringParsing(this.titleLightMap.map.get(items[i]))
-      for (let j in svgStyle) {
-        svg_clone.style[j] = svgStyle[j];
-      }
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
-      div_clone.appendChild(svg_clone);
-
-      //bar
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      for (let j in barStyle) {
-        div_clone2.style[j] = barStyle[j];
-      }
-      div_clone.appendChild(div_clone2);
-
-      //contents
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      for (let j in contentsStyle) {
-        div_clone2.style[j] = contentsStyle[j];
-      }
-
-      //idea
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[0].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "0";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      //on stage
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[1].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "calc(50% - " + String(height * 0.5) + ea + ")";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      //on going
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[2].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "calc(100% - " + svgSubStyle.height + ")";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      //daily
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[3].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "0";
-      svg_clone.style.left = "50%";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      //problems
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[4].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "calc(50% - " + String(height * 0.5) + ea + ")";
-      svg_clone.style.left = "50%";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      //Referrer
-      svg_clone = SvgTong.stringParsing(SvgTong[onSrc[5].replace(/\.svg$/, '')]);
-      for (let j in svgSubStyle) {
-        svg_clone.style[j] = svgSubStyle[j];
-      }
-      svg_clone.style.top = "calc(100% - " + svgSubStyle.height + ")";
-      svg_clone.style.left = "50%";
-      svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
-      div_clone2.appendChild(svg_clone);
-
-      div_clone.appendChild(div_clone2);
-
-      mainArea.appendChild(div_clone);
+    } catch (e) {
+      console.log(e);
     }
-
-  } catch (e) {
-    console.log(e);
   }
 }
 
-DashboardJs.prototype.dailyBoard = async function (dom) {
+DashboardJs.prototype.memberBoard = async function (on = true) {
   const instance = this;
-  try {
-    console.log(dom);
-  } catch (e) {
-    console.log(e);
+  const [ svgTitle, mainArea ] = this.matrixDoms[1].dom.children;
+  const { main: { members: { names, src } }, sub: { memberWording: { src: memberWordingSrc } } } = this.map;
+  while (mainArea.firstChild) {
+    mainArea.removeChild(mainArea.lastChild);
+  }
+
+  const projectSamples = [
+    3,
+    7,
+    2,
+    5,
+    4,
+    6,
+    1,
+    3
+  ];
+
+  mainArea.style.background = "#dddddd";
+  mainArea.style.paddingTop = GeneralJs.stacks["onMemberBoxPaddingTopPastConst"];
+  mainArea.style.height = GeneralJs.stacks["onMemberBoxHeightPastConst"];
+
+  if (on) {
+    mainArea.style.background = "";
+    mainArea.style.border = "1px solid #dddddd";
+    mainArea.style.overflow = "scroll";
+    mainArea.classList.add("noScrollBar");
+
+    try {
+      let div_clone, div_clone2, div_clone3, svg_clone;
+      let style;
+      let barStyle, svgStyle, projectBoxStyle;
+      let ea = "px";
+      let margin, height, top;
+      let detailMargin;
+      let middleMargin;
+      let tempWidth;
+      let initLeft;
+      let marginRatio;
+      let whiteBoxHeight;
+      let circle;
+
+      margin = (10 / 976) * window.innerHeight;
+      height = (16 / 976) * window.innerHeight;
+      top = (18 / 976) * window.innerHeight;
+      detailMargin = (10 / 976) * window.innerHeight;
+      middleMargin = (2.5 / 976) * window.innerHeight;
+      initLeft = (16 / 976) * window.innerHeight;
+      marginRatio = 1.4;
+      whiteBoxHeight = (55 / 976) * window.innerHeight;
+
+      GeneralJs.stacks["onMemberBoxPaddingTopPastConst"] = String(0) + ea;
+      mainArea.style.paddingTop = String(margin) + ea;
+      GeneralJs.stacks["onMemberBoxHeightPastConst"] = mainArea.style.height;
+      mainArea.style.height = "calc(" + mainArea.style.height + " - " + String(margin) + ea + ")";
+
+      style = {
+        position: "relative",
+        display: "block",
+        width: "calc(100% - " + String(margin * 2) + ea + ")",
+        height: String(whiteBoxHeight) + ea,
+        background: "white",
+        borderRadius: String(5) + ea,
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginBottom: String(margin) + ea,
+      };
+
+      barStyle = {
+        position: "absolute",
+        borderRight: "1px solid #dddddd",
+        height: String(height + 2) + ea,
+        width: String(0) + ea,
+        left: String(top) + ea,
+        top: String(top - 1) + ea,
+      };
+
+      svgStyle = {
+        position: "absolute",
+        height: String(height) + ea,
+        top: String(top) + ea,
+        left: String(top) + ea,
+      };
+
+      projectBoxStyle = {
+        position: "absolute",
+        background: "#59af89",
+        borderRadius: String(5) + ea,
+        height: "58%",
+        width: String(80) + ea,
+        top: "21%",
+        cursor: "pointer",
+      };
+
+      for (let i = 0; i < names.length; i++) {
+
+        //white tong
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in style) {
+          div_clone.style[j] = style[j];
+        }
+        div_clone.setAttribute("name", names[i]);
+
+        //name
+        svg_clone = SvgTong.stringParsing(SvgTong[src[i].replace(/\.svg$/, '')]);
+        for (let k in svgStyle) {
+          svg_clone.style[k] = svgStyle[k];
+        }
+        svg_clone.style.top = "calc(50% - " + String((top / 2) + 1) + ea + ")";
+        svg_clone.style.left = String(initLeft) + ea;
+        tempWidth = SvgTong.getRatio(svg_clone) * height;
+        svg_clone.style.width = String(tempWidth) + ea;
+        div_clone.appendChild(svg_clone);
+
+        //bar
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in barStyle) {
+          div_clone2.style[j] = barStyle[j];
+        }
+        div_clone2.style.top = "calc(50% - " + String((top / 2) + 1) + ea + ")";
+        div_clone2.style.left = String(tempWidth + (margin * marginRatio) + initLeft) + ea;
+        div_clone.appendChild(div_clone2);
+
+        //daily work wording
+        svg_clone = SvgTong.stringParsing(SvgTong[memberWordingSrc[0].replace(/\.svg$/, '')]);
+        svg_clone.classList.add("hoverDefault");
+        for (let k in svgStyle) {
+          svg_clone.style[k] = svgStyle[k];
+        }
+        svg_clone.style.top = "calc(50% - " + String((top / 2) + 1) + ea + ")";
+        svg_clone.style.left = String(tempWidth + (margin * (marginRatio * 2)) + initLeft) + ea;
+        svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
+        svg_clone.style.cursor = "pointer";
+        svg_clone.addEventListener("click", function (e) {
+          window.open("https://drive.google.com/drive/folders/1AGAmAGuj3C5UbdnR50n24WXuSKNbyNmx?usp=sharing", "_blank");
+        });
+        div_clone.appendChild(svg_clone);
+        tempWidth = tempWidth + (margin * (marginRatio * 2)) + initLeft + (SvgTong.getRatio(svg_clone) * height);
+
+        //bar
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in barStyle) {
+          div_clone2.style[j] = barStyle[j];
+        }
+        div_clone2.style.top = "calc(50% - " + String((top / 2) + 1) + ea + ")";
+        div_clone2.style.left = String(tempWidth + (margin * marginRatio)) + ea;
+        div_clone.appendChild(div_clone2);
+
+        //project list wording
+        svg_clone = SvgTong.stringParsing(SvgTong[memberWordingSrc[1].replace(/\.svg$/, '')]);
+        for (let k in svgStyle) {
+          svg_clone.style[k] = svgStyle[k];
+        }
+        svg_clone.style.top = "calc(50% - " + String((top / 2) + 1) + ea + ")";
+        svg_clone.style.left = String(tempWidth + (margin * (marginRatio * 2))) + ea;
+        svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
+        div_clone.appendChild(svg_clone);
+        tempWidth = tempWidth + (margin * (marginRatio * 2)) + (SvgTong.getRatio(svg_clone) * height);
+
+        //project list
+        for (let k = 0; k < projectSamples[i]; k++) {
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          div_clone2.classList.add("hoverDefault_lite");
+          for (let j in projectBoxStyle) {
+            div_clone2.style[j] = projectBoxStyle[j];
+          }
+          div_clone2.style.left = String(3 + tempWidth + (margin * marginRatio) + (k * 85)) + ea;
+          svg_clone = SvgTong.stringParsing(SvgTong[memberWordingSrc[2].replace(/\.svg$/, '')]);
+          svg_clone.style.position = "absolute";
+          svg_clone.style.left = String(14) + ea;
+          svg_clone.style.top = String(8.5) + ea;
+          svg_clone.style.height = String(15) + ea;
+          div_clone2.appendChild(svg_clone);
+
+          div_clone.appendChild(div_clone2);
+        }
+
+        //circles
+        for (let k = 0; k < 3; k++) {
+          circle = this.mother.returnCircle("", "#ececec");
+          circle = SvgTong.stringParsing(circle);
+          circle.style.position = "absolute";
+          circle.style.right = String(11 + (13 * k)) + ea;
+          circle.style.top = String(20) + ea;
+          circle.style.height = String(12) + ea;
+          circle.style.transform = "scale(0.7)"
+          div_clone.appendChild(circle);
+        }
+
+        mainArea.appendChild(div_clone);
+
+      }
+
+
+
+      /*
+
+      for (let i = 2; i < items.length; i++) {
+
+        //white tong
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in style) {
+          div_clone.style[j] = style[j];
+        }
+        if (((i - 1) % 3) === 0) {
+          div_clone.style.marginRight = String(0);
+        }
+        if (i > items.length - 4) {
+          div_clone.style.marginBottom = String(0);
+        }
+        div_clone.setAttribute("name", items[i]);
+
+        //title
+        svg_clone = SvgTong.stringParsing(this.titleLightMap.map.get(items[i]))
+        for (let j in svgStyle) {
+          svg_clone.style[j] = svgStyle[j];
+        }
+        svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height) + ea;
+        div_clone.appendChild(svg_clone);
+
+        //title bar
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in barStyle) {
+          div_clone2.style[j] = barStyle[j];
+        }
+        div_clone.appendChild(div_clone2);
+
+        //contents box
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in contentsStyle) {
+          div_clone2.style[j] = contentsStyle[j];
+        }
+
+        //details
+        for (let j = 0; j < onSrc.length; j++) {
+
+          //detail title
+          svg_clone = SvgTong.stringParsing(SvgTong[onSrc[j].replace(/\.svg$/, '')]);
+          for (let k in svgSubStyle) {
+            svg_clone.style[k] = svgSubStyle[k];
+          }
+          svg_clone.style.top = detailsTop[j % (onSrc.length / 2)];
+          svg_clone.style.left = ((j >= onSrc.length / 2) ? String(50 + middleMargin) : String(0)) + '%';
+          svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+          div_clone2.appendChild(svg_clone);
+
+          //detail bar
+          div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+          for (let k in detailBarStyle) {
+            div_clone3.style[k] = detailBarStyle[k];
+          }
+          div_clone3.style.top = "calc(" + detailsTop[j % (onSrc.length / 2)] + " + " + String(height2 / 2) + ea + ' - ' + String(2) + ea + ")";
+          div_clone3.style.left = "calc(" + svg_clone.style.width + ' + ' + (((j >= onSrc.length / 2) ? String(50 + middleMargin) : String(0)) + '%') + ' + ' + String(detailMargin) + ea + ")";
+          div_clone3.style.width = "calc(" + String(50 - middleMargin) + "% - " + String(SvgTong.getRatio(svg_clone) * height2) + ea + ")";
+          div_clone2.appendChild(div_clone3);
+
+          //detail number
+          svg_clone = SvgTong.stringParsing(SvgTong[numbers[0].replace(/\.svg$/, '')]);
+          for (let k in detailNumberStyle) {
+            svg_clone.style[k] = detailNumberStyle[k];
+          }
+          svg_clone.style.top = detailsTop[j % (onSrc.length / 2)];
+          svg_clone.style.width = String(SvgTong.getRatio(svg_clone) * height2) + ea;
+          svg_clone.style.left = "calc(" + ((j >= onSrc.length / 2) ? String(100) : String(50 - middleMargin)) + '%' + " - " + svg_clone.style.width + ")";
+          div_clone2.appendChild(svg_clone);
+
+          div_clone3.style.width = "calc(" + div_clone3.style.width + " - " + svg_clone.style.width + " - " + String(detailMargin * 2) + ea + ")";
+
+        }
+
+        div_clone.appendChild(div_clone2);
+        mainArea.appendChild(div_clone);
+      }
+
+      */
+
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
@@ -320,6 +597,7 @@ DashboardJs.prototype.spreadMatrix = function () {
   secondTop = "calc(" + firstTop + ' + ' + smallHeight + ' + ' + String(margin) + ea + ")";
   thirdBottom = firstTop;
 
+  //matrix infomations
   const matrixInfo = new MapArray([
     { name: this.map.main.titles.items[0], styleObj: { ...generalStyle, top: firstTop, left: zeroLeft, width: bigWidth, height: bigHeight, } },
     { name: this.map.main.titles.items[1], styleObj: { ...generalStyle, bottom: thirdBottom, left: zeroLeft, width: bigWidth, height: bigHeight, } },
@@ -334,6 +612,7 @@ DashboardJs.prototype.spreadMatrix = function () {
     { name: this.map.main.titles.items[10], styleObj: { ...generalStyle, bottom: thirdBottom, right: thirdRight, width: smallWidth, height: smallHeight, } },
   ]);
 
+  //moving events
   const makeMatrixEvents = function (index) {
 
     let bigWidth0, bigWidth1;
@@ -686,6 +965,7 @@ DashboardJs.prototype.spreadMatrix = function () {
 
     return function (e) {
 
+      //matrix moving
       for (let i = 0; i < instance.matrixDoms.length; i++) {
 
         for (let j in targetArr[index][0][i]) {
@@ -719,15 +999,18 @@ DashboardJs.prototype.spreadMatrix = function () {
             }
           }
         }
-
       }
 
+      //matrix contents setting
       if (instance.matrixDoms[index].name === instance.standardItemNames[0]) {
-        instance.projectStatus(instance.matrixDoms[index].dom);
+        instance.projectStatus(true);
+      } else {
+        instance.projectStatus(false);
       }
-
       if (instance.matrixDoms[index].name === instance.standardItemNames[1]) {
-        instance.dailyBoard(instance.matrixDoms[index].dom);
+        instance.memberBoard(true);
+      } else {
+        instance.memberBoard(false);
       }
 
       GeneralJs.stacks["matrixTimeout"] = setTimeout(function () {
@@ -752,20 +1035,12 @@ DashboardJs.prototype.spreadMatrix = function () {
     }
   }
 
-  matrixMother = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: "100%",
-    height: "calc(100% - " + String(this.belowHeight) + ea + ")",
-  };
-  for (let i in style) {
-    matrixMother.style[i] = style[i];
-  }
-
-  tempArr = [];
-
+  //cancel event
   cancelEvent = function (e) {
     e.preventDefault();
+    if (GeneralJs.stacks["matrixTimeout"] !== null) {
+      clearTimeout(GeneralJs.stacks["matrixTimeout"]);
+    }
     for (let i = 0; i < matrixInfo.length; i++) {
       for (let j in matrixInfo[i].styleObj) {
         instance.matrixDoms[i].dom.style[j] = matrixInfo[i].styleObj[j];
@@ -777,6 +1052,7 @@ DashboardJs.prototype.spreadMatrix = function () {
       instance.matrixDoms[i].dom.children[1].style.transition = "all 0s ease";
       instance.matrixDoms[i].dom.children[1].style.opacity = String(0);
 
+      //matrix moving
       if (instance.matrixDoms[i].name !== instance.standardItemNames[0] && instance.matrixDoms[i].name !== instance.standardItemNames[1]) {
         for (let j = 0; j < instance.matrixDoms[i].dom.children[1].children.length; j++) {
           for (let k in categoryDetailBoxStyle0) {
@@ -794,18 +1070,34 @@ DashboardJs.prototype.spreadMatrix = function () {
         }
       }
 
-      GeneralJs.stacks["matrixTimeout"] = setTimeout(function () {
+      //matrix contents
+      instance.projectStatus(false);
+      instance.memberBoard(false);
+
+      GeneralJs.stacks["matrixTimeoutCancel"] = setTimeout(function () {
         for (let i = 0; i < instance.matrixDoms.length; i++) {
           instance.matrixDoms[i].dom.children[1].style.opacity = String(1);
           instance.matrixDoms[i].dom.children[1].style.transition = "all 0.5s ease";
         }
-        clearTimeout(GeneralJs.stacks["matrixTimeout"]);
-        GeneralJs.stacks["matrixTimeout"] = null;
+        clearTimeout(GeneralJs.stacks["matrixTimeoutCancel"]);
+        GeneralJs.stacks["matrixTimeoutCancel"] = null;
       }, 501);
-
     }
   }
 
+  //total mother
+  matrixMother = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    width: "100%",
+    height: "calc(100% - " + String(this.belowHeight) + ea + ")",
+  };
+  for (let i in style) {
+    matrixMother.style[i] = style[i];
+  }
+
+  //make matrix doms
+  tempArr = [];
   for (let i = 0; i < matrixInfo.length; i++) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.setAttribute("name", matrixInfo[i].name);
@@ -815,12 +1107,14 @@ DashboardJs.prototype.spreadMatrix = function () {
     div_clone.addEventListener("click", makeMatrixEvents(i));
     div_clone.addEventListener("contextmenu", cancelEvent);
 
+    //title
     svg_clone = SvgTong.stringParsing(titleMap.map.get(matrixInfo[i].name));
     for (let j in svgStyle) {
       svg_clone.style[j] = svgStyle[j];
     }
     div_clone.appendChild(svg_clone);
 
+    //contents tong
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     for (let j in categoryBoxStyle) {
       div_clone2.style[j] = categoryBoxStyle[j];
@@ -854,6 +1148,9 @@ DashboardJs.prototype.spreadMatrix = function () {
         }
         div_clone2.appendChild(div_clone3);
       }
+
+    } else {
+      div_clone2.style.background = "#dddddd";
     }
 
     div_clone.appendChild(div_clone2);
