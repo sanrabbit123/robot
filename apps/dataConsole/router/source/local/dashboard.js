@@ -243,6 +243,7 @@ DashboardJs.prototype.memberBoard = async function (on = true) {
   mainArea.style.background = "#dddddd";
   mainArea.style.paddingTop = GeneralJs.stacks["onMemberBoxPaddingTopPastConst"];
   mainArea.style.height = GeneralJs.stacks["onMemberBoxHeightPastConst"];
+  mainArea.style.border = "";
 
   if (on) {
     mainArea.style.background = "";
