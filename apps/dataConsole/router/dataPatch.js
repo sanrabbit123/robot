@@ -1136,6 +1136,146 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
   return targetColumns;
 }
 
+DataPatch.prototype.projectChainingTarget = function () {
+  const methodFilter = function (supply, method, percentage) {
+    let result, ratio, fee;
+
+    supply = Number(supply.replace(/[^0-9\.\-]/g, ''));
+    fee = percentage / 100;
+
+    if (/일반/gi.test(method)) {
+      result = Math.round((supply * 1.1) * (1 - fee));
+    } else if (/간이/gi.test(method)) {
+      result = Math.round(supply * (1 - fee));
+    } else if (/프리/gi.test(method)) {
+      ratio = 0.967;
+      result = Math.round((supply - (supply * fee)) * ratio);
+    } else {
+      throw new Error("invaild calculation");
+    }
+    
+    return result;
+  }
+
+  const targetFunctions = {
+    remainSupply: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let remainVat, remainConsumer;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      remainVat = value * 0.1;
+      remainConsumer = value * 1.1;
+
+      paymentsTotalAmount = methodFilter(value, thisCase.method, thisCase.percentage);
+      paymentsFirstAmount = paymentsTotalAmount / 2;
+      paymentsRemainAmount = paymentsTotalAmount / 2;
+
+      resultObj = { remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    remainVat: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let remainSupply, remainConsumer;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      remainSupply = value * 10;
+      remainConsumer = remainSupply + value;
+
+      paymentsTotalAmount = methodFilter(value * 10, thisCase.method, thisCase.percentage);
+      paymentsFirstAmount = paymentsTotalAmount / 2;
+      paymentsRemainAmount = paymentsTotalAmount / 2;
+
+      resultObj = { remainSupply, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    remainConsumer: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let remainSupply, remainVat;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      remainVat = value / 11;
+      remainSupply = value - remainVat;
+
+      paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
+      paymentsFirstAmount = paymentsTotalAmount / 2;
+      paymentsRemainAmount = paymentsTotalAmount / 2;
+
+      resultObj = { remainSupply, remainVat, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    method: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      paymentsTotalAmount = methodFilter(thisCase.remainSupply, value, thisCase.percentage);
+      paymentsFirstAmount = paymentsTotalAmount / 2;
+      paymentsRemainAmount = paymentsTotalAmount / 2;
+
+      resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    percentage: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      paymentsTotalAmount = methodFilter(thisCase.remainSupply, thisCase.method, value);
+      paymentsFirstAmount = paymentsTotalAmount / 2;
+      paymentsRemainAmount = paymentsTotalAmount / 2;
+
+      resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    paymentsTotalAmount: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let paymentsFirstAmount, paymentsRemainAmount;
+
+      paymentsFirstAmount = value / 2;
+      paymentsRemainAmount = value / 2;
+
+      resultObj = { paymentsFirstAmount, paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    paymentsFirstAmount: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let paymentsRemainAmount;
+
+      paymentsRemainAmount = thisCase.paymentsTotalAmount - value;
+
+      resultObj = { paymentsRemainAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+    paymentsRemainAmount: function (thisCase, value) {
+      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+
+      let resultObj;
+      let paymentsFirstAmount;
+
+      paymentsFirstAmount = thisCase.paymentsTotalAmount - value;
+
+      resultObj = { paymentsFirstAmount };
+      return { keys: Object.keys(resultObj), values: resultObj };
+    },
+  };
+
+  const targetNames = Object.keys(targetFunctions);
+
+  return { targetNames, targetFunctions };
+}
+
 DataPatch.prototype.projectMap = function () {
   const accountToObject = function (value, pastValue, vaildMode) {
     let obj;
@@ -1172,7 +1312,6 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-
   const methodToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
@@ -1215,8 +1354,10 @@ DataPatch.prototype.projectMap = function () {
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
 
 
+
     designer: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
     service: { name: "서비스", position: "service", type: "string", searchBoo: true, },
+
 
 
     status: { name: "진행 상태", position: "process.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
