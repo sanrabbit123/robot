@@ -48,10 +48,14 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       finalValue = String(value);
       break;
     case "number":
-      if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
-        finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value !== "number") {
+        if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
+          finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
+        } else {
+          finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
+        }
       } else {
-        finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
+        finalValue = value;
       }
       break;
     case "date":

@@ -13,19 +13,19 @@ DataPatch.prototype.toolsDateFilter = function (value) {
   } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
     tempArr = value.split("-");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
     tempArr = value.split("-");
     filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
     tempArr = value.split("-");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
     tempArr = value.split("-");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
     tempArr = value.split("-");
     filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
     tempArr = value.split("-");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
@@ -37,19 +37,19 @@ DataPatch.prototype.toolsDateFilter = function (value) {
   } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
     tempArr = value.split(".");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
     tempArr = value.split(".");
     filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
     tempArr = value.split(".");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
     tempArr = value.split(".");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
     tempArr = value.split(".");
     filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
     tempArr = value.split(".");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
@@ -61,19 +61,19 @@ DataPatch.prototype.toolsDateFilter = function (value) {
   } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
     tempArr = value.split("/");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
     tempArr = value.split("/");
     filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
     tempArr = value.split("/");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
     tempArr = value.split("/");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
     tempArr = value.split("/");
     filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
     tempArr = value.split("/");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
@@ -85,19 +85,19 @@ DataPatch.prototype.toolsDateFilter = function (value) {
   } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
     tempArr = value.split(" ");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
     tempArr = value.split(" ");
     filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9] [0-9] [0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
     tempArr = value.split(" ");
     filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
     tempArr = value.split(" ");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
     tempArr = value.split(" ");
     filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]/g.test(value)) {
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
     tempArr = value.split(" ");
     filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
   } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
@@ -1115,14 +1115,17 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
     info: [
       { name: "진행 상태", target: "status" },
       { name: "서비스", target: "service" },
-      { name: "계약금", target: "firstGuide", subTargets: [ "firstDate" ], subTitles: [ "안내", "입금" ] },
+      { name: "계약금 입금", target: "firstDate", subTargets: [ "firstGuide" ], subTitles: [ "계약금 안내" ] },
       { name: "계약금 정보", target: "firstInfo" },
       { name: "1차 미팅", target: "meetingDate" },
-      { name: "잔금", target: "remainGuide", subTargets: [ "remainDate" ], subTitles: [ "안내", "입금" ] },
-      { name: "잔금액", target: "remainSupply", subTargets: [ "remainVat", "remainConsumer" ], subTitles: [ "공급가", "VAT", "소비자가" ] },
+      { name: "잔금 입금", target: "remainDate", subTargets: [ "remainGuide" ], subTitles: [ "잔금 안내" ] },
+      { name: "공급가", target: "remainSupply" },
+      { name: "VAT", target: "remainVat" },
+      { name: "소비자가", target: "remainConsumer" },
       { name: "잔금 정보", target: "remainInfo" },
       { name: "계약", target: "formGuide",  subTargets: [ "formDateFrom", "formDateTo" ], subTitles: [ "안내", "시작일", "종료일" ] },
-      { name: "정산 방식", target: "method", subTargets: [ "percentage" ], subTitles: [ "방식", "수수료" ] },
+      { name: "정산 방식", target: "method" },
+      { name: "수수료", target: "percentage" },
       { name: "정산 정보", target: "calculationInfo" },
       { name: "정산 총금액", target: "paymentsTotalAmount" },
       { name: "디자이너 선금", target: "paymentsFirstAmount" },
@@ -1140,7 +1143,9 @@ DataPatch.prototype.projectChainingTarget = function () {
   const methodFilter = function (supply, method, percentage) {
     let result, ratio, fee;
 
-    supply = Number(supply.replace(/[^0-9\.\-]/g, ''));
+    if (typeof supply === "string") {
+      supply = Number(supply.replace(/[^0-9\.\-]/g, ''));
+    }
     fee = percentage / 100;
 
     if (/일반/gi.test(method)) {
@@ -1151,32 +1156,37 @@ DataPatch.prototype.projectChainingTarget = function () {
       ratio = 0.967;
       result = Math.round((supply - (supply * fee)) * ratio);
     } else {
-      throw new Error("invaild calculation");
+      console.log("사업자 일반으로 계산");
+      result = Math.round((supply * 1.1) * (1 - fee));
     }
-    
-    return result;
-  }
 
-  const targetFunctions = {
+    return result;
+  };
+
+  const chainingMethods = {
     remainSupply: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let remainVat, remainConsumer;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
-      remainVat = value * 0.1;
-      remainConsumer = value * 1.1;
+      remainVat = Math.round(value * 0.1);
+      remainConsumer = Math.round(value * 1.1);
 
       paymentsTotalAmount = methodFilter(value, thisCase.method, thisCase.percentage);
-      paymentsFirstAmount = paymentsTotalAmount / 2;
-      paymentsRemainAmount = paymentsTotalAmount / 2;
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainVat: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let remainSupply, remainConsumer;
@@ -1186,69 +1196,76 @@ DataPatch.prototype.projectChainingTarget = function () {
       remainConsumer = remainSupply + value;
 
       paymentsTotalAmount = methodFilter(value * 10, thisCase.method, thisCase.percentage);
-      paymentsFirstAmount = paymentsTotalAmount / 2;
-      paymentsRemainAmount = paymentsTotalAmount / 2;
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainSupply, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainConsumer: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let remainSupply, remainVat;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
-      remainVat = value / 11;
+      remainVat = Math.round(value / 11);
       remainSupply = value - remainVat;
 
       paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
-      paymentsFirstAmount = paymentsTotalAmount / 2;
-      paymentsRemainAmount = paymentsTotalAmount / 2;
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainSupply, remainVat, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     method: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
 
       let resultObj;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
       paymentsTotalAmount = methodFilter(thisCase.remainSupply, value, thisCase.percentage);
-      paymentsFirstAmount = paymentsTotalAmount / 2;
-      paymentsRemainAmount = paymentsTotalAmount / 2;
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     percentage: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
       paymentsTotalAmount = methodFilter(thisCase.remainSupply, thisCase.method, value);
-      paymentsFirstAmount = paymentsTotalAmount / 2;
-      paymentsRemainAmount = paymentsTotalAmount / 2;
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     paymentsTotalAmount: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let paymentsFirstAmount, paymentsRemainAmount;
 
-      paymentsFirstAmount = value / 2;
-      paymentsRemainAmount = value / 2;
+      paymentsFirstAmount = Math.round(value / 2);
+      paymentsRemainAmount = Math.round(value / 2);
 
       resultObj = { paymentsFirstAmount, paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     paymentsFirstAmount: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let paymentsRemainAmount;
@@ -1256,10 +1273,12 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = thisCase.paymentsTotalAmount - value;
 
       resultObj = { paymentsRemainAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     paymentsRemainAmount: function (thisCase, value) {
-      value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
 
       let resultObj;
       let paymentsFirstAmount;
@@ -1267,13 +1286,13 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsFirstAmount = thisCase.paymentsTotalAmount - value;
 
       resultObj = { paymentsFirstAmount };
-      return { keys: Object.keys(resultObj), values: resultObj };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
   };
 
-  const targetNames = Object.keys(targetFunctions);
+  const chainingTargets = Object.keys(chainingMethods);
 
-  return { targetNames, targetFunctions };
+  return { chainingTargets, chainingMethods };
 }
 
 DataPatch.prototype.projectMap = function () {
@@ -1375,7 +1394,7 @@ DataPatch.prototype.projectMap = function () {
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, },
-    method: { name: "정산 방식", position: "process.calculation.method", type: "string", searchBoo: true, },
+    method: { name: "정산 방식", position: "process.calculation.method", type: "string", items: [ "사업자(일반)", "사업자(간이)", "프리랜서" ], searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
     calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     paymentsTotalAmount: { name: "정산 총금액", position: "process.calculation.payments.totalAmount", type: "number", searchBoo: true, moneyBoo: true },

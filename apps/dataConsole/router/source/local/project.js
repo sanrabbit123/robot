@@ -201,6 +201,7 @@ ProjectJs.prototype.standardBar = function (standard) {
 ProjectJs.prototype.infoArea = function (info) {
   const instance = this;
   const map = DataPatch.projectMap();
+  const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -318,6 +319,11 @@ ProjectJs.prototype.infoArea = function (info) {
         let originalDiv = this.parentNode;
         let finalValue;
         let pastRawData;
+        let temp, tempFunction;
+        let thisCase;
+        let chainingFinalValue;
+        let idDomChildren;
+        let targetOriginalDiv;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
 
@@ -350,6 +356,39 @@ ProjectJs.prototype.infoArea = function (info) {
             finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
 
+          thisCase = instance.cases[Number(idDom.getAttribute("index"))];
+
+          if (chainingTargets.includes(column)) {
+            idDomChildren = idDom.children;
+            tempFunction = chainingMethods[column];
+            let { chainingColumns, chainingValues } = tempFunction(thisCase, finalValue);
+            for (let c of chainingColumns) {
+              chainingFinalValue = GeneralJs.vaildValue(c, chainingValues[c], thisCase[c]);
+              await GeneralJs.updateValue({
+                thisId: thisId,
+                requestIndex: String(requestIndex),
+                column: c,
+                pastValue: thisCase[c],
+                value: chainingFinalValue,
+                index: Number(idDom.getAttribute("index")),
+              });
+              thisCase[c] = chainingFinalValue;
+              targetOriginalDiv = null;
+              for (let dom of idDomChildren) {
+                if (dom.getAttribute("column") === c) {
+                  targetOriginalDiv = dom;
+                }
+              }
+              if (targetOriginalDiv !== null) {
+                if (GeneralJs.moneyBoo(c)) {
+                  targetOriginalDiv.textContent = GeneralJs.autoComma(chainingFinalValue);
+                } else {
+                  targetOriginalDiv.textContent = chainingFinalValue;
+                }
+              }
+            }
+          }
+
           await GeneralJs.updateValue({
             thisId: thisId,
             requestIndex: String(requestIndex),
@@ -359,7 +398,7 @@ ProjectJs.prototype.infoArea = function (info) {
             index: Number(idDom.getAttribute("index")),
           });
 
-          instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
+          thisCase[column] = finalValue;
           if (GeneralJs.moneyBoo(column)) {
             originalDiv.textContent = GeneralJs.autoComma(finalValue);
           } else {
@@ -1349,6 +1388,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const map = DataPatch.projectMap();
+  const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   const { standard, info } = DataPatch.projectWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -1561,6 +1601,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let originalDiv = this.parentNode;
         let finalValue;
         let pastRawData;
+        let temp, tempFunction;
+        let thisCaseOriginal;
+        let chainingFinalValue;
+        let idDom;
+        let idDomChildren;
+        let targetOriginalRowDiv, targetOriginalDiv;
+        let motherChildren;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
@@ -1571,6 +1618,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           column = mother.getAttribute("index");
           for (let dom of document.querySelectorAll('.' + thisId)) {
             if (Number(dom.getAttribute("index")) === thisCase["index"]) {
+              idDom = dom;
               for (let ch of dom.children) {
                 if (ch.getAttribute("column") === column) {
                   targetDom = ch;
@@ -1591,6 +1639,56 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
             finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
+          }
+
+          thisCaseOriginal = instance.cases[thisCase["index"]];
+
+          if (chainingTargets.includes(column)) {
+            idDomChildren = idDom.children;
+            motherChildren = mother.parentNode.children;
+            tempFunction = chainingMethods[column];
+            let { chainingColumns, chainingValues } = tempFunction(thisCaseOriginal, finalValue);
+            for (let c of chainingColumns) {
+              chainingFinalValue = GeneralJs.vaildValue(c, chainingValues[c], thisCaseOriginal[c]);
+              await GeneralJs.updateValue({
+                thisId: thisId,
+                requestIndex: String(requestIndex),
+                column: c,
+                pastValue: thisCaseOriginal[c],
+                value: chainingFinalValue,
+                index: Number(thisCase["index"]),
+              });
+              thisCaseOriginal[c] = chainingFinalValue;
+              targetOriginalRowDiv = null;
+              targetOriginalDiv = null;
+              for (let dom of idDomChildren) {
+                if (dom.getAttribute("column") === c) {
+                  targetOriginalRowDiv = dom;
+                }
+              }
+              for (let dom of motherChildren) {
+                if (dom.getAttribute("index") === c) {
+                  targetOriginalDiv = dom.children[1];
+                }
+              }
+
+              if (targetOriginalRowDiv !== null) {
+                if (GeneralJs.moneyBoo(c)) {
+                  targetOriginalRowDiv.textContent = GeneralJs.autoComma(chainingFinalValue);
+                } else {
+                  targetOriginalRowDiv.textContent = chainingFinalValue;
+                }
+              }
+
+              if (targetOriginalDiv !== null) {
+                if (GeneralJs.moneyBoo(c)) {
+                  targetOriginalDiv.textContent = GeneralJs.autoComma(chainingFinalValue);
+                } else {
+                  targetOriginalDiv.textContent = chainingFinalValue;
+                }
+              }
+
+            }
           }
 
           await GeneralJs.updateValue({
@@ -1618,7 +1716,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               }
             }
           }
-          instance.cases[thisCase["index"]][column] = finalValue;
+          thisCaseOriginal[column] = finalValue;
           if (map[column].moneyBoo === true) {
             originalDiv.textContent = GeneralJs.autoComma(finalValue);
             targetDom.textContent = GeneralJs.autoComma(finalValue);
@@ -1906,7 +2004,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.setAttribute("index", "referrerLinks");
     style = {
       position: "absolute",
-      top: String(fontSize * lineHeightRatio * (info.length + 3)) + ea,
+      top: String(fontSize * lineHeightRatio * (info.length)) + ea,
       left: String(0) + ea,
       width: "100%",
       height: String(16) + ea,
