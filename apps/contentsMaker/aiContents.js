@@ -406,16 +406,16 @@ AiContents.prototype.to_mysql = async function () {
 
 AiContents.prototype.to_poo = async function () {
   const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   const mother = this.mother;
   try {
 
     //setting binary folders -------------------------------------------------------------------------------------------------
     let pooPath_mother, pooPath;
     let webPath_mother, webPath;
-    let staticPath_mother, staticPath;
 
-    //set icloud main poo folder
-    pooPath_mother = mother.shellLink(this.motherLink.mainBinary);
+    //set uragen main poo folder
+    pooPath_mother = shellLink(this.motherLink.mainBinary);
     pooPath = {
       list_image: pooPath_mother + "/list_image",
       porpor: pooPath_mother + "/list_svg/porporpor",
@@ -423,17 +423,12 @@ AiContents.prototype.to_poo = async function () {
     };
 
     //set new-web folder
-    webPath_mother = mother.shellLink(this.motherLink.webPath);
+    webPath_mother = shellLink(this.motherLink.webPath);
     webPath = {
       porpor: webPath_mother + "/_PortfolioDetail",
       revrev: webPath_mother + "/_Review",
     };
 
-    //set ~/static folder
-    staticPath_mother = mother.shellLink(this.motherLink.proposalBinary);
-    staticPath = {
-      list_image: staticPath_mother + "/list_image",
-    };
 
     //setting ids -----------------------------------------------------------------------------------------------------------
     let arr;
@@ -444,7 +439,7 @@ AiContents.prototype.to_poo = async function () {
     let revdelete_arr = [];
 
     //set p_id and r_id
-    arr = await mother.fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
+    arr = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
     p_id = `none`;
     r_id = `none`;
     for (let i = 0; i < arr.length; i++) {
@@ -457,7 +452,7 @@ AiContents.prototype.to_poo = async function () {
 
     //move svgs and ai delete
     p_path = `${this.options.home_dir}/result/${p_id}code`;
-    svgAis = await mother.fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
+    svgAis = await fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
     for (let i of svgAis) { if (/\.ai$/g.test(i)) {
       delete_arr.push(i);
     }}
@@ -475,13 +470,10 @@ AiContents.prototype.to_poo = async function () {
     //image copy to poo
     mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${pooPath.list_image}`);
 
-    //image copy to static
-    mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${staticPath.list_image}`);
-
     //review version
     if (r_id !== `none`) {
       r_path = `${this.options.home_dir}/result/${r_id}code`;
-      revAis = await this.mother.fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
+      revAis = await fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
       for (let i of revAis) { if (/\.ai$/g.test(i)) {
         revdelete_arr.push(i);
       }}
@@ -501,11 +493,11 @@ AiContents.prototype.to_poo = async function () {
     let scpMsg = '';
     scpMsg += `scp -r ${pooPath.porpor} miro81@home-liaison.com:/miro81/www/list_svg/;`;
     scpMsg += `scp -r ${pooPath.list_image}/portp${p_id} miro81@home-liaison.com:/miro81/www/list_image/;`;
-    scpMsg += `scp -i ${process.env.HOME}/database.pem -r ${pooPath.porpor} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
-    scpMsg += `scp -i ${process.env.HOME}/database.pem -r ${pooPath.list_image}/portp${p_id} centos@homeliaison-dashboard.xyz:/home/centos/static/list_image/;`;
+    scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.porpor} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
+    scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.list_image}/portp${p_id} centos@homeliaison-dashboard.xyz:/home/centos/static/list_image/;`;
     if (r_id !== `none`) {
       scpMsg += `scp -r ${pooPath.revrev} miro81@home-liaison.com:/miro81/www/list_svg/;`;
-      scpMsg += `scp -i ${process.env.HOME}/database.pem -r ${pooPath.revrev} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
+      scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.revrev} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
     }
 
 

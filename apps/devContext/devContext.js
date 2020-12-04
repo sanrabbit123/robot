@@ -797,19 +797,6 @@ class DevContext extends Array {
       // console.log(endPoint);
 
 
-      // await this.mother.s3FileUpload("/Users/baechang-gyu/Desktop/a9.jpg", "test/test.jpg");
-
-      // const app = new GoogleDrive();
-      // await app.makeFolder_andMove_inPython("kkk", "11L22Szfanu0S7AgqPdg0kYT2lkpsHZWM");
-
-      // const app = new ImmovablesServer();
-      // await app.launching();
-
-      // let back = new BackMaker();
-      // let obj = await back.launching("project");
-      // const designer = await back.getDesignerById("de004");
-      // console.log(designer);
-
       // {
       //
       //   const resultFolder = process.env.HOME + "/photoOriginal";
@@ -1011,25 +998,23 @@ class DevContext extends Array {
 
       // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
 
-      const app = new DataRouter();
-      await app.getCalendar();
 
 
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
-      /*
+      // /*
 
       // contents upload
 
-      const client = "백향목";
-      const pid = "p67";
-      const rid = "re062";
+      const client = "이주희";
+      const pid = "p68";
+      const rid = "re063";
       const links = [
-        "https://docs.google.com/document/d/1PITuKqPNFROknT-7n88nosp77VH-zh0pZIrMcvyxmgk/edit?usp=sharing",
-        "https://docs.google.com/document/d/1sy2X1NHaH9gShLbKtxy-TgNJAoStA-EM4Ln80UKuf3U/edit?usp=sharing",
-        "https://drive.google.com/drive/folders/16kBX8SqddIDzQzju041GGOzHwLpQyqWz?usp=sharing",
+        "https://docs.google.com/document/d/1S2srNFFzeyE1wNApMmPEn50H-l9ho-nBCoRW_4GGOFk/edit?usp=sharing",
+        "https://docs.google.com/document/d/1f9DUnsDRj2NJoOV35FBmTk2O1jD30KQgIgMqZgSVCEE/edit?usp=sharing",
+        "https://drive.google.com/drive/folders/1s6raMZMdbxCGJTmkEnaLRhYEDyfMmLHu?usp=sharing",
       ];
       const webLinks = [
         "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1039,18 +1024,17 @@ class DevContext extends Array {
 
 
       // 1
-      // channel = "#502_sns_contents";
-      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
-      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
-      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
+      channel = "#502_sns_contents";
+      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
 
       // 2
       channel = "#200_web";
       await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
 
-      */
-
+      // */
 
 
       // card setting
@@ -1064,6 +1048,7 @@ class DevContext extends Array {
       // await app.generateToken();
 
 
+      // contents backup
 
       // const MONGOC = this.MONGOC;
       // const contents = await MONGOC.db(`miro81`).collection(`contents_backup`).find({}).toArray();
@@ -1072,20 +1057,22 @@ class DevContext extends Array {
       // }
 
 
+      // past to mongo
 
       // const back = new BackMaker();
       // await back.pastToMongo();
       // await back.updateDesid();
 
 
+      //addtional photo repair
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p66", 2);
 
 
+      // etc tools
 
-
-      // await this.spellCheck("p67");
+      // await this.spellCheck("p68");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
