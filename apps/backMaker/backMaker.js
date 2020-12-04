@@ -551,7 +551,13 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
     if (option.withTools) {
       Client = Tools.widthTools(Client);
     }
-    target = new Client(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Client(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -667,7 +673,13 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
     if (option.withTools) {
       Client = Tools.widthTools(Client);
     }
-    target = new Client(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Client(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -899,7 +911,13 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
     if (option.withTools) {
       Contents = Tools.widthTools(Contents);
     }
-    target = new Contents(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Contents(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -926,7 +944,13 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
     if (option.withTools) {
       Contents = Tools.widthTools(Contents);
     }
-    target = new Contents(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Contents(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1042,7 +1066,13 @@ BackMaker.prototype.getLatestContents = async function (option = { withTools: fa
     if (option.withTools) {
       Contents = Tools.widthTools(Contents);
     }
-    target = new Contents(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Contents(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1251,7 +1281,12 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
       arr = await option.selfMongo.db(`miro81`).collection(this.button).find({ serid }).toArray();
     }
 
-    target = new Service(arr[0]);
+    if (arr.length > 0) {
+      target = new Service(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1280,7 +1315,13 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
     if (option.withTools) {
       Designer = Tools.widthTools(Designer);
     }
-    target = new Designer(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Designer(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1396,7 +1437,13 @@ BackMaker.prototype.getLatestDesigner = async function (option = { withTools: fa
     if (option.withTools) {
       Designer = Tools.widthTools(Designer);
     }
-    target = new Designer(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Designer(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1689,7 +1736,13 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
     if (option.withTools) {
       Project = Tools.widthTools(Project);
     }
-    target = new Project(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Project(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);
@@ -1805,7 +1858,13 @@ BackMaker.prototype.getLatestProject = async function (option = { withTools: fal
     if (option.withTools) {
       Project = Tools.widthTools(Project);
     }
-    target = new Project(arr[0]);
+
+    if (arr.length > 0) {
+      target = new Project(arr[0]);
+    } else {
+      target = null;
+    }
+
     return target;
   } catch (e) {
     console.log(e);

@@ -525,7 +525,7 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 
   width = 300;
   height = 60;
-  visualSpecific = 2;
+  visualSpecific = 4;
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",

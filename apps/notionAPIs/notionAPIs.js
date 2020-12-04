@@ -92,6 +92,51 @@ NotionAPIs.prototype.getCxCards = async function () {
   }
 }
 
+NotionAPIs.prototype.getElementById = async function (id) {
+  const instance = this;
+  try {
+    let notionIds;
+    let obj, obj2, button;
+    let targetId;
+    let result;
+    let tempObj;
+
+    if (/^c/.test(id)) {
+      obj = await this.back.getClientById(id);
+      button = 'c';
+    } else if (/^d/.test(id)) {
+      obj = await this.back.getDesignerById(id);
+      button = 'd';
+    } else if (/^p/) {
+      obj2 = await this.back.getProjectById(id);
+      obj = await this.back.getClientById(obj2.cliid);
+      button = 'c';
+    } else {
+      throw new Error("invaild id");
+    }
+
+    notionIds = [];
+    if (button === 'c') {
+      for (let { request: { notionId } } of obj.requests) {
+        notionIds.push(notionId);
+      }
+    } else {
+      notionIds.push(obj.information.notionId);
+    }
+
+    result = [];
+    for (let i of notionIds) {
+      targetId = i.split('-')[1];
+      tempObj = await this.mother.pythonExecute(this.pythonApp, [ "getElementById" ], { id: targetId });
+      result.push(tempObj);
+    }
+
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 NotionAPIs.prototype.addNewRow = async function (obj) {
   const instance = this;
   try {

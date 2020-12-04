@@ -103,5 +103,10 @@ try:
         notionInstance.setConsoleLink(data["blockInfo"])
         print(dumps({ "message": "done" }))
 
+    elif argv[1] == 'getElementById':
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        cardObj = notionInstance.getElementById(data["id"])
+        print(dumps(cardObj))
+
 except Exception as e:
     print(e)

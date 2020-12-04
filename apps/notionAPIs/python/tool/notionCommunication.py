@@ -107,6 +107,10 @@ class NotionCommunication:
 
         return resultArr
 
+    def getElementById(self, id):
+        obj = self.client.get_block(self.host + '/' + RegExp.sub('-', '', id))
+        return self.cardToObject(obj)
+
     def setConsoleLink(self, dataObj):
         resultArr = self.getAllRows(dataObj)
         for i in resultArr:
