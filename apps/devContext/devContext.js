@@ -993,7 +993,7 @@ class DevContext extends Array {
 
 
       const notion = new NotionAPIs();
-      const notionCard = await notion.getElementById("d1904_aa12s");
+      const notionCard = await notion.getElementById("c2007_aa32s");
       console.log(notionCard)
 
       // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });

@@ -5,6 +5,191 @@ const DataPatch = function () {
 
 //TOOL ------------------------------------------------------------------------------------------
 
+DataPatch.toolsDateFilter = function (value) {
+  let filteredValue, temp, tempArr, today;
+
+  if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+    filteredValue = "20" + value;
+  } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+    tempArr = value.split("-");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+    tempArr = value.split(".");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+    tempArr = value.split("/");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
+    tempArr = value.split(" ");
+    filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+  } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\-[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("-");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\.[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(".");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9]\/[0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split("/");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+  } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[0-9] [0-9]$/.test(value)) {
+    today = new Date();
+    temp = String(today.getFullYear());
+    tempArr = value.split(" ");
+    filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+  } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
+    today = new Date();
+    filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
+  } else {
+    filteredValue = value;
+  }
+
+  return filteredValue;
+}
+
 DataPatch.prototype.toolsDateFilter = function (value) {
   let filteredValue, temp, tempArr, today;
 
@@ -373,19 +558,19 @@ DataPatch.prototype.clientMap = function () {
       } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
         tempArr = value.split("-");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
         tempArr = value.split("-");
         filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
         tempArr = value.split("-");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
         tempArr = value.split("-");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
         tempArr = value.split("-");
         filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
         tempArr = value.split("-");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
@@ -397,19 +582,19 @@ DataPatch.prototype.clientMap = function () {
       } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
         tempArr = value.split(".");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
         tempArr = value.split(".");
         filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
         tempArr = value.split(".");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
         tempArr = value.split(".");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
         tempArr = value.split(".");
         filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
         tempArr = value.split(".");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
@@ -421,19 +606,19 @@ DataPatch.prototype.clientMap = function () {
       } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
         tempArr = value.split("/");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
         tempArr = value.split("/");
         filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
         tempArr = value.split("/");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
         tempArr = value.split("/");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
         tempArr = value.split("/");
         filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
         tempArr = value.split("/");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
@@ -445,19 +630,19 @@ DataPatch.prototype.clientMap = function () {
       } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
         tempArr = value.split(" ");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
         tempArr = value.split(" ");
         filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9] [0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
         tempArr = value.split(" ");
         filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
         tempArr = value.split(" ");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
         tempArr = value.split(" ");
         filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]/g.test(value)) {
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
         tempArr = value.split(" ");
         filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
       } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
@@ -549,6 +734,7 @@ DataPatch.prototype.clientMap = function () {
 
       return filteredValue;
     };
+
     let arr = [];
     let filteredValue;
     let filteredArr = [];
@@ -587,6 +773,198 @@ DataPatch.prototype.clientMap = function () {
 
     return arr;
   };
+
+  const map = {
+    name: { name: "성함", position: "name", type: "string", searchBoo: true, },
+    cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
+    phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
+    email: { name: "이메일", position: "email", type: "string", searchBoo: true, },
+    timeline: { name: "문의일", position: "requests.0.request.timeline", type: "date", searchBoo: true, },
+    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
+    family: { name: "가족 구성원", position: "requests.0.request.family", type: "string", searchBoo: true, },
+    address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
+    contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },
+    pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
+    room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
+    bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
+    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: true, },
+    comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
+    channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
+    status: { name: "상태", position: "requests.0.analytics.response.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
+    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
+    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
+    precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, },
+    empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, },
+    movein: { name: "이사일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, },
+  };
+  return map;
+}
+
+DataPatch.prototype.clientNotionMap = function () {
+  let notionCard = {
+    address: '서울 강남구 선릉로69길 19 역삼래미안아파트 108동 2001호',
+    pyeong: 33,
+    movein: '2020-11-16',
+    email: '',
+    family: '부부,딸1(중2),아들1(초5)',
+    channel: '',
+    precheck: '2020-08-19',
+    empty: '2020-10-27',
+    contract: '자가',
+    room: '방 3개',
+    bathroom: '화장실 2개',
+    valcony: '발코니 확장',
+    phone: '010-6251-7863',
+    budget: '3000만원',
+    request: null,
+  };
+
+  let notionModel, requestNum;
+  let targetFunction;
+
+  if (notionCard.request === null || notionCard.request === undefined) {
+    requestNum = 0;
+  } else {
+    requestNum = notionCard.request;
+  }
+
+  notionModel = {
+    address: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.address";
+
+      if (typeof notionValue === "string") {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    pyeong: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.pyeong";
+
+      if (typeof notionValue === "number") {
+        finalValue = notionValue;
+      } else if (!Number.isNaN(Number(notionValue.replace(/[^0-9\.]/g, '')))) {
+        finalValue = Number(notionValue.replace(/[^0-9\.]/g, ''));
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    movein: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".analytics.date.space.movein";
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
+        finalValue = DataPatch.toolsDateFilter(notionValue);
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    email: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "email";
+
+      return { target, finalValue };
+    },
+    family: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.family";
+
+      return { target, finalValue };
+    },
+    channel: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.etc.channel";
+
+      return { target, finalValue };
+    },
+    precheck: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".analytics.date.space.precheck";
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
+        finalValue = DataPatch.toolsDateFilter(notionValue);
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    empty: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".analytics.date.space.empty";
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
+        finalValue = DataPatch.toolsDateFilter(notionValue);
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    contract: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.contract";
+
+      return { target, finalValue };
+    },
+    room: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.spec.room";
+
+      return { target, finalValue };
+    },
+    bathroom: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.spec.bathroom";
+
+      return { target, finalValue };
+    },
+    valcony: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.space.spec.valcony";
+
+      return { target, finalValue };
+    },
+    phone: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "phone";
+
+      return { target, finalValue };
+    },
+    budget: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "requests." + String(requestNum) + ".request.budget";
+
+      return { target, finalValue };
+    },
+  };
+
+
+  targetFunction = notionModel(something);
+  const { target, finalValue } = targetFunction(notionValue, pastValue, requestNum);
+
+
 
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
