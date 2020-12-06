@@ -875,6 +875,11 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "email";
+      if (typeof notionValue === "string" && /@/g.test(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -882,6 +887,11 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.family";
+      if (typeof notionValue === "string") {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -889,6 +899,11 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.etc.channel";
+      if (typeof notionValue === "string") {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -918,8 +933,10 @@ DataPatch.prototype.clientNotionMap = function () {
     },
     contract: function (notionValue, pastValue, requestNum) {
       let target, finalValue;
+      let items;
 
       target = "requests." + String(requestNum) + ".request.space.contract";
+      items = [ '전월세', '자가' ];
 
       return { target, finalValue };
     },
@@ -948,6 +965,11 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "phone";
+      if (typeof notionValue === "string" && /-/g.test(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -960,11 +982,8 @@ DataPatch.prototype.clientNotionMap = function () {
     },
   };
 
-
   targetFunction = notionModel(something);
   const { target, finalValue } = targetFunction(notionValue, pastValue, requestNum);
-
-
 
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
