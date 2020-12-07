@@ -309,6 +309,9 @@ ProjectJs.prototype.infoArea = function (info) {
 
         removeAllEvent();
         originalDiv.style.overflow = "hidden";
+        originalDiv.style.color = "inherit";
+        originalDiv.style.transition = "";
+
         window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
         GeneralJs.stacks["addressEvent"] = null;
       }
@@ -422,6 +425,8 @@ ProjectJs.prototype.infoArea = function (info) {
       let width;
       let fontSize;
       let iframe_clone;
+      let tempFunction;
+      const updateEventMother = this;
 
       if (this.querySelector("input") === null) {
 
@@ -475,7 +480,7 @@ ProjectJs.prototype.infoArea = function (info) {
         const map = DataPatch.projectMap();
         const thisMap = map[this.getAttribute("column")];
 
-        if (thisMap.items !== undefined) {
+        if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -515,7 +520,7 @@ ProjectJs.prototype.infoArea = function (info) {
             this.appendChild(button_clone);
           }
 
-        } else if (thisMap.address !== undefined) {
+        } else if (thisMap.type !== "object" && thisMap.address !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -562,6 +567,19 @@ ProjectJs.prototype.infoArea = function (info) {
           window.addEventListener('message', GeneralJs.stacks["addressEvent"]);
 
           this.appendChild(button_clone);
+
+        } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction(this, input_clone, function () {
+            let e = {};
+            e.type = "keypress";
+            e.keyCode = 13;
+            updateValueEvent.call(input_clone, e);
+            updateEventMother.style.overflow = "hidden";
+          });
 
         } else {
 
@@ -1590,6 +1608,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         removeAllEvent();
         originalDiv.style.overflow = "hidden";
+        originalDiv.style.color = "inherit";
+        originalDiv.style.transition = "";
+
         window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
         GeneralJs.stacks["addressEvent"] = null;
       }
@@ -1739,6 +1760,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let width;
       let fontSize;
       let iframe_clone;
+      let tempFunction;
+      const updateEventMother = this;
 
       if (this.querySelector("input") === null) {
 
@@ -1790,7 +1813,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         //items
         const thisMap = map[this.parentNode.getAttribute("index")];
 
-        if (thisMap.items !== undefined) {
+        if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -1831,7 +1854,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             this.appendChild(button_clone);
           }
 
-        } else if (thisMap.address !== undefined) {
+        } else if (thisMap.type !== "object" && thisMap.address !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -1878,6 +1901,19 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           window.addEventListener('message', GeneralJs.stacks["addressEvent"]);
 
           this.appendChild(button_clone);
+
+        } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction(this, input_clone, function () {
+            let e = {};
+            e.type = "keypress";
+            e.keyCode = 13;
+            updateValueEvent.call(input_clone, e);
+            updateEventMother.style.overflow = "hidden";
+          });
 
         } else {
 
