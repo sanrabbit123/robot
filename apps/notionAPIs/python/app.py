@@ -108,5 +108,10 @@ try:
         cardObj = notionInstance.getElementById(data["id"])
         print(dumps(cardObj))
 
+    elif argv[1] == 'pastToNewDesid':
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        notionInstance.pastToNewDesid(data["blockInfo"], data["filter"])
+        print(dumps({ "message": "done" }))
+
 except Exception as e:
     print(e)

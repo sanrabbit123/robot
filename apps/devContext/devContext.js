@@ -992,14 +992,16 @@ class DevContext extends Array {
       */
 
 
-      const notion = new NotionAPIs();
-      const notionCard = await notion.getElementById("c2007_aa32s");
-      console.log(notionCard)
+      // const notion = new NotionAPIs();
+      // const notionCard = await notion.getElementById("d2003_aa01s");
+      // console.log(notionCard)
+      // await notion.pastToNewDesid()
+      // await notion.updateConsoleLink();
 
       // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
 
-
-
+      const back = new BackMaker();
+      console.log(await back.getClientsAll());
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------

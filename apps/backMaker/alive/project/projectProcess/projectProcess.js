@@ -57,7 +57,7 @@ Payments.prototype.toNormal = function () {
 }
 
 const Calculation = function (json) {
-  this.method = json.method;
+  this.method = new Menu(json.method, [ "사업자(일반)", "사업자(간이)", "프리랜서" ], false);
   this.percentage = json.percentage;
   this.info = new Info(json.info);
   this.payments = new Payments(json.payments);
@@ -65,7 +65,7 @@ const Calculation = function (json) {
 
 Calculation.prototype.toNormal = function () {
   let obj = {};
-  obj.method = this.method;
+  obj.method = this.method.toNormal();
   obj.percentage = this.percentage;
   obj.info = this.info.toNormal();
   obj.payments = this.payments.toNormal();

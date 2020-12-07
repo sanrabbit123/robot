@@ -117,9 +117,19 @@ class NotionCommunication:
             try:
                 if i.cliid != '':
                     if i.status == '현장 미팅' or i.status == '잔금 대기' or i.status == '계약서' or i.status == '프로젝트 진행' or i.status == '디자인 제안' or i.status == '시공 제안' or i.status == '스타일링 제안':
-                        i.console = "http://127.0.0.1:8080/project?cliid=" + i.cliid
+                        i.console = "http://127.0.0.1:3000/project?cliid=" + i.cliid
                     else:
-                        i.console = "http://127.0.0.1:8080/client?cliid=" + i.cliid
+                        i.console = "http://127.0.0.1:3000/client?cliid=" + i.cliid
+                    i.update = "http://127.0.0.1:3000/loading?notionUpdate=" + i.cliid
+                    i.request = 0
             except Exception as e:
                 if i.desid != '':
-                    i.console = "http://127.0.0.1:8080/designer?desid=" + i.desid
+                    i.console = "http://127.0.0.1:3000/designer?desid=" + i.desid
+                    i.update = "http://127.0.0.1:3000/loading?notionUpdate=" + i.desid
+                    i.request = 0
+
+    def pastToNewDesid(self, dataObj, filter):
+        resultArr = self.getAllRows(dataObj)
+        for i in resultArr:
+            if i.desid != '':
+                i.desid = filter[i.desid]

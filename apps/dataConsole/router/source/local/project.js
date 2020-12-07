@@ -494,11 +494,11 @@ ProjectJs.prototype.infoArea = function (info) {
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
             style = {
               position: "absolute",
-              top: String(((height * 1.9) * (i + 1)) - top) + ea,
+              top: String(((height * 2) * (i + 1)) - top) + ea,
               left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
               width: String(width) + ea,
               paddingTop: String(height * 0.3) + ea,
-              height: String(height * 1.4) + ea,
+              height: String(height * 1.5) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
@@ -508,8 +508,8 @@ ProjectJs.prototype.infoArea = function (info) {
               animation: "fadeuplite 0.3s ease forwards",
               boxShadow: "0px 2px 11px -6px #2fa678",
             };
-            for (let i in style) {
-              button_clone.style[i] = style[i];
+            for (let j in style) {
+              button_clone.style[j] = style[j];
             }
             button_clone.addEventListener("click", updateValueEvent);
             this.appendChild(button_clone);
@@ -1824,8 +1824,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               boxShadow: "0px 2px 11px -6px #2fa678",
               cursor: "pointer",
             };
-            for (let i in style) {
-              button_clone.style[i] = style[i];
+            for (let j in style) {
+              button_clone.style[j] = style[j];
             }
             button_clone.addEventListener("click", updateValueEvent);
             this.appendChild(button_clone);

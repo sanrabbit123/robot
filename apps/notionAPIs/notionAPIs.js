@@ -6,6 +6,19 @@ const NotionAPIs = function () {
   this.dir = process.cwd() + "/apps/notionAPIs";
   this.jsonDir = this.dir + "/json";
   this.pythonApp = this.dir + "/python/app.py";
+  this.blockInfo = {
+    blockInfo: {
+      blockId: "0da6f7d0806945a3919127b4171adde9",
+      targetColumns: [
+        { regex: "신규", name: "newClient" },
+        { regex: "프로젝트", name: "projectContents" },
+        { regex: "장기", name: "oldClient" },
+        { regex: "드랍", name: "dropClient" },
+        { regex: "완료", name: "completeClient" },
+        { regex: "디자이너", name: "designer" },
+      ],
+    },
+  };
 }
 
 NotionAPIs.prototype.blockToJson = async function (obj) {
@@ -17,10 +30,47 @@ NotionAPIs.prototype.blockToJson = async function (obj) {
   }
 }
 
-NotionAPIs.prototype.updateConsoleLink = async function (obj) {
+NotionAPIs.prototype.pastToNewDesid = async function () {
   const instance = this;
   try {
-    return (await this.mother.pythonExecute(this.pythonApp, [ "setConsoleLink" ], obj));
+    const DesidFilter = this.back.idFilter("designer");
+    let block, designerTarget, obj;
+    let temp, temp2, temp3;
+    let tempString, tempString2;
+
+    block = JSON.parse(JSON.stringify(this.blockInfo));
+    designerTarget = block.blockInfo.targetColumns.pop();
+    block.blockInfo.targetColumns = [ designerTarget ];
+    obj = { ...block };
+
+    temp = DesidFilter.pastToNew.toString().split("case");
+
+    temp2 = [];
+    for (let i = 1; i < temp.length; i++) {
+      temp2.push(temp[i].split("return"));
+    }
+
+    temp3 = {};
+    for (let i = 0; i < temp2.length; i++) {
+      tempString = '';
+      tempString2 = '';
+      tempString = temp2[i][0].replace(/[^de0-9]/g, '');
+      tempString2 = temp2[i][1].replace(/[^a-z\_0-9]/g, '').slice(0, 11);
+      temp3[tempString] = tempString2;
+    }
+
+    obj.filter = temp3;
+
+    return (await this.mother.pythonExecute(this.pythonApp, [ "pastToNewDesid" ], obj));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.prototype.updateConsoleLink = async function () {
+  const instance = this;
+  try {
+    return (await this.mother.pythonExecute(this.pythonApp, [ "setConsoleLink" ], this.blockInfo));
   } catch (e) {
     console.log(e);
   }
@@ -30,20 +80,8 @@ NotionAPIs.prototype.getCxCards = async function () {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
-    const obj = {
-      blockInfo: {
-        blockId: "0da6f7d0806945a3919127b4171adde9",
-        targetColumns: [
-          { regex: "신규", name: "newClient" },
-          { regex: "프로젝트", name: "projectContents" },
-          { regex: "장기", name: "oldClient" },
-          { regex: "드랍", name: "dropClient" },
-          { regex: "완료", name: "completeClient" },
-          { regex: "디자이너", name: "designer" },
-        ],
-      },
-    };
-    await this.updateConsoleLink(obj);
+    const obj = this.blockInfo;
+    await this.updateConsoleLink();
     const { resultFileList } = await this.blockToJson(obj);
 
     let tempArr;
@@ -131,7 +169,7 @@ NotionAPIs.prototype.getElementById = async function (id) {
       result.push(tempObj);
     }
 
-    return result;
+    return result[0];
   } catch (e) {
     console.log(e);
   }

@@ -1176,6 +1176,56 @@ DataRouter.prototype.rou_post_calendarArr = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_notionUpdate = function () {
+  const instance = this;
+  const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+  const notion = new NotionAPIs();
+  let obj = {};
+  obj.link = "/notionUpdate";
+  obj.func = async function (req, res) {
+    try {
+      let notionCard;
+      let whoMethod, whoFunction;
+      let result;
+      let whereQuery, updateQuery;
+
+      whoMethod = null;
+      if (req.body.cliid !== undefined) {
+        notionCard = await notion.getElementById(req.body.cliid);
+        whoMethod = "client";
+      } else if (req.body.desid !== undefined) {
+        notionCard = await notion.getElementById(req.body.desid);
+        whoMethod = "designer";
+      }
+
+      whoFunction = instance.patch[whoMethod + "NotionMap"];
+      result = whoFunction(notionCard);
+
+      updateQuery = {};
+      for (let { target, finalValue } of result) {
+        if (finalValue !== null && finalValue !== undefined) {
+          updateQuery[target] = finalValue;
+        }
+      }
+
+      whereQuery = {};
+      if (req.body.cliid !== undefined) {
+        whereQuery.cliid = req.body.cliid;
+        instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.body.desid !== undefined) {
+        whereQuery.desid = req.body.desid;
+        instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ "message": "success" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.getAll = function () {

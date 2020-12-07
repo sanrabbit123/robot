@@ -1,6 +1,6 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
-const { DateParse, Address } = require(GENERAL_DIR + "/generator.js");
+const { DateParse, Menu, Address } = require(GENERAL_DIR + "/generator.js");
 
 //contract ------------------------------------------------------------------------
 
@@ -144,14 +144,14 @@ BusinessFiles.prototype.toNormal = function () {
 }
 
 const BusinessInfo = function (json) {
-  this.classification = json.classification;
+  this.classification = new Menu(json.classification, [ "법인사업자(일반)", "법인사업자(간이)", "개인사업자(일반)", "개인사업자(간이)", "프리랜서" ], false);
   this.businessNumber = json.businessNumber;
   this.files = new BusinessFiles(json.files);
 }
 
 BusinessInfo.prototype.toNormal = function () {
   let obj = {};
-  obj.classification = this.classification;
+  obj.classification = this.classification.toNormal();
   obj.businessNumber = this.businessNumber;
   obj.files = this.files.toNormal();
   return obj;

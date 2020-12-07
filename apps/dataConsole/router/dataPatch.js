@@ -773,6 +773,186 @@ DataPatch.prototype.clientMap = function () {
 
     return arr;
   };
+  const callHistoryInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
+      let totalString = '';
+      for (let i = 0; i < inputs.length; i++) {
+        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
+          totalString += DataPatch.toolsDateFilter(inputs[i].value);
+          totalString += ", ";
+        }
+      }
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -2);
+      }
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "100";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "100" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "100" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "#2fa678",
+      width: String(width) + ea,
+      height: "89%",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% + " + String(3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let button_clone, input_clone;
+
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    });
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
 
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
@@ -794,7 +974,7 @@ DataPatch.prototype.clientMap = function () {
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
     status: { name: "상태", position: "requests.0.analytics.response.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
-    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
+    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, },
     movein: { name: "이사일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, },
@@ -802,27 +982,10 @@ DataPatch.prototype.clientMap = function () {
   return map;
 }
 
-DataPatch.prototype.clientNotionMap = function () {
-  let notionCard = {
-    address: '서울 강남구 선릉로69길 19 역삼래미안아파트 108동 2001호',
-    pyeong: 33,
-    movein: '2020-11-16',
-    email: '',
-    family: '부부,딸1(중2),아들1(초5)',
-    channel: '',
-    precheck: '2020-08-19',
-    empty: '2020-10-27',
-    contract: '자가',
-    room: '방 3개',
-    bathroom: '화장실 2개',
-    valcony: '발코니 확장',
-    phone: '010-6251-7863',
-    budget: '3000만원',
-    request: null,
-  };
-
+DataPatch.prototype.clientNotionMap = function (notionCard) {
   let notionModel, requestNum;
   let targetFunction;
+  let resultArr;
 
   if (notionCard.request === null || notionCard.request === undefined) {
     requestNum = 0;
@@ -861,10 +1024,26 @@ DataPatch.prototype.clientNotionMap = function () {
     },
     movein: function (notionValue, pastValue, requestNum) {
       let target, finalValue;
+      let tempArr;
+
+      target = "requests." + String(requestNum) + ".request.space.resident.expected";
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
+        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
+        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    realmove: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+      let tempArr;
 
       target = "requests." + String(requestNum) + ".analytics.date.space.movein";
       if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        finalValue = DataPatch.toolsDateFilter(notionValue);
+        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
+        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
       } else {
         finalValue = pastValue;
       }
@@ -909,10 +1088,12 @@ DataPatch.prototype.clientNotionMap = function () {
     },
     precheck: function (notionValue, pastValue, requestNum) {
       let target, finalValue;
+      let tempArr;
 
       target = "requests." + String(requestNum) + ".analytics.date.space.precheck";
       if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        finalValue = DataPatch.toolsDateFilter(notionValue);
+        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
+        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
       } else {
         finalValue = pastValue;
       }
@@ -921,10 +1102,12 @@ DataPatch.prototype.clientNotionMap = function () {
     },
     empty: function (notionValue, pastValue, requestNum) {
       let target, finalValue;
+      let tempArr;
 
       target = "requests." + String(requestNum) + ".analytics.date.space.empty";
       if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        finalValue = DataPatch.toolsDateFilter(notionValue);
+        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
+        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
       } else {
         finalValue = pastValue;
       }
@@ -937,6 +1120,11 @@ DataPatch.prototype.clientNotionMap = function () {
 
       target = "requests." + String(requestNum) + ".request.space.contract";
       items = [ '전월세', '자가' ];
+      if (items.includes(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -944,6 +1132,33 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.space.spec.room";
+      if (typeof notionValue === "string") {
+        if (/4/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 4) {
+          finalValue = 4;
+        } else if (/3/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 3) {
+          finalValue = 3;
+        } else if (/2/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 2) {
+          finalValue = 2;
+        } else if (/1/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 1) {
+          finalValue = 1;
+        } else {
+          finalValue = pastValue;
+        }
+      } else if (typeof notionValue === "number") {
+        if (notionValue === 4) {
+          finalValue = 4;
+        } else if (notionValue === 3) {
+          finalValue = 3;
+        } else if (notionValue === 2) {
+          finalValue = 2;
+        } else if (notionValue === 1) {
+          finalValue = 1;
+        } else {
+          finalValue = pastValue;
+        }
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -951,6 +1166,29 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.space.spec.bathroom";
+      if (typeof notionValue === "string") {
+        if (/3/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 3) {
+          finalValue = 3;
+        } else if (/2/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 2) {
+          finalValue = 2;
+        } else if (/1/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 1) {
+          finalValue = 1;
+        } else {
+          finalValue = pastValue;
+        }
+      } else if (typeof notionValue === "number") {
+        if (notionValue === 3) {
+          finalValue = 3;
+        } else if (notionValue === 2) {
+          finalValue = 2;
+        } else if (notionValue === 1) {
+          finalValue = 1;
+        } else {
+          finalValue = pastValue;
+        }
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -958,6 +1196,17 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.space.spec.valcony";
+      if (typeof notionValue === "string") {
+        if (notionValue === "발코니 확장") {
+          finalValue = true;
+        } else if (notionValue === "발코니 확장 없음") {
+          finalValue = false;
+        } else {
+          finalValue = pastValue;
+        }
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
@@ -977,40 +1226,47 @@ DataPatch.prototype.clientNotionMap = function () {
       let target, finalValue;
 
       target = "requests." + String(requestNum) + ".request.budget";
+      if (typeof notionValue === "string") {
+        if (notionValue.replace(/[^0-9]/g, '') === "5000") {
+          finalValue = '5,000만원 이상';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "4500") {
+          finalValue = '4,500만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "4000") {
+          finalValue = '4,000만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "3500") {
+          finalValue = '3,500만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "3000") {
+          finalValue = '3,000만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "2500") {
+          finalValue = '2,500만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "2000") {
+          finalValue = '2,000만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "1500") {
+          finalValue = '1,500만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "1000") {
+          finalValue = '1,000만원';
+        } else if (notionValue.replace(/[^0-9]/g, '') === "500") {
+          finalValue = '500만원 이하';
+        } else {
+          finalValue = pastValue;
+        }
+      } else {
+        finalValue = pastValue;
+      }
 
       return { target, finalValue };
     },
   };
 
-  targetFunction = notionModel(something);
-  const { target, finalValue } = targetFunction(notionValue, pastValue, requestNum);
+  resultArr = [];
+  for (let i in notionCard) {
+    if (notionModel[i] !== undefined) {
+      targetFunction = notionModel[i];
+      resultArr.push(targetFunction(notionCard[i], null, requestNum));
+    }
+  }
 
-  const map = {
-    name: { name: "성함", position: "name", type: "string", searchBoo: true, },
-    cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
-    phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
-    email: { name: "이메일", position: "email", type: "string", searchBoo: true, },
-    timeline: { name: "문의일", position: "requests.0.request.timeline", type: "date", searchBoo: true, },
-    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
-    family: { name: "가족 구성원", position: "requests.0.request.family", type: "string", searchBoo: true, },
-    address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
-    contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },
-    pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
-    room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
-    bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
-    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
-    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
-    expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: true, },
-    comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
-    channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
-    status: { name: "상태", position: "requests.0.analytics.response.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
-    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
-    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
-    precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, },
-    empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, },
-    movein: { name: "이사일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, },
-  };
-  return map;
+  return resultArr;
 }
 
 //DESIGNER --------------------------------------------------------------------------------------
@@ -1332,7 +1588,7 @@ DataPatch.prototype.designerMap = function () {
     sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     career: { name: "경력", position: "information.business.career", type: "object", objectFunction: careerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     account: { name: "계좌번호", position: "information.business.account", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    classification: { name: "사업자 분류", position: "information.business.businessInfo.classification", type: "string", searchBoo: true, },
+    classification: { name: "사업자 분류", position: "information.business.businessInfo.classification", items: [ "법인사업자(일반)", "법인사업자(간이)", "개인사업자(일반)", "개인사업자(간이)", "프리랜서" ], type: "string", searchBoo: true, },
     businessNumber: { name: "사업자 등록번호", position: "information.business.businessInfo.businessNumber", type: "string", searchBoo: true, },
     files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     percentage: { name: "수수료", position: "information.business.service.cost.percentage", type: "number", searchBoo: true, },
@@ -1340,6 +1596,124 @@ DataPatch.prototype.designerMap = function () {
     method: { name: "시공 방식", position: "information.business.service.construct.method", type: "string", searchBoo: true, },
   };
   return map;
+}
+
+DataPatch.prototype.designerNotionMap = function (notionCard) {
+  let notionModel, requestNum;
+  let targetFunction;
+  let resultArr;
+
+  if (notionCard.request === null || notionCard.request === undefined) {
+    requestNum = 0;
+  } else {
+    requestNum = notionCard.request;
+  }
+
+  notionModel = {
+    address: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "information.address";
+
+      if (typeof notionValue === "string" && notionValue !== "") {
+        finalValue = [ notionValue ];
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    contractday: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+      let tempArr;
+
+      target = "information.contract.date";
+      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
+        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
+        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    email: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "information.email";
+      if (typeof notionValue === "string" && /@/g.test(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    phone: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "information.phone";
+      if (typeof notionValue === "string" && /-/g.test(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    classification: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+      let items;
+
+      target = "information.business.businessInfo.classification";
+      items = [ "법인사업자(일반)", "법인사업자(간이)", "개인사업자(일반)", "개인사업자(간이)", "프리랜서" ];
+      if (items.includes(notionValue)) {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    percentage: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "information.business.service.cost.percentage";
+
+      if (typeof notionValue === "number") {
+        finalValue = notionValue;
+      } else if (!Number.isNaN(Number(notionValue.replace(/[^0-9\.]/g, '')))) {
+        finalValue = Number(notionValue.replace(/[^0-9\.]/g, ''));
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    },
+    businessnumber: function (notionValue, pastValue, requestNum) {
+      let target, finalValue;
+
+      target = "information.business.businessInfo.businessNumber";
+
+      if (typeof notionValue === "string") {
+        finalValue = notionValue;
+      } else {
+        finalValue = pastValue;
+      }
+
+      return { target, finalValue };
+    }
+  };
+
+  resultArr = [];
+  for (let i in notionCard) {
+    if (notionModel[i] !== undefined) {
+      targetFunction = notionModel[i];
+      resultArr.push(targetFunction(notionCard[i], null, requestNum));
+    }
+  }
+
+  return resultArr;
 }
 
 //PROJECT ---------------------------------------------------------------------------------------
