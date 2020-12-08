@@ -2271,7 +2271,7 @@ ProposalJs.prototype.list_searchBar = async function () {
     input_clone.setAttribute("placeholder", "제안서 검색...");
     this.mother.searchInput.style.display = "none";
 
-    input_clone.addEventListener("keypress", async function (e) {
+    GeneralJs.events["proposalListSearch"] = async function (e) {
       let parent;
       let entireList;
       let svg_icon;
@@ -2319,8 +2319,9 @@ ProposalJs.prototype.list_searchBar = async function () {
         }
 
       }
-    });
+    }
 
+    input_clone.addEventListener("keypress", GeneralJs.events["proposalListSearch"]);
     parent.appendChild(input_clone);
     this.listSearchInput = input_clone;
     this.listSearchInput.focus();
@@ -2454,6 +2455,7 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
       }
 
       if (projectList.length === 0) {
+        GeneralJs.stacks["proposalListSearchResult"] = null;
         alert("결과가 없습니다.");
         retry = true;
       }
@@ -2531,6 +2533,8 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
       if (j === 1 || j === 2) {
         div_clone2.addEventListener("click", this.load_initevent());
       } else if (j === 3) {
+        div_clone2.setAttribute("proid", info_object_arr[i].proid);
+        div_clone2.setAttribute("cliid", info_object_arr[i].cliid);
         div_clone2.addEventListener("click", this.list_menu());
       }
       div_clone2.insertAdjacentHTML("beforeend", details_list[i][j]);
@@ -2956,8 +2960,8 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
 }
 
 ProposalJs.prototype.load_processLoad_second = function (obj, third) {
-  let instance = this;
-  let e = {}
+  const instance = this;
+  let e = {};
   let labels = document.querySelectorAll(".pp_clients_label");
   for (let lbj of labels) {
     if (lbj.getAttribute("cus_value") === obj.service) {
@@ -2970,9 +2974,15 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     i.children[0].style.color = "#59af89";
     i.children[0].style.fontSize = "1.7vh";
   }
-  for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-  for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-  for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
+  for (let i = 0; i < 4; i++) {
+    service[i].children[0].style.marginTop = "-2px";
+  }
+  for (let i = 4; i < 8; i++) {
+    service[i].children[0].style.marginTop = "-4px";
+  }
+  for (let i = 8; i < 12; i++) {
+    service[i].children[0].style.marginTop = "-6px";
+  }
   let target0 = e.target.parentNode.parentNode;
   let target1 = e.target.parentNode.parentNode.children[0];
 
@@ -3008,7 +3018,7 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
 }
 
 ProposalJs.prototype.load_processLoad_third = function () {
-  let instance = this;
+  const instance = this;
   return async function (obj) {
     clearTimeout(ProposalJs.toggleTimeout.load_third);
     clearTimeout(ProposalJs.toggleTimeout.load_second);
@@ -3026,6 +3036,7 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
+  const instance = this;
   try {
     let target, temp, temp2, standard_id;
     let temp_arr = [];
@@ -4258,7 +4269,7 @@ ProposalJs.prototype.cssInjection = function () {
 
 ProposalJs.prototype.launching = async function () {
   const instance = this;
-  const { arrow: { left, right } } = this.mother.belowButtons;
+  const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
   try {
 
     left.style.display = 'none';
@@ -4273,7 +4284,7 @@ ProposalJs.prototype.launching = async function () {
     let query = GeneralJs.returnGet();
     let proposal_list_raw, proposal_obj;
     let textTarget;
-    let proid;
+    let proid, cliid;
     let serviceMap, xValueMap;
     let clients;
 
@@ -4326,6 +4337,71 @@ ProposalJs.prototype.launching = async function () {
         }
       }
     }
+
+    if (query.cliid !== undefined) {
+
+      cliid = query["cliid"];
+      GeneralJs.timeouts["belowLaunchingTimeOut"] = setTimeout(function () {
+
+        left.click();
+
+        GeneralJs.timeouts["belowLaunchingTimeOut2"] = setTimeout(async function () {
+          try {
+            const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");
+            let target = null;
+            let client;
+            for (let dom of buttons) {
+              if (dom.getAttribute("cliid") === cliid) {
+                target = dom;
+              }
+            }
+            if (target !== null) {
+              target.click();
+              GeneralJs.timeouts["belowLaunchingTimeOut3"] = setTimeout(function () {
+                document.querySelector(".listpp_menuEvent_selected").click();
+                clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut3"]);
+                GeneralJs.timeouts["belowLaunchingTimeOut3"] = null;
+              }, 401);
+            } else {
+              client = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"))[0];
+              instance.mother.searchInput.nextElementSibling.value = client.name;
+              (GeneralJs.events["proposalListSearch"]).call(instance.mother.searchInput.nextElementSibling, { keyCode: 13 });
+              if (GeneralJs.stacks["proposalListSearchResult"] !== null) {
+                GeneralJs.timeouts["belowLaunchingTimeOut4"] = setTimeout(function () {
+                  const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");
+                  let target = null;
+                  for (let dom of buttons) {
+                    if (dom.getAttribute("cliid") === cliid) {
+                      target = dom;
+                    }
+                  }
+                  if (target !== null) {
+                    target.click();
+                    GeneralJs.timeouts["belowLaunchingTimeOut5"] = setTimeout(function () {
+                      document.querySelector(".listpp_menuEvent_selected").click();
+                      clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut5"]);
+                      GeneralJs.timeouts["belowLaunchingTimeOut5"] = null;
+                    }, 401);
+                  } else {
+                    alert("제안서를 만들어 주세요.");
+                  }
+                  clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut4"]);
+                  GeneralJs.timeouts["belowLaunchingTimeOut4"] = null;
+                }, 401);
+              }
+            }
+            clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut2"]);
+            GeneralJs.timeouts["belowLaunchingTimeOut2"] = null;
+          } catch (e) {
+            console.log(e);
+          }
+        }, 401);
+        clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut"]);
+        GeneralJs.timeouts["belowLaunchingTimeOut"] = null;
+      }, 0);
+
+    }
+
   } catch (e) {
     console.log(e);
   }

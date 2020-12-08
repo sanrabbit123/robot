@@ -549,6 +549,155 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.clientMap = function () {
+  const statusToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = [ "응대중", "진행", "드랍", "완료" ];
+
+    if (targetArr.includes(value)) {
+      finalValue = value;
+    } else {
+      finalValue = pastValue;
+    }
+
+    return finalValue;
+  };
+  const statusInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+
+      items = [ "응대중", "진행", "드랍", "완료" ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "진행") {
+        window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
+      } else {
+        input.style.transition = "0s all ease";
+        input.style.color = "transparent";
+        input.value = finalValue;
+        input.parentElement.style.transition = "";
+        input.parentElement.style.color = "inherit";
+        mother.removeChild(document.querySelector(".divTong"));
+        callback();
+      }
+    };
+
+    inputArr = [ "응대중", "진행", "드랍", "완료" ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(5) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+
   const callHistoryToObject = function (value, pastValue, vaildMode) {
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
@@ -972,7 +1121,7 @@ DataPatch.prototype.clientMap = function () {
     expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: true, },
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
-    status: { name: "상태", position: "requests.0.analytics.response.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
+    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
     callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, },
@@ -3883,7 +4032,7 @@ DataPatch.prototype.projectMap = function () {
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
     designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    status: { name: "진행 상태", position: "process.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
+    status: { name: "진행 상태", position: "process.status", type: "string", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], searchBoo: true, },
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
