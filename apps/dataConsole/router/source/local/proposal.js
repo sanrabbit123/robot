@@ -2642,7 +2642,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
           const proid = that.parentElement.parentElement.getAttribute("cus_id");
           const rawContents = that.parentElement.parentElement.querySelector(".listpp_mainArea_tong_details").textContent;
           let contentsArr, title;
-          let div_clone, div_clone2;
+          let div_clone, div_clone2, div_clone3;
           let style;
           let ea = "px";
           let serviceRaw;
@@ -2701,12 +2701,16 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
           for (let i = 0; i < 5; i++) {
             div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.textContent = (contentsArr[i] !== undefined) ? contentsArr[i] : "";
             div_clone2.classList.add("selected_button");
             if (i === 4) {
               div_clone2.style.borderBottom = "0px";
             }
-            div_clone2.addEventListener("click", async function (e) {
+
+            div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+            div_clone3.textContent = (contentsArr[i] !== undefined) ? contentsArr[i] : "";
+            div_clone3.classList.add("selected_button_contents");
+
+            div_clone3.addEventListener("click", async function (e) {
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
               try {
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ desid: desid, "service.serid": serid, "service.xValue": xValue, "process.status": "대기" }), "/rawUpdateProject");
@@ -2715,6 +2719,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 console.log(e);
               }
             });
+            div_clone2.appendChild(div_clone3);
             div_clone.appendChild(div_clone2);
           }
 
@@ -4223,20 +4228,28 @@ ProposalJs.prototype.cssInjection = function () {
   .selected_button {
     position: relative;
     border-bottom: 1px solid #ececec;
-    height: 16.9%;
-    padding-top: 1.4%;
+    height: 20%;
     font-size: 16px;
     font-weight: 200;
     text-align: center;
     cursor: pointer;
     background: transparent;
     color: #404040;
-    border-radius: 5px
   }
 
-  .selected_button:hover {
-    background: #2fa678;
-    color: white;
+  .selected_button_contents {
+    position: absolute;
+    width:100%;
+    top: 7px;
+    font-size: 16px;
+    font-weight: 200;
+    text-align: center;
+    cursor: pointer;
+    color: #404040;
+  }
+
+  .selected_button_contents:hover {
+    color: #2fa789;
   }
 
   `;
