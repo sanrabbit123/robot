@@ -1487,7 +1487,7 @@ DataPatch.prototype.designerMap = function () {
             totalString += "etc";
             totalString += " ";
           }
-          totalString += inputs1[i].value.trim().replace(/\/$/, '');
+          totalString += inputs1[i].value.trim().replace(/\/$/, '').replace(/[ \n\t]/g, '');
           totalString += " / ";
         }
       }
@@ -1811,7 +1811,7 @@ DataPatch.prototype.designerMap = function () {
     endEvent = function (e) {
       let inputs0 = document.querySelectorAll(".inputTargetValue");
       let totalString = '';
-      totalString = inputs0[0].value + "년 " + inputs0[1].value + "월";
+      totalString = inputs0[0].value.replace(/[^0-9]/g, '') + "년 " + inputs0[1].value.replace(/[^0-9]/g, '') + "월";
       input.style.transition = "0s all ease";
       input.style.color = "transparent";
       input.value = totalString;
@@ -1932,10 +1932,6 @@ DataPatch.prototype.designerMap = function () {
         input_clone.style[j] = inputStyle[j];
       }
       input_clone.value = inputArr[i].replace(/[^0-9]/g, '');
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-      });
       input_clone.addEventListener("keypress", function (e) {
         if (e.keyCode === 13) {
           endEvent.call(this, e);
@@ -2001,7 +1997,14 @@ DataPatch.prototype.designerMap = function () {
         }
       }
     } else {
-      boo = true;
+      temp2 = value.split(" ");
+      if (temp2.length !== 3) {
+        boo = true;
+      }
+    }
+
+    if (value === '') {
+      boo = false;
     }
 
     if (!boo) {
@@ -2014,7 +2017,7 @@ DataPatch.prototype.designerMap = function () {
       return { boo: !boo, value: null };
     }
 
-    if (temp[0] === '') {
+    if (value === '' || temp[0] === '') {
       return [];
     }
 
@@ -2028,6 +2031,261 @@ DataPatch.prototype.designerMap = function () {
     }
 
     return arr;
+  };
+  const accountInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let tempArr;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetBank");
+      let inputs1 = document.querySelectorAll(".inputTargetAccount");
+      let inputs2 = document.querySelectorAll(".inputTargetTo");
+      let totalString = '';
+
+      for (let i = 0; i < inputs0.length; i++) {
+        totalString += inputs0[i].value.replace(/은행/g, '');
+        totalString += ' ';
+        totalString += inputs1[i].value;
+        totalString += ' ';
+        totalString += inputs2[i].value;
+        totalString += ' / ';
+      }
+
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -3);
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(" / ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "300";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "22%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        left: "calc(22% + " + String(Math.round(height / 4)) + ea + ")",
+        top: String(0) + ea,
+        width: "calc(54% - " + String(Math.round((height * 2) / 4) + 1) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "24%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      tempArr = inputArr[i].split(' ');
+
+      for (let z = 0; z < 3; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.input.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Bank", "Account", "To" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+        if (tempArr[z] !== undefined) {
+          input_clone.value = tempArr[z];
+        } else {
+          input_clone.value = '';
+        }
+        input_clone.addEventListener("contextmenu", function (e) {
+          e.preventDefault();
+          this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+        });
+        input_clone.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            endEvent.call(this, e);
+          }
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% + " + String(3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let button_clone, button_clone2;
+      let input_clone;
+
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < 3; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.input.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Bank", "Account", "To" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.addEventListener("contextmenu", function (e) {
+          e.preventDefault();
+          this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+        });
+        input_clone.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            endEvent.call(this, e);
+          }
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    });
+
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
   };
 
   const filesToObject = function (value, pastValue, vaildMode) {
@@ -2066,6 +2324,195 @@ DataPatch.prototype.designerMap = function () {
 
     return obj;
   };
+  const filesInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let tempArr;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetBoolean");
+      let totalString = '';
+
+      for (let i = 0; i < 3; i++) {
+        totalString += ([ "사업자등록증", "통장사본", "신분증사본" ])[i];
+        totalString += ' ';
+        if (/유/g.test(inputs0[i].value)) {
+          totalString += "유";
+        } else {
+          totalString += "무";
+        }
+        totalString += ' / ';
+      }
+
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -3);
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(" / ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "200";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "200" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "200" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "80%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "calc(20% - " + String(Math.round(height / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      tempArr = inputArr[i].split(' ');
+
+      for (let z = 0; z < 2; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.input.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Name", "Boolean" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+        if (z !== 1) {
+          input_clone.value = tempArr[z];
+        } else {
+          tempArr.shift();
+          input_clone.value = tempArr.join("");
+        }
+        input_clone.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            endEvent.call(this, e);
+          }
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
 
   const map = {
     designer: { name: "성함", position: "designer", type: "string", searchBoo: true, },
@@ -2079,10 +2526,10 @@ DataPatch.prototype.designerMap = function () {
     webPage: { name: "웹페이지", position: "information.personalSystem.webPage", type: "array", searchBoo: true, },
     sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", inputFunction: snsInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     career: { name: "경력", position: "information.business.career", type: "object", inputFunction: careerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: careerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    account: { name: "계좌번호", position: "information.business.account", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    account: { name: "계좌번호", position: "information.business.account", type: "object", inputFunction: accountInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     classification: { name: "사업자 분류", position: "information.business.businessInfo.classification", items: [ "법인사업자(일반)", "법인사업자(간이)", "개인사업자(일반)", "개인사업자(간이)", "프리랜서" ], type: "string", searchBoo: true, },
     businessNumber: { name: "사업자 등록번호", position: "information.business.businessInfo.businessNumber", type: "string", searchBoo: true, },
-    files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    files: { name: "파일 유무", position: "information.business.businessInfo.files", type: "object", inputFunction: filesInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: filesToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     percentage: { name: "수수료", position: "information.business.service.cost.percentage", type: "number", searchBoo: true, },
     partner: { name: "시공사", position: "information.business.service.construct.partner", type: "string", searchBoo: true, },
     method: { name: "시공 방식", position: "information.business.service.construct.method", type: "string", searchBoo: true, },
@@ -2588,12 +3035,199 @@ DataPatch.prototype.projectMap = function () {
     }
 
     obj = {};
-    obj.account = temp[0].replace(/^계좌번호 /, '');
-    obj.to = temp[1].replace(/^수신자 /, '');
-    obj.proof = temp[2].replace(/^증빙 /, '');
+    obj.account = temp[0].replace(/^계좌번호/, '').trim();
+    obj.to = temp[1].replace(/^수신자/, '').trim();
+    obj.proof = temp[2].replace(/^증빙/, '').trim();
 
     return obj;
   };
+  const accountInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let tempArr;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetProperty");
+      let inputs1 = document.querySelectorAll(".inputTargetValue");
+      let totalString = '';
+
+      for (let i = 0; i < inputs0.length; i++) {
+        totalString += ([ "계좌번호", "수신자", "증빙" ])[i];
+        totalString += ' ';
+        totalString += inputs1[i].value.replace(/[ \n\t]/g, '');
+        totalString += " / ";
+      }
+
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -3);
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(" / ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "300";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "28%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      tempArr = inputArr[i].split(' ');
+
+      for (let z = 0; z < 2; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.input.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Property", "Value" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+        if (z !== 1) {
+          input_clone.value = tempArr[z];
+        } else {
+          tempArr.shift();
+          input_clone.value = tempArr.join("");
+        }
+        input_clone.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            endEvent.call(this, e);
+          }
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
   const methodToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
@@ -2623,43 +3257,650 @@ DataPatch.prototype.projectMap = function () {
     }
 
     obj = {};
-    obj.method = temp[0].replace(/^결제방법 /, '');
-    obj.to = temp[1].replace(/^수신자 /, '');
-    obj.proof = temp[2].replace(/^증빙 /, '');
+    obj.method = temp[0].replace(/^결제방법/, '').trim();
+    obj.to = temp[1].replace(/^수신자/, '').trim();
+    obj.proof = temp[2].replace(/^증빙/, '').trim();
 
     return obj;
+  };
+  const methodInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let tempArr;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetProperty");
+      let inputs1 = document.querySelectorAll(".inputTargetValue");
+      let totalString = '';
+
+      for (let i = 0; i < inputs0.length; i++) {
+        totalString += ([ "결제방법", "수신자", "증빙" ])[i];
+        totalString += ' ';
+        totalString += inputs1[i].value.replace(/[ \n\t]/g, '');
+        totalString += " / ";
+      }
+
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -3);
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(" / ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "300";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "28%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      tempArr = inputArr[i].split(' ');
+
+      for (let z = 0; z < 2; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.input.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Property", "Value" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+        if (z !== 1) {
+          input_clone.value = tempArr[z];
+        } else {
+          tempArr.shift();
+          input_clone.value = tempArr.join("");
+        }
+        input_clone.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            endEvent.call(this, e);
+          }
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const serviceToObject = function (value, pastValue, vaildMode) {
+    let obj;
+    let temp;
+    let boo = false;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    obj = {};
+
+    if (/홈퍼/g.test(value)) {
+      obj.serid = "s2011_aa01s";
+    } else if (/홈스/g.test(value)) {
+      obj.serid = "s2011_aa02s";
+    } else if (/토탈/g.test(value)) {
+      obj.serid = "s2011_aa03s";
+    }
+
+    if (/mini/gi.test(value)) {
+      obj.xValue = 'M';
+    } else if (/basic/gi.test(value)) {
+      obj.xValue = 'B';
+    } else if (/premium/gi.test(value)) {
+      obj.xValue = 'P';
+    }
+
+    return obj;
+  };
+  const serviceInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let valuesTong;
+    let originalValue;
+
+    valuesTong = [
+      [ "홈퍼니싱", "mini" ],
+      [ "홈스타일링", "basic" ],
+      [ "토탈 스타일링", "premium" ],
+    ];
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetOne");
+      let inputs1 = document.querySelectorAll(".inputTargetTwo");
+      let totalString = '';
+
+      for (let i = 0; i < inputs0.length; i++) {
+        if (inputs0[i].getAttribute("switch") === "on") {
+          totalString += inputs0[i].getAttribute("target");
+          totalString += ' ';
+        }
+      }
+      for (let i = 0; i < inputs1.length; i++) {
+        if (inputs1[i].getAttribute("switch") === "on") {
+          totalString += inputs1[i].getAttribute("target");
+        }
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
+    if (width === '' || Number.isNaN(width)) {
+      width = "300";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "58%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "calc(42% - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: "15%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < 2; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget" + ([ "One", "Two" ])[z]);
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "One", "Two" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
+          input_clone.setAttribute("switch", "on");
+          button_clone2.style.background = "#ececec";
+          input_clone.style.color = "#2fa678";
+        } else {
+          input_clone.setAttribute("switch", "off");
+        }
+
+        input_clone.setAttribute("target", valuesTong[i][z]);
+        input_clone.textContent = valuesTong[i][z];
+        input_clone.addEventListener("click", function (e) {
+          const thisClass = this.className;
+          const divTargets = document.querySelectorAll("." + thisClass.replace(/^input/, "div"));
+          const inputTargets = document.querySelectorAll("." + thisClass);
+
+          for (let dom of divTargets) {
+            dom.style.background = "#2fa678";
+          }
+
+          for (let dom of inputTargets) {
+            dom.style.color = "#ffffff";
+            dom.setAttribute("switch", "off");
+          }
+
+          this.parentElement.style.background = "#ececec";
+          this.style.color = "#2fa678";
+          this.setAttribute("switch", "on");
+        });
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const designerToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValueObj, finalValue;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    finalValueObj = /d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(value);
+    if (finalValueObj === null) {
+      finalValue = "";
+    } else {
+      finalValue = finalValueObj[0];
+    }
+
+    return finalValue;
+  };
+  const designerInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let count;
+    let valuesTong;
+    let toHtml;
+    let originalValue;
+
+    valuesTong = [];
+    count = 4;
+    tempArr = null;
+    toHtml = function (designer, desid) {
+      return designer + ' <b style="font-weight:200;font-size:11px;color:white">' + desid + '</b>';
+    };
+    for (let { designer, desid } of GeneralJs.stacks.allDesignerTong) {
+      if (count < 4) {
+        tempArr.push(toHtml(designer, desid));
+        count++;
+      } else {
+        if (tempArr !== null) {
+          valuesTong.push(tempArr);
+        }
+        tempArr = [];
+        tempArr.push(toHtml(designer, desid));
+        count = 0;
+      }
+    }
+    if (Array.isArray(tempArr)) {
+      if (tempArr.length > 0) {
+        valuesTong.push(tempArr);
+      }
+    }
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = this.getAttribute("target");
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 590;
+    if (width === '' || Number.isNaN(width)) {
+      width = "600";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: String(0) + ea,
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: String(0) + ea,
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [];
+    for (let z = 0; z < 5; z++) {
+      buttonDetailStyles.push({
+        position: "absolute",
+        left: String(20 * z) + '%',
+        top: String(0) + ea,
+        width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      });
+    }
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: "16%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < valuesTong[i].length; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget");
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.setAttribute("switch", "off");
+        input_clone.setAttribute("target", valuesTong[i][z].replace(/\<[^\<\>]+\>/g, ''));
+        input_clone.insertAdjacentHTML("beforeend", valuesTong[i][z]);
+        input_clone.addEventListener("click", endEvent);
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
   };
 
   const map = {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
-
-
-
-    designer: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
-    service: { name: "서비스", position: "service", type: "string", searchBoo: true, },
-
-
-
+    designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "string", items: [ "응대중", "진행", "드랍", "완료" ], searchBoo: true, },
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
-    firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, },
     remainGuide: { name: "잔금 안내", position: "process.contract.remain.guide", type: "date", searchBoo: true, },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
     remainVat: { name: "VAT", position: "process.contract.remain.calculation.amount.vat", type: "number", searchBoo: true, moneyBoo: true },
     remainConsumer: { name: "소비자가", position: "process.contract.remain.calculation.amount.consumer", type: "number", searchBoo: true, moneyBoo: true },
-    remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, },
     method: { name: "정산 방식", position: "process.calculation.method", type: "string", items: [ "사업자(일반)", "사업자(간이)", "프리랜서" ], searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
-    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", inputFunction: accountInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     paymentsTotalAmount: { name: "정산 총금액", position: "process.calculation.payments.totalAmount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstAmount: { name: "디자이너 선금", position: "process.calculation.payments.first.amount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstDate: { name: "선금 지급일", position: "process.calculation.payments.first.date", type: "date", searchBoo: true, },

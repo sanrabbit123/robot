@@ -2493,7 +2493,7 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
     general_string = proposal_obj.serviceName + "<b> | </b>";
 
     for (let obj of proposal_obj.proposal.detail) {
-      general_string += designer_names_obj[obj.desid];
+      general_string += designer_names_obj[obj.desid] + ' <b style="display:none">' + obj.desid + '</b>';
       general_string += ' : ';
       for (let obj2 of obj.fee) {
         general_string += (obj2.method === "offline") ? "오프라인" : "온라인";
@@ -2554,7 +2554,7 @@ ProposalJs.prototype.list_menu = function () {
       { key: "make", name: "제작 요청", },
       { key: "send", name: "발송 대기", },
       { key: "complete", name: "완료", },
-      { key: "cancel", name: "취소", },
+      { key: "selected", name: "고객 선택", },
       { key: "delete", name: "삭제", }
     ];
     // style
@@ -2587,6 +2587,7 @@ ProposalJs.prototype.list_menu = function () {
 }
 
 ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
+  const instance = this;
   let return_func;
   async function mother_name(o) {
     mother.textContent = o.name;
@@ -2633,9 +2634,94 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
         reset_event(this);
       }
       break;
-    case "cancel":
+    case "selected":
       return_func = async function (e) {
-        await mother_name(obj);
+        const that = this;
+        // await mother_name(obj);
+        instance.mother.getWhitePrompt("small", function (mother) {
+          const proid = that.parentElement.parentElement.getAttribute("cus_id");
+          const rawContents = that.parentElement.parentElement.querySelector(".listpp_mainArea_tong_details").textContent;
+          let contentsArr, title;
+          let div_clone, div_clone2;
+          let style;
+          let ea = "px";
+          let serviceRaw;
+          let serid, xValue;
+
+          contentsArr = rawContents.split(" | ");
+          serviceRaw = contentsArr.shift();
+
+          if (/홈퍼/g.test(serviceRaw)) {
+            serid = "s2011_aa01s";
+          } else if (/홈스/g.test(serviceRaw)) {
+            serid = "s2011_aa02s";
+          } else if (/토탈/g.test(serviceRaw)) {
+            serid = "s2011_aa03s";
+          }
+
+          if (/mini/gi.test(serviceRaw)) {
+            xValue = 'M';
+          } else if (/basic/gi.test(serviceRaw)) {
+            xValue = 'B';
+          } else if (/premium/gi.test(serviceRaw)) {
+            xValue = 'P';
+          }
+
+          title = '<b style="color=#2fa678;font-weight:200">Q.</b> 고객이 선택한 디자이너를 선택해주세요!';
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          div_clone.insertAdjacentHTML("beforeend", title);
+          style = {
+            position: "relative",
+            top: String(25) + ea,
+            left: String(27) + ea,
+            fontSize: String(19) + ea,
+            fontWeight: String(600),
+          };
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+          mother.appendChild(div_clone);
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            width: "calc(100% - " + String(54) + ea + ")",
+            height: "calc(100% - " + String(95) + ea + ")",
+            bottom: String(30) + ea,
+            left: String(27) + ea,
+            fontSize: String(19) + ea,
+            fontWeight: String(600),
+            borderRadius: String(5) + ea,
+            border: "1px solid #ececec",
+          };
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
+          for (let i = 0; i < 5; i++) {
+            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+            div_clone2.textContent = (contentsArr[i] !== undefined) ? contentsArr[i] : "";
+            div_clone2.classList.add("selected_button");
+            if (i === 4) {
+              div_clone2.style.borderBottom = "0px";
+            }
+            div_clone2.addEventListener("click", async function (e) {
+              const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
+              try {
+                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ desid: desid, "service.serid": serid, "service.xValue": xValue, "process.status": "대기" }), "/rawUpdateProject");
+                window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
+              } catch (e) {
+                console.log(e);
+              }
+            });
+            div_clone.appendChild(div_clone2);
+          }
+
+          mother.appendChild(div_clone);
+
+
+        });
         reset_event(this);
       }
       break;
@@ -4133,6 +4219,25 @@ ProposalJs.prototype.cssInjection = function () {
     display: block;
     transform: translateX(0px);
     animation: listpp_fadeout_ani 0.5s ease forwards;
+  }
+
+  .selected_button {
+    position: relative;
+    border-bottom: 1px solid #ececec;
+    height: 16.9%;
+    padding-top: 1.4%;
+    font-size: 16px;
+    font-weight: 200;
+    text-align: center;
+    cursor: pointer;
+    background: transparent;
+    color: #404040;
+    border-radius: 5px
+  }
+
+  .selected_button:hover {
+    background: #2fa678;
+    color: white;
   }
 
   `;

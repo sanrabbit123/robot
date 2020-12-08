@@ -750,25 +750,20 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     }
 
     whereQuery = {};
-    whereQuery["$or"] = [];
-    for (var i = 0; i < desidArr.length; i++) {
-      whereQuery["$or"].push({ desid: desidArr[i] });
-    }
-    if (whereQuery["$or"].length > 0) {
-      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
-    } else {
-      designers = [];
-    }
+    designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
+    GeneralJs.stacks.allDesignerTong = designers;
 
     for (let p of projects.data) {
+
       for (let c of clients) {
         if (p.middle.cliid === c.cliid) {
           p.standard.name = c.name;
         }
       }
+
       for (let d of designers) {
         if (p.middle.desid === d.desid) {
-          p.info.designer = d.designer;
+          p.info.designer = d.designer + " " + d.desid;
         }
       }
 

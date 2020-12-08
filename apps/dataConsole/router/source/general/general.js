@@ -868,3 +868,76 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
 
 }
+
+GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function () {}) {
+  if (typeof size === "object") {
+    callback = size;
+    size = "big";
+  }
+  const instance = this;
+  let div_clone;
+  let style;
+  let ea = "px";
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("whitePrompt");
+  style = {
+    position: "fixed",
+    width: "100%",
+    height: "100%",
+    borderRadius: String(5) + ea,
+    top: String(0) + ea,
+    left: String(0) + ea,
+    background: "#404040",
+    opacity: String(0.2),
+    zIndex: String(4),
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  div_clone.addEventListener("click", function (e) {
+    while (document.querySelectorAll(".whitePrompt").length !== 0) {
+      document.body.removeChild(document.querySelector(".whitePrompt"));
+    }
+  });
+  document.body.appendChild(div_clone);
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.classList.add("whitePrompt");
+  if (size === "big") {
+    style = {
+      position: "fixed",
+      width: "50%",
+      height: "50%",
+      borderRadius: String(5) + ea,
+      top: "calc(25% - 61.5px)",
+      left: "25%",
+      background: "white",
+      boxShadow: "0px 4px 13px -8px #808080",
+      opacity: String(0.95),
+      zIndex: String(4),
+      animation: "fadeup 0.4s ease forwards",
+    };
+  } else {
+    style = {
+      position: "fixed",
+      width: "30%",
+      height: "30%",
+      borderRadius: String(5) + ea,
+      top: "calc(35% - 61.5px)",
+      left: "35%",
+      background: "white",
+      boxShadow: "0px 4px 13px -8px #808080",
+      opacity: String(0.95),
+      zIndex: String(4),
+      animation: "fadeup 0.4s ease forwards",
+    };
+  }
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  document.body.appendChild(div_clone);
+
+  callback(div_clone);
+}
