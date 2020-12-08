@@ -2637,7 +2637,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "selected":
       return_func = async function (e) {
         const that = this;
-        // await mother_name(obj);
+        await mother_name(obj);
         instance.mother.getWhitePrompt("small", function (mother) {
           const proid = that.parentElement.parentElement.getAttribute("cus_id");
           const rawContents = that.parentElement.parentElement.querySelector(".listpp_mainArea_tong_details").textContent;
@@ -2719,7 +2719,6 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
           }
 
           mother.appendChild(div_clone);
-
 
         });
         reset_event(this);
