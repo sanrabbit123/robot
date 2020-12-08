@@ -1000,8 +1000,11 @@ class DevContext extends Array {
 
       // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
 
-      const back = new BackMaker();
-      console.log(await back.getClientsAll());
+      // const back = new BackMaker();
+      // console.log(await back.getClientsAll());
+
+
+      console.log(await this.mother.searchDir(process.cwd() + "/apps/notionAPIs"));
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
