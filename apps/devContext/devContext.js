@@ -6,6 +6,7 @@ const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
+const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
@@ -1004,7 +1005,8 @@ class DevContext extends Array {
       // console.log(await back.getClientsAll());
 
 
-      console.log(await this.mother.searchDir(process.cwd() + "/apps/notionAPIs"));
+      const ai = new AiConsole();
+      await ai.cardToAi("c2011_aa04s");
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------

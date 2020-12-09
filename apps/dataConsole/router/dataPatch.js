@@ -1438,7 +1438,7 @@ DataPatch.prototype.designerStandard = function () {
   model.info = {
     status: {
       name: "계약 상태",
-      width: 100,
+      width: 75,
       left: 30,
     },
     date: {
@@ -2666,11 +2666,11 @@ DataPatch.prototype.designerMap = function () {
   const map = {
     designer: { name: "성함", position: "designer", type: "string", searchBoo: true, },
     desid: { name: "아이디", position: "desid", type: "string", searchBoo: true, },
-    status: { name: "계약 상태", position: "information.contract.status", type: "string", searchBoo: true, },
+    status: { name: "계약 상태", position: "information.contract.status", type: "string", items: [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ], searchBoo: true, },
     date: { name: "계약일", position: "information.contract.date", type: "date", searchBoo: true, },
     phone: { name: "연락처", position: "information.phone", type: "string", searchBoo: true, },
     email: { name: "이메일", position: "information.email", type: "string", searchBoo: true, },
-    address: { name: "주소", position: "information.address", type: "array", searchBoo: true, },
+    address: { name: "주소", position: "information.address", type: "array", address: true, searchBoo: true, },
     showRoom: { name: "쇼룸", position: "information.personalSystem.showRoom", type: "boolean", items: [ "true", "false" ], searchBoo: true, },
     webPage: { name: "웹페이지", position: "information.personalSystem.webPage", type: "array", searchBoo: true, },
     sns: { name: "SNS", position: "information.personalSystem.sns", type: "object", inputFunction: snsInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: snsToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },

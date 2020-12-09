@@ -130,8 +130,9 @@ NotionAPIs.prototype.getCxCards = async function () {
   }
 }
 
-NotionAPIs.prototype.getElementById = async function (id) {
+NotionAPIs.prototype.getElementById = async function (id, detail = false) {
   const instance = this;
+  const { fileSystem } = this.mother;
   try {
     let notionIds;
     let obj, obj2, button;
@@ -169,11 +170,82 @@ NotionAPIs.prototype.getElementById = async function (id) {
       result.push(tempObj);
     }
 
-    return result[0];
+    if (!detail) {
+      return result[0];
+    } else {
+
+      let client, designer;
+      let blockDetails;
+      let clientStructure, designerStructure;
+      let childrenParsing;
+
+      childrenParsing = function (children) {
+        let arr = [];
+        for (let { block, children: childrenchildren } of children) {
+          if (childrenchildren !== undefined) {
+            if (childrenchildren.length !== 0) {
+              block.children = childrenParsing(childrenchildren);
+            }
+          }
+          arr.push(block);
+        }
+        return arr;
+      }
+
+      //detail parsing - client
+      if (button === 'c') {
+
+        client = result[0];
+        let { resultFile } = await this.mother.pythonExecute(this.pythonApp, [ "treeParsing" ], { id: client.id });
+        blockDetails = JSON.parse(await fileSystem("readString", [ resultFile ]));
+
+        clientStructure = {};
+        for (let { block, children } of blockDetails) {
+          if (block.className === "ToggleBlock") {
+            if (/HISTORY/gi.test(block.title_plaintext)) {
+              clientStructure.history = childrenParsing(children);
+            } else if (/현장/gi.test(block.title_plaintext)) {
+              clientStructure.space = childrenParsing(children);
+            } else if (/시공/gi.test(block.title_plaintext)) {
+              clientStructure.construct = childrenParsing(children);
+            } else if (/스타일링/gi.test(block.title_plaintext)) {
+              clientStructure.styling = childrenParsing(children);
+            } else if (/예산/gi.test(block.title_plaintext)) {
+              clientStructure.budget = childrenParsing(children);
+            } else if (/진행/gi.test(block.title_plaintext)) {
+              clientStructure.progress = childrenParsing(children);
+            }
+          }
+        }
+        if (Object.keys(clientStructure).length !== 6) {
+          throw new Error("invaild card : " + result[0].cliid + " " + JSON.stringify(clientStructure, null, 2));
+        }
+
+        client.detailStory = clientStructure;
+
+        return client;
+
+      //detail parsing - designer
+      } else if (button === 'd') {
+
+
+
+
+
+
+
+
+      } else {
+        throw new Error("invaild card");
+      }
+    }
   } catch (e) {
     console.log(e);
   }
 }
+
+
+//PAST -----------------------------------------------------------------------------------------------------
 
 NotionAPIs.prototype.addNewRow = async function (obj) {
   const instance = this;

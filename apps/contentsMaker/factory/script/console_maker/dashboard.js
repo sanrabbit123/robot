@@ -1,6 +1,8 @@
 ExecMain.prototype.titleMaker = function () {
   const { main: { titles: { items } } } = this.text;
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
+  let rectangle;
 
   for (let i of items) {
 
@@ -56,6 +58,7 @@ ExecMain.prototype.titleMaker = function () {
 ExecMain.prototype.memberMaker = function () {
   const { main: { members: { names } } } = this.text;
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
   let num = 0;
 
   for (let i of names) {
@@ -83,6 +86,8 @@ ExecMain.prototype.memberMaker = function () {
 ExecMain.prototype.onMaker = function () {
   const { sub: { on: { words } } } = this.text;
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
+  let rectangle;
 
   for (let i of words) {
     this_ai = this.createDoc();
@@ -110,10 +115,10 @@ ExecMain.prototype.onMaker = function () {
 
 }
 
-
 ExecMain.prototype.subTitleMaker = function () {
   const { main: { titles: { items }, subTitles } } = this.text;
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
   let num;
 
   for (let i of items) {
@@ -145,6 +150,7 @@ ExecMain.prototype.subTitleMaker = function () {
 
 ExecMain.prototype.numberMaker = function () {
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
 
   for (let i = 0; i < 10; i++) {
     this_ai = this.createDoc();
@@ -169,6 +175,7 @@ ExecMain.prototype.numberMaker = function () {
 ExecMain.prototype.memberWordingMaker = function () {
   const { sub: { memberWording: { words } } } = this.text;
   let this_ai, from, to, contents, temp, tempObj;
+  let exception;
 
   for (let i = 0; i < words.length; i++) {
     this_ai = this.createDoc();

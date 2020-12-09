@@ -113,5 +113,10 @@ try:
         notionInstance.pastToNewDesid(data["blockInfo"], data["filter"])
         print(dumps({ "message": "done" }))
 
+    elif argv[1] == 'treeParsing':
+        notionInstance = NotionCommunication(token=token, tempDir=tempPath)
+        fileName = notionInstance.treeParsingAndJson(data["id"])
+        print(dumps({ "resultFile": fileName }))
+
 except Exception as e:
     print(e)

@@ -5,13 +5,13 @@ const { DateParse, Menu, Address } = require(GENERAL_DIR + "/generator.js");
 //contract ------------------------------------------------------------------------
 
 const Contract = function (json) {
-  this.status = json.status;
+  this.status = new Menu(json.status, [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ], false);
   this.date = new DateParse(json.date);
 }
 
 Contract.prototype.toNormal = function () {
   let obj = {};
-  obj.status = this.status;
+  obj.status = this.status.toNormal();
   obj.date = this.date.toNormal();
   return obj;
 }

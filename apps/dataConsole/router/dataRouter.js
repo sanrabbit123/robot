@@ -1226,6 +1226,24 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_createRequestDocument = function () {
+  const instance = this;
+  const { shell, shellLink } = this.mother;
+  let obj = {};
+  obj.link = "/createRequestDocument";
+  obj.func = async function (req, res) {
+    try {
+      shell.exec(`node ${shellLink(process.cwd())}/robot.js dev`);
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ "message": "success" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.getAll = function () {

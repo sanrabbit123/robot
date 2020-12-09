@@ -133,3 +133,80 @@ class NotionCommunication:
         for i in resultArr:
             if i.desid != '':
                 i.desid = filter[i.desid]
+
+    def getBlockChildren(self, id):
+        obj = self.client.get_block(self.host + '/' + RegExp.sub('-', '', id))
+        return obj.children
+
+    def blockToLiteObject(self, block):
+        resultDic = {}
+        resultDic["className"] = block.__class__.__name__
+        resultDic["rawId"] = block.id
+        resultDic["id"] = RegExp.sub('-', '', block.id)
+        if hasattr(block, "title"):
+            resultDic["title"] = block.title
+        if hasattr(block, "column_ratio"):
+            resultDic["column_ratio"] = block.column_ratio
+        if hasattr(block, "title_plaintext"):
+            resultDic["title_plaintext"] = block.title_plaintext
+        if hasattr(block, "color"):
+            resultDic["color"] = block.color
+        if hasattr(block, "checked"):
+            resultDic["checked"] = block.checked
+        if hasattr(block, "language"):
+            resultDic["language"] = block.language
+        if hasattr(block, "wrap"):
+            resultDic["wrap"] = block.wrap
+        if hasattr(block, "icon"):
+            resultDic["icon"] = block.icon
+        if hasattr(block, "cover"):
+            resultDic["cover"] = block.cover
+        if hasattr(block, "locked"):
+            resultDic["locked"] = block.locked
+        if hasattr(block, "latex"):
+            resultDic["latex"] = block.latex
+        if hasattr(block, "caption"):
+            resultDic["caption"] = block.caption
+        if hasattr(block, "display_source"):
+            resultDic["display_source"] = block.display_source
+        if hasattr(block, "source"):
+            resultDic["source"] = block.source
+        if hasattr(block, "height"):
+            resultDic["height"] = block.height
+        if hasattr(block, "full_width"):
+            resultDic["full_width"] = block.full_width
+        if hasattr(block, "page_width"):
+            resultDic["page_width"] = block.page_width
+        if hasattr(block, "width"):
+            resultDic["width"] = block.width
+        if hasattr(block, "file_id"):
+            resultDic["file_id"] = block.file_id
+        if hasattr(block, "size"):
+            resultDic["size"] = block.size
+        if hasattr(block, "bookmark_cover"):
+            resultDic["bookmark_cover"] = block.bookmark_cover
+        if hasattr(block, "bookmark_icon"):
+            resultDic["bookmark_icon"] = block.bookmark_icon
+        if hasattr(block, "description"):
+            resultDic["description"] = block.description
+        if hasattr(block, "link"):
+            resultDic["link"] = block.link
+        return resultDic
+
+    def treeParsing(self, id):
+        targetList = self.getBlockChildren(id)
+        finalList = []
+        for i in targetList:
+            tempDic = {}
+            tempDic["block"] = self.blockToLiteObject(i)
+            if hasattr(i, "children"):
+                tempDic["children"] = self.treeParsing(i.id)
+            finalList.append(tempDic)
+        return finalList
+
+    def treeParsingAndJson(self, id):
+        finalList = self.treeParsing(id)
+        fileName = self.tempDir + "/treeParsingAndJson.json"
+        with open(fileName, "w", encoding='utf-8') as f:
+            f.write(dumps(finalList, indent=2, sort_keys=True, ensure_ascii=False))
+        return fileName

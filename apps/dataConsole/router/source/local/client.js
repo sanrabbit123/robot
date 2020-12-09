@@ -1813,10 +1813,15 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     height: "100%",
     fontSize: String(fontSize) + ea,
     fontWeight: String(700),
+    cursor: "pointer",
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
+  div_clone3.addEventListener("contextmenu", async function (e) {
+    e.preventDefault();
+    await GeneralJs.ajaxPromise("cliid=" + thisCase.cliid, "/createRequestDocument");
+  });
   historyBox.appendChild(div_clone3);
 
   //history text box tong
