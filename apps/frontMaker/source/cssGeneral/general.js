@@ -93,6 +93,17 @@ module.exports = function () {
     transition:all 0.5s ease;
     cursor: pointer;
   }
+  .hoverdefault_reverse{
+    opacity: 0;
+    transition:all 0.5s ease;
+    cursor: pointer;
+  }
+  .hoverdefault_reverse:hover{ opacity: 0.4; }
+  .mouseoverdefault{
+    opacity: 0;
+    transition:all 0.5s ease;
+    cursor: pointer;
+  }
   .mouseoverdefault:hover{ opacity: 0.5; }
 
   .inputdefault{

@@ -2097,4 +2097,142 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
   }
 }
 
+// GET client history -------------------------------------------------------------------------
+
+BackMaker.prototype.getClientHistoryById = async function (cliid, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    let arr, target;
+    await MONGOLOCALC.connect();
+    arr = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({ cliid }).toArray();
+    MONGOLOCALC.close();
+    if (arr.length > 0) {
+      return arr[0];
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.getClientHistoriesByQuery = async function (query, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    let tong, sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "cliid": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    await MONGOLOCALC.connect();
+    if (option.limit !== undefined) {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find(query).sort(sortQuery).toArray();
+    }
+    MONGOLOCALC.close();
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.getClientHistoriesAll = async function (option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    let tong, sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "cliid": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    await MONGOLOCALC.connect();
+    if (option.limit !== undefined) {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({}).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({}).sort(sortQuery).toArray();
+    }
+    MONGOLOCALC.close();
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.updateClientHistory = async function (queryArr, option = { selfMongo: null }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+
+    await MONGOLOCALC.connect();
+    await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).updateOne(whereQuery, { $set: updateQuery });
+    MONGOLOCALC.close();
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.deleteClientHistory = async function (cliid, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    await MONGOLOCALC.connect();
+    await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteOne({ cliid });
+    MONGOLOCALC.close();
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.createClientHistory = async function (updateQuery, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongolocalinfo } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    let dummy;
+
+    dummy = {
+      cliid: updateQuery.cliid,
+      history: "",
+      space: "",
+      construct: "",
+      styling: "",
+      budget: "",
+      progress: "",
+    };
+
+    await MONGOLOCALC.connect();
+    await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(dummy);
+    MONGOLOCALC.close();
+
+    await this.updateClientHistory([ { cliid: updateQuery.cliid }, updateQuery ], option);
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackMaker;

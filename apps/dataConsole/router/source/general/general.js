@@ -388,6 +388,12 @@ GeneralJs.prototype.generalCss = function () {
   .hoverDefault_lite:hover{opacity:0.75;}
   .hoverDefault{cursor:pointer;opacity:1}
   .hoverDefault:hover{opacity:0.5;}
+  .hoverdefault_reverse{
+    opacity: 0;
+    transition:all 0.5s ease;
+    cursor: pointer;
+  }
+  .hoverdefault_reverse:hover{ opacity: 0.4; }
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
   @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
@@ -456,6 +462,10 @@ GeneralJs.prototype.returnRinitial = function (color) {
 
 GeneralJs.prototype.returnHinitial = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48.023 56.198"><path d="M0 0h12.733v22.951h22.558V0h12.732v56.198H35.291V33.011H12.733v23.187H0V0z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnRinitial = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.116 56.198"><path d="M0 0h20.121c13.283 0 21.693 5.423 21.693 17.056v0.314c0 8.488-4.952 12.969-11.554 14.933L45.116 56.198H31.596L18.156 34.505h-5.502v21.693H0V0zM19.807 25.859c6.366 0 9.589-2.672 9.589-8.095v-0.314c0-5.738-3.458-7.703-9.589-7.703h-7.152v16.113H19.807z" fill="${color}"/></svg>`;
 }
 
 GeneralJs.prototype.returnReturn = function (color) {

@@ -169,6 +169,69 @@ DataRouter.autoComma = function (str) {
   return minus + num;
 }
 
+DataRouter.stringFilter = function (str) {
+  let filtered;
+  filtered = str.replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '');
+  filtered = filtered.replace(/^\n/, '');
+  filtered = filtered.replace(/\n$/, '');
+  filtered = filtered.replace(/\n\n/g, '\n');
+  filtered = filtered.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ0-9a-zA-Z\)\(\.\,\?\!\/\'\"\;\:\@\#\$\%\&\*\-\_\+\=\n\t ]/g, '');
+  filtered = filtered.replace(/^ /g, '');
+  filtered = filtered.replace(/ $/g, '');
+  filtered = filtered.replace(/  /g, ' ');
+  filtered = filtered.replace(/   /g, ' ');
+  filtered = filtered.replace(/    /g, ' ');
+  filtered = filtered.replace(/     /g, ' ');
+  filtered = filtered.replace(/      /g, ' ');
+  filtered = filtered.replace(/     /g, ' ');
+  filtered = filtered.replace(/    /g, ' ');
+  filtered = filtered.replace(/   /g, ' ');
+  filtered = filtered.replace(/  /g, ' ');
+  return filtered;
+}
+
+DataRouter.notionArrRefine = function (arr) {
+  let target;
+  let targetTong;
+  target = [];
+  for (let obj of arr) {
+    if (obj.title_plaintext !== undefined && obj.title_plaintext !== '') {
+      targetTong = {};
+      targetTong.title_plaintext = DataRouter.stringFilter(obj.title_plaintext);
+      if (obj.children !== undefined) {
+        targetTong.children = DataRouter.notionArrRefine(obj.children);
+      }
+      target.push(targetTong);
+    }
+  }
+  return target;
+}
+
+DataRouter.objectToFlat = function (arr) {
+  let totalString;
+  let temp, tempArr;
+  totalString = '';
+  for (let obj of arr) {
+    totalString += obj.title_plaintext;
+    totalString += "__split__";
+    if (obj.children !== undefined) {
+      temp = DataRouter.objectToFlat(obj.children);
+      tempArr = temp.split("__split__");
+      for (let i = 0; i < tempArr.length; i++) {
+        tempArr[i] = "- " + tempArr[i];
+      }
+      totalString += tempArr.join("__split__");
+      totalString += "__split__";
+    }
+  }
+  totalString = totalString.slice(0, -9);
+  return totalString;
+}
+
+DataRouter.splitToSpace = function (str) {
+  return str.replace(/__split__/g, '\n');
+}
+
 //GENERAL METHODS ---------------------------------------------------------------------------------
 
 DataRouter.prototype.getDateMatrix = async function (length = 6) {
@@ -933,47 +996,52 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
 
 DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
+  const back = this.back;
   let obj = {};
   obj.link = [ "/getClientHistory" ];
   obj.func = async function (req, res) {
     try {
-      //DEV ---------------------------------
-      let longText0, longText1, longText2, longText3, longText4;
-      longText0 = ` 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:25:19 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼부부 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색 과거의 정보 모음 / 이전 문의일 : 2020-10-27 00:35:04 / 이전 주소 : 인천 연수구 원인재로 180 우성2차 / 이전 가족 구성원 : 예비신혼 / 이전 예산 : 500만원 이하 / 이전 평수 : 18 / 이전 입주일 : 2020-01-01 / 이전 계약 형태 : 전월세 / 이전 공간 상태 : 방 3개 / 화장실 1개 / 발코니 확장 / 이전 요청 사항 : 예비 신혼부부예용  오빠예랑 혼자 자취하다가 이번달에 이사했고 가전 가구 거의 없어요. 이사한 상태 그대로예요. 오래된 아파트의 전셋집이라 고치고싶은데는 많은데 큰돈을 들일수도없고ㅜㅜ 신혼집인데 그냥살자니 너무 서글퍼서 낮에는 회사에서 밤에는 집에서 혼자 울다가 ㅜㅜ 전문가의 도움을 요청합니다. 진심어린 홈스타일링이 저에게는 집뿐만아니라 마음에도큰힘이될거같아요!   다음중 예산에맞춰 가능한부분을 진행하고싶습니다!!  1. 전셋집이기때문에 시공공사 비용은 최소화 / 화장실 욕실 주방 방문 등등 깨끗하게 리폼  하고싶어요ㅜㅜ  2. 어떤방을 어떻게 사용해야할지 모르겠어요 동선이 너무 복잡해요 @_@  3. 가구 추천과 배치 원해요!!! 무작정 골라놓고 생각해본 가구들은 많은데 현재갖고있는걸 최대한 활용하면서 서로조화가되도록 고르고 배치하는게 너무 어려운거같아요   / 이전 유입 경로 : 인터넷 검색
-      2020년 10월 27일 열림통화 부재중 문자 남김
+      const historyObj = await back.getClientHistoryById(req.body.id);
+      let responseArr = [];
 
-      2020년 10월 29일 열림통화 플친등록 문자 남김
-
-      2020년 10월 30일 열림통화 통화 지금 어려우시다고 함`;
-
-      longText1 = `재배치 추가구매, 구매양이 많을 듯
-첫째딸 방 _> 공부방   수면분리 아직 안되었지만 예쁘게 꾸며주면 될까 싶기도 하고
-둘째딸 방 _> 놀이방
-베이비시터 둘째아이 침실
-
-임은숙 실장님 파주 아이방이 좋았음. 효율적인 수납, 통일성 있는 디자인, 전체 집과 어울리는 분위기. 예쁘게 아기자기한 건 원하지 않음(청소 및 관리 어렵기 때문). 러그나 패브릭 선호하지 않으시는 것 같음. (액자대신) 애기 그림을 전시하는 것 좋다고 생각하시는 듯. `;
-
-      longText2 = `전체구매
-- 새로살 가구 : 심플하게 진행할 예정 드레스룸, 안방가구 책상 의자 (제작가구 고민 중)
-- 자녀 성별, 연령 거실 왼쪽에 있는 방은 없는 상황
-- 안방 붙박이장, 화장대가 있는데 철거 후 새롭게 붙박이장 옆에다가 침대 넣고 화장대 재설치 책상, 의자
-- 거실건넌방 아이방
-- 안방 옆방 드레스룸`;
-
-      longText3 = `시공없음 영 톤이 안맞으면 도배정도는 생각해볼 수 있을 것 같음`;
-
-      longText4 = `10/12 해진 통화, 디자인이 마음에 안드신다고. 우다미 디자이너같은 스타일이 좋으시다고. (선호사진은 완전 다르다고 말하기는 좀 그렇지만 일치감이 높지는 않은데.) 우다미 디자이너 제안을 받았다면 250-300선이면 그래도 고민해 봤을텐데 디자이너 포트폴리오가 마음에 안드신다고.
-10/8 해진 통화, 디자이너 추천제안 하기로. 빠르면 8일 늦으면 12일, 남편 추가 통화 12일에 연락하기로 함10/12 해진 통화, 디자인이 마음에 안드신다고. 우다미 디자이너같은 스타일이 좋으시다고. (선호사진은 완전 다르다고 말하기는 좀 그렇지만 일치감이 높지는 않은데.) 우다미 디자이너 제안을 받았다면 250-300선이면 그래도 고민해 봤을텐데 디자이너 포트폴리오가 마음에 안드신다고.
-10/8 해진 통화, 디자이너 추천제안 하기로. 빠르면 8일 늦으면 12일, 남편 추가 통화 12일에 연락하기로 함`;
-
-      //DEV ---------------------------------
-
-      if (req.url === "/getClientHistory") {
-        console.log(req.body.id);
+      if (historyObj === null) {
+        for (let i = 0; i < 6; i++) {
+          responseArr.push('');
+        }
+      } else {
+        responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
+        responseArr.push((historyObj.space === undefined ? '' : historyObj.space));
+        responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling));
+        responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct));
+        responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget));
+        responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress));
       }
 
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify([ longText0, longText1, longText2, longText3, longText4 ]));
+      res.send(JSON.stringify(responseArr));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_updateHistory = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = [ "/updateClientHistory" ];
+  obj.func = async function (req, res) {
+    try {
+      const { id, column, value } = req.body;
+      let whereQuery, updateQuery;
+      whereQuery = {};
+      updateQuery = {};
+      whereQuery.cliid = id;
+      updateQuery[column] = value;
+      await back.updateClientHistory([ whereQuery, updateQuery ]);
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {
       console.log(e);
     }
@@ -1178,6 +1246,7 @@ DataRouter.prototype.rou_post_calendarArr = function () {
 
 DataRouter.prototype.rou_post_notionUpdate = function () {
   const instance = this;
+  const back = this.back;
   const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
   const notion = new NotionAPIs();
   let obj = {};
@@ -1188,10 +1257,11 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
       let whoMethod, whoFunction;
       let result;
       let whereQuery, updateQuery;
+      let historyObj;
 
       whoMethod = null;
       if (req.body.cliid !== undefined) {
-        notionCard = await notion.getElementById(req.body.cliid);
+        notionCard = await notion.getElementById(req.body.cliid, true);
         whoMethod = "client";
       } else if (req.body.desid !== undefined) {
         notionCard = await notion.getElementById(req.body.desid);
@@ -1211,10 +1281,22 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
       whereQuery = {};
       if (req.body.cliid !== undefined) {
         whereQuery.cliid = req.body.cliid;
-        instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+        historyObj = {};
+        historyObj.cliid = req.body.cliid;
+        historyObj.history = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.history === undefined ? [] : notionCard.detailStory.history))));
+        historyObj.space = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.space === undefined ? [] : notionCard.detailStory.space))));
+        historyObj.styling = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.styling === undefined ? [] : notionCard.detailStory.styling))));
+        historyObj.construct = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.construct === undefined ? [] : notionCard.detailStory.construct))));
+        historyObj.budget = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.budget === undefined ? [] : notionCard.detailStory.budget))));
+        historyObj.progress = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.progress === undefined ? [] : notionCard.detailStory.progress))));
+
+        await instance.back.updateClientHistory([ whereQuery, historyObj ]);
+
       } else if (req.body.desid !== undefined) {
         whereQuery.desid = req.body.desid;
-        instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
 
       res.set("Content-Type", "application/json");
@@ -1229,11 +1311,13 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
 DataRouter.prototype.rou_post_createRequestDocument = function () {
   const instance = this;
   const { shell, shellLink } = this.mother;
+  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let obj = {};
   obj.link = "/createRequestDocument";
   obj.func = async function (req, res) {
     try {
-      shell.exec(`node ${shellLink(process.cwd())}/robot.js dev`);
+      const aiConsole = new AiConsole();
+      await aiConsole.cardToAi("c2011_aa04s");
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {

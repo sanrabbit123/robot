@@ -22,8 +22,9 @@ class DevContext extends Array {
   constructor() {
     super();
     this.mother = new Mother();
-    const { mongo, mongoinfo } = this.mother;
+    const { mongo, mongoinfo, mongolocalinfo } = this.mother;
     this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   }
 
   async main1() {
@@ -763,6 +764,7 @@ class DevContext extends Array {
     const { fileSystem, shell, shellLink, s3FileUpload } = this.mother;
     try {
       await this.MONGOC.connect();
+      await this.MONGOLOCALC.connect();
 
       // await this.main0();
       // await this.main1();
@@ -1005,8 +1007,203 @@ class DevContext extends Array {
       // console.log(await back.getClientsAll());
 
 
-      const ai = new AiConsole();
-      await ai.cardToAi("c2011_aa04s");
+
+      //history parsing
+
+      let targets = [
+        "a12_history",
+        "a31_aboutsite",
+        "a32_aboutcom",
+        "a33_aboutsty",
+        "a34_aboutmon",
+        "a35_aboutetc",
+      ];
+      let targets2 = [
+        "history",
+        "space",
+        "construct",
+        "styling",
+        "budget",
+        "progress",
+      ];
+
+      /*
+
+      // history parsing - notion to file
+
+      const notion = new NotionAPIs();
+      const notionCard = await notion.getElementById("c2011_aa04s", true);
+      await notion.getAllClients();
+
+      */
+
+      // history parsing - from file
+
+      const filter = function (str) {
+        let filtered;
+        filtered = str.replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '');
+        filtered = filtered.replace(/^\n/, '');
+        filtered = filtered.replace(/\n$/, '');
+        filtered = filtered.replace(/\n\n/g, '\n');
+        filtered = filtered.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ0-9a-zA-Z\)\(\.\,\?\!\/\'\"\;\:\@\#\$\%\&\*\-\_\+\=\n\t ]/g, '');
+        filtered = filtered.replace(/^ /g, '');
+        filtered = filtered.replace(/ $/g, '');
+        filtered = filtered.replace(/  /g, ' ');
+        filtered = filtered.replace(/   /g, ' ');
+        filtered = filtered.replace(/    /g, ' ');
+        filtered = filtered.replace(/     /g, ' ');
+        filtered = filtered.replace(/      /g, ' ');
+        filtered = filtered.replace(/     /g, ' ');
+        filtered = filtered.replace(/    /g, ' ');
+        filtered = filtered.replace(/   /g, ' ');
+        filtered = filtered.replace(/  /g, ' ');
+        return filtered;
+      }
+      const returnTargetTong = function (arr) {
+        let target;
+        let targetTong;
+        target = [];
+        for (let obj of arr) {
+          if (obj.title_plaintext !== undefined && obj.title_plaintext !== '') {
+            targetTong = {};
+            targetTong.title_plaintext = filter(obj.title_plaintext);
+            if (obj.children !== undefined) {
+              targetTong.children = returnTargetTong(obj.children);
+            }
+            target.push(targetTong);
+          }
+        }
+        return target;
+      }
+      const objectToFlat = function (arr) {
+        let totalString;
+        let temp, tempArr;
+        totalString = '';
+        for (let obj of arr) {
+          totalString += obj.title_plaintext;
+          totalString += "__split__";
+          if (obj.children !== undefined) {
+            temp = objectToFlat(obj.children);
+            tempArr = temp.split("__split__");
+            for (let i = 0; i < tempArr.length; i++) {
+              tempArr[i] = "- " + tempArr[i];
+            }
+            totalString += tempArr.join("__split__");
+            totalString += "__split__";
+          }
+        }
+        totalString = totalString.slice(0, -9);
+        return totalString;
+      }
+      const splitToSpace = function (str) {
+        return str.replace(/__split__/g, '\n');
+      }
+      const notionClientTong = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/notionClientTong.json` ]));
+      let finalString;
+      let finalNotionTong;
+      finalNotionTong = {};
+      for (let cliid in notionClientTong) {
+        finalNotionTong[cliid] = {};
+        for (let z of targets2) {
+          if (Object.keys(notionClientTong[cliid]["detailStory"]).length !== 0) {
+            if (notionClientTong[cliid]["detailStory"][z] !== undefined) {
+              if (Object.keys(notionClientTong[cliid]["detailStory"][z]).length !== 0) {
+                finalString = splitToSpace(objectToFlat(returnTargetTong(notionClientTong[cliid]["detailStory"][z])));
+                if (finalString !== '') {
+                  finalNotionTong[cliid][z] = finalString;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // history parsing - from past
+      let nothing = [
+        '',
+        '-'
+      ];
+      const MONGOC = this.MONGOC;
+      let pastTong = await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({}).toArray();
+      let historyTong = {};
+      for (let i of pastTong) {
+        if (!(nothing.includes(i.a12_history) && nothing.includes(i.a31_aboutsite) && nothing.includes(i.a32_aboutcom) && nothing.includes(i.a33_aboutsty) && nothing.includes(i.a34_aboutmon))) {
+          historyTong[i.a4_customernumber] = {};
+          for (let j = 0; j < targets.length; j++) {
+            historyTong[i.a4_customernumber][targets2[j]] = i[targets[j]];
+          }
+        }
+      }
+
+      let mixTong = [], mixTong2 = [];
+      let mixTong2_copied;
+      let mixTong2_filtered;
+      let mixTong_cliidArr;
+      let mixTong2_filtered_cliidArr;
+      let mixFinal;
+      let mixFinal_cliidArr;
+
+      for (let i in finalNotionTong) {
+        finalNotionTong[i].cliid = i;
+        mixTong.push(finalNotionTong[i]);
+      }
+
+      for (let i in historyTong) {
+        historyTong[i].cliid = i;
+        mixTong2.push(historyTong[i]);
+      }
+
+      for (let i of mixTong) {
+        for (let j of mixTong2) {
+          if (i.cliid === j.cliid) {
+            if (j.history !== undefined && j.history !== '' && j.history !== '-') {
+              i.history = j.history;
+            }
+            if (j.space !== undefined && j.space !== '' && j.space !== '-') {
+              i.space = j.space;
+            }
+            if (j.construct !== undefined && j.construct !== '' && j.construct !== '-') {
+              i.construct = j.construct;
+            }
+            if (j.styling !== undefined && j.styling !== '' && j.styling !== '-') {
+              i.styling = j.styling;
+            }
+            if (j.budget !== undefined && j.budget !== '' && j.budget !== '-') {
+              i.budget = j.budget;
+            }
+            if (j.progress !== undefined && j.progress !== '' && j.progress !== '-') {
+              i.progress = j.progress;
+            }
+          }
+        }
+      }
+
+      mixTong2_copied = JSON.parse(JSON.stringify(mixTong2));
+      mixTong_cliidArr = [];
+      mixTong2_filtered = [];
+      mixTong2_filtered_cliidArr = [];
+
+      for (let i of mixTong) {
+        mixTong_cliidArr.push(i.cliid);
+      }
+
+      for (let i of mixTong2_copied) {
+        if (mixTong_cliidArr.indexOf(i.cliid) === -1) {
+          mixTong2_filtered.push(i);
+        }
+      }
+
+      for (let i of mixTong2_filtered) {
+        mixTong2_filtered_cliidArr.push(i.cliid);
+      }
+
+      mixFinal = mixTong.concat(mixTong2_filtered);
+
+      // await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteMany({});
+      // for (let i of mixFinal) {
+      //   await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(i);
+      // }
+
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
@@ -1090,6 +1287,7 @@ class DevContext extends Array {
       console.log(e);
     } finally {
       this.MONGOC.close();
+      this.MONGOLOCALC.close();
       console.log(`done`);
     }
   }

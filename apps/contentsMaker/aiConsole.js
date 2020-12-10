@@ -38,7 +38,7 @@ AiConsole.prototype.cardToAi = async function (id) {
     let sw = "notioncard";
 
     tempDir = await fileSystem(`readDir`, [ `${process.cwd()}/temp` ]);
-    if (tempDir.includes(`tempNotionCard_${id}`)) {
+    if (tempDir.includes(`tempNotionCard_${id}.json`)) {
       json = JSON.parse(await fileSystem("readString", [ `${process.cwd()}/temp/tempNotionCard_${id}.json`, JSON.stringify(json, null, 2) ]));
     } else {
       json = await this.extractJson(id);
@@ -46,19 +46,19 @@ AiConsole.prototype.cardToAi = async function (id) {
       await fileSystem("write", [ `${process.cwd()}/temp/tempNotionCard_${id}.json`, JSON.stringify(json, null, 2) ]);
     }
 
-    // shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result/${sw}`);
-    //
-    // this.options.script_dir = `${this.links.factory}/script/console_maker`;
-    // temp_scriptString = await this.general.generator.console_maker.exec(this.options, sw);
-    // await this.general.startAdobe({
-    //   name: `cardToAi_${id}`,
-    //   data: json,
-    //   script: temp_scriptString,
-    //   app: "Illustrator",
-    //   end: false,
-    // });
-    //
-    // shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
+    shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result/${sw}`);
+
+    this.options.script_dir = `${this.links.factory}/script/console_maker`;
+    temp_scriptString = await this.general.generator.console_maker.exec(this.options, sw);
+    await this.general.startAdobe({
+      name: `cardToAi_${id}`,
+      data: json,
+      script: temp_scriptString,
+      app: "Illustrator",
+      end: false,
+    });
+
+    shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
 
   } catch (e) {
     console.log(e);

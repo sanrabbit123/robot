@@ -130,6 +130,56 @@ NotionAPIs.prototype.getCxCards = async function () {
   }
 }
 
+NotionAPIs.prototype.treeParsing = async function (id) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    let blockDetails;
+    let clientStructure;
+    let childrenParsing;
+
+    childrenParsing = function (children) {
+      let arr = [];
+      for (let { block, children: childrenchildren } of children) {
+        if (childrenchildren !== undefined) {
+          if (childrenchildren.length !== 0) {
+            block.children = childrenParsing(childrenchildren);
+          }
+        }
+        arr.push(block);
+      }
+      return arr;
+    }
+
+    //detail parsing
+    let { resultFile } = await this.mother.pythonExecute(this.pythonApp, [ "treeParsing" ], { id });
+    blockDetails = JSON.parse(await fileSystem("readString", [ resultFile ]));
+
+    clientStructure = {};
+    for (let { block, children } of blockDetails) {
+      if (block.className === "ToggleBlock") {
+        if (/HISTORY/gi.test(block.title_plaintext)) {
+          clientStructure.history = childrenParsing(children);
+        } else if (/현장/gi.test(block.title_plaintext)) {
+          clientStructure.space = childrenParsing(children);
+        } else if (/시공/gi.test(block.title_plaintext)) {
+          clientStructure.construct = childrenParsing(children);
+        } else if (/스타일링/gi.test(block.title_plaintext)) {
+          clientStructure.styling = childrenParsing(children);
+        } else if (/예산/gi.test(block.title_plaintext)) {
+          clientStructure.budget = childrenParsing(children);
+        } else if (/진행/gi.test(block.title_plaintext)) {
+          clientStructure.progress = childrenParsing(children);
+        }
+      }
+    }
+
+    return clientStructure;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 NotionAPIs.prototype.getElementById = async function (id, detail = false) {
   const instance = this;
   const { fileSystem } = this.mother;
@@ -173,70 +223,10 @@ NotionAPIs.prototype.getElementById = async function (id, detail = false) {
     if (!detail) {
       return result[0];
     } else {
-
-      let client, designer;
-      let blockDetails;
-      let clientStructure, designerStructure;
-      let childrenParsing;
-
-      childrenParsing = function (children) {
-        let arr = [];
-        for (let { block, children: childrenchildren } of children) {
-          if (childrenchildren !== undefined) {
-            if (childrenchildren.length !== 0) {
-              block.children = childrenParsing(childrenchildren);
-            }
-          }
-          arr.push(block);
-        }
-        return arr;
-      }
-
-      //detail parsing - client
       if (button === 'c') {
-
         client = result[0];
-        let { resultFile } = await this.mother.pythonExecute(this.pythonApp, [ "treeParsing" ], { id: client.id });
-        blockDetails = JSON.parse(await fileSystem("readString", [ resultFile ]));
-
-        clientStructure = {};
-        for (let { block, children } of blockDetails) {
-          if (block.className === "ToggleBlock") {
-            if (/HISTORY/gi.test(block.title_plaintext)) {
-              clientStructure.history = childrenParsing(children);
-            } else if (/현장/gi.test(block.title_plaintext)) {
-              clientStructure.space = childrenParsing(children);
-            } else if (/시공/gi.test(block.title_plaintext)) {
-              clientStructure.construct = childrenParsing(children);
-            } else if (/스타일링/gi.test(block.title_plaintext)) {
-              clientStructure.styling = childrenParsing(children);
-            } else if (/예산/gi.test(block.title_plaintext)) {
-              clientStructure.budget = childrenParsing(children);
-            } else if (/진행/gi.test(block.title_plaintext)) {
-              clientStructure.progress = childrenParsing(children);
-            }
-          }
-        }
-        if (Object.keys(clientStructure).length !== 6) {
-          throw new Error("invaild card : " + result[0].cliid + " " + JSON.stringify(clientStructure, null, 2));
-        }
-
-        client.detailStory = clientStructure;
-
-        return client;
-
-      //detail parsing - designer
-      } else if (button === 'd') {
-
-
-
-
-
-
-
-
-      } else {
-        throw new Error("invaild card");
+        result[0].detailStory = await this.treeParsing(result[0].id);
+        return result[0];
       }
     }
   } catch (e) {
@@ -244,6 +234,50 @@ NotionAPIs.prototype.getElementById = async function (id, detail = false) {
   }
 }
 
+NotionAPIs.prototype.getAllClients = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    let obj = JSON.parse(JSON.stringify(this.blockInfo));
+    obj.blockInfo.targetColumns.pop();
+
+    await this.updateConsoleLink();
+    const { resultFileList } = await this.blockToJson(obj);
+
+    let tempArr;
+    let firstTong, secondTong, finalTong;
+
+    firstTong = [];
+    for (let f of resultFileList) {
+      tempArr = JSON.parse(await fileSystem(`readString`, [ f ]));
+      for (let i of tempArr) {
+        firstTong.push(i);
+      }
+    }
+
+    secondTong = {};
+    for (let m of firstTong) {
+      if (m.cliid !== undefined && m.cliid !== '') {
+        secondTong[m.cliid] = {};
+        secondTong[m.cliid]["id"] = m.parentId + '-' + m.id;
+        secondTong[m.cliid]["data"] = m;
+      }
+    }
+
+    finalTong = {};
+    for (let cliid of Object.keys(secondTong)) {
+      finalTong[cliid] = secondTong[cliid];
+      finalTong[cliid].detailStory = await this.treeParsing(secondTong[cliid].id.split('-')[1]);
+    }
+
+    console.log(finalTong);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/notionClientTong.json`, JSON.stringify(finalTong, null, 2) ]);
+
+    return finalTong;
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 //PAST -----------------------------------------------------------------------------------------------------
 

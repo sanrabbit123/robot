@@ -2239,7 +2239,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       position: "absolute",
       bottom: String(0) + ea,
       left: String(fontSize * (15 / 15.3027)) + ea,
-      background: "aqua",
       width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
       height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
       overflow: "scroll",

@@ -1265,10 +1265,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let rightArrowBox, leftArrowBox;
   let rightArrow, leftArrow;
   let hInitial, hInitialBox;
+  let rInitial, rInitialBox;
   let updateEventFunction;
   let contentsBoxHeight, contentsBoxBottom;
   let lineHeightRatio;
   let historyTongTarget, historyTargetHeightConst;
+  let historyFocusEvent, historyBlurEvent;
   let visualSpecificMarginTop;
   let textAreas;
   let notionEvent;
@@ -1400,14 +1402,40 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //h initial button
   hInitialBox = GeneralJs.nodes.div.cloneNode(true);
+  hInitialBox.classList.add("hoverdefault_reverse");
   for (let i in style) {
     hInitialBox.style[i] = style[i];
   }
+  hInitialBox.style.opacity = '';
   hInitialBox.style.right = String(leftMargin + (leftMargin * (31 / 60))) + ea;
   hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
   hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
   hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  hInitialBox.style.background = "white";
   div_clone2.appendChild(hInitialBox);
+
+  //r initial icon
+  rInitial = SvgTong.stringParsing(this.mother.returnRinitial("#2fa678"));
+  for (let i in style) {
+    rInitial.style[i] = style[i];
+  }
+  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (35.5 / 60))) + ea;
+  rInitial.style.width = String(leftMargin * (9.7 / 60)) + ea;
+  div_clone2.appendChild(rInitial);
+
+  //r initial button
+  rInitialBox = GeneralJs.nodes.div.cloneNode(true);
+  rInitialBox.classList.add("hoverdefault_reverse");
+  for (let i in style) {
+    rInitialBox.style[i] = style[i];
+  }
+  rInitialBox.style.opacity = '';
+  rInitialBox.style.right = String(leftMargin + (1.5 * leftMargin * (31 / 60))) + ea;
+  rInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  rInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  rInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  rInitialBox.style.background = "white";
+  div_clone2.appendChild(rInitialBox);
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -1826,11 +1854,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //history text box tong
   historyTongTarget = [
-    { name: "시공 관련", dom: null },
-    { name: "스타일링 관련", dom: null },
-    { name: "예산 관련", dom: null },
-    { name: "현장 관련", dom: null },
-    { name: "진행 현황", dom: null },
+    { column: "history", name: "응대 기록", dom: null },
+    { column: "space", name: "현장 관련", dom: null },
+    { column: "styling", name: "스타일링 관련", dom: null },
+    { column: "construct", name: "시공 관련", dom: null },
+    { column: "budget", name: "예산 관련", dom: null },
+    { column: "progress", name: "진행 현황", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
   historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
@@ -1850,6 +1879,33 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   for (let i = 0; i < historyTongTarget.length; i++) {
+
+    //focus event
+    historyFocusEvent = function (e) {
+      const thisIndex = i;
+      for (let { dom } of historyTongTarget) {
+        if (Number(dom.getAttribute("index")) !== thisIndex) {
+          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        } else {
+          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        }
+      }
+      this.style.color = "#202020";
+    }
+
+    //blur event
+    historyBlurEvent = function (e) {
+      const thisIndex = i;
+      let target;
+      for (let { dom } of historyTongTarget) {
+        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        if (Number(dom.getAttribute("index")) === thisIndex) {
+          target = dom.querySelector("textarea");
+        }
+      }
+      this.style.color = "#cccccc";
+      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+    }
 
     //margin box
     div_clone4 = GeneralJs.nodes.div.cloneNode(true);
@@ -1879,7 +1935,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone4.style[j] = style[j];
     }
 
+    //title
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone5.classList.add("hoverDefault_lite");
     div_clone5.textContent = historyTongTarget[i].name;
     style = {
       position: "absolute",
@@ -1891,19 +1949,21 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       background: "white",
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
+      cursor: "pointer",
     };
     for (let j in style) {
       div_clone5.style[j] = style[j];
     }
+    div_clone5.addEventListener("click", historyFocusEvent);
     div_clone4.appendChild(div_clone5);
 
+    //textarea tong
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
     div_clone5.classList.add("noScrollBar");
     style = {
       position: "absolute",
       bottom: String(0) + ea,
       left: String(fontSize * (15 / 15.3027)) + ea,
-      background: "aqua",
       width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
       height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
       overflow: "scroll",
@@ -1912,12 +1972,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone5.style[j] = style[j];
     }
 
+    //textarea
     textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
     style = {
       width: "100%",
       height: String(5000) + ea,
       fontSize: String(fontSize * 0.9) + ea,
-      fontWeight: String(200),
+      fontWeight: String(400),
       color: "#aaaaaa",
       border: String(0),
       outline: String(0),
@@ -1926,23 +1987,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let j in style) {
       textArea_clone.style[j] = style[j];
     }
-    textArea_clone.addEventListener("focus", function (e) {
-      const thisIndex = i;
-      for (let { dom } of historyTongTarget) {
-        if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        } else {
-          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        }
-      }
-      this.style.color = "#202020";
-    });
-    textArea_clone.addEventListener("blur", function (e) {
-      for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
-      }
-      this.style.color = "#cccccc";
-    });
+    textArea_clone.addEventListener("focus", historyFocusEvent);
+    textArea_clone.addEventListener("blur", historyBlurEvent);
 
     div_clone5.appendChild(textArea_clone);
     textAreas.push(textArea_clone);
@@ -1958,7 +2004,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(historyBox);
   this.whiteBox.historyBox = historyBox;
 
-  //h inital event
+  //h initial event
   GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
   hInitialBox.addEventListener("click", function (e) {
     if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
@@ -1969,6 +2015,233 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       propertyBox.style.opacity = String(1);
       historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+    }
+  });
+
+  //r initial event
+  GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
+  GeneralJs.stacks["rInitialBoxButtonDom"] = null;
+  rInitialBox.addEventListener("click", function (e) {
+    if (GeneralJs.stacks["rInitialBoxButtonToggle"] === 0) {
+      for (let { dom } of historyTongTarget) {
+        dom.style.opacity = String(0);
+      }
+      const mother = historyTongTarget[0].dom.parentElement;
+      let div_clone4, div_clone5, div_clone6;
+      let textArea_clone;
+
+      //contents box
+      div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: "100%",
+        marginTop: String(visualSpecificMarginTop) + ea,
+        height: "calc(" + String(100) + "% - " + String(historyTargetHeightConst) + ea + ")",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(300),
+        border: "solid 1px #dddddd",
+        borderRadius: String(5) + ea,
+        top: String(fontSize * (1 / 5)) + ea,
+        animation: "fadeuplite 0.3s ease forwards",
+      };
+      for (let j in style) {
+        div_clone4.style[j] = style[j];
+      }
+
+      //title
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone5.classList.add("hoverDefault_lite");
+      div_clone5.textContent = "홈스타일링 의뢰서";
+      style = {
+        position: "absolute",
+        top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
+        left: String(fontSize * (2 / 15.3027) * -1) + ea,
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(600),
+        color: "#404040",
+        background: "white",
+        paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
+        paddingRight: String(fontSize * (12 / 15.3027)) + ea,
+        cursor: "pointer",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+      div_clone4.appendChild(div_clone5);
+
+      //textarea tong
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone5.classList.add("noScrollBar");
+      style = {
+        position: "absolute",
+        bottom: String(0) + ea,
+        left: String(fontSize * (15 / 15.3027)) + ea,
+        width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
+        height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
+        overflow: "scroll",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+
+      //textarea
+      textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
+      style = {
+        width: "100%",
+        height: String(5000) + ea,
+        fontSize: String(fontSize * 0.9) + ea,
+        fontWeight: String(400),
+        color: "#202020",
+        border: String(0),
+        outline: String(0),
+        lineHeight: String(1.6),
+      };
+      for (let j in style) {
+        textArea_clone.style[j] = style[j];
+      }
+      div_clone5.appendChild(textArea_clone);
+      div_clone4.appendChild(div_clone5);
+
+      //button0
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: String(55) + ea,
+        height: String(30) + ea,
+        bottom: String(13) + ea,
+        right: String(12) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+        background: "#2fa678",
+        borderRadius: String(5) + ea,
+        opacity: String(0.92),
+        cursor: "pointer",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone6.classList.add("hoverDefault_lite");
+      div_clone6.textContent = "제작";
+      style = {
+        position: "absolute",
+        top: String(4) + ea,
+        left: String(15) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+      };
+      for (let j in style) {
+        div_clone6.style[j] = style[j];
+      }
+      div_clone6.addEventListener("click", async function (e) {
+        try {
+          await GeneralJs.ajaxPromise("", "/createRequestDocument");
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      div_clone5.appendChild(div_clone6);
+      div_clone4.appendChild(div_clone5);
+
+      //button1
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: String(55) + ea,
+        height: String(30) + ea,
+        bottom: String(13) + ea,
+        right: String(73) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+        background: "#2fa678",
+        borderRadius: String(5) + ea,
+        opacity: String(0.92),
+        cursor: "pointer",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone6.classList.add("hoverDefault_lite");
+      div_clone6.textContent = "취소";
+      style = {
+        position: "absolute",
+        top: String(4) + ea,
+        left: String(15) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+      };
+      for (let j in style) {
+        div_clone6.style[j] = style[j];
+      }
+      div_clone5.appendChild(div_clone6);
+      div_clone4.appendChild(div_clone5);
+
+      //button2
+      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: String(55) + ea,
+        height: String(30) + ea,
+        bottom: String(13) + ea,
+        right: String(134) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+        background: "#2fa678",
+        borderRadius: String(5) + ea,
+        opacity: String(0.92),
+        cursor: "pointer",
+      };
+      for (let j in style) {
+        div_clone5.style[j] = style[j];
+      }
+      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone6.classList.add("hoverDefault_lite");
+      div_clone6.textContent = "저장";
+      style = {
+        position: "absolute",
+        top: String(4) + ea,
+        left: String(15) + ea,
+        fontSize: String(fontSize * 0.92) + ea,
+        fontWeight: String(600),
+        color: "white",
+      };
+      for (let j in style) {
+        div_clone6.style[j] = style[j];
+      }
+      div_clone5.appendChild(div_clone6);
+      div_clone4.appendChild(div_clone5);
+
+      GeneralJs.stacks["rInitialBoxButtonDom"] = div_clone4;
+      mother.appendChild(div_clone4);
+
+      GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
+        const dataArr = JSON.parse(res);
+        let totalString = '\n';
+        for (let i = 0; i < historyTongTarget.length; i++) {
+          totalString += "[" + String(i + 1) + "] " + historyTongTarget[i].name;
+          totalString += "\n\n";
+          totalString += dataArr[i];
+          totalString += "\n\n\n";
+        }
+        textArea_clone.value = totalString;
+      });
+
+      GeneralJs.stacks["rInitialBoxButtonToggle"] = 1;
+    } else {
+      for (let { dom } of historyTongTarget) {
+        dom.style.opacity = '';
+      }
+      if (GeneralJs.stacks["rInitialBoxButtonDom"] !== null) {
+        GeneralJs.stacks["rInitialBoxButtonDom"].parentElement.removeChild(GeneralJs.stacks["rInitialBoxButtonDom"]);
+      }
+      GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
+      GeneralJs.stacks["rInitialBoxButtonDom"] = null;
     }
   });
 
