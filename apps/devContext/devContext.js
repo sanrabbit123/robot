@@ -1008,217 +1008,221 @@ class DevContext extends Array {
 
 
 
-      //history parsing
 
-      let targets = [
-        "a12_history",
-        "a31_aboutsite",
-        "a32_aboutcom",
-        "a33_aboutsty",
-        "a34_aboutmon",
-        "a35_aboutetc",
-      ];
-      let targets2 = [
-        "history",
-        "space",
-        "construct",
-        "styling",
-        "budget",
-        "progress",
-      ];
+      async function historyParsing() {
 
-      /*
+        //history parsing
 
-      // history parsing - notion to file
+        let targets = [
+          "a12_history",
+          "a31_aboutsite",
+          "a32_aboutcom",
+          "a33_aboutsty",
+          "a34_aboutmon",
+          "a35_aboutetc",
+        ];
+        let targets2 = [
+          "history",
+          "space",
+          "construct",
+          "styling",
+          "budget",
+          "progress",
+        ];
 
-      const notion = new NotionAPIs();
-      const notionCard = await notion.getElementById("c2011_aa04s", true);
-      await notion.getAllClients();
+        // history parsing - notion to file
 
-      */
+        const notion = new NotionAPIs();
+        const notionCard = await notion.getElementById("c2011_aa04s", true);
+        await notion.getAllClients();
 
-      // history parsing - from file
 
-      const filter = function (str) {
-        let filtered;
-        filtered = str.replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '');
-        filtered = filtered.replace(/^\n/, '');
-        filtered = filtered.replace(/\n$/, '');
-        filtered = filtered.replace(/\n\n/g, '\n');
-        filtered = filtered.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ0-9a-zA-Z\)\(\.\,\?\!\/\'\"\;\:\@\#\$\%\&\*\-\_\+\=\n\t ]/g, '');
-        filtered = filtered.replace(/^ /g, '');
-        filtered = filtered.replace(/ $/g, '');
-        filtered = filtered.replace(/  /g, ' ');
-        filtered = filtered.replace(/   /g, ' ');
-        filtered = filtered.replace(/    /g, ' ');
-        filtered = filtered.replace(/     /g, ' ');
-        filtered = filtered.replace(/      /g, ' ');
-        filtered = filtered.replace(/     /g, ' ');
-        filtered = filtered.replace(/    /g, ' ');
-        filtered = filtered.replace(/   /g, ' ');
-        filtered = filtered.replace(/  /g, ' ');
-        return filtered;
-      }
-      const returnTargetTong = function (arr) {
-        let target;
-        let targetTong;
-        target = [];
-        for (let obj of arr) {
-          if (obj.title_plaintext !== undefined && obj.title_plaintext !== '') {
-            targetTong = {};
-            targetTong.title_plaintext = filter(obj.title_plaintext);
-            if (obj.children !== undefined) {
-              targetTong.children = returnTargetTong(obj.children);
-            }
-            target.push(targetTong);
-          }
+        // history parsing - from file
+        const filter = function (str) {
+          let filtered;
+          filtered = str.replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/^ /g, '').replace(/ $/g, '');
+          filtered = filtered.replace(/^\n/, '');
+          filtered = filtered.replace(/\n$/, '');
+          filtered = filtered.replace(/\n\n/g, '\n');
+          filtered = filtered.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ0-9a-zA-Z\)\(\.\,\?\!\/\'\"\;\:\@\#\$\%\&\*\-\_\+\=\n\t ]/g, '');
+          filtered = filtered.replace(/^ /g, '');
+          filtered = filtered.replace(/ $/g, '');
+          filtered = filtered.replace(/  /g, ' ');
+          filtered = filtered.replace(/   /g, ' ');
+          filtered = filtered.replace(/    /g, ' ');
+          filtered = filtered.replace(/     /g, ' ');
+          filtered = filtered.replace(/      /g, ' ');
+          filtered = filtered.replace(/     /g, ' ');
+          filtered = filtered.replace(/    /g, ' ');
+          filtered = filtered.replace(/   /g, ' ');
+          filtered = filtered.replace(/  /g, ' ');
+          return filtered;
         }
-        return target;
-      }
-      const objectToFlat = function (arr) {
-        let totalString;
-        let temp, tempArr;
-        totalString = '';
-        for (let obj of arr) {
-          totalString += obj.title_plaintext;
-          totalString += "__split__";
-          if (obj.children !== undefined) {
-            temp = objectToFlat(obj.children);
-            tempArr = temp.split("__split__");
-            for (let i = 0; i < tempArr.length; i++) {
-              tempArr[i] = "- " + tempArr[i];
+        const returnTargetTong = function (arr) {
+          let target;
+          let targetTong;
+          target = [];
+          for (let obj of arr) {
+            if (obj.title_plaintext !== undefined && obj.title_plaintext !== '') {
+              targetTong = {};
+              targetTong.title_plaintext = filter(obj.title_plaintext);
+              if (obj.children !== undefined) {
+                targetTong.children = returnTargetTong(obj.children);
+              }
+              target.push(targetTong);
             }
-            totalString += tempArr.join("__split__");
+          }
+          return target;
+        }
+        const objectToFlat = function (arr) {
+          let totalString;
+          let temp, tempArr;
+          totalString = '';
+          for (let obj of arr) {
+            totalString += obj.title_plaintext;
             totalString += "__split__";
+            if (obj.children !== undefined) {
+              temp = objectToFlat(obj.children);
+              tempArr = temp.split("__split__");
+              for (let i = 0; i < tempArr.length; i++) {
+                tempArr[i] = "- " + tempArr[i];
+              }
+              totalString += tempArr.join("__split__");
+              totalString += "__split__";
+            }
           }
+          totalString = totalString.slice(0, -9);
+          return totalString;
         }
-        totalString = totalString.slice(0, -9);
-        return totalString;
-      }
-      const splitToSpace = function (str) {
-        return str.replace(/__split__/g, '\n');
-      }
-      const notionClientTong = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/notionClientTong.json` ]));
-      let finalString;
-      let finalNotionTong;
-      finalNotionTong = {};
-      for (let cliid in notionClientTong) {
-        finalNotionTong[cliid] = {};
-        for (let z of targets2) {
-          if (Object.keys(notionClientTong[cliid]["detailStory"]).length !== 0) {
-            if (notionClientTong[cliid]["detailStory"][z] !== undefined) {
-              if (Object.keys(notionClientTong[cliid]["detailStory"][z]).length !== 0) {
-                finalString = splitToSpace(objectToFlat(returnTargetTong(notionClientTong[cliid]["detailStory"][z])));
-                if (finalString !== '') {
-                  finalNotionTong[cliid][z] = finalString;
+        const splitToSpace = function (str) {
+          return str.replace(/__split__/g, '\n');
+        }
+        const notionClientTong = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/notionClientTong.json` ]));
+        let finalString;
+        let finalNotionTong;
+        finalNotionTong = {};
+        for (let cliid in notionClientTong) {
+          finalNotionTong[cliid] = {};
+          for (let z of targets2) {
+            if (Object.keys(notionClientTong[cliid]["detailStory"]).length !== 0) {
+              if (notionClientTong[cliid]["detailStory"][z] !== undefined) {
+                if (Object.keys(notionClientTong[cliid]["detailStory"][z]).length !== 0) {
+                  finalString = splitToSpace(objectToFlat(returnTargetTong(notionClientTong[cliid]["detailStory"][z])));
+                  if (finalString !== '') {
+                    finalNotionTong[cliid][z] = finalString;
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      // history parsing - from past
-      let nothing = [
-        '',
-        '-'
-      ];
-      const MONGOC = this.MONGOC;
-      let pastTong = await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({}).toArray();
-      let historyTong = {};
-      for (let i of pastTong) {
-        if (!(nothing.includes(i.a12_history) && nothing.includes(i.a31_aboutsite) && nothing.includes(i.a32_aboutcom) && nothing.includes(i.a33_aboutsty) && nothing.includes(i.a34_aboutmon))) {
-          historyTong[i.a4_customernumber] = {};
-          for (let j = 0; j < targets.length; j++) {
-            historyTong[i.a4_customernumber][targets2[j]] = i[targets[j]];
-          }
-        }
-      }
-
-      let mixTong = [], mixTong2 = [];
-      let mixTong2_copied;
-      let mixTong2_filtered;
-      let mixTong_cliidArr;
-      let mixTong2_filtered_cliidArr;
-      let mixFinal;
-      let mixFinal_cliidArr;
-
-      for (let i in finalNotionTong) {
-        finalNotionTong[i].cliid = i;
-        mixTong.push(finalNotionTong[i]);
-      }
-
-      for (let i in historyTong) {
-        historyTong[i].cliid = i;
-        mixTong2.push(historyTong[i]);
-      }
-
-      for (let i of mixTong) {
-        for (let j of mixTong2) {
-          if (i.cliid === j.cliid) {
-            if (j.history !== undefined && j.history !== '' && j.history !== '-') {
-              i.history = j.history;
-            }
-            if (j.space !== undefined && j.space !== '' && j.space !== '-') {
-              i.space = j.space;
-            }
-            if (j.construct !== undefined && j.construct !== '' && j.construct !== '-') {
-              i.construct = j.construct;
-            }
-            if (j.styling !== undefined && j.styling !== '' && j.styling !== '-') {
-              i.styling = j.styling;
-            }
-            if (j.budget !== undefined && j.budget !== '' && j.budget !== '-') {
-              i.budget = j.budget;
-            }
-            if (j.progress !== undefined && j.progress !== '' && j.progress !== '-') {
-              i.progress = j.progress;
+        // history parsing - from past
+        let nothing = [
+          '',
+          '-'
+        ];
+        const MONGOC = this.MONGOC;
+        let pastTong = await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({}).toArray();
+        let historyTong = {};
+        for (let i of pastTong) {
+          if (!(nothing.includes(i.a12_history) && nothing.includes(i.a31_aboutsite) && nothing.includes(i.a32_aboutcom) && nothing.includes(i.a33_aboutsty) && nothing.includes(i.a34_aboutmon))) {
+            historyTong[i.a4_customernumber] = {};
+            for (let j = 0; j < targets.length; j++) {
+              historyTong[i.a4_customernumber][targets2[j]] = i[targets[j]];
             }
           }
         }
-      }
 
-      mixTong2_copied = JSON.parse(JSON.stringify(mixTong2));
-      mixTong_cliidArr = [];
-      mixTong2_filtered = [];
-      mixTong2_filtered_cliidArr = [];
+        let mixTong = [], mixTong2 = [];
+        let mixTong2_copied;
+        let mixTong2_filtered;
+        let mixTong_cliidArr;
+        let mixTong2_filtered_cliidArr;
+        let mixFinal;
+        let mixFinal_cliidArr;
 
-      for (let i of mixTong) {
-        mixTong_cliidArr.push(i.cliid);
-      }
-
-      for (let i of mixTong2_copied) {
-        if (mixTong_cliidArr.indexOf(i.cliid) === -1) {
-          mixTong2_filtered.push(i);
+        for (let i in finalNotionTong) {
+          finalNotionTong[i].cliid = i;
+          mixTong.push(finalNotionTong[i]);
         }
+
+        for (let i in historyTong) {
+          historyTong[i].cliid = i;
+          mixTong2.push(historyTong[i]);
+        }
+
+        for (let i of mixTong) {
+          for (let j of mixTong2) {
+            if (i.cliid === j.cliid) {
+              if (j.history !== undefined && j.history !== '' && j.history !== '-') {
+                i.history = j.history;
+              }
+              if (j.space !== undefined && j.space !== '' && j.space !== '-') {
+                i.space = j.space;
+              }
+              if (j.construct !== undefined && j.construct !== '' && j.construct !== '-') {
+                i.construct = j.construct;
+              }
+              if (j.styling !== undefined && j.styling !== '' && j.styling !== '-') {
+                i.styling = j.styling;
+              }
+              if (j.budget !== undefined && j.budget !== '' && j.budget !== '-') {
+                i.budget = j.budget;
+              }
+              if (j.progress !== undefined && j.progress !== '' && j.progress !== '-') {
+                i.progress = j.progress;
+              }
+            }
+          }
+        }
+
+        mixTong2_copied = JSON.parse(JSON.stringify(mixTong2));
+        mixTong_cliidArr = [];
+        mixTong2_filtered = [];
+        mixTong2_filtered_cliidArr = [];
+
+        for (let i of mixTong) {
+          mixTong_cliidArr.push(i.cliid);
+        }
+
+        for (let i of mixTong2_copied) {
+          if (mixTong_cliidArr.indexOf(i.cliid) === -1) {
+            mixTong2_filtered.push(i);
+          }
+        }
+
+        for (let i of mixTong2_filtered) {
+          mixTong2_filtered_cliidArr.push(i.cliid);
+        }
+
+        mixFinal = mixTong.concat(mixTong2_filtered);
+
+        // await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteMany({});
+        // for (let i of mixFinal) {
+        //   await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(i);
+        // }
+
       }
 
-      for (let i of mixTong2_filtered) {
-        mixTong2_filtered_cliidArr.push(i.cliid);
-      }
 
-      mixFinal = mixTong.concat(mixTong2_filtered);
 
-      // await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteMany({});
-      // for (let i of mixFinal) {
-      //   await this.MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(i);
-      // }
 
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
-      /*
+
 
       // contents upload
 
-      const client = "이주희";
-      const pid = "p68";
-      const rid = "re063";
+      const client = "이초록";
+      const pid = "p69";
+      const rid = "re064";
       const links = [
-        "https://docs.google.com/document/d/1S2srNFFzeyE1wNApMmPEn50H-l9ho-nBCoRW_4GGOFk/edit?usp=sharing",
-        "https://docs.google.com/document/d/1f9DUnsDRj2NJoOV35FBmTk2O1jD30KQgIgMqZgSVCEE/edit?usp=sharing",
-        "https://drive.google.com/drive/folders/1s6raMZMdbxCGJTmkEnaLRhYEDyfMmLHu?usp=sharing",
+        "https://docs.google.com/document/d/1QiOasB0piHrKZRjyVA7kjsKT1U3pBhRJxPoSH2wJ_7g/edit?usp=sharing",
+        "https://docs.google.com/document/d/1EQ2UuYKRPK6nwnO6g7gy3ka1WYFKQT1zu5sxMz_3roE/edit?usp=sharing",
+        "https://drive.google.com/drive/folders/1AYvgzbhmNnOKPEDqDZ2HvOF7E0FS1DVd?usp=sharing",
       ];
       const webLinks = [
         "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1228,17 +1232,17 @@ class DevContext extends Array {
 
 
       // 1
-      channel = "#502_sns_contents";
-      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
+      // channel = "#502_sns_contents";
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[0]}`, channel });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${links[1]}`, channel });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
 
       // 2
       channel = "#200_web";
       await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
 
-      */
+
 
 
       // card setting
@@ -1276,7 +1280,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p68");
+      // await this.spellCheck("p69");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
