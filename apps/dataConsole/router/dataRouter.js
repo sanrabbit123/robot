@@ -787,7 +787,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
     try {
       const today = new Date();
       let dateMatrix;
-      let searchQuery, clients, proposals, contracts;
+      let searchQuery, clients, proposals, contracts, process;
+      let cliidArr;
       let resultArr;
       let obj;
       let searchBoo;
@@ -842,6 +843,19 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
           contracts = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
           obj.contract = contracts.length;
+
+          //process start
+          cliidArr = [];
+          for (let client of clients) {
+            cliidArr.push({ cliid: client.cliid });
+          }
+          if (cliidArr.length > 0) {
+            searchQuery = { "$or": cliidArr };
+            process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+            obj.process = process.length;
+          } else {
+            obj.process = 0;
+          }
 
           monthArr.push(obj);
         }

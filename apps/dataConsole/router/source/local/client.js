@@ -2567,6 +2567,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       client: 0,
       proposal: 0,
       contract: 0,
+      process: 0,
     };
 
     //gray card
@@ -2641,7 +2642,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       position: "absolute",
       fontSize: String(matrixFontSize) + ea,
       fontWeight: String(600),
-      width: String(matrixWidth * (2 / 5)) + ea,
+      width: String(matrixWidth * (2 / 6)) + ea,
       textAlign: "center",
       left: String(0) + ea,
       paddingTop: String(columnPaddingTop) + ea,
@@ -2658,8 +2659,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     //client
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     matrixStyle1 = JSON.parse(JSON.stringify(matrixStyle0));
-    matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
-    matrixStyle1.width = String(matrixWidth * (1 / 5)) + ea;
+    matrixStyle1.left = String(matrixWidth * (2 / 6)) + ea;
+    matrixStyle1.width = String(matrixWidth * (1 / 6)) + ea;
     matrixStyle1.borderLeft = matrixInnerLine;
     for (let z in matrixStyle1) {
       div_clone2.style[z] = matrixStyle1[z];
@@ -2669,7 +2670,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
     //proposal
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
+    matrixStyle1.left = String(matrixWidth * (3 / 6)) + ea;
     for (let z in matrixStyle1) {
       div_clone2.style[z] = matrixStyle1[z];
     }
@@ -2678,15 +2679,24 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
     //contract
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
+    matrixStyle1.left = String(matrixWidth * (4 / 6)) + ea;
     for (let z in matrixStyle1) {
       div_clone2.style[z] = matrixStyle1[z];
     }
     div_clone2.textContent = "계약";
     matrixBox.appendChild(div_clone2);
 
+    //process start
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    matrixStyle1.left = String(matrixWidth * (5 / 6)) + ea;
+    for (let z in matrixStyle1) {
+      div_clone2.style[z] = matrixStyle1[z];
+    }
+    div_clone2.textContent = "진행";
+    matrixBox.appendChild(div_clone2);
+
     reportNumber = 0;
-    for (let { startDay, endDay, client, proposal, contract } of report[i]) {
+    for (let { startDay, endDay, client, proposal, contract, process } of report[i]) {
 
       columnTop = columnTop + columnLineHeight + columnPaddingTop;
 
@@ -2706,7 +2716,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       //client
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle1.top = String(columnTop) + ea;
-      matrixStyle1.left = String(matrixWidth * (2 / 5)) + ea;
+      matrixStyle1.left = String(matrixWidth * (2 / 6)) + ea;
       matrixStyle1.background = "";
       matrixStyle1.fontWeight = String(200);
       if (reportNumber === report[i].length - 1) {
@@ -2721,7 +2731,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
       //proposal
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.left = String(matrixWidth * (3 / 5)) + ea;
+      matrixStyle1.left = String(matrixWidth * (3 / 6)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
@@ -2731,13 +2741,23 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
       //contract
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.left = String(matrixWidth * (4 / 5)) + ea;
+      matrixStyle1.left = String(matrixWidth * (4 / 6)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(contract);
       matrixBox.appendChild(div_clone2);
       summaryTong.contract += contract;
+
+      //contract
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      matrixStyle1.left = String(matrixWidth * (5 / 6)) + ea;
+      for (let z in matrixStyle1) {
+        div_clone2.style[z] = matrixStyle1[z];
+      }
+      div_clone2.textContent = String(process);
+      matrixBox.appendChild(div_clone2);
+      summaryTong.process += process;
 
       reportNumber++;
     }
@@ -2749,7 +2769,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     style = {
       position: "absolute",
       width: String(matrixWidth) + ea,
-      fontSize: String(matrixFontSize + 6) + ea,
+      fontSize: String(matrixFontSize + 3) + ea,
       left: String(matrixBoxMargin) + ea,
       bottom: String(titleTop + 8) + ea,
       fontWeight: String(200),
@@ -2759,7 +2779,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       summaryBox.style[z] = style[z];
     }
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${String(summaryTong.contract)}</b>명`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${String(summaryTong.contract)}</b>명&nbsp;&nbsp;진행 <b style="color:#2fa678">${String(summaryTong.process)}</b>명`);
     div_clone.appendChild(summaryBox);
 
     scrollBox.appendChild(div_clone);

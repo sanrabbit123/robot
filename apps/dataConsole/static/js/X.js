@@ -1015,7 +1015,7 @@ X.prototype.longtext = function (mege) {
 
         //update
         function update_event(e) {
-          if ((e.type === "click" && e.target.id === "savecancelbt1") || (e.type === "keydown" && e.key === "Tab")) {
+          if ((e.type === "click" && e.target.id === "savecancelbt1") || (e.type === "keydown" && e.keyCode === 9)) {
 
             //update query
             let new_data = document.getElementById(m.id + '_ta').value;
@@ -1104,7 +1104,7 @@ X.prototype.longtextplus = function (mege) {
 
         //update
         function update_event(e) {
-          if ((e.type === "click" && this.id === "array_update") || (e.type === "keydown" && e.key === "Tab")) {
+          if ((e.type === "click" && this.id === "array_update") || (e.type === "keydown" && e.keyCode === 9)) {
             //update query
             let arr_vals = document.querySelectorAll('.rowinputlong');
             let new_data = "";
@@ -1191,7 +1191,7 @@ X.prototype.shorttext = function (mege) {
 
         //update
         function update_event(e) {
-          if (e.keyCode === 13 || e.key === "Tab") {
+          if (e.keyCode === 13 || e.keyCode === 9) {
             //update query
             let new_data = document.getElementById(m.id + '_ta').value;
             instance.update_query(m, new_data);
@@ -1312,7 +1312,7 @@ X.prototype.eashort = function (mege) {
 
         //update
         function update_event(e) {
-          if (e.keyCode === 13 || e.key === "Tab") {
+          if (e.keyCode === 13 || e.keyCode === 9) {
             //update query
             let new_data = document.getElementById(m.id + '_ta').value + subupdate_node.textContent;
             instance.update_query(m, new_data);
@@ -1540,7 +1540,7 @@ X.prototype.calendarplus = function (mege) {
 
         //update
         function update_event(e) {
-          if (e.keyCode === 13 || e.key === "Tab") {
+          if (e.keyCode === 13 || e.keyCode === 9) {
             //update query
             let new_data = document.getElementById(m.id + '_ta').value;
             instance.update_query(m, new_data);
@@ -1787,7 +1787,7 @@ X.prototype.scopeslider = function (mege) {
 
         //update
         function update_event(e) {
-          if (e.type === "click" || (e.type === "keydown" && (e.key === "Tab" || e.keyCode === 13))) {
+          if (e.type === "click" || (e.type === "keydown" && (e.keyCode === 9 || e.keyCode === 13))) {
             //update query
             let new_data;
             if (typeof boo_gijun === "number") {
@@ -2010,7 +2010,7 @@ X.prototype.calcperiod = function (mege) {
 
         //update
         function update_event(e) {
-          if ((e.target.id === "period_text" && e.type === "click") || (e.type === "keydown" && e.key === "Tab") || (e.type === "keydown" && e.keyCode === 13)) {
+          if ((e.target.id === "period_text" && e.type === "click") || (e.type === "keydown" && e.keyCode === 9) || (e.type === "keydown" && e.keyCode === 13)) {
             //update query
             let new_data = document.getElementById("period_text").textContent.replace(/총 /gi, '') + ',' + document.getElementById("start_val").value + ',' + document.getElementById("end_val").value;
             instance.update_query(m, new_data);
@@ -2251,7 +2251,7 @@ X.prototype.arraymaker = function (mege) {
 
         //update
         function update_event(e) {
-          if ((e.type === "click" && this.id === "array_update") || (e.type === "keydown" && (e.keyCode === 13 || e.key === "Tab"))) {
+          if ((e.type === "click" && this.id === "array_update") || (e.type === "keydown" && (e.keyCode === 13 || e.keyCode === 9))) {
             //update query
             let arr_vals = document.querySelectorAll('.rowinputarray');
             let new_data = "";
@@ -2395,7 +2395,7 @@ X.prototype.objectmaker = function (mege) {
         } else {
           //update
           function update_event(e) {
-            if (e.keyCode === 13 || e.key === "Tab") {
+            if (e.keyCode === 13 || e.keyCode === 9) {
               let new_data = '';
               for (let node of document.querySelectorAll('.objectitems')) {
                 new_data += node.firstElementChild.textContent;
