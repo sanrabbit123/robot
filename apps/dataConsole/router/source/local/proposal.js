@@ -1752,10 +1752,13 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
 
 ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pictureSettings) {
   const instance = this;
-  let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
-  let leftMother, rightMother;
-  let mother = whitebox;
+  const mother = whitebox;
   let whiteBoxDom = new Map();
+  let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
+  let leftArea, rightArea;
+  let leftMother, rightMother;
+  let style;
+  let ea = "px";
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_leftbox");
@@ -1856,6 +1859,45 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
   for (let j = 0; j < (contents.length + 1); j++) {
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.classList.add("ppw_right_set");
+
+    leftArea = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      bottom: String(25) + ea,
+      left: String(0) + ea,
+      opacity: String(0),
+      height: String(184) + ea,
+      width: String(42) + ea,
+      zIndex: String(1),
+      cursor: "w-resize",
+    };
+    for (let s in style) {
+      leftArea.style[s] = style[s];
+    }
+    leftArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
+    leftArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
+    div_clone2.appendChild(leftArea);
+
+
+    rightArea = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      bottom: String(25) + ea,
+      right: String(0) + ea,
+      opacity: String(0),
+      height: String(184) + ea,
+      width: String(42) + ea,
+      zIndex: String(1),
+      cursor: "e-resize",
+    };
+    for (let s in style) {
+      rightArea.style[s] = style[s];
+    }
+    rightArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
+    rightArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "right", order: j, id: id, }));
+    div_clone2.appendChild(rightArea);
+
+
     for (let i = 0; i < rightList.length; i++) {
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
       div_clone3.classList.add("ppw_right_" + rightList[i]);
@@ -1870,6 +1912,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
       }
       //pictures
       else if (i === 1) {
+
         sgTong.s = [];
         sgTong.g = [];
         scroll_box = GeneralJs.nodes.div.cloneNode(true);
@@ -1982,7 +2025,7 @@ ProposalJs.prototype.fifthScrollX = function (method, options) {
       let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
       let result;
       if (options.direction === "left") {
-        result = Math.abs(974 - left) - 500;
+        result = Math.abs(974 - left) - 600;
       } else {
         result = Math.abs(974 - left) + 400;
       }
@@ -1995,9 +2038,9 @@ ProposalJs.prototype.fifthScrollX = function (method, options) {
         let left = target_nodes[options.order].querySelector(".ppw_right_picturebox_scroll").getBoundingClientRect().left;
         let result;
         if (options.direction === "left") {
-          // result = Math.abs(974 - left) - 100;
+          result = Math.abs(830 - left) - 100;
         } else {
-          result = Math.abs(974 - left) + 100;
+          result = 830 - left;
         }
         target_nodes[options.order].scrollTo({ left: result, behavior: "smooth" });
       }, 80);

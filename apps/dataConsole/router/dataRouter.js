@@ -1221,10 +1221,14 @@ DataRouter.prototype.rou_post_calculateService = function () {
         }
       }
 
-      if (typeof matrix[yNum][xNum] === "string") {
-        result = pyeong * Number(matrix[yNum][xNum].replace(/py/gi, ''));
+      if (matrix[yNum] !== undefined) {
+        if (typeof matrix[yNum][xNum] === "string") {
+          result = pyeong * Number(matrix[yNum][xNum].replace(/py/gi, ''));
+        } else {
+          result = matrix[yNum][xNum];
+        }
       } else {
-        result = matrix[yNum][xNum];
+        result = 0;
       }
 
       if (Math.floor(result) === 0) {

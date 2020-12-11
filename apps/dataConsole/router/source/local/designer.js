@@ -1815,6 +1815,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let height, margin, fontSize, titleHeight, totalWidth;
       let tempNumber;
       let ghost;
+      let leftArea, rightArea;
 
       totalTong = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -1843,6 +1844,59 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         for (let j in style) {
           div_clone.style[j] = style[j];
         }
+
+        leftArea = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          bottom: String(0) + ea,
+          left: String(0) + ea,
+          opacity: String(0),
+          height: String(170) + ea,
+          width: String(42) + ea,
+          zIndex: String(1),
+          cursor: "w-resize",
+        };
+        for (let s in style) {
+          leftArea.style[s] = style[s];
+        }
+        leftArea.addEventListener("mouseover", function (e) {
+          const targetNode = this.nextElementSibling.nextElementSibling.nextElementSibling.children[0];
+          GeneralJs.timeouts[thisCase[standard[1]] + "contents_left" + String(i)] = setInterval(function () {
+            let left = targetNode.getBoundingClientRect().left;
+            targetNode.parentElement.scrollTo({ left: Math.abs(974 - left) - 180, behavior: "smooth" });
+          }, 80);
+        });
+        leftArea.addEventListener("mouseleave", function (e) {
+          clearInterval(GeneralJs.timeouts[thisCase[standard[1]] + "contents_left" + String(i)]);
+        });
+        div_clone.appendChild(leftArea);
+
+        rightArea = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          bottom: String(0) + ea,
+          right: String(0) + ea,
+          opacity: String(0),
+          height: String(170) + ea,
+          width: String(42) + ea,
+          zIndex: String(1),
+          cursor: "e-resize",
+        };
+        for (let s in style) {
+          rightArea.style[s] = style[s];
+        }
+        rightArea.addEventListener("mouseover", function (e) {
+          const targetNode = this.nextElementSibling.nextElementSibling.children[0];
+          GeneralJs.timeouts[thisCase[standard[1]] + "contents_right" + String(i)] = setInterval(function () {
+            let left = targetNode.getBoundingClientRect().left;
+            targetNode.parentElement.scrollTo({ left: 974 - left, behavior: "smooth" });
+          }, 80);
+        });
+        rightArea.addEventListener("mouseleave", function (e) {
+          clearInterval(GeneralJs.timeouts[thisCase[standard[1]] + "contents_right" + String(i)]);
+        });
+        div_clone.appendChild(rightArea);
+
 
         //title
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
