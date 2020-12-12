@@ -26,9 +26,9 @@ GeneralJs.ajax = function (data, url, callback) {
   xhr.onload = function () {
     if (xhr.readyState !== 4) { return }
     if (xhr.status >= 200 && xhr.status < 300) {
-      let data = xhr.response;
-      if (!/Exception occur/g.test(data)) {
-        callback(data);
+      let response = xhr.response;
+      if (!/Exception occur/g.test(response)) {
+        callback(response);
       } else {
         window.location = "https://home-liaison.com/about.php";
       }
@@ -74,6 +74,57 @@ GeneralJs.ajaxPromise = function (data, url) {
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }
     xhr.send(data);
+  });
+}
+
+GeneralJs.request = function (url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", url);
+  xhr.onload = function () {
+    if (xhr.readyState !== 4) { return; }
+    if (xhr.status >= 200 && xhr.status < 300) {
+      let response = xhr.response;
+      if (!/Exception occur/g.test(response)) {
+        callback(response);
+      } else {
+        window.location = "https://home-liaison.com/about.php";
+      }
+    } else if (xhr.status >= 500) {
+      window.location = "https://home-liaison.com/about.php";
+    } else if (xhr.status >= 402 && xhr.status <= 420) {
+      window.location = "https://home-liaison.com/about.php";
+    } else if(xhr.status === 400 || xhr.status === 401) {
+      window.location = "https://home-liaison.com/about.php";
+    }
+  }
+  xhr.onerror = function () {
+    window.location = "https://home-liaison.com/about.php";
+  }
+  xhr.send();
+}
+
+GeneralJs.requestPromise = function (url) {
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.onload = function () {
+     if (xhr.readyState !== 4) { return }
+     if (xhr.status >= 200 && xhr.status < 300) {
+       resolve(xhr.response);
+     } else {
+       reject({
+         status: this.status,
+         statusText: xhr.statusText
+       });
+     }
+    };
+    xhr.onerror = function () {
+     reject({
+       status: this.status,
+       statusText: xhr.statusText
+     });
+    };
+    xhr.send();
   });
 }
 
@@ -1712,4 +1763,92 @@ GeneralJs.prototype.todayMaker = function (startPoint = "month") {
     throw new Error("invaild option");
   }
   return dayString;
+}
+
+GeneralJs.setCookie = function (obj, day = 730, del = false) {
+  if (typeof day === "boolean") {
+    del = day;
+    day = 730;
+  }
+  const today = new Date();
+  let totalString, expires;
+
+  today.setTime(today.getTime() + (day * 24 * 60 * 60 * 1000));
+  if (!del) {
+    expires = "expires=" + today.toUTCString();
+  } else {
+    expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
+  }
+
+  for (let i in obj) {
+    totalString = '';
+    totalString += encodeURIComponent(i.replace(/\=\;/g, ''));
+    totalString += '=';
+    totalString += encodeURIComponent(String(obj[i]).replace(/\=\;/g, ''));
+    totalString += ';';
+    totalString += expires + ";path=/";
+    document.cookie = totalString;
+  }
+}
+
+GeneralJs.getCookiesAll = function () {
+  const cookies = decodeURIComponent(document.cookie);
+  let tempArr0, tempArr1;
+  let resultObj;
+
+  resultObj = {};
+  tempArr0 = cookies.split(';');
+
+  if (tempArr0[0] === undefined) {
+    return {};
+  } else {
+    if (tempArr0[0].split('=').length < 2) {
+      return {};
+    }
+  }
+
+  for (let i of tempArr0) {
+    tempArr1 = i.split('=');
+    resultObj[tempArr1[0].trim()] = tempArr1[1].trim();
+  }
+
+  return resultObj;
+}
+
+GeneralJs.getCookieById = function (key) {
+  const cookiesObj = GeneralJs.getCookiesAll();
+  const cookiesKey = Object.keys(cookiesObj);
+  if (cookiesKey.includes(key)) {
+    return cookiesObj[key];
+  } else {
+    return null;
+  }
+}
+
+GeneralJs.googleLogInInit = function () {
+  GeneralJs.stacks["GoogleAuth"] = null;
+  GeneralJs.stacks["GoogleClient"] = null;
+  GeneralJs.stacks["GoogleClientProfile"] = {
+    homeliaisonConsoleLoginedName: null,
+    homeliaisonConsoleLoginedEmail: null,
+    homeliaisonConsoleLoginedBoolean: false
+  };
+  return new Promise(function(resolve, reject) {
+    GeneralJs.request("https://apis.google.com/js/platform.js?onload=googleLogInInit", function (response) {
+      const googleCode = new Function(response);
+      googleCode();
+      gapi.load("auth2", function () {
+        const googleAuth = gapi.auth2.init({
+          client_id: "444967534334-r85i9pcnfd3oeschret07t465vcnv4gf.apps.googleusercontent.com",
+        });
+        googleAuth.then(function () {
+          GeneralJs.stacks["GoogleAuth"] = googleAuth;
+          console.log(googleAuth);
+          resolve(googleAuth);
+        }, function (e) {
+          reject(e);
+        });
+      });
+    });
+  });
 }

@@ -36,6 +36,7 @@ class RobotInstall:
         self.robotPath = '/'.join(thisFileArr)
         self.moduleFolder = "python_modules"
         self.modulePath = self.robotPath + "/" + self.moduleFolder
+        self.pythonCloudPath = self.robotPath + "/apps/pythonCloud/python/tool"
 
     def setTempDir(self):
         subprocess.run([ "mkdir", self.tempDir ], shell=False, encoding='utf8')
@@ -81,7 +82,7 @@ class RobotInstall:
             subprocess.run([ "mkdir", (self.robotPath + dir) ], shell=False, encoding='utf8')
 
     def returnPath(self):
-        return { "robotPath": self.robotPath, "modulePath": self.modulePath }
+        return { "robotPath": self.robotPath, "modulePath": self.modulePath, "pythonCloudPath": self.pythonCloudPath }
 
     def installLocal(self):
         self.setTempDir()
@@ -108,33 +109,16 @@ try:
         pathDic = installApps.returnPath()
         robotPath = pathDic["robotPath"]
         modulePath = pathDic["modulePath"]
+        pythonCloudPath = pathDic["pythonCloudPath"]
         sys.path.append(modulePath)
+        sys.path.append(pythonCloudPath)
+
 except Exception as e:
     print(e)
     sys.exit()
 
 from cryptography.fernet import Fernet
-
-class EnDecrypt:
-    def __init__(self, key=None):
-        if key is None:
-            key = Fernet.generate_key()
-        self.key = key
-        self.f = Fernet(self.key)
-
-    def encrypt(self, data):
-        if isinstance(data, bytes):
-            ou = self.f.encrypt(data)
-        else:
-            ou = self.f.encrypt(data.encode('utf-8'))
-        return ou
-
-    def decrypt(self, data):
-        if isinstance(data, bytes):
-            ou = self.f.decrypt(data)
-        else:
-            ou = self.f.decrypt(data.encode('utf-8'))
-        return ou.decode('utf-8')
+from enDecrypt import EnDecrypt
 
 pemsName = {
     "key": robotPath + "/pems/guguKey.pem",

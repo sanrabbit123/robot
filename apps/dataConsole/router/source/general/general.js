@@ -403,6 +403,11 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes fadedown{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(20px);}}
   @keyframes fadeup{from{opacity:0;transform:translateY(20px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadeuplite{from{opacity:0;transform:translateY(5px);}to{opacity:0.95;transform:translateY(0px);}}
+
+  @keyframes loginfadeup0{from{opacity:0;}to{opacity:0.1;}}
+  @keyframes loginfadeup1{from{opacity:0;backdrop-filter: blur(0px);}to{opacity:0.6;backdrop-filter: blur(4px);}}
+
+
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -950,4 +955,101 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
   document.body.appendChild(div_clone);
 
   callback(div_clone);
+}
+
+GeneralJs.prototype.loginBox = async function () {
+  const instance = this;
+  try {
+    let div_clone;
+    let style;
+    let ea = "px";
+    let googleAuth, client, profile;
+    let name, email, id;
+
+    this.loginBox = [];
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      width: "100%",
+      height: "100%",
+      background: "white",
+      opacity: String(0),
+      zIndex: String(3),
+      backdropFilter: "invert(1)",
+      animation: "loginfadeup0 0.5s ease forwards",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    this.totalContents.appendChild(div_clone);
+    this.loginBox.push(div_clone);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      width: "100%",
+      height: "100%",
+      background: "white",
+      opacity: String(0),
+      zIndex: String(3),
+      backdropFilter: "blur(4px)",
+      animation: "loginfadeup1 0.5s ease forwards",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    this.totalContents.appendChild(div_clone);
+    this.loginBox.push(div_clone);
+
+    const cookies = GeneralJs.getCookiesAll();
+    const memberEmail = [
+      "totite2@gmail.com",
+      "homeliaisonemail@gmail.com",
+      "homeliaisonphoto@gmail.com",
+    ];
+
+    console.log(cookies);
+    GeneralJs.ajax("type=get", "/getMembers", function (data) {
+      console.log(JSON.parse(data));
+    });
+
+    if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail") && memberEmail.includes(cookies["homeliaisonConsoleLoginedEmail"])) {
+
+      setTimeout(function () {
+        instance.totalContents.removeChild(instance.totalContents.lastChild);
+        instance.totalContents.removeChild(instance.totalContents.lastChild);
+      }, 1000);
+
+    } else {
+
+      if (GeneralJs.stacks["GoogleAuth"] !== undefined && GeneralJs.stacks["GoogleAuth"] !== null) {
+        googleAuth = GeneralJs.stacks["GoogleAuth"];
+      } else {
+        googleAuth = await GeneralJs.googleLogInInit();
+      }
+
+      client = await googleAuth.signIn();
+      profile = client.getBasicProfile();
+
+      name = profile.getName();
+      email = profile.getEmail();
+      id = profile.getId();
+
+      GeneralJs.stacks["GoogleClient"] = client;
+      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedName = name;
+      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedEmail = email;
+      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedBoolean = true;
+
+      GeneralJs.setCookie(GeneralJs.stacks["GoogleClientProfile"]);
+
+      console.log(GeneralJs.getCookiesAll());
+
+    }
+
+  } catch (e) {
+    console.log(e);
+    console.log(e.details);
+  }
 }

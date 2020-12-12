@@ -1207,28 +1207,25 @@ class DevContext extends Array {
 
 
 
-
-
-
       // TOOLS ----------------------------------------------------------------------------------------------------
 
 
 
       // contents upload
 
-      const client = "이초록";
-      const pid = "p69";
-      const rid = "re064";
-      const links = [
-        "https://docs.google.com/document/d/1QiOasB0piHrKZRjyVA7kjsKT1U3pBhRJxPoSH2wJ_7g/edit?usp=sharing",
-        "https://docs.google.com/document/d/1EQ2UuYKRPK6nwnO6g7gy3ka1WYFKQT1zu5sxMz_3roE/edit?usp=sharing",
-        "https://drive.google.com/drive/folders/1AYvgzbhmNnOKPEDqDZ2HvOF7E0FS1DVd?usp=sharing",
-      ];
-      const webLinks = [
-        "https://home-liaison.com/portdetail.php?qqq=" + pid,
-        "https://home-liaison.com/revdetail.php?qqq=" + rid,
-      ];
-      let channel;
+      // const client = "이초록";
+      // const pid = "p69";
+      // const rid = "re064";
+      // const links = [
+      //   "https://docs.google.com/document/d/1QiOasB0piHrKZRjyVA7kjsKT1U3pBhRJxPoSH2wJ_7g/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1EQ2UuYKRPK6nwnO6g7gy3ka1WYFKQT1zu5sxMz_3roE/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1AYvgzbhmNnOKPEDqDZ2HvOF7E0FS1DVd?usp=sharing",
+      // ];
+      // const webLinks = [
+      //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
+      //   "https://home-liaison.com/revdetail.php?qqq=" + rid,
+      // ];
+      // let channel;
 
 
       // 1
@@ -1238,9 +1235,9 @@ class DevContext extends Array {
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 세팅 사진 원본 link : ${links[2]}`, channel });
 
       // 2
-      channel = "#200_web";
-      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
+      // channel = "#200_web";
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
+      // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
 
 
 

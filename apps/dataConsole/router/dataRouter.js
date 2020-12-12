@@ -1345,6 +1345,38 @@ DataRouter.prototype.rou_post_createRequestDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getMembers = function () {
+  const instance = this;
+  const { shell, shellLink } = this.mother;
+  let obj = {};
+  obj.link = "/getMembers";
+  obj.func = async function (req, res) {
+    try {
+      const membersArr = JSON.parse(await instance.mother.pythonExecute(instance.pythonApp, [ "getMembers" ], {}));
+      let emailArr = [];
+      let vaild = false;
+
+      if (req.body.type === "get") {
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify(membersArr));
+      } else if (req.body.type === "boo") {
+        for (let { email } of membersArr.members) {
+          emailArr.push(email);
+        }
+        if (emailArr.includes(req.body.value)) {
+          vaild = true;
+        } else {
+          vaild = false;
+        }
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ result: vaild }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 

@@ -20,7 +20,8 @@ def returnModulepath():
         resultPath += rawPathArr[i] + '/'
     robotPath = resultPath[0:-1]
     modulPath = resultPath + "python_modules"
-    return { "robot": robotPath, "module": modulPath }
+    pythonCloudPath = resultPath + "apps/pythonCloud/python/tool"
+    return { "robot": robotPath, "module": modulPath, "pythonCloud": pythonCloudPath }
 
 # return json data
 def getBridge():
@@ -33,8 +34,11 @@ def getBridge():
     name = fileArr[count - 3]
 
     # get bridge data
-    with open(pathDic["robot"] + "/temp/" + name + ".json", 'r') as jsonFile:
-        data = jsonFile.read()
+    try:
+        with open(pathDic["robot"] + "/temp/" + name + ".json", 'r') as jsonFile:
+            data = jsonFile.read()
+    except Exception as e:
+        data = {}
 
     return loads(data)
 
@@ -42,6 +46,8 @@ def getBridge():
 try:
     pathDic = returnModulepath()
     path.append(pathDic["module"])
+    path.append(pathDic["pythonCloud"])
+
 except Exception as e:
     print(e)
 

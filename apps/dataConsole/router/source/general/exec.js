@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.generalCss();
     local_funcs.mother.greenBar();
     await local_funcs.launching();
+    await local_funcs.mother.loginBox();
   } catch (e) {
     console.log(e);
   }
