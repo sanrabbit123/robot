@@ -1362,13 +1362,19 @@ DataRouter.prototype.rou_post_getMembers = function () {
         res.send(JSON.stringify(membersArr));
 
       } else if (req.body.type === "boo") {
-        for (let { email } of membersArr.members) {
-          emailArr.push(email);
+        for (let { id, email } of membersArr.members) {
+          for (let e of email) {
+            emailArr.push({ email: e, id });
+          }
         }
 
         for (let i = 0; i < emailArr.length; i++) {
-          if (req.body.value === emailArr[i]) {
-            targetMember = membersArr.members[i];
+          if (req.body.value === emailArr[i].email) {
+            for (let j = 0; j < membersArr.members.length; j++) {
+              if (emailArr[i].id === membersArr.members[j].id) {
+                targetMember = membersArr.members[j];
+              }
+            }
           }
         }
 

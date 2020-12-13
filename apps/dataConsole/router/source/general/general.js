@@ -944,6 +944,8 @@ GeneralJs.prototype.memberView = function () {
     let ea = "px";
     let temp;
 
+    console.log(member);
+
     instance.memberBox = {};
 
     //cancel back
@@ -1091,7 +1093,7 @@ GeneralJs.prototype.memberView = function () {
     for (let i in style) {
       div_clone2.style[i] = style[i];
     }
-    div_clone2.textContent = member.email;
+    div_clone2.textContent = member.email[0];
     div_clone.appendChild(div_clone2);
 
     //phone

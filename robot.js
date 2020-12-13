@@ -212,7 +212,7 @@ Robot.prototype.launching = async function () {
       await this.bridgeCloud();
 
     } else {
-      re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.exit\n`);
+      re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.flask 9.flaskInstall 10.exit\n`);
 
       //console server
       if (re === "back" || re === "1") {
@@ -275,8 +275,18 @@ Robot.prototype.launching = async function () {
           await this.getConsulting(re2);
         }
 
+      //flask
+      } else if (re === "flask" || re === "8") {
+        console.log(`source ./bin/activate;gunicorn --bind 0.0.0.0:5000 wsgi:app;`);
+        process.exit();
+
+      //flask install
+      } else if (re === "flaskInstall" || re === "9") {
+        console.log(`python3 -m venv .;source ./bin/activate;pip3 install flask;pip3 install gunicorn;`);
+        process.exit();
+
       //exit
-      } else if (re === "exit" || re === "8") {
+    } else if (re === "exit" || re === "10") {
         process.exit();
       }
     }

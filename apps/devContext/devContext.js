@@ -16,6 +16,7 @@ const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
+const GenerateFlask = require(APP_PATH + "/pythonCloud/generateFlask.js");
 
 class DevContext extends Array {
 
@@ -1204,6 +1205,11 @@ class DevContext extends Array {
         // }
 
       }
+
+
+
+
+
 
 
 
