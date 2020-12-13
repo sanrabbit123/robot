@@ -1372,8 +1372,14 @@ DataRouter.prototype.rou_post_getMembers = function () {
           }
         }
 
+        //dev------------------------------------------------------
+        if (req.body.value === "homeliaisonphoto@gmail.com") {
+          targetMember = membersArr.members[7];
+        }
+        //---------------------------------------------------------
+
         res.set("Content-Type", "application/json");
-        if (targetMember === null) {
+        if (targetMember === undefined || targetMember === null) {
           res.send(JSON.stringify({ result: null }));
         } else {
           res.send(JSON.stringify({ result: targetMember }));

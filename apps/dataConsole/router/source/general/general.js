@@ -406,7 +406,9 @@ GeneralJs.prototype.generalCss = function () {
 
   @keyframes loginfadeup0{from{opacity:0;}to{opacity:0.1;}}
   @keyframes loginfadeup1{from{opacity:0;backdrop-filter: blur(0px);}to{opacity:0.6;backdrop-filter: blur(4px);}}
-
+  @keyframes loginfadedown0{from{opacity:0.1;}to{opacity:0;}}
+  @keyframes loginfadedown1{from{opacity:0.6;backdrop-filter: blur(4px);}to{opacity:0;backdrop-filter: blur(0px);}}
+  @keyframes profilefadeup{from{opacity:0;transform:translateY(10px);}to{opacity:0.9;transform:translateY(0px);}}
 
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
@@ -601,6 +603,7 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 }
 
 GeneralJs.prototype.greenBar = function () {
+  const instance = this;
   let div_clone, div_clone2, svg_icon;
   let input_clone;
   let style = {};
@@ -629,7 +632,6 @@ GeneralJs.prototype.greenBar = function () {
   }
   this.below = div_clone;
 
-
   //circle
   margin = 18;
   start = 7;
@@ -642,7 +644,6 @@ GeneralJs.prototype.greenBar = function () {
   for (let i = 0; i < colors.length; i++) {
     div_clone.insertAdjacentHTML(`beforeend`, this.returnCircle("right:" + String(start + (margin * i)) + ea, colors[i]));
   }
-
 
   //arrow - left
   move = 300;
@@ -690,7 +691,6 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.arrow.left = div_clone2;
   div_clone.appendChild(div_clone2);
 
-
   //arrow - right
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
@@ -731,7 +731,6 @@ GeneralJs.prototype.greenBar = function () {
   top = top;
   belowTop = top + 34;
 
-
   //report
   svg_icon = SvgTong.stringParsing(this.returnReport("#ffffff"));
   svg_icon.classList.add("hoverDefault");
@@ -749,7 +748,6 @@ GeneralJs.prototype.greenBar = function () {
   }
   this.belowButtons.square.reportIcon = svg_icon;
   div_clone.appendChild(svg_icon);
-
 
   //return
   svg_icon = SvgTong.stringParsing(this.returnReturn("#ffffff"));
@@ -769,7 +767,6 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.square.returnIcon = svg_icon;
   div_clone.appendChild(svg_icon);
 
-
   //button C
   svg_icon = SvgTong.stringParsing(this.returnCinitial("#ffffff"));
   svg_icon.classList.add("hoverDefault");
@@ -787,7 +784,6 @@ GeneralJs.prototype.greenBar = function () {
   }
   this.belowButtons.square.up = svg_icon;
   div_clone.appendChild(svg_icon);
-
 
   //button R
   svg_icon = SvgTong.stringParsing(this.returnRinitial("#ffffff"));
@@ -807,13 +803,11 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.square.down = svg_icon;
   div_clone.appendChild(svg_icon);
 
-
   //navigator icons
   const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
   let naviIconsHost, naviIconsLinks, naviIconsLeftException;
 
   naviIconsHost = window.location.protocol + "//" + window.location.host;
-
   naviIconsLinks = [
     "/client",
     "/proposal",
@@ -822,7 +816,6 @@ GeneralJs.prototype.greenBar = function () {
     "/contents",
     "/service",
   ];
-
   naviIconsLeftException = [
     0,
     2,
@@ -872,7 +865,6 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.sub.extractIcon = svg_icon;
   div_clone.appendChild(svg_icon);
 
-
   //talk icon
   svg_icon = SvgTong.stringParsing(this.returnTalk("#ffffff"));
   svg_icon.classList.add("hoverDefault");
@@ -892,16 +884,259 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.sub.talkIcon = svg_icon;
   div_clone.appendChild(svg_icon);
 
+  //file manager icon
+  svg_icon = SvgTong.stringParsing(this.returnFolder("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  additionalStyle = {
+    right: "",
+    width: String(25) + ea,
+    height: String(23) + ea,
+    top: String(top - 1) + ea,
+    left: String(iconRight + 82) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
+  this.belowButtons.sub.folder = svg_icon;
+  div_clone.appendChild(svg_icon);
+
+  //profile icon
+  svg_icon = SvgTong.stringParsing(this.returnProfile("#ffffff"));
+  svg_icon.classList.add("hoverDefault");
+  for (let i in style) {
+    svg_icon.style[i] = style[i];
+  }
+  additionalStyle = {
+    right: "",
+    width: String(26) + ea,
+    height: String(24) + ea,
+    top: String(belowTop - 2) + ea,
+    left: String(iconRight + 81) + ea,
+  };
+  for (let i in additionalStyle) {
+    svg_icon.style[i] = additionalStyle[i];
+  }
+  svg_icon.addEventListener("click", this.memberView());
+  this.belowButtons.sub.profile = svg_icon;
+  div_clone.appendChild(svg_icon);
+
   //search Input
   this.searchInput(div_clone);
   this.totalContents.appendChild(div_clone);
   this.searchInput.focus();
 
-
   this.belowButtons.naviIcons.contents.style.opacity = String(0.4);
   this.belowButtons.naviIcons.service.style.opacity = String(0.4);
-  this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
+  // this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
+  // this.belowButtons.sub.folder.style.opacity = String(0.4);
+}
 
+GeneralJs.prototype.memberView = function () {
+  const instance = this;
+  return function (e) {
+    const member = instance.member;
+    let div_clone, div_clone2;
+    let svg_clone;
+    let style;
+    let ea = "px";
+    let temp;
+
+    instance.memberBox = {};
+
+    //cancel back
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      width: String(98.5) + "vw",
+      height: String(98) + "vh",
+      bottom: String(0) + ea,
+      left: String(0) + ea,
+      background: "transparent",
+      opacity: String(0),
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    div_clone.addEventListener("click", function (e) {
+      instance.below.removeChild(instance.memberBox.cancel);
+      instance.below.removeChild(instance.memberBox.contents);
+    });
+    instance.memberBox.cancel = div_clone;
+    this.parentElement.appendChild(div_clone);
+
+    //white box
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(326) + ea,
+      height: String(160) + ea,
+      top: String(-104) + ea,
+      left: String(220) + ea,
+      background: "white",
+      borderRadius: String(4) + ea,
+      opacity: String(0.9),
+      boxShadow: "0px 6px 18px -9px #505050",
+      backdropFilter: "blur(4px)",
+      animation: "profilefadeup 0.4s ease forwards",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    //photo
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(114) + ea,
+      height: String(114) + ea,
+      top: String(24) + ea,
+      left: String(24) + ea,
+      borderRadius: String(60) + ea,
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    if (member.photo !== undefined && member.photo !== null) {
+      div_clone2.style.backgroundImage = 'url("' + S3HOST + member.photo + '")';
+      div_clone2.style.backgroundSize = '102% 102%';
+      div_clone2.style.backgroundPosition = '-1% -1%';
+    } else {
+      temp = SvgTong.stringParsing(instance.returnProfile("#dddddd", true));
+      temp.style.position = "absolute";
+      temp.style.width = "100%";
+      temp.style.height = "100%";
+      temp.style.top = "0" + ea;
+      temp.style.left = "0" + ea;
+      div_clone2.appendChild(temp);
+    }
+    div_clone.appendChild(div_clone2);
+
+    //name
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(30) + ea,
+      left: String(157) + ea,
+      fontSize: String(24) + ea,
+      fontWeight: String(600),
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = member.name;
+    div_clone.appendChild(div_clone2);
+
+    //id
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(45) + ea,
+      left: String(227) + ea,
+      fontSize: String(12) + ea,
+      fontWeight: String(200),
+      color: "#808080",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = member.id;
+    div_clone.appendChild(div_clone2);
+
+    //bar
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(66) + ea,
+      left: String(158) + ea,
+      width: String(139) + ea,
+      borderBottom: "1px solid #ececec",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone.appendChild(div_clone2);
+
+    //roles
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(74) + ea,
+      left: String(158) + ea,
+      fontSize: String(12.5) + ea,
+      fontWeight: String(400),
+      color: "#2fa678",
+      width: String(137) + ea,
+      overflow: "hidden",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = member.roles.join(", ");
+    div_clone.appendChild(div_clone2);
+
+    //email
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(91) + ea,
+      left: String(158) + ea,
+      fontSize: String(12.5) + ea,
+      fontWeight: String(400),
+      width: String(137) + ea,
+      overflow: "hidden",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = member.email;
+    div_clone.appendChild(div_clone2);
+
+    //phone
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(109) + ea,
+      left: String(158) + ea,
+      fontSize: String(12.5) + ea,
+      fontWeight: String(400),
+      width: String(137) + ea,
+      overflow: "hidden",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = member.phone;
+    div_clone.appendChild(div_clone2);
+
+    //logout icon
+    svg_clone = SvgTong.stringParsing(instance.returnLogout("#2fa678"));
+    svg_clone.classList.add("hoverDefault");
+    style = {
+      position: "absolute",
+      bottom: String(17.5) + ea,
+      right: String(11) + ea,
+      width: String(16) + ea,
+      height: String(16 / SvgTong.getRatio(svg_clone)) + ea,
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let obj = {};
+      obj["homeliaisonConsoleLoginedName"] = '';
+      obj["homeliaisonConsoleLoginedEmail"] = '';
+      obj["homeliaisonConsoleLoginedBoolean"] = '';
+      GeneralJs.setCookie(obj, true);
+      window.location.reload();
+    });
+    div_clone.appendChild(svg_clone);
+
+    instance.memberBox.contents = div_clone;
+    this.parentElement.appendChild(div_clone);
+  }
 }
 
 GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function () {}) {
@@ -988,50 +1223,7 @@ GeneralJs.prototype.loginBox = async function () {
     let memberBoo, thisMember;
     let tempObj;
 
-    this.loginBox = [];
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "fixed",
-      width: "100%",
-      height: "100%",
-      background: "white",
-      opacity: String(0),
-      zIndex: String(3),
-      backdropFilter: "invert(1)",
-      animation: "loginfadeup0 0.5s ease forwards",
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-    this.totalContents.appendChild(div_clone);
-    this.loginBox.push(div_clone);
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "fixed",
-      width: "100%",
-      height: "100%",
-      background: "white",
-      opacity: String(0),
-      zIndex: String(3),
-      backdropFilter: "blur(4px)",
-      animation: "loginfadeup1 0.5s ease forwards",
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
-    this.totalContents.appendChild(div_clone);
-    this.loginBox.push(div_clone);
-
     const cookies = GeneralJs.getCookiesAll();
-    const memberEmail = [
-      "totite2@gmail.com",
-      "homeliaisonemail@gmail.com",
-      "homeliaisonphoto@gmail.com",
-    ];
-
     if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail")) {
       let { result } = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + cookies["homeliaisonConsoleLoginedEmail"], "/getMembers"));
       if (result !== null) {
@@ -1043,17 +1235,48 @@ GeneralJs.prototype.loginBox = async function () {
       }
     }
 
+    this.loginBox = [];
+
     if (memberBoo) {
 
       this.member = thisMember;
-      GeneralJs.timeouts["login"] = setTimeout(function () {
-        instance.totalContents.removeChild(instance.totalContents.lastChild);
-        instance.totalContents.removeChild(instance.totalContents.lastChild);
-        clearTimeout(GeneralJs.timeouts["login"]);
-        GeneralJs.timeouts["login"] = null;
-      }, 500);
 
     } else {
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "fixed",
+        width: "100%",
+        height: "100%",
+        background: "white",
+        opacity: String(0),
+        zIndex: String(3),
+        backdropFilter: "invert(1)",
+        animation: "loginfadeup0 0.5s ease forwards",
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      this.totalContents.appendChild(div_clone);
+      this.loginBox.push(div_clone);
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "fixed",
+        width: "100%",
+        height: "100%",
+        background: "white",
+        opacity: String(0),
+        zIndex: String(3),
+        backdropFilter: "blur(4px)",
+        animation: "loginfadeup1 0.5s ease forwards",
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      this.totalContents.appendChild(div_clone);
+      this.loginBox.push(div_clone);
 
       if (GeneralJs.stacks["GoogleAuth"] !== undefined && GeneralJs.stacks["GoogleAuth"] !== null) {
         googleAuth = GeneralJs.stacks["GoogleAuth"];
@@ -1079,12 +1302,14 @@ GeneralJs.prototype.loginBox = async function () {
       if (tempObj.result !== null) {
         thisMember = tempObj.result;
         this.member = thisMember;
+        this.loginBox[0].style.animation = "loginfadedown0 0.5s ease forwards";
+        this.loginBox[1].style.animation = "loginfadedown1 0.5s ease forwards";
         GeneralJs.timeouts["login"] = setTimeout(function () {
           instance.totalContents.removeChild(instance.totalContents.lastChild);
           instance.totalContents.removeChild(instance.totalContents.lastChild);
           clearTimeout(GeneralJs.timeouts["login"]);
           GeneralJs.timeouts["login"] = null;
-        }, 0);
+        }, 500);
       } else {
         alert("허가된 멤버가 아닙니다.");
         window.location.reload();
