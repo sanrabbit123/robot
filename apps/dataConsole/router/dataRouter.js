@@ -40,78 +40,78 @@ DataRouter.baseMaker = function (target) {
       <style>
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
             font-weight: 700;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
             font-weight: 500;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
             font-weight: 800;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
             font-weight: 600;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
             font-weight: 200;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
             font-weight: 100;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
             font-weight: 900;
             font-style: normal;
         }
         @font-face {
             font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
             font-weight: 300;
             font-style: normal;
         }
         @font-face {
             font-family: 'Futura';
-            src: url('${ADDRESS.s3info.host}/font/futura/Futura-Medium.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/futura/Futura-Medium.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff') format('woff');
             font-weight: 500;
             font-style: normal;
         }
         @font-face {
             font-family: 'Futura';
-            src: url('${ADDRESS.s3info.host}/font/futura/Futura-Bold.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/font/futura/Futura-Bold.woff') format('woff');
+            src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff') format('woff');
             font-weight: 600;
             font-style: normal;
         }
@@ -1354,22 +1354,31 @@ DataRouter.prototype.rou_post_getMembers = function () {
     try {
       const membersArr = JSON.parse(await instance.mother.pythonExecute(instance.pythonApp, [ "getMembers" ], {}));
       let emailArr = [];
-      let vaild = false;
+      let targetMember = null;
 
       if (req.body.type === "get") {
+
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify(membersArr));
+
       } else if (req.body.type === "boo") {
         for (let { email } of membersArr.members) {
           emailArr.push(email);
         }
-        if (emailArr.includes(req.body.value)) {
-          vaild = true;
-        } else {
-          vaild = false;
+
+        for (let i = 0; i < emailArr.length; i++) {
+          if (req.body.value === emailArr[i]) {
+            targetMember = membersArr.members[i];
+          }
         }
+
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ result: vaild }));
+        if (targetMember === null) {
+          res.send(JSON.stringify({ result: null }));
+        } else {
+          res.send(JSON.stringify({ result: targetMember }));
+        }
+
       }
     } catch (e) {
       console.log(e);

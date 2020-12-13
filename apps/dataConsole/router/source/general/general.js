@@ -529,6 +529,26 @@ GeneralJs.prototype.returnTalk = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 421.983 385.724"><path d="M45.862 380.211c-2.035 2.093-0.485 5.651 2.398 5.509 41.274-2.037 90.99-18.691 124.766-45.899 2.845-2.291 6.427-3.402 10.03-3.015 9.141 0.981 18.464 1.493 27.936 1.493 116.527 0 210.991-74.348 210.991-168.629S327.52 0 210.992 0 0 75.389 0 169.67c0 51.139 30.824 96.055 77.016 128.587 2.297 1.618 3.636 4.344 3.53 7.193C79.207 341.602 56.86 368.898 45.862 380.211z" fill="${color}"/></svg>`;
 }
 
+GeneralJs.prototype.returnProfile = function (color, circle = false) {
+  if (circle) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 455 455"><path d="M227.5 0C101.855 0 0 101.855 0 227.5S101.855 455 227.5 455 455 353.145 455 227.5 353.145 0 227.5 0zM227.5 85.86c36.175 0 65.5 28.716 65.5 64.14 0 35.423-29.325 64.14-65.5 64.14 -36.175 0-65.5-28.716-65.5-64.14C162 114.577 191.325 85.86 227.5 85.86zM227.5 370c-63.789 0-115.5-19.252-115.5-43 0-34.357 1.24-80.277 57.093-117.897 1.78-1.199 4.149-1.065 5.759 0.353 6.299 5.551 24.124 19.215 52.648 19.215 28.504 0 46.345-13.669 52.649-19.218 1.61-1.417 3.978-1.55 5.756-0.352C341.76 246.722 343 292.643 343 327 343 350.748 291.289 370 227.5 370z" fill="${color}"/></svg>`;
+  } else {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 369.906 455"><path d="M369.906 386.143c0 38.029-82.806 68.857-184.953 68.857S0 424.172 0 386.143c0-55.017 1.985-128.55 91.425-188.791 2.85-1.919 6.644-1.706 9.221 0.566 10.086 8.889 38.63 30.77 84.307 30.77 45.644 0 74.214-21.889 84.308-30.775 2.578-2.269 6.37-2.481 9.218-0.563C367.921 257.591 369.906 331.126 369.906 386.143zM184.953 205.417c57.928 0 104.887-45.984 104.887-102.709C289.84 45.984 242.881 0 184.953 0 127.026 0 80.066 45.984 80.066 102.709 80.066 159.433 127.026 205.417 184.953 205.417z" fill="${color}"/></svg>`;
+  }
+}
+
+GeneralJs.prototype.returnLogout = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 424.942 505.757"><path d="M278.583 326.277h19.269c2.611 0 4.728 2.117 4.728 4.728v108.305 16.073 7.924c0 2.611-2.117 4.728-4.728 4.728H178.201c-2.611 0-4.728-2.117-4.728-4.728v-19.269c0-2.611 2.117-4.728 4.728-4.728h90.926c2.611 0 4.728-2.117 4.728-4.728V331.005C273.855 328.393 275.972 326.277 278.583 326.277zM278.583 178.17h19.269c2.611 0 4.728-2.117 4.728-4.728V65.137 49.064v-7.924c0-2.611-2.117-4.728-4.728-4.728H178.201c-2.611 0-4.728 2.117-4.728 4.728v19.269c0 2.611 2.117 4.728 4.728 4.728h90.926c2.611 0 4.728 2.117 4.728 4.728v103.577C273.855 176.053 275.972 178.17 278.583 178.17zM422.434 247.537l-92.906-59.541c-1.99-1.276-4.604 0.154-4.604 2.518v15.979c0 1.17-0.949 2.119-2.119 2.119H178.921c-3.009 0-5.447 2.439-5.447 5.447v75.764c0 3.009 2.439 5.447 5.447 5.447h143.884c1.17 0 2.119 0.949 2.119 2.119v15.996c0 2.36 2.606 3.79 4.597 2.522l92.901-59.191C425.777 254.58 425.783 249.684 422.434 247.537zM149.64 24.761v454.666c0 18.688-18.941 31.415-36.243 24.353l-89.219-36.415C9.556 461.398 0 447.175 0 431.383V74.073C0 58.138 9.727 43.818 24.539 37.945l91.246-36.179C132.024-4.673 149.64 7.293 149.64 24.761zM122.286 250.815c0-8.442-6.844-15.286-15.286-15.286s-15.286 6.844-15.286 15.286c0 8.442 6.844 15.286 15.286 15.286S122.286 259.257 122.286 250.815z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnTalkBoxTriangle = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 259.582 443.73"><path d="M0 0v259.584V432.318c0 10.06 12.086 15.18 19.311 8.179l173.011-167.605c8.81-8.534 20.595-13.307 32.86-13.307h34.4V0H0z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnFolder = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 416.427 350.794"><path d="M173.206 29.54L133.756 4.781C128.779 1.657 123.022 0 117.145 0H23.61C10.57 0 0 10.57 0 23.61v303.92c0 12.849 10.416 23.265 23.265 23.265h373.314c10.962 0 19.848-8.886 19.848-19.848V55.293c0-11.583-9.389-20.972-20.972-20.972H189.817C183.94 34.321 178.183 32.664 173.206 29.54z" fill="${color}"/></svg>`;
+}
+
 GeneralJs.prototype.returnLoadingIcon = function () {
   let icon = SvgTong.stringParsing(this.returnLoading());
   icon.classList.add("loading");
@@ -965,6 +985,8 @@ GeneralJs.prototype.loginBox = async function () {
     let ea = "px";
     let googleAuth, client, profile;
     let name, email, id;
+    let memberBoo, thisMember;
+    let tempObj;
 
     this.loginBox = [];
 
@@ -1010,17 +1032,26 @@ GeneralJs.prototype.loginBox = async function () {
       "homeliaisonphoto@gmail.com",
     ];
 
-    console.log(cookies);
-    GeneralJs.ajax("type=get", "/getMembers", function (data) {
-      console.log(JSON.parse(data));
-    });
+    if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail")) {
+      let { result } = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + cookies["homeliaisonConsoleLoginedEmail"], "/getMembers"));
+      if (result !== null) {
+        memberBoo = true;
+        thisMember = result;
+      } else {
+        memberBoo = false;
+        thisMember = null;
+      }
+    }
 
-    if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail") && memberEmail.includes(cookies["homeliaisonConsoleLoginedEmail"])) {
+    if (memberBoo) {
 
-      setTimeout(function () {
+      this.member = thisMember;
+      GeneralJs.timeouts["login"] = setTimeout(function () {
         instance.totalContents.removeChild(instance.totalContents.lastChild);
         instance.totalContents.removeChild(instance.totalContents.lastChild);
-      }, 1000);
+        clearTimeout(GeneralJs.timeouts["login"]);
+        GeneralJs.timeouts["login"] = null;
+      }, 500);
 
     } else {
 
@@ -1044,8 +1075,20 @@ GeneralJs.prototype.loginBox = async function () {
 
       GeneralJs.setCookie(GeneralJs.stacks["GoogleClientProfile"]);
 
-      console.log(GeneralJs.getCookiesAll());
-
+      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + email, "/getMembers"));
+      if (tempObj.result !== null) {
+        thisMember = tempObj.result;
+        this.member = thisMember;
+        GeneralJs.timeouts["login"] = setTimeout(function () {
+          instance.totalContents.removeChild(instance.totalContents.lastChild);
+          instance.totalContents.removeChild(instance.totalContents.lastChild);
+          clearTimeout(GeneralJs.timeouts["login"]);
+          GeneralJs.timeouts["login"] = null;
+        }, 0);
+      } else {
+        alert("허가된 멤버가 아닙니다.");
+        window.location.reload();
+      }
     }
 
   } catch (e) {
