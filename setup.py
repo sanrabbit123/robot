@@ -183,3 +183,7 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
     if sys.argv[1] == 'install':
         print("npm install")
         print("npm install -g pm2")
+        print("python3 -m venv .")
+        print("source ./bin/activate")
+        print("pip3 install flask")
+        print("pip3 install gunicorn")

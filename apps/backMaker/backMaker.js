@@ -2235,4 +2235,137 @@ BackMaker.prototype.createClientHistory = async function (updateQuery, option = 
   }
 }
 
+
+// GET project history -------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+// general mongo CRUD  --------------------------------------------------------------------
+
+BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  try {
+    let MONGOC;
+    if (option.local !== undefined && option.local !== null) {
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(collection).insertOne(json);
+      MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(collection).insertOne(json);
+    }
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  try {
+    let MONGOC;
+    if (option.local !== undefined && option.local !== null) {
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    }
+
+    let tong;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = {};
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+      }
+      MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+      }
+    }
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+    let MONGOC;
+    if (option.local !== undefined && option.local !== null) {
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    }
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    }
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  try {
+    let MONGOC;
+    if (option.local !== undefined && option.local !== null) {
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    }
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(collection).deleteOne(query);
+      MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(collection).deleteOne(query);
+    }
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
+
 module.exports = BackMaker;

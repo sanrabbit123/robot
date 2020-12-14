@@ -1587,7 +1587,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   //realtime
-  GeneralJs.ajax("desid=" + thisCase[standard[1]], "/realtimeDesigner", function (data) {
+  GeneralJs.ajax("type=get&desid=" + thisCase[standard[1]], "/realtimeDesigner", function (data) {
     const dateArr = JSON.parse(data);
     let div_clone3, div_clone4, div_clone5;
 
@@ -1655,14 +1655,24 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let j in style) {
         div_clone5.style[j] = style[j];
       }
-      div_clone5.setAttribute("onoff", (dateArr[j].onoff ? "true" : "false"))
-      div_clone5.addEventListener("click", function (e) {
-        if (this.getAttribute("onoff") === "true") {
-          this.style.color = "#bbbbbb";
-          this.setAttribute("onoff", "false");
-        } else {
-          this.style.color = "#2fa678";
-          this.setAttribute("onoff", "true");
+      div_clone5.setAttribute("year", String(dateArr[j].year));
+      div_clone5.setAttribute("month", String(dateArr[j].month));
+      div_clone5.setAttribute("onoff", (dateArr[j].onoff ? "true" : "false"));
+      div_clone5.addEventListener("click", async function (e) {
+        try {
+          let onoff;
+          if (this.getAttribute("onoff") === "true") {
+            onoff = 0;
+            this.style.color = "#bbbbbb";
+            this.setAttribute("onoff", "false");
+          } else {
+            onoff = 1;
+            this.style.color = "#2fa678";
+            this.setAttribute("onoff", "true");
+          }
+          await GeneralJs.ajaxPromise("type=update&year=" + this.getAttribute("year") + "&month=" + this.getAttribute("month") + "&onoff=" + String(onoff) + "&desid=" + thisCase[standard[1]], "/realtimeDesigner");
+        } catch (e) {
+          console.log(e);
         }
       });
       div_clone4.appendChild(div_clone5);
