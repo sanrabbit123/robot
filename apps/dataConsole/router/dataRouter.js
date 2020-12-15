@@ -1012,23 +1012,47 @@ DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
   let obj = {};
-  obj.link = [ "/getClientHistory" ];
+  obj.link = [ "/getClientHistory", "/getProjectHistory" ];
   obj.func = async function (req, res) {
     try {
-      const historyObj = await back.getClientHistoryById(req.body.id);
-      let responseArr = [];
+      let historyObj, responseArr;
 
-      if (historyObj === null) {
-        for (let i = 0; i < 6; i++) {
-          responseArr.push('');
+      responseArr = [];
+
+      if (req.url === "/getClientHistory") {
+
+        historyObj = await back.getClientHistoryById(req.body.id);
+
+        if (historyObj === null) {
+          await back.createClientHistory({ cliid: req.body.id });
+          for (let i = 0; i < 6; i++) {
+            responseArr.push('');
+          }
+        } else {
+          responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
+          responseArr.push((historyObj.space === undefined ? '' : historyObj.space));
+          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling));
+          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct));
+          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget));
+          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress));
         }
-      } else {
-        responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
-        responseArr.push((historyObj.space === undefined ? '' : historyObj.space));
-        responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling));
-        responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct));
-        responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget));
-        responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress));
+
+      } else if (req.url === "/getProjectHistory") {
+
+        historyObj = await back.getProjectHistoryById(req.body.id);
+
+        if (historyObj === null) {
+          await back.createProjectHistory({ proid: req.body.id });
+          for (let i = 0; i < 4; i++) {
+            responseArr.push('');
+          }
+        } else {
+          responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
+          responseArr.push((historyObj.designer === undefined ? '' : historyObj.designer));
+          responseArr.push((historyObj.client === undefined ? '' : historyObj.client));
+          responseArr.push((historyObj.photo === undefined ? '' : historyObj.photo));
+        }
+
       }
 
       res.set("Content-Type", "application/json");
@@ -1044,16 +1068,44 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
   const back = this.back;
   let obj = {};
-  obj.link = [ "/updateClientHistory" ];
+  obj.link = [ "/updateClientHistory", "/updateProjectHistory" ];
   obj.func = async function (req, res) {
     try {
       const { id, column, value } = req.body;
+      let historyObj;
       let whereQuery, updateQuery;
+
       whereQuery = {};
       updateQuery = {};
-      whereQuery.cliid = id;
-      updateQuery[column] = value;
-      await back.updateClientHistory([ whereQuery, updateQuery ]);
+
+      if (req.url === "/updateClientHistory") {
+
+        historyObj = await back.getClientHistoryById(id);
+        if (historyObj === null) {
+          updateQuery.cliid = id;
+          updateQuery[column] = value;
+          await back.createClientHistory(updateQuery);
+        } else {
+          whereQuery.cliid = id;
+          updateQuery[column] = value;
+          await back.updateClientHistory([ whereQuery, updateQuery ]);
+        }
+
+      } else if (req.url === "/updateProjectHistory") {
+
+        historyObj = await back.getProjectHistoryById(id);
+        if (historyObj === null) {
+          updateQuery.proid = id;
+          updateQuery[column] = value;
+          await back.createProjectHistory(updateQuery);
+        } else {
+          whereQuery.proid = id;
+          updateQuery[column] = value;
+          await back.updateProjectHistory([ whereQuery, updateQuery ]);
+        }
+
+      }
+
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {

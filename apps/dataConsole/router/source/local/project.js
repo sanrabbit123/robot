@@ -987,51 +987,44 @@ ProjectJs.prototype.cardViewMaker = function () {
       updateState = async function (from, to) {
         try {
           let toValue;
-          let cliid, originalStatus, index;
+          let proid, originalStatus, index;
           let motherDiv, originalDiv;
-          let requests, requestIndex;
           let column;
           let finalValue;
 
-          cliid = from.getAttribute("cliid");
+          proid = from.getAttribute("proid");
           index = from.getAttribute("index");
           originalStatus = from.getAttribute("thisStatus");
           from.setAttribute("thisStatus", to);
-          if (to === "드랍") {
+          if (to === "드랍" || to === "홀딩") {
             from.setAttribute("dropDetail", originalStatus);
           } else if (from.hasAttribute("dropDetail")) {
             from.setAttribute("dropDetail", "");
           }
 
-          requests = [];
-          for (let i = 1; i < instance.cases.length; i++) {
-            if (instance.cases[i].cliid === cliid) {
-              requests.push(instance.cases[i]);
-            }
-          }
-          for (let i = 0; i < requests.length; i++) {
-            if (requests[i] === instance.cases[Number(index)]) {
-              requestIndex = i;
-            }
-          }
-
           column = "status";
 
-          motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
+          motherDiv = document.querySelectorAll('.' + proid)[0];
           for (let i = 0; i < motherDiv.children.length; i++) {
             if (motherDiv.children[i].getAttribute("column") === column) {
               originalDiv = motherDiv.children[i];
             }
           }
 
-          if (to === "통화 전") {
-            toValue = "응대중";
-          } else if (to === "제안 전") {
-            toValue = "응대중";
-          } else if (to === "제안 후") {
-            toValue = "응대중";
-          } else if (to === "진행") {
-            toValue = "진행";
+          if (to === "계약 전") {
+            toValue = "대기";
+          } else if (to === "미팅 전") {
+            toValue = "진행중";
+          } else if (to === "잔금 전") {
+            toValue = "진행중";
+          } else if (to === "촬영 전") {
+            toValue = "진행중";
+          } else if (to === "공유 전") {
+            toValue = "진행중";
+          } else if (to === "완료") {
+            toValue = "완료";
+          } else if (to === "홀딩") {
+            toValue = "홀딩";
           } else if (to === "드랍") {
             toValue = "드랍";
           }
@@ -1039,8 +1032,8 @@ ProjectJs.prototype.cardViewMaker = function () {
           finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
 
           await GeneralJs.updateValue({
-            thisId: cliid,
-            requestIndex: requestIndex,
+            thisId: proid,
+            requestIndex: 0,
             column: column,
             pastValue: originalStatus,
             value: finalValue,
@@ -1093,109 +1086,222 @@ ProjectJs.prototype.cardViewMaker = function () {
             area = e.target.parentElement.parentElement;
           }
 
-          if (area.getAttribute("name") === "통화 전") {
-            if (status === "통화 전") {
+          if (area.getAttribute("name") === "계약 전") {
+            if (status === "계약 전") {
               //pass
-            } else if (status === "제안 전") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "제안 후") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "드랍") {
+            } else if (status === "미팅 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "잔금 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "촬영 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "공유 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "완료") {
+              alert("완료는 되돌릴 수 없습니다!");
+            } else if (status === "홀딩") {
               dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail !== "통화 전") {
-                alert("통화 기록은 되돌릴 수 없습니다!");
+              if (dropDetail === "계약 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "계약 전");
               } else {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "통화 전");
+                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
               }
-            }
-
-          } else if (area.getAttribute("name") === "제안 전") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              //pass
-            } else if (status === "제안 후") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
             } else if (status === "드랍") {
               dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
+              if (dropDetail === "계약 전") {
                 area.appendChild(targetDom);
-                await updateState(targetDom, "제안 전");
-              } else if (dropDetail === "제안 후") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
-              } else if (dropDetail === "진행") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
+                await updateState(targetDom, "계약 전");
+              } else {
+                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
               }
             }
-
-          } else if (area.getAttribute("name") === "제안 후") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
+          } else if (area.getAttribute("name") === "미팅 전") {
+            if (status === "계약 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "미팅 전") {
               //pass
-            } else if (status === "진행") {
+            } else if (status === "잔금 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "촬영 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "공유 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "완료") {
+              alert("완료는 되돌릴 수 없습니다!");
+            } else if (status === "홀딩") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "미팅 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "미팅 전");
+              } else {
+                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "미팅 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "미팅 전");
+              } else {
+                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            }
+          } else if (area.getAttribute("name") === "잔금 전") {
+            if (status === "계약 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "미팅 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "잔금 전") {
+              //pass
+            } else if (status === "촬영 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "공유 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "완료") {
+              alert("완료는 되돌릴 수 없습니다!");
+            } else if (status === "홀딩") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "잔금 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "잔금 전");
+              } else {
+                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "잔금 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "잔금 전");
+              } else {
+                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            }
+          } else if (area.getAttribute("name") === "촬영 전") {
+            if (status === "계약 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "미팅 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "잔금 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "촬영 전") {
+              //pass
+            } else if (status === "공유 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "완료") {
+              alert("완료는 되돌릴 수 없습니다!");
+            } else if (status === "홀딩") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "촬영 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "촬영 전");
+              } else {
+                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            } else if (status === "드랍") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "촬영 전") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "촬영 전");
+              } else {
+                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
+            }
+          } else if (area.getAttribute("name") === "공유 전") {
+            if (status === "계약 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "미팅 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "잔금 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "촬영 전") {
+              alert("날짜 체크로 상태를 제어해주세요!");
+            } else if (status === "공유 전") {
+              //pass
+            } else if (status === "완료") {
               area.appendChild(targetDom);
-              await updateState(targetDom, "제안 후");
+              await updateState(targetDom, "공유 전");
+            } else if (status === "홀딩") {
+              dropDetail = targetDom.getAttribute("dropDetail");
+              if (dropDetail === "공유 전" || dropDetail === "완료") {
+                area.appendChild(targetDom);
+                await updateState(targetDom, "공유 전");
+              } else {
+                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
+              }
             } else if (status === "드랍") {
               dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
+              if (dropDetail === "공유 전" || dropDetail === "완료") {
                 area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
+                await updateState(targetDom, "공유 전");
+              } else {
+                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
               }
             }
-
-          } else if (area.getAttribute("name") === "진행") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
+          } else if (area.getAttribute("name") === "완료") {
+            if (status === "계약 전") {
+              alert("계약이 필요합니다!");
+            } else if (status === "미팅 전") {
+              alert("미팅 확인이 필요합니다!");
+            } else if (status === "잔금 전") {
+              alert("잔금 확인이 필요합니다!");
+            } else if (status === "촬영 전") {
+              alert("촬영 확인이 필요합니다!");
+            } else if (status === "공유 전") {
               area.appendChild(targetDom);
-              await updateState(targetDom, "진행");
-            } else if (status === "진행") {
+              await updateState(targetDom, "완료");
+            } else if (status === "완료") {
+              //pass
+            } else if (status === "홀딩") {
+              alert("홀딩에서 완료로 될 수 없습니다!");
+            } else if (status === "드랍") {
+              alert("드랍에서 완료로 될 수 없습니다!");
+            }
+          } else if (area.getAttribute("name") === "홀딩") {
+            if (status === "계약 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "미팅 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "잔금 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "촬영 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "공유 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "완료") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
+            } else if (status === "홀딩") {
               //pass
             } else if (status === "드랍") {
               dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              }
+              area.appendChild(targetDom);
+              await updateState(targetDom, "홀딩");
             }
-
           } else if (area.getAttribute("name") === "드랍") {
-            if (status === "통화 전") {
+            if (status === "계약 전") {
               area.appendChild(targetDom);
               await updateState(targetDom, "드랍");
-            } else if (status === "제안 전") {
+            } else if (status === "미팅 전") {
               area.appendChild(targetDom);
               await updateState(targetDom, "드랍");
-            } else if (status === "제안 후") {
+            } else if (status === "잔금 전") {
               area.appendChild(targetDom);
               await updateState(targetDom, "드랍");
-            } else if (status === "진행") {
+            } else if (status === "촬영 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "공유 전") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "완료") {
+              area.appendChild(targetDom);
+              await updateState(targetDom, "드랍");
+            } else if (status === "홀딩") {
               area.appendChild(targetDom);
               await updateState(targetDom, "드랍");
             } else if (status === "드랍") {
@@ -1427,6 +1533,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let textAreas;
   let fixedFontSizeConst;
   let notionEvent;
+  let historyFocusEvent, historyBlurEvent;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2168,11 +2275,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //history text box tong
   historyTongTarget = [
-    { name: "시공 관련", dom: null },
-    { name: "스타일링 관련", dom: null },
-    { name: "예산 관련", dom: null },
-    { name: "현장 관련", dom: null },
-    { name: "진행 현황", dom: null },
+    { column: "history", name: "진행 상황", dom: null },
+    { column: "designer", name: "디자이너 관련", dom: null },
+    { column: "client", name: "고객 관련", dom: null },
+    { column: "photo", name: "촬영 관련", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
   historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
@@ -2192,6 +2298,33 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   for (let i = 0; i < historyTongTarget.length; i++) {
+
+    //focus event
+    historyFocusEvent = function (e) {
+      const thisIndex = i;
+      for (let { dom } of historyTongTarget) {
+        if (Number(dom.getAttribute("index")) !== thisIndex) {
+          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        } else {
+          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        }
+      }
+      this.style.color = "#202020";
+    }
+
+    //blur event
+    historyBlurEvent = function (e) {
+      const thisIndex = i;
+      let target;
+      for (let { dom } of historyTongTarget) {
+        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        if (Number(dom.getAttribute("index")) === thisIndex) {
+          target = dom.querySelector("textarea");
+        }
+      }
+      this.style.color = "#cccccc";
+      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateProjectHistory", function (res) {});
+    }
 
     //margin box
     div_clone4 = GeneralJs.nodes.div.cloneNode(true);
@@ -2267,23 +2400,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let j in style) {
       textArea_clone.style[j] = style[j];
     }
-    textArea_clone.addEventListener("focus", function (e) {
-      const thisIndex = i;
-      for (let { dom } of historyTongTarget) {
-        if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        } else {
-          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        }
-      }
-      this.style.color = "#202020";
-    });
-    textArea_clone.addEventListener("blur", function (e) {
-      for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
-      }
-      this.style.color = "#cccccc";
-    });
+    textArea_clone.addEventListener("focus", historyFocusEvent);
+    textArea_clone.addEventListener("blur", historyBlurEvent);
 
     div_clone5.appendChild(textArea_clone);
     textAreas.push(textArea_clone);
@@ -2314,7 +2432,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
+  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {
     const dataArr = JSON.parse(res);
     for (let i = 0; i < textAreas.length; i++) {
       textAreas[i].value = dataArr[i];
