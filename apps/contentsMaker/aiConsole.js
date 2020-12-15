@@ -2,11 +2,9 @@ const AiConsole = function () {
   const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-  const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
   this.general = new ContentsMaker();
   this.mother = new Mother();
   this.back = new BackMaker();
-  this.notion = new NotionAPIs();
   this.text = {};
   this.options = this.general.options;
   this.consoleSource = `${process.cwd()}/apps/dataConsole/router/source/svg`;
@@ -16,43 +14,38 @@ const AiConsole = function () {
   this.links.map = `${this.consoleSource}/map`;
 }
 
-AiConsole.prototype.extractJson = async function (id) {
-  const instance = this;
-  try {
-    const notionCard = await this.notion.getElementById(id, true);
-    notionCard.original = (await this.back.getClientById(notionCard.cliid)).toNormal();
-    return notionCard;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-AiConsole.prototype.cardToAi = async function (id) {
+AiConsole.prototype.cardToRequest = async function (cliid, desid) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
   try {
-    let tempDir;
-    let json;
+    let resultDir;
+    let resultDirSw;
     let temp_scriptString;
-    let sw = "notioncard";
+    let sw = "stylingrequest";
+    let client;
 
-    tempDir = await fileSystem(`readDir`, [ `${process.cwd()}/temp` ]);
-    if (tempDir.includes(`tempNotionCard_${id}.json`)) {
-      json = JSON.parse(await fileSystem("readString", [ `${process.cwd()}/temp/tempNotionCard_${id}.json`, JSON.stringify(json, null, 2) ]));
+    await this.general.static_setting();
+
+    client = await this.back.getClientById(cliid);
+    client.history = await this.back.getClientHistoryById(cliid);
+    client.designer = await this.back.getDesignerById(desid);
+
+    resultDir = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
+    if (!resultDir.includes(sw)) {
+      shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result/${sw}`);
     } else {
-      json = await this.extractJson(id);
-      console.log(json);
-      await fileSystem("write", [ `${process.cwd()}/temp/tempNotionCard_${id}.json`, JSON.stringify(json, null, 2) ]);
+      resultDirSw = await fileSystem(`readDir`, [ `${this.options.home_dir}/result/${sw}` ]);
+      for (let i of resultDirSw) {
+        shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}/${i}`);
+      }
     }
-
-    shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result/${sw}`);
 
     this.options.script_dir = `${this.links.factory}/script/console_maker`;
     temp_scriptString = await this.general.generator.console_maker.exec(this.options, sw);
     await this.general.startAdobe({
-      name: `cardToAi_${id}`,
-      data: json,
+      name: "homestylingRequestFrom" + cliid + "To" + desid,
+      data: client,
       script: temp_scriptString,
       app: "Illustrator",
       end: false,

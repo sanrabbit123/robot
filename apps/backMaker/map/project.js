@@ -6,6 +6,7 @@ module.exports = {
     service: {
       serid: "",
       xValue: "",
+      online: false,
     },
     proposal: {
       status: "",

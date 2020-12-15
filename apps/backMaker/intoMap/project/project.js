@@ -42,6 +42,7 @@ module.exports = function (tools) {
         tempObj.service = {};
         tempObj.service.serid = "";
         tempObj.service.xValue = "";
+        tempObj.service.online = false;
 
         if (/^홈스/.test(past.service)) {
           tempObj.service.serid = "s2011_aa02s";

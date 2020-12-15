@@ -7,12 +7,14 @@ const ProjectContents = require(PROJECT_DIR + "/projectContents/projectContents.
 const ProjectService = function (json) {
   this.serid = json.serid;
   this.xValue = json.xValue;
+  this.online = Boolean(json.online);
 }
 
 ProjectService.prototype.toNormal = function () {
   let obj = {};
   obj.serid = this.serid;
   obj.xValue = this.xValue;
+  obj.online = this.online;
   return obj;
 }
 

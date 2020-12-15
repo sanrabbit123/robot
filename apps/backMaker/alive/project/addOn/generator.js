@@ -74,7 +74,7 @@ const widthTools = function (Project) {
     let tong = [];
     let temp;
 
-    const { proid, cliid, desid, service: { serid, xValue } } = project;
+    const { proid, cliid, desid, service: { serid, xValue, online } } = project;
     const { status, contract: { first: { guide: firstGuide, date: firstDate, calculation: { amount: firstAmount, info: firstInfo } }, remain: { guide: remainGuide, date: remainDate, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate } } } } = project.process;
     const { photo: { date: contentsPhotoDate, info: { photographer, interviewer } } } = project.contents;
 
@@ -88,7 +88,8 @@ const widthTools = function (Project) {
       cliid,
       desid,
       serid,
-      xValue
+      xValue,
+      online
     };
 
     temp.info = {

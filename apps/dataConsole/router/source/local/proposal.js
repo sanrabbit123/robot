@@ -2759,8 +2759,9 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
             div_clone3.addEventListener("click", async function (e) {
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
+              const onoffLine = /온라인/gi.test(this.textContent);
               try {
-                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ desid: desid, "service.serid": serid, "service.xValue": xValue, "process.status": "대기" }), "/rawUpdateProject");
+                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" }), "/rawUpdateProject");
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
               } catch (e) {
                 console.log(e);

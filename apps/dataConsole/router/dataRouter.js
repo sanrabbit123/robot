@@ -1386,7 +1386,7 @@ DataRouter.prototype.rou_post_createRequestDocument = function () {
   obj.func = async function (req, res) {
     try {
       const aiConsole = new AiConsole();
-      await aiConsole.cardToAi("c2011_aa04s");
+      await aiConsole.cardToRequest("c2011_aa04s");
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {

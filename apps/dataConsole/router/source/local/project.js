@@ -783,6 +783,12 @@ ProjectJs.prototype.spreadData = async function (search = null) {
         serviceWording += " premium";
       }
 
+      if (p.middle.online) {
+        serviceWording = "온라인 " + serviceWording;
+      } else {
+        serviceWording = "오프라인 " + serviceWording;
+      }
+
       p.info.service = serviceWording;
     }
 

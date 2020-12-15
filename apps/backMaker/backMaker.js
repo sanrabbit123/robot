@@ -1980,6 +1980,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         service: {
           serid: "",
           xValue: "",
+          online: false,
         },
         proposal: {
           status: "",

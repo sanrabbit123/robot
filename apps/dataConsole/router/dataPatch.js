@@ -2833,7 +2833,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     service: {
       name: "서비스",
-      width: 120,
+      width: 180,
     },
     firstGuide: {
       name: "계약금 안내",
@@ -3626,6 +3626,12 @@ DataPatch.prototype.projectMap = function () {
       obj.xValue = 'P';
     }
 
+    if (/온라인/gi.test(value)) {
+      obj.online = true;
+    } else {
+      obj.online = false;
+    }
+
     return obj;
   };
   const serviceInputFunction = function (mother, input, callback) {
@@ -3641,18 +3647,31 @@ DataPatch.prototype.projectMap = function () {
     let tempArr;
     let valuesTong;
     let originalValue;
+    let online;
 
-    valuesTong = [
-      [ "홈퍼니싱", "mini" ],
-      [ "홈스타일링", "basic" ],
-      [ "토탈 스타일링", "premium" ],
-    ];
     originalValue = input.value;
+    if (/온라인/gi.test(originalValue)) {
+      online = "온라인";
+    } else {
+      online = "오프라인";
+    }
+    valuesTong = [
+      [ online, "홈퍼니싱", "mini" ],
+      [ online, "홈스타일링", "basic" ],
+      [ online, "토탈 스타일링", "premium" ],
+    ];
 
     endEvent = function (e) {
+      let onoffLine;
       let inputs0 = document.querySelectorAll(".inputTargetOne");
       let inputs1 = document.querySelectorAll(".inputTargetTwo");
       let totalString = '';
+
+      if (document.querySelector(".inputTargetZero").textContent === "온라인") {
+        onoffLine = "온라인";
+      } else {
+        onoffLine = "오프라인";
+      }
 
       for (let i = 0; i < inputs0.length; i++) {
         if (inputs0[i].getAttribute("switch") === "on") {
@@ -3665,6 +3684,8 @@ DataPatch.prototype.projectMap = function () {
           totalString += inputs1[i].getAttribute("target");
         }
       }
+
+      totalString = onoffLine + " " + totalString;
 
       input.style.transition = "0s all ease";
       input.style.color = "transparent";
@@ -3728,7 +3749,19 @@ DataPatch.prototype.projectMap = function () {
         position: "absolute",
         left: String(0) + ea,
         top: String(0) + ea,
-        width: "58%",
+        width: "28%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        left: "calc(28% + " + String(Math.round((height) / 4) * 1) + ea + ")",
+        top: String(0) + ea,
+        width: "40%",
         height: "100%",
         background: "#2fa678",
         zIndex: String(3),
@@ -3740,7 +3773,7 @@ DataPatch.prototype.projectMap = function () {
         position: "absolute",
         right: String(0) + ea,
         top: String(0) + ea,
-        width: "calc(42% - " + String(Math.round((height) / 4)) + ea + ")",
+        width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
         height: "100%",
         background: "#2fa678",
         zIndex: String(3),
@@ -3774,48 +3807,91 @@ DataPatch.prototype.projectMap = function () {
         button_clone.style[j] = buttonStyle[j];
       }
 
-      for (let z = 0; z < 2; z++) {
+      for (let z = 0; z < 3; z++) {
         button_clone2 = GeneralJs.nodes.div.cloneNode(true);
         button_clone2.classList.add("removeTarget");
         button_clone2.classList.add("hoverDefault_lite");
-        button_clone2.classList.add("divTarget" + ([ "One", "Two" ])[z]);
+        button_clone2.classList.add("divTarget" + ([ "Zero", "One", "Two" ])[z]);
         for (let j in buttonDetailStyles[z]) {
           button_clone2.style[j] = buttonDetailStyles[z][j];
         }
         input_clone = GeneralJs.nodes.div.cloneNode(true);
-        input_clone.classList.add("inputTarget" + ([ "One", "Two" ])[z]);
+        input_clone.classList.add("inputTarget" + ([ "Zero", "One", "Two" ])[z]);
         for (let j in inputStyle) {
           input_clone.style[j] = inputStyle[j];
         }
 
-        if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
-          input_clone.setAttribute("switch", "on");
-          button_clone2.style.background = "#ececec";
-          input_clone.style.color = "#2fa678";
-        } else {
-          input_clone.setAttribute("switch", "off");
-        }
-
         input_clone.setAttribute("target", valuesTong[i][z]);
         input_clone.textContent = valuesTong[i][z];
-        input_clone.addEventListener("click", function (e) {
-          const thisClass = this.className;
-          const divTargets = document.querySelectorAll("." + thisClass.replace(/^input/, "div"));
-          const inputTargets = document.querySelectorAll("." + thisClass);
 
-          for (let dom of divTargets) {
-            dom.style.background = "#2fa678";
+        if (z !== 0) {
+          if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
+            input_clone.setAttribute("switch", "on");
+            button_clone2.style.background = "#ececec";
+            input_clone.style.color = "#2fa678";
+          } else {
+            input_clone.setAttribute("switch", "off");
           }
+          input_clone.addEventListener("click", function (e) {
+            const zeroClass = "inputTargetZero";
+            const zIndex = z;
+            const thisClass = this.className;
+            const divTargets = document.querySelectorAll("." + thisClass.replace(/^input/, "div"));
+            const inputTargets = document.querySelectorAll("." + thisClass);
+            const zeroDivTargets = document.querySelectorAll("." + zeroClass.replace(/^input/, "div"));
+            const zeroInputTargets = document.querySelectorAll("." + zeroClass);
 
-          for (let dom of inputTargets) {
-            dom.style.color = "#ffffff";
-            dom.setAttribute("switch", "off");
+            for (let dom of divTargets) {
+              dom.style.background = "#2fa678";
+            }
+
+            for (let dom of inputTargets) {
+              dom.style.color = "#ffffff";
+              dom.setAttribute("switch", "off");
+            }
+
+            if (zIndex === 1) {
+              for (let dom of zeroDivTargets) {
+                dom.style.background = "#2fa678";
+              }
+
+              for (let dom of zeroInputTargets) {
+                dom.style.color = "#ffffff";
+                dom.setAttribute("switch", "off");
+              }
+            }
+
+            this.parentElement.style.background = "#ececec";
+            this.style.color = "#2fa678";
+
+            if (zIndex === 1) {
+              this.parentElement.previousElementSibling.style.background = "#ececec";
+              this.parentElement.previousElementSibling.children[0].style.color = "#2fa678";
+            }
+
+            this.setAttribute("switch", "on");
+          });
+        } else {
+          if ((new RegExp(valuesTong[i][1], "gi")).test(originalValue)) {
+            input_clone.setAttribute("switch", "on");
+            button_clone2.style.background = "#ececec";
+            input_clone.style.color = "#2fa678";
+          } else {
+            input_clone.setAttribute("switch", "off");
           }
+          input_clone.addEventListener("click", function (e) {
+            const thisClass = this.className;
+            const inputTargets = document.querySelectorAll("." + thisClass);
+            for (let dom of inputTargets) {
+              if (dom.textContent === "오프라인") {
+                dom.textContent = "온라인";
+              } else {
+                dom.textContent = "오프라인";
+              }
+            }
+          });
+        }
 
-          this.parentElement.style.background = "#ececec";
-          this.style.color = "#2fa678";
-          this.setAttribute("switch", "on");
-        });
         button_clone2.appendChild(input_clone);
         button_clone.appendChild(button_clone2);
       }
