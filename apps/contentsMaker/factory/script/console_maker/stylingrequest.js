@@ -160,7 +160,8 @@ StylingRequest.prototype.readDoms = function () {
 }
 
 ExecMain.prototype.fileName = function () {
-  return this.dir + "/test.pdf";
+  const { designer: { desid, designer }, name } = this.text;
+  return this.dir + '/' + desid + '_' + designer + '_' + name + '_' + this.dayString + ".pdf";
 }
 
 ExecMain.prototype.fileSave = function () {
@@ -184,7 +185,6 @@ ExecMain.prototype.start = function (dayString) {
   tempArr.push("template");
   tempArr.push("stylingrequest");
   tempArr.push("template.ai");
-  this.log(tempArr.join('/'));
 
   //DEV ---------------------------------
 
@@ -196,6 +196,6 @@ ExecMain.prototype.start = function (dayString) {
   app.open(new File(tempArr.join('/')));
   this.doms = this.request.readDoms();
 
-  // this.fileSave();
-  // app.activeDocument.close();
+  this.fileSave();
+  app.activeDocument.close();
 }

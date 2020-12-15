@@ -51,7 +51,7 @@ AiConsole.prototype.cardToRequest = async function (cliid, desid) {
       end: false,
     });
 
-    shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
+    // shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
 
   } catch (e) {
     console.log(e);

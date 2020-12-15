@@ -1206,10 +1206,8 @@ class DevContext extends Array {
       }
 
 
-      // const aiConsole = new AiConsole();
-      // await aiConsole.cardToRequest("c2011_aa04s", "d2004_aa02s");
-
-
+      const aiConsole = new AiConsole();
+      await aiConsole.cardToRequest("c2011_aa04s", "d2004_aa02s");
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
