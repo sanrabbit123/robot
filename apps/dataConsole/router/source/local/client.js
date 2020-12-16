@@ -1904,7 +1904,61 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
       }
       this.style.color = "#cccccc";
-      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+
+      const originalValue = target.value;
+      const originalValueArr = originalValue.split("\n");
+
+      let tempString;
+      let vaildTong;
+      let item = null;
+      let tong = [];
+      for (let text of originalValueArr) {
+        if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
+          tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
+          tong.push('- ' + tempString);
+        } else if (/^\<\%item\%\>/.test(text)) {
+          item = text;
+        }
+      }
+
+      if (item !== null) {
+        target.value = item + "\n\n" + tong.join("\n");
+      } else {
+        target.value = tong.join("\n");
+      }
+
+      target.value = target.value.replace(/\&/g, ",");
+
+      if (thisIndex !== 2 && thisIndex !== 3) {
+        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+      } else if (thisIndex === 2) {
+        vaildTong = target.value.split("\n");
+        if (!/^\<\%item\%\>/.test(vaildTong[0])) {
+          alert("스타일링 범위 정의를 입력해주셔야 합니다! (스타일링 타이틀 우클릭)");
+          target.value = "<%item%> 재배치" + "\n\n" + target.value;
+          e.preventDefault();
+          this.focus();
+        } else {
+          if (!(/컨셉/g.test(vaildTong[2]) && /\:/g.test(vaildTong[2]))) {
+            alert("선호 컨셉을 가장 앞줄에 적어주셔야 합니다! (형식 => - 선호 컨셉 : 컨셉명)");
+            target.value = item + "\n\n" + "- 선호 컨셉 : 모던 화이트\n" + tong.join("\n");
+            e.preventDefault();
+            this.focus();
+          } else {
+            GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+          }
+        }
+      } else if (thisIndex === 3) {
+        vaildTong = target.value.split("\n");
+        if (!/^\<\%item\%\>/.test(vaildTong[0])) {
+          alert("시공 범위 정의를 입력해주셔야 합니다! (시공 타이틀 우클릭)");
+          target.value = "<%item%> 시공 없음" + "\n\n" + target.value;
+          e.preventDefault();
+          this.focus();
+        } else {
+          GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+        }
+      }
     }
 
     //margin box
@@ -1954,6 +2008,139 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let j in style) {
       div_clone5.style[j] = style[j];
     }
+
+    if (i === 2 || i === 3) {
+      div_clone5.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        if (!/historyMenuItem/gi.test(this.className)) {
+          const motherTong = this.parentElement;
+          let itemTargets;
+          let menu_tong;
+          let div_clone, div_clone2;
+          let style;
+          let ea = "px";
+
+          if (i === 2) {
+            itemTargets = [
+              "재배치",
+              "재배치 > 구매",
+              "재배치 < 구매",
+              "전체 구매"
+            ];
+          } else {
+            itemTargets = [
+              "시공 없음",
+              "부분 시공",
+              "전체 시공",
+            ];
+          }
+
+          //cancel back
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          div_clone.classList.add("historyMenuItem");
+          style = {
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            background: "transparent",
+            zIndex: String(4),
+          };
+          for (let z in style) {
+            div_clone.style[z] = style[z];
+          }
+          div_clone.addEventListener("click", function (e) {
+            const targets = document.querySelectorAll(".historyMenuItem");
+            for (let dom of targets) {
+              dom.parentNode.removeChild(dom);
+            }
+          });
+          this.parentElement.appendChild(div_clone);
+
+          //menu tong
+          menu_tong = GeneralJs.nodes.div.cloneNode(true);
+          menu_tong.classList.add("historyMenuItem");
+          style = {
+            position: "absolute",
+            width: String((i === 2) ? 106 : 85) + ea,
+            top: String(19) + ea,
+            left: String(-3) + ea,
+            zIndex: String(4),
+            animation: "fadeuplite 0.3s ease forwards",
+          };
+          for (let z in style) {
+            menu_tong.style[z] = style[z];
+          }
+
+          for (let t = 0; t < itemTargets.length; t++) {
+            //items
+            div_clone = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "relative",
+              width: String(100) + "%",
+              height: String(32) + ea,
+              borderRadius: String(4) + ea,
+              background: "#2fa678",
+              marginBottom: String(4) + ea,
+            };
+            for (let z in style) {
+              div_clone.style[z] = style[z];
+            }
+            div_clone.addEventListener("click", function (e) {
+              const targetTextTong = motherTong.children[motherTong.children.length - 3].querySelector("textarea");
+              const originalValue = targetTextTong.value;
+              const originalValueArr = originalValue.split("\n");
+              const thisValue = this.firstChild.textContent;
+
+              let tempString;
+              let tong = [];
+              for (let text of originalValueArr) {
+                if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
+                  tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
+                  tong.push('- ' + tempString);
+                }
+              }
+
+              targetTextTong.value = "<%item%> " + thisValue + "\n\n" + tong.join("\n");
+              targetTextTong.focus();
+              targetTextTong.selectionEnd = 0;
+              targetTextTong.parentElement.scroll(0, 0);
+
+              const removeTargets = document.querySelectorAll(".historyMenuItem");
+              for (let dom of removeTargets) {
+                dom.parentNode.removeChild(dom);
+              }
+            });
+
+            //text
+            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+            div_clone2.textContent = itemTargets[t];
+            div_clone2.classList.add("hoverDefault");
+            style = {
+              position: "absolute",
+              top: String(6) + ea,
+              left: String(0) + ea,
+              color: "#ffffff",
+              fontSize: String(14) + ea,
+              fontWeight: String(300),
+              width: "100%",
+              textAlign: "center",
+              cursor: "pointer",
+            };
+            for (let z in style) {
+              div_clone2.style[z] = style[z];
+            }
+            div_clone.appendChild(div_clone2);
+            menu_tong.appendChild(div_clone);
+          }
+
+          motherTong.appendChild(menu_tong);
+
+        }
+      });
+    }
+
     div_clone5.addEventListener("click", historyFocusEvent);
     div_clone4.appendChild(div_clone5);
 
@@ -1989,6 +2176,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
     textArea_clone.addEventListener("focus", historyFocusEvent);
     textArea_clone.addEventListener("blur", historyBlurEvent);
+    if (i === historyTongTarget.length - 1) {
+      textArea_clone.addEventListener("keydown", function (e) {
+        if (e.keyCode === 9) {
+          e.preventDefault();
+          this.blur();
+        }
+      });
+    }
 
     div_clone5.appendChild(textArea_clone);
     textAreas.push(textArea_clone);
@@ -2029,6 +2224,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const mother = historyTongTarget[0].dom.parentElement;
       let div_clone4, div_clone5, div_clone6;
       let textArea_clone;
+      let saveEventFunction;
 
       //contents box
       div_clone4 = GeneralJs.nodes.div.cloneNode(true);
@@ -2102,6 +2298,103 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone5.appendChild(textArea_clone);
       div_clone4.appendChild(div_clone5);
 
+      //save event
+      saveEventFunction = async function (e) {
+        try {
+          const targetValue = textArea_clone.value;
+          const totalParsingArr = targetValue.split("\n");
+
+          let indexArr;
+          let matrix;
+          let temp;
+          let tempString;
+          let vaildTong;
+          let item;
+
+          indexArr = [];
+          for (let t = 0; t < totalParsingArr.length; t++) {
+            if (/^\[/.test(totalParsingArr[t])) {
+              indexArr.push(t);
+            }
+          }
+
+          matrix = [];
+          for (let t = 1; t < indexArr.length; t++) {
+            temp = [];
+            for (let s = indexArr[t - 1] + 1; s < indexArr[t]; s++) {
+              if (totalParsingArr[s] !== '' && totalParsingArr[s] !== '\n' && totalParsingArr[s] !== ' ' && totalParsingArr[s] !== '  ') {
+                if (!/^\<\%item\%\>/.test(totalParsingArr[s]) && /[^ \n]/g.test(totalParsingArr[s].replace(/[\n ]/g, ''))) {
+                  tempString = totalParsingArr[s].trim().replace(/^- /g, '').replace(/^-/g, '').trim();
+                  temp.push('- ' + tempString);
+                } else if (/^\<\%item\%\>/.test(totalParsingArr[s])) {
+                  temp.push(totalParsingArr[s]);
+                }
+              }
+            }
+            matrix.push(temp);
+          }
+
+          temp = [];
+          for (let s = indexArr[indexArr.length - 1] + 1; s < totalParsingArr.length; s++) {
+            if (totalParsingArr[s] !== '' && totalParsingArr[s] !== '\n' && totalParsingArr[s] !== ' ' && totalParsingArr[s] !== '  ') {
+              if (!/^\<\%item\%\>/.test(totalParsingArr[s]) && /[^ \n]/g.test(totalParsingArr[s].replace(/[\n ]/g, ''))) {
+                tempString = totalParsingArr[s].trim().replace(/^- /g, '').replace(/^-/g, '').trim();
+                temp.push('- ' + tempString);
+              } else if (/^\<\%item\%\>/.test(totalParsingArr[s])) {
+                temp.push(totalParsingArr[s]);
+              }
+            }
+          }
+          matrix.push(temp);
+
+          for (let t = 0; t < matrix.length; t++) {
+
+            if (t !== 2 && t !== 3) {
+              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+            } else if (t === 2) {
+              vaildTong = matrix[t];
+              if (!/^\<\%item\%\>/.test(vaildTong[0])) {
+                alert("스타일링 범위 정의를 입력해주셔야 합니다! (스타일링 타이틀 우클릭)");
+                rInitialBox.click();
+                return;
+              } else {
+                if (!(/컨셉/g.test(vaildTong[1]) && /\:/g.test(vaildTong[1]))) {
+                  alert("선호 컨셉을 가장 앞줄에 적어주셔야 합니다! (형식 => - 선호 컨셉 : 컨셉명)");
+                  rInitialBox.click();
+                  return;
+                } else {
+                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+                }
+              }
+            } else if (t === 3) {
+              vaildTong = matrix[t];
+              if (!/^\<\%item\%\>/.test(vaildTong[0])) {
+                alert("시공 범위 정의를 입력해주셔야 합니다! (시공 타이틀 우클릭)");
+                rInitialBox.click();
+                return;
+              } else {
+                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+              }
+            }
+          }
+
+          if (this.textContent === "제작") {
+            await GeneralJs.ajaxPromise("", "/createRequestDocument");
+          }
+
+          GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
+            const dataArr = JSON.parse(res);
+            for (let i = 0; i < textAreas.length; i++) {
+              textAreas[i].value = dataArr[i];
+            }
+            rInitialBox.click();
+          });
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
       //button0
       div_clone5 = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -2135,13 +2428,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let j in style) {
         div_clone6.style[j] = style[j];
       }
-      div_clone6.addEventListener("click", async function (e) {
-        try {
-          await GeneralJs.ajaxPromise("", "/createRequestDocument");
-        } catch (e) {
-          console.log(e);
-        }
-      });
+      div_clone6.addEventListener("click", saveEventFunction);
       div_clone5.appendChild(div_clone6);
       div_clone4.appendChild(div_clone5);
 
@@ -2178,6 +2465,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let j in style) {
         div_clone6.style[j] = style[j];
       }
+      div_clone6.addEventListener("click", function (e) {
+        rInitialBox.click();
+      });
       div_clone5.appendChild(div_clone6);
       div_clone4.appendChild(div_clone5);
 
@@ -2214,6 +2504,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let j in style) {
         div_clone6.style[j] = style[j];
       }
+      div_clone6.addEventListener("click", saveEventFunction);
       div_clone5.appendChild(div_clone6);
       div_clone4.appendChild(div_clone5);
 

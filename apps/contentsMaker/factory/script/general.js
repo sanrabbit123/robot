@@ -722,7 +722,7 @@ Mother.prototype.lineMaker = function (xy, options = {}) {
   line.stroked = true;
   line.setEntirePath(xy);
   line.fillColor = new NoColor();
-  line.strokeColor = this.colorpick("#59af89");
+  line.strokeColor = this.colorpick("#2fa678");
   line.strokeCap = StrokeCap.ROUNDENDCAP;
   line.strokeJoin = StrokeJoin.ROUNDENDJOIN;
   line.strokeWidth = 1.25;
@@ -1230,7 +1230,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
   let total_arrBold, total_arrColor, numbers;
   total_arrBold = [];
   while (areaTextRef.contents.indexOf("<b%") !== -1) {
-    numbers = {}
+    numbers = {};
     numbers.start = areaTextRef.contents.indexOf("<b%");
     numbers.end = areaTextRef.contents.indexOf("%b>");
     numbers.length = numbers.end - numbers.start - 3;
@@ -1241,7 +1241,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
   // color
   total_arrColor = [];
   while (areaTextRef.contents.indexOf("<g%") !== -1) {
-    numbers = {}
+    numbers = {};
     numbers.start = areaTextRef.contents.indexOf("<g%");
     numbers.end = areaTextRef.contents.indexOf("%g>");
     numbers.length = numbers.end - numbers.start - 3;

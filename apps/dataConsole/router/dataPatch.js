@@ -2853,7 +2853,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     meetingDate: {
       name: "1차 미팅",
-      width: 100,
+      width: 170,
     },
     remainGuide: {
       name: "잔금 안내",

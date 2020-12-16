@@ -361,6 +361,7 @@ GeneralJs.prototype.generalCss = function () {
   const css = `
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
   *{margin:0;padding:0;transition:all 0.4s ease;font-family:'sandoll'}
+  *::-webkit-scrollbar{display:none;}
   input::placeholder {color:white;opacity:0.5;}
   body,div{font-size:0;color:#404040;margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}

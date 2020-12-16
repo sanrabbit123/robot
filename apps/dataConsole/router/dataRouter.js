@@ -1011,6 +1011,32 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
 DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
+  const stringFilter = function (raw) {
+    const originalValue = raw;
+    const originalValueArr = originalValue.split("\n");
+
+    let str;
+    let tempString;
+    let item = null;
+    let tong = [];
+
+    for (let text of originalValueArr) {
+      if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
+        tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
+        tong.push('- ' + tempString);
+      } else if (/^\<\%item\%\>/.test(text)) {
+        item = text;
+      }
+    }
+
+    if (item !== null) {
+      str = item + "\n\n" + tong.join("\n");
+    } else {
+      str = tong.join("\n");
+    }
+
+    return str.replace(/\&/g, ",");
+  }
   let obj = {};
   obj.link = [ "/getClientHistory", "/getProjectHistory" ];
   obj.func = async function (req, res) {
@@ -1029,12 +1055,12 @@ DataRouter.prototype.rou_post_getHistory = function () {
             responseArr.push('');
           }
         } else {
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
-          responseArr.push((historyObj.space === undefined ? '' : historyObj.space));
-          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling));
-          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct));
-          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget));
-          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress));
+          responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
+          responseArr.push((historyObj.space === undefined ? '' : stringFilter(historyObj.space)));
+          responseArr.push((historyObj.styling === undefined ? '' : stringFilter(historyObj.styling)));
+          responseArr.push((historyObj.construct === undefined ? '' : stringFilter(historyObj.construct)));
+          responseArr.push((historyObj.budget === undefined ? '' : stringFilter(historyObj.budget)));
+          responseArr.push((historyObj.progress === undefined ? '' : stringFilter(historyObj.progress)));
         }
 
       } else if (req.url === "/getProjectHistory") {
@@ -1047,10 +1073,10 @@ DataRouter.prototype.rou_post_getHistory = function () {
             responseArr.push('');
           }
         } else {
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history));
-          responseArr.push((historyObj.designer === undefined ? '' : historyObj.designer));
-          responseArr.push((historyObj.client === undefined ? '' : historyObj.client));
-          responseArr.push((historyObj.photo === undefined ? '' : historyObj.photo));
+          responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
+          responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
+          responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
+          responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
         }
 
       }
@@ -1438,7 +1464,7 @@ DataRouter.prototype.rou_post_createRequestDocument = function () {
   obj.func = async function (req, res) {
     try {
       const aiConsole = new AiConsole();
-      await aiConsole.cardToRequest("c2011_aa04s", "d2004_aa02s");
+      await aiConsole.cardToRequest("c2010_aa64s");
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {

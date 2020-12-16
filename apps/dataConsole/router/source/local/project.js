@@ -2354,6 +2354,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone4.style[j] = style[j];
     }
 
+    //title
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
     div_clone5.textContent = historyTongTarget[i].name;
     style = {
@@ -2366,12 +2367,15 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       background: "white",
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
+      cursor: "pointer",
     };
     for (let j in style) {
       div_clone5.style[j] = style[j];
     }
+    div_clone5.addEventListener("click", historyFocusEvent);
     div_clone4.appendChild(div_clone5);
 
+    //textarea tong
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
     div_clone5.classList.add("noScrollBar");
     style = {
@@ -2402,7 +2406,15 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
     textArea_clone.addEventListener("focus", historyFocusEvent);
     textArea_clone.addEventListener("blur", historyBlurEvent);
-
+    if (i === historyTongTarget.length - 1) {
+      textArea_clone.addEventListener("keydown", function (e) {
+        if (e.keyCode === 9) {
+          e.preventDefault();
+          this.blur();
+        }
+      });
+    }
+    
     div_clone5.appendChild(textArea_clone);
     textAreas.push(textArea_clone);
 

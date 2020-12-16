@@ -14,7 +14,7 @@ const AiConsole = function () {
   this.links.map = `${this.consoleSource}/map`;
 }
 
-AiConsole.prototype.cardToRequest = async function (cliid, desid) {
+AiConsole.prototype.cardToRequest = async function (cliid) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
@@ -24,12 +24,25 @@ AiConsole.prototype.cardToRequest = async function (cliid, desid) {
     let temp_scriptString;
     let sw = "stylingrequest";
     let client;
+    let projects, project;
 
     await this.general.static_setting();
 
-    client = await this.back.getClientById(cliid);
+    client = (await this.back.getClientById(cliid)).toNormal();
+    projects = await this.back.getProjectsByQuery({ cliid });
+    project = null;
+    for (let p of projects) {
+      if (p.desid !== '') {
+        project = p;
+        break;
+      }
+    }
+    if (project === null) {
+      throw new Error("there is no project");
+    }
+    client.project = project.toNormal();
+    client.designer = (await this.back.getDesignerById(project.desid)).toNormal();
     client.history = await this.back.getClientHistoryById(cliid);
-    client.designer = await this.back.getDesignerById(desid);
 
     resultDir = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
     if (!resultDir.includes(sw)) {
@@ -44,7 +57,7 @@ AiConsole.prototype.cardToRequest = async function (cliid, desid) {
     this.options.script_dir = `${this.links.factory}/script/console_maker`;
     temp_scriptString = await this.general.generator.console_maker.exec(this.options, sw);
     await this.general.startAdobe({
-      name: "homestylingRequestFrom" + cliid + "To" + desid,
+      name: "homestylingRequestFrom" + cliid + "To" + project.desid,
       data: client,
       script: temp_scriptString,
       app: "Illustrator",

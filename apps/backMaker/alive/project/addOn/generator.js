@@ -107,7 +107,7 @@ const widthTools = function (Project) {
       formGuide: dateToString(formGuide),
       formDateFrom: dateToString(formDateFrom),
       formDateTo: dateToString(formDateTo),
-      meetingDate: dateToString(meetingDate),
+      meetingDate: dateToString(meetingDate, true),
       method,
       percentage: String(percentage),
       calculationInfo: infoToString(calculationInfo),
