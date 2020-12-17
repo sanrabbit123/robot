@@ -14,8 +14,12 @@ def queryStringParsing(qs):
         dic[tempArr2[0]] = tempArr2[1]
     return dic
 
+@app.route('/test')
+def test():
+    return "테스트입니다."
+
 @app.route('/proposal')
-def index():
+def proposal():
     queryString = request.query_string.decode('utf-8')
 
     if queryString != '':
