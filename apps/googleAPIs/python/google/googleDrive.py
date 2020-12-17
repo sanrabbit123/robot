@@ -42,9 +42,7 @@ class GoogleDrive:
         fileArr = file.split("/")
         file_metadata = { 'name': fileArr[fileArr.__len__() - 1], 'parents': [ folder_id ] }
         media = MediaFileUpload(file, mimetype='image/jpeg')
-        result = self.app.files().create(body=file_metadata,
-                                            media_body=media,
-                                            fields='id').execute()
+        result = self.app.files().create(body=file_metadata, media_body=media, fields='id').execute()
         return dumps({ "id": result.get('id') })
 
 

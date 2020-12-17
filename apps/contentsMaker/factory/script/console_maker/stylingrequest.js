@@ -17,11 +17,13 @@ const StylingRequest = function (text) {
     offsetY: 630,
     bottom: -1641.76953125,
     top: -953.6494140625,
-    lastLineBottom: -1492.67409775648,
+    lastLineBottom: -1592.67409775648,
     lineHeight: 39.2854180031154,
+    lastWordingBottom: -1560,
   };
   this.lastArtboardNumber = 0;
   this.lastBottom = this.settings.top;
+  this.lines = [];
 
   const { project: { process: { contract: { remain: { calculation: { amount: { supply } } } } } } } = this.text;
   let matrix = [
@@ -44,13 +46,16 @@ const StylingRequest = function (text) {
         "- 디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
         "- 시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
         "- 시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
-        "- 기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+        "- 기존에 사용하시는 가구들 중 가져갈 가구와 버릴 가구 선택 및 배치 / 활용 제안드립니다.",
+        "- 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
         "- 디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
-        "- 생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
-        "",
-        "- 디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
-        "",
-        "- 제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
+        "- 생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 외관의 디자인 옵션을 의논하실 경우 전체 디자인을 고려하여 골라드립니다.",
+        "- 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
+        "- 디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다.",
+        "- 연계 업체의 제품 구매시, 할인 혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
+        "- 제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다.",
+        "- 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다.",
+        "- 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
       ]
     ],
     [
@@ -211,6 +216,8 @@ StylingRequest.refineArr = function (str) {
 StylingRequest.prototype.artboardMaker = function () {
   let currentArt, newArt;
   let rect;
+  let temp;
+  let top, left, width, height
 
   currentArt = app.activeDocument.artboards.getByName("ab" + String(this.lastArtboardNumber));
   rect = currentArt.artboardRect;
@@ -219,6 +226,15 @@ StylingRequest.prototype.artboardMaker = function () {
 
   newArt = app.activeDocument.artboards.add(rect);
   newArt.name = "ab" + String(this.lastArtboardNumber + 1);
+
+  top = this.doms.whiteBack.top;
+  left = this.doms.whiteBack.left + (this.lastArtboardNumber * this.settings.offsetY);
+  width = this.doms.whiteBack.width;
+  height = this.doms.whiteBack.height;
+  temp = app.activeDocument.pathItems.rectangle(top, left, width, height);
+  temp.fillColor = this.mother.colorpick("#ffffff");
+  temp.strokeColor = new NoColor();
+  temp.zOrder(ZOrderMethod.SENDTOBACK);
 
   this.lastArtboardNumber = this.lastArtboardNumber + 1;
 }
@@ -411,13 +427,22 @@ StylingRequest.prototype.readDoms = function () {
     this.doms.table.push(tempObj);
   }
 
-  //total targets
+  //wordings
   mainItems = main.pageItems;
   this.doms.wordings = [
     mainItems.getByName(StylingRequest.objectToQueryString({ target: 0, title: 0, order: 0 })),
     mainItems.getByName(StylingRequest.objectToQueryString({ target: 0, area: 0, order: 0 })),
     mainItems.getByName(StylingRequest.objectToQueryString({ target: 0, area: 1, order: 0 })),
   ];
+
+  //page number
+  this.doms.pageNumber = main.pageItems.getByName("pageNumber");
+
+  //last static wordings
+  this.doms.lastStatic = main.pageItems.getByName("lastStatic");
+
+  //white back
+  this.doms.whiteBack = main.pageItems.getByName("whiteBack");
 
   return this.doms;
 }
@@ -511,6 +536,7 @@ StylingRequest.prototype.domToLineArr = function (dom) {
     tempDom.contents = tempString;
     tempDom = tempDom.createOutline();
     tempObj.top = tempDom.top;
+    tempObj.bottom = tempDom.top - tempDom.height;
 
     tempObj.contents = dom.lines[i].contents;
     resultArr.push(tempObj);
@@ -523,8 +549,9 @@ StylingRequest.prototype.domToLineArr = function (dom) {
   return resultArr;
 }
 
-StylingRequest.prototype.colorPoint = function (dom) {
-  let boo = false;
+StylingRequest.prototype.colorPoint = function (dom, custom = false) {
+  let boo = custom;
+
   for (let i = 0; i < dom.lines.length; i++) {
     if (/^★/.test(dom.lines[i].contents)) {
       boo = true;
@@ -542,9 +569,11 @@ StylingRequest.prototype.colorPoint = function (dom) {
 StylingRequest.prototype.domLineCutSet = function (setArr) {
   const thisNum = setArr.length;
   let tempDom0, tempDom1, tempDom2;
+  let tempLine;
+  let tempArr0, tempArr1;
 
   if (thisNum === 2) {
-    const { lastBoo, originalArr, lastIndex, leftContents } = this.domLineCut(setArr[1]);
+    const { lastBoo, originalArr, lastIndex, leftContents, lastNoEmpty, previousArr } = this.domLineCut(setArr[1]);
 
     if (lastBoo) {
       this.artboardMaker();
@@ -552,9 +581,21 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       tempDom0 = setArr[0].duplicate();
       tempDom1 = setArr[1].duplicate();
 
-      tempDom1.contents = leftContents;
+      tempArr0 = leftContents.split("\n");
 
-      this.colorPoint(tempDom1);
+      if (tempArr0[0] === '') {
+
+        tempArr0.shift();
+
+        tempDom1.contents = tempArr0.join("\n");
+
+      } else {
+
+        tempDom1.contents = leftContents;
+
+      }
+
+      this.colorPoint(tempDom1, /^★/.test(lastNoEmpty));
 
       tempDom0.left = tempDom0.left + this.settings.offsetY;
       tempDom1.left = tempDom1.left + this.settings.offsetY;
@@ -567,14 +608,19 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       } else if (this.mother.return_bottom(tempDom1) > this.settings.bottom && this.mother.return_bottom(tempDom1) <= this.settings.lastLineBottom) {
         this.lastBottom = this.settings.top;
       } else {
-        this.mother.lineMaker([
+        tempLine = this.mother.lineMaker([
           [ tempDom0.left, this.mother.return_bottom(tempDom1) - this.settings.lineHeight ],
           [ tempDom1.left + tempDom1.width, this.mother.return_bottom(tempDom1) - this.settings.lineHeight ]
         ], {
           strokeColor: this.mother.colorpick("#dddddd"),
           strokeWidth: 0.5
         });
+        this.lines.unshift(tempLine);
         this.lastBottom = this.mother.return_bottom(tempDom1) - (this.settings.lineHeight * 2);
+      }
+
+      if (lastIndex === 0) {
+        setArr[0].remove();
       }
 
     } else {
@@ -584,21 +630,22 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       if (this.mother.return_bottom(setArr[1]) > this.settings.bottom && this.mother.return_bottom(setArr[1]) <= this.settings.lastLineBottom) {
         this.lastBottom = this.settings.top;
       } else {
-        this.mother.lineMaker([
+        tempLine = this.mother.lineMaker([
           [ setArr[0].left, this.mother.return_bottom(setArr[1]) - this.settings.lineHeight ],
           [ setArr[1].left + setArr[1].width, this.mother.return_bottom(setArr[1]) - this.settings.lineHeight ]
         ], {
           strokeColor: this.mother.colorpick("#dddddd"),
           strokeWidth: 0.5
         });
+        this.lines.unshift(tempLine);
         this.lastBottom = this.mother.return_bottom(setArr[1]) - (this.settings.lineHeight * 2);
       }
 
     }
 
   } else if (thisNum === 3) {
-    const { leftContents: leftContents0 } = this.domLineCut(setArr[1]);
-    const { lastBoo, originalArr, lastIndex, leftContents: leftContents1 } = this.domLineCut(setArr[2]);
+    const { leftContents: leftContents0, lastNoEmpty } = this.domLineCut(setArr[1]);
+    const { lastBoo, originalArr, lastIndex, leftContents: leftContents1, lastNoEmpty: lastNoEmpty1, previousArr } = this.domLineCut(setArr[2]);
 
     if (lastBoo) {
       this.artboardMaker();
@@ -607,11 +654,38 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       tempDom1 = setArr[1].duplicate();
       tempDom2 = setArr[2].duplicate();
 
-      tempDom1.contents = leftContents0;
-      tempDom2.contents = leftContents1;
+      tempArr0 = leftContents0.split("\n");
+      tempArr1 = leftContents1.split("\n");
+
+      if (tempArr0[0] === '' && tempArr1[0] !== '') {
+
+        tempArr0.shift();
+        tempArr0.unshift(lastNoEmpty);
+
+        tempDom1.contents = tempArr0.join("\n");
+        tempDom2.contents = leftContents1;
+
+      } else if (tempArr0[0] === '' && tempArr1[0] === '') {
+
+        tempArr0.shift();
+        tempArr1.shift();
+
+        tempDom1.contents = tempArr0.join("\n");
+        tempDom2.contents = tempArr1.join("\n");
+
+      } else {
+
+        tempDom1.contents = leftContents0;
+        tempDom2.contents = leftContents1;
+
+      }
 
       this.colorPoint(tempDom1);
-      this.colorPoint(tempDom2);
+      if (!/^★/.test(lastNoEmpty1) && !/^- /.test(lastNoEmpty1)) {
+        this.colorPoint(tempDom2, /^★/.test(previousArr[previousArr.length - 2]));
+      } else {
+        this.colorPoint(tempDom2, /^★/.test(lastNoEmpty1));
+      }
 
       tempDom0.left = tempDom0.left + this.settings.offsetY;
       tempDom1.left = tempDom1.left + this.settings.offsetY;
@@ -626,15 +700,21 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       } else if (this.mother.return_bottom(tempDom1) > this.settings.bottom && this.mother.return_bottom(tempDom1) <= this.settings.lastLineBottom) {
         this.lastBottom = this.settings.top;
       } else {
-        this.mother.lineMaker([
+        tempLine = this.mother.lineMaker([
           [ tempDom0.left, this.mother.return_bottom(tempDom1) - this.settings.lineHeight ],
           [ tempDom2.left + tempDom2.width, this.mother.return_bottom(tempDom1) - this.settings.lineHeight ]
         ], {
           strokeColor: this.mother.colorpick("#dddddd"),
           strokeWidth: 0.5
         });
+        this.lines.unshift(tempLine);
         this.lastBottom = this.mother.return_bottom(tempDom1) - (this.settings.lineHeight * 2);
       }
+
+      if (lastIndex === 0) {
+        setArr[0].remove();
+      }
+
     } else {
 
       this.colorPoint(setArr[1]);
@@ -643,13 +723,14 @@ StylingRequest.prototype.domLineCutSet = function (setArr) {
       if (this.mother.return_bottom(setArr[1]) > this.settings.bottom && this.mother.return_bottom(setArr[1]) <= this.settings.lastLineBottom) {
         this.lastBottom = this.settings.top;
       } else {
-        this.mother.lineMaker([
+        tempLine = this.mother.lineMaker([
           [ setArr[0].left, this.mother.return_bottom(setArr[1]) - this.settings.lineHeight ],
           [ setArr[2].left + setArr[2].width, this.mother.return_bottom(setArr[1]) - this.settings.lineHeight ]
         ], {
           strokeColor: this.mother.colorpick("#dddddd"),
           strokeWidth: 0.5
         });
+        this.lines.unshift(tempLine);
         this.lastBottom = this.mother.return_bottom(setArr[1]) - (this.settings.lineHeight * 2);
       }
 
@@ -663,6 +744,7 @@ StylingRequest.prototype.domLineCut = function (dom) {
   let resultContents;
   let lastBoo;
   let lastNoEmpty;
+  let previousArr;
 
   lastBoo = false;
   lastIndex = lineArr.length;
@@ -673,48 +755,32 @@ StylingRequest.prototype.domLineCut = function (dom) {
     }
   }
 
-  if (lastIndex !== lineArr.length - 1) {
-    resultContents = '';
-    for (let i = 0; i < lastIndex; i++) {
-      resultContents += lineArr[i].contents;
-      resultContents += "\n";
-      if (lineArr[i].contents !== '') {
-        lastNoEmpty = lineArr[i].contents;
-      }
-    }
-    resultContents = resultContents.slice(0, -1);
-    dom.contents = resultContents;
-
-    resultContents = '';
-    for (let i = lastIndex; i < lineArr.length; i++) {
-      if (i === lastIndex && lineArr[i].contents === '') {
-        resultContents += lastNoEmpty;
-      } else {
-        resultContents += lineArr[i].contents;
-      }
-      resultContents += "\n";
-    }
-    resultContents = resultContents.slice(0, -1);
-    leftContents = resultContents;
-  } else {
-
+  if (lastIndex === lineArr.length - 1 && lineArr[lineArr.length - 1].bottom >= this.settings.lastWordingBottom) {
     lastBoo = false;
-
-    resultContents = '';
-    for (let i = 0; i < lineArr.length; i++) {
-      resultContents += lineArr[i].contents;
-      resultContents += "\n";
-      if (lineArr[i].contents !== '') {
-        lastNoEmpty = lineArr[i].contents;
-      }
-    }
-    resultContents = resultContents.slice(0, -1);
-    dom.contents = resultContents;
-
-    leftContents = '';
   }
 
-  return { lastBoo, originalArr: lineArr, lastIndex, leftContents };
+  resultContents = '';
+  previousArr = [];
+  for (let i = 0; i < (lastBoo ? lastIndex : lineArr.length); i++) {
+    resultContents += lineArr[i].contents;
+    resultContents += "\n";
+    if (lineArr[i].contents !== '') {
+      lastNoEmpty = lineArr[i].contents;
+      previousArr.push(lineArr[i].contents);
+    }
+  }
+  resultContents = resultContents.slice(0, -1);
+  dom.contents = resultContents;
+
+  resultContents = '';
+  for (let i = lastIndex; i < lineArr.length; i++) {
+    resultContents += lineArr[i].contents;
+    resultContents += "\n";
+  }
+  resultContents = resultContents.slice(0, -1);
+  leftContents = lastBoo ? resultContents : '';
+
+  return { lastBoo, originalArr: lineArr, lastIndex, leftContents, lastNoEmpty, previousArr };
 }
 
 StylingRequest.prototype.copyWording = function (mode = 2) {
@@ -760,13 +826,36 @@ StylingRequest.prototype.copyWording = function (mode = 2) {
 
 StylingRequest.prototype.staticMaker = function () {
   let tempArr;
-
   for (let i = 0; i < this.static.length; i++) {
     tempArr = this.copyWording(2);
     tempArr[0].contents = this.static[i][0][0];
     tempArr[1].contents = this.static[i][1].join("\n");
     this.domLineCutSet(tempArr);
   }
+  if (this.lines.length === 5) {
+    this.lines[0].remove();
+  }
+}
+
+StylingRequest.prototype.setPageNumber = function () {
+  const { pageNumber, lastStatic } = this.doms;
+  let tempDom;
+  for (let i = 0; i < this.lastArtboardNumber + 1; i++) {
+    tempDom = pageNumber.duplicate();
+    tempDom.left = tempDom.left + (this.settings.offsetY * i);
+    tempDom.contents = String(i + 1);
+  }
+
+  lastStatic.left = lastStatic.left + (this.settings.offsetY * this.lastArtboardNumber);
+
+  if (this.lastBottom >= -1527.37037461361 && this.lastBottom < this.settings.top) {
+    tempDom.remove();
+  } else {
+    lastStatic.remove();
+  }
+
+  this.colorPoint(this.doms.wordings[1]);
+  this.colorPoint(this.doms.wordings[2]);
 
 }
 
@@ -803,8 +892,8 @@ ExecMain.prototype.start = function (dayString) {
   this.request.intoClientHistory();
   this.request.staticMaker();
 
+  this.request.setPageNumber();
 
-
-  // this.fileSave();
-  // app.activeDocument.close();
+  this.fileSave();
+  app.activeDocument.close();
 }

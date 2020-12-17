@@ -1462,11 +1462,11 @@ DataRouter.prototype.rou_post_createRequestDocument = function () {
   let obj = {};
   obj.link = "/createRequestDocument";
   obj.func = async function (req, res) {
+    const aiConsole = new AiConsole();
     try {
-      const aiConsole = new AiConsole();
-      await aiConsole.cardToRequest("c2010_aa64s");
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ "message": "success" }));
+      const resultObj = await aiConsole.cardToRequest(req.body.id);
+      res.send(JSON.stringify(resultObj));
     } catch (e) {
       console.log(e);
     }

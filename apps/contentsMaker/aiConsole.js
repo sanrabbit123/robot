@@ -7,6 +7,7 @@ const AiConsole = function () {
   this.back = new BackMaker();
   this.text = {};
   this.options = this.general.options;
+  this.options.dayString = this.mother.todayMaker("year");
   this.consoleSource = `${process.cwd()}/apps/dataConsole/router/source/svg`;
   this.links = this.general.links;
   this.links.svgTong = `${this.consoleSource}/svgTong`;
@@ -19,12 +20,15 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
   const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
   try {
+    const gDrive = this.mother.googleSystem("drive");
+    const folderId = "1yFU5RpFklRAqSwQDnVOL61IKFY7Y9Voa";
     let resultDir;
     let resultDirSw;
     let temp_scriptString;
     let sw = "stylingrequest";
     let client;
     let projects, project;
+    let resultLink;
 
     await this.general.static_setting();
 
@@ -38,8 +42,12 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
       }
     }
     if (project === null) {
-      throw new Error("there is no project");
+      return { "alert": "확인되는 프로젝트가 없습니다!" };
     }
+    if (project.process.contract.meeting.date.getFullYear() < 1900) {
+      return { "alert": "현장 미팅에 대한 정보가 없습니다!" };
+    }
+
     client.project = project.toNormal();
     client.designer = (await this.back.getDesignerById(project.desid)).toNormal();
     client.history = await this.back.getClientHistoryById(cliid);
@@ -64,7 +72,16 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
       end: false,
     });
 
-    // shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
+    resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "/result/" + sw ]);
+    for (let i of resultDir) { if (i !== `.DS_Store`) {
+      resultLink = await gDrive.upload_andView(folderId, this.options.home_dir + "/result/" + sw + "/" + i);
+    }}
+
+    await this.mother.slack_bot.chat.postMessage({ text: `${client.designer.designer} 실장님께 보낼, ${client.name} 고객님 홈스타일링 의뢰서가 완료되었습니다! 확인부탁드립니다! : ${resultLink}`, channel: `#300_designer` });
+
+    shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
+
+    return { "alert": "의뢰서가 제작되었습니다!", "link": resultLink };
 
   } catch (e) {
     console.log(e);

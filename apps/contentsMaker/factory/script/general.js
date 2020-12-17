@@ -731,6 +731,7 @@ Mother.prototype.lineMaker = function (xy, options = {}) {
       line[i] = options[i];
     }
   }
+  return line;
 }
 
 Mother.prototype.deleteWithout = function (itemName) {

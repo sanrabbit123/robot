@@ -1846,10 +1846,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("contextmenu", async function (e) {
-    e.preventDefault();
-    await GeneralJs.ajaxPromise("cliid=" + thisCase.cliid, "/createRequestDocument");
-  });
   historyBox.appendChild(div_clone3);
 
   //history text box tong
@@ -1885,9 +1881,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       for (let { dom } of historyTongTarget) {
         if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(8) + "% - " + String(historyTargetHeightConst) + ea + ")";
+          dom.style.height = "calc(" + String(5) + "% - " + String(historyTargetHeightConst) + ea + ")";
         } else {
-          dom.style.height = "calc(" + String(100 - (8 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+          this.parentElement.scroll(0, 0);
+          dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
         }
       }
       this.style.color = "#202020";
@@ -2019,6 +2016,17 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let div_clone, div_clone2;
           let style;
           let ea = "px";
+
+          const thisIndex = i;
+          for (let { dom } of historyTongTarget) {
+            if (Number(dom.getAttribute("index")) !== thisIndex) {
+              dom.style.height = "calc(" + String(5) + "% - " + String(historyTargetHeightConst) + ea + ")";
+            } else {
+              this.parentElement.scroll(0, 0);
+              dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+            }
+          }
+          this.style.color = "#202020";
 
           if (i === 2) {
             itemTargets = [
@@ -2310,6 +2318,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let tempString;
           let vaildTong;
           let item;
+          let createRequestDocumentResponse;
 
           indexArr = [];
           for (let t = 0; t < totalParsingArr.length; t++) {
@@ -2379,7 +2388,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           if (this.textContent === "제작") {
-            await GeneralJs.ajaxPromise("", "/createRequestDocument");
+            createRequestDocumentResponse = JSON.parse(await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]], "/createRequestDocument"));
+            window.alert(createRequestDocumentResponse.alert);
+            if (createRequestDocumentResponse.link !== undefined) {
+              window.open(createRequestDocumentResponse.link, "_blank");
+            }
           }
 
           GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
