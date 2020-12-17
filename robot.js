@@ -282,7 +282,7 @@ Robot.prototype.launching = async function () {
 
       //flask install
       } else if (re === "flaskInstall" || re === "9") {
-        console.log(`python3 -m venv .;source ./bin/activate;pip3 install flask;pip3 install gunicorn;`);
+        console.log(`python3 -m venv .;source ./bin/activate;pip3 install flask;pip3 install gunicorn;pip3 install requests;pip3 install bs4;`);
         process.exit();
 
       //exit
