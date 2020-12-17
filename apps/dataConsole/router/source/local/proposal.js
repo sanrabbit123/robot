@@ -4319,6 +4319,9 @@ ProposalJs.prototype.launching = async function () {
     left.style.display = 'none';
     right.style.display = 'none';
 
+    this.mother.below.removeChild(this.mother.belowButtons.moveArea.left);
+    this.mother.below.removeChild(this.mother.belowButtons.moveArea.right);
+
     this.cssInjection();
     this.totalInitial();
     this.domBox = await this.firstProcess();

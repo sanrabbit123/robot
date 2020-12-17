@@ -1174,6 +1174,9 @@ DashboardJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
+    this.mother.below.removeChild(this.mother.belowButtons.moveArea.left);
+    this.mother.below.removeChild(this.mother.belowButtons.moveArea.right);
+
     this.spreadMatrix();
 
   } catch (e) {

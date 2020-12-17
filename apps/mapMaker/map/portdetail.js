@@ -82,6 +82,11 @@ module.exports = {
         "src": "room_furniture_3rspot284_111310.svg"
       },
       {
+        "wording": "Fitness Room",
+        "value": "fitnessroom",
+        "src": ""
+      },
+      {
         "wording": "Graphic & Stuff",
         "value": "graphicandstuff",
         "src": "room_graphicandstuff_6rspot005_111310.svg"

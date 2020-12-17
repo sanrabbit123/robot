@@ -2608,6 +2608,7 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
 
 ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
+  const { standard, info } = DataPatch.clientWhiteViewStandard();
   return function () {
     const thisCase = { ...instance.cases[index], index };
     let div_clone;
@@ -2696,6 +2697,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     instance.whiteContentsMaker(thisCase, div_clone);
     instance.whiteBox.contentsBox = div_clone;
     instance.whiteBox.index = index;
+    instance.whiteBox.id = thisCase[standard[1]];
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
   }
@@ -3692,6 +3694,44 @@ ClientJs.prototype.makeNotionEvent = function (id, index) {
   }
 }
 
+ClientJs.prototype.whiteResize = function () {
+  const instance = this;
+  this.resizeStack = 0;
+  this.resizeFrom = 0;
+  this.resizePopup = 0;
+  const resizeDebounceEvent = function () {
+    let timeout;
+    const reEvent = function () {
+      if (instance.whiteBox !== undefined && instance.whiteBox !== null) {
+        if (instance.whiteBox.id !== undefined) {
+          window.location.search = "cliid=" + instance.whiteBox.id;
+        } else {
+          window.location.reload();
+        };
+      }
+      instance.resizeStack = 0;
+    }
+    let immediate = null;
+    return function (e) {
+      if (instance.resizeStack === 0) {
+        instance.resizeStack = 1;
+        instance.resizeFrom = window.innerWidth;
+      }
+      let context = this;
+      let args = arguments;
+      function later() {
+        timeout = null;
+        if (!immediate) { reEvent.apply(context, args); };
+      }
+      let callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, 250);
+      if (callNow) { reEvent.apply(context, args); };
+    }
+  }
+  window.addEventListener('resize', resizeDebounceEvent());
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -3702,6 +3742,7 @@ ClientJs.prototype.launching = async function () {
     this.addTransFormEvent();
     this.addSearchEvent();
     this.addExtractEvent();
+    this.whiteResize();
 
     const getObj = GeneralJs.returnGet();
     let getTarget;

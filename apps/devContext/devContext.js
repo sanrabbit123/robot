@@ -1206,8 +1206,10 @@ class DevContext extends Array {
       }
 
 
-      const aiConsole = new AiConsole();
-      await aiConsole.cardToRequest("c2010_aa64s");
+      // const aiConsole = new AiConsole();
+      // await aiConsole.cardToRequest("c2010_aa64s");
+
+
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
@@ -1216,20 +1218,19 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "이초록";
-      // const pid = "p69";
-      // const rid = "re064";
+      // const client = "임호진";
+      // const pid = "p70";
+      // const rid = "re065";
       // const links = [
-      //   "https://docs.google.com/document/d/1QiOasB0piHrKZRjyVA7kjsKT1U3pBhRJxPoSH2wJ_7g/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1EQ2UuYKRPK6nwnO6g7gy3ka1WYFKQT1zu5sxMz_3roE/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1AYvgzbhmNnOKPEDqDZ2HvOF7E0FS1DVd?usp=sharing",
+      //   "https://docs.google.com/document/d/1Gk14m3PxfPyiflalrIUuRXQx26oamHdj2OUcS_zcwzY/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1oCZHIWKviV-WY4fZdfLeol8USJE2RSkwYYZN-YPeHI4/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1DYOD491yhD-Vmn5BXvoKacl3HuO-xWim?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
       //   "https://home-liaison.com/revdetail.php?qqq=" + rid,
       // ];
       // let channel;
-
 
       // 1
       // channel = "#502_sns_contents";
@@ -1243,18 +1244,14 @@ class DevContext extends Array {
       // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
 
 
-
-
       // card setting
 
       // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
-
 
       // kakao token
 
       // const app = new KakaoTalk();
       // await app.generateToken();
-
 
       // contents backup
 
@@ -1263,7 +1260,6 @@ class DevContext extends Array {
       // for (let c of contents) {
       //   await MONGOC.db(`miro81`).collection(`contents`).insertOne(c);
       // }
-
 
       // past to mongo
 
@@ -1280,7 +1276,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p69");
+      // await this.spellCheck("p70");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

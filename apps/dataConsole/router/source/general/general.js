@@ -352,6 +352,10 @@ GeneralJs.prototype.belowButtons = {
     extractIcon: null,
     talkIcon: null,
   },
+  moveArea: {
+    left: null,
+    right: null,
+  }
 }
 
 GeneralJs.prototype.totalContents = document.getElementById("totalcontents");
@@ -933,6 +937,112 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.naviIcons.service.style.opacity = String(0.4);
   // this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
   // this.belowButtons.sub.folder.style.opacity = String(0.4);
+
+  //move right area
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "block",
+    position: "fixed",
+    background: "transparent",
+    top: String(0) + ea,
+    right: String(0) + ea,
+    width: String(15) + ea,
+    height: "calc(100% - " + String(this.belowHeight) + ea + ")",
+    cursor: "e-resize",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.addEventListener("mouseenter", function (e) {
+    if (GeneralJs.timeouts["scrollXAreaLeftInterval"] === undefined || GeneralJs.timeouts["scrollXAreaLeftInterval"] === null) {
+      GeneralJs.timeouts["scrollXAreaLeftInterval"] = window.setInterval(function () {
+        const targets = document.querySelectorAll(".moveTarget");
+        const ea = "px";
+        const translateFunc = function (past) {
+          const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
+          return ("translateX(" + String(newValue) + ea + ")");
+        }
+        for (let target of targets) {
+          if (target.style.transform === '') {
+            target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
+          } else {
+            target.style.transform = translateFunc(target.style.transform);
+          }
+          if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+            target.style.transform = "translateX(0px)";
+            window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
+            GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+          } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+            target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+            window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
+            GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+          }
+        }
+      }, 400);
+    }
+  });
+  div_clone2.addEventListener("mouseleave", function () {
+    if (GeneralJs.timeouts["scrollXAreaLeftInterval"] !== undefined) {
+      window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
+      GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+    }
+  })
+  this.belowButtons.moveArea.right = div_clone2;
+  this.below.appendChild(div_clone2);
+
+
+  //move left area
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "block",
+    position: "fixed",
+    background: "transparent",
+    top: String(0) + ea,
+    left: String(210) + ea,
+    width: String(15) + ea,
+    height: "calc(100% - " + String(this.belowHeight) + ea + ")",
+    cursor: "w-resize",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.addEventListener("mouseenter", function (e) {
+    if (GeneralJs.timeouts["scrollXAreaRightInterval"] === undefined || GeneralJs.timeouts["scrollXAreaRightInterval"] === null) {
+      GeneralJs.timeouts["scrollXAreaRightInterval"] = window.setInterval(function () {
+        const targets = document.querySelectorAll(".moveTarget");
+        const ea = "px";
+        const translateFunc = function (past) {
+          const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
+          return ("translateX(" + String(newValue) + ea + ")");
+        }
+        for (let target of targets) {
+          if (target.style.transform === '') {
+            target.style.transform = "translateX(" + String(move) + ea + ")";
+          } else {
+            target.style.transform = translateFunc(target.style.transform);
+          }
+          if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+            target.style.transform = "translateX(0px)";
+            window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
+            GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+          } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+            target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+            window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
+            GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+          }
+        }
+      }, 400);
+    }
+  });
+  div_clone2.addEventListener("mouseleave", function () {
+    if (GeneralJs.timeouts["scrollXAreaRightInterval"] !== undefined) {
+      window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
+      GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+    }
+  })
+  this.belowButtons.moveArea.left = div_clone2;
+  this.below.appendChild(div_clone2);
+
 }
 
 GeneralJs.prototype.memberView = function () {
