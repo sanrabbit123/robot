@@ -1940,11 +1940,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
             style = {
               position: "absolute",
-              top: String(((height * (GeneralJs.isMac() ? 1.9 : 1)) * (i + 1)) - top) + ea,
+              top: String(((height * 1.9) * (i + 1)) - top) + ea,
               left: String(0) + ea,
               width: String(width) + ea,
-              paddingTop: String(height * 0.3) + ea,
-              height: String(height * 1.4) + ea,
+              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.6)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.1)) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
