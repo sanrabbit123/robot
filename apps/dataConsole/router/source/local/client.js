@@ -1319,7 +1319,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (12 / 60)) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (9 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
   };
