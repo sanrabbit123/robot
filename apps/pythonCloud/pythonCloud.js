@@ -5,23 +5,24 @@ const PythonCloud = function () {
   this.dir = process.cwd() + "/apps/pythonCloud";
   this.tong = this.dir + "/tong";
   this.formidable = require('formidable');
+  this.pythonApp = this.dir + "/python/app.py";
 }
 
 PythonCloud.firstDo = {
-  proposal: true,
+  illustrator: true,
   notion: true,
   analytics: true,
 };
 
 PythonCloud.timeout = {
-  proposal: null,
+  illustrator: null,
   notion: null,
   analytics: null,
 };
 
-PythonCloud.prototype.routingCloud = function () {
+PythonCloud.prototype.routingCloud = function (macAddress = null) {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
+  const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem } = this.mother;
   let funcObj = {};
 
   //POST - mongo to notion
@@ -147,6 +148,110 @@ PythonCloud.prototype.routingCloud = function () {
     }
   }
 
+  funcObj.post_toAiServer = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        if (!err) {
+          let tongName = "illustrator";
+          let targetTong = `${instance.tong}/${tongName}`;
+          let tongBoo = false;
+          let tongDir;
+          let targetTongList;
+
+          const zeroAddition = function (number) {
+            if (number < 10) {
+              return `0${String(number)}`;
+            } else {
+              return String(number);
+            }
+          }
+          const objToQuery = function (obj) {
+            let str = '';
+            for (let i in obj) {
+              str += i.replace(/[\=\&]/g, '');
+              str += '=';
+              str += obj[i].replace(/[\=\&]/g, '');
+              str += '&';
+            }
+            return str.slice(0, -1);
+          }
+          const today = new Date();
+          const todayString = `${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
+
+          //make tong
+          tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          tongBoo = tongDir.includes(tongName);
+          if (!tongBoo) {
+            shell.exec(`mkdir ${shellLink(targetTong)};`);
+          }
+
+          //clean target tong
+          targetTongList = await fileSystem(`readDir`, [ targetTong ]);
+          if (PythonCloud.firstDo[tongName]) {
+            for (let j of targetTongList) {
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${j};`);
+            }
+          }
+
+          //write stack
+          for (let i = 0; i < targetTongs.length; i++) {
+            await fileSystem(`write`, [ targetTong + "/" + tongName + "_order_" + todayString + ".json", JSON.stringify(fields) ]);
+            PythonCloud.firstDo[tongName] = false;
+          }
+
+          //debounce clean
+          if (PythonCloud.timeout[tongName] !== null) {
+            clearTimeout(PythonCloud.timeout[tongName]);
+            PythonCloud.timeout[tongName] = null;
+          }
+
+          //debounce timeout : illustrator
+          PythonCloud.timeout.illustrator = setTimeout(async function () {
+            const tongDir = await fileSystem(`readDir`, [ targetTong ]);
+            if (macAddress !== null) {
+              const targetIp = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
+              let targetJsons;
+
+              targetJsons = [];
+              for (let i of tongDir) {
+                if (i !== `.DS_Store`) {
+                  targetJsons.push(JSON.parse(await fileSystem(`readString`, [ targetTong + "/" + i ])));
+                }
+              }
+
+              for (let i of targetJsons) {
+                await requestSystem("http://" + targetIp + ":8080/illustrator?" + objToQuery(i));
+              }
+
+            }
+            for (let i of tongDir) {
+              shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
+            }
+            PythonCloud.firstDo.illustrator = true;
+            PythonCloud.timeout.illustrator = null;
+          }, 2000);
+
+          //end
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send("done");
+
+        } else {
+          slack_bot.chat.postMessage({ text: `파이선 클라우드 문제 생김 ${err}`, channel: `#error_log` });
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: `파이선 클라우드 문제 생김 ${e}`, channel: `#error_log` });
+      console.log(e);
+    }
+  }
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -178,21 +283,18 @@ PythonCloud.prototype.serverLaunching = async function () {
       throw new Error("invalid address");
     }
 
-    console.log(address)
-
     //set router
     let get, post, router, inner;
 
-    router = this.routingCloud();
+    console.log(address);
 
     if (address.host !== "localhost") {
       inner = address.ip.inner;
+      router = this.routingCloud(address.polling.mac);
     } else {
       inner = address.polling.inner;
+      router = this.routingCloud(null);
     }
-
-    console.log(inner)
-
 
     get = router.get;
     post = router.post;

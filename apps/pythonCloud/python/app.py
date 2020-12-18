@@ -61,7 +61,7 @@ try:
 
     if argv[1] == 'getIp':
         app = IpScan()
-        ip = app.getIpFromMac(sys.argv[2])
+        ip = app.getIpFromMac(data["macAddress"])
         print(dumps({ "ip": ip }))
 
 except Exception as e:
