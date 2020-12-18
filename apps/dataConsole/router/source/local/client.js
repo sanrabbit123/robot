@@ -1319,7 +1319,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (6 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
   };
@@ -1337,7 +1337,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     color: "#2fa678",
     fontSize: String(titleFontSize * (19 / 42)) + ea,
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (13 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * 3) + ea,
     cursor: "pointer",
   };
@@ -1992,7 +1992,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone5.textContent = historyTongTarget[i].name;
     style = {
       position: "absolute",
-      top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
+      top: String(((fontSize * (GeneralJs.isMac() ? (5 / 15.3027) : (4 / 15.3027))) + visualSpecificMarginTop) * -1) + ea,
       left: String(fontSize * (2 / 15.3027) * -1) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(600),

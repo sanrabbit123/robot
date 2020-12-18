@@ -1579,7 +1579,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (12 / 60)) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (6 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
   };
   for (let i in style) {
@@ -1596,7 +1596,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     color: "#2fa678",
     fontSize: String(titleFontSize * (19 / 42)) + ea,
-    bottom: String(leftMargin * (17 / 60)) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * 3) + ea,
   };
   for (let i in style) {
