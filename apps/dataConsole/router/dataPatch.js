@@ -1740,7 +1740,7 @@ DataPatch.prototype.designerMap = function () {
       width: "100%",
       height: "89%",
       left: String(0) + ea,
-      top: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
       outline: String(0),
       border: String(0),
