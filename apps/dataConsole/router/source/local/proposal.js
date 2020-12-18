@@ -3648,7 +3648,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-left: 6px;
     margin-right: 6px;
-    top: ${GeneralJs.isMac() ? String(11) : String(13)}px;
+    top: ${GeneralJs.isMac() ? String(12) : String(13)}px;
   }
 
   .pp_designer_selected_box_contents_selection{
@@ -3657,7 +3657,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 300;
     color: #aaaaaa;
     width: 100%;
-    height: 87%;
+    height: ${GeneralJs.isMac() ? String(87) : String(97)}%;
     justify-content: center;
     align-items: center;
     cursor:pointer;
@@ -3795,7 +3795,7 @@ ProposalJs.prototype.cssInjection = function () {
     border-radius: 4px;
     color: #fff;
     font-size: 14px;
-    padding-bottom: 3px;
+    padding-bottom: ${GeneralJs.isMac() ? String(3) : String(0)}px;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -4149,7 +4149,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: inline-block;
     width: 86px;
     position: absolute;
-    top: 6px;
+    top: ${GeneralJs.isMac() ? String(6) : String(7)}px;
     color: #59af89;
   }
 
@@ -4157,7 +4157,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-size: 14px;
     display: inline-block;
     font-weight: 600;
-    padding-top: 3px;
+    padding-top: ${GeneralJs.isMac() ? String(3) : String(4)}px;
     position: absolute;
     margin-left: 4px;
     width: 39px;
@@ -4174,10 +4174,10 @@ ProposalJs.prototype.cssInjection = function () {
     position: absolute;
     top: 0px;
     background: #f7f7f7;
-    height: calc(100% - 5px);
+    height: calc(100% - ${GeneralJs.isMac() ? String(5) : String(6)}px);
     width: calc(100% - 245px);
     padding-left: 11px;
-    padding-top: 4px;
+    padding-top: ${GeneralJs.isMac() ? String(4) : String(5)}px;
     border-radius: 5px;
     overflow: scroll;
     font-weight: 300;
@@ -4206,7 +4206,7 @@ ProposalJs.prototype.cssInjection = function () {
     text-align: center;
     box-sizing: border-box;
     top: 0px;
-    padding-top: 6px;
+    padding-top: ${GeneralJs.isMac() ? String(6) : String(7)}px;
     border-radius: 5px;
   }
 
@@ -4219,7 +4219,7 @@ ProposalJs.prototype.cssInjection = function () {
     right: 7px;
     top: 38px;
     width: 81px;
-    height: 184px;
+    height: ${GeneralJs.isMac() ? String(184) : String(187)}px;
     background: white;
     z-index: 2;
     border-radius: 5px;
