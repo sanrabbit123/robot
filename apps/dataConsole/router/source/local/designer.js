@@ -1097,7 +1097,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (6 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
   };
   for (let i in style) {

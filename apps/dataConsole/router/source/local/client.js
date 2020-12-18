@@ -1319,7 +1319,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (6 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
   };
@@ -1397,7 +1397,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     hInitial.style[i] = style[i];
   }
   hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (10 / 60)) + ea;
+  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
   div_clone2.appendChild(hInitial);
 
   //h initial button
@@ -1419,8 +1419,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     rInitial.style[i] = style[i];
   }
-  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (35.5 / 60))) + ea;
-  rInitial.style.width = String(leftMargin * (9.7 / 60)) + ea;
+  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (GeneralJs.isMac() ? (35.5 / 60) : (36 / 60)))) + ea;
+  rInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (9.7 / 60) : (10.7 / 60))) + ea;
   div_clone2.appendChild(rInitial);
 
   //r initial button
@@ -2432,7 +2432,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone6.textContent = "제작";
       style = {
         position: "absolute",
-        top: String(4) + ea,
+        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(15) + ea,
         fontSize: String(fontSize * 0.92) + ea,
         fontWeight: String(600),
@@ -2469,7 +2469,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone6.textContent = "취소";
       style = {
         position: "absolute",
-        top: String(4) + ea,
+        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(15) + ea,
         fontSize: String(fontSize * 0.92) + ea,
         fontWeight: String(600),
@@ -2508,7 +2508,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone6.textContent = "저장";
       style = {
         position: "absolute",
-        top: String(4) + ea,
+        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(15) + ea,
         fontSize: String(fontSize * 0.92) + ea,
         fontWeight: String(600),

@@ -1579,7 +1579,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (6 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
   };
   for (let i in style) {
@@ -1655,7 +1655,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     hInitial.style[i] = style[i];
   }
   hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (10 / 60)) + ea;
+  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
   div_clone2.appendChild(hInitial);
 
   //h initial button
@@ -2360,7 +2360,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone5.textContent = historyTongTarget[i].name;
     style = {
       position: "absolute",
-      top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
+      top: String(((fontSize * (GeneralJs.isMac() ? (5 / 15.3027) : (4 / 15.3027))) + visualSpecificMarginTop) * -1) + ea,
       left: String(fontSize * (2 / 15.3027) * -1) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(600),
