@@ -2822,7 +2822,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       paddingRight: String(12) + ea,
       fontSize: String(titleFontSize) + ea,
       left: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop) + ea,
+      top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
       fontWeight: String(600),
       background: "#f7f7f7",
     };
@@ -2875,7 +2875,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       contentsBoxDetailProid = GeneralJs.nodes.div.cloneNode(true);
       contentsBoxDetailProidStyle = {
         position: "absolute",
-        top: String(6.5) + ea,
+        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(contentsBoxDetailContentsMargin) + ea,
         fontSize: String(contentsBoxDetailFontSize) + ea,
         fontWeight: String(200),
@@ -2892,7 +2892,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       contentsBoxDetailName = GeneralJs.nodes.div.cloneNode(true);
       contentsBoxDetailNameStyle = {
         position: "absolute",
-        top: String(6.5) + ea,
+        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, proid) * 0.65) + (contentsBoxDetailContentsMargin * 2)) + ea,
         fontSize: String(contentsBoxDetailFontSize) + ea,
         fontWeight: String(500),
@@ -2924,7 +2924,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       contentsBoxDetailDate = GeneralJs.nodes.div.cloneNode(true);
       contentsBoxDetailDateStyle = {
         position: "absolute",
-        top: String(6.5) + ea,
+        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         right: String((GeneralJs.calculationWordWidth(contentsBoxDetailFontSize, amount) * 0.81) + (contentsBoxDetailContentsMargin * 2)) + ea,
         fontSize: String(contentsBoxDetailFontSize) + ea,
         fontWeight: String(200),
@@ -2941,7 +2941,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       contentsBoxDetailAmount = GeneralJs.nodes.div.cloneNode(true);
       contentsBoxDetailAmountStyle = {
         position: "absolute",
-        top: String(6.5) + ea,
+        top: String(6.5 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         right: String(contentsBoxDetailContentsMargin) + ea,
         fontSize: String(contentsBoxDetailFontSize) + ea,
         fontWeight: String(500),
@@ -2971,7 +2971,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
       position: "absolute",
       fontSize: String(titleFontSize + 4) + ea,
       right: String(matrixBoxMargin) + ea,
-      bottom: String(titleTop + (margin / 2) - 2) + ea,
+      bottom: String(titleTop + (margin / 2) - 2 +  + (GeneralJs.isMac() ? 0 : -4)) + ea,
       fontWeight: String(200),
       background: "#f7f7f7",
     };
@@ -3103,7 +3103,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   inputStyle = {
     position: "absolute",
     left: String(0) + ea,
-    top: String(40) + ea,
+    top: String(40 + (GeneralJs.isMac() ? 0 : 5)) + ea,
     width: String(500) + ea,
     height: String(30) + ea,
     fontSize: String(29) + ea,
