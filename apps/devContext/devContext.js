@@ -1229,7 +1229,7 @@ class DevContext extends Array {
       // MONGOCTEST.close();
 
 
-      let response = await this.mother.requestSystem("http://" + "172.30.1.39" + ":8080/illustrator?abc=dd");
+      let response = await this.mother.requestSystem("http://" + "172.30.1.17" + ":3000/toAiServer", { test: "subject" });
       console.log(response);
 
 
