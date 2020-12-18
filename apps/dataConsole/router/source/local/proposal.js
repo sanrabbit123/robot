@@ -3559,8 +3559,8 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 600;
     display: inline-flex;
     padding: 13px;
-    padding-top: 4px;
-    padding-bottom: 5px;
+    padding-top: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
+    padding-bottom: ${GeneralJs.isMac() ? String(5) : String(4.5)}px;
     height: 16px;
     background: white;
     margin: 2px;
@@ -3586,7 +3586,7 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_contents_service{
     font-size: 1.4vh;
     background: transparent;
-    padding-top: 0;
+    padding-top: ${GeneralJs.isMac() ? String(0) : String(0.2)}vw;
     position: relative;
     display: inline-block;
     text-align: initial;
@@ -3619,7 +3619,6 @@ ProposalJs.prototype.cssInjection = function () {
     width: 100%;
     height: 100%;
     justify-content: center;
-    align-items: center;
   }
 
   .pp_designer_selected_box_contents_money_text,.pp_designer_selected_box_contents_money_text2{
@@ -3628,6 +3627,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 700;
     color: #606060;
     padding-bottom: 3px;
+    top: ${GeneralJs.isMac() ? String(11) : String(13)}px;
   }
 
   .pp_designer_selected_box_contents_money_input{
