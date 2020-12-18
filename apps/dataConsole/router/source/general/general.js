@@ -328,7 +328,6 @@ GeneralJs.moneyBoo = function (column) {
   }
 }
 
-
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
@@ -356,6 +355,10 @@ GeneralJs.prototype.belowButtons = {
     left: null,
     right: null,
   }
+}
+
+GeneralJs.isMac = function () {
+  return !/Windows/gi.test(window.navigator.userAgent);
 }
 
 GeneralJs.prototype.totalContents = document.getElementById("totalcontents");

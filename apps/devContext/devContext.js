@@ -1206,8 +1206,27 @@ class DevContext extends Array {
       }
 
 
-      // const aiConsole = new AiConsole();
-      // await aiConsole.cardToRequest("c2010_aa64s");
+      // const { mongo } = this.mother;
+      // const MONGOCTEST = new mongo("mongodb://" + "uragen" + ':' + "Dpdhdn941!" + '@' + "3.34.233.59" + ':' + String(27017) + "/admin", { useUnifiedTopology: true });
+      // let tempArr;
+      // let targetCollections = [
+      //   `clientHistory`,
+      //   `projectHistory`,
+      //   `realtimeDesigner`,
+      // ];
+      //
+      // await MONGOCTEST.connect();
+      //
+      // for (let t of targetCollections) {
+      //   tempArr = await this.MONGOLOCALC.db(`miro81`).collection(t).find({}).toArray();
+      //   await MONGOCTEST.db(`miro81`).collection(t).deleteMany({});
+      //   for (let i of tempArr) {
+      //     await MONGOCTEST.db(`miro81`).collection(t).insertOne(i);
+      //   }
+      // }
+      //
+      //
+      // MONGOCTEST.close();
 
 
 
