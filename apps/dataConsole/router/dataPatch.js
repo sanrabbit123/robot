@@ -670,7 +670,7 @@ DataPatch.prototype.clientMap = function () {
       width: "100%",
       height: "calc(100% - " + String(5) + ea + ")",
       left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? 5 : 8) + ea,
+      top: String(GeneralJs.isMac() ? (height / 3.6) : height / 2.3)) + ea,
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
