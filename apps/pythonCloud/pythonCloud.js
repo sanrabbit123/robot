@@ -220,7 +220,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
           PythonCloud.timeout.illustrator = setTimeout(async function () {
             const tongDir = await fileSystem(`readDir`, [ targetTong ]);
             if (macAddress !== null) {
-              const targetIp = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
+              const { ip } = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
               let targetJsons;
 
               targetJsons = [];
@@ -231,8 +231,8 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
               }
 
               for (let i of targetJsons) {
-                console.log("http://" + targetIp + ":8080/illustrator?" + objToQuery(i));
-                console.log(await requestSystem("http://" + targetIp + ":8080/illustrator?" + objToQuery(i)));
+                console.log("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+                console.log(await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i)));
               }
 
             }
