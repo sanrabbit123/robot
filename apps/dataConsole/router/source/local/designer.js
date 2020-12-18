@@ -808,7 +808,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         position: "absolute",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
-        top: String(titleTop) + ea,
+        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
         left: String(intend) + ea,
         color: "#404040",
         cursor: "pointer",
@@ -818,7 +818,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         position: "absolute",
         fontSize: String(fontSize) + ea,
         fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2)) + ea,
+        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
         color: "#2fa678",
         cursor: "pointer",
       };
@@ -826,7 +826,7 @@ DesignerJs.prototype.cardViewMaker = function () {
       barStyle = {
         position: "absolute",
         background: "#ececec",
-        top: String(startTop + 13) + ea,
+        top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(intend) + ea,
         width: String(totalWidth) + ea,
         height: String(1) + ea,
@@ -837,7 +837,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         position: "absolute",
         fontSize: String(fontSize) + ea,
         fontWeight: String(500),
-        top: String(startTop + lineHeight) + ea,
+        top: String(startTop + lineHeight + (GeneralJs.isMac() ? 0 : 3)) + ea,
         left: String(intend) + ea,
         width: String(totalWidth) + ea,
         color: "#404040",
@@ -860,7 +860,7 @@ DesignerJs.prototype.cardViewMaker = function () {
 
       areaNameStyle = {
         position: "absolute",
-        top: String(margin * 0.9) + ea,
+        top: String(margin * (GeneralJs.isMac() ? 0.9 : 1.07)) + ea,
         left: String(margin * 1.7) + ea,
         fontSize: String(21) + ea,
         fontWeight: String(200),
@@ -1173,7 +1173,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     hInitial.style[i] = style[i];
   }
   hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (10 / 60)) + ea;
+  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
   div_clone2.appendChild(hInitial);
 
   //h initial button
@@ -1395,8 +1395,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               top: String(((height * 2) * (i + 1)) - top) + ea,
               left: String(0) + ea,
               width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.4)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.4)) + ea,
+              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
