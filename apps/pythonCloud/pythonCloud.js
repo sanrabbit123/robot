@@ -240,7 +240,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             }
             PythonCloud.firstDo.illustrator = true;
             PythonCloud.timeout.illustrator = null;
-          }, 2000);
+          }, 1000);
 
           //end
           res.set({
