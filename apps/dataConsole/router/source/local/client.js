@@ -840,7 +840,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
       areaNameStyle = {
         position: "absolute",
-        top: String(margin * (GeneralJs.isMac ? 0.9 : 1.2)) + ea,
+        top: String(margin * (GeneralJs.isMac() ? 0.9 : 1.07)) + ea,
         left: String(margin * 1.7) + ea,
         fontSize: String(21) + ea,
         fontWeight: String(200),
