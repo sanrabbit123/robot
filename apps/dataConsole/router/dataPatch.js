@@ -1015,7 +1015,7 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       background: "#2fa678",
       width: String(width) + ea,
-      height: "89%",
+      height: (GeneralJs.isMac() ? "89%" : "100%"),
       left: String(0) + ea,
       top: String(0) + ea,
       borderRadius: String(3) + ea,
