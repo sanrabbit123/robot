@@ -1,54 +1,84 @@
 const DataConsole = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
-  this.data = {};
-  this.setting = {};
   this.dir = process.cwd() + "/apps/dataConsole";
 }
 
-DataConsole.prototype.block_template = function () {
-  let instance = this;
-  const Blockstyle = require('./block_data/Blockstyle.js');
-  function first_render(mete, mete2) {
-    const block = new Blockstyle(mete);
-    let h = block.headhead();
-    h += block.navinavi(mete2);
-    h += block.demain();
-    return h;
+DataConsole.prototype.renderStatic = async function (staticFolder) {
+  const instance = this;
+  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const S3HOST = ADDRESS.s3info.host;
+  try {
+
+    //set static
+    const staticDir = `${this.dir}/router/source/local`;
+    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
+    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+    }
+
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString;
+    let code0, code1;
+    let result;
+
+    s3String = "const S3HOST = \"" + S3HOST + "\";";
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+
+    for (let i of staticDirList) {
+      svgTongItemsString = null;
+      if (i !== `.DS_Store`) {
+        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
+        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+        fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+        if (/\/<%map%>\//g.test(fileString)) {
+          fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+            return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
+          });
+          svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
+        }
+        code0 = s3String + "\n\n" + svgTongString;
+        code1 = generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString;
+        if (svgTongItemsString === null) {
+          result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
+        } else {
+          result = (await babelSystem(code0)) + "\n\n" + svgTongItemsString + "\n\n" + (await babelSystem(code1));
+        }
+        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, (polyfillString + "\n\n" + result) ]);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
   }
-  function second_render(mete, rows) {
-    const block = new Blockstyle(mete);
-    block.setrowsdata(rows);
-    let h = block.headhead(true, 'second');
-    h += block.secondbody();
-    return h;
-  }
-  function mongo_render(monSet) {
-    const block = new Blockstyle(monSet, "mongo");
-    let h = block.mongohead();
-    // h += block.navinavi("mongo");
-    // h += block.mongobody();
-    return h;
-  }
-  return { first_render: first_render, second_render: second_render, mongo_render: mongo_render };
 }
 
 DataConsole.prototype.connect = async function () {
-  const express = require('express');
+  const instance = this;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
+  const https = require("https");
+  const express = require("express");
   const app = express();
-  const bodyParser = require('body-parser');
-  const session = require('express-session');
-  const MongoStore = require('connect-mongo')(session);
+  const bodyParser = require("body-parser");
+  const session = require("express-session");
+  const MongoStore = require("connect-mongo")(session);
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   let localMongoUrl_Arr, localMongoUrl;
-  localMongoUrl_Arr = this.mother.mongoinfo.split('@');
+  localMongoUrl_Arr = mongoinfo.split('@');
   localMongoUrl = localMongoUrl_Arr[0] + '@' + "localhost" + ':' + (localMongoUrl_Arr[1].split(':'))[1];
   const sessionStore = new MongoStore({
     url: localMongoUrl,
     dbName: "miro81",
     collection: "sessions"
   });
-
   const useragent = require('express-useragent');
+  const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -61,63 +91,66 @@ DataConsole.prototype.connect = async function () {
     saveUninitialized: true,
     cookie: { maxAge: (2 * 365 * 24 * 60 * 60 * 1000) }
   }));
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
-
+  app.use(express.static(staticFolder));
   try {
-    //database on
+
+    //set mongo connetion
     await MONGOC.connect();
 
-    //static file sync
-    this.mother.shell.exec(`cp -r ./apps/dataConsole/static ${process.env.HOME};`);
-    console.log(`static update success`);
+    //set address info
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    if (name === "unknown") {
+      throw new Error("invalid address");
+    }
 
-    //data file sync
-    let tables_file = await this.mother.fileSystem(`readDir`, [`${process.cwd()}/apps/dataConsole/block_data/data`]);
-    let tables = [];
-    for (let i = 0; i < tables_file.length; i++) {
-      if (tables_file[i] !== '.DS_Store' && tables_file[i] !== 'sql' && tables_file[i] !== 'mongo') {
-        tables.push(tables_file[i].slice(0,-8));
+    //set pem key
+    let pems = {};
+    let pemsLink = process.cwd() + "/pems/" + address.host;
+    let certDir, keyDir, caDir;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
       }
     }
-    console.log(tables);
-
-    //data to mongo
-    let temp_obj = {};
-    for (let i of tables) { temp_obj[i] = require(`./block_data/data/${i}_data.js`); }
-    await MONGOC.db("miro81").collection("data_settings").deleteMany({});
-    await MONGOC.db("miro81").collection("data_settings").insertOne({dbtitles:tables});
-    await MONGOC.db("miro81").collection("data_settings").insertOne(temp_obj);
-    console.log(`mongo update success`);
-
-    //data update
-    this.data = (await MONGOC.db("miro81").collection("data_settings").find({}).toArray())[1];
-    delete this.data._id;
-    for (let i of tables) {
-      this.setting[i] = {};
-      this.setting[i]['onoff'] = {};
-      this.setting[i]['order'] = [];
-      for (let data of this.data[i].colcol_arr) {
-        this.setting[i]['onoff'][data] = 1;
-      }
-      for (let data of this.data[i].colleft_arr) {
-        this.setting[i]['order'].push(data);
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
       }
     }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
 
     //set router
-    const Router = require('./router/router.js');
-    let rouArr = [ MONGOC, this.data, this.setting, this.block_template() ];
-    let rou = new Router(rouArr);
-    let rouObj = rou.getAll();
-    for (let obj of rouObj.get) { app.get(obj.link, obj.func); }
-    for (let obj of rouObj.post) { app.post(obj.link, obj.func); }
+    const DataRouter = require(`${this.dir}/router/dataRouter.js`);
+    const router = new DataRouter(MONGOC);
+    const rouObj = router.getAll();
+    for (let obj of rouObj.get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of rouObj.post) {
+      app.post(obj.link, obj.func);
+    }
+
+    //set static
+    await this.renderStatic(staticFolder);
 
     //server on
-    const http = require('http').createServer(app);
-    http.listen(3000, () => { console.log(`connect 3000`) });
+    https.createServer(pems, app).listen(3000, address.ip.inner, () => {
+      console.log(`Server running`);
+    });
+
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   }
 }
 

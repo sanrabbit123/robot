@@ -1206,6 +1206,9 @@ class DevContext extends Array {
       }
 
 
+      console.log(await this.mother.ipCheck());
+
+
       // const { mongo } = this.mother;
       // const MONGOCTEST = new mongo("mongodb://" + "uragen" + ':' + "Dpdhdn941!" + '@' + "3.34.233.59" + ':' + String(27017) + "/admin", { useUnifiedTopology: true });
       // let tempArr;
