@@ -296,15 +296,13 @@ PythonCloud.prototype.serverLaunching = async function () {
     }
 
     //set router
-    let get, post, router, inner;
+    let get, post, router;
 
     console.log(address);
 
     if (address.host !== "localhost") {
-      inner = address.ip.inner;
       router = this.routingCloud(address.polling.mac);
     } else {
-      inner = address.polling.inner;
       router = this.routingCloud(null);
     }
 
@@ -317,8 +315,9 @@ PythonCloud.prototype.serverLaunching = async function () {
       app.post(obj.link, obj.func);
     }
 
+
     //server on
-    http.createServer(app).listen(3000, address.ip.inner, () => {
+    http.createServer(app).listen(3000, () => {
       console.log(`Server running`);
     });
   } catch (e) {
