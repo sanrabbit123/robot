@@ -1691,7 +1691,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
-  lineHeightRatio = 29 / 16;
+  lineHeightRatio = GeneralJs.isMac() ? (29 / 16) : (20 / 16);
   fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
   fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
 
@@ -2048,22 +2048,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   //propoerty box
-
-  /**********************************************************************************/
-  /**********************************************************************************/
-  /**********************************************************************************/
-  /**********************************************************************************/
-  /*
-
-
-  MUST MAKE property subTarget and subTitle system
-
-
-  */
-  /**********************************************************************************/
-  /**********************************************************************************/
-  /**********************************************************************************/
-
   propertyBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
