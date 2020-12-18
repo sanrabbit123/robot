@@ -33,5 +33,10 @@ def proposal():
     else:
         return "제안서 아이디를 입력해주세요."
 
+@app.route('/illustrator')
+def illustrator():
+    queryString = request.query_string.decode('utf-8')
+    return queryString
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0")

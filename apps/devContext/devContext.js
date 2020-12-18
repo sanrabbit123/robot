@@ -1229,6 +1229,8 @@ class DevContext extends Array {
       // MONGOCTEST.close();
 
 
+      let response = await this.mother.requestSystem("http://" + "172.30.1.39" + ":8080/illustrator?abc=dd");
+      console.log(response);
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
