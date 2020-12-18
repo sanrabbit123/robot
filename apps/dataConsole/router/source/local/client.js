@@ -815,7 +815,7 @@ ClientJs.prototype.cardViewMaker = function () {
           position: "absolute",
           fontSize: String(fontSize) + ea,
           fontWeight: String(500),
-          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 4)) + ea,
+          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 3)) + ea,
           left: String(intend) + ea,
           width: String(totalWidth) + ea,
           color: "#404040",
@@ -2916,7 +2916,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       paddingRight: String(12) + ea,
       fontSize: String(matrixFontSize + 6) + ea,
       left: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop) + ea,
+      top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
       fontWeight: String(200),
       background: "#f7f7f7",
     };
@@ -2951,9 +2951,9 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       width: String(matrixWidth * (2 / 6)) + ea,
       textAlign: "center",
       left: String(0) + ea,
-      paddingTop: String(columnPaddingTop) + ea,
+      paddingTop: String(columnPaddingTop + (GeneralJs.isMac() ? 0 : 2)) + ea,
       top: String(columnTop) + ea,
-      height: String(columnLineHeight) + ea,
+      height: String(columnLineHeight + (GeneralJs.isMac() ? 0 : -2)) + ea,
       borderBottom: matrixInnerLine,
       background: "white",
     };
@@ -3077,7 +3077,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       width: String(matrixWidth) + ea,
       fontSize: String(matrixFontSize + 3) + ea,
       left: String(matrixBoxMargin) + ea,
-      bottom: String(titleTop + 8) + ea,
+      bottom: String(titleTop +  + (GeneralJs.isMac() ? 8 : 4)) + ea,
       fontWeight: String(200),
       textAlign: "right",
     };
@@ -3190,7 +3190,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   inputStyle = {
     position: "absolute",
     left: String(0) + ea,
-    top: String(40) + ea,
+    top: String(40 + (GeneralJs.isMac() ? 0 : 5)) + ea,
     width: String(500) + ea,
     height: String(30) + ea,
     fontSize: String(29) + ea,
