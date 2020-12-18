@@ -4,7 +4,6 @@ const PythonCloud = function () {
   this.mother = new Mother();
   this.dir = process.cwd() + "/apps/pythonCloud";
   this.tong = this.dir + "/tong";
-  this.cloudHost = { inner: address.pythoninfo.ip.inner, outer: address.pythoninfo.host, port: 3000 };
   this.formidable = require('formidable');
 }
 
@@ -172,19 +171,40 @@ PythonCloud.prototype.serverLaunching = async function () {
   app.use(bodyParser.json());
 
   try {
+
+    //set address info
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    if (name === "unknown") {
+      throw new Error("invalid address");
+    }
+
+    console.log(address)
+
     //set router
     let get, post, router, inner;
 
     router = this.routingCloud();
-    inner = this.cloudHost.inner;
+
+    if (address.host !== "localhost") {
+      inner = address.ip.inner;
+    } else {
+      inner = address.polling.inner;
+    }
+
+    console.log(inner)
+
 
     get = router.get;
     post = router.post;
-    for (let obj of get) { app.get(obj.link, obj.func); }
-    for (let obj of post) { app.post(obj.link, obj.func); }
+    for (let obj of get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of post) {
+      app.post(obj.link, obj.func);
+    }
 
     //server on
-    http.createServer(app).listen(this.cloudHost.port, inner, () => {
+    http.createServer(app).listen(3000, address.ip.inner, () => {
       console.log(`Server running`);
     });
   } catch (e) {
