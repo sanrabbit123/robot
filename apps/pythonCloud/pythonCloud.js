@@ -320,7 +320,7 @@ PythonCloud.prototype.serverLaunching = async function () {
     console.log(inner);
 
     //server on
-    http.createServer(app).listen(3000, address.ip.inner, () => {
+    http.createServer(app).listen(3000, inner, () => {
       console.log(`Server running`);
     });
   } catch (e) {
