@@ -207,10 +207,8 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
           }
 
           //write stack
-          for (let i = 0; i < targetTongs.length; i++) {
-            await fileSystem(`write`, [ targetTong + "/" + tongName + "_order_" + todayString + ".json", JSON.stringify(fields) ]);
-            PythonCloud.firstDo[tongName] = false;
-          }
+          await fileSystem(`write`, [ targetTong + "/" + tongName + "_order_" + todayString + ".json", JSON.stringify(fields) ]);
+          PythonCloud.firstDo[tongName] = false;
 
           //debounce clean
           if (PythonCloud.timeout[tongName] !== null) {
