@@ -25,6 +25,17 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
   const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem } = this.mother;
   let funcObj = {};
 
+  //GET test
+  funcObj.get_test = function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
+    res.send("done");
+  }
+
   //POST - mongo to notion
   funcObj.post_toNotion = async function (req, res) {
     try {
@@ -148,6 +159,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
     }
   }
 
+  //POST - to ai server
   funcObj.post_toAiServer = async function (req, res) {
     try {
       const form = instance.formidable({ multiples: true });
