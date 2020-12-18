@@ -1691,7 +1691,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
-  lineHeightRatio = GeneralJs.isMac() ? (29 / 16) : (26 / 16);
+  lineHeightRatio = GeneralJs.isMac() ? (29 / 16) : (27 / 16);
   fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
   fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
 
