@@ -1918,7 +1918,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
         style = {
           position: "absolute",
-          top: String(0) + ea,
+          top: String(GeneralJs.isMac() ? 0 : -2) + ea,
           left: String(0) + ea,
           fontSize: String(fontSize) + ea,
           fontWeight: String(600),
@@ -1942,7 +1942,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         div_clone2.classList.add("noScrollBar");
         style = {
           position: "relative",
-          top: String(titleHeight + (margin / 2)) + ea,
+          top: String(titleHeight + (margin / 2) + (GeneralJs.isMac() ? 0 : -2)) + ea,
           left: String(0) + ea,
           background: "#f7f7f7",
           borderRadius: String(4) + ea,
