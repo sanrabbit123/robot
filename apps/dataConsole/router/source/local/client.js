@@ -2951,9 +2951,9 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       width: String(matrixWidth * (2 / 6)) + ea,
       textAlign: "center",
       left: String(0) + ea,
-      paddingTop: String(columnPaddingTop + (GeneralJs.isMac() ? 0 : 2)) + ea,
+      paddingTop: String(columnPaddingTop + (GeneralJs.isMac() ? 0 : 2.5)) + ea,
       top: String(columnTop) + ea,
-      height: String(columnLineHeight + (GeneralJs.isMac() ? 0 : -2)) + ea,
+      height: String(columnLineHeight + (GeneralJs.isMac() ? 0 : -2.5)) + ea,
       borderBottom: matrixInnerLine,
       background: "white",
     };
