@@ -305,7 +305,7 @@ DataRouter.prototype.rou_get_Root = function () {
   obj.func = async function (req, res) {
     try {
       res.set("Content-Type", "text/html");
-      res.send("hello?");
+      res.send("<script>window.location.href = 'https://home-liaison.com';</script>");
     } catch (e) {
       console.log(e);
     }
