@@ -397,7 +397,7 @@ ProposalJs.prototype.below_initial = function () {
   style = {
     position: "absolute",
     width: String(75) + ea,
-    height: String(44) + ea,
+    height: String(GeneralJs.isMac() ? 44 : 41) + ea,
     top: String(31.5) + ea,
     right: String(49) + ea,
     background: "white",
@@ -405,7 +405,7 @@ ProposalJs.prototype.below_initial = function () {
     fontSize: String(17) + ea,
     fontWeight: String(500) + ea,
     textAlign: "center",
-    paddingTop: String(13) + ea,
+    paddingTop: String(GeneralJs.isMac() ? 13 : 16) + ea,
     color: "#2fa678",
     cursor: "pointer",
     animation: "justfadeinoriginal 0.4s ease forwards",
@@ -3408,8 +3408,8 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight:600;
     display:inline-block;
     padding:15px;
-    padding-top:6px;
-    padding-bottom:8px;
+    padding-top:${GeneralJs.isMac() ? String(6) : String(7)}px;
+    padding-bottom:${GeneralJs.isMac() ? String(8) : String(7)}px;
     background:white;
     margin:3px;
     border-radius:5px;
