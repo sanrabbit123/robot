@@ -3451,7 +3451,7 @@ ProposalJs.prototype.cssInjection = function () {
     to {transform: translateY(-23px);}
   }
   .pp_designer_question{
-    top: calc(50% - 19px);
+    top: calc(50% - ${GeneralJs.isMac() ? String(19) : String(15)}px);
     position: absolute;
     width: 100%;
     display: block;
@@ -3627,7 +3627,6 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 700;
     color: #606060;
     padding-bottom: 3px;
-    top: ${GeneralJs.isMac() ? String(11) : String(13)}px;
   }
 
   .pp_designer_selected_box_contents_money_input{
@@ -3649,6 +3648,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-left: 6px;
     margin-right: 6px;
+    top: ${GeneralJs.isMac() ? String(11) : String(13)}px;
   }
 
   .pp_designer_selected_box_contents_selection{
