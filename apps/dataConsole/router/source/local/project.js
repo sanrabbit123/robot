@@ -1940,7 +1940,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
             style = {
               position: "absolute",
-              top: String(((height * 1.9) * (i + 1)) - top) + ea,
+              top: String(((height * (GeneralJs.isMac() ? 1.9 : 2.2)) * (i + 1)) - top) + ea,
               left: String(0) + ea,
               width: String(width) + ea,
               paddingTop: String(height * 0.3) + ea,
