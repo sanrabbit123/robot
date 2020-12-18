@@ -1761,6 +1761,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       for (let j in style) {
         div_clone4.style[j] = style[j];
       }
+
       //value scroll box
       div_clone5 = GeneralJs.nodes.div.cloneNode(true);
       div_clone5.classList.add("noScrollBar");
@@ -1777,6 +1778,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         div_clone5.style[j] = style[j];
       }
       div_clone4.appendChild(div_clone5);
+
       //value detail
       for (let z = 0; z < pairs.length; z++) {
         div_clone6 = GeneralJs.nodes.div.cloneNode(true);
@@ -1855,6 +1857,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           div_clone.style[j] = style[j];
         }
 
+        //moving area - left
         leftArea = GeneralJs.nodes.div.cloneNode(true);
         style = {
           position: "absolute",
@@ -1869,11 +1872,16 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         for (let s in style) {
           leftArea.style[s] = style[s];
         }
+        GeneralJs.stacks[thisCase[standard[1]] + "first_boo_left" + String(i)] = true;
         leftArea.addEventListener("mouseover", function (e) {
           const targetNode = this.nextElementSibling.nextElementSibling.nextElementSibling.children[0];
+          if (GeneralJs.stacks[thisCase[standard[1]] + "first_boo_left" + String(i)]) {
+            GeneralJs.stacks[thisCase[standard[1]] + "first_left" + String(i)] = targetNode.getBoundingClientRect().left;
+            GeneralJs.stacks[thisCase[standard[1]] + "first_boo_left" + String(i)] = false;
+          }
           GeneralJs.timeouts[thisCase[standard[1]] + "contents_left" + String(i)] = setInterval(function () {
             let left = targetNode.getBoundingClientRect().left;
-            targetNode.parentElement.scrollTo({ left: Math.abs(974 - left) - 180, behavior: "smooth" });
+            targetNode.parentElement.scrollTo({ left: GeneralJs.stacks[thisCase[standard[1]] + "first_left" + String(i)] - left - 100, behavior: "smooth" });
           }, 80);
         });
         leftArea.addEventListener("mouseleave", function (e) {
@@ -1881,6 +1889,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         });
         div_clone.appendChild(leftArea);
 
+        //moving area - right
         rightArea = GeneralJs.nodes.div.cloneNode(true);
         style = {
           position: "absolute",
@@ -1895,18 +1904,22 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         for (let s in style) {
           rightArea.style[s] = style[s];
         }
+        GeneralJs.stacks[thisCase[standard[1]] + "first_boo_right" + String(i)] = true;
         rightArea.addEventListener("mouseover", function (e) {
           const targetNode = this.nextElementSibling.nextElementSibling.children[0];
+          if (GeneralJs.stacks[thisCase[standard[1]] + "first_boo_right" + String(i)]) {
+            GeneralJs.stacks[thisCase[standard[1]] + "first_right" + String(i)] = targetNode.getBoundingClientRect().left;
+            GeneralJs.stacks[thisCase[standard[1]] + "first_boo_right" + String(i)] = false;
+          }
           GeneralJs.timeouts[thisCase[standard[1]] + "contents_right" + String(i)] = setInterval(function () {
             let left = targetNode.getBoundingClientRect().left;
-            targetNode.parentElement.scrollTo({ left: 974 - left, behavior: "smooth" });
+            targetNode.parentElement.scrollTo({ left: GeneralJs.stacks[thisCase[standard[1]] + "first_right" + String(i)] - left + 100, behavior: "smooth" });
           }, 80);
         });
         rightArea.addEventListener("mouseleave", function (e) {
           clearInterval(GeneralJs.timeouts[thisCase[standard[1]] + "contents_right" + String(i)]);
         });
         div_clone.appendChild(rightArea);
-
 
         //title
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
