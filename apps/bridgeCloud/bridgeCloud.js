@@ -516,12 +516,28 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     //set pem key
     let pems = {};
     let pemsLink = process.cwd() + "/pems/" + this.cloudHost.outer;
+    let certDir, keyDir, caDir;
 
-    pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/cert1.pem` ]);
-    pems.key = await fileSystem(`read`, [ `${pemsLink}/key/privkey1.pem` ]);
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
     pems.ca = [];
-    pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/chain1.pem` ]));
-    pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/fullchain1.pem` ]));
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
     pems.allowHTTP1 = true;
 
     //set router

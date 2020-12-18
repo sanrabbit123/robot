@@ -76,7 +76,6 @@ class RobotInstall:
         targetList = [
             "/binary",
             "/temp",
-            "/apps/mapMaker/svgTong",
         ]
         for dir in targetList:
             subprocess.run([ "mkdir", (self.robotPath + dir) ], shell=False, encoding='utf8')
@@ -187,3 +186,5 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
         print("source ./bin/activate")
         print("pip3 install flask")
         print("pip3 install gunicorn")
+        print("pip3 install requests")
+        print("pip3 install bs4")
