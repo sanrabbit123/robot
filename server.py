@@ -59,15 +59,15 @@ def illustrator():
 
     if order["type"] == "proposal":
         asyncio.create_task(makeProposal(order["proid"]))
-        return f"{order["proid"]} make success"
+        return order["proid"] + " make success"
 
     if order["type"] == "request":
         asyncio.create_task(makeRequest(order["cliid"]))
-        return f"{order["cliid"]} make success"
+        return order["cliid"] + " make success"
 
     if order["type"] == "contents":
         asyncio.create_task(makeProposal(order["pid"]))
-        return f"{order["pid"]} make success"
+        return order["pid"] + " make success"
 
     return None
 
