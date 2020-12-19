@@ -48,6 +48,17 @@ Robot.prototype.proposalMaker = function (button, arg) {
   }
 }
 
+Robot.prototype.requestMaker = async function (arg) {
+  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
+  try {
+    let app;
+    app = new AiConsole();
+    await app.cardToRequest(arg);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.portfolioFilter = function (boo, clientName, apartName, exceptionId = 0, pid = null) {
   const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
   let app = new PortfolioFilter(clientName, apartName, exceptionId, pid);
@@ -163,6 +174,9 @@ Robot.prototype.launching = async function () {
 
     } else if (process.argv[2] === "back") {
       this.dataConsole();
+
+    } else if (process.argv[2] === "request" && process.argv[3] !== undefined) {
+      await this.requestMaker(process.argv[3]);
 
     } else if (process.argv[2] === "front" && process.argv[3] !== "--webpack") {
       this.frontMaker(false);
