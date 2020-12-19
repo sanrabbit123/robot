@@ -42,12 +42,24 @@ async def makeProposal(proid):
     subprocess.run([ "node", ROBOT, "proposal", proid ], encoding="utf-8")
     return "success"
 
+async def runProposal(proid):
+    asyncio.create_task(makeProposal(proid))
+    return "success"
+
 async def makeRequest(cliid):
     subprocess.run([ "node", ROBOT, "request", cliid ], encoding="utf-8")
     return "success"
 
-async def makeProposal(pid):
+async def runRequest(cliid):
+    asyncio.create_task(makeRequest(cliid))
+    return "success"
+
+async def makeContents(pid):
     subprocess.run([ "node", ROBOT, "contents", pid ], encoding="utf-8")
+    return "success"
+
+async def runContents(pid):
+    asyncio.create_task(makeContents(pid))
     return "success"
 
 #illustrator routing
@@ -58,15 +70,15 @@ def illustrator():
     order = queryStringParsing(queryString)
 
     if order["type"] == "proposal":
-        asyncio.create_task(makeProposal(order["proid"]))
+        asyncio.run(runProposal(order["proid"]))
         return order["proid"] + " make success"
 
     if order["type"] == "request":
-        asyncio.create_task(makeRequest(order["cliid"]))
+        asyncio.run(runRequest(order["cliid"]))
         return order["cliid"] + " make success"
 
     if order["type"] == "contents":
-        asyncio.create_task(makeProposal(order["pid"]))
+        asyncio.run(runContents(order["pid"]))
         return order["pid"] + " make success"
 
     return None
