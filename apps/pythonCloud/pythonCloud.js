@@ -231,6 +231,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 
               const { ip } = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
               let targetJsons;
+              let aiResponse;
 
               targetJsons = [];
               for (let i of tongDir) {
@@ -241,7 +242,8 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 
               if (ip !== null) {
                 for (let i of targetJsons) {
-                  await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+                  aiResponse = await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+                  console.log(aiResponse);
                 }
               }
 
