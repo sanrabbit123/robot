@@ -1,4 +1,4 @@
-from flask import Flask, request
+from aiohttp import web
 import subprocess
 import os
 import asyncio
@@ -6,24 +6,7 @@ import asyncio
 
 ROBOT_PATH = os.getcwd()
 ROBOT = ROBOT_PATH + "/robot.js"
-app = Flask(__name__)
 
-
-def queryStringParsing(qs):
-    tempArr = qs.split('&')
-    dic = {}
-    for i in tempArr:
-        tempArr2 = i.split('=')
-        dic[tempArr2[0]] = tempArr2[1]
-    return dic
-
-
-@app.route('/test')
-def test():
-    return "테스트입니다."
-
-
-#illustrator functions
 
 async def run(cmdArr):
     cmd = ' '.join(cmdArr)
@@ -33,6 +16,7 @@ async def run(cmdArr):
         print(stdout.decode())
     if stderr:
         print(stderr.decode())
+
 
 async def makeProposal(proid):
     await asyncio.create_task(run([ "node", ROBOT, "proposal", proid ]))
@@ -44,26 +28,30 @@ async def makeContents(pid):
     await asyncio.create_task(run([ "node", ROBOT, "contents", pid ]))
 
 
-#illustrator routing
-
-@app.route('/illustrator')
-def illustrator():
-    queryString = request.query_string.decode('utf-8')
-    order = queryStringParsing(queryString)
+async def illustrator(request):
+    order = request.rel_url.query
 
     if order["type"] == "proposal":
         asyncio.run(makeProposal(order["proid"]))
-        return order["proid"] + " make success"
+        return web.Response(text=order["proid"] + " make success")
 
     if order["type"] == "request":
         asyncio.run(makeRequest(order["cliid"]))
-        return order["cliid"] + " make success"
+        return web.Response(text=order["cliid"] + " make success")
 
     if order["type"] == "contents":
         asyncio.run(makeContents(order["pid"]))
-        return order["pid"] + " make success"
+        return web.Response(text=order["pid"] + " make success")
 
-    return None
+    return web.Response(text="nothing")
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+
+
+# async def returnApp():
+#     app = web.Application()
+#     app.add_routes([web.get('/', hello)])
+#     return app
+
+app = web.Application()
+app.add_routes([web.get('/', hello)])
+web.run_app(app)
