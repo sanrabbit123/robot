@@ -108,6 +108,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTongs[0])}/${i}`);
             }
+            clearTimeout(PythonCloud.timeout.notion);
             PythonCloud.firstDo.notion = true;
             PythonCloud.timeout.notion = null;
           }, 4000);
@@ -135,6 +136,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTongs[1])}/${i}`);
             }
+            clearTimeout(PythonCloud.timeout.analytics);
             PythonCloud.firstDo.analytics = true;
             PythonCloud.timeout.analytics = null;
           }, (1000 * 60 * 30));
@@ -183,7 +185,13 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             for (let i in obj) {
               str += i.replace(/[\=\&]/g, '');
               str += '=';
-              str += obj[i].replace(/[\=\&]/g, '');
+              if (typeof obj[i] === "number" || typeof obj[i] === "boolean") {
+                str += String(obj[i].replace(/[\=\&]/g, ''));
+              } else if (obj[i] !== null && typeof obj[i] === "object") {
+                str += JSON.stringify(obj[i].replace(/[\=\&]/g, ''));
+              } else {
+                str += obj[i].replace(/[\=\&]/g, '');
+              }
               str += '&';
             }
             return str.slice(0, -1);
@@ -220,6 +228,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
           PythonCloud.timeout.illustrator = setTimeout(async function () {
             const tongDir = await fileSystem(`readDir`, [ targetTong ]);
             if (macAddress !== null) {
+
               const { ip } = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
               let targetJsons;
 
@@ -230,14 +239,17 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
                 }
               }
 
-              for (let i of targetJsons) {
-                await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+              if (ip !== null) {
+                for (let i of targetJsons) {
+                  await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+                }
               }
 
             }
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
             }
+            clearTimeout(PythonCloud.timeout.illustrator);
             PythonCloud.firstDo.illustrator = true;
             PythonCloud.timeout.illustrator = null;
           }, 1000);
