@@ -2100,11 +2100,17 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
 // GET client history -------------------------------------------------------------------------
 
-BackMaker.prototype.getClientHistoryById = async function (cliid, option = { selfMongo: null }) {
+BackMaker.prototype.getClientHistoryById = async function (cliid, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
+
     let arr, target;
     await MONGOLOCALC.connect();
     arr = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({ cliid }).toArray();
@@ -2119,11 +2125,16 @@ BackMaker.prototype.getClientHistoryById = async function (cliid, option = { sel
   }
 }
 
-BackMaker.prototype.getClientHistoriesByQuery = async function (query, option = { selfMongo: null }) {
+BackMaker.prototype.getClientHistoriesByQuery = async function (query, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let tong, sortQuery;
 
     if (option.sort === undefined) {
@@ -2146,11 +2157,17 @@ BackMaker.prototype.getClientHistoriesByQuery = async function (query, option = 
   }
 }
 
-BackMaker.prototype.getClientHistoriesAll = async function (option = { selfMongo: null }) {
+BackMaker.prototype.getClientHistoriesAll = async function (option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
+
     let tong, sortQuery;
 
     if (option.sort === undefined) {
@@ -2173,14 +2190,20 @@ BackMaker.prototype.getClientHistoriesAll = async function (option = { selfMongo
   }
 }
 
-BackMaker.prototype.updateClientHistory = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateClientHistory = async function (queryArr, option = { fromConsole: true }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
+
     const [ whereQuery, updateQuery ] = queryArr;
 
     await MONGOLOCALC.connect();
@@ -2193,11 +2216,16 @@ BackMaker.prototype.updateClientHistory = async function (queryArr, option = { s
   }
 }
 
-BackMaker.prototype.deleteClientHistory = async function (cliid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteClientHistory = async function (cliid, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     await MONGOLOCALC.connect();
     await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteOne({ cliid });
     MONGOLOCALC.close();
@@ -2207,11 +2235,16 @@ BackMaker.prototype.deleteClientHistory = async function (cliid, option = { self
   }
 }
 
-BackMaker.prototype.createClientHistory = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createClientHistory = async function (updateQuery, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let dummy;
 
     dummy = {
@@ -2238,11 +2271,16 @@ BackMaker.prototype.createClientHistory = async function (updateQuery, option = 
 
 // GET project history -------------------------------------------------------------------------
 
-BackMaker.prototype.getProjectHistoryById = async function (proid, option = { selfMongo: null }) {
+BackMaker.prototype.getProjectHistoryById = async function (proid, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let arr, target;
     await MONGOLOCALC.connect();
     arr = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find({ proid }).toArray();
@@ -2257,11 +2295,16 @@ BackMaker.prototype.getProjectHistoryById = async function (proid, option = { se
   }
 }
 
-BackMaker.prototype.getProjectHistoriesByQuery = async function (query, option = { selfMongo: null }) {
+BackMaker.prototype.getProjectHistoriesByQuery = async function (query, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let tong, sortQuery;
 
     if (option.sort === undefined) {
@@ -2284,11 +2327,16 @@ BackMaker.prototype.getProjectHistoriesByQuery = async function (query, option =
   }
 }
 
-BackMaker.prototype.getProjectHistoriesAll = async function (option = { selfMongo: null }) {
+BackMaker.prototype.getProjectHistoriesAll = async function (option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let tong, sortQuery;
 
     if (option.sort === undefined) {
@@ -2311,14 +2359,19 @@ BackMaker.prototype.getProjectHistoriesAll = async function (option = { selfMong
   }
 }
 
-BackMaker.prototype.updateProjectHistory = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateProjectHistory = async function (queryArr, option = { fromConsole: true }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     const [ whereQuery, updateQuery ] = queryArr;
 
     await MONGOLOCALC.connect();
@@ -2331,11 +2384,16 @@ BackMaker.prototype.updateProjectHistory = async function (queryArr, option = { 
   }
 }
 
-BackMaker.prototype.deleteProjectHistory = async function (proid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteProjectHistory = async function (proid, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     await MONGOLOCALC.connect();
     await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).deleteOne({ proid });
     MONGOLOCALC.close();
@@ -2345,11 +2403,16 @@ BackMaker.prototype.deleteProjectHistory = async function (proid, option = { sel
   }
 }
 
-BackMaker.prototype.createProjectHistory = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createProjectHistory = async function (updateQuery, option = { fromConsole: true }) {
   const instance = this;
-  const { mongo, mongolocalinfo } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
     let dummy;
 
     dummy = {
@@ -2374,13 +2437,15 @@ BackMaker.prototype.createProjectHistory = async function (updateQuery, option =
 
 // general mongo CRUD  --------------------------------------------------------------------
 
-BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, selfMongo: null }) {
+BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else if (option.console !== undefined && option.console !== null) {
+      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2399,13 +2464,15 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
   }
 }
 
-BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, selfMongo: null }) {
+BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else if (option.console !== undefined && option.console !== null) {
+      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2441,14 +2508,16 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
   }
 }
 
-BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, selfMongo: null }) {
+BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else if (option.console !== undefined && option.console !== null) {
+      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2465,13 +2534,15 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
   }
 }
 
-BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, selfMongo: null }) {
+BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, console: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    } else if (option.console !== undefined && option.console !== null) {
+      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }

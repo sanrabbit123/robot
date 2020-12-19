@@ -1228,8 +1228,9 @@ class DevContext extends Array {
       //
       // MONGOCTEST.close();
       const ADDRESS = require(APP_PATH + "/infoObj.js");
-      let response = await this.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { 'type': 'request', 'id': 'c2011_aa64s' });
+      let response = await this.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { 'type': 'request', 'id': 'c2011_aa64' });
       console.log(response);
+
 
 
 

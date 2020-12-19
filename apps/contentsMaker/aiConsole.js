@@ -50,7 +50,7 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
 
     client.project = project.toNormal();
     client.designer = (await this.back.getDesignerById(project.desid)).toNormal();
-    client.history = await this.back.getClientHistoryById(cliid);
+    client.history = await this.back.getClientHistoryById(cliid, { fromConsole: true });
 
     resultDir = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
     if (!resultDir.includes(sw)) {
