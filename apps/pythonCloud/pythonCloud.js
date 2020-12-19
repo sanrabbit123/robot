@@ -197,7 +197,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             return str.slice(0, -1);
           }
           const today = new Date();
-          const todayString = `${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
+          const todayString = `${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}${String(today.getMilliseconds())}`;
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
@@ -254,7 +254,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             clearTimeout(PythonCloud.timeout.illustrator);
             PythonCloud.firstDo.illustrator = true;
             PythonCloud.timeout.illustrator = null;
-          }, 1000);
+          }, 2000);
 
           //end
           res.set({
