@@ -3,10 +3,11 @@ import subprocess
 import os
 import asyncio
 
+
 ROBOT_PATH = os.getcwd()
 ROBOT = ROBOT_PATH + "/robot.js"
-
 app = Flask(__name__)
+
 
 def queryStringParsing(qs):
     tempArr = qs.split('&')
@@ -16,51 +17,32 @@ def queryStringParsing(qs):
         dic[tempArr2[0]] = tempArr2[1]
     return dic
 
+
 @app.route('/test')
 def test():
     return "테스트입니다."
 
-@app.route('/proposal')
-def proposal():
-    queryString = request.query_string.decode('utf-8')
-
-    if queryString != '':
-        proidDic = queryStringParsing(queryString)
-        try:
-            proid = proidDic["proid"]
-            subprocess.run([ "node", ROBOT, "proposal", proid ], encoding="utf-8")
-            return "success"
-        except Exception as e:
-            return "제안서 아이디를 입력해주세요. (must be proid)"
-    else:
-        return "제안서 아이디를 입력해주세요."
-
 
 #illustrator functions
 
-async def makeProposal(proid):
-    subprocess.run([ "node", ROBOT, "proposal", proid ], encoding="utf-8")
-    return "success"
+async def run(cmdArr):
+    cmd = ' '.join(cmdArr)
+    proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    (stdout, stderr) = await proc.communicate()
+    if stdout:
+        print(stdout.decode())
+    if stderr:
+        print(stderr.decode())
 
-async def runProposal(proid):
-    asyncio.create_task(makeProposal(proid))
-    return "success"
+async def makeProposal(proid):
+    await asyncio.create_task(run([ "node", ROBOT, "proposal", proid ]))
 
 async def makeRequest(cliid):
-    subprocess.run([ "node", ROBOT, "request", cliid ], encoding="utf-8")
-    return "success"
-
-async def runRequest(cliid):
-    asyncio.create_task(makeRequest(cliid))
-    return "success"
+    await asyncio.create_task(run([ "node", ROBOT, "request", cliid ]))
 
 async def makeContents(pid):
-    subprocess.run([ "node", ROBOT, "contents", pid ], encoding="utf-8")
-    return "success"
+    await asyncio.create_task(run([ "node", ROBOT, "contents", pid ]))
 
-async def runContents(pid):
-    asyncio.create_task(makeContents(pid))
-    return "success"
 
 #illustrator routing
 
@@ -70,15 +52,15 @@ def illustrator():
     order = queryStringParsing(queryString)
 
     if order["type"] == "proposal":
-        asyncio.run(runProposal(order["proid"]))
+        asyncio.run(makeProposal(order["proid"]))
         return order["proid"] + " make success"
 
     if order["type"] == "request":
-        asyncio.run(runRequest(order["cliid"]))
+        asyncio.run(makeRequest(order["cliid"]))
         return order["cliid"] + " make success"
 
     if order["type"] == "contents":
-        asyncio.run(runContents(order["pid"]))
+        asyncio.run(makeContents(order["pid"]))
         return order["pid"] + " make success"
 
     return None

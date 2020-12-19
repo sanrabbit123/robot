@@ -242,8 +242,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 
               if (ip !== null) {
                 for (let i of targetJsons) {
-                  aiResponse = await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
-                  console.log(aiResponse);
+                  requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
                 }
               }
 
