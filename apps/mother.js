@@ -844,4 +844,14 @@ Mother.prototype.searchDir = function (targetDirectory) {
   });
 }
 
+Mother.prototype.sleep = function (time) {
+  let timeoutId = null;
+  return new Promise(function (resolve, reject) {
+    timeoutId = setTimeout(function () {
+      resolve('awake');
+      clearTimeout(timeoutId);
+    }, time);
+  });
+}
+
 module.exports = Mother;

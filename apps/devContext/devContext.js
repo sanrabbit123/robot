@@ -1229,7 +1229,7 @@ class DevContext extends Array {
       // MONGOCTEST.close();
 
 
-      let response = await this.mother.requestSystem("http://" + "172.30.1.17" + ":3000/toAiServer", { 'type': 'proposal', 'proid': 'p2012_aa24s' });
+      let response = await this.mother.requestSystem("http://" + "172.30.1.17" + ":3000/toAiServer", { 'type': 'proposal', 'id': 'p2012_aa24s' });
       console.log(response);
 
 

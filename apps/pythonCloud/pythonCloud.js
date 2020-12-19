@@ -20,6 +20,12 @@ PythonCloud.timeout = {
   analytics: null,
 };
 
+PythonCloud.running = {
+  illustrator: false,
+  notion: false,
+  analytics: false,
+};
+
 PythonCloud.prototype.routingCloud = function (macAddress = null) {
   const instance = this;
   const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem } = this.mother;
@@ -198,6 +204,19 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
           }
           const today = new Date();
           const todayString = `${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}${String(today.getMilliseconds())}`;
+          const waitingRunning = async function waitingRunning() {
+            try {
+              if (PythonCloud.running[tongName]) {
+                await instance.mother.sleep(500);
+                await waitingRunning();
+              } else {
+                clearTimeout(PythonCloud.timeout[tongName]);
+                PythonCloud.timeout[tongName] = null;
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
@@ -220,13 +239,25 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 
           //debounce clean
           if (PythonCloud.timeout[tongName] !== null) {
-            clearTimeout(PythonCloud.timeout[tongName]);
-            PythonCloud.timeout[tongName] = null;
+            await waitingRunning();
           }
 
           //debounce timeout : illustrator
           PythonCloud.timeout.illustrator = setTimeout(async function () {
+            PythonCloud.running.illustrator = true;
             const tongDir = await fileSystem(`readDir`, [ targetTong ]);
+            const waitingRequest = async function waitingRequest(url) {
+              try {
+                let aiResponse;
+                aiResponse = await requestSystem(url);
+                if (!/pass/gi.test(aiResponse.data)) {
+                  await instance.mother.sleep(1000);
+                  await waitingRequest(url);
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
             if (macAddress !== null) {
 
               const { ip } = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
@@ -242,8 +273,8 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 
               if (ip !== null) {
                 for (let i of targetJsons) {
-                  aiResponse = await requestSystem("http://" + ip + ":8080/illustrator?" + objToQuery(i));
-                  console.log(aiResponse);
+                  await waitingRequest("http://" + ip + ":8080/illustrator?" + objToQuery(i));
+                  console.log(i.id + " request");
                 }
               }
 
@@ -251,6 +282,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
             }
+            PythonCloud.running.illustrator = false;
             clearTimeout(PythonCloud.timeout.illustrator);
             PythonCloud.firstDo.illustrator = true;
             PythonCloud.timeout.illustrator = null;
