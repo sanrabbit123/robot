@@ -170,9 +170,9 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
   //POST - to ai server
   funcObj.post_toAiServer = async function (req, res) {
     try {
-      console.log(req);
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
+        console.log("this!");
         if (!err) {
           let tongName = "illustrator";
           let targetTong = `${instance.tong}/${tongName}`;
