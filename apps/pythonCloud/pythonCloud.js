@@ -323,14 +323,11 @@ PythonCloud.prototype.serverLaunching = async function () {
   const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
-  const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
 
   //express
   const app = express();
   app.use(useragent.express());
-  // app.use(bodyParser.urlencoded({ extended: false }));
-  // app.use(bodyParser.json());
 
   try {
 
