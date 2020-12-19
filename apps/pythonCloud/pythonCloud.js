@@ -166,12 +166,15 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
     try {
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
+        console.log("on");
         if (!err) {
           let tongName = "illustrator";
           let targetTong = `${instance.tong}/${tongName}`;
           let tongBoo = false;
           let tongDir;
           let targetTongList;
+
+          console.log(fields)
 
           const zeroAddition = function (number) {
             if (number < 10) {
