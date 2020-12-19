@@ -1455,18 +1455,54 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_createRequestDocument = function () {
+DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
   const { shell, shellLink } = this.mother;
-  const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
+  const ADDRESS = require(APP_PATH + "/infoObj.js");
   let obj = {};
-  obj.link = "/createRequestDocument";
+  obj.link = [ "/createRequestDocument", "/createProposalDocument" ];
   obj.func = async function (req, res) {
-    const aiConsole = new AiConsole();
     try {
-      res.set("Content-Type", "application/json");
-      const resultObj = await aiConsole.cardToRequest(req.body.id);
-      res.send(JSON.stringify(resultObj));
+
+      if (req.url === "/createRequestDocument") {
+
+        let clientOriginal;
+        let projects, project;
+        let resultObj = { "alert": "요청에 문제가 있습니다!" };
+
+        clientOriginal = await instance.back.getClientById(req.body.id);
+        if (clientOriginal === null) {
+          resultObj = { "alert": "확인되는 고객이 없습니다!" };
+        } else {
+          projects = await this.back.getProjectsByQuery({ req.body.id });
+          project = null;
+          for (let p of projects) {
+            if (p.desid !== '') {
+              project = p;
+              break;
+            }
+          }
+          if (project === null) {
+            resultObj = { "alert": "확인되는 프로젝트가 없습니다!" };
+          } else {
+            if (project.process.contract.meeting.date.getFullYear() < 1900) {
+              resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
+            } else {
+              await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
+              resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
+            }
+          }
+        }
+
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify(resultObj));
+
+      } else if (req.url === "/createProposalDocument") {
+        await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: req.body.id });
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ message: "done" }));
+      }
+
     } catch (e) {
       console.log(e);
     }

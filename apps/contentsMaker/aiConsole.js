@@ -32,7 +32,11 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
 
     await this.general.static_setting();
 
-    client = (await this.back.getClientById(cliid)).toNormal();
+    clientOriginal = await this.back.getClientById(cliid);
+    if (clientOriginal === null) {
+      return { "alert": "확인되는 고객이 없습니다!" };
+    }
+    client = clientOriginal.toNormal();
     projects = await this.back.getProjectsByQuery({ cliid });
     project = null;
     for (let p of projects) {

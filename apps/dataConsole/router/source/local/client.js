@@ -2390,9 +2390,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           if (this.textContent === "제작") {
             createRequestDocumentResponse = JSON.parse(await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]], "/createRequestDocument"));
             window.alert(createRequestDocumentResponse.alert);
-            if (createRequestDocumentResponse.link !== undefined) {
-              window.open(createRequestDocumentResponse.link, "_blank");
-            }
           }
 
           GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
