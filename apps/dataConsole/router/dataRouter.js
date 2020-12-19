@@ -1474,7 +1474,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         if (clientOriginal === null) {
           resultObj = { "alert": "확인되는 고객이 없습니다!" };
         } else {
-          projects = await this.back.getProjectsByQuery({ cliid: req.body.id });
+          projects = await instance.back.getProjectsByQuery({ cliid: req.body.id });
           project = null;
           for (let p of projects) {
             if (p.desid !== '') {
