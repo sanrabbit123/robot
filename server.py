@@ -33,8 +33,6 @@ async def runAi(button):
     runProcess[button] = 2
     for i in runList[button]:
         await run([ "node", ROBOT, button, i ])
-    for i in appendList[button]:
-        await run([ "node", ROBOT, button, i ])
     runList[button] = []
     runProcess[button] = 0
 
