@@ -2655,7 +2655,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "confirm":
       return_func = async function (e) {
         let message = "제안서 확인 후, 컨펌 부탁드리겠습니다! link: ";
-        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
+        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
         await mother_name(obj);
         reset_event(this);
       }
@@ -2664,7 +2664,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       return_func = async function (e) {
         let message = "제안서의 제작을 요청드립니다! link: ";
         await GeneralJs.ajaxPromise("id=" + proid, "/createProposalDocument");
-        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
+        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
         await mother_name(obj);
         reset_event(this);
       }
