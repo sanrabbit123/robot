@@ -50,8 +50,9 @@ except Exception as e:
 
 import boto3
 import subprocess
+import re
 
-def searchDir(target):
+def searchDir(target, detail=False):
     fileList_raw = subprocess.check_output([ "ls", "-al", target ], shell=False, encoding='utf8')
 
     fileList = fileList_raw.split("\n")
@@ -90,12 +91,12 @@ def searchDir(target):
 
     tempArr3 = []
     for i in tempArr2:
-        if i["fileName"] != '.' and i["fileName"] != '..':
+        if i["fileName"] != '.' and i["fileName"] != '..' and re.search("->", i["fileName"]) == None:
             tempArr3.append(i)
 
     tempArr4 = []
     for i in tempArr3:
-        if i["directory"]:
+        if i["directory"] and detail:
             tempArr5 = searchDir(i["absolute"])
             for j in tempArr5:
                 tempArr4.append(j)
