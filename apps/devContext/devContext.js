@@ -1227,11 +1227,6 @@ class DevContext extends Array {
       // }
       //
       // MONGOCTEST.close();
-      const ADDRESS = require(APP_PATH + "/infoObj.js");
-      let response = await this.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { 'type': 'request', 'id': 'c2010_aa64s' });
-      console.log(response);
-
-
 
 
 
@@ -1241,13 +1236,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "임호진";
-      // const pid = "p70";
-      // const rid = "re065";
+      // const client = "김다혜";
+      // const pid = "p71";
+      // const rid = "re066";
       // const links = [
-      //   "https://docs.google.com/document/d/1Gk14m3PxfPyiflalrIUuRXQx26oamHdj2OUcS_zcwzY/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1oCZHIWKviV-WY4fZdfLeol8USJE2RSkwYYZN-YPeHI4/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1DYOD491yhD-Vmn5BXvoKacl3HuO-xWim?usp=sharing",
+      //   "https://docs.google.com/document/d/1LRkI264_QF-wngYajG0C0SDEkcUmGpI6kj5-unlGw90/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1Rn5_zSmdS_4AHDPc3AE-hXVcaeWJOIkxWG9o4sMrxJk/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1mD0F4vbOIgv1S6imE7NSpP8wxxBZ5lfn?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1290,16 +1285,14 @@ class DevContext extends Array {
       // await back.pastToMongo();
       // await back.updateDesid();
 
-
       //addtional photo repair
 
-      // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p66", 2);
-
+      const filter = new PortfolioFilter();
+      await filter.addtionalRepair("p71", 13);
 
       // etc tools
 
-      // await this.spellCheck("p70");
+      // await this.spellCheck("p71");
       // await this.intoDesigner();
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();

@@ -12,6 +12,11 @@ module.exports = {
         "src": "room_alpharoom_4rspot6_111310.svg"
       },
       {
+        "wording": "Attic room",
+        "value": "atticroom",
+        "src": ""
+      },
+      {
         "wording": "Bar",
         "value": "bar",
         "src": "room_bar_1rspot319_111310.svg"
@@ -82,7 +87,12 @@ module.exports = {
         "src": "room_furniture_3rspot284_111310.svg"
       },
       {
-        "wording": "Fitness Room",
+        "wording": "Front room",
+        "value": "frontroom",
+        "src": ""
+      },
+      {
+        "wording": "Fitness room",
         "value": "fitnessroom",
         "src": ""
       },
