@@ -1109,7 +1109,6 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
-  let fixedFontSizeConst;
   let notionEvent;
 
   //entire box -------------------------------------
@@ -1268,9 +1267,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
-  lineHeightRatio = 29 / 16;
-  fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
-  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
+  fontSize = (contentsBoxHeight / (info.length + 6)) / 1.8;
+  lineHeightRatio = ((contentsBoxHeight - fontSize) / fontSize) / (info.length + 6 - 1);
 
   //contents event
   updateEventFunction = function () {
@@ -1590,7 +1588,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-0.8 * (fontSize / 15)) + ea,
       left: String(0) + ea,
       width: String(fontSize * 9) + ea,
       height: String(fontSize * (21 / 16)) + ea,
@@ -1669,7 +1667,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-0.8 * (fontSize / 15)) + ea,
       left: String(0) + ea,
       width: String(fontSize * 9) + ea,
       height: String(fontSize * (21 / 16)) + ea,
@@ -1686,7 +1684,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(-1.6 * (fontSize / 15)) + ea,
+      top: String(-1.2 * (fontSize / 15)) + ea,
       left: String(fontSize * 9) + ea,
       width: "calc(100% - " + String(fontSize * 9) + ea + ")",
       height: String(fontSize * (21 / 16)) + ea,
@@ -1792,7 +1790,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       style = {
         display: "inline-block",
         position: "absolute",
-        top: String(0) + ea,
+        top: String(-0.8 * (fontSize / 15)) + ea,
         left: String(0) + ea,
         width: String(fontSize * 9) + ea,
         height: String(fontSize * (21 / 16)) + ea,

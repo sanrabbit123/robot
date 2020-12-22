@@ -1590,7 +1590,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
-  let fixedFontSizeConst;
   let notionEvent;
   let historyFocusEvent, historyBlurEvent;
 
@@ -1750,9 +1749,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
-  lineHeightRatio = GeneralJs.isMac() ? (29 / 16) : (27.5 / 16);
-  fixedFontSizeConst = ((contentsBoxHeight / info.length) / 15.302673635919229) - lineHeightRatio;
-  fontSize = (contentsBoxHeight / info.length) / (lineHeightRatio + fixedFontSizeConst);
+  fontSize = (contentsBoxHeight / (info.length + 1)) / 1.8;
+  lineHeightRatio = ((contentsBoxHeight - fontSize) / fontSize) / (info.length + 1 - 1);
 
   //contents event
   updateEventFunction = function () {
@@ -2138,7 +2136,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-0.8 * (fontSize / 15)) + ea,
       left: String(0) + ea,
       width: String(fontSize * 9) + ea,
       height: String(fontSize * (21 / 16)) + ea,
@@ -2206,7 +2204,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-0.8 * (fontSize / 15)) + ea,
       left: String(0) + ea,
       width: String(fontSize * 9) + ea,
       height: String(fontSize * (21 / 16)) + ea,
@@ -2324,7 +2322,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     { column: "photo", name: "촬영 관련", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
-  historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
+  historyTargetHeightConst = (fontSize * 0.92) + visualSpecificMarginTop;
   textAreas = [];
 
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);

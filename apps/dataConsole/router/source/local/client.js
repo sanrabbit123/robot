@@ -1518,8 +1518,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
   contentsBoxBottom = topMargin * 0.9;
-  lineHeightRatio = 29 / 16;
-  fontSize = (contentsBoxHeight / info.length) / lineHeightRatio;
+  fontSize = (contentsBoxHeight / info.length) / 1.8;
+  lineHeightRatio = ((contentsBoxHeight - fontSize) / fontSize) / (info.length - 1);
 
   //contents event
   updateEventFunction = function () {
@@ -1839,7 +1839,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     style = {
       display: "inline-block",
       position: "absolute",
-      top: String(0) + ea,
+      top: String(-0.8 * (fontSize / 15)) + ea,
       left: String(0) + ea,
       width: String(fontSize * 9) + ea,
       height: String(fontSize * (21 / 16)) + ea,
@@ -1914,10 +1914,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     { column: "styling", name: "스타일링 관련", dom: null },
     { column: "construct", name: "시공 관련", dom: null },
     { column: "budget", name: "예산 관련", dom: null },
-    { column: "progress", name: "진행 현황", dom: null },
+    { column: "progress", name: "기타 메모", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
-  historyTargetHeightConst = (fontSize * 1.1) + visualSpecificMarginTop;
+  historyTargetHeightConst = (fontSize * 1) + visualSpecificMarginTop;
   textAreas = [];
 
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
