@@ -191,3 +191,4 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
         print("pip3 install bs4")
         print("pip3 install apscheduler")
         print("pip3 install pymongo")
+        print("pip3 install PyMySQL")

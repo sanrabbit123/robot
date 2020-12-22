@@ -1516,8 +1516,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //contents ---------------------------------------------------------------------------------
 
   //property
-  contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.4);
-  contentsBoxBottom = topMargin * 0.9;
+  contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.5);
+  contentsBoxBottom = topMargin;
   fontSize = (contentsBoxHeight / info.length) / 1.8;
   lineHeightRatio = ((contentsBoxHeight - fontSize) / fontSize) / (info.length - 1);
 
