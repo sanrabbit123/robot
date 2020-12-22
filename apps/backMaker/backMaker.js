@@ -1993,18 +1993,21 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
             first: {
               guide: new Date(1800, 0, 1),
               date: new Date(1800, 0, 1),
+              cancel: new Date(1800, 0, 1),
               calculation: {
                 amount: 0,
                 info: {
                   method: "",
                   proof: "",
                   to: "",
-                }
+                },
+                refund: 0,
               },
             },
             remain: {
               guide: new Date(1800, 0, 1),
               date: new Date(1800, 0, 1),
+              cancel: new Date(1800, 0, 1),
               calculation: {
                 amount: {
                   supply: 0,
@@ -2015,7 +2018,8 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
                   method: "",
                   proof: "",
                   to: "",
-                }
+                },
+                refund: 0,
               },
             },
             form: {
@@ -2024,6 +2028,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
               date: {
                 from: new Date(1800, 0, 1),
                 to: new Date(1800, 0, 1),
+                cancel: new Date(1800, 0, 1),
               }
             },
             meeting: {
@@ -2059,10 +2064,14 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
               first: {
                 amount: 0,
                 date: new Date(1800, 0, 1),
+                cancel: new Date(1800, 0, 1),
+                refund: 0,
               },
               remain: {
                 amount: 0,
                 date: new Date(1800, 0, 1),
+                cancel: new Date(1800, 0, 1),
+                refund: 0,
               }
             }
           },

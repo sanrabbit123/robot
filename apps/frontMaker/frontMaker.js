@@ -343,6 +343,8 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
       console.log(`phpGeneral ${i} success`);
     }}
 
+    /*
+
     //set alimtalk
     let template;
     const kakao = new KakaoTalk();
@@ -370,6 +372,8 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
     alpha.code += `?>`;
     await fileSystem(`write`, [ `${this.links.server}/engine/${alpha.name}.php`, alpha.code ]);
     console.log(`alpha success`);
+
+    */
 
   } catch (e) {
     console.log(e);

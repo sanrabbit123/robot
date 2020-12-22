@@ -75,7 +75,7 @@ const widthTools = function (Project) {
     let temp;
 
     const { proid, cliid, desid, service: { serid, xValue, online } } = project;
-    const { status, contract: { first: { guide: firstGuide, date: firstDate, calculation: { amount: firstAmount, info: firstInfo } }, remain: { guide: remainGuide, date: remainDate, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate } } } } = project.process;
+    const { status, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
     const { photo: { date: contentsPhotoDate, info: { photographer, interviewer } } } = project.contents;
 
     temp = {};
@@ -96,17 +96,22 @@ const widthTools = function (Project) {
       status,
       firstGuide: dateToString(firstGuide),
       firstDate: dateToString(firstDate),
+      firstCancel: dateToString(firstCancel),
       firstAmount: String(firstAmount),
       firstInfo: infoToString(firstInfo),
+      firstRefund: String(firstRefund),
       remainGuide: dateToString(remainGuide),
       remainDate: dateToString(remainDate),
+      remainCancel: dateToString(remainCancel),
       remainSupply: String(remainSupply),
       remainVat: String(remainVat),
       remainConsumer: String(remainConsumer),
       remainInfo: infoToString(remainInfo),
+      remainRefund: String(remainRefund),
       formGuide: dateToString(formGuide),
       formDateFrom: dateToString(formDateFrom),
       formDateTo: dateToString(formDateTo),
+      formDateCancel: dateToString(formDateCancel),
       meetingDate: dateToString(meetingDate, true),
       method,
       percentage: String(percentage),
@@ -114,8 +119,12 @@ const widthTools = function (Project) {
       paymentsTotalAmount: String(paymentsTotalAmount),
       paymentsFirstAmount: String(paymentsFirstAmount),
       paymentsFirstDate: dateToString(paymentsFirstDate),
+      paymentsFirstCancel: dateToString(paymentsFirstCancel),
+      paymentsFirstRefund: String(paymentsFirstRefund),
       paymentsRemainAmount: String(paymentsRemainAmount),
       paymentsRemainDate: dateToString(paymentsRemainDate),
+      paymentsRemainCancel: dateToString(paymentsRemainCancel),
+      paymentsRemainRefund: String(paymentsRemainRefund),
       contentsPhotoDate: dateToString(contentsPhotoDate),
       photographer,
       interviewer

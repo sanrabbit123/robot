@@ -471,7 +471,7 @@ GeneralJs.prototype.returnCinitial = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 276.866 296.154"><path d="M0 169.978C0 73.134 61.481 0 157.52 0c68.717 0 116.133 34.957 119.346 104.478h-64.695c-4.42-34.557-21.298-53.442-56.661-53.442 -56.658 0-87.199 53.042-87.599 116.93 -0.403 45.809 20.895 76.353 68.314 76.353 34.957 0 59.068-20.498 69.114-55.855h63.894c-12.859 69.515-67.107 107.691-133.814 107.691C52.639 296.154 0 250.345 0 169.978z" fill="${color}"/></svg>`;
 }
 
-GeneralJs.prototype.returnRinitial = function (color) {
+GeneralJs.prototype.returnRinitialItalic = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 179.985 211.309"><path d="M33.395 0h73.589c46.4 0 73.295 20.985 72.998 57.629 0 36.648-23.052 57.629-53.196 64.131l44.329 89.548H121.761l-40.191-81.567H60.29L47.582 211.309H0L33.395 0zM93.685 97.23c25.417 0 39.307-10.934 39.307-34.872 0.294-17.734-10.936-25.711-31.623-25.711H75.361l-9.751 60.582H93.685z" fill="${color}"/></svg>`;
 }
 
@@ -794,7 +794,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //button R
-  svg_icon = SvgTong.stringParsing(this.returnRinitial("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnRinitialItalic("#ffffff"));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];

@@ -44,18 +44,21 @@ module.exports = {
         first: {
           guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
           date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+          cancel: new Date(1800, 0, 1),
           calculation: {
             amount: 0, // from contract
             info: {
               method: "", // from contract
               proof: "", // from contract
               to: "", // from contract
-            }
+            },
+            refund: 0,
           },
         },
         remain: {
           guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
           date: new Date(1800, 0, 1), // bank api in button in notion (to mongo / to notion)
+          cancel: new Date(1800, 0, 1),
           calculation: {
             amount: {
               supply: 0, // from contract
@@ -66,7 +69,8 @@ module.exports = {
               method: "", // from contract
               proof: "", // from contract
               to: "", // from contract
-            }
+            },
+            refund: 0,
           },
         },
         form: {
@@ -75,7 +79,8 @@ module.exports = {
           date: {
             from: new Date(1800, 0, 1), // from contract
             to: new Date(1800, 0, 1), // from contract
-          }
+            cancel: new Date(1800, 0, 1),
+          },
         },
         meeting: {
           date: new Date(1800, 0, 1), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
@@ -154,10 +159,14 @@ module.exports = {
           first: {
             amount: 0,
             date: new Date(1800, 0, 1),
+            cancel: new Date(1800, 0, 1),
+            refund: 0,
           },
           remain: {
             amount: 0,
             date: new Date(1800, 0, 1),
+            cancel: new Date(1800, 0, 1),
+            refund: 0,
           }
         }
       },

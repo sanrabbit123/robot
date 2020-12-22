@@ -2843,6 +2843,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "계약금 입금",
       width: 100,
     },
+    firstCancel: {
+      name: "계약금 취소",
+      width: 100,
+    },
     firstAmount: {
       name: "계약금",
       width: 100,
@@ -2850,6 +2854,10 @@ DataPatch.prototype.projectStandard = function () {
     firstInfo: {
       name: "계약금 정보",
       width: 300,
+    },
+    firstRefund: {
+      name: "계약금 환불액",
+      width: 100,
     },
     meetingDate: {
       name: "1차 미팅",
@@ -2861,6 +2869,10 @@ DataPatch.prototype.projectStandard = function () {
     },
     remainDate: {
       name: "잔금 입금",
+      width: 100,
+    },
+    remainCancel: {
+      name: "잔금 취소",
       width: 100,
     },
     remainSupply: {
@@ -2879,6 +2891,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "잔금 정보",
       width: 300,
     },
+    remainRefund: {
+      name: "잔금 환불액",
+      width: 100,
+    },
     formGuide: {
       name: "계약 안내",
       width: 100,
@@ -2889,6 +2905,10 @@ DataPatch.prototype.projectStandard = function () {
     },
     formDateTo: {
       name: "종료일",
+      width: 100,
+    },
+    formDateCancel: {
+      name: "계약 취소",
       width: 100,
     },
     method: {
@@ -2915,12 +2935,28 @@ DataPatch.prototype.projectStandard = function () {
       name: "선금 지급일",
       width: 100,
     },
+    paymentsFirstCancel: {
+      name: "선금 환수일",
+      width: 100,
+    },
+    paymentsFirstRefund: {
+      name: "선금 환수액",
+      width: 100,
+    },
     paymentsRemainAmount: {
       name: "디자이너 잔금",
       width: 100,
     },
     paymentsRemainDate: {
       name: "잔금 지급일",
+      width: 100,
+    },
+    paymentsRemainCancel: {
+      name: "잔금 환수일",
+      width: 100,
+    },
+    paymentsRemainRefund: {
+      name: "잔금 환수액",
       width: 100,
     },
     contentsPhotoDate: {
@@ -4111,26 +4147,35 @@ DataPatch.prototype.projectMap = function () {
     status: { name: "진행 상태", position: "process.status", type: "string", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], searchBoo: true, },
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, },
+    firstCancel: { name: "계약금 취소", position: "process.contract.first.cancel", type: "date", searchBoo: true, },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
     firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    firstRefund: { name: "계약금 환불액", position: "process.contract.first.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
     meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, },
     remainGuide: { name: "잔금 안내", position: "process.contract.remain.guide", type: "date", searchBoo: true, },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, },
+    remainCancel: { name: "잔금 취소", position: "process.contract.remain.cancel", type: "date", searchBoo: true, },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
     remainVat: { name: "VAT", position: "process.contract.remain.calculation.amount.vat", type: "number", searchBoo: true, moneyBoo: true },
     remainConsumer: { name: "소비자가", position: "process.contract.remain.calculation.amount.consumer", type: "number", searchBoo: true, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, },
+    formDateCancel: { name: "계약 취소", position: "process.contract.form.date.cancel", type: "date", searchBoo: true, },
     method: { name: "정산 방식", position: "process.calculation.method", type: "string", items: [ "사업자(일반)", "사업자(간이)", "프리랜서" ], searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
     calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", inputFunction: accountInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     paymentsTotalAmount: { name: "정산 총금액", position: "process.calculation.payments.totalAmount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstAmount: { name: "디자이너 선금", position: "process.calculation.payments.first.amount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstDate: { name: "선금 지급일", position: "process.calculation.payments.first.date", type: "date", searchBoo: true, },
+    paymentsFirstCancel: { name: "선금 환수일", position: "process.calculation.payments.first.cancel", type: "date", searchBoo: true, },
+    paymentsFirstRefund: { name: "선금 환수액", position: "process.calculation.payments.first.refund", type: "number", searchBoo: true, moneyBoo: true },
     paymentsRemainAmount: { name: "디자이너 잔금", position: "process.calculation.payments.remain.amount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsRemainDate: { name: "잔금 지급일", position: "process.calculation.payments.remain.date", type: "date", searchBoo: true, },
+    paymentsRemainCancel: { name: "잔금 환수일", position: "process.calculation.payments.remain.cancel", type: "date", searchBoo: true, },
+    paymentsRemainRefund: { name: "잔금 환수액", position: "process.calculation.payments.remain.refund", type: "number", searchBoo: true, moneyBoo: true },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, },
     photographer: { name: "촬영 작가", position: "contents.photo.info.photographer", type: "string", searchBoo: true, },
     interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", searchBoo: true, },

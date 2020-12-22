@@ -1229,6 +1229,39 @@ class DevContext extends Array {
       // MONGOCTEST.close();
 
 
+      // const MONGOC = this.MONGOC;
+      // const projects = await MONGOC.db(`miro81`).collection(`project`).find({}).toArray();
+      // let whereQuery, updateQuery;
+      // let tempObj, tempObj2, tempObj3, tempObj4, tempObj5;
+      //
+      // for (let p of projects) {
+      //   whereQuery = { proid: p.proid };
+      //
+      //   tempObj = p.process.contract.first;
+      //   tempObj.cancel = new Date(1800, 0, 1);
+      //   tempObj.calculation.refund = 0;
+      //
+      //   tempObj2 = p.process.contract.remain;
+      //   tempObj2.cancel = new Date(1800, 0, 1);
+      //   tempObj2.calculation.refund = 0;
+      //
+      //   tempObj3 = p.process.contract.form;
+      //   tempObj3.date.cancel = new Date(1800, 0, 1);
+      //
+      //   tempObj4 = p.process.calculation.payments.first;
+      //   tempObj4.cancel = new Date(1800, 0, 1);
+      //   tempObj4.refund = 0;
+      //
+      //   tempObj5 = p.process.calculation.payments.remain;
+      //   tempObj5.cancel = new Date(1800, 0, 1);
+      //   tempObj5.refund = 0;
+      //
+      //   updateQuery = { "process.contract.first": tempObj, "process.contract.remain": tempObj2, "process.contract.form": tempObj3, "process.calculation.payments.first": tempObj4, "process.calculation.payments.remain": tempObj5 };
+      //   await MONGOC.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
+      // }
+
+
+
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
@@ -1287,8 +1320,8 @@ class DevContext extends Array {
 
       //addtional photo repair
 
-      const filter = new PortfolioFilter();
-      await filter.addtionalRepair("p71", 13);
+      // const filter = new PortfolioFilter();
+      // await filter.addtionalRepair("p71", 13);
 
       // etc tools
 

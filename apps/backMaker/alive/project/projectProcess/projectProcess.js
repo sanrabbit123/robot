@@ -7,24 +7,32 @@ const { DateParse, Menu } = require(GENERAL_DIR + "/generator.js");
 const PaymentsFirst = function (json) {
   this.amount = json.amount;
   this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
+  this.refund = json.refund;
 }
 
 PaymentsFirst.prototype.toNormal = function () {
   let obj = {};
   obj.amount = this.amount;
   obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
+  obj.refund = this.refund;
   return obj;
 }
 
 const PaymentsRemain = function (json) {
   this.amount = json.amount;
   this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
+  this.refund = json.refund;
 }
 
 PaymentsRemain.prototype.toNormal = function () {
   let obj = {};
   obj.amount = this.amount;
   obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
+  obj.refund = this.refund;
   return obj;
 }
 
@@ -344,12 +352,14 @@ FirstCalculationInfo.prototype.toNormal = function () {
 const FirstCalculation = function (json) {
   this.amount = json.amount;
   this.info = new FirstCalculationInfo(json.info);
+  this.refund = json.refund;
 }
 
 FirstCalculation.prototype.toNormal = function () {
   let obj = {};
   obj.amount = this.amount;
   obj.info = this.info.toNormal();
+  obj.refund = this.refund;
   return obj;
 }
 
@@ -384,24 +394,28 @@ RemainCalculationInfo.prototype.toNormal = function () {
 const RemainCalculation = function (json) {
   this.amount = new RemainCalculationAmount(json.amount);
   this.info = new RemainCalculationInfo(json.info);
+  this.refund = json.refund;
 }
 
 RemainCalculation.prototype.toNormal = function () {
   let obj = {};
   obj.amount = this.amount.toNormal();
   obj.info = this.info.toNormal();
+  obj.refund = this.refund;
   return obj;
 }
 
 const FormDate = function (json) {
   this.from = new DateParse(json.from);
   this.to = new DateParse(json.to);
+  this.cancel = new DateParse(json.cancel);
 }
 
 FormDate.prototype.toNormal = function () {
   let obj = {};
   obj.from = this.from.toNormal();
   obj.to = this.to.toNormal();
+  obj.cancel = this.cancel.toNormal();
   return obj;
 }
 
@@ -428,6 +442,7 @@ PastDesigner.prototype.toNormal = function () {
 const First = function (json) {
   this.guide = new DateParse(json.guide);
   this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
   this.calculation = new FirstCalculation(json.calculation);
 }
 
@@ -435,6 +450,7 @@ First.prototype.toNormal = function () {
   let obj = {};
   obj.guide = this.guide.toNormal();
   obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
   obj.calculation = this.calculation.toNormal();
   return obj;
 }
@@ -442,6 +458,7 @@ First.prototype.toNormal = function () {
 const Remain = function (json) {
   this.guide = new DateParse(json.guide);
   this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
   this.calculation = new RemainCalculation(json.calculation);
 }
 
@@ -449,6 +466,7 @@ Remain.prototype.toNormal = function () {
   let obj = {};
   obj.guide = this.guide.toNormal();
   obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
   obj.calculation = this.calculation.toNormal();
   return obj;
 }
