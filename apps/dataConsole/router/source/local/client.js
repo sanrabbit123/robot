@@ -201,15 +201,16 @@ ClientJs.prototype.standardBar = function (standard) {
 
 ClientJs.prototype.infoArea = function (info) {
   const instance = this;
+  const grayBarWidth = this.grayBarWidth;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
   let temp, target;
   let num, leftPosition, widthArr;
   let columns;
-  const grayBarWidth = this.grayBarWidth;
   let upsideWhiteBar;
   let eventFunction, updateEventFunction;
+  let enterEventFunction, leaveEventFunction;
 
   temp = {};
   columns = [];
@@ -235,6 +236,7 @@ ClientJs.prototype.infoArea = function (info) {
     width: String(5000) + ea,
     color: "#404040",
   };
+
   style2 = {
     display: "block",
     position: "fixed",
@@ -247,6 +249,7 @@ ClientJs.prototype.infoArea = function (info) {
     left: style.left,
     color: "inherit",
   };
+
   style3 = {
     position: "absolute",
     marginBottom: String(this.module.marginBottom) + ea,
@@ -287,13 +290,62 @@ ClientJs.prototype.infoArea = function (info) {
     }
   }
 
+  enterEventFunction = function (e) {
+    const mother = this.parentElement;
+    const thisIndex = this.parentElement.getAttribute("index");
+    const cliidChildren = instance.totalMother.children[0].children;
+    for (let z = 0; z < mother.children.length; z++) {
+      mother.children[z].style.color = "#2fa678";
+    }
+    for (let z = 0; z < cliidChildren.length; z++) {
+      if (cliidChildren[z].getAttribute("index") === thisIndex) {
+        for (let y = 0; y < cliidChildren[z].children.length; y++) {
+          cliidChildren[z].children[y].style.color = "#2fa678";
+        }
+      }
+    }
+  }
+
+  leaveEventFunction = function (e) {
+    const mother = this.parentElement;
+    const thisIndex = this.parentElement.getAttribute("index");
+    const cliidChildren = instance.totalMother.children[0].children;
+    for (let z = 0; z < mother.children.length; z++) {
+      mother.children[z].style.color = "#404040";
+    }
+    for (let z = 0; z < cliidChildren.length; z++) {
+      if (cliidChildren[z].getAttribute("index") === thisIndex) {
+        for (let y = 0; y < cliidChildren[z].children.length; y++) {
+          cliidChildren[z].children[y].style.color = "#404040";
+        }
+      }
+    }
+  }
+
   updateEventFunction = function (left) {
     return function (e) {
       e.preventDefault();
       (eventFunction(left))(e);
 
+      const thisIndex = this.parentElement.getAttribute("index");
+      leaveEventFunction.call(this, e);
+      for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
+        if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
+          for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
+            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
+          }
+        }
+      }
+
       const removeAllEvent = function () {
         GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
+          for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
+            if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
+              for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
+                instance.totalMother.children[0].children[z].children[y].style.color = "#404040";
+              }
+            }
+          }
           while (document.querySelectorAll('.removeTarget').length !== 0) {
             document.querySelectorAll('.removeTarget')[0].remove();
           }
@@ -620,6 +672,8 @@ ClientJs.prototype.infoArea = function (info) {
         });
       } else {
         div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+        div_clone3.addEventListener("mouseenter", enterEventFunction);
+        div_clone3.addEventListener("mouseleave", leaveEventFunction);
       }
 
       div_clone2.appendChild(div_clone3);
@@ -628,10 +682,8 @@ ClientJs.prototype.infoArea = function (info) {
     if (num === 0) {
       upsideWhiteBar = div_clone2;
       upsideWhiteBar.classList.add("moveTarget");
-
       upsideWhiteBar.style.borderBottom = "1px dashed #dddddd";
       upsideWhiteBar.style.height = String(this.module.height + this.module.initialLine) + ea;
-
       upsideWhiteBar.setAttribute("sort", String(0));
       this.totalMother.appendChild(upsideWhiteBar);
     } else {

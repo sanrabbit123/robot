@@ -209,6 +209,7 @@ DesignerJs.prototype.infoArea = function (info) {
   const grayBarWidth = this.grayBarWidth;
   let upsideWhiteBar;
   let eventFunction, updateEventFunction;
+  let enterEventFunction, leaveEventFunction;
 
   temp = {};
   columns = [];
@@ -286,13 +287,62 @@ DesignerJs.prototype.infoArea = function (info) {
     }
   }
 
+  enterEventFunction = function (e) {
+    const mother = this.parentElement;
+    const thisIndex = this.parentElement.getAttribute("index");
+    const desidChildren = instance.totalMother.children[0].children;
+    for (let z = 0; z < mother.children.length; z++) {
+      mother.children[z].style.color = "#2fa678";
+    }
+    for (let z = 0; z < desidChildren.length; z++) {
+      if (desidChildren[z].getAttribute("index") === thisIndex) {
+        for (let y = 0; y < desidChildren[z].children.length; y++) {
+          desidChildren[z].children[y].style.color = "#2fa678";
+        }
+      }
+    }
+  }
+
+  leaveEventFunction = function (e) {
+    const mother = this.parentElement;
+    const thisIndex = this.parentElement.getAttribute("index");
+    const desidChildren = instance.totalMother.children[0].children;
+    for (let z = 0; z < mother.children.length; z++) {
+      mother.children[z].style.color = "#404040";
+    }
+    for (let z = 0; z < desidChildren.length; z++) {
+      if (desidChildren[z].getAttribute("index") === thisIndex) {
+        for (let y = 0; y < desidChildren[z].children.length; y++) {
+          desidChildren[z].children[y].style.color = "#404040";
+        }
+      }
+    }
+  }
+
   updateEventFunction = function (left) {
     return function (e) {
       e.preventDefault();
       (eventFunction(left))(e);
 
+      const thisIndex = this.parentElement.getAttribute("index");
+      leaveEventFunction.call(this, e);
+      for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
+        if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
+          for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
+            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
+          }
+        }
+      }
+
       const removeAllEvent = function () {
         GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
+          for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
+            if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
+              for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
+                instance.totalMother.children[0].children[z].children[y].style.color = "#404040";
+              }
+            }
+          }
           while (document.querySelectorAll('.removeTarget').length !== 0) {
             document.querySelectorAll('.removeTarget')[0].remove();
           }
@@ -619,6 +669,8 @@ DesignerJs.prototype.infoArea = function (info) {
         });
       } else {
         div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+        div_clone3.addEventListener("mouseenter", enterEventFunction);
+        div_clone3.addEventListener("mouseleave", leaveEventFunction);
       }
 
       div_clone2.appendChild(div_clone3);
