@@ -346,6 +346,13 @@ ClientJs.prototype.infoArea = function (info) {
               }
             }
           }
+          for (let z = 0; z < instance.totalMother.lastChild.children.length; z++) {
+            if (instance.totalMother.lastChild.children[z].getAttribute("index") === thisIndex) {
+              for (let y = 0; y < instance.totalMother.lastChild.children[z].children.length; y++) {
+                instance.totalMother.lastChild.children[z].children[y].style.color = "#404040";
+              }
+            }
+          }
           while (document.querySelectorAll('.removeTarget').length !== 0) {
             document.querySelectorAll('.removeTarget')[0].remove();
           }
