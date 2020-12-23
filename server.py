@@ -81,7 +81,6 @@ async def mongoToJson():
         await run([ 'mongoexport', f'--uri="mongodb://{infoJson["mongoinfo"]["host"]}/miro81"', "--username=uragen", "--password=Dpdhdn941!", f'--port={str(infoJson["mongoinfo"]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
 
 
-
 def rowsDecode(rows):
     result = []
     for dic in rows:
@@ -130,8 +129,7 @@ async def mysqlToJson():
     return fileNameList
 
 
-async def mysqlToTest():
-
+async def mysqlCopy():
     fileList = []
     fileNameList = await mysqlToJson()
     for i in fileNameList:
@@ -139,12 +137,13 @@ async def mysqlToTest():
             dataArr = json.loads(f.read())
         dic = {}
         tempList = i.split("_")
-        dic["name"] = tempList[0]
+        dic["name"] = tempList[0].split("/")[tempList[0].split("/").__len__() - 1]
         dic["data"] = dataArr
         columns = []
         if dataArr.__len__() > 0:
             for j in dataArr[0]:
-                columns.append(j)
+                if j != "id":
+                    columns.append(j)
         dic["columns"] = columns
         fileList.append(dic)
 
@@ -160,6 +159,7 @@ async def mysqlToTest():
     tables_raw = curs.fetchall()
     tables_dic = rowsDecode(tables_raw)
     tables = []
+
     for dic in tables_dic:
         tables.append(dic[tablesConstant])
 
@@ -183,10 +183,12 @@ async def mysqlToTest():
                 sql += k + ","
             sql = sql[0:-1] + ") VALUES ("
             for k in dic["columns"]:
-                sql += j[k] + ","
+                sql += "'" + str(j[k]) + "',"
             sql = sql[0:-1] + ");"
+            print(sql)
             curs.execute(sql)
 
+    conn.commit()
     conn.close()
 
 
@@ -207,7 +209,7 @@ if sys.argv.__len__() > 1:
             pass
 
     elif sys.argv[1] == "mysql":
-        asyncio.run(mysqlToTest())
+        asyncio.run(mysqlCopy())
 
 else:
     print("argument must be 'ai' or 'backup'")
