@@ -989,18 +989,18 @@ DesignerJs.prototype.cardViewMaker = function () {
         position: "absolute",
         top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
         left: String(margin * 1.7) + ea,
-        fontSize: String(19) + ea,
+        fontSize: String(fontSize + 6) + ea,
         fontWeight: String(600),
         color: "#404040",
       };
 
       areaNumberStyle = {
         position: "absolute",
-        bottom: String(margin * (GeneralJs.isMac() ? 1.2 : 1.37)) + ea,
-        left: String(margin * 1.5) + ea,
-        fontSize: String(15.8) + ea,
-        fontWeight: String(100),
-        color: "#404040",
+        top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
+        left: String(margin * 1.7) + ea,
+        fontSize: String(fontSize + 4) + ea,
+        fontWeight: String(200),
+        color: "#aaaaaa",
       };
 
       areaTongStyle = {
