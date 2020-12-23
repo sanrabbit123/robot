@@ -211,6 +211,9 @@ ClientJs.prototype.infoArea = function (info) {
   let upsideWhiteBar;
   let eventFunction, updateEventFunction;
   let enterEventFunction, leaveEventFunction;
+  let dropPoint;
+  let onoffDummy;
+  let thisOnOff;
 
   temp = {};
   columns = [];
@@ -226,6 +229,13 @@ ClientJs.prototype.infoArea = function (info) {
   target = info.data;
   if (info.search === null) {
     target.unshift(temp);
+  }
+
+  onoffDummy = {};
+  if (target.length > 0) {
+    for (let i in target[0]) {
+      onoffDummy[i] = false;
+    }
   }
 
   style = {
@@ -277,6 +287,15 @@ ClientJs.prototype.infoArea = function (info) {
   num = (info.search === null ? 0 : 1);
   eventFunction = function (left) {
     return function (e) {
+      if (e.type === "click" && e.altKey) {
+        const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];
+        const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
+        onOffObj[this.getAttribute("column")] = !onOffObj[this.getAttribute("column")];
+        window.localStorage.setItem(thisId, JSON.stringify(onOffObj));
+        if (onOffObj[this.getAttribute("column")]) {
+          this.style.color = "#2fa678";
+        }
+      }
       const targets = document.querySelectorAll(".moveTarget");
       const ea = "px";
       for (let target of targets) {
@@ -308,15 +327,22 @@ ClientJs.prototype.infoArea = function (info) {
 
   leaveEventFunction = function (e) {
     const mother = this.parentElement;
-    const thisIndex = this.parentElement.getAttribute("index");
+    const thisIndex = mother.getAttribute("index");
+    const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(mother.className)[0];
+    const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const cliidChildren = instance.totalMother.children[0].children;
+    const finalColor = (mother.getAttribute("drop") === "true") ? "#cccccc" : "#404040";
     for (let z = 0; z < mother.children.length; z++) {
-      mother.children[z].style.color = "#404040";
+      if (!onOffObj[mother.children[z].getAttribute("column")]) {
+        mother.children[z].style.color = finalColor;
+      } else {
+        mother.children[z].style.color = "#2fa678";
+      }
     }
     for (let z = 0; z < cliidChildren.length; z++) {
       if (cliidChildren[z].getAttribute("index") === thisIndex) {
         for (let y = 0; y < cliidChildren[z].children.length; y++) {
-          cliidChildren[z].children[y].style.color = "#404040";
+          cliidChildren[z].children[y].style.color = finalColor;
         }
       }
     }
@@ -325,9 +351,12 @@ ClientJs.prototype.infoArea = function (info) {
   updateEventFunction = function (left) {
     return function (e) {
       e.preventDefault();
-      (eventFunction(left))(e);
+      const clickEventFunction = eventFunction(left);
+      clickEventFunction.call(this, e);
 
       const thisIndex = this.parentElement.getAttribute("index");
+      const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];
+
       leaveEventFunction.call(this, e);
       for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
         if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
@@ -339,20 +368,36 @@ ClientJs.prototype.infoArea = function (info) {
 
       const removeAllEvent = function () {
         GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
-          for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
-            if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
-              for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
-                instance.totalMother.children[0].children[z].children[y].style.color = "#404040";
+          const standardArea = instance.totalMother.lastChild;
+          const infoArea = instance.totalMother.children[0];
+          const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
+          let finalColor;
+
+          for (let z = 0; z < standardArea.children.length; z++) {
+            if (standardArea.children[z].getAttribute("index") === thisIndex) {
+              if (standardArea.children[z].getAttribute("drop") === "true") {
+                finalColor = "#cccccc";
+              } else {
+                finalColor = "#404040";
+              }
+              for (let y = 0; y < standardArea.children[z].children.length; y++) {
+                if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
+                  standardArea.children[z].children[y].style.color = finalColor;
+                } else {
+                  standardArea.children[z].children[y].style.color = "#2fa678";
+                }
               }
             }
           }
-          for (let z = 0; z < instance.totalMother.lastChild.children.length; z++) {
-            if (instance.totalMother.lastChild.children[z].getAttribute("index") === thisIndex) {
-              for (let y = 0; y < instance.totalMother.lastChild.children[z].children.length; y++) {
-                instance.totalMother.lastChild.children[z].children[y].style.color = "#404040";
+
+          for (let z = 0; z < infoArea.children.length; z++) {
+            if (infoArea.children[z].getAttribute("index") === thisIndex) {
+              for (let y = 0; y < infoArea.children[z].children.length; y++) {
+                infoArea.children[z].children[y].style.color = finalColor;
               }
             }
           }
+
           while (document.querySelectorAll('.removeTarget').length !== 0) {
             document.querySelectorAll('.removeTarget')[0].remove();
           }
@@ -611,6 +656,8 @@ ClientJs.prototype.infoArea = function (info) {
     }
   }
 
+  dropPoint = DataPatch.clientDropPoint();
+
   for (let obj of target) {
     if (num === 1) {
       style3.fontWeight = "500";
@@ -627,8 +674,23 @@ ClientJs.prototype.infoArea = function (info) {
     div_clone2.setAttribute("index", String(num));
     if (num !== 0) {
       div_clone2.classList.add(this.cases[num].cliid);
+      if (dropPoint.values.includes(obj[dropPoint.column])) {
+        style2.color = "#cccccc";
+        for (let z = 0; z < this.standardDoms[num].children.length; z++) {
+          this.standardDoms[num].children[z].style.color = "#cccccc";
+        }
+        div_clone2.setAttribute("drop", "true");
+      } else {
+        style2.color = "inherit";
+        div_clone2.setAttribute("drop", "false");
+      }
+      if (window.localStorage.getItem(this.cases[num].cliid) === null) {
+        window.localStorage.setItem(this.cases[num].cliid, JSON.stringify(onoffDummy));
+        thisOnOff = onoffDummy;
+      } else {
+        thisOnOff = JSON.parse(window.localStorage.getItem(this.cases[num].cliid));
+      }
     }
-
     for (let i in style2) {
       div_clone2.style[i] = style2[i];
     }
@@ -638,6 +700,11 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.textContent = obj[columns[z]];
       for (let i in style3) {
         div_clone3.style[i] = style3[i];
+      }
+      if (num !== 0) {
+        if (thisOnOff[columns[z]]) {
+          div_clone3.style.color = "#2fa678";
+        }
       }
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
@@ -791,6 +858,7 @@ ClientJs.prototype.cardViewMaker = function () {
       let nameStyle, cliidStyle, barStyle;
       let style, styles;
       let areaStyle, areaNameStyle, areaTongStyle;
+      let areaNumberStyle;
       let div_clone, div_clone2, div_clone3;
       let size, margin;
       let ea = "px";
@@ -805,6 +873,7 @@ ClientJs.prototype.cardViewMaker = function () {
       let whereQuery;
       let tempResult, tempBoo;
       let division, divisionName;
+      let numbers;
       let updateState;
       let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
 
@@ -893,17 +962,26 @@ ClientJs.prototype.cardViewMaker = function () {
         paddingBottom: String(margin * 1.2) + ea,
         paddingRight: String(margin * 1.2) + ea,
         paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed #2fa678",
+        border: "1px dashed #cccccc",
         borderRadius: String(5) + ea,
       };
 
       areaNameStyle = {
         position: "absolute",
-        top: String(margin * (GeneralJs.isMac() ? 0.9 : 1.07)) + ea,
+        top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
         left: String(margin * 1.7) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(200),
-        color: "#2fa678",
+        fontSize: String(19) + ea,
+        fontWeight: String(600),
+        color: "#404040",
+      };
+
+      areaNumberStyle = {
+        position: "absolute",
+        bottom: String(margin * (GeneralJs.isMac() ? 1.2 : 1.37)) + ea,
+        left: String(margin * 1.5) + ea,
+        fontSize: String(15.8) + ea,
+        fontWeight: String(100),
+        color: "#404040",
       };
 
       areaTongStyle = {
@@ -914,6 +992,9 @@ ClientJs.prototype.cardViewMaker = function () {
         borderRadius: String(5) + ea,
       };
 
+      //set map
+      division = new Map();
+      numbers = new Map();
 
       //update value
       updateState = async function (from, to) {
@@ -928,6 +1009,12 @@ ClientJs.prototype.cardViewMaker = function () {
           cliid = from.getAttribute("cliid");
           index = from.getAttribute("index");
           originalStatus = from.getAttribute("thisStatus");
+
+          numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
+          numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
+          numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
+          numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
+
           from.setAttribute("thisStatus", to);
           if (to === "드랍") {
             from.setAttribute("dropDetail", originalStatus);
@@ -1142,7 +1229,6 @@ ClientJs.prototype.cardViewMaker = function () {
       }
 
       //make division
-      division = new Map();
       divisionName = [
         "통화 전",
         "제안 전",
@@ -1164,15 +1250,25 @@ ClientJs.prototype.cardViewMaker = function () {
         }
         div_clone.appendChild(div_clone2);
 
+        //number
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.textContent = String(0) + "명";
+        for (let i in areaNumberStyle) {
+          div_clone2.style[i] = areaNumberStyle[i];
+        }
+        div_clone2.setAttribute("kinds", "number");
+        numbers.set(divisionName[i], div_clone2);
+        div_clone.appendChild(div_clone2);
+
         //tong
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         for (let i in areaTongStyle) {
           div_clone2.style[i] = areaTongStyle[i];
         }
-        div_clone.appendChild(div_clone2);
         div_clone2.setAttribute("kinds", "area");
         div_clone2.setAttribute("name", divisionName[i]);
         division.set(divisionName[i], div_clone2);
+        div_clone.appendChild(div_clone2);
 
         totalFather.appendChild(div_clone);
 
@@ -1291,6 +1387,11 @@ ClientJs.prototype.cardViewMaker = function () {
         }
         num++;
       }
+
+      numbers.forEach((value, key, map) => {
+        numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+        numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+      });
 
       totalFather.style.paddingLeft = String(margin * 0.75) + ea;
       totalFather.style.paddingRight = String(margin * 0.75) + ea;

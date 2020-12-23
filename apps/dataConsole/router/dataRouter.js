@@ -902,13 +902,8 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
       resultObj.startDay = req.body.start;
       resultObj.endDay = req.body.end;
 
-      resultObj.dateRange = [];
-      for (let i = Number(req.body.start.split("-")[2].replace(/^0/, '')); i < Number(req.body.end.split("-")[2].replace(/^0/, '')) + 1; i++) {
-        resultObj.dateRange.push(i);
-      }
-
       resultObj.projects = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 6; i++) {
 
         if (i === 0) {
           searchQuery0 = { "process.contract.remain.date": { "$lt": new Date(2000, 0, 1) } };
@@ -919,17 +914,28 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
           searchQuery1 = { "desid": { "$regex": "^d" } };
           searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
         } else if (i === 2) {
+          searchQuery0 = { "process.contract.remain.cancel": { "$gte": startDay, "$lt": endDay } };
+          searchQuery1 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
+        } else if (i === 3) {
           searchQuery3 = { "process.contract.remain.date": { "$gte": new Date(2000, 0, 1) } };
           searchQuery0 = { "process.calculation.payments.remain.date": { "$lt": new Date(2000, 0, 1) } };
           searchQuery1 = { "desid": { "$regex": "^d" } };
           searchQuery2 = { "$and": [ searchQuery0, searchQuery1, searchQuery3 ] };
-        } else if (i === 3) {
+        } else if (i === 4) {
           searchQuery0 = { "process.calculation.payments.first.date": { "$gte": startDay, "$lt": endDay } };
           searchQuery1 = { "process.calculation.payments.remain.date": { "$gte": startDay, "$lt": endDay } };
           searchQuery4 = { "$or": [ searchQuery0, searchQuery1 ] };
           searchQuery3 = { "desid": { "$regex": "^d" } };
           searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
+        } else if (i === 5) {
+          searchQuery0 = { "process.calculation.payments.first.cancel": { "$gte": startDay, "$lt": endDay } };
+          searchQuery1 = { "process.calculation.payments.remain.cancel": { "$gte": startDay, "$lt": endDay } };
+          searchQuery4 = { "$or": [ searchQuery0, searchQuery1 ] };
+          searchQuery3 = { "desid": { "$regex": "^d" } };
+          searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
         }
+
         temp = await back.getProjectsByQuery(searchQuery2, { selfMongo: instance.mongo });
 
         cliidArr = [];
@@ -939,7 +945,7 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
           desidArr.push({ desid: temp[j].desid });
         }
 
-        if (i < 2) {
+        if (i < 3) {
           if (cliidArr.length > 0) {
             temp2 = await back.getClientsByQuery({ "$or": cliidArr }, { selfMongo: instance.mongo });
           } else {
@@ -976,12 +982,20 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
             tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.amount.consumer) + "만원";
           } else if (i === 2) {
             for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].cliid === temp[j].cliid) {
+                tempObj.name = temp2[z].name;
+              }
+            }
+            tempObj.date = DataRouter.dateToString(temp[j].process.contract.remain.cancel);
+            tempObj.amount = DataRouter.autoComma(temp[j].process.contract.remain.calculation.refund) + "만원";
+          } else if (i === 3) {
+            for (let z = 0; z < temp2.length; z++) {
               if (temp2[z].desid === temp[j].desid) {
                 tempObj.name = temp2[z].designer;
               }
             }
             tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
-          } else if (i === 3) {
+          } else if (i === 4) {
             for (let z = 0; z < temp2.length; z++) {
               if (temp2[z].desid === temp[j].desid) {
                 tempObj.name = temp2[z].designer;
@@ -992,8 +1006,18 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
               tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.first.date);
             }
             tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
+          } else if (i === 5) {
+            for (let z = 0; z < temp2.length; z++) {
+              if (temp2[z].desid === temp[j].desid) {
+                tempObj.name = temp2[z].designer;
+              }
+            }
+            tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.remain.cancel);
+            if (/^1[6789]/.test(tempObj.date)) {
+              tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.first.cancel);
+            }
+            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.refund) + "만원";
           }
-
           tempArr.push(tempObj);
         }
         resultObj.projects.push(tempArr);

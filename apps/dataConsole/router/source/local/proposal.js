@@ -2579,6 +2579,7 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
         div_clone2.setAttribute("proid", info_object_arr[i].proid);
         div_clone2.setAttribute("cliid", info_object_arr[i].cliid);
         div_clone2.addEventListener("click", this.list_menu());
+        div_clone2.addEventListener("contextmenu", this.list_menu());
       }
       div_clone2.insertAdjacentHTML("beforeend", details_list[i][j]);
       div_clone.appendChild(div_clone2);
@@ -2591,8 +2592,11 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
 }
 
 ProposalJs.prototype.list_menu = function () {
-  let instance = this;
+  const instance = this;
   return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     let div_clone, div_clone2, div_clone3;
     let mother = this;
     let list = [
@@ -2760,8 +2764,66 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
             div_clone3.addEventListener("click", async function (e) {
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
               const onoffLine = /온라인/gi.test(this.textContent);
+              const thisMoney = Number((this.textContent.split(" ")[this.textContent.split(" ").length - 1]).replace(/[^0-9]/g, '')) * 10000;
+              let contractFirst, supply, vat, consumer, classification, percentage, bankName, bankTo, calculate, ratio;
+              let method;
+              let updateQuery;
+
+              let selectedDesigner_raw, selectedDesigner;
               try {
-                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" }), "/rawUpdateProject");
+                selectedDesigner_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
+                selectedDesigner = selectedDesigner_raw[0];
+
+                updateQuery = { desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" };
+
+                contractFirst = 330000;
+                supply = thisMoney;
+                vat = Math.round(supply * 0.1);
+                consumer = Math.round(supply * 1.1);
+
+                updateQuery["process.contract.first.calculation.amount"] = Number(contractFirst);
+                updateQuery["process.contract.remain.calculation.amount.supply"] = Number(supply);
+                updateQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+                updateQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
+                classification = selectedDesigner.information.business.businessInfo.classification;
+                percentage = Number(selectedDesigner.information.business.service.cost.percentage);
+                method = "사업자(일반)";
+                if (/사업자/g.test(classification)) {
+                  if (/일반/g.test(classification)) {
+                    method = "사업자(일반)";
+                  } else {
+                    method = "사업자(간이)";
+                  }
+                } else {
+                  method = "프리랜서";
+                }
+                updateQuery["process.calculation.method"] = method;
+                updateQuery["process.calculation.percentage"] = Number(percentage);
+
+                if (selectedDesigner.information.business.account.length > 0) {
+                  bankName = selectedDesigner.information.business.account[0].bankName + " " + String(selectedDesigner.information.business.account[0].accountNumber);
+                  bankTo = selectedDesigner.information.business.account[0].to;
+                  updateQuery["process.calculation.info.account"] = bankName;
+                  updateQuery["process.calculation.info.proof"] = bankTo;
+                  updateQuery["process.calculation.info.to"] = bankTo;
+                }
+
+                if (/일반/gi.test(method)) {
+                  calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
+                } else if (/간이/gi.test(method)) {
+                  calculate = Math.round(supply * (1 - (percentage / 100)));
+                } else if (/프리/gi.test(method)) {
+                  ratio = 0.967;
+                  calculate = Math.round((supply - (supply * (percentage / 100))) * ratio);
+                } else {
+                  calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
+                }
+                updateQuery["process.calculation.payments.totalAmount"] = calculate;
+                updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+                updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
               } catch (e) {
                 console.log(e);
