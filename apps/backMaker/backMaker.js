@@ -384,6 +384,124 @@ BackMaker.prototype.updateDesid = async function () {
   }
 }
 
+BackMaker.prototype.historyParsing = async function () {
+  const instance = this;
+  const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+  try {
+
+    //client history
+
+    let targets, targets2;
+    let pastTong;
+    let historyTong;
+    let tempTong;
+    let projectHistories;
+    let tempArr;
+
+    targets = [
+      "a12_history",
+      "a31_aboutsite",
+      "a32_aboutcom",
+      "a33_aboutsty",
+      "a34_aboutmon",
+      "a35_aboutetc",
+    ];
+
+    targets2 = [
+      "history",
+      "space",
+      "construct",
+      "styling",
+      "budget",
+      "progress",
+    ];
+
+    await MONGOC.connect();
+    await MONGOLOCALC.connect();
+
+    pastTong = await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({}).toArray();
+
+    historyTong = [];
+    await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteMany({});
+
+    for (let p of pastTong) {
+      tempTong = {};
+      tempTong.cliid = p.a4_customernumber;
+      tempTong.history = "";
+      tempTong.space = "";
+      tempTong.construct = "";
+      tempTong.styling = "";
+      tempTong.budget = "";
+      tempTong.progress = "";
+
+      if (p.a12_history !== "" && p.a12_history !== "-") {
+        tempTong.history += p.a12_history;
+      }
+      if (p.a31_aboutsite !== "" && p.a31_aboutsite !== "-") {
+        tempTong.space = p.a31_aboutsite;
+      }
+      if (p.a32_aboutcom !== "" && p.a32_aboutcom !== "-") {
+        tempTong.construct = p.a32_aboutcom;
+      }
+      if (p.a33_aboutsty !== "" && p.a33_aboutsty !== "-") {
+        tempTong.styling += p.a33_aboutsty;
+      }
+      if (p.a34_aboutmon !== "" && p.a34_aboutmon !== "-") {
+        tempTong.budget = p.a34_aboutmon;
+      }
+      if (p.a35_aboutetc !== "" && p.a35_aboutetc !== "-") {
+        tempTong.progress = p.a35_aboutetc;
+      }
+
+      historyTong.push(tempTong);
+      await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(tempTong);
+    }
+
+    //project history
+    pastTong = await MONGOC.db(`miro81`).collection(`BP1_process`).find({}).toArray();
+
+    projectHistories = [];
+    await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).deleteMany({});
+
+    for (let p of pastTong) {
+      tempArr = await MONGOC.db(`miro81`).collection(`project`).find({ cliid: p.a4_customernumber }).toArray();
+      if (tempArr.length > 0) {
+        tempTong = {};
+        tempTong.proid = "";
+        tempTong.history = "";
+        tempTong.designer = "";
+        tempTong.client = "";
+        tempTong.photo = "";
+
+        tempTong.proid = tempArr[0].proid;
+
+        if (p.z1_history1 !== "" && p.z1_history1 !== "-") {
+          tempTong.history += p.z1_history1;
+        }
+        if (p.z2_history2 !== "" && p.z2_history2 !== "-") {
+          tempTong.history += "\n\n";
+          tempTong.history += p.z2_history2;
+        }
+        if (p.z3_history3 !== "" && p.z3_history3 !== "-") {
+          tempTong.history += "\n\n";
+          tempTong.history += p.z3_history3;
+        }
+
+        projectHistories.push(tempTong);
+        await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).insertOne(tempTong);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+    MONGOLOCALC.close();
+  }
+}
+
 BackMaker.prototype.pastMap = function () {
   switch (this.button) {
     case "client":

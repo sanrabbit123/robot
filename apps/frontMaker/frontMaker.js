@@ -18,39 +18,39 @@ FrontMaker.prototype.links = {
   svgTong: `${process.cwd()}/apps/mapMaker/svgTong`,
 }
 
-FrontMaker.prototype.startChrome = async function (link, newBoo = true) {
-  try {
-    const { exec } = require("child_process");
-    const chromePath = `/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' ${newBoo ? "--new-window " : ""}${link}`;
-    return new Promise(function (resolve, reject) {
-      exec(chromePath, (err, stdout, stderr) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(stdout);
-      });
+FrontMaker.prototype.startChrome = function (link, newBoo = true) {
+  const { exec } = require("child_process");
+  const chromePath = `/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' ${newBoo ? "--new-window " : ""}${link}`;
+  return new Promise(function (resolve, reject) {
+    exec(chromePath, function (err, stdout, stderr) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(stdout);
     });
-  } catch (e) {
-    console.log(e);
-  }
+  });
 }
 
 FrontMaker.prototype.setStrings = async function () {
+  const instance = this;
   const { fileSystem } = this.mother;
   try {
     const stringDir = await fileSystem(`readDir`, [ `${this.dir}/string` ]);
     let strings;
-    for (let i of stringDir) { if (i !== `.DS_Store`) {
-      strings = await fileSystem(`readString`, [ `${this.dir}/string/${i}` ]);
-      this.strings[i.replace(/\..+$/g, '') + 'String'] = strings;
-    }}
+    for (let i of stringDir) {
+      if (i !== `.DS_Store`) {
+        strings = await fileSystem(`readString`, [ `${this.dir}/string/${i}` ]);
+        this.strings[i.replace(/\..+$/g, '') + 'String'] = strings;
+      }
+    }
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.mediaLoad = function (code) {
+  const instance = this;
   let media_mother, media_arr0, media_arr1, media_arr2, media_temp, media_temp_result, media_plus, media_temp2, media_temp3;
   let media_mother_indexArr = [];
   let media_result_indexArr = [];
@@ -122,6 +122,7 @@ FrontMaker.prototype.mediaLoad = function (code) {
 }
 
 FrontMaker.prototype.cssOut = function (code) {
+  const instance = this;
   let cssOutStart, cssOutEnd, tempArr0, tempArr1;
   let resultCssString = '';
   let resultCssArr, resultCssResult;
@@ -164,6 +165,7 @@ FrontMaker.prototype.cssOut = function (code) {
 }
 
 FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
+  const instance = this;
   try {
     let code, generalCode, result, svg_result, async_result, temp_string, exec_string, css_code, css_string, css_string_general, css_string_final, svgTong, svgDirBoo;
     let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/javascript` ]);
@@ -299,34 +301,43 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
 }
 
 FrontMaker.prototype.phpExecToPoo = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
   try {
-    let code;
-    let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/phpExec` ]);
-    for (let i of list) { if (i !== ".DS_Store") {
-      code = await this.mother.fileSystem(`readString`, [ `${this.links.source}/phpExec/${i}` ]);
-      await this.mother.fileSystem(`write`, [ `${this.links.server}/${i.replace(/\.php$/g, '')}.php`, code ]);
-      console.log(`phpExec ${i} success`);
-    }}
+    let code, list;
+    list = await fileSystem(`readDir`, [ `${this.links.source}/phpExec` ]);
+    for (let i of list) {
+      if (i !== ".DS_Store") {
+        code = await fileSystem(`readString`, [ `${this.links.source}/phpExec/${i}` ]);
+        await fileSystem(`write`, [ `${this.links.server}/${i.replace(/\.php$/g, '')}.php`, code ]);
+        console.log(`phpExec ${i} success`);
+      }
+    }
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.phpFunctionToPoo = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
   try {
-    let code;
-    let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/phpFunctions` ]);
-    for (let i of list) { if (i !== ".DS_Store") {
-      code = await this.mother.fileSystem(`readString`, [ `${this.links.source}/phpFunctions/${i}` ]);
-      await this.mother.fileSystem(`write`, [ `${this.links.server}/engine/functions/${i.replace(/\.php$/g, '')}_f.php`, code ]);
-      console.log(`phpFunction ${i} success`);
-    }}
+    let code, list;
+    list = await fileSystem(`readDir`, [ `${this.links.source}/phpFunctions` ]);
+    for (let i of list) {
+      if (i !== ".DS_Store") {
+        code = await fileSystem(`readString`, [ `${this.links.source}/phpFunctions/${i}` ]);
+        await fileSystem(`write`, [ `${this.links.server}/engine/functions/${i.replace(/\.php$/g, '')}_f.php`, code ]);
+        console.log(`phpFunction ${i} success`);
+      }
+    }
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
+  const instance = this;
   const infoObj = require(`${process.cwd()}/apps/infoObj.js`);
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const { fileSystem } = this.mother;
@@ -334,14 +345,16 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
     const exceptions = [ 'Alimtalk' ];
 
     //general php
-    let code, result;
-    let list = await fileSystem(`readDir`, [ `${this.links.source}/phpGeneral` ]);
-    for (let i of list) { if (i !== ".DS_Store" && !exceptions.includes(i.replace(/\.js$/g, ''))) {
-      code = require(`${this.links.source}/phpGeneral/${i}`);
-      result = code(dayString);
-      await fileSystem(`write`, [ `${this.links.server}/engine/${i.replace(/\.js$/g, '')}.php`, result ]);
-      console.log(`phpGeneral ${i} success`);
-    }}
+    let code, result, list;
+    list = await fileSystem(`readDir`, [ `${this.links.source}/phpGeneral` ]);
+    for (let i of list) {
+      if (i !== ".DS_Store" && !exceptions.includes(i.replace(/\.js$/g, ''))) {
+        code = require(`${this.links.source}/phpGeneral/${i}`);
+        result = code(dayString);
+        await fileSystem(`write`, [ `${this.links.server}/engine/${i.replace(/\.js$/g, '')}.php`, result ]);
+        console.log(`phpGeneral ${i} success`);
+      }
+    }
 
     /*
 
@@ -381,64 +394,105 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
 }
 
 FrontMaker.prototype.tokenToPoo = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
-    let code;
-    let list = await this.mother.fileSystem(`readDir`, [ `${this.links.source}/token` ]);
-    for (let i of list) { if (i !== ".DS_Store") {
-      code = await this.mother.fileSystem(`readString`, [ `${this.links.source}/token/${i}` ]);
-      await this.mother.fileSystem(`write`, [ `${this.links.server}/engine/token/${i}`, code ]);
-      console.log(`token ${i} success`);
-    }}
+    let code, list;
+
+    list = await fileSystem(`readDir`, [ `${this.links.source}/token` ]);
+    for (let i of list) {
+      if (i !== ".DS_Store") {
+        code = await fileSystem(`readString`, [ `${this.links.source}/token/${i}` ]);
+        await fileSystem(`write`, [ `${this.links.server}/engine/token/${i}`, code ]);
+        console.log(`token ${i} success`);
+      }
+    }
+
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.imageToStatic = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
-    let list = await this.mother.fileSystem(`readDir`, [ `${this.links.binary}` ]);
-    let list_image = await this.mother.fileSystem(`readDir`, [ `${this.links.server}/list_image` ]);
-    for (let i of list_image) { if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
-      this.mother.shell.exec(`rm -rf ${this.mother.shellLink(`${this.links.server}/list_image/${i}`)};`);
-      console.log(`delete image ${i} success`);
-    }}
-    for (let i of list) { if (i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
-      this.mother.shell.exec(`cp -r ${this.mother.shellLink(`${this.links.binary}/${i}`)} ${this.mother.shellLink(`${this.links.server}/list_image`)};`);
-      console.log(`image copy ${i} success`);
-    }}
+    let list, list_image;
+
+    list = await fileSystem(`readDir`, [ `${this.links.binary}` ]);
+    list_image = await fileSystem(`readDir`, [ `${this.links.server}/list_image` ]);
+
+    for (let i of list_image) {
+      if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
+        shell.exec(`rm -rf ${shellLink(`${this.links.server}/list_image/${i}`)};`);
+        console.log(`delete image ${i} success`);
+      }
+    }
+
+    for (let i of list) {
+      if (i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
+        shell.exec(`cp -r ${shellLink(`${this.links.binary}/${i}`)} ${shellLink(`${this.links.server}/list_image`)};`);
+        console.log(`image copy ${i} success`);
+      }
+    }
+
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.staticSetting = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
+
     console.log(`staticSetting...`);
-    let home = await this.mother.fileSystem(`readDir`, [ this.links.server_raw ]);
-    let pooBoo = true;
-    for (let i of home) { if (i === this.links.server_name) {
-      pooBoo = false;
-    }}
-    if (pooBoo) { this.mother.shell.exec(`mkdir ${this.links.server};`); }
+    let home, pooBoo;
+    let server;
+    let engine;
 
-    let server = await this.mother.fileSystem(`readDir`, [ this.links.server ]);
-    if (server.indexOf(`js`) === -1) { this.mother.shell.exec(`mkdir ${this.links.server}/js`); }
-    if (server.indexOf(`list_image`) === -1) { this.mother.shell.exec(`mkdir ${this.links.server}/list_image`); }
-    if (server.indexOf(`engine`) === -1) { this.mother.shell.exec(`mkdir ${this.links.server}/engine`); }
+    home = await fileSystem(`readDir`, [ this.links.server_raw ]);
+    pooBoo = true;
+    for (let i of home) {
+      if (i === this.links.server_name) {
+        pooBoo = false;
+      }
+    }
+    if (pooBoo) {
+      shell.exec(`mkdir ${this.links.server};`);
+    }
 
-    let engine = await this.mother.fileSystem(`readDir`, [ this.links.server + "/engine" ]);
-    if (engine.indexOf(`functions`) === -1) { this.mother.shell.exec(`mkdir ${this.links.server}/engine/functions`); }
-    if (engine.indexOf(`token`) === -1) { this.mother.shell.exec(`mkdir ${this.links.server}/engine/token`); }
+    server = await fileSystem(`readDir`, [ this.links.server ]);
+    if (server.indexOf(`js`) === -1) {
+      shell.exec(`mkdir ${this.links.server}/js`);
+    }
+    if (server.indexOf(`list_image`) === -1) {
+      shell.exec(`mkdir ${this.links.server}/list_image`);
+    }
+    if (server.indexOf(`engine`) === -1) {
+      shell.exec(`mkdir ${this.links.server}/engine`);
+    }
 
-    this.mother.shell.exec(`cp -r ${this.mother.shellLink(`${this.links.binary}/poo`)} ${this.mother.shellLink(this.links.server_raw)};`);
+    engine = await fileSystem(`readDir`, [ this.links.server + "/engine" ]);
+    if (engine.indexOf(`functions`) === -1) {
+      shell.exec(`mkdir ${this.links.server}/engine/functions`);
+    }
+    if (engine.indexOf(`token`) === -1) {
+      shell.exec(`mkdir ${this.links.server}/engine/token`);
+    }
+
+    shell.exec(`cp -r ${shellLink(`${this.links.binary}/poo`)} ${shellLink(this.links.server_raw)};`);
+
     console.log(`static done`);
     await this.imageToStatic();
+
   } catch (e) {
     console.log(e);
   }
 }
 
 FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
+  const instance = this;
   try {
     const dayString = this.mother.todayMaker();
 
@@ -461,28 +515,31 @@ FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
   }
 }
 
-FrontMaker.prototype.totalUpdate = async function () {
+FrontMaker.prototype.totalUpdate = async function (test = true) {
   const { fileSystem, shell, shellLink, frontinfo: { host, user } } = this.mother;
   const { server, binary, binary_www } = this.links;
   const home = process.env.HOME;
   const dayString = this.mother.todayMaker();
   const www = (binary_www.split('/'))[binary_www.split('/').length - 1];
-
   try {
+    let homeBoo, pastHomeUpdateFolder, finalUpdateDir, homeDirList;
+    let binaryTragets, binaryDirList;
+    let totalOrder;
+
     await this.totalLaunching(true, true);
 
     //read home and mkdir autoUpdateFront folder
-    let homeBoo = false;
-    let pastHomeUpdateFolder;
-    let finalUpdateDir;
-    let homeDirList = await fileSystem(`readDir`, [ home ]);
+    homeBoo = false;
+    homeDirList = await fileSystem(`readDir`, [ home ]);
 
-    for (let i of homeDirList) { if (i !== `.DS_Store`) {
-      if (/autoUpdateFront/gi.test(i)) {
-        homeBoo = true;
-        pastHomeUpdateFolder = i;
+    for (let i of homeDirList) {
+      if (i !== `.DS_Store`) {
+        if (/autoUpdateFront/gi.test(i)) {
+          homeBoo = true;
+          pastHomeUpdateFolder = i;
+        }
       }
-    }}
+    }
     if (homeBoo) {
       shell.exec(`rm -rf ${home}/${pastHomeUpdateFolder};`);
     }
@@ -490,31 +547,37 @@ FrontMaker.prototype.totalUpdate = async function () {
     shell.exec(`mkdir ${finalUpdateDir}`);
 
     //set binary targets
-    let binaryTragets = [];
-    let binaryDirList = await fileSystem(`readDir`, [ binary ]);
-    for (let i of binaryDirList) { if (i !== `.DS_Store` && i !== `poo` && i !== `www` && i !== `ai`) {
-      binaryTragets.push(i);
-    }}
+    binaryTragets = [];
+    binaryDirList = await fileSystem(`readDir`, [ binary ]);
+    for (let i of binaryDirList) {
+      if (i !== `.DS_Store` && i !== `poo` && i !== `www` && i !== `ai`) {
+        binaryTragets.push(i);
+      }
+    }
 
     //make shellScript : update www and copy homeFolder
-    let totalOrder = '';
+    totalOrder = '';
     totalOrder += "cd " + shellLink(server) + ";";
     totalOrder += "git add -A" + ";";
     totalOrder += "git commit -m \"Butterfly_Autoupdate" + dayString + "\"" + ";";
     totalOrder += "git push" + ";";
     totalOrder += "cd " + shellLink(binary_www) + ";";
     totalOrder += "git pull" + ";";
-    totalOrder += "cp -r " + shellLink(binary_www) + " " + shellLink(finalUpdateDir) + ";";
-    totalOrder += "rm -rf " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
-    totalOrder += "mkdir " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
 
-    //and copy binaries
-    for (let i of binaryTragets) {
-      totalOrder += "cp -r " + shellLink(binary) + "/" + i + " " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+    if (!test) {
+      totalOrder += "cp -r " + shellLink(binary_www) + " " + shellLink(finalUpdateDir) + ";";
+      totalOrder += "rm -rf " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+      totalOrder += "mkdir " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+
+      //and copy binaries
+      for (let i of binaryTragets) {
+        totalOrder += "cp -r " + shellLink(binary) + "/" + i + " " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
+      }
+      
+      //send to server
+      totalOrder += "scp -r " + shellLink(finalUpdateDir) + "/" + www + " " + user + "@" + host + ":/" + user + ";";
     }
 
-    //send to server
-    totalOrder += "scp -r " + shellLink(finalUpdateDir) + "/" + www + " " + user + "@" + host + ":/" + user + ";";
     totalOrder += "rm -rf " + shellLink(finalUpdateDir) + ";";
 
     //execute
