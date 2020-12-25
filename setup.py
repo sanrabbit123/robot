@@ -9,7 +9,6 @@ class RobotInstall:
         self.install = [
             [ "notion" ],
             [ "flask" ],
-            [ "aiohttp" ],
             [ "pymysql" ],
             [ "pymongo" ],
             [ "argparse" ],
