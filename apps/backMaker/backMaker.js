@@ -2686,6 +2686,4 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
   }
 }
 
-
-
 module.exports = BackMaker;
