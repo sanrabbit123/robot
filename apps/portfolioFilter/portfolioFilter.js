@@ -1,14 +1,7 @@
 const PortfolioFilter = function (clientName = "", apartName = "", designer = "", pid = "g0") {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
-  this.mother = new Mother();
-
-  this.dir = `${process.cwd()}/apps/portfolioFilter`;
-  this.generator = {
-    factory: require(this.dir + "/factory/generator.js"),
-  }
-  this.clientName = clientName;
-  this.designer = designer;
-  function apart(str) {
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const apart = function (str) {
     let arr = str.split(' ');
     let new_string = '';
     for (let i of arr) {
@@ -17,6 +10,16 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
     new_string += "홈스타일링_";
     return new_string;
   }
+
+  this.mother = new Mother();
+  this.back = new BackMaker();
+  this.dir = `${process.cwd()}/apps/portfolioFilter`;
+  this.generator = {
+    factory: require(this.dir + "/factory/generator.js"),
+  }
+  this.clientName = clientName;
+  this.designer = designer;
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.apartName = apart(apartName);
   this.pid = pid;
   this.options = {
@@ -92,6 +95,7 @@ PortfolioFilter.prototype.static_setting = async function () {
 }
 
 PortfolioFilter.prototype.image_filter = function (str, size) {
+  const instance = this;
   let date = new Date();
   let datestring = String(date.getFullYear()).slice(2);
   if (date.getMonth() + 1 < 10) {
@@ -279,7 +283,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
     return { result_folder: `${this.options.home_dir}/result`, script_folder: `${this.options.home_dir}/factory/applescript` };
 
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   }
 }
 
@@ -371,99 +375,77 @@ PortfolioFilter.prototype.total_make = async function () {
 }
 
 PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
-  //this.clientName => designer;
+  //this.clientName => designer
   const instance = this;
   const { shell, shellLink } = this.mother;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
-  const get_num = function (obj) { return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,'')); }
-  const cloud_folder = this.mother.ghostPath() + "/binary/rawDesigner";
-  const static_folder = `${process.env.HOME}/static`;
-
+  const get_num = function (obj) {
+    return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,''));
+  }
   try {
-    await MONGOC.connect();
     await this.static_setting();
 
     //Designer --------------------------------------------------------------------------------------------------
     let target_obj, ghost_arr, designer_arr;
 
     //find designer and set designer object
-    designer_arr = await MONGOC.db("miro81").collection("Designer").find({ designer: this.clientName }).toArray();
+    designer_arr = await this.back.getDesignersByQuery({ designer: this.clientName });
     if (designer_arr.length > 1) {
       if (exceptionId === 0) {
         console.log(`Exception occur : `);
         for (let i = 0; i < designer_arr.length; i++) {
-          console.log(`exceptionId : ${String(i+1)} => designer : ${i.designer} / past_desid : ${i.past_desid}`);
+          console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
         }
       } else {
-        target_obj = designer_arr[exceptionId - 1];
+        target_obj = designer_arr[exceptionId - 1].toNormal();
       }
     } else {
-      target_obj = designer_arr[0];
+      target_obj = designer_arr[0].toNormal();
     }
 
     //set ghost array
-    ghost_arr = target_obj.picture.ghost;
-
+    ghost_arr = target_obj.setting.ghost;
 
     //Save File --------------------------------------------------------------------------------------------------
     let start_num;
-    let result_files, dimensions, to_server;
-    let cloud_folder_ghost, cloud_folder_boo;
-    let static_folder_ghost, static_folder_boo;
+    let result_files, dimensions;
+    let fromArr, toArr;
 
     //find start number of ghost-picture
     if (ghost_arr.length === 0) {
       start_num = 0;
     } else {
-      ghost_arr.sort(function (a, b) { return get_num(b) - get_num(a); });
+      ghost_arr.sort((a, b) => { return get_num(b) - get_num(a); });
       start_num = get_num(ghost_arr[0]);
     }
 
     //run ghost filter
     const { result_folder, script_folder } = await this.ghost_filter(start_num);
     result_files = await this.mother.fileSystem(`readDir`, [ result_folder ]);
-    to_server = ``;
-    console.log(result_files);
 
-    //set ghost folders
-    cloud_folder_ghost = await this.mother.fileSystem(`readDir`, [ `${cloud_folder}/ghost` ]);
-    cloud_folder_boo = false;
-    static_folder_ghost = await this.mother.fileSystem(`readDir`, [ `${static_folder}/ghost` ]);
-    static_folder_boo = false;
+    fromArr = [];
+    toArr = [];
 
-    //mkdir designer folder
-    for (let dir of cloud_folder_ghost) { if (dir === target_obj.past_desid) { cloud_folder_boo = true; } }
-    for (let dir of static_folder_ghost) { if (dir === target_obj.past_desid) { static_folder_boo = true; } }
-    if (!cloud_folder_boo) { shell.exec(`mkdir ${shellLink(cloud_folder)}/ghost/${target_obj.past_desid}`); }
-    if (!static_folder_boo) { shell.exec(`mkdir ${shellLink(static_folder)}/ghost/${target_obj.past_desid}`); }
+    for (let file of result_files) {
+      if (file !== ".DS_Store") {
+        fromArr.push(result_folder + "/" + file);
+        toArr.push(`rawDesigner/ghost/${target_obj.desid}/${file}`);
+        dimensions = shell.exec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ${shellLink(result_folder)}/${file}`);
+        ghost_arr.unshift({
+          link: `/rawDesigner/ghost/${target_obj.desid}/${file}`,
+          sgTrue: dimensions.replace(/[^gs]/g, ''),
+        });
+      }
+    }
 
-    //copy image to ghost folder
-    for (let file of result_files) { if (file !== ".DS_Store") {
-      //copy image
-      shell.exec(`cp ${shellLink(result_folder)}/${file} ${shellLink(static_folder)}/ghost/${target_obj.past_desid}`);
-      shell.exec(`cp ${shellLink(result_folder)}/${file} ${shellLink(cloud_folder)}/ghost/${target_obj.past_desid}`);
-
-      //find sero / garo
-      dimensions = shell.exec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ~/static/ghost/${target_obj.past_desid}/${file}`);
-      ghost_arr.unshift({
-        link: `/ghost/${target_obj.past_desid}/${file}`,
-        sgTrue: dimensions.replace(/[^gs]/g, ''),
-      });
-
-      //make scp message
-      to_server += `scp -i ${process.env.HOME}/database.pem ${result_folder}/${file} centos@homeliaison-dashboard.xyz:/home/centos/static/ghost/${target_obj.past_desid};`;
-    }}
     console.log(ghost_arr);
+    console.log(fromArr);
+    console.log(toArr);
 
-    await MONGOC.db("miro81").collection(`Designer`).updateOne({ past_desid: target_obj.past_desid }, { $set: { "picture.ghost": ghost_arr } });
-    console.log(`done`);
-    console.log(to_server);
+    await this.back.updateDesigner([ { desid: target_obj.desid }, { "setting.ghost": ghost_arr } ]);
+    await this.mother.s3FileUpload(fromArr, toArr);
+
   } catch (e) {
     console.log(e.message);
-  } finally {
-    MONGOC.close();
-    process.exit();
   }
 }
 
@@ -511,6 +493,7 @@ PortfolioFilter.prototype.addtionalRepair = async function (pid, tNumber) {
 
     await s3FileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
+    
   } catch (e) {
     console.log(e);
   }
