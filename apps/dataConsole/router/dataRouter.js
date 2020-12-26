@@ -318,7 +318,23 @@ DataRouter.prototype.rou_get_First = function () {
   obj.link = "/:id";
   obj.func = function (req, res) {
     try {
-      const html = DataRouter.baseMaker(req.params.id);
+      let target;
+
+      if (/^cl/i.test(req.params.id)) {
+        target = "client";
+      } else if (/^de/i.test(req.params.id)) {
+        target = "designer";
+      } else if (/^da/i.test(req.params.id)) {
+        target = "dashboards";
+      } else if (/^proj/i.test(req.params.id)) {
+        target = "project";
+      } else if (/^prop/i.test(req.params.id)) {
+        target = "proposal";
+      } else {
+        target = "client";
+      }
+
+      const html = DataRouter.baseMaker(target);
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {

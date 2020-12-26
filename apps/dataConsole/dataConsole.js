@@ -66,32 +66,17 @@ DataConsole.prototype.connect = async function () {
   const express = require("express");
   const app = express();
   const bodyParser = require("body-parser");
-  const session = require("express-session");
-  const MongoStore = require("connect-mongo")(session);
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  let localMongoUrl_Arr, localMongoUrl;
-  localMongoUrl_Arr = mongoinfo.split('@');
-  localMongoUrl = localMongoUrl_Arr[0] + '@' + "localhost" + ':' + (localMongoUrl_Arr[1].split(':'))[1];
-  const sessionStore = new MongoStore({
-    url: localMongoUrl,
-    dbName: "miro81",
-    collection: "sessions"
-  });
   const useragent = require('express-useragent');
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(session({
-    key: 'session_cookie_name',
-    HttpOnly: true,
-    secret: 'weufhD@ao34ehvgawegv!@RFG',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: (2 * 365 * 24 * 60 * 60 * 1000) }
-  }));
   app.use(express.static(staticFolder));
+  app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(200).send('<script>window.location.href = "https://' + this.address.backinfo.host + '/client"</script>');
+  });
   try {
 
     //set mongo connetion
