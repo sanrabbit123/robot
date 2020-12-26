@@ -338,13 +338,15 @@ NotionAPIs.prototype.launching = async function (cliid = "latest") {
     }
   }
   try {
-    let latestObj, newObj, tempArr;
+    let latestObj_raw, latestObj, newObj, tempArr;
 
     if (cliid === "latest") {
-      latestObj = await this.back.getLatestClient();
+      latestObj_raw = await this.back.getLatestClient();
     } else {
-      latestObj = await this.back.getClientById(cliid);
+      latestObj_raw = await this.back.getClientById(cliid);
     }
+
+    latestObj = latestObj_raw.toNormal();
 
     if (latestObj !== null && latestObj !== undefined) {
       newObj = {};
