@@ -65,10 +65,11 @@ try:
     tempPath = pathDic["robot"] + "/temp"
     data = getBridge()
 
-    # app = NotionClient(token_v2="671489b54b004ebe2d266be5e21154f69dda7373ed8ba6c70747b506bce158b094a8b8cdb990007c989b874aafa8dfb7cda655bd98d902a44399ae6797f21cbbdd23504409a0349107068db13406")
-    # clientInstance = Client(app)
+    app = NotionClient(token_v2=token)
+    clientInstance = Client(app)
 
     if argv[1] == 'single':
+
         newId = clientInstance.createElement(data)
         resultDic = clientInstance.toDictionary(newId)
         print(dumps(resultDic))
