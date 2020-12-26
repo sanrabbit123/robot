@@ -273,7 +273,6 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
       try {
         tempObj = await this.getClientById(usersObj[i].id);
         tempObj.timeline = this.returnTimeline(usersObj[i].time);
-        console.log(tempObj)
         clients[i].googleAnalyticsUpdate(tempObj);
       } catch (e) {
         console.log(usersObj);

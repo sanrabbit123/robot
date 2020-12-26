@@ -32,6 +32,8 @@ class GoogleAnalytics {
     this.campaign = null;
     this.history = null;
 
+    console.log(json);
+
     this.timeline = new DateParse(json.timeline);
     this.userType = json.userType;
     this.referrer = new Referrer(json.referrer);

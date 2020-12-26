@@ -130,17 +130,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             let tongDir = await fileSystem(`readDir`, [ targetTongs[1] ]);
 
             const clients = await analytics.getClientsInfoByNumber(tongDir.length);
-
-            console.log(clients)
-            console.log(clients[0].requests)
-            console.log(clients[0].requests[0].analytics.googleAnalytics)
-            console.log(clients[0].requests[0].analytics.response)
-
-
             const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
-
-
-
             const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
 
             console.log(finalArr)
