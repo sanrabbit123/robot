@@ -23,17 +23,6 @@ class GoogleAnalytics {
   }
 
   jsonUpdate(json) {
-    this.timeline = null;
-    this.userType = null;
-    this.referrer = null;
-    this.device = null;
-    this.region = null;
-    this.personalInfo = null;
-    this.campaign = null;
-    this.history = null;
-
-    console.log(json);
-
     this.timeline = new DateParse(json.timeline);
     this.userType = json.userType;
     this.referrer = new Referrer(json.referrer);
