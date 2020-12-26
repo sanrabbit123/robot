@@ -1052,15 +1052,15 @@ class DevContext extends Array {
       // }
 
 
-      const back = new BackMaker();
-      const client = await back.getClientById("c2012_aa59s");
-
-      console.log(client.requests[0].analytics.googleAnalytics.userType);
+      // const back = new BackMaker();
+      // const client = await back.getClientById("c2012_aa59s");
+      //
+      // console.log(client.requests[0].analytics.googleAnalytics.userType);
       // await back.pastToMongo();
       // await back.updateDesid();
       // await back.historyParsing();
 
-
+      await this.mother.requestSystem("http://" + "52.79.119.72" + ":3000/toNotion", { cliid: "c2012_aa59s" });
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
