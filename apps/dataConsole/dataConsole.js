@@ -125,9 +125,9 @@ DataConsole.prototype.connect = async function () {
     //set static
     await this.renderStatic(staticFolder);
 
-    app.use(function (err, req, res, next) {
-      console.error(err.stack);
-      res.status(500).send('Something broke!');
+    app.use(function (req, res, next) {
+      res.status(404);
+      res.send('404: File Not Found');
     });
 
     //server on
