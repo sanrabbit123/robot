@@ -10,7 +10,7 @@ const KakaoTalk = function () {
     office: address.officeinfo.ip.outer,
     home: address.homeinfo.ip.outer,
     bridge: address.bridgeinfo.ip.outer,
-    console: address.consoleinfo.ip.outer,
+    console: address.backinfo.ip.outer,
     front: address.frontinfo.ip.outer,
   };
   this.ipRegExp = {
