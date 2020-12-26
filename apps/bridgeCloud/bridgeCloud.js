@@ -176,6 +176,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let pastRequests;
         let tempArr;
         let message;
+        let thisClientArr, thisClient;
 
         requestObj = {};
 
@@ -333,7 +334,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //send slack message
         if (requestObj["phone"] !== "010-2747-3403") {
-          const [ thisClient ] = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
+          thisClientArr = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
+          thisClient = thisClientArr[0];
+
           message = '';
           message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
           message += thisClient.toMessage();
@@ -343,7 +346,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         //send alimtalk
-        KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
+        //KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
         message = message + "\n\n" + requestObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
 
         //to google
@@ -372,8 +375,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         //to notion
         if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
-            const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: thisClient.cliid });
-            if (notionStatus !== 200) {
+            if (thisClient !== undefined) {
+              const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: thisClient.cliid });
+              if (notionStatus !== 200) {
+                message = message + "\n\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+              }
+            } else {
               message = message + "\n\n" + "노션으로 옮겨지는 과정에서 문제 생김";
             }
           }
