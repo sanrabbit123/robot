@@ -133,8 +133,6 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
             const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
 
-            console.log(finalArr)
-
             await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
             for (let client of clients) {
               await fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${todayMaker()}.json`, client.toDeath() ]);

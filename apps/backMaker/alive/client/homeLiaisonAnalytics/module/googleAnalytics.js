@@ -23,7 +23,15 @@ class GoogleAnalytics {
   }
 
   jsonUpdate(json) {
-    this.timeline = new DateParse(json.timeline);
+    let tempArr0, tempArr1, tempArr2;
+    if (typeof json.timeline === "string") {
+      tempArr0 = json.timeline.split(" ");
+      tempArr1 = tempArr0[0].split("-");
+      tempArr2 = tempArr0[1].split(":");
+      this.timeline = new DateParse(new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2]), Number(tempArr2[0]), Number(tempArr2[1]), Number(tempArr2[2])));
+    } else {
+      this.timeline = new DateParse(json.timeline);
+    }
     this.userType = json.userType;
     this.referrer = new Referrer(json.referrer);
     this.device = new Device(json.device);
