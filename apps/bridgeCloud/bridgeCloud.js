@@ -323,13 +323,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //to mongo
         console.log(requestObj);
-        if (requestObj["phone"] !== "010-2747-3403") {
+        // if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
             await instance.back.createClient(requestObj, { selfMongo: MONGOC });
           } else {
             await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
           }
-        }
+        // }
 
         //send slack message
         const [ thisClient ] = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
