@@ -73,10 +73,6 @@ DataConsole.prototype.connect = async function () {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(express.static(staticFolder));
-  app.use(function (err, req, res, next) {
-    console.error(err.stack);
-    res.status(200).send('<script>window.location.href = "https://' + this.address.backinfo.host + '/client"</script>');
-  });
   try {
 
     //set mongo connetion
@@ -128,6 +124,11 @@ DataConsole.prototype.connect = async function () {
 
     //set static
     await this.renderStatic(staticFolder);
+
+    app.use(function (err, req, res, next) {
+      console.error(err.stack);
+      res.status(500).send('Something broke!');
+    });
 
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {
