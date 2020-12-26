@@ -1,8 +1,10 @@
 const AiProposal = function (proid = "none") {
   const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.general = new ContentsMaker();
   this.mother = new Mother();
+  this.back = new BackMaker();
   this.text = {};
   this.proid = proid;
   this.options = this.general.options;
@@ -16,6 +18,14 @@ AiProposal.prototype.saveStatic = async function (path) {
   try {
     let targetHost, targetPath, targetName;
     let tempArr, tempArr2, tempObject, tempString;
+
+    if (/^http:/.test(path)) {
+      path = path.slice(7);
+    } else if (/^https:/.test(path)) {
+      path = path.slice(8);
+    } else {
+      path = path;
+    }
 
     tempArr = path.split('/');
     targetHost = tempArr.shift();
@@ -45,60 +55,73 @@ AiProposal.prototype.proposalLaunching = async function () {
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const http = require('http');
   const { shell, shellLink, fileSystem, binaryRequest } = this.mother;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   try {
-    await MONGOC.connect();
     await this.general.static_setting();
-
     let result_dir;
+    let tempObject;
+    let temp_scriptString;
+    let gres, resultDir;
+    let client;
+    let serviceWording;
+    let intoObj;
+
     result_dir = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
     for (let i of result_dir) { if (i !== ".DS_Store") {
       shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
     }}
     shell.exec(`mkdir ${shellLink(this.options.static_dir)};`);
 
-    let text_raw;
     if (this.proid !== "none") {
-      text_raw = await MONGOC.db(`miro81`).collection(`Project`).find({ proid: this.proid }).toArray();
+      this.text = await this.back.getProjectById(this.proid);
     } else {
-      text_raw = await MONGOC.db(`miro81`).collection(`Project`).find({}).toArray();
+      this.text = await this.back.getLatestProject();
     }
-    text_raw.sort(function (a,b) {
-      return Number(b.proid.replace(/[^0-9]/g, '')) - Number(a.proid.replace(/[^0-9]/g, ''));
-    })
-    this.text = text_raw[0];
 
-    let tempObject;
-    for (let j = 0; j < this.text.proposal.length; j++) {
-      for (let i = 0; i < this.text.proposal[j].picture_settings.length - 1; i++) {
-        await this.saveStatic(ADDRESS.consoleinfo.host + this.text.proposal[j].picture_settings[i].imgSrc);
+    for (let j = 0; j < this.text.proposal.detail.length; j++) {
+      for (let i = 0; i < this.text.proposal.detail[j].pictureSettings.length; i++) {
+        await this.saveStatic(ADDRESS.s3info.host + this.text.proposal.detail[j].pictureSettings[i].imgSrc);
       }
     }
 
-    let temp_scriptString = this.general.generator.proposal_maker.proposal(this.options);
+    client = await this.back.getClientById(this.text.cliid);
+    serviceWording = '';
+    intoObj = this.text.toNormal();
+    intoObj.client = client.toNormal();
+
+    if (this.text.service.serid === "s2011_aa01s") {
+      serviceWording = "홈퍼니싱";
+    } else if (this.text.service.serid === "s2011_aa02s") {
+      serviceWording = "홈스타일링";
+    } else if (this.text.service.serid === "s2011_aa03s") {
+      serviceWording = "토탈 스타일링";
+    }
+
+    intoObj.serviceWording = serviceWording;
+
+    temp_scriptString = this.general.generator.proposal_maker.proposal(this.options);
     await this.general.startAdobe({
       name: `proposal`,
-      data: this.text,
+      data: intoObj,
       script: temp_scriptString,
       app: `Illustrator`,
       end: false,
     });
 
     const gd = this.mother.googleSystem("drive");
-    let gres, resultDir;
+
     resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "/result" ]);
-    for (let i of resultDir) { if (i !== `.DS_Store` && i !== `static`) {
-      gres = await gd.upload_andView("1ofHfJmGJJ6TCk5qP_VttNvIvHt2IVZ21", this.options.home_dir + "/result/" + i);
-    }}
-    await this.mother.slack_bot.chat.postMessage({ text: `${this.text.client} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
-    await MONGOC.db("miro81").collection(`Project`).updateOne({ proid: this.text.proid }, { $set: { status: "발송 대기" } });
+    for (let i of resultDir) {
+      if (i !== `.DS_Store` && i !== `static`) {
+        gres = await gd.upload_andView("1ofHfJmGJJ6TCk5qP_VttNvIvHt2IVZ21", this.options.home_dir + "/result/" + i);
+      }
+    }
+
+    await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
+    await this.back.updateProject([ { proid: this.text.proid }, { "proposal.status": "발송 대기", "proposal.date": new Date() } ]);
     console.log(`done`);
 
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 

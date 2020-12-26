@@ -10,16 +10,26 @@ const Proposal = function (text) {
   let temp_arr = [];
   let general_string = '';
   let method = '';
-  for (let i = 0; i < proposal.length; i++) {
-    temp_arr = proposal[i].fee;
+  let serviceWording = '';
+
+  for (let i = 0; i < proposal.detail.length; i++) {
+    temp_arr = proposal.detail[i].fee;
     for (let j = 0; j < temp_arr.length; j++) {
       general_string += temp_arr[j].method;
     }
   }
-  if (/offline/g.exec(general_string) === null) { method = "온라인"; this.method = "online"; }
-  else if (/online/g.exec(general_string) === null) { method = "오프라인"; this.method = "offline"; }
-  else { method = "온/오프라인"; this.method = "offlineOnline"; }
-  this.service = method + ' ' + this.text.service.replace(/[a-z]/g, '').replace(/ $/g, '');
+  if (/offline/g.exec(general_string) === null) {
+    method = "온라인";
+    this.method = "online";
+  } else if (/online/g.exec(general_string) === null) {
+    method = "오프라인";
+    this.method = "offline";
+  } else {
+    method = "온/오프라인";
+    this.method = "offlineOnline";
+  }
+
+  this.service = method + ' ' + this.text.serviceWording;
 }
 
 Proposal.prototype.mother = new Mother();
@@ -65,7 +75,7 @@ Proposal.prototype.firstProcess = function () {
   let i;
 
   //0
-  pick("init0").contents = this.text.client + " 고객님께";
+  pick("init0").contents = this.text.client.name + " 고객님께";
   //1
   pick("init1").left = mother.return_right(pick("init0")) + 3;
   pick("init1").contents = "고객 맞춤 커스터마이징 : " + this.service + " 서비스";
@@ -78,7 +88,7 @@ Proposal.prototype.firstProcess = function () {
   pick("serviceBlack").left = pick("serviceGreen").left - 2.2 - pick("serviceBlack").width;
 
   //Set titles
-  mother.pick("moduleTitle", "main").contents = "Designers for " + this.text.client + " 고객님";
+  mother.pick("moduleTitle", "main").contents = "Designers for " + this.text.client.name + " 고객님";
   mother.pick("moduleTitle", "serviceGreen").contents = this.service;
   mother.pick("moduleTitle", "serviceBlack").left = mother.pick("moduleTitle", "serviceGreen").left - 2.2 - mother.pick("moduleTitle", "serviceBlack").width;
 
@@ -87,31 +97,37 @@ Proposal.prototype.firstProcess = function () {
   target_obj.online = pick("online");
   target_obj.offlineOnline = pick("offlineOnline");
   for (i in target_obj) {
-    if (i !== this.method) { target_obj[i].remove(); }
+    if (i !== this.method) {
+      target_obj[i].remove();
+    }
   }
 }
 
 Proposal.prototype.second_process = function () {
   const instance = this;
   let mother = this.mother;
-  let pick = function (name) { return mother.pick("moduleFinish", name); }
-  pick("finish").left = pick("finish").left + (this.settings.offsetY * (this.text.proposal.length + 1));
+  let pick = function (name) {
+    return mother.pick("moduleFinish", name);
+  }
+  pick("finish").left = pick("finish").left + (this.settings.offsetY * (this.text.proposal.detail.length + 1));
 }
 
 Proposal.prototype.third_process = function () {
   const instance = this;
   let mother = this.mother;
-  let pick = function (name) { return mother.pick("moduleTitle", name); }
+  let pick = function (name) {
+    return mother.pick("moduleTitle", name);
+  }
   let items = [ "main", "serviceBlack", "serviceGreen", "static0" ];
   let i = 0, j = 0;
   let temp;
 
-  for (j = 0; j < this.text.proposal.length + 1; j++) {
+  for (j = 0; j < this.text.proposal.detail.length + 1; j++) {
     temp = this.mother.itempick("whiteback").duplicate();
     temp.left = temp.left + (this.settings.offsetY * (j + 1));
     temp.name = temp.name + "_copy" + String(j);
   }
-  for (j = 0; j < this.text.proposal.length + 1; j++) {
+  for (j = 0; j < this.text.proposal.detail.length + 1; j++) {
     for (i = 0; i < items.length; i++) {
       temp = pick(items[i]).duplicate();
       temp.left = temp.left + (this.settings.offsetY * (j + 1));
@@ -132,49 +148,56 @@ Proposal.prototype.fourth_process = function () {
   let temp, arrow;
   let i = 0, j = 0;
 
-  for (j = 0; j < this.text.proposal.length; j++) {
+  for (j = 0; j < this.text.proposal.detail.length; j++) {
     for (i = 0; i < items.length; i++) {
       temp = pick(items[i]).duplicate();
       temp.left = temp.left + (this.settings.offsetY * (j + 1));
       temp.name = items[i] + "_copy" + String(j) + String(i);
+
       //designer
       if (i === 0) {
         temp.contents = abc[j];
       }
+
       //statics
       if (i === 1) {
       }
+
       //descriptions
       if (i === 2) {
-        pick(items[i] + "_copy" + String(j) + String(i)).contents = this.text.proposal[j].picture_settings[this.text.proposal[j].picture_settings.length - 1].description0;
+        pick(items[i] + "_copy" + String(j) + String(i)).contents = this.text.proposal.detail[j].description[0];
         pick(items[i] + "_copy" + String(j) + String(i)).contents += "\\n";
-        pick(items[i] + "_copy" + String(j) + String(i)).contents += this.text.proposal[j].picture_settings[this.text.proposal[j].picture_settings.length - 1].description1;
+        pick(items[i] + "_copy" + String(j) + String(i)).contents += this.text.proposal.detail[j].description[1];
         pick(items[i] + "_copy" + String(j) + String(i)).contents += "\\n";
-        pick(items[i] + "_copy" + String(j) + String(i)).contents += this.text.proposal[j].picture_settings[this.text.proposal[j].picture_settings.length - 1].description2;
+        pick(items[i] + "_copy" + String(j) + String(i)).contents += this.text.proposal.detail[j].description[2];
       }
+
       //money
       if (i === 3) {
-        pick(items[i] + "_copy" + String(j) + String(i)).contents = ((this.text.proposal[j].fee[0].method === "offline") ? "오프라인 " : "온라인 ");
-        pick(items[i] + "_copy" + String(j) + String(i)).contents += ((this.text.proposal[j].fee[0].partial) ? "부분 공간 " : "");
-        pick(items[i] + "_copy" + String(j) + String(i)).contents += Proposal.auto_comma(String(this.text.proposal[j].fee[0].money));
+        pick(items[i] + "_copy" + String(j) + String(i)).contents = ((this.text.proposal.detail[j].fee[0].method === "offline") ? "오프라인 " : "온라인 ");
+        pick(items[i] + "_copy" + String(j) + String(i)).contents += ((this.text.proposal.detail[j].fee[0].partial) ? "부분 공간 " : "");
+        pick(items[i] + "_copy" + String(j) + String(i)).contents += Proposal.auto_comma(String(this.text.proposal.detail[j].fee[0].amount));
         pick(items[i] + "_copy" + String(j) + String(i)).contents += '원';
         pick(items[i] + "_copy" + String(j) + String(i)).contents += " (VAT 별도)";
       }
+
       //etc
       if (i === 4) {
         pick(items[i] + "_copy" + String(j) + String(i)).contents = '';
-        if (this.text.proposal[j].fee[0].method === "offline") {
+        if (this.text.proposal.detail[j].fee[0].method === "offline") {
           pick(items[i] + "_copy" + String(j) + String(i)).contents += "*결정이 늦어지실 경우, 디자이너 일정이 마감될 수 있습니다.";
         } else {
           pick(items[i] + "_copy" + String(j) + String(i)).contents += "*현장 미팅을 진행하실 경우, 별도의 출장비가 청구됩니다.";
         }
       }
+
       //arrow
       if (i === 5) {
         arrow = pick(items[i] + "_copy" + String(j) + String(i));
         arrow.pageItems.getByName('h').left = pick("money_copy" + String(j) + String(3)).left - 13;
         arrow.pageItems.getByName('l').width = pick("money_copy" + String(j) + String(3)).left - arrow.pageItems.getByName('l').left - 8;
       }
+
     }
   }
   for (i = 0; i < items.length; i++) {
@@ -185,7 +208,9 @@ Proposal.prototype.fourth_process = function () {
 Proposal.prototype.fifth_process = function () {
   const instance = this;
   let mother = this.mother;
-  let pick = function (name) { return mother.pick("moduleBoxes", name); }
+  let pick = function (name) {
+    return mother.pick("moduleBoxes", name);
+  }
   let temp_arr, temp, tempMother, tempImg;
   let i = 0, j = 0;
 
@@ -229,23 +254,23 @@ Proposal.prototype.fifth_process = function () {
     return "error";
   }
 
-  for (j = 0; j < this.text.proposal.length; j++) {
+  for (j = 0; j < this.text.proposal.detail.length; j++) {
     temp_arr = [];
-    for (i = 0; i < this.text.proposal[j].picture_settings.length - 1; i++) {
-      temp_arr.push(this.text.proposal[j].picture_settings[i].sgTrue);
+    for (i = 0; i < this.text.proposal.detail[j].pictureSettings.length; i++) {
+      temp_arr.push(this.text.proposal.detail[j].pictureSettings[i].sgTrue);
     }
     temp = pick(caseBoo(temp_arr)).duplicate();
     temp.left = temp.left + (this.settings.offsetY * (j + 1));
     temp.name = temp.name + "_copy" + String(j);
 
-    for (i = 0; i < this.text.proposal[j].picture_settings.length - 1; i++) {
+    for (i = 0; i < this.text.proposal.detail[j].pictureSettings.length; i++) {
       tempMother = temp.pageItems.getByName("p" + String(i));
       tempImg = tempMother.placedItems.add();
-      tempImg.file = new File(this.settings.staticLink + this.text.proposal[j].picture_settings[i].imgSrc);
-      tempImg.width = tempMother.pageItems.getByName("image").width
-      tempImg.height = tempMother.pageItems.getByName("image").height
-      tempImg.top = tempMother.pageItems.getByName("image").top
-      tempImg.left = tempMother.pageItems.getByName("image").left
+      tempImg.file = new File(this.settings.staticLink + this.text.proposal.detail[j].pictureSettings[i].imgSrc);
+      tempImg.width = tempMother.pageItems.getByName("image").width;
+      tempImg.height = tempMother.pageItems.getByName("image").height;
+      tempImg.top = tempMother.pageItems.getByName("image").top;
+      tempImg.left = tempMother.pageItems.getByName("image").left;
       tempImg.embed();
       tempMother.pageItems.getByName("image").remove();
     }
@@ -266,7 +291,7 @@ ExecMain.prototype.fileName = function () {
   else { month_str = String(month + 1); }
   if (day < 10) { day_str = '0' + String(day); }
   else { day_str = String(day); }
-  let new_name = this.text.proid + '_' + this.text.client + '_' + String(today.getFullYear()).slice(2) + month_str + day_str;
+  let new_name = this.text.proid + '_' + this.text.client.name + '_' + String(today.getFullYear()).slice(2) + month_str + day_str;
   return this.dir + "/result/" + new_name + ".pdf";
 }
 
@@ -282,7 +307,7 @@ ExecMain.prototype.start = function () {
   this.proposal = new Proposal(this.text);
   app.open(new File(this.dir + "/factory/template/proposal/template.ai"));
   this.proposal.firstProcess();
-  for (let i = 0; i < this.text.proposal.length + 1; i++) {
+  for (let i = 0; i < this.text.proposal.detail.length + 1; i++) {
     this.proposal.artboard_maker(i);
   }
   this.proposal.second_process();

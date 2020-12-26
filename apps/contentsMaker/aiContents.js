@@ -493,11 +493,8 @@ AiContents.prototype.to_poo = async function () {
     let scpMsg = '';
     scpMsg += `scp -r ${pooPath.porpor} miro81@home-liaison.com:/miro81/www/list_svg/;`;
     scpMsg += `scp -r ${pooPath.list_image}/portp${p_id} miro81@home-liaison.com:/miro81/www/list_image/;`;
-    scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.porpor} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
-    scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.list_image}/portp${p_id} centos@homeliaison-dashboard.xyz:/home/centos/static/list_image/;`;
     if (r_id !== `none`) {
       scpMsg += `scp -r ${pooPath.revrev} miro81@home-liaison.com:/miro81/www/list_svg/;`;
-      scpMsg += `scp -i ${mother.shellLink(process.cwd() + "/pems")}/database.pem -r ${pooPath.revrev} centos@homeliaison-dashboard.xyz:/home/centos/static/list_svg/;`;
     }
 
 
