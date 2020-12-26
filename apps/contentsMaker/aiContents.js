@@ -305,14 +305,10 @@ AiContents.prototype.query_maker = async function (result) {
 
 AiContents.prototype.total_make = async function () {
   const instance = this;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   const Filter = this.back.idFilter("designer");
   try {
     let targetContents = await this.back.getContentsByPid(this.portfolioNum);
     this.text = targetContents.toAiState();
-
-    await MONGOC.connect();
 
     await this.general.static_setting();
     await this.photo_search();
@@ -321,19 +317,18 @@ AiContents.prototype.total_make = async function () {
 
     let result;
     if (/^de/.test(this.text.designer)) {
-      result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: this.text.designer });
+      result = await this.back.getDesignerById(Filter.pastToNew(this.text.designer));
     } else {
-      result = await MONGOC.db(`miro81`).collection(`Designer`).findOne({ past_desid: Filter.newToPast(this.text.designer) });
+      result = await this.back.getDesignerById(this.text.designer);
     }
+
+    result.past_desid = Filter.newToPast(this.text.designer);
 
     await this.query_maker(result);
     console.log(`done`);
 
   } catch (e) {
     console.log(e);
-  } finally {
-    MONGOC.close();
-    process.exit();
   }
 }
 
@@ -344,8 +339,6 @@ AiContents.prototype.to_mysql = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   const sliceQuery = function (str) {
     if (str.search(/\(/g) === -1) {
       return "nothing";
@@ -359,7 +352,6 @@ AiContents.prototype.to_mysql = async function () {
       return obj;
     }
   }
-  const mongoList = { FP1_porlist: "porlist_query", FP2_pordeta: "pordeta_query", FR1_revlist: "revlist_query", FR2_revdeta: "revdeta_query" };
 
   try {
     let pidResultarr, p_id, queryObj;
@@ -371,16 +363,6 @@ AiContents.prototype.to_mysql = async function () {
       }
     }
     queryObj = JSON.parse(await fileSystem(`readString`, [ `${home_dir}/result/query_${p_id}.js` ]));
-
-    await MONGOC.connect();
-    console.log(`mongo connect success`);
-    for (let coll in mongoList) {
-      if (sliceQuery(queryObj[mongoList[coll]]) !== "nothing") {
-        await MONGOC.db(`miro81`).collection(coll).insertOne(sliceQuery(queryObj[mongoList[coll]]));
-        console.log(`insert to ${coll} success`);
-        console.log(sliceQuery(queryObj[mongoList[coll]]));
-      }
-    }
 
     const POOL = this.mother.mysql.createPool(this.mother.frontinfo);
     const PPOOL = POOL.promise();
@@ -396,7 +378,6 @@ AiContents.prototype.to_mysql = async function () {
   } catch (e) {
     console.log(e.message);
   } finally {
-    MONGOC.close();
     process.exit();
   }
 }
@@ -428,7 +409,6 @@ AiContents.prototype.to_poo = async function () {
       porpor: webPath_mother + "/_PortfolioDetail",
       revrev: webPath_mother + "/_Review",
     };
-
 
     //setting ids -----------------------------------------------------------------------------------------------------------
     let arr;

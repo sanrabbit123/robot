@@ -1053,9 +1053,13 @@ class DevContext extends Array {
 
 
       const back = new BackMaker();
-      await back.pastToMongo();
-      await back.updateDesid();
-      await back.historyParsing();
+      const client = await back.getClientById("c2012_aa59s");
+
+      console.log(client.requests[0].analytics.googleAnalytics.userType);
+      // await back.pastToMongo();
+      // await back.updateDesid();
+      // await back.historyParsing();
+
 
 
 
