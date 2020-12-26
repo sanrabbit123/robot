@@ -2,7 +2,9 @@ const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 const BridgeCloud = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.mother = new Mother();
+  this.back = new BackMaker();
 
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/bridgeCloud";
@@ -43,8 +45,9 @@ BridgeCloud.clientFilters = {
       } else {
         return String(som);
       }
+    } else {
+      return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
     }
-    return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
   },
   filterCont: function (som) {
     let str = String(som);
@@ -65,7 +68,7 @@ BridgeCloud.clientFilters = {
       return target;
     }
   },
-}
+};
 
 BridgeCloud.makeId = function (past_id) {
   let this_id;
@@ -159,9 +162,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       console.log("request get");
 
       //ban bad data
-      const ifOverlap = await MONGOC.db("miro81").collection("BC1_conlist").find({ a20_phone: filterAll(resultObj.cellphone) }).toArray();
-      let pastInfos = "no", pastInfo_boo = false;
-      console.log(ifOverlap);
+      const ifOverlap = await instance.back.getClientsByQuery({ phone: filterAll(resultObj.cellphone) }, { withTools: false, selfMongo: MONGOC });
+      let pastInfo_boo = false;
 
       if (/[ㄱ-ㅎㅏ-ㅣ]/g.test(resultObj.pretext) || /[a-zA-Z]/g.test(resultObj.pretext) || resultObj.pretext === '') {
 
@@ -169,169 +171,218 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       } else {
 
-        //if overlap
-        if (ifOverlap.length > 0) {
-          pastInfos = "과거의 정보 모음 / ";
-          pastInfos += "이전 문의일 : " + ifOverlap[0].a18_timeline + " / ";
-          pastInfos += "이전 주소 : " + ifOverlap[0].a21_address + " / ";
-          pastInfos += "이전 가족 구성원 : " + ifOverlap[0].a22_family + " / ";
-          pastInfos += "이전 예산 : " + ifOverlap[0].a23_budget + " / ";
-          pastInfos += "이전 평수 : " + ifOverlap[0].a24_pyeong + " / ";
-          pastInfos += "이전 입주일 : " + ifOverlap[0].a25_due_date + " / ";
-          pastInfos += "이전 계약 형태 : " + ifOverlap[0].a27_contract + " / ";
-          pastInfos += "이전 공간 상태 : " + ifOverlap[0].a28_space + " / ";
-          pastInfos += "이전 요청 사항 : " + ifOverlap[0].a29_etc + " / ";
-          pastInfos += "이전 유입 경로 : " + ifOverlap[0].a30_channel;
-          pastInfo_boo = true;
-        }
+        let requestObj;
+        let requestArr;
+        let pastRequests;
+        let tempArr;
+        let message;
 
-        //make client object
-        const columnMap = {
-          "pretext": "a19_name",
-          "cellphone": "a20_phone",
-          "dwelling": "a21_address",
-          "folk": "a22_family",
-          "email": "a35_aboutetc",
-          "money": "a23_budget",
-          "area": "a24_pyeong",
-          "movingdate": "a25_due_date",
-          "myhomeboo": "a27_contract",
-          "spotspec": "a28_space",
-          "description": "a29_etc",
-          "wayto": "a30_channel",
-        };
-        let clientObj = {};
-        for (let i in resultObj) {
-          if (i === "pretext") {
-            clientObj[columnMap[i]] = filterAll(filterName(resultObj[i]));
-          } else if (i === "email") {
-            clientObj[columnMap[i]] = filterAll(filterNull(resultObj[i]));
-          } else if (i === "movingdate") {
-            clientObj[columnMap[i]] = filterAll(filterDate(resultObj[i]));
-          } else if (i === "myhomeboo") {
-            clientObj[columnMap[i]] = filterAll(filterCont(resultObj[i]));
-          } else {
-            clientObj[columnMap[i]] = filterAll(resultObj[i]);
-          }
-        }
-        console.log("client object make");
+        requestObj = {};
 
-        //id and add column
-        let rows = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).sort({ a4_customernumber: -1 }).limit(1).toArray();
-        console.log(rows);
-        let this_id = BridgeCloud.makeId(rows[0].a4_customernumber);
-        console.log(this_id);
-        const additionColumns = {
-          "a18_timeline": BridgeCloud.returnTimeline(),
-          "a1_class1": "응대중",
-          "a2_class2": "",
-          "a3_reason": "",
-          "a5_call": "",
-          "a7_channelenroll": "",
-          "a8_image": "",
-          "a9_proposal": "",
-          "a10_comfirmcall": "",
-          "a11_next": "",
-          "a13_sajeon": "",
-          "a14_emptyday": "",
-          "a16_service": "",
-          "a17_money": "",
-          "a12_history": "",
-          "a31_aboutsite": "",
-          "a32_aboutcom": "",
-          "a33_aboutsty": "",
-          "a34_aboutmon": "",
-          "a4_customernumber": this_id,
-        };
+        requestObj["name"] = filterAll(filterName(resultObj["pretext"]));
+        requestObj["phone"] = filterAll(resultObj["cellphone"]);
+        requestObj["email"] = filterAll(filterNull(resultObj["email"]));
 
-        if (!pastInfo_boo) {
-          for (let i in additionColumns) {
-            clientObj[i] = additionColumns[i];
-          }
+        requestObj["requests.0.request.space.address"] = filterAll(resultObj["dwelling"]);
+        requestObj["requests.0.request.family"] = filterAll(resultObj["folk"]);
+
+        tempArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상' ];
+        if (tempArr.indexOf(filterAll(resultObj["money"])) !== -1) {
+          requestObj["requests.0.request.budget"] = filterAll(resultObj["money"]);
         } else {
-          for (let i in additionColumns) {
-            clientObj[i] = ifOverlap[0][i];
-          }
-          clientObj["a12_history"] = clientObj["a12_history"] + " " + pastInfos;
-          clientObj["a18_timeline"] = additionColumns["a18_timeline"];
-          clientObj["a1_class1"] = additionColumns["a1_class1"];
+          requestObj["requests.0.request.budget"] = "500만원 이하";
         }
 
-        //view client object
-        console.log(clientObj);
+        if (Number.isNaN(Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, '')))) {
+          requestObj["requests.0.request.space.pyeong"] = 0;
+        } else {
+          requestObj["requests.0.request.space.pyeong"] = Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, ''));
+        }
+
+        if (filterAll(filterDate(resultObj["movingdate"])) === "거주중") {
+          requestObj["requests.0.request.space.resident.living"] = true;
+          requestObj["requests.0.request.space.resident.expected"] = new Date();
+        } else {
+          tempArr = filterAll(filterDate(resultObj["movingdate"])).split("-");
+          requestObj["requests.0.request.space.resident.living"] = false;
+          requestObj["requests.0.request.space.resident.expected"] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+        }
+
+        requestObj["requests.0.request.space.contract"] = filterAll(filterCont(resultObj["myhomeboo"]));
+
+        tempArr = filterAll(resultObj["spotspec"]).split("/");
+
+        if (Number.isNaN(Number(tempArr[0].replace(/[^0-9]/g, '')))) {
+          requestObj["requests.0.request.space.spec.room"] = 0;
+        } else {
+          requestObj["requests.0.request.space.spec.room"] = Number(tempArr[0].replace(/[^0-9]/g, ''));
+        }
+
+        if (Number.isNaN(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+          requestObj["requests.0.request.space.spec.bathroom"] = 0;
+        } else {
+          requestObj["requests.0.request.space.spec.bathroom"] = Number(tempArr[1].replace(/[^0-9]/g, ''));
+        }
+
+        if (/없음/gi.test(tempArr[2])) {
+          requestObj["requests.0.request.space.spec.valcony"] = false;
+        } else {
+          requestObj["requests.0.request.space.spec.valcony"] = true;
+        }
+
+        requestObj["requests.0.request.etc.comment"] = filterAll(resultObj["description"]);
+        requestObj["requests.0.request.etc.channel"] = filterAll(resultObj["wayto"]);
+
+        requestObj["requests.0.request.timeline"] = new Date();
+
+        if (ifOverlap.length > 0) {
+          requestArr = [];
+          pastRequests = (ifOverlap[0].toNormal()).requests;
+          for (let z = 0; z < pastRequests.length; z++) {
+            requestArr.push(pastRequests[z]);
+          }
+          requestArr.unshift({
+            request: {
+              timeline: new Date(1800, 0, 1),
+              notionId: "",
+              budget: "알 수 없음",
+              family: "",
+              space: {
+                address: "",
+                contract: "알 수 없음",
+                pyeong: 0,
+                spec: {
+                  room: 0,
+                  bathroom: 0,
+                  valcony: false
+                },
+                resident: {
+                  living: false,
+                  expected: new Date(1800, 0, 1),
+                },
+              },
+              etc: {
+                comment: "",
+                channel: "",
+              },
+            },
+            analytics: {
+              googleAnalytics: {
+                timeline: new Date(1800, 0, 1),
+                userType: "",
+                referrer: {
+                  name: "",
+                  detail: {
+                    host: null,
+                    queryString: {},
+                  },
+                },
+                device: {
+                  type: "",
+                  os: "",
+                  mobileDevice: "",
+                },
+                region: {
+                  country: "",
+                  city: "",
+                  latitude: 0,
+                  longitude: 0,
+                },
+                personalInfo: {
+                  age: null,
+                  gender: null
+                },
+                campaign: "",
+                history: [],
+              },
+              response: {
+                status: "응대중",
+                outreason: [],
+              },
+              date: {
+                callHistory: [],
+                space: {
+                  precheck: new Date(1800, 0, 1),
+                  empty: new Date(1800, 0, 1),
+                  movein: new Date(1800, 0, 1),
+                },
+              },
+              picture: {
+                space: false,
+                prefer: false,
+              },
+            },
+            proposal: {
+              proid: "",
+            },
+          });
+          pastInfo_boo = true;
+
+          await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, { "requests": requestArr } ], { selfMongo: MONGOC });
+        }
 
         //to mongo
-        if (clientObj["a20_phone"] !== "010-2747-3403") {
+        console.log(requestObj);
+        if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
-            await MONGOC.db("miro81").collection("BC1_conlist").insertOne(clientObj);
+            await instance.back.createClient(requestObj, { selfMongo: MONGOC });
           } else {
-            await MONGOC.db("miro81").collection("BC1_conlist").updateOne({ a20_phone: filterAll(resultObj.cellphone) }, { $set: clientObj });
+            await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
           }
         }
 
         //send slack message
-        let message = '';
-        message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!  |  " + clientObj["a18_timeline"] + "\n";
-        message += "성함 : " + clientObj["a19_name"] + " ( 고객 아이디 : " + (pastInfo_boo ? ifOverlap[0]["a4_customernumber"] : this_id) + " )" + "\n";
-        message += "연락처 : " + clientObj["a20_phone"] + "\n";
-        message += "이메일 : " + clientObj["a35_aboutetc"] + "\n";
-        message += "주소 : " + clientObj["a21_address"] + "\n";
-        message += "가족 구성원 : " + clientObj["a22_family"] + "\n";
-        message += "예산 : " + clientObj["a23_budget"] + "\n";
-        message += "평수 : " + clientObj["a24_pyeong"] + "평" + "\n";
-        message += "입주 예정일 : " + clientObj["a25_due_date"] + "\n";
-        message += "계약 형태 : " + clientObj["a27_contract"] + "\n";
-        message += "공간 상태 : " + clientObj["a28_space"] + "\n";
-        message += "요청 사항 : " + clientObj["a29_etc"] + "\n";
-        message += "유입 경로 : " + clientObj["a30_channel"] + "\n";
+        const [ thisClient ] = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
+
+        message = '';
+        message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
+        message += thisClient.toMessage();
 
         //send alimtalk
-        KAKAO.sendTalk("complete", clientObj["a19_name"], clientObj["a20_phone"]);
-        message = message + "\n" + clientObj["a19_name"] + "님에게 알림톡 전송을 완료하였습니다!";
+        KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
+        message = message + "\n\n" + clientObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
 
         //to google
         const toGoogle = {
-          "a19_name": "entry.1330142163",
-          "a20_phone": "entry.113799560",
-          "a21_address": "entry.2114079722",
-          "a22_family": "entry.132869049",
-          "a35_aboutetc": "entry.1481370131",
-          "a23_budget": "entry.795490298",
-          "a24_pyeong": "entry.1040328027",
-          "a25_due_date": "entry.2088583577",
-          "a27_contract": "entry.2069033904",
-          "a28_space": "entry.1127622227",
-          "a29_etc": "entry.462371043",
-          "a30_channel": "entry.795957898",
-          "a18_timeline": "entry.1749939672",
+          "entry.1330142163": requestObj["name"],
+          "entry.113799560": requestObj["phone"],
+          "entry.2114079722": requestObj["requests.0.request.space.address"],
+          "entry.132869049": requestObj["requests.0.request.family"],
+          "entry.1481370131": requestObj["email"],
+          "entry.795490298": requestObj["requests.0.request.budget"],
+          "entry.1040328027": filterAll(resultObj["area"]),
+          "entry.2088583577": filterAll(filterDate(resultObj["movingdate"])),
+          "entry.2069033904": requestObj["requests.0.request.space.contract"],
+          "entry.1127622227": filterAll(resultObj["spotspec"]),
+          "entry.462371043": requestObj["requests.0.request.etc.comment"],
+          "entry.795957898": requestObj["requests.0.request.etc.channel"],
+          "entry.1749939672": requestObj["requests.0.request.timeline"].toUTCString(),
         };
-        let googleObj = {};
-        for (let i in toGoogle) {
-          googleObj[toGoogle[i]] = clientObj[i];
-        }
-        const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", googleObj);
+        const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", toGoogle);
         if (googleStatus === 200) {
-          message = message + "\n" + "구글 설문지로 옮겨졌습니다. 출력해주세요!\nhttps://docs.google.com/forms/d/1D8CNQFtRr_hiuUXdMXYAgYCk6nFC5cAdkezzp-3mlcw/edit";
+          message = message + "\n\n" + "구글 설문지로 옮겨졌습니다. 출력해주세요!\nhttps://docs.google.com/forms/d/1D8CNQFtRr_hiuUXdMXYAgYCk6nFC5cAdkezzp-3mlcw/edit";
         } else {
-          message = message + "\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
+          message = message + "\n\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
         }
 
         //to notion
-        if (clientObj["a20_phone"] !== "010-2747-3403") {
+        if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
-            const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: this_id });
+            const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: thisClient.cliid });
             if (notionStatus !== 200) {
-              message = message + "\n" + "노션으로 옮겨지는 과정에서 문제 생김";
+              message = message + "\n\n" + "노션으로 옮겨지는 과정에서 문제 생김";
             }
           }
         }
 
+        console.log(message);
+
         //to slack
-        if (clientObj["a20_phone"] !== "010-2747-3403") {
-          slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-        } else {
-          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-        }
+        // if (requestObj["phone"] !== "010-2747-3403") {
+        //   slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+        // } else {
+        //   slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        // }
 
       }
 
@@ -354,11 +405,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   funcObj.post_namephone = async function (req, res) {
     try {
       const resultObj = req.body;
-
-      let rows = await MONGOC.db("miro81").collection("BC1_conlist").find({ a20_phone: resultObj.phone }).toArray();
+      const rows = await instance.back.getClientsByQuery({ phone: filterAll(resultObj.phone) }, { withTools: false, selfMongo: MONGOC });
       let boo = false;
       for (let i = 0; i < rows.length; i++) {
-        if (rows[i].a19_name === resultObj.name) {
+        if (rows[i].name === resultObj.name) {
           boo = true;
         }
       }

@@ -2804,6 +2804,7 @@ ConsultingJs.prototype.serveyBox = function (boo) {
 
   //details
   if (boo === "desktop") {
+    
     //question
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("below_servey_question");
@@ -2823,6 +2824,7 @@ ConsultingJs.prototype.serveyBox = function (boo) {
     }
     div_clone.appendChild(SvgTong.parsing(svg_clone));
     dom.appendChild(div_clone);
+
     //detail
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("below_servey_details");
