@@ -127,7 +127,7 @@ DataConsole.prototype.connect = async function () {
 
     app.use(function (req, res, next) {
       res.status(404);
-      res.send('404: File Not Found');
+      res.send('<script>window.location.href = "https://' + this.address.backinfo.host + '/client"</script>');
     });
 
     //server on
