@@ -1,7 +1,22 @@
 class DateParse extends Date {
 
   constructor(dateObject) {
-    super(dateObject.toISOString());
+    let tempArr0, tempArr1, tempArr2;
+    if (typeof dateObject === "string") {
+      if (dateObject.length === 19) {
+        tempArr0 = dateObject.split(" ");
+        tempArr1 = tempArr0[0].split("-");
+        tempArr2 = tempArr0[1].split(":");
+        super(new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2]), Number(tempArr2[0]), Number(tempArr2[1]), Number(tempArr2[2])));
+      } else if (dateObject.length === 10) {
+        tempArr1 = dateObject.split("-");
+        super(new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2])));
+      } else {
+        throw new Error("invalid date object");
+      }
+    } else {
+      super(dateObject.toISOString());
+    }
   }
 
   static zeroAddition(number) {
