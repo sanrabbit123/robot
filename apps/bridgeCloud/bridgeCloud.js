@@ -323,20 +323,24 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //to mongo
         console.log(requestObj);
-        // if (requestObj["phone"] !== "010-2747-3403") {
+        if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
             await instance.back.createClient(requestObj, { selfMongo: MONGOC });
           } else {
             await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
           }
-        // }
+        }
 
         //send slack message
-        const [ thisClient ] = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
-
-        message = '';
-        message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
-        message += thisClient.toMessage();
+        if (requestObj["phone"] !== "010-2747-3403") {
+          const [ thisClient ] = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
+          message = '';
+          message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
+          message += thisClient.toMessage();
+        } else {
+          message = '';
+          message += JSON.stringify(requestObj, null, 2);
+        }
 
         //send alimtalk
         KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
@@ -377,12 +381,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         console.log(message);
 
-        //to slack
-        // if (requestObj["phone"] !== "010-2747-3403") {
-        //   slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-        // } else {
-        //   slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-        // }
+        // to slack
+        if (requestObj["phone"] !== "010-2747-3403") {
+          slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+        } else {
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        }
 
       }
 
