@@ -1052,7 +1052,15 @@ class DevContext extends Array {
       // }
 
 
-      // const back = new BackMaker();
+      const back = new BackMaker();
+      let clients = await back.getLatestClients(1, { withTools: true });
+
+      console.log(clients)
+      console.log(clients[0].requests)
+      console.log(clients[0].requests[0].analytics.googleAnalytics)
+      console.log(clients[0].requests[0].analytics.response)
+
+
       // const client = await back.getClientById("c2012_aa59s");
       //
       // console.log(client.requests[0].analytics.googleAnalytics.userType);
@@ -1060,7 +1068,7 @@ class DevContext extends Array {
       // await back.updateDesid();
       // await back.historyParsing();
 
-      await this.mother.requestSystem("http://" + "52.79.119.72" + ":3000/toNotion", { cliid: "c2012_aa59s" });
+      // await this.mother.requestSystem("http://" + "52.79.119.72" + ":3000/toNotion", { cliid: "c2012_aa59s" });
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------

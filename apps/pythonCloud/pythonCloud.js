@@ -134,6 +134,8 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             console.log(clients)
             console.log(clients[0].requests)
             console.log(clients[0].requests[0].analytics.googleAnalytics)
+            console.log(clients[0].requests[0].analytics.response)
+
 
             const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
 
