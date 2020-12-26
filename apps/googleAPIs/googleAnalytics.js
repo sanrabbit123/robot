@@ -348,10 +348,10 @@ GoogleAnalytics.prototype.getUsers = async function () {
     }
 
     //request
-    row = await MONGOC.db("miro81").collection("BC1_conlist").find({}).project({ a4_customernumber: 1 }).toArray();
+    row = await MONGOC.db("miro81").collection("client").find({}).toArray();
     rowNumber = [];
-    for (let { a4_customernumber } of row) {
-      temp = { raw: a4_customernumber, parsing: idParsing(a4_customernumber) };
+    for (let { cliid } of row) {
+      temp = { raw: cliid, parsing: idParsing(cliid) };
       temp2 = temp.parsing;
       while (/^0/.test(temp2)) {
         temp2 = temp2.replace(/^0/, '');
@@ -372,11 +372,11 @@ GoogleAnalytics.prototype.getUsers = async function () {
     }
 
     //contract
-    row = await MONGOC.db("miro81").collection("BP2_calculation").find({}).project({ d5_deposit_yn: 1 }).toArray();
+    row = await MONGOC.db("miro81").collection("project").find({}).toArray();
     contract_raw = [];
-    for (let { d5_deposit_yn: value } of row) {
-      if (/^[0-9][0-9][0-9][0-9]/.test(value)) {
-        contract_raw.push(value.slice(0, 7));
+    for (let { process: { contract: { first: { date: value } } } } of row) {
+      if (value.getFullYear() > 2000) {
+        contract_raw.push(String(value.getFullYear()) + '-' + (value.getMonth() + 1 < 10 ? '0' + String(value.getMonth() + 1) : String(value.getMonth() + 1)) + '-' + (value.getDate() < 10 ? '0' + String(value.getDate()) : String(value.getDate())));
       }
     }
     for (let i of totalFinal) {
