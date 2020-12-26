@@ -108,9 +108,11 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             let app = new NotionAPIs();
             let temp;
             let tongDir = await fileSystem(`readDir`, [ targetTongs[0] ]);
-            // for (let i of tongDir) { if (i !== `.DS_Store`) {
-            //   await app.launching(i.replace(/\.js$/, ''));
-            // }}
+            for (let i of tongDir) {
+              if (i !== `.DS_Store`) {
+                await app.launching(i.replace(/\.js$/, ''));
+              }
+            }
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTongs[0])}/${i}`);
             }
@@ -128,11 +130,9 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             const sheetTarget = { id: "1ESI1wf8Zj17s6hYHkEJhDOeLutEvC5iDvtSUN3qjpZc", sheet: "분석", xyz: [ 0, 1 ] };
 
             let tongDir = await fileSystem(`readDir`, [ targetTongs[1] ]);
-
             const clients = await analytics.getClientsInfoByNumber(tongDir.length);
             const pastData = await sheet.get_value_inPython(sheetTarget.id, sheetTarget.sheet + "!A2:T101");
             const finalArr = clients.toGoogleAnalyticsSheet().concat(pastData);
-
             await sheet.update_value_inPython(sheetTarget.id, sheetTarget.sheet, finalArr, sheetTarget.xyz);
             for (let client of clients) {
               await fileSystem(`write`, [ `${process.cwd()}/temp/googleAnalytics_${client.name}_${todayMaker()}.json`, client.toDeath() ]);
@@ -146,7 +146,7 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
             clearTimeout(PythonCloud.timeout.analytics);
             PythonCloud.firstDo.analytics = true;
             PythonCloud.timeout.analytics = null;
-          }, (1000 * 1 * 2));
+          }, (1000 * 60 * 30));
 
           //end
           res.set({

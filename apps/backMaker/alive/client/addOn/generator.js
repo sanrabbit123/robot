@@ -67,7 +67,7 @@ const widthTools = function (Client) {
     sheet.push(request.family.value);
     sheet.push(request.budget.value);
     sheet.push(request.space.pyeong.toMessage());
-    sheet.push(request.space.resident.expected.toNormal());
+    sheet.push(request.space.resident.expected.toString());
     sheet.push(request.space.contract.value);
     sheet.push(request.space.spec.toMessage());
     sheet.push(request.etc.comment);
