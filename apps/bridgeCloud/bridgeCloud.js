@@ -340,7 +340,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //send alimtalk
         KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
-        message = message + "\n\n" + clientObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
+        message = message + "\n\n" + requestObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
 
         //to google
         const toGoogle = {
