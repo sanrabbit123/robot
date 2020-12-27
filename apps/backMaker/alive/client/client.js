@@ -21,11 +21,11 @@ const Client = function (json) {
 }
 
 Client.prototype.latestRequest = function () {
-  return this.requests[this.requests.length - 1];
+  return this.requests[0];
 }
 
 Client.prototype.googleAnalyticsUpdate = function (obj) {
-  const request = this.requests[this.requests.length - 1];
+  const request = this.requests[0];
   request.google.jsonUpdate(obj);
   return this;
 }

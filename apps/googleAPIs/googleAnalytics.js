@@ -251,14 +251,20 @@ GoogleAnalytics.prototype.getClientById = async function (clientId) {
   }
 }
 
-GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
+GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, test = false) {
   const instance = this;
   const mother = this.mother;
+  const MongoClient = this.mother.mongo;
+  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   try {
+    await MONGOC.connect();
+
     const back = new BackMaker();
     const usersObj = await this.getTodayClients();
     let tempObj;
+    let clients;
+    let tempJson, resultObj;
 
     if (number > usersObj.length) {
       throw new Error("over num");
@@ -268,12 +274,27 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
       number = usersObj.length;
     }
 
-    let clients = await back.getLatestClients(number, { withTools: true });
+    clients = await back.getLatestClients(number, { withTools: true });
     for (let i = 0; i < number; i++) {
       try {
         tempObj = await this.getClientById(usersObj[i].id);
         tempObj.timeline = this.returnTimeline(usersObj[i].time);
         clients[i].googleAnalyticsUpdate(tempObj);
+
+        resultObj = {};
+        tempJson = clients[i].toNormal();
+        resultObj.name = tempJson.name;
+        resultObj.phone = tempJson.phone;
+        resultObj.email = tempJson.email;
+        resultObj.cliid = tempJson.cliid;
+        resultObj.request = tempJson.requests[0].request;
+        resultObj.googleAnalytics = tempJson.requests[0].analytics.googleAnalytics;
+        if (!test) {
+          await MONGOC.db(`miro81`).collection(`googleAnalytics_client`).insertOne(resultObj);
+        } else {
+          console.log(resultObj);
+        }
+
       } catch (e) {
         console.log(e);
         console.log(usersObj);
@@ -284,13 +305,14 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0) {
     return clients;
   } catch (e) {
     console.log(e);
+  } finally {
+    MONGOC.close();
   }
 }
 
 GoogleAnalytics.prototype.getUsers = async function () {
   const instance = this;
   const mother = this.mother;
-
   const MongoClient = this.mother.mongo;
   const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   const getAnalytics = async function (boo) {

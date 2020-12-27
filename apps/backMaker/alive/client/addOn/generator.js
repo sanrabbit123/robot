@@ -33,7 +33,7 @@ class Clients extends Array {
 const widthTools = function (Client) {
 
   Client.prototype.toMessage = function () {
-    const { request } = this.requests[this.requests.length - 1];
+    const { request } = this.requests[0];
     let message = "";
 
     message += "문의일 : " + request.timeline.toString(true) + "\n";
@@ -55,7 +55,7 @@ const widthTools = function (Client) {
   }
 
   Client.prototype.toGoogleAnalyticsSheet = function () {
-    const { request, analytics: { googleAnalytics } } = this.requests[this.requests.length - 1];
+    const { request, analytics: { googleAnalytics } } = this.requests[0];
     let sheet = [];
 
     sheet.push(request.timeline.toString(true));
