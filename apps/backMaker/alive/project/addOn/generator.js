@@ -106,6 +106,7 @@ const widthTools = function (Project) {
       remainSupply: String(remainSupply),
       remainVat: String(remainVat),
       remainConsumer: String(remainConsumer),
+      remainPure: String(remainConsumer - firstAmount),
       remainInfo: infoToString(remainInfo),
       remainRefund: String(remainRefund),
       formGuide: dateToString(formGuide),

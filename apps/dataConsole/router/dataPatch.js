@@ -3057,6 +3057,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "소비자가",
       width: 100,
     },
+    remainPure: {
+      name: "잔금",
+      width: 100,
+    },
     remainInfo: {
       name: "잔금 정보",
       width: 300,
@@ -3185,8 +3189,8 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "1차 미팅", target: "meetingDate" },
       { name: "잔금 입금", target: "remainDate", subTargets: [ "remainGuide" ], subTitles: [ "잔금 안내" ] },
       { name: "공급가", target: "remainSupply" },
-      { name: "VAT", target: "remainVat" },
       { name: "소비자가", target: "remainConsumer" },
+      { name: "잔금", target: "remainPure" },
       { name: "잔금 정보", target: "remainInfo" },
       { name: "계약", target: "formGuide",  subTargets: [ "formDateFrom", "formDateTo" ], subTitles: [ "안내", "시작일", "종료일" ] },
       { name: "정산 방식", target: "method" },
@@ -3235,17 +3239,18 @@ DataPatch.prototype.projectChainingTarget = function () {
       }
 
       let resultObj;
-      let remainVat, remainConsumer;
+      let remainVat, remainConsumer, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
       remainVat = Math.round(value * 0.1);
       remainConsumer = Math.round(value * 1.1);
+      remainPure = remainConsumer - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
       paymentsTotalAmount = methodFilter(value, thisCase.method, thisCase.percentage);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
-      resultObj = { remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      resultObj = { remainVat, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainVat: function (thisCase, value) {
@@ -3254,17 +3259,18 @@ DataPatch.prototype.projectChainingTarget = function () {
       }
 
       let resultObj;
-      let remainSupply, remainConsumer;
+      let remainSupply, remainConsumer, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
       remainSupply = value * 10;
       remainConsumer = remainSupply + value;
+      remainPure = remainConsumer - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
       paymentsTotalAmount = methodFilter(value * 10, thisCase.method, thisCase.percentage);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
-      resultObj = { remainSupply, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      resultObj = { remainSupply, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainConsumer: function (thisCase, value) {
@@ -3273,17 +3279,38 @@ DataPatch.prototype.projectChainingTarget = function () {
       }
 
       let resultObj;
-      let remainSupply, remainVat;
+      let remainSupply, remainVat, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
 
       remainVat = Math.round(value / 11);
       remainSupply = value - remainVat;
+      remainPure = value - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
       paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
-      resultObj = { remainSupply, remainVat, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      resultObj = { remainSupply, remainVat, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
+    },
+    remainPure: function (thisCase, value) {
+      if (typeof value === "string") {
+        value = Number(value.replace(/[^0-9\.\-]/g, ''));
+      }
+
+      let resultObj;
+      let remainSupply, remainVat, remainConsumer;
+      let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+
+      remainConsumer = value + Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
+      remainVat = Math.round(remainConsumer / 11);
+      remainSupply = remainConsumer - remainVat;
+
+      paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
+      paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
+      paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
+
+      resultObj = { remainSupply, remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     method: function (thisCase, value) {
@@ -4460,6 +4487,40 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const remainPureToObject = function (value, pastValue, vaildMode) {
+    let result;
+    let boo = false;
+    let num;
+
+    if (typeof value === "string") {
+      num = Number(value.replace(/[^0-9\.\-]/g, ''));
+    } else {
+      num = value;
+    }
+
+    if (Number.isNaN(num)) {
+      boo = true;
+      if (typeof pastValue === "string") {
+        result = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
+      } else {
+        result = pastValue;
+      }
+    } else {
+      boo = false;
+      if (typeof value === "string") {
+        result = Number(value.replace(/[^0-9\.\-]/g, ''));
+      } else {
+        result = value;
+      }
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: result };
+    }
+
+    return Number(result + 330000);
+  };
+
   const map = {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
@@ -4480,6 +4541,7 @@ DataPatch.prototype.projectMap = function () {
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
     remainVat: { name: "VAT", position: "process.contract.remain.calculation.amount.vat", type: "number", searchBoo: true, moneyBoo: true },
     remainConsumer: { name: "소비자가", position: "process.contract.remain.calculation.amount.consumer", type: "number", searchBoo: true, moneyBoo: true },
+    remainPure: { name: "잔금", position: "process.contract.remain.calculation.amount.consumer", type: "object", objectFunction: remainPureToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
     formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, },
