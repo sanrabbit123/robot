@@ -1428,11 +1428,11 @@ GeneralJs.prototype.loginBox = async function () {
         }, 500);
       } else {
         alert("허가된 멤버가 아닙니다.");
-        window.location.href = "https://home-liaison.com";
+        // window.location.href = "https://home-liaison.com";
       }
     }
 
   } catch (e) {
-    window.location.href = "https://home-liaison.com";
+    // window.location.href = "https://home-liaison.com";
   }
 }
