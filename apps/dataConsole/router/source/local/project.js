@@ -3668,7 +3668,11 @@ ProjectJs.prototype.addExtractEvent = function () {
       temp2 = Object.keys(caseCopied[0]);
       temp = [];
       for (let i of temp2) {
-        temp.push(map[i].name);
+        if (i === "name") {
+          temp.push("성함");
+        } else {
+          temp.push(map[i].name);
+        }
       }
       valuesArr.push(temp);
 
