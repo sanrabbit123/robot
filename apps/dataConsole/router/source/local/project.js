@@ -27,6 +27,7 @@ ProjectJs.prototype.standardBar = function (standard) {
   let ea = "px";
   let temp, target;
   let num, leftPosition;
+  let sortEventFunction;
 
   temp = {
     proid: standard.standard.proid.name,
@@ -83,6 +84,43 @@ ProjectJs.prototype.standardBar = function (standard) {
     141,
   ];
 
+  sortEventFunction = function (index) {
+    return function (e) {
+      let s, h, arr, toggle;
+      s = document.createDocumentFragment();
+      h = document.createDocumentFragment();
+      arr = [];
+      toggle = Number(instance.standardDoms[0].getAttribute("sort"));
+      for (let i = 1; i < instance.standardDoms.length; i++) {
+        arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
+      }
+      arr.sort((a, b) => {
+        if (/^[0-9]/.test(a.standard.children[index].textContent) && !/\-/g.test(a.standard.children[index].textContent)) {
+          if (toggle) {
+            return Number(a.standard.children[index].textContent.replace(/[^0-9\.]/g, '')) - Number(b.standard.children[index].textContent.replace(/[^0-9\.]/g, ''));
+          } else {
+            return Number(b.standard.children[index].textContent.replace(/[^0-9\.]/g, '')) - Number(a.standard.children[index].textContent.replace(/[^0-9\.]/g, ''));
+          }
+        } else {
+          if (a.standard.children[index].textContent < b.standard.children[index].textContent) {
+            return toggle ? -1 : 1;
+          }
+          if (a.standard.children[index].textContent > b.standard.children[index].textContent) {
+            return toggle ? 1 : -1;
+          }
+          return 0;
+        }
+      });
+      for (let { standard, caseDom } of arr) {
+        s.appendChild(standard);
+        h.appendChild(caseDom);
+      }
+      instance.totalMother.firstChild.appendChild(s);
+      instance.totalMother.lastChild.appendChild(h);
+      instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
+    }
+  }
+
   num = (standard.search === null ? 0 : 1);
   for (let { proid, name } of target) {
     if (num === 1) {
@@ -110,29 +148,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[0]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("click", function (e) {
-        let h, arr, toggle;
-        h = document.createDocumentFragment();
-        arr = [];
-        toggle = Number(instance.standardDoms[0].getAttribute("sort"));
-        for (let i = 1; i < instance.standardDoms.length; i++) {
-          arr.push(instance.standardDoms[i]);
-        }
-        arr.sort((a, b) => {
-          if (a.children[0].textContent < b.children[0].textContent) {
-            return toggle ? -1 : 1;
-          }
-          if (a.children[0].textContent > b.children[0].textContent) {
-            return toggle ? 1 : -1;
-          }
-          return 0;
-        });
-        for (let div of arr) {
-          h.appendChild(div);
-        }
-        div_clone.appendChild(h);
-        instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
-      });
+      div_clone3.addEventListener("click", sortEventFunction(0));
     }
     div_clone2.appendChild(div_clone3);
 
@@ -143,29 +159,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[1]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("click", function (e) {
-        let h, arr, toggle;
-        h = document.createDocumentFragment();
-        arr = [];
-        toggle = Number(instance.standardDoms[0].getAttribute("sort"));
-        for (let i = 1; i < instance.standardDoms.length; i++) {
-          arr.push(instance.standardDoms[i]);
-        }
-        arr.sort((a, b) => {
-          if (a.children[1].textContent < b.children[1].textContent) {
-            return toggle ? -1 : 1;
-          }
-          if (a.children[1].textContent > b.children[1].textContent) {
-            return toggle ? 1 : -1;
-          }
-          return 0;
-        });
-        for (let div of arr) {
-          h.appendChild(div);
-        }
-        div_clone.appendChild(h);
-        instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
-      });
+      div_clone3.addEventListener("click", sortEventFunction(1));
     }
     div_clone2.appendChild(div_clone3);
 
@@ -212,6 +206,7 @@ ProjectJs.prototype.infoArea = function (info) {
   let upsideWhiteBar;
   let eventFunction, updateEventFunction;
   let enterEventFunction, leaveEventFunction;
+  let sortEventFunction;
   let dropPoint;
   let onoffDummy;
   let thisOnOff;
@@ -349,7 +344,9 @@ ProjectJs.prototype.infoArea = function (info) {
 
   updateEventFunction = function (left) {
     return function (e) {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       const clickEventFunction = eventFunction(left);
       clickEventFunction.call(this, e);
 
@@ -536,7 +533,7 @@ ProjectJs.prototype.infoArea = function (info) {
           top: String(0) + ea,
           left: String(0) + ea,
           width: String(100) + "%",
-          height: String(100) + "%",
+          height: String(100) + "vh",
           opacity: String(0.7),
           zIndex: String(3),
         };
@@ -735,6 +732,190 @@ ProjectJs.prototype.infoArea = function (info) {
     }
 
     for (let z = 0; z < columns.length; z++) {
+
+      sortEventFunction = function (left) {
+        return function (e) {
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+          const map = DataPatch.projectMap();
+          const clickEventFunction = eventFunction(left);
+          clickEventFunction.call(this, e);
+
+          let cancel_inputBack, cancel_event;
+          let sort_event;
+          let button_clone;
+          let style;
+          let ea = "px";
+          let height, fontSize, top, width;
+          let items;
+          let tempArr;
+
+          items = [
+            "오름차순",
+            "내림차순",
+          ];
+
+          tempArr = map[instance.caseDoms[0].children[z].getAttribute("column")];
+          if (tempArr.items !== undefined && tempArr.items !== null) {
+            tempArr = tempArr.items;
+            tempArr.unshift("전체 보기");
+            items = items.concat(tempArr);
+          } else if (tempArr.yesNo !== undefined && tempArr.yesNo !== null) {
+            tempArr = tempArr.yesNo;
+            tempArr.unshift("전체 보기");
+            items = items.concat(tempArr);
+          }
+
+          cancel_event = function (e) {
+            if (e.cancelable) {
+              e.preventDefault();
+            }
+            let originalDiv = this.parentNode;
+
+            GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
+              while (document.querySelectorAll('.removeTarget').length !== 0) {
+                document.querySelectorAll('.removeTarget')[0].remove();
+              }
+              clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
+              GeneralJs.timeouts.whiteCardRemoveTargets = null;
+            }, 10);
+
+            originalDiv.style.overflow = "hidden";
+            originalDiv.style.color = "#2fa678";
+            originalDiv.style.transition = "";
+          }
+
+          sort_event = function (toggle = true) {
+            return function (e) {
+              let s, h, arr;
+              s = document.createDocumentFragment();
+              h = document.createDocumentFragment();
+              arr = [];
+              for (let i = 1; i < instance.caseDoms.length; i++) {
+                arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
+              }
+
+              arr.sort((a, b) => {
+                if (/^[0-9]/.test(a.caseDom.children[z].textContent) && !/\-/g.test(a.caseDom.children[z].textContent)) {
+                  if (toggle) {
+                    return Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
+                  } else {
+                    return Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
+                  }
+                } else {
+                  if (a.caseDom.children[z].textContent < b.caseDom.children[z].textContent) {
+                    return toggle ? -1 : 1;
+                  }
+                  if (a.caseDom.children[z].textContent > b.caseDom.children[z].textContent) {
+                    return toggle ? 1 : -1;
+                  }
+                  return 0;
+                }
+              });
+
+              for (let { standard, caseDom } of arr) {
+                s.appendChild(standard);
+                h.appendChild(caseDom);
+              }
+              instance.totalMother.firstChild.appendChild(s);
+              instance.totalMother.lastChild.appendChild(h);
+              cancel_event.call(this, e);
+            }
+          }
+
+          cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
+          cancel_inputBack.classList.add("removeTarget");
+          style = {
+            position: "fixed",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(100) + "%",
+            height: String(100) + "vh",
+            opacity: String(0.7),
+            zIndex: String(3),
+            background: "white",
+            animation: "justfadeinmiddle 0.3s ease forwards",
+          };
+          for (let i in style) {
+            cancel_inputBack.style[i] = style[i];
+          }
+          this.appendChild(cancel_inputBack);
+
+          cancel_inputBack.addEventListener("click", cancel_event);
+          cancel_inputBack.addEventListener("contextmenu", cancel_event);
+
+          this.style.overflow = "";
+
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+          width = GeneralJs.calculationMenuWidth(fontSize, items);
+
+          for (let i = 0; i < items.length; i++) {
+            button_clone = GeneralJs.nodes.div.cloneNode(true);
+            button_clone.classList.add("removeTarget");
+            button_clone.textContent = items[i];
+            button_clone.setAttribute("buttonValue", items[i]);
+            style = {
+              position: "absolute",
+              top: String(((height * 2) * (i + 1)) - top) + ea,
+              left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+              width: String(width) + ea,
+              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.4)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.4)) + ea,
+              background: "#2fa678",
+              textAlign: "center",
+              fontSize: "inherit",
+              color: "#ffffff",
+              zIndex: String(3),
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              boxShadow: "0px 2px 11px -6px #2fa678",
+            };
+            for (let j in style) {
+              button_clone.style[j] = style[j];
+            }
+            if (i < 2) {
+              button_clone.addEventListener("click", sort_event(i === 0));
+            } else if (i === 2) {
+              button_clone.addEventListener("click", function (e) {
+                for (let j = 1; j < instance.caseDoms.length; j++) {
+                  instance.standardDoms[j].style.display = "block";
+                  instance.caseDoms[j].style.display = "block";
+                }
+                cancel_event.call(this, e);
+              });
+            } else if (i >= 3) {
+              button_clone.addEventListener("click", function (e) {
+                const yesNo = [ "Y", "N" ];
+                for (let j = 1; j < instance.caseDoms.length; j++) {
+                  if (!yesNo.includes(this.textContent)) {
+                    if (instance.caseDoms[j].children[z].textContent !== this.textContent) {
+                      instance.standardDoms[j].style.display = "none";
+                      instance.caseDoms[j].style.display = "none";
+                    } else {
+                      instance.standardDoms[j].style.display = "block";
+                      instance.caseDoms[j].style.display = "block";
+                    }
+                  } else {
+                    if (/^1[6789]/.test(instance.caseDoms[j].children[z].textContent)) {
+                      instance.standardDoms[j].style.display = this.textContent === "Y" ? "none": "block";
+                      instance.caseDoms[j].style.display = this.textContent === "Y" ? "none": "block";
+                    } else {
+                      instance.standardDoms[j].style.display = this.textContent === "Y" ? "block": "none";
+                      instance.caseDoms[j].style.display = this.textContent === "Y" ? "block": "none";
+                    }
+                  }
+                }
+                cancel_event.call(this, e);
+              });
+            }
+            this.appendChild(button_clone);
+          }
+        }
+      }
+
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
 
       if (num === 0) {
@@ -758,48 +939,14 @@ ProjectJs.prototype.infoArea = function (info) {
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
       div_clone3.setAttribute("column", columns[z]);
-      div_clone3.addEventListener("contextmenu", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
 
       if (num === 0) {
-        div_clone3.addEventListener("click", function (e) {
-          let s, h, arr, toggle;
-          s = document.createDocumentFragment();
-          h = document.createDocumentFragment();
-          arr = [];
-          toggle = Number(instance.caseDoms[0].getAttribute("sort"));
-          for (let i = 1; i < instance.caseDoms.length; i++) {
-            arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
-          }
-
-          arr.sort((a, b) => {
-            if (/^[0-9]/.test(a.caseDom.children[z].textContent) && !/\-/g.test(a.caseDom.children[z].textContent)) {
-              if (toggle) {
-                return Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
-              } else {
-                return Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
-              }
-            } else {
-              if (a.caseDom.children[z].textContent < b.caseDom.children[z].textContent) {
-                return toggle ? -1 : 1;
-              }
-              if (a.caseDom.children[z].textContent > b.caseDom.children[z].textContent) {
-                return toggle ? 1 : -1;
-              }
-              return 0;
-            }
-          });
-          for (let { standard, caseDom } of arr) {
-            s.appendChild(standard);
-            h.appendChild(caseDom);
-          }
-          instance.totalMother.firstChild.appendChild(s);
-          div_clone.appendChild(h);
-          instance.caseDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
-        });
+        div_clone3.addEventListener("contextmenu", sortEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
       } else {
-        div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
         div_clone3.addEventListener("mouseenter", enterEventFunction);
         div_clone3.addEventListener("mouseleave", leaveEventFunction);
+        div_clone3.addEventListener("click", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+        div_clone3.addEventListener("contextmenu", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
       }
 
       div_clone2.appendChild(div_clone3);
@@ -847,7 +994,7 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, casesTargets;
 
     if (search === null) {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
+      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=200&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchProjects"));
     }
