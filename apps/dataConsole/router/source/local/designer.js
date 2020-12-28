@@ -709,34 +709,37 @@ DesignerJs.prototype.infoArea = function (info) {
 
       if (num === 0) {
         div_clone3.addEventListener("click", function (e) {
-          let h, arr, toggle;
+          let s, h, arr, toggle;
+          s = document.createDocumentFragment();
           h = document.createDocumentFragment();
           arr = [];
           toggle = Number(instance.caseDoms[0].getAttribute("sort"));
           for (let i = 1; i < instance.caseDoms.length; i++) {
-            arr.push(instance.caseDoms[i]);
+            arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
           }
 
           arr.sort((a, b) => {
-            if (/^[0-9]/.test(a.children[z].textContent) && !/\-/g.test(a.children[z].textContent)) {
+            if (/^[0-9]/.test(a.caseDom.children[z].textContent) && !/\-/g.test(a.caseDom.children[z].textContent)) {
               if (toggle) {
-                return Number(a.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.children[z].textContent.replace(/[^0-9\.]/g, ''));
+                return Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
               } else {
-                return Number(b.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(a.children[z].textContent.replace(/[^0-9\.]/g, ''));
+                return Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
               }
             } else {
-              if (a.children[z].textContent < b.children[z].textContent) {
+              if (a.caseDom.children[z].textContent < b.caseDom.children[z].textContent) {
                 return toggle ? -1 : 1;
               }
-              if (a.children[z].textContent > b.children[z].textContent) {
+              if (a.caseDom.children[z].textContent > b.caseDom.children[z].textContent) {
                 return toggle ? 1 : -1;
               }
               return 0;
             }
           });
-          for (let div of arr) {
-            h.appendChild(div);
+          for (let { standard, caseDom } of arr) {
+            s.appendChild(standard);
+            h.appendChild(caseDom);
           }
+          instance.totalMother.firstChild.appendChild(s);
           div_clone.appendChild(h);
           instance.caseDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
         });
