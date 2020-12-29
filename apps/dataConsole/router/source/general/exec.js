@@ -12,5 +12,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 });
 
 document.addEventListener("error", function (e) {
+  window.localStorage.clear();
+  window.location.reload();
   console.log(e);
 });
