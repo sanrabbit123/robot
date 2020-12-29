@@ -59,11 +59,16 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       }
       break;
     case "date":
-      filteredValue = DataPatch.toolsDateFilter(value);
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
-        finalValue = filteredValue;
+      if (value === "-" || value === "") {
+        filteredValue = "-";
+        finalValue = "-";
       } else {
-        finalValue = pastValue;
+        filteredValue = DataPatch.toolsDateFilter(value);
+        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
+          finalValue = filteredValue;
+        } else {
+          finalValue = pastValue;
+        }
       }
       break;
     case "boolean":

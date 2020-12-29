@@ -89,14 +89,18 @@ const widthTools = function (Client) {
 
     const dateToString = function (dateObject, detail = false) {
       let dayString = '';
+
       dayString += String(dateObject.getFullYear()).slice(0, 4);
       dayString += '-';
+
       if (dateObject.getMonth() + 1 < 10) {
         dayString += '0' + String(dateObject.getMonth() + 1);
       } else {
         dayString += String(dateObject.getMonth() + 1);
       }
+
       dayString += '-';
+
       if (dateObject.getDate() < 10) {
         dayString += '0' + String(dateObject.getDate());
       } else {
@@ -124,6 +128,10 @@ const widthTools = function (Client) {
         }
       }
 
+      if (/^1[678]/.test(dayString)) {
+        dayString = '-';
+      }
+
       return dayString;
     }
 
@@ -131,7 +139,7 @@ const widthTools = function (Client) {
     let temp;
     let callHistoryString;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected } }, etc: { comment, channel } }, analytics: { response: { status, outreason }, date: { callHistory, space: { precheck, empty, movein } }, picture } } of client.requests) {
+    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, outreason }, date: { callHistory, space: { precheck, empty, movein } }, picture }, proposal: { proid } } of client.requests) {
 
       callHistoryString = '';
       for (let h of callHistory) {
@@ -156,7 +164,6 @@ const widthTools = function (Client) {
         contract,
         pyeong,
         living,
-        expected: dateToString(expected),
         precheck: dateToString(precheck),
         empty: dateToString(empty),
         movein: dateToString(movein),
@@ -166,6 +173,7 @@ const widthTools = function (Client) {
         family,
         comment,
         channel,
+        proid,
       }
       tong.push(temp);
     }

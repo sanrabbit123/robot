@@ -1001,7 +1001,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
 
     await this.updateClient([ { cliid: dummy.structure.cliid }, updateQuery ], option);
 
-    return "success";
+    return dummy.structure.cliid;
   } catch (e) {
     console.log(e);
   }
@@ -1374,7 +1374,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
 
     await this.updateContents([ { conid: dummy.structure.conid }, updateQuery ], option);
 
-    return "success";
+    return dummy.structure.conid;
   } catch (e) {
     console.log(e);
   }
@@ -1826,7 +1826,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
     await this.updateDesigner([ { desid: dummy.structure.desid }, updateQuery ], option);
 
-    return "success";
+    return dummy.structure.desid;
   } catch (e) {
     console.log(e);
   }
@@ -2219,7 +2219,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
     await this.updateProject([ { proid: dummy.structure.proid }, updateQuery ], option);
 
-    return "success";
+    return dummy.structure.proid;
   } catch (e) {
     console.log(e);
   }
@@ -2390,7 +2390,7 @@ BackMaker.prototype.createClientHistory = async function (updateQuery, option = 
 
     await this.updateClientHistory([ { cliid: updateQuery.cliid }, updateQuery ], option);
 
-    return "success";
+    return updateQuery.cliid;
   } catch (e) {
     console.log(e);
   }
@@ -2556,7 +2556,7 @@ BackMaker.prototype.createProjectHistory = async function (updateQuery, option =
 
     await this.updateClientHistory([ { proid: updateQuery.proid }, updateQuery ], option);
 
-    return "success";
+    return updateQuery.proid;
   } catch (e) {
     console.log(e);
   }

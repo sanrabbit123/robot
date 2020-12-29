@@ -20,14 +20,18 @@ const widthTools = function (Project) {
     const project = this.toNormal();
     const dateToString = function (dateObject, detail = false) {
       let dayString = '';
+
       dayString += String(dateObject.getFullYear()).slice(0, 4);
       dayString += '-';
+
       if (dateObject.getMonth() + 1 < 10) {
         dayString += '0' + String(dateObject.getMonth() + 1);
       } else {
         dayString += String(dateObject.getMonth() + 1);
       }
+
       dayString += '-';
+
       if (dateObject.getDate() < 10) {
         dayString += '0' + String(dateObject.getDate());
       } else {
@@ -53,6 +57,10 @@ const widthTools = function (Project) {
         } else {
           dayString += String(dateObject.getSeconds());
         }
+      }
+
+      if (/^1[678]/.test(dayString)) {
+        dayString = '-';
       }
 
       return dayString;

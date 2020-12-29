@@ -441,10 +441,6 @@ DataPatch.prototype.clientStandard = function () {
       name: "거주중",
       width: 60,
     },
-    expected: {
-      name: "입주 예정일",
-      width: 100,
-    },
     precheck: {
       name: "사전 점검일",
       width: 100,
@@ -454,7 +450,7 @@ DataPatch.prototype.clientStandard = function () {
       width: 100,
     },
     movein: {
-      name: "이사일",
+      name: "입주 예정일",
       width: 100,
     },
     room: {
@@ -479,6 +475,10 @@ DataPatch.prototype.clientStandard = function () {
     },
     channel: {
       name: "유입 채널",
+      width: 100,
+    },
+    proid: {
+      name: "제안서",
       width: 100,
     },
   };
@@ -536,16 +536,16 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "계약 상태", target: "contract" },
       { name: "평수", target: "pyeong" },
       { name: "거주중", target: "living" },
-      { name: "입주 예정일", target: "expected" },
       { name: "사전 점검일", target: "precheck" },
       { name: "집 비는 날", target: "empty" },
-      { name: "이사일", target: "movein" },
+      { name: "입주 예정일", target: "movein" },
       { name: "방", target: "room" },
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
       { name: "요청 사항", target: "comment" },
       { name: "유입 채널", target: "channel" },
+      { name: "제안서", target: "proid" },
     ],
   };
 
@@ -1128,7 +1128,6 @@ DataPatch.prototype.clientMap = function () {
     bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
     valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
     living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
-    expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
     status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "응대중", "진행", "드랍", "완료" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
@@ -1136,7 +1135,8 @@ DataPatch.prototype.clientMap = function () {
     callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    movein: { name: "이사일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    proid: { name: "제안서", position: "requests.0.proposal.proid", type: "string", searchBoo: true, },
   };
   return map;
 }

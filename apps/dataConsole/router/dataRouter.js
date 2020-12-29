@@ -590,7 +590,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject" ];
   obj.func = async function (req, res) {
     try {
-      const { thisId, requestIndex, column, value, pastValue } = req.body;
+      let { thisId, requestIndex, column, value, pastValue } = req.body;
       let map;
       let whereQuery, updateQuery;
       let message;
@@ -618,6 +618,9 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           }
           break;
         case "date":
+          if (value === "-" || value === "") {
+            value = "1800-01-01";
+          }
           if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
             if (value.length === 10) {
               temp = value.split('-');
@@ -764,20 +767,21 @@ DataRouter.prototype.rou_post_createDocument = function () {
   obj.func = async function (req, res) {
     try {
       const updateQuery = JSON.parse(req.body.updateQuery);
+      let id;
 
       if (req.url === "/createClient") {
-        await instance.back.createClient(updateQuery, { selfMongo: instance.mongo });
+        id = await instance.back.createClient(updateQuery, { selfMongo: instance.mongo });
       } else if (req.url === "/createDesigner") {
-        await instance.back.createDesigner(updateQuery, { selfMongo: instance.mongo });
+        id = await instance.back.createDesigner(updateQuery, { selfMongo: instance.mongo });
       } else if (req.url === "/createProject") {
         updateQuery["proposal.date"] = new Date();
-        await instance.back.createProject(updateQuery, { selfMongo: instance.mongo });
+        id = await instance.back.createProject(updateQuery, { selfMongo: instance.mongo });
       } else if (req.url === "/createContents") {
-        await instance.back.createContents(updateQuery, { selfMongo: instance.mongo });
+        id = await instance.back.createContents(updateQuery, { selfMongo: instance.mongo });
       }
 
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ message: "success" }));
+      res.send(JSON.stringify({ id: id }));
     } catch (e) {
       console.log(e);
     }

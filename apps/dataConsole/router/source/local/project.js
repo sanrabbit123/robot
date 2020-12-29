@@ -546,7 +546,7 @@ ProjectJs.prototype.infoArea = function (info) {
           top: String(0) + ea,
           left: String(0) + ea,
           width: String(100) + "%",
-          height: String(100) + "vh",
+          height: String(document.querySelector('.totalMother').lastChild.getBoundingClientRect().height) + ea,
           opacity: String(0.7),
           zIndex: String(3),
         };
@@ -802,7 +802,7 @@ ProjectJs.prototype.infoArea = function (info) {
         top: String(0) + ea,
         left: String(0) + ea,
         width: String(100) + "%",
-        height: String(100) + "vh",
+        height: String(document.querySelector('.totalMother').lastChild.getBoundingClientRect().height) + ea,
         opacity: String(0.7),
         zIndex: String(3),
         background: "white",
