@@ -436,28 +436,6 @@ class DevContext extends Array {
       // }
 
 
-      // const back = new BackMaker();
-      //
-      // const contents = await back.getLatestContentsArr("all");
-      // console.log(contents);
-      //
-      //
-      // const past = await this.MONGOC.db(`miro81`).collection(`FP1_porlist`).find({}).toArray();
-      // console.log(past)
-      //
-      //
-      // for (let i of past) {
-      //   for (let j of contents) {
-      //     if (i.porlid === j.contents.portfolio.pid) {
-      //       console.log(i.desid === j.desid);
-      //     }
-      //   }
-      // }
-
-
-
-
-
 
 
       // const notion = new NotionAPIs();

@@ -361,6 +361,15 @@ GeneralJs.isMac = function () {
   return !/Windows/gi.test(window.navigator.userAgent);
 }
 
+GeneralJs.isIE = function () {
+  let agent = window.navigator.userAgent.toLowerCase();
+  if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || (agent.indexOf("msie") !== -1)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 GeneralJs.prototype.totalContents = document.getElementById("totalcontents");
 
 GeneralJs.prototype.generalCss = function () {
