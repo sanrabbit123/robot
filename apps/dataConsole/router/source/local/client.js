@@ -1667,7 +1667,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
 ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
-  const { standard, info } = DataPatch.clientWhiteViewStandard();
+  let { standard, info } = DataPatch.clientWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
   let style;
@@ -1687,6 +1687,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let visualSpecificMarginTop;
   let textAreas;
   let notionEvent;
+  let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2150,6 +2151,100 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
   }
 
+  dragstartEventFunction = function (e) {
+    e.dataTransfer.setData("dragData", e.target.parentNode.getAttribute("index"));
+    const img = new Image();
+    e.dataTransfer.setDragImage(img, 1, 1);
+  }
+
+  dragendEventFunction = function (e) {
+    this.style.opacity = String(1);
+    e.preventDefault();
+  }
+
+  dragenterEventFunction = function (e) {
+    this.style.opacity = String(0.5);
+    e.preventDefault();
+  }
+
+  dragleaveEventFunction = function (e) {
+    this.style.opacity = String(1);
+    e.preventDefault();
+  }
+
+  dragoverEventFunction = function (e) {
+    this.style.opacity = String(0.5);
+    e.preventDefault();
+  }
+
+  dropEventFunction = function (e) {
+    e.preventDefault();
+    this.style.opacity = String(1);
+    const { info } = DataPatch.clientWhiteViewStandard();
+    const movingColumn = e.dataTransfer.getData("dragData");
+    const thisColumn = this.parentNode.getAttribute("index");
+    let originalColumns, originalColumns_filtered, originalTops;
+    let thisStorage;
+    let movingColumnIndex, thisColumnIndex;
+    let tempObj;
+    let infoObj;
+    let infoObjKey;
+
+    infoObj = {};
+    for (let c of info) {
+      infoObj[c.target] = c.name;
+    }
+    infoObjKey = Object.keys(infoObj);
+
+    originalColumns = [];
+    originalColumns_filtered = [];
+    originalTops = [];
+    thisStorage = [];
+
+    for (let c = 0; c < this.parentNode.parentNode.children.length; c++) {
+      if (this.parentNode.parentNode.children[c].getAttribute("index") !== null && this.parentNode.parentNode.children[c].getAttribute("index") !== undefined) {
+        if (infoObjKey.includes(this.parentNode.parentNode.children[c].getAttribute("index"))) {
+          tempObj = { dom: this.parentNode.parentNode.children[c], name: this.parentNode.parentNode.children[c].getAttribute("index"), top: this.parentNode.parentNode.children[c].style.top };
+          originalColumns.push(tempObj);
+          originalTops.push(tempObj.top);
+          if (tempObj.name === movingColumn) {
+            movingColumnIndex = c;
+          }
+          if (tempObj.name === thisColumn) {
+            thisColumnIndex = c;
+          }
+        }
+      }
+    }
+
+    for (let c = 0; c < originalColumns.length; c++) {
+      if (c !== movingColumnIndex) {
+        if (c === thisColumnIndex) {
+          originalColumns_filtered.push(originalColumns[movingColumnIndex]);
+        }
+        originalColumns_filtered.push(originalColumns[c]);
+      }
+    }
+
+    for (let c = 0; c < originalColumns_filtered.length; c++) {
+      originalColumns_filtered[c].dom.style.top = originalTops[c];
+      originalColumns_filtered[c].top = originalTops[c];
+    }
+
+    originalColumns_filtered.sort((a, b) => {
+      return Number(a.top.replace(/[^0-9\.\-]/gi, '')) - Number(b.top.replace(/[^0-9\.\-]/gi, ''));
+    });
+
+    for (let c = 0; c < originalColumns_filtered.length; c++) {
+      thisStorage.push({ name: infoObj[originalColumns_filtered[c].name], target: originalColumns_filtered[c].name });
+      this.parentNode.parentNode.insertBefore(originalColumns_filtered[originalColumns_filtered.length - 1 - c].dom, this.parentNode.parentNode.firstChild);
+    }
+
+    window.localStorage.setItem("client_whiteOrder", JSON.stringify(thisStorage));
+
+    e.stopPropagation();
+  }
+
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
@@ -2171,6 +2266,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   };
   for (let i in style) {
     propertyBox.style[i] = style[i];
+  }
+
+  if (window.localStorage.getItem("client_whiteOrder") !== null && window.localStorage.getItem("client_whiteOrder") !== undefined) {
+    info = JSON.parse(window.localStorage.getItem("client_whiteOrder"));
   }
 
   for (let i = 0; i < info.length; i++) {
@@ -2199,10 +2298,17 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: String(fontSize * (21 / 16)) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(700),
+      cursor: "pointer",
     };
     for (let j in style) {
       div_clone4.style[j] = style[j];
     }
+    div_clone4.setAttribute("draggable", "true");
+    div_clone4.addEventListener("dragstart", dragstartEventFunction);
+    div_clone4.addEventListener("dragenter", dragenterEventFunction);
+    div_clone4.addEventListener("dragleave", dragleaveEventFunction);
+    div_clone4.addEventListener("dragover", dragoverEventFunction);
+    div_clone4.addEventListener("drop", dropEventFunction);
     div_clone3.appendChild(div_clone4);
 
     //value
