@@ -514,10 +514,11 @@ class DevContext extends Array {
 
 
 
-      // const analytics = new GoogleAnalytics();
-      // const clients = await analytics.getClientsInfoByNumber(1);
-
-
+      const analytics = new GoogleAnalytics();
+      const startDay = "2020-12-01";
+      const endDay = "2020-12-29";
+      const users = await analytics.getUsersByDate(startDay, endDay);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
 
 
 

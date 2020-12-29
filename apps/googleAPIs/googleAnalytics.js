@@ -310,6 +310,185 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, t
   }
 }
 
+GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", end = "today") {
+  const instance = this;
+  const zeroAddtion = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return `${String(num)}`;
+    }
+  }
+  const userSort = function (result) {
+    let users = [];
+    for (let { dimensions } of result.rows) {
+      users.push(dimensions);
+    }
+    users.sort((a, b) => { return Number(b[0].replace(/[^0-9\.\-]/, '')) - Number(a[0].replace(/[^0-9\.\-]/, '')); });
+    return users;
+  }
+  const queryString = require('querystring');
+  try {
+    const today = new Date();
+    const monthAgo = new Date();
+    monthAgo.setMonth(monthAgo.getMonth() - 1);
+    let startDate, endDate;
+    let dimensionsArr;
+    let users, dimensions, dimensions_values, result;
+    let resultObj = {};
+    let resultObj_key;
+    let questionIndex;
+    let tempObj;
+    let finalObj;
+    let filteredArr;
+    let temp;
+    let num;
+
+
+    if (end === "today") {
+      endDate = zeroAddtion(today.getFullYear()) + '-' + zeroAddtion(today.getMonth() + 1) + '-' + zeroAddtion(today.getDate());
+    } else {
+      endDate = end;
+    }
+
+    if (date === "aMonthAgo") {
+      startDate = zeroAddtion(monthAgo.getFullYear()) + '-' + zeroAddtion(monthAgo.getMonth() + 1) + '-' + zeroAddtion(monthAgo.getDate());
+    } else {
+      startDate = date;
+    }
+
+
+    dimensionsArr = [
+      [
+        { name: "ga:pagePath" },
+        { name: "ga:pageTitle" },
+      ],
+      [
+        { name: "ga:userDefinedValue" },
+        { name: "ga:source" },
+      ],
+      [
+        { name: "ga:deviceCategory" },
+        { name: "ga:operatingSystem" },
+        { name: "ga:mobileDeviceModel" },
+      ],
+      [
+        { name: "ga:country" },
+        { name: "ga:city" },
+      ],
+      [
+        { name: "ga:campaign" },
+        { name: "ga:userType" },
+      ],
+    ];
+
+    resultObj = {};
+    for (let z = 0; z < dimensionsArr.length; z++) {
+      dimensions = dimensionsArr[z];
+      dimensions_values = [];
+      for (let { name } of dimensions) {
+        dimensions_values.push(name.replace(/^ga\:/, ''));
+      }
+      result = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "getClientsByDate" ], { startDate, endDate, dimensions });
+      users = userSort(result.reports[0].data);
+      for (let i of users) {
+        if (resultObj[i[1]] === undefined) {
+          resultObj[i[1]] = [];
+        }
+        tempObj = {};
+        tempObj.timeline = i[0];
+        for (let j = 2; j < dimensions_values.length + 2; j++) {
+          tempObj[dimensions_values[j - 2]] = i[j];
+        }
+        resultObj[i[1]].push(tempObj);
+      }
+    }
+
+    finalObj = {};
+    for (let i in resultObj) {
+      tempObj = {};
+      for (let j = 0; j < resultObj[i].length; j++) {
+        if (tempObj[resultObj[i][j].timeline] === undefined) {
+          tempObj[resultObj[i][j].timeline] = {};
+        }
+        for (let k in resultObj[i][j]) {
+          tempObj[resultObj[i][j].timeline][k] = resultObj[i][j][k];
+        }
+      }
+      finalObj[i] = Object.values(tempObj);
+    }
+
+    filteredArr = [];
+    for (let i in finalObj) {
+
+      finalObj[i].sort((a, b) => { return Number(a.timeline) - Number(b.timeline); });
+
+      tempObj = {};
+      tempObj.history = [];
+      questionIndex = 0;
+      num = 0;
+
+      for (let obj of finalObj[i]) {
+        tempObj.userid = i;
+
+        tempObj.userType = obj.userType !== undefined && obj.userType !== '' ? obj.userType : "(not set)";
+        tempObj.campaign = obj.campaign !== undefined && obj.campaign !== '' ? obj.campaign : "(not set)";
+
+        tempObj.source = obj.source !== undefined && obj.source !== '' ? obj.source : "(not set)";
+
+        tempObj.referrer = {};
+        tempObj.referrer.name = obj.source !== undefined && obj.source !== '' ? obj.source : "(not set)";
+        tempObj.referrer.detail = {};
+        tempObj.referrer.detail.host = null;
+        tempObj.referrer.detail.queryString = {};
+
+        tempObj.referrer.raw = obj.userDefinedValue !== undefined && obj.userDefinedValue !== '' ? obj.userDefinedValue : "(not set)";
+        if (/^http/.test(obj.userDefinedValue)) {
+          if (/\?/.test(obj.userDefinedValue)) {
+            questionIndex = obj.userDefinedValue.search(/\?/);
+            tempObj.referrer.detail.host = obj.userDefinedValue.slice(0, questionIndex);
+            tempObj.referrer.detail.queryString = queryString.parse(obj.userDefinedValue.slice(questionIndex + 1));
+          } else {
+            tempObj.referrer.detail.host = obj.userDefinedValue;
+            tempObj.referrer.detail.queryString = {};
+          }
+        }
+
+        tempObj.device = {};
+        tempObj.device.category = obj.deviceCategory !== undefined && obj.deviceCategory !== '' ? obj.deviceCategory : "(not set)";
+        tempObj.device.os = obj.operatingSystem !== undefined && obj.operatingSystem !== '' ? obj.operatingSystem : "(not set)";
+        tempObj.device.model = obj.mobileDeviceModel !== undefined && obj.mobileDeviceModel !== '' ? obj.mobileDeviceModel : "(not set)";
+
+        tempObj.region = {};
+        tempObj.region.country = obj.country !== undefined && obj.country !== '' ? obj.country : "(not set)";
+        tempObj.region.city = obj.city !== undefined && obj.city !== '' ? obj.city : "(not set)";
+
+        temp = {};
+        temp.time = obj.timeline.slice(0, 4) + "-" + obj.timeline.slice(4, 6) + "-" + obj.timeline.slice(6, 8) + " " + obj.timeline.slice(8, 10) + ":" + obj.timeline.slice(10, 12) + ":00";
+        temp.page = obj.pageTitle !== undefined && obj.pageTitle !== '' ? obj.pageTitle : "(not set)";
+        temp.page_raw = obj.pagePath !== undefined && obj.pagePath !== '' ? obj.pagePath : "(not set)";
+        tempObj.history.push(temp);
+
+        if (num === 0) {
+          tempObj.firstTimeline = temp.time;
+        }
+        tempObj.latestTimeline = temp.time;
+
+        num++;
+      }
+      filteredArr.push(tempObj);
+    }
+
+    filteredArr.sort((a, b) => {
+      return Number(b.latestTimeline.replace(/[^0-9]/g, '')) - Number(a.latestTimeline.replace(/[^0-9]/g, ''));
+    });
+
+    return filteredArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleAnalytics.prototype.getUsers = async function () {
   const instance = this;
   const mother = this.mother;

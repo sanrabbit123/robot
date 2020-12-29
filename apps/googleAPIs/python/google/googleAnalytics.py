@@ -123,6 +123,27 @@ class GoogleAnalytics:
 
         return dumps(result)
 
+    def getClientsByDate(self, startDate, endDate, dimensions):
+        dimensions.insert(0, { "name": "ga:clientId" })
+        dimensions.insert(0, { "name": "ga:dateHourMinute" })
+        result = self.app.reports().batchGet(
+            body={
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [
+                            { "startDate": startDate, "endDate": endDate }
+                        ],
+                        "dimensions": dimensions,
+                        "metrics": [
+                            { "expression": "ga:pageviews" },
+                        ]
+                    }
+                ]
+            }).execute()
+
+        return dumps(result)
 
     def getClientById(self, clientId, dimensions):
         aMonthAgo = self.getAMonthAgo()
