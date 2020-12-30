@@ -545,11 +545,11 @@ class DevContext extends Array {
 
 
 
-      const analytics = new GoogleAnalytics();
-      const startDay = "2020-12-21";
-      const endDay = "2020-12-29";
-      const users = await analytics.getUsersByDate(startDay, endDay);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
+      // const analytics = new GoogleAnalytics();
+      // const startDay = "2020-12-21";
+      // const endDay = "2020-12-29";
+      // const users = await analytics.getUsersByDate(startDay, endDay);
+      // await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
 
 
       /*
@@ -640,13 +640,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "김시연";
-      // const pid = "p72";
+      // const client = "박미진";
+      // const pid = "p73";
       // const rid = "re067";
       // const links = [
-      //   "https://docs.google.com/document/d/1OpizjsraRbCkwy2qonwXIp8sDH_0OkzSaViK_d15JsE/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1DWGQaNn56gQPLmjVQHwDzQmfAROYC_JHyL2u-VUgk9U/edit?usp=sharing",
       //   "https://docs.google.com/document/d/1WwWI6iBgjG6sXs5wFFiZXaAq4T64nrpkftf1Kkxji9Q/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1Q5sAs0rtsjCPchOxnBYMMHdmbbd_W2vC?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1E_FSUiuw-xlgPm7sKWyxV6v0Jd4qD-Kx?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -686,11 +686,11 @@ class DevContext extends Array {
       //addtional photo repair
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p71", 13);
+      // await filter.addtionalRepair("p73", 10);
 
       // etc tools
 
-      // await this.spellCheck("p72");
+      // await this.spellCheck("p73");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
