@@ -304,12 +304,14 @@ ClientJs.prototype.infoArea = function (info) {
       }
       const targets = document.querySelectorAll(".moveTarget");
       const ea = "px";
-      for (let target of targets) {
-        target.style.transform = "translateX(" + String(left * -1) + ea + ")";
-        if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-          target.style.transform = "translateX(0px)";
-        } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-          target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+      if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
+        for (let target of targets) {
+          target.style.transform = "translateX(" + String(left * -1) + ea + ")";
+          if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+            target.style.transform = "translateX(0px)";
+          } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+            target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+          }
         }
       }
     }

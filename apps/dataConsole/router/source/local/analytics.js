@@ -81,8 +81,7 @@ AnalyticsJs.prototype.standardBar = function (standard) {
   }
 
   leftPosition = [
-    57,
-    141,
+    70,
   ];
 
   sortEventFunction = function (index) {
@@ -132,7 +131,7 @@ AnalyticsJs.prototype.standardBar = function (standard) {
       delete style2.background;
       delete style2.width;
       leftPosition = [
-        38,
+        27,
       ];
     }
 
@@ -277,12 +276,14 @@ AnalyticsJs.prototype.infoArea = function (info) {
       }
       const targets = document.querySelectorAll(".moveTarget");
       const ea = "px";
-      for (let target of targets) {
-        target.style.transform = "translateX(" + String(left * -1) + ea + ")";
-        if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-          target.style.transform = "translateX(0px)";
-        } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-          target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+      if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
+        for (let target of targets) {
+          target.style.transform = "translateX(" + String(left * -1) + ea + ")";
+          if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+            target.style.transform = "translateX(0px)";
+          } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+            target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+          }
         }
       }
     }
@@ -658,14 +659,14 @@ AnalyticsJs.prototype.analyticsStandard = function () {
   model.standard = {
     userid: {
       name: "고유 아이디",
-      left: 40,
+      left: 35,
     },
   };
   model.info = {
     userType: {
       name: "타입",
-      width: 50,
-      left: 30,
+      width: 100,
+      left: 40,
     },
     firstTimeline: {
       name: "최초 도달 시간",
@@ -677,23 +678,23 @@ AnalyticsJs.prototype.analyticsStandard = function () {
     },
     campaign: {
       name: "캠패인",
-      width: 100,
+      width: 150,
     },
     referrer: {
       name: "리퍼럴",
-      width: 200,
+      width: 260,
     },
     device: {
       name: "디바이스",
-      width: 120,
+      width: 200,
     },
     region: {
       name: "지역",
-      width: 120,
+      width: 200,
     },
     history: {
       name: "움직임 기록",
-      width: 200,
+      width: 480,
     },
   };
 
@@ -758,7 +759,6 @@ AnalyticsJs.prototype.analyticsFlatDeath = function (tong) {
   }
   const referrerString = function (referrer) {
     let temp = '';
-    console.log(referrer);
     temp = referrer.name;
     if (referrer.detail.host !== null) {
       temp += " (";
@@ -792,7 +792,7 @@ AnalyticsJs.prototype.analyticsFlatDeath = function (tong) {
     let temp = '';
 
     for (let { time, page, page_raw } of historyArr) {
-      temp += `${time.toString(true).slice(5)} : ${page}(${page_raw}) / `;
+      temp += `${dateToString(new Date(time), false)} : ${page}(${page_raw}) / `;
     }
     temp = temp.slice(0, -3);
     return temp;
@@ -832,7 +832,7 @@ AnalyticsJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
-      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: "2020-12-18 00:00:00", endDate: "2020-12-28 00:00:00" }), "/getAnalytics_total"));
+      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: "2020-11-18 00:00:00", endDate: "2020-11-28 00:00:00" }), "/getAnalytics_total"));
     } else {
       // users = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
     }
@@ -3886,7 +3886,7 @@ AnalyticsJs.prototype.addExtractEvent = function () {
       const caseCopied = JSON.parse(JSON.stringify(instance.cases));
       caseCopied.shift();
       const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-      const map = DataPatch.clientMap();
+      const map = this.analyticsStandard();
 
       let data;
       let valuesArr;
