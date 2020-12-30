@@ -434,8 +434,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
         tempObj.userType = obj.userType !== undefined && obj.userType !== '' ? obj.userType : "(not set)";
         tempObj.campaign = obj.campaign !== undefined && obj.campaign !== '' ? obj.campaign : "(not set)";
 
-        tempObj.source = obj.source !== undefined && obj.source !== '' ? obj.source : "(not set)";
-
         tempObj.referrer = {};
         tempObj.referrer.name = obj.source !== undefined && obj.source !== '' ? obj.source : "(not set)";
         tempObj.referrer.detail = {};
@@ -455,9 +453,9 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
         }
 
         tempObj.device = {};
-        tempObj.device.category = obj.deviceCategory !== undefined && obj.deviceCategory !== '' ? obj.deviceCategory : "(not set)";
+        tempObj.device.type = obj.deviceCategory !== undefined && obj.deviceCategory !== '' ? obj.deviceCategory : "(not set)";
         tempObj.device.os = obj.operatingSystem !== undefined && obj.operatingSystem !== '' ? obj.operatingSystem : "(not set)";
-        tempObj.device.model = obj.mobileDeviceModel !== undefined && obj.mobileDeviceModel !== '' ? obj.mobileDeviceModel : "(not set)";
+        tempObj.device.mobileDevice = obj.mobileDeviceModel !== undefined && obj.mobileDeviceModel !== '' ? obj.mobileDeviceModel : "(not set)";
 
         tempObj.region = {};
         tempObj.region.country = obj.country !== undefined && obj.country !== '' ? obj.country : "(not set)";

@@ -125,10 +125,10 @@ DataConsole.prototype.connect = async function () {
     //set static
     await this.renderStatic(staticFolder);
 
-    app.use(function (req, res, next) {
-      res.status(404);
-      res.send('<script>window.location.href = "https://' + instance.address.backinfo.host + '/client"</script>');
-    });
+    // app.use(function (req, res, next) {
+    //   res.status(404);
+    //   res.send('<script>window.location.href = "https://' + instance.address.backinfo.host + '/client"</script>');
+    // });
 
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {

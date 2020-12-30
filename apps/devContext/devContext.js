@@ -504,7 +504,38 @@ class DevContext extends Array {
       // }
 
 
+
+
+
       // const back = new BackMaker();
+      // let clients = await back.getClientsByQuery({ "$or": [ { "requests.0.analytics.response.status": "진행" }, { "requests.0.analytics.response.status": "완료" } ] });
+      //
+      // let tong = [ [ "이름", "전화번호" ] ];
+      // let tempTong;
+      // for (let i of clients) {
+      //   tempTong = [];
+      //   tempTong.push(i.name);
+      //   tempTong.push(i.phone);
+      //   tong.push(tempTong);
+      // }
+      // console.log(tong);
+      //
+      // const sheets = new GoogleSheet();
+      // const drive = new GoogleDrive();
+      //
+      // let sheetsId, response;
+      //
+      // sheetsId = await sheets.create_newSheets_inPython("진행 및 완료 고객 이름, 번호", "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c");
+      // await sheets.update_value_inPython(sheetsId, '', tong, [ 0, 0 ]);
+      // await sheets.setting_cleanView_inPython(sheetsId);
+      // response = await drive.read_webView_inPython(sheetsId);
+      //
+      //
+      // console.log(response);
+
+
+
+
       // let clients = await back.getLatestClients(1, { withTools: true });
       //
       // console.log(clients)
@@ -515,10 +546,89 @@ class DevContext extends Array {
 
 
       const analytics = new GoogleAnalytics();
-      const startDay = "2020-12-01";
+      const startDay = "2020-12-21";
       const endDay = "2020-12-29";
       const users = await analytics.getUsersByDate(startDay, endDay);
       await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
+
+
+      /*
+
+      const targets = [
+        "analyticsExports_2019-03-01_2019-05-01.js",
+        "analyticsExports_2019-05-01_2019-07-01.js",
+        "analyticsExports_2019-07-01_2019-09-01.js",
+        "analyticsExports_2019-09-01_2019-11-01.js",
+        "analyticsExports_2019-11-01_2020-01-01.js",
+        "analyticsExports_2020-01-01_2020-02-01.js",
+        "analyticsExports_2020-02-01_2020-04-01.js",
+        "analyticsExports_2020-04-01_2020-06-01.js",
+        "analyticsExports_2020-06-01_2020-08-01.js",
+        "analyticsExports_2020-08-01_2020-10-01.js",
+        "analyticsExports_2020-10-01_2020-12-01.js",
+        "analyticsExports_2020-12-01_2020-12-29.js",
+      ];
+
+      let totalTong = [];
+      let tempArr;
+      for (let i of targets) {
+        tempArr = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/${i}` ]));
+        for (let j = 0; j < tempArr.length; j++) {
+          totalTong.push(tempArr[tempArr.length - 1 - j]);
+        }
+      }
+
+      // await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_totalTong.js`, JSON.stringify(totalTong) ]);
+
+      const { mongo, mongoinfo } = this.mother;
+      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      const MONGOCPYTHON = new mongo(("mongodb://" + ADDRESS.pythoninfo.user + ':' + ADDRESS.pythoninfo.password + '@' + ADDRESS.pythoninfo.host + ':' + String(ADDRESS.pythoninfo.port) + "/admin"), { useUnifiedTopology: true });
+
+
+      await MONGOCPYTHON.connect();
+
+      const stringToArr = function (dateString) {
+        let tempArr0, tempArr1, tempArr2;
+        tempArr0 = dateString.split(' ');
+        tempArr1 = tempArr0[0].split('-');
+        tempArr2 = tempArr0[1].split(':');
+        return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
+      }
+
+      let already;
+
+      for (let i of totalTong) {
+        i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
+        i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
+        for (let j = 0; j < i.history.length; j++) {
+          i.history[j].time = new Date(...stringToArr(i.history[j].time));
+        }
+        for (let j in i.referrer.detail.queryString) {
+          if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
+            delete i.referrer.detail.queryString[j];
+          }
+        }
+        if (i.source !== undefined) {
+          delete i.source;
+        }
+
+        i.device.type = i.device.category;
+        i.device.mobileDevice = i.device.model;
+        delete i.device.category;
+        delete i.device.model;
+
+        already = await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).find({ "userid": i.userid }).toArray();
+        if (already.length === 0) {
+          await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).insertOne(i);
+        }
+        console.log(i.userid + " success");
+      }
+
+
+      MONGOCPYTHON.close();
+
+      */
+
 
 
 

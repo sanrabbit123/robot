@@ -1035,8 +1035,8 @@ DesignerJs.prototype.spreadData = async function (search = null) {
   try {
     let designers, totalMother;
     let standardDataTong = [], infoDataTong = [];
-    let standardDomsFirst, casesFirst;
-    let standardDomsTargets, casesTargets;
+    let standardDomsFirst, caseDomsFirst, casesFirst;
+    let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
       designers = JSON.parse(await GeneralJs.ajaxPromise("limit=200", "/getDesigners"));
@@ -1058,18 +1058,21 @@ DesignerJs.prototype.spreadData = async function (search = null) {
       this.totalMother = totalMother;
     } else {
       standardDomsFirst = this.standardDoms.shift();
+      caseDomsFirst = this.caseDoms.shift();
       casesFirst = this.cases.shift();
       this.standardDoms = [];
+      this.caseDoms = [];
       this.cases = [];
       this.standardDoms.push(standardDomsFirst);
+      this.caseDoms.push(caseDomsFirst);
       this.cases.push(casesFirst);
 
       standardDomsTargets = this.totalMother.children[0].children;
       while (standardDomsTargets[2] !== undefined) {
         this.totalMother.children[0].removeChild(this.totalMother.children[0].lastChild);
       }
-      casesTargets = this.totalMother.children[2].children;
-      while (casesTargets[1] !== undefined) {
+      caseDomsTargets = this.totalMother.children[2].children;
+      while (caseDomsTargets[1] !== undefined) {
         this.totalMother.children[2].removeChild(this.totalMother.children[2].lastChild);
       }
     }

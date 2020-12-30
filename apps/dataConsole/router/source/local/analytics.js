@@ -1,4 +1,4 @@
-const ClientJs = function () {
+const AnalyticsJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
   this.module = {
@@ -14,13 +14,14 @@ const ClientJs = function () {
   this.standardDoms = [];
   this.caseDoms = [];
   this.cases = [];
+  this.casesRaw = [];
   this.totalMother = null;
   this.totalFather = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
 }
 
-ClientJs.prototype.standardBar = function (standard) {
+AnalyticsJs.prototype.standardBar = function (standard) {
   const instance = this;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
@@ -30,8 +31,7 @@ ClientJs.prototype.standardBar = function (standard) {
   let sortEventFunction;
 
   temp = {
-    cliid: standard.standard.cliid.name,
-    name: standard.standard.name.name
+    userid: standard.standard.userid.name,
   };
 
   target = standard.data;
@@ -123,7 +123,7 @@ ClientJs.prototype.standardBar = function (standard) {
   }
 
   num = (standard.search === null ? 0 : 1);
-  for (let { cliid, name } of target) {
+  for (let { userid } of target) {
     if (num === 1) {
       style2.position = "relative";
       style3.color = "#404040";
@@ -133,7 +133,6 @@ ClientJs.prototype.standardBar = function (standard) {
       delete style2.width;
       leftPosition = [
         38,
-        135,
       ];
     }
 
@@ -143,7 +142,7 @@ ClientJs.prototype.standardBar = function (standard) {
     }
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone3.textContent = cliid;
+    div_clone3.textContent = userid;
     for (let i in style3) {
       div_clone3.style[i] = style3[i];
     }
@@ -153,25 +152,8 @@ ClientJs.prototype.standardBar = function (standard) {
     }
     div_clone2.appendChild(div_clone3);
 
-    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone3.textContent = name;
-    for (let i in style3) {
-      div_clone3.style[i] = style3[i];
-    }
-    div_clone3.style.left = String(leftPosition[1]) + ea;
-    if (num === 0) {
-      div_clone3.addEventListener("click", sortEventFunction(1));
-    }
-    div_clone2.appendChild(div_clone3);
-
-    div_clone2.style.cursor = "pointer";
     if (num !== 0) {
-      div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(cliid, num));
-    }
-
-    if (num !== 0) {
-      this.cases.push({ cliid, name });
+      this.cases.push({ userid });
     } else {
       div_clone2.style.borderBottom = "1px dashed #dddddd";
       div_clone2.style.height = String(this.module.height + this.module.initialLine) + ea;
@@ -193,7 +175,7 @@ ClientJs.prototype.standardBar = function (standard) {
 
 }
 
-ClientJs.prototype.infoArea = function (info) {
+AnalyticsJs.prototype.infoArea = function (info) {
   const instance = this;
   const grayBarWidth = this.grayBarWidth;
   let div_clone, div_clone2, div_clone3;
@@ -203,26 +185,17 @@ ClientJs.prototype.infoArea = function (info) {
   let num, leftPosition, widthArr;
   let columns;
   let upsideWhiteBar;
-  let eventFunction, updateEventFunction;
+  let eventFunction;
   let enterEventFunction, leaveEventFunction;
   let sortEventFunction;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
-  let dropPoint;
   let onoffDummy;
-  let thisOnOff;
   let originalColumns;
 
   temp = {};
   columns = [];
   leftPosition = [];
   widthArr = [];
-
-  if (window.localStorage.getItem("client_columnsOrder") !== null && window.localStorage.getItem("client_columnsOrder") !== undefined) {
-    originalColumns = JSON.parse(window.localStorage.getItem("client_columnsOrder"));
-    for (let c of originalColumns) {
-      info.standard[c.name].left = c.left;
-    }
-  }
 
   for (let i in info.standard) {
     temp[i] = info.standard[i].name;
@@ -354,322 +327,11 @@ ClientJs.prototype.infoArea = function (info) {
     }
   }
 
-  updateEventFunction = function (left) {
-    return function (e) {
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-      const clickEventFunction = eventFunction(left);
-      clickEventFunction.call(this, e);
-
-      const thisIndex = this.parentElement.getAttribute("index");
-      const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];
-
-      leaveEventFunction.call(this, e);
-      for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
-        if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
-          for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
-            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
-          }
-        }
-      }
-
-      const removeAllEvent = function () {
-        GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
-          const standardArea = instance.totalMother.lastChild;
-          const infoArea = instance.totalMother.children[0];
-          const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
-          let finalColor;
-
-          for (let z = 0; z < standardArea.children.length; z++) {
-            if (standardArea.children[z].getAttribute("index") === thisIndex) {
-              if (standardArea.children[z].getAttribute("drop") === "true") {
-                finalColor = "#cccccc";
-              } else {
-                finalColor = "#404040";
-              }
-              for (let y = 0; y < standardArea.children[z].children.length; y++) {
-                if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
-                  standardArea.children[z].children[y].style.color = finalColor;
-                } else {
-                  standardArea.children[z].children[y].style.color = "#2fa678";
-                }
-              }
-            }
-          }
-
-          for (let z = 0; z < infoArea.children.length; z++) {
-            if (infoArea.children[z].getAttribute("index") === thisIndex) {
-              for (let y = 0; y < infoArea.children[z].children.length; y++) {
-                infoArea.children[z].children[y].style.color = finalColor;
-              }
-            }
-          }
-
-          while (document.querySelectorAll('.removeTarget').length !== 0) {
-            document.querySelectorAll('.removeTarget')[0].remove();
-          }
-          clearTimeout(GeneralJs.timeouts.whiteCardRemoveTargets);
-          GeneralJs.timeouts.whiteCardRemoveTargets = null;
-        }, 10);
-      }
-      const cancel_event = function (e) {
-        e.preventDefault();
-
-        let originalDiv = this.parentNode;
-
-        removeAllEvent();
-        originalDiv.style.overflow = "hidden";
-        originalDiv.style.color = "inherit";
-        originalDiv.style.transition = "";
-
-        window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
-        GeneralJs.stacks["addressEvent"] = null;
-      }
-      const updateValueEvent = async function (e) {
-        let thisId, requestIndex, column;
-        let idDom;
-        let mothers, targetDom;
-        let originalDiv = this.parentNode;
-        let finalValue;
-        let pastRawData;
-
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
-
-          idDom = this.parentNode.parentNode;
-
-          idDom.setAttribute("active", "true");
-          thisId = idDom.getAttribute("class");
-          mothers = document.querySelectorAll('.' + thisId);
-          for (let i = 0; i < mothers.length; i++) {
-            if (mothers[i].hasAttribute("active")) {
-              if (mothers[i].getAttribute("active") === "true") {
-                targetDom = mothers[i];
-                requestIndex = i;
-              }
-            }
-          }
-          column = this.parentNode.getAttribute("column");
-
-          if (originalDiv.childNodes[0] !== undefined && originalDiv.childNodes[0].nodeType === 3) {
-            pastRawData = originalDiv.childNodes[0].data;
-          } else {
-            pastRawData = '';
-          }
-
-          if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
-          } else if (e.type === "click") {
-            finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
-          } else if (e.type === "message") {
-            finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
-          }
-
-          await GeneralJs.updateValue({
-            thisId: thisId,
-            requestIndex: String(requestIndex),
-            column: column,
-            pastValue: pastRawData,
-            value: finalValue,
-            index: Number(idDom.getAttribute("index")),
-          });
-
-          instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
-          originalDiv.textContent = finalValue;
-          idDom.setAttribute("active", "false");
-          removeAllEvent();
-          originalDiv.style.overflow = "hidden";
-        }
-
-      }
-
-      let input_clone;
-      let button_clone;
-      let cancel_inputBack;
-      let style;
-      let ea = 'px';
-      let paddingBottom;
-      let height;
-      let top;
-      let width;
-      let fontSize;
-      let iframe_clone;
-      let tempFunction;
-      const updateEventMother = this;
-
-      if (this.querySelector("input") === null) {
-
-        cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
-        cancel_inputBack.classList.add("removeTarget");
-        style = {
-          position: "fixed",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String(100) + "%",
-          height: String(document.querySelector('.totalMother').lastChild.getBoundingClientRect().height) + ea,
-          opacity: String(0.7),
-          zIndex: String(3),
-        };
-        for (let i in style) {
-          cancel_inputBack.style[i] = style[i];
-        }
-        this.appendChild(cancel_inputBack);
-
-        input_clone = GeneralJs.nodes.input.cloneNode(true);
-        input_clone.classList.add("removeTarget");
-        input_clone.setAttribute("type", "text");
-        input_clone.setAttribute("value", this.textContent);
-
-        paddingBottom = 1;
-
-        style = {
-          position: "absolute",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String(100) + '%',
-          outline: String(0) + ea,
-          border: String(0) + ea,
-          textAlign: "center",
-          fontSize: "inherit",
-          color: "#2fa678",
-          paddingBottom: String(paddingBottom) + ea,
-          zIndex: String(3),
-        };
-        for (let i in style) {
-          input_clone.style[i] = style[i];
-        }
-
-        cancel_inputBack.addEventListener("click", cancel_event);
-        cancel_inputBack.addEventListener("contextmenu", cancel_event);
-        input_clone.addEventListener("keypress", updateValueEvent);
-
-        this.appendChild(input_clone);
-
-        //items
-        const map = DataPatch.clientMap();
-        const thisMap = map[this.getAttribute("column")];
-
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
-
-          cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-
-          this.style.overflow = "";
-          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
-          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-          top = height * 0.5;
-
-          width = GeneralJs.calculationMenuWidth(fontSize, thisMap.items);
-
-          for (let i = 0; i < thisMap.items.length; i++) {
-            button_clone = GeneralJs.nodes.div.cloneNode(true);
-            button_clone.classList.add("removeTarget");
-            button_clone.textContent = thisMap.items[i];
-            button_clone.setAttribute("buttonValue", thisMap.items[i]);
-            style = {
-              position: "absolute",
-              top: String(((height * 2) * (i + 1)) - top) + ea,
-              left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
-              width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.4)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.4)) + ea,
-              background: "#2fa678",
-              textAlign: "center",
-              fontSize: "inherit",
-              color: "#ffffff",
-              zIndex: String(3),
-              borderRadius: String(3) + ea,
-              animation: "fadeuplite 0.3s ease forwards",
-              boxShadow: "0px 2px 11px -6px #2fa678",
-            };
-            for (let j in style) {
-              button_clone.style[j] = style[j];
-            }
-            button_clone.addEventListener("click", updateValueEvent);
-            this.appendChild(button_clone);
-          }
-
-        } else if (thisMap.type !== "object" && thisMap.address !== undefined) {
-
-          cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-
-          this.style.overflow = "";
-          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
-          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-          top = height * 0.5;
-          width = fontSize * 36;
-
-          button_clone = GeneralJs.nodes.div.cloneNode(true);
-          button_clone.classList.add("removeTarget");
-
-          style = {
-            position: "absolute",
-            top: String((height * 1.9) - top) + ea,
-            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
-            width: String(width) + ea,
-            paddingTop: String(height * 0.3) + ea,
-            height: String(width * 0.9) + ea,
-            background: "white",
-            zIndex: String(3),
-            borderRadius: String(3) + ea,
-            animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #aaaaaa",
-          };
-          for (let i in style) {
-            button_clone.style[i] = style[i];
-          }
-
-          iframe_clone = GeneralJs.nodes.iframe.cloneNode(true);
-          iframe_clone.setAttribute("src", window.location.protocol + "//" + window.location.host + "/tools/address");
-          iframe_clone.setAttribute("width", "100%");
-          iframe_clone.setAttribute("height", "100%");
-          iframe_clone.style.border = String(0);
-          iframe_clone.style.borderRadius = String(3) + ea;
-          button_clone.appendChild(iframe_clone);
-
-          GeneralJs.stacks["addressEvent"] = async function (e) {
-            updateValueEvent.call(button_clone, e);
-            window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
-            GeneralJs.stacks["addressEvent"] = null;
-          }
-          window.addEventListener('message', GeneralJs.stacks["addressEvent"]);
-
-          this.appendChild(button_clone);
-
-        } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
-
-          cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
-          tempFunction(this, input_clone, function () {
-            let e = {};
-            e.type = "keypress";
-            e.keyCode = 13;
-            updateValueEvent.call(input_clone, e);
-            updateEventMother.style.overflow = "hidden";
-          });
-
-        } else {
-
-          GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
-            input_clone.focus();
-            clearTimeout(GeneralJs.timeouts.updateInputTimeout);
-            GeneralJs.timeouts.updateInputTimeout = null;
-          }, 200);
-
-        }
-
-      }
-    }
-  }
-
   sortEventFunction = function (left, z) {
     return function (e) {
       if (e.cancelable) {
         e.preventDefault();
       }
-      const map = DataPatch.clientMap();
       const clickEventFunction = eventFunction(left);
       clickEventFunction.call(this, e);
 
@@ -686,17 +348,6 @@ ClientJs.prototype.infoArea = function (info) {
         "오름차순",
         "내림차순",
       ];
-
-      tempArr = map[instance.caseDoms[0].children[z].getAttribute("column")];
-      if (tempArr.items !== undefined && tempArr.items !== null) {
-        tempArr = tempArr.items;
-        tempArr.unshift("전체 보기");
-        items = items.concat(tempArr);
-      } else if (tempArr.yesNo !== undefined && tempArr.yesNo !== null) {
-        tempArr = tempArr.yesNo;
-        tempArr.unshift("전체 보기");
-        items = items.concat(tempArr);
-      }
 
       cancel_event = function (e) {
         if (e.cancelable) {
@@ -889,12 +540,8 @@ ClientJs.prototype.infoArea = function (info) {
     originalColumns = [];
     allColumns = [];
 
-    if (window.localStorage.getItem("client_columnsOrder") !== null && window.localStorage.getItem("client_columnsOrder") !== undefined) {
-      originalColumns = JSON.parse(window.localStorage.getItem("client_columnsOrder"));
-    } else {
-      for (let c of instance.caseDoms[0].children) {
-        originalColumns.push({ name: c.getAttribute("column"), width: Number(c.style.width.replace(/[^0-9\.\-]/g, '')), left: Number(c.style.left.replace(/[^0-9\.\-]/g, '')) });
-      }
+    for (let c of instance.caseDoms[0].children) {
+      originalColumns.push({ name: c.getAttribute("column"), width: Number(c.style.width.replace(/[^0-9\.\-]/g, '')), left: Number(c.style.left.replace(/[^0-9\.\-]/g, '')) });
     }
 
     for (let c of originalColumns) {
@@ -919,8 +566,6 @@ ClientJs.prototype.infoArea = function (info) {
       }
     }
 
-    window.localStorage.setItem("client_columnsOrder", JSON.stringify(allColumns));
-
     for (let c of instance.caseDoms) {
       for (let d of c.children) {
         for (let { name, left } of allColumns) {
@@ -934,7 +579,7 @@ ClientJs.prototype.infoArea = function (info) {
     e.stopPropagation();
   }
 
-  dropPoint = DataPatch.clientDropPoint();
+
 
   for (let obj of target) {
     if (num === 1) {
@@ -950,25 +595,6 @@ ClientJs.prototype.infoArea = function (info) {
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.setAttribute("index", String(num));
-    if (num !== 0) {
-      div_clone2.classList.add(this.cases[num].cliid);
-      if (dropPoint.values.includes(obj[dropPoint.column])) {
-        style2.color = "#cccccc";
-        for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#cccccc";
-        }
-        div_clone2.setAttribute("drop", "true");
-      } else {
-        style2.color = "inherit";
-        div_clone2.setAttribute("drop", "false");
-      }
-      if (window.localStorage.getItem(this.cases[num].cliid) === null) {
-        window.localStorage.setItem(this.cases[num].cliid, JSON.stringify(onoffDummy));
-        thisOnOff = onoffDummy;
-      } else {
-        thisOnOff = JSON.parse(window.localStorage.getItem(this.cases[num].cliid));
-      }
-    }
     for (let i in style2) {
       div_clone2.style[i] = style2[i];
     }
@@ -978,11 +604,6 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.textContent = obj[columns[z]];
       for (let i in style3) {
         div_clone3.style[i] = style3[i];
-      }
-      if (num !== 0) {
-        if (thisOnOff[columns[z]]) {
-          div_clone3.style.color = "#2fa678";
-        }
       }
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
@@ -997,10 +618,10 @@ ClientJs.prototype.infoArea = function (info) {
         div_clone3.addEventListener("dragover", dragoverEventFunction);
         div_clone3.addEventListener("drop", dropEventFunction);
       } else {
-        div_clone3.addEventListener("mouseenter", enterEventFunction);
-        div_clone3.addEventListener("mouseleave", leaveEventFunction);
-        div_clone3.addEventListener("click", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
-        div_clone3.addEventListener("contextmenu", updateEventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+        // div_clone3.addEventListener("mouseenter", enterEventFunction);
+        // div_clone3.addEventListener("mouseleave", leaveEventFunction);
+        div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
+        div_clone3.addEventListener("contextmenu", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
       }
 
       div_clone2.appendChild(div_clone3);
@@ -1030,21 +651,195 @@ ClientJs.prototype.infoArea = function (info) {
 
 }
 
-ClientJs.prototype.spreadData = async function (search = null) {
+AnalyticsJs.prototype.analyticsStandard = function () {
+  let model = {};
+  let targetArr, margin;
+
+  model.standard = {
+    userid: {
+      name: "고유 아이디",
+      left: 40,
+    },
+  };
+  model.info = {
+    userType: {
+      name: "타입",
+      width: 50,
+      left: 30,
+    },
+    firstTimeline: {
+      name: "최초 도달 시간",
+      width: 120,
+    },
+    latestTimeline: {
+      name: "최종 도달 시간",
+      width: 120,
+    },
+    campaign: {
+      name: "캠패인",
+      width: 100,
+    },
+    referrer: {
+      name: "리퍼럴",
+      width: 200,
+    },
+    device: {
+      name: "디바이스",
+      width: 120,
+    },
+    region: {
+      name: "지역",
+      width: 120,
+    },
+    history: {
+      name: "움직임 기록",
+      width: 200,
+    },
+  };
+
+  targetArr = Object.keys(model.info);
+  margin = 20;
+  for (let i = 1; i < targetArr.length; i++) {
+    model.info[targetArr[i]].left = model.info[targetArr[i - 1]].width + model.info[targetArr[i - 1]].left + margin;
+  }
+
+  return model;
+}
+
+AnalyticsJs.prototype.analyticsFlatDeath = function (tong) {
+  let entireTong;
+  let tempObj;
+  const dateToString = function (dateObject, detail = false) {
+    let dayString = '';
+
+    dayString += String(dateObject.getFullYear()).slice(0, 4);
+    dayString += '-';
+
+    if (dateObject.getMonth() + 1 < 10) {
+      dayString += '0' + String(dateObject.getMonth() + 1);
+    } else {
+      dayString += String(dateObject.getMonth() + 1);
+    }
+
+    dayString += '-';
+
+    if (dateObject.getDate() < 10) {
+      dayString += '0' + String(dateObject.getDate());
+    } else {
+      dayString += String(dateObject.getDate());
+    }
+
+    if (detail) {
+      dayString += ' ';
+      if (dateObject.getHours() < 10) {
+        dayString += '0' + String(dateObject.getHours());
+      } else {
+        dayString += String(dateObject.getHours());
+      }
+      dayString += ':';
+      if (dateObject.getMinutes() < 10) {
+        dayString += '0' + String(dateObject.getMinutes());
+      } else {
+        dayString += String(dateObject.getMinutes());
+      }
+      dayString += ':';
+      if (dateObject.getSeconds() < 10) {
+        dayString += '0' + String(dateObject.getSeconds());
+      } else {
+        dayString += String(dateObject.getSeconds());
+      }
+    }
+
+    if (/^1[678]/.test(dayString)) {
+      dayString = '-';
+    }
+
+    return dayString;
+  }
+  const referrerString = function (referrer) {
+    let temp = '';
+    console.log(referrer);
+    temp = referrer.name;
+    if (referrer.detail.host !== null) {
+      temp += " (";
+      temp += referrer.detail.host + " ";
+      for (let i in referrer.detail.queryString) {
+        temp += referrer.detail.queryString[i] + " ";
+      }
+      temp = temp.slice(0, -1) + ")";
+    }
+    return temp;
+  }
+  const deviceString = function (device) {
+    const { type, os, mobileDevice } = device;
+    let result = `${type} (${os})${(type === 'mobile') ? (' ' + mobileDevice) : ''}`;
+    if (result === " ()") {
+      return ``;
+    } else {
+      return result;
+    }
+  }
+  const regionString = function (region) {
+    const { country, city } = region;
+    let result = `${country} / ${city}`;
+    if (result === " / ") {
+      return ``;
+    } else {
+      return `${country} / ${city}`;
+    }
+  }
+  const historyString = function (historyArr) {
+    let temp = '';
+
+    for (let { time, page, page_raw } of historyArr) {
+      temp += `${time.toString(true).slice(5)} : ${page}(${page_raw}) / `;
+    }
+    temp = temp.slice(0, -3);
+    return temp;
+  }
+
+  entireTong = [];
+  for (let i of tong) {
+    tempObj = {};
+
+    tempObj.standard = {
+      userid: i.userid,
+    };
+
+    tempObj.info = {
+      userType: i.userType,
+      firstTimeline: dateToString(new Date(i.firstTimeline), true),
+      latestTimeline: dateToString(new Date(i.latestTimeline), true),
+      campaign: i.campaign,
+      referrer: referrerString(i.referrer),
+      device: deviceString(i.device),
+      region: regionString(i.region),
+      history: historyString(i.history),
+    };
+
+    entireTong.push(tempObj);
+  }
+
+  return entireTong;
+}
+
+AnalyticsJs.prototype.spreadData = async function (search = null) {
   const instance = this;
   try {
-    let clients, totalMother;
+    let users, totalMother;
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
-      clients = JSON.parse(await GeneralJs.ajaxPromise("limit=200", "/getClients"));
+      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: "2020-12-18 00:00:00", endDate: "2020-12-28 00:00:00" }), "/getAnalytics_total"));
     } else {
-      clients = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
+      // users = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
     }
 
-    const { standard, data } = clients;
+    this.casesRaw = users;
+    const standard = this.analyticsStandard();
+    const data = this.analyticsFlatDeath(users);
 
     for (let i of data) {
       standardDataTong.push(i.standard);
@@ -1085,7 +880,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-ClientJs.prototype.cardViewMaker = function () {
+AnalyticsJs.prototype.cardViewMaker = function () {
   const instance = this;
 
   return async function (e) {
@@ -1668,7 +1463,7 @@ ClientJs.prototype.cardViewMaker = function () {
   }
 }
 
-ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
+AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   let { standard, info } = DataPatch.clientWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
@@ -3082,7 +2877,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   mother.appendChild(div_clone);
 }
 
-ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
+AnalyticsJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
   const instance = this;
   return function (e) {
 
@@ -3125,7 +2920,7 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
   }
 }
 
-ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
+AnalyticsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
   const { standard, info } = DataPatch.clientWhiteViewStandard();
   return function () {
@@ -3222,7 +3017,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   }
 }
 
-ClientJs.prototype.whiteViewMaker = function (index) {
+AnalyticsJs.prototype.whiteViewMaker = function (index) {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -3238,7 +3033,7 @@ ClientJs.prototype.whiteViewMaker = function (index) {
   }
 }
 
-ClientJs.prototype.rowViewMaker = function () {
+AnalyticsJs.prototype.rowViewMaker = function () {
   const instance = this;
   return function (e) {
     if (instance.totalFather !== null) {
@@ -3262,7 +3057,7 @@ ClientJs.prototype.rowViewMaker = function () {
   }
 }
 
-ClientJs.prototype.returnValueEventMaker = function () {
+AnalyticsJs.prototype.returnValueEventMaker = function () {
   const instance = this;
   return async function (e) {
     let pastObj;
@@ -3331,7 +3126,7 @@ ClientJs.prototype.returnValueEventMaker = function () {
   }
 }
 
-ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
+AnalyticsJs.prototype.reportScrollBox = function (data, motherWidth) {
   const instance = this;
   const report = JSON.parse(data);
 
@@ -3613,7 +3408,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   return scrollBox;
 }
 
-ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
+AnalyticsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const instance = this;
   const vaildValue = function (target) {
     const today = new Date();
@@ -3770,7 +3565,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   mother.appendChild(scrollBox);
 }
 
-ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
+AnalyticsJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
   try {
     return function () {
@@ -3860,7 +3655,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
   }
 }
 
-ClientJs.prototype.reportViewMaker = function () {
+AnalyticsJs.prototype.reportViewMaker = function () {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -3876,7 +3671,7 @@ ClientJs.prototype.reportViewMaker = function () {
   }
 }
 
-ClientJs.prototype.addTransFormEvent = function () {
+AnalyticsJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
   up.addEventListener("click", this.cardViewMaker());
@@ -3885,7 +3680,7 @@ ClientJs.prototype.addTransFormEvent = function () {
   returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
-ClientJs.prototype.makeSearchEvent = function (search = null) {
+AnalyticsJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
     if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
@@ -3925,13 +3720,13 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
   }
 }
 
-ClientJs.prototype.addSearchEvent = function () {
+AnalyticsJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
   input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
-ClientJs.prototype.backGrayBar = function () {
+AnalyticsJs.prototype.backGrayBar = function () {
   const instance = this;
   let div_clone;
   let style;
@@ -3954,7 +3749,7 @@ ClientJs.prototype.backGrayBar = function () {
   this.totalContents.appendChild(div_clone);
 }
 
-ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
+AnalyticsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
   const instance = this;
   try {
     return function () {
@@ -4064,7 +3859,7 @@ ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
   }
 }
 
-ClientJs.prototype.extractViewMaker = function (link) {
+AnalyticsJs.prototype.extractViewMaker = function (link) {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -4080,7 +3875,7 @@ ClientJs.prototype.extractViewMaker = function (link) {
   }
 }
 
-ClientJs.prototype.addExtractEvent = function () {
+AnalyticsJs.prototype.addExtractEvent = function () {
   const instance = this;
   const { sub: { extractIcon } } = this.mother.belowButtons;
   let sendEvent;
@@ -4181,39 +3976,7 @@ ClientJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-ClientJs.prototype.makeNotionEvent = function (id, index) {
-  const instance = this;
-  return async function (e) {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-
-    let indexArr, requestIndex;
-
-    index = Number(index);
-    indexArr = [];
-    for (let dom of document.querySelectorAll('.' + id)) {
-      indexArr.push(Number(dom.getAttribute("index")));
-    }
-    indexArr.sort((a, b) => { return a - b; });
-    for (let z = 0; z < indexArr.length; z++) {
-      if (indexArr[z] === index) {
-        requestIndex = z;
-      }
-    }
-
-    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: id }), "/getClients");
-    const client = JSON.parse(clients)[0];
-    const notionId = client.requests[requestIndex].request.notionId;
-    if (notionId !== '') {
-      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-    } else {
-      alert("노션에 정보가 없습니다!");
-    }
-  }
-}
-
-ClientJs.prototype.whiteResize = function () {
+AnalyticsJs.prototype.whiteResize = function () {
   const instance = this;
   this.resizeStack = 0;
   this.resizeFrom = 0;
@@ -4251,42 +4014,19 @@ ClientJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
-ClientJs.prototype.launching = async function () {
+AnalyticsJs.prototype.launching = async function () {
   const instance = this;
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.backGrayBar();
     await this.spreadData();
-    this.addTransFormEvent();
-    this.addSearchEvent();
-    this.addExtractEvent();
-    this.whiteResize();
+    // this.addTransFormEvent();
+    // this.addSearchEvent();
+    // this.addExtractEvent();
+    // this.whiteResize();
 
     const getObj = GeneralJs.returnGet();
-    let getTarget;
-    let tempFunction;
-
-    getTarget = null;
-    if (getObj.cliid !== undefined) {
-      for (let dom of this.standardDoms) {
-        if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
-          getTarget = dom;
-        }
-      }
-      if (getTarget === null) {
-        tempFunction = this.makeSearchEvent(getObj.cliid);
-        await tempFunction({ keyCode: 13 });
-        for (let dom of this.standardDoms) {
-          if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
-            getTarget = dom;
-          }
-        }
-      }
-      if (getTarget !== null) {
-        getTarget.click();
-      }
-    }
 
   } catch (e) {
     console.log(e);

@@ -14,6 +14,7 @@ const DataRouter = function (MONGOC) {
     this.mongo = MONGOC;
   }
   this.pythonApp = this.dir + "/python/app.py";
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
@@ -330,6 +331,8 @@ DataRouter.prototype.rou_get_First = function () {
         target = "project";
       } else if (/^prop/i.test(req.params.id)) {
         target = "proposal";
+      } else if (/^ana/i.test(req.params.id)) {
+        target = "analytics";
       } else {
         target = "client";
       }
@@ -1600,6 +1603,44 @@ DataRouter.prototype.rou_post_getMembers = function () {
         }
 
       }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getAnalytics = function () {
+  const instance = this;
+  const { shell, shellLink, mongo } = this.mother;
+  const stringToArr = function (dateString) {
+    let tempArr0, tempArr1, tempArr2;
+    tempArr0 = dateString.split(' ');
+    tempArr1 = tempArr0[0].split('-');
+    tempArr2 = tempArr0[1].split(':');
+    return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
+  }
+  let obj = {};
+  obj.link = "/getAnalytics_total";
+  obj.func = async function (req, res) {
+    try {
+      let { startDate, endDate } = JSON.parse(req.body.range);
+      let searchQuery, rows;
+
+      startDate = new Date(...stringToArr(startDate));
+      endDate = new Date(...stringToArr(endDate));
+
+      const MONGOCPYTHON = new mongo(("mongodb://" + instance.address.pythoninfo.user + ':' + instance.address.pythoninfo.password + '@' + instance.address.pythoninfo.host + ':' + String(instance.address.pythoninfo.port) + "/admin"), { useUnifiedTopology: true });
+      await MONGOCPYTHON.connect();
+
+      searchQuery = { "latestTimeline": { "$gte": startDate, "$lte": endDate } };
+
+      rows = await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).find(searchQuery).toArray();
+
+      MONGOCPYTHON.close();
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(rows));
     } catch (e) {
       console.log(e);
     }
