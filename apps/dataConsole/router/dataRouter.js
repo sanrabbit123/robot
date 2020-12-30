@@ -810,6 +810,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       const today = new Date();
       let dateMatrix;
       let searchQuery, clients, proposals, contracts, process;
+      let processTong;
       let cliidArr;
       let resultArr;
       let obj;
@@ -868,13 +869,19 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
           //process start
           cliidArr = [];
+          processTong = [];
           for (let client of clients) {
             cliidArr.push({ cliid: client.cliid });
           }
           if (cliidArr.length > 0) {
             searchQuery = { "$or": cliidArr };
             process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
-            obj.process = process.length;
+            for (let i of process) {
+              if (i.desid !== "") {
+                processTong.push(i);
+              }
+            }
+            obj.process = processTong.length;
           } else {
             obj.process = 0;
           }
