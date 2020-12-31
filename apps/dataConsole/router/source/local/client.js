@@ -3076,6 +3076,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let i = 0; i < textAreas.length; i++) {
       textAreas[i].value = dataArr[i];
     }
+    if (!/요청 사항 : /gi.test(dataArr[dataArr.length - 1])) {
+      textAreas[textAreas.length - 1].value = textAreas[textAreas.length - 1].value + "\n\n" + thisCase["comment"];
+    }
   });
 
   div_clone.appendChild(div_clone2);
