@@ -591,7 +591,7 @@ ClientJs.prototype.infoArea = function (info) {
             this.appendChild(button_clone);
           }
 
-        } else if (thisMap.type !== "object" && thisMap.address !== undefined) {
+        } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -2082,7 +2082,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             this.appendChild(button_clone);
           }
 
-        } else if (thisMap.type !== "object" && thisMap.address !== undefined) {
+        } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
