@@ -333,6 +333,8 @@ DataRouter.prototype.rou_get_First = function () {
         target = "proposal";
       } else if (/^ana/i.test(req.params.id)) {
         target = "analytics";
+      } else if (/^con/i.test(req.params.id)) {
+        target = "contents";
       } else {
         target = "client";
       }

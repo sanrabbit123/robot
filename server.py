@@ -78,7 +78,7 @@ async def mongoToJson():
     await run([ "mkdir", f'{targetDir}/{timeString}' ])
 
     for i in collections:
-        await run([ 'mongoexport', f'--uri="mongodb://{infoJson["mongoinfo"]["host"]}/miro81"', "--username=uragen", "--password=Dpdhdn941!", f'--port={str(infoJson["mongoinfo"]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
+        await run([ 'mongoexport', f'--uri="mongodb://{infoJson["mongoinfo"]["host"]}/{infoJson["mongoinfo"]["database"]}"', "--username=" + infoJson["mongoinfo"]["user"], "--password=" + infoJson["mongoinfo"]["password"], f'--port={str(infoJson["mongoinfo"]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
 
 
 def rowsDecode(rows):
