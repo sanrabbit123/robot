@@ -20,6 +20,744 @@ const ContentsJs = function () {
   this.onView = "mother";
 }
 
+ContentsJs.prototype.contentsStandard = function () {
+  let model = {};
+  let targetArr, margin;
+
+  model.standard = {
+    conid: {
+      name: "아이디",
+      left: 35,
+    },
+    pid: {
+      name: "p-아이디",
+      left: 128,
+    },
+  };
+  model.info = {
+    desid: {
+      name: "디자이너",
+      width: 100,
+      left: 40,
+    },
+    rid: {
+      name: "r-아이디",
+      width: 120,
+    },
+    portfolioDate: {
+      name: "포트폴리오 발행일",
+      width: 120,
+    },
+    reviewDate: {
+      name: "고객후기 발행일",
+      width: 120,
+    },
+    titleMain: {
+      name: "포트폴리오 제목",
+      width: 120,
+    },
+    titleSub: {
+      name: "포트폴리오 부제목",
+      width: 120,
+    },
+    reviewTitleMain: {
+      name: "고객 후기 제목",
+      width: 120,
+    },
+    reviewTitleSub: {
+      name: "고객 후기 부제목",
+      width: 120,
+    },
+    space: {
+      name: "공간",
+      width: 120,
+    },
+    pyeong: {
+      name: "평수",
+      width: 120,
+    },
+    region: {
+      name: "지역",
+      width: 120,
+    },
+    method: {
+      name: "서비스 방식",
+      width: 120,
+    },
+    color: {
+      name: "컬러",
+      width: 120,
+    },
+    photodae: {
+      name: "대표사진",
+      width: 120,
+    },
+    reviewPhotodae: {
+      name: "리뷰 대표사진",
+      width: 120,
+    },
+    photosg: {
+      name: "sg 상수",
+      width: 120,
+    },
+    slide: {
+      name: "슬라이드",
+      width: 120,
+    },
+    tag: {
+      name: "태그",
+      width: 120,
+    },
+    service: {
+      name: "서비스",
+      width: 120,
+    },
+    key8: {
+      name: "인기순 지수",
+      width: 120,
+    },
+    key9: {
+      name: "최근순 지수",
+      width: 120,
+    },
+    order: {
+      name: "리뷰 순서 지수",
+      width: 120,
+    },
+  };
+
+  targetArr = Object.keys(model.info);
+  margin = 20;
+  for (let i = 1; i < targetArr.length; i++) {
+    model.info[targetArr[i]].left = model.info[targetArr[i - 1]].width + model.info[targetArr[i - 1]].left + margin;
+  }
+
+  return model;
+}
+
+ContentsJs.prototype.contentsWhiteViewStandard = function () {
+  const targetColumns = {
+    standard: [
+      "name",
+      "cliid",
+    ],
+    info: [
+      { name: "디자이너", target: "desid" },
+      { name: "r-아이디", target: "rid" },
+      { name: "포트폴리오 발행일", target: "portfolioDate" },
+      { name: "고객후기 발행일", target: "reviewDate" },
+      { name: "포트폴리오 제목", target: "titleMain" },
+      { name: "포트폴리오 부제목", target: "titleSub" },
+      { name: "고객 후기 제목", target: "reviewTitleMain" },
+      { name: "고객 후기 부제목", target: "reviewTitleSub" },
+      { name: "공간", target: "space" },
+      { name: "평수", target: "pyeong" },
+      { name: "지역", target: "region" },
+      { name: "서비스 방식", target: "method" },
+      { name: "컬러", target: "color" },
+      { name: "대표사진", target: "photodae" },
+      { name: "리뷰 대표사진", target: "reviewPhotodae" },
+      { name: "sg 상수", target: "photosg" },
+      { name: "슬라이드", target: "slide" },
+      { name: "태그", target: "tag" },
+      { name: "서비스", target: "service" },
+      { name: "최근순 지수", target: "key9" },
+      { name: "리뷰 순서 지수", target: "order" },
+    ],
+  };
+
+  return targetColumns;
+}
+
+ContentsJs.prototype.contentsMap = function () {
+  const statusToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = [ "응대중", "진행", "드랍", "완료" ];
+
+    if (targetArr.includes(value)) {
+      finalValue = value;
+    } else {
+      finalValue = pastValue;
+    }
+
+    return finalValue;
+  };
+  const statusInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+
+      items = [ "응대중", "진행", "드랍", "완료" ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "진행") {
+        window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
+      } else {
+        if (finalValue === "드랍") {
+          grandMother.setAttribute("drop", "true");
+        } else {
+          grandMother.setAttribute("drop", "false");
+        }
+        input.style.transition = "0s all ease";
+        input.style.color = "transparent";
+        input.value = finalValue;
+        input.parentElement.style.transition = "";
+        input.parentElement.style.color = "inherit";
+        mother.removeChild(document.querySelector(".divTong"));
+        callback();
+      }
+    };
+
+    inputArr = [ "응대중", "진행", "드랍", "완료" ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+
+  const callHistoryToObject = function (value, pastValue, vaildMode) {
+    const filter = function (value) {
+      let filteredValue, temp, tempArr, today;
+
+      if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+        filteredValue = "20" + value;
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
+        today = new Date();
+        filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
+      } else {
+        filteredValue = value;
+      }
+
+      return filteredValue;
+    };
+
+    let arr = [];
+    let filteredValue;
+    let filteredArr = [];
+    let obj;
+    let temp, temp2;
+    let boo = false;
+
+    temp = value.split(", ");
+    for (let i of temp) {
+      filteredValue = filter(i);
+      filteredArr.push(filteredValue);
+      if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(filteredValue)) {
+        boo = true;
+      }
+    }
+
+    if (!boo) {
+      temp = filteredArr;
+    } else {
+      temp = pastValue.split(", ");
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: filteredArr.join(", ") };
+    }
+
+    if (temp[0] === '') {
+      return [];
+    }
+
+    for (let i of temp) {
+      temp2 = i.split("-");
+      obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
+      arr.push(obj);
+    }
+
+    return arr;
+  };
+  const callHistoryInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
+      let totalString = '';
+      for (let i = 0; i < inputs.length; i++) {
+        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
+          totalString += DataPatch.toolsDateFilter(inputs[i].value);
+          totalString += ", ";
+        }
+      }
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -2);
+      }
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "#2fa678",
+      width: String(width) + ea,
+      height: (GeneralJs.isMac() ? "89%" : "100%"),
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% + " + String(3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let button_clone, input_clone;
+
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    });
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const map = {
+    name: { name: "성함", position: "name", type: "string", searchBoo: true, },
+    cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
+    phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
+    email: { name: "이메일", position: "email", type: "string", searchBoo: true, },
+    timeline: { name: "문의일", position: "requests.0.request.timeline", type: "date", searchBoo: true, },
+    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
+    family: { name: "가족 구성원", position: "requests.0.request.family", type: "string", searchBoo: true, },
+    address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
+    contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },
+    pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
+    room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
+    bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
+    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
+    channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
+    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "응대중", "진행", "드랍", "완료" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
+    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
+    precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    proid: { name: "제안서", position: "requests.0.proposal.proid", type: "string", searchBoo: true, },
+  };
+  return map;
+}
+
 ContentsJs.prototype.standardBar = function (standard) {
   const instance = this;
   let div_clone, div_clone2, div_clone3;
@@ -1030,744 +1768,6 @@ ContentsJs.prototype.infoArea = function (info) {
     this.totalMother.appendChild(div_clone);
   }
 
-}
-
-ContentsJs.prototype.contentsStandard = function () {
-  let model = {};
-  let targetArr, margin;
-
-  model.standard = {
-    conid: {
-      name: "아이디",
-      left: 35,
-    },
-    pid: {
-      name: "p-아이디",
-      left: 128,
-    },
-  };
-  model.info = {
-    desid: {
-      name: "디자이너",
-      width: 100,
-      left: 40,
-    },
-    rid: {
-      name: "r-아이디",
-      width: 120,
-    },
-    portfolioDate: {
-      name: "포트폴리오 발행일",
-      width: 120,
-    },
-    reviewDate: {
-      name: "고객후기 발행일",
-      width: 120,
-    },
-    titleMain: {
-      name: "포트폴리오 제목",
-      width: 120,
-    },
-    titleSub: {
-      name: "포트폴리오 부제목",
-      width: 120,
-    },
-    reviewTitleMain: {
-      name: "고객 후기 제목",
-      width: 120,
-    },
-    reviewTitleSub: {
-      name: "고객 후기 부제목",
-      width: 120,
-    },
-    space: {
-      name: "공간",
-      width: 120,
-    },
-    pyeong: {
-      name: "평수",
-      width: 120,
-    },
-    region: {
-      name: "지역",
-      width: 120,
-    },
-    method: {
-      name: "서비스 방식",
-      width: 120,
-    },
-    color: {
-      name: "컬러",
-      width: 120,
-    },
-    photodae: {
-      name: "대표사진",
-      width: 120,
-    },
-    reviewPhotodae: {
-      name: "리뷰 대표사진",
-      width: 120,
-    },
-    photosg: {
-      name: "sg 상수",
-      width: 120,
-    },
-    slide: {
-      name: "슬라이드",
-      width: 120,
-    },
-    tag: {
-      name: "태그",
-      width: 120,
-    },
-    service: {
-      name: "서비스",
-      width: 120,
-    },
-    key8: {
-      name: "인기순 지수",
-      width: 120,
-    },
-    key9: {
-      name: "최근순 지수",
-      width: 120,
-    },
-    order: {
-      name: "리뷰 순서 지수",
-      width: 120,
-    },
-  };
-
-  targetArr = Object.keys(model.info);
-  margin = 20;
-  for (let i = 1; i < targetArr.length; i++) {
-    model.info[targetArr[i]].left = model.info[targetArr[i - 1]].width + model.info[targetArr[i - 1]].left + margin;
-  }
-
-  return model;
-}
-
-ContentsJs.prototype.contentsWhiteViewStandard = function () {
-  const targetColumns = {
-    standard: [
-      "name",
-      "cliid",
-    ],
-    info: [
-      { name: "디자이너", target: "desid" },
-      { name: "r-아이디", target: "rid" },
-      { name: "포트폴리오 발행일", target: "portfolioDate" },
-      { name: "고객후기 발행일", target: "reviewDate" },
-      { name: "포트폴리오 제목", target: "titleMain" },
-      { name: "포트폴리오 부제목", target: "titleSub" },
-      { name: "고객 후기 제목", target: "reviewTitleMain" },
-      { name: "고객 후기 부제목", target: "reviewTitleSub" },
-      { name: "공간", target: "space" },
-      { name: "평수", target: "pyeong" },
-      { name: "지역", target: "region" },
-      { name: "서비스 방식", target: "method" },
-      { name: "컬러", target: "color" },
-      { name: "대표사진", target: "photodae" },
-      { name: "리뷰 대표사진", target: "reviewPhotodae" },
-      { name: "sg 상수", target: "photosg" },
-      { name: "슬라이드", target: "slide" },
-      { name: "태그", target: "tag" },
-      { name: "서비스", target: "service" },
-      { name: "최근순 지수", target: "key9" },
-      { name: "리뷰 순서 지수", target: "order" },
-    ],
-  };
-
-  return targetColumns;
-}
-
-ContentsJs.prototype.contentsMap = function () {
-  const statusToObject = function (value, pastValue, vaildMode) {
-    let boo = false;
-    let finalValue;
-    let targetArr;
-
-    if (vaildMode) {
-      return { boo: !boo, value: null };
-    }
-
-    targetArr = [ "응대중", "진행", "드랍", "완료" ];
-
-    if (targetArr.includes(value)) {
-      finalValue = value;
-    } else {
-      finalValue = pastValue;
-    }
-
-    return finalValue;
-  };
-  const statusInputFunction = function (mother, input, callback) {
-    const grandMother = mother.parentElement;
-    let buttonStyle, inputStyle, style;
-    let ea = "px";
-    let height, fontSize, top, width;
-    let div_clone, svg_clone;
-    let button_clone;
-    let input_clone;
-    let iconWidth;
-    let inputArr, length;
-    let endEvent;
-    let originalValue;
-
-    originalValue = input.value;
-
-    endEvent = function (e) {
-      const rawValue = this.getAttribute("target");
-      let finalValue;
-      let items;
-
-      items = [ "응대중", "진행", "드랍", "완료" ];
-      if (items.includes(rawValue)) {
-        finalValue = rawValue;
-      } else {
-        finalValue = originalValue;
-      }
-
-      if (finalValue === "진행") {
-        window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
-      } else {
-        if (finalValue === "드랍") {
-          grandMother.setAttribute("drop", "true");
-        } else {
-          grandMother.setAttribute("drop", "false");
-        }
-        input.style.transition = "0s all ease";
-        input.style.color = "transparent";
-        input.value = finalValue;
-        input.parentElement.style.transition = "";
-        input.parentElement.style.color = "inherit";
-        mother.removeChild(document.querySelector(".divTong"));
-        callback();
-      }
-    };
-
-    inputArr = [ "응대중", "진행", "드랍", "완료" ];
-    length = inputArr.length;
-    input.value = "입력중";
-    if (input.parentElement.childNodes[0].nodeType === 3) {
-      input.parentElement.style.transition = "0s all ease";
-      input.parentElement.style.color = "transparent";
-    }
-
-    mother.style.overflow = "";
-    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
-    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
-    if (width === '' || Number.isNaN(width)) {
-      width = "120";
-    }
-    top = height * 0.5;
-    iconWidth = 18;
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("removeTarget");
-    div_clone.classList.add("divTong");
-    style = {
-      position: "absolute",
-      top: String((height * 2) - top) + ea,
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      textAlign: "center",
-      fontSize: "inherit",
-      zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
-      paddingBottom: String(iconWidth + 3) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
-    buttonStyle = {
-      position: "relative",
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
-      background: "#2fa678",
-      fontSize: "inherit",
-      color: "#ffffff",
-      zIndex: String(3),
-      borderRadius: String(3) + ea,
-      animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
-      marginBottom: String(height / 4) + ea,
-    };
-
-    inputStyle = {
-      position: "absolute",
-      fontSize: "inherit",
-      fontWeight: String(100) + ea,
-      color: "#ffffff",
-      zIndex: String(3),
-      textAlign: "center",
-      background: "transparent",
-      width: "100%",
-      height: "calc(100% - " + String(5) + ea + ")",
-      left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
-      borderRadius: String(3) + ea,
-      border: String(0),
-      cursor: "pointer",
-    };
-
-    for (let i = 0; i < length; i++) {
-      button_clone = GeneralJs.nodes.div.cloneNode(true);
-      button_clone.classList.add("removeTarget");
-      for (let j in buttonStyle) {
-        button_clone.style[j] = buttonStyle[j];
-      }
-      input_clone = GeneralJs.nodes.div.cloneNode(true);
-      input_clone.classList.add("inputTarget");
-      input_clone.classList.add("hoverDefault");
-      for (let j in inputStyle) {
-        input_clone.style[j] = inputStyle[j];
-      }
-      input_clone.textContent = inputArr[i];
-      input_clone.setAttribute("target", inputArr[i]);
-      input_clone.addEventListener("click", endEvent);
-      button_clone.appendChild(input_clone);
-      div_clone.appendChild(button_clone);
-    }
-
-    mother.appendChild(div_clone);
-  };
-
-  const callHistoryToObject = function (value, pastValue, vaildMode) {
-    const filter = function (value) {
-      let filteredValue, temp, tempArr, today;
-
-      if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
-        filteredValue = "20" + value;
-      } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
-        tempArr = value.split("-");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
-        tempArr = value.split(".");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
-        tempArr = value.split("/");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
-        tempArr = value.split(" ");
-        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
-      } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("-");
-        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("-");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("-");
-        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9]\-[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("-");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(".");
-        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(".");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(".");
-        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9]\.[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(".");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("/");
-        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("/");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("/");
-        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9]\/[0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split("/");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(" ");
-        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(" ");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
-      } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(" ");
-        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[0-9] [0-9]$/.test(value)) {
-        today = new Date();
-        temp = String(today.getFullYear());
-        tempArr = value.split(" ");
-        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
-      } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
-        today = new Date();
-        filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
-      } else {
-        filteredValue = value;
-      }
-
-      return filteredValue;
-    };
-
-    let arr = [];
-    let filteredValue;
-    let filteredArr = [];
-    let obj;
-    let temp, temp2;
-    let boo = false;
-
-    temp = value.split(", ");
-    for (let i of temp) {
-      filteredValue = filter(i);
-      filteredArr.push(filteredValue);
-      if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(filteredValue)) {
-        boo = true;
-      }
-    }
-
-    if (!boo) {
-      temp = filteredArr;
-    } else {
-      temp = pastValue.split(", ");
-    }
-
-    if (vaildMode) {
-      return { boo: !boo, value: filteredArr.join(", ") };
-    }
-
-    if (temp[0] === '') {
-      return [];
-    }
-
-    for (let i of temp) {
-      temp2 = i.split("-");
-      obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
-      arr.push(obj);
-    }
-
-    return arr;
-  };
-  const callHistoryInputFunction = function (mother, input, callback) {
-    let buttonStyle, inputStyle, style;
-    let ea = "px";
-    let height, fontSize, top, width;
-    let div_clone, svg_clone;
-    let button_clone;
-    let input_clone;
-    let iconWidth;
-    let inputArr, length;
-    let endEvent;
-
-    endEvent = function (e) {
-      let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
-      let totalString = '';
-      for (let i = 0; i < inputs.length; i++) {
-        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
-          totalString += DataPatch.toolsDateFilter(inputs[i].value);
-          totalString += ", ";
-        }
-      }
-      if (totalString.length > 0) {
-        totalString = totalString.slice(0, -2);
-      }
-      input.style.transition = "0s all ease";
-      input.style.color = "transparent";
-      input.value = totalString;
-      input.parentElement.style.transition = "";
-      input.parentElement.style.color = "inherit";
-      mother.removeChild(document.querySelector(".divTong"));
-      callback();
-    };
-
-    inputArr = input.value.split(", ");
-    length = inputArr.length;
-    input.value = "입력중";
-    if (input.parentElement.childNodes[0].nodeType === 3) {
-      input.parentElement.style.transition = "0s all ease";
-      input.parentElement.style.color = "transparent";
-    }
-
-    mother.style.overflow = "";
-    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
-    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
-    if (width === '' || Number.isNaN(width)) {
-      width = "120";
-    }
-    top = height * 0.5;
-    iconWidth = 18;
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("removeTarget");
-    div_clone.classList.add("divTong");
-    style = {
-      position: "absolute",
-      top: String((height * 2) - top) + ea,
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      textAlign: "center",
-      fontSize: "inherit",
-      zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
-      paddingBottom: String(iconWidth + 3) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
-    buttonStyle = {
-      position: "relative",
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
-      background: "#2fa678",
-      fontSize: "inherit",
-      color: "#ffffff",
-      zIndex: String(3),
-      borderRadius: String(3) + ea,
-      animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
-      marginBottom: String(height / 4) + ea,
-    };
-
-    inputStyle = {
-      position: "absolute",
-      fontSize: "inherit",
-      fontWeight: String(100) + ea,
-      color: "#ffffff",
-      zIndex: String(3),
-      textAlign: "center",
-      background: "#2fa678",
-      width: String(width) + ea,
-      height: (GeneralJs.isMac() ? "89%" : "100%"),
-      left: String(0) + ea,
-      top: String(0) + ea,
-      borderRadius: String(3) + ea,
-      outline: String(0),
-      border: String(0),
-    };
-
-    for (let i = 0; i < length; i++) {
-      button_clone = GeneralJs.nodes.div.cloneNode(true);
-      button_clone.classList.add("removeTarget");
-      for (let j in buttonStyle) {
-        button_clone.style[j] = buttonStyle[j];
-      }
-      input_clone = GeneralJs.nodes.input.cloneNode(true);
-      input_clone.classList.add("inputTarget");
-      for (let j in inputStyle) {
-        input_clone.style[j] = inputStyle[j];
-      }
-      input_clone.value = inputArr[i];
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.removeChild(this.parentElement);
-      });
-      input_clone.addEventListener("keypress", function (e) {
-        if (e.keyCode === 13) {
-          endEvent.call(this, e);
-        }
-      });
-      button_clone.appendChild(input_clone);
-      div_clone.appendChild(button_clone);
-    }
-
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
-    svg_clone.classList.add("removeTarget");
-    style = {
-      position: "absolute",
-      bottom: String(0),
-      width: String(iconWidth) + ea,
-      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    svg_clone.addEventListener("click", endEvent);
-    div_clone.appendChild(svg_clone);
-
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
-    svg_clone.classList.add("removeTarget");
-    style = {
-      position: "absolute",
-      bottom: String(0),
-      width: String(iconWidth) + ea,
-      left: "calc(50% + " + String(3) + ea + ")",
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    svg_clone.addEventListener("click", function (e) {
-      let button_clone, input_clone;
-
-      button_clone = GeneralJs.nodes.div.cloneNode(true);
-      button_clone.classList.add("removeTarget");
-      for (let j in buttonStyle) {
-        button_clone.style[j] = buttonStyle[j];
-      }
-      input_clone = GeneralJs.nodes.input.cloneNode(true);
-      input_clone.classList.add("inputTarget");
-      for (let j in inputStyle) {
-        input_clone.style[j] = inputStyle[j];
-      }
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.removeChild(this.parentElement);
-      });
-      input_clone.addEventListener("keypress", function (e) {
-        if (e.keyCode === 13) {
-          endEvent.call(this, e);
-        }
-      });
-      button_clone.appendChild(input_clone);
-      div_clone.appendChild(button_clone);
-    });
-    div_clone.appendChild(svg_clone);
-
-    mother.appendChild(div_clone);
-  };
-
-  const map = {
-    name: { name: "성함", position: "name", type: "string", searchBoo: true, },
-    cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
-    phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
-    email: { name: "이메일", position: "email", type: "string", searchBoo: true, },
-    timeline: { name: "문의일", position: "requests.0.request.timeline", type: "date", searchBoo: true, },
-    budget: { name: "예산", position: "requests.0.request.budget", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
-    family: { name: "가족 구성원", position: "requests.0.request.family", type: "string", searchBoo: true, },
-    address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
-    contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },
-    pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
-    room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
-    bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
-    valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
-    living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
-    comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
-    channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
-    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "응대중", "진행", "드랍", "완료" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
-    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
-    precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    proid: { name: "제안서", position: "requests.0.proposal.proid", type: "string", searchBoo: true, },
-  };
-  return map;
 }
 
 ContentsJs.prototype.spreadData = async function (search = null) {
