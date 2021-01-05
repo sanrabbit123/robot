@@ -208,8 +208,11 @@ if sys.argv.__len__() > 1:
         except (KeyboardInterrupt, SystemExit):
             pass
 
+    elif sys.argv[1] == "backuptest":
+        asyncio.run(mongoToJson())
+
     elif sys.argv[1] == "mysql":
         asyncio.run(mysqlCopy())
 
 else:
-    print("argument must be 'ai' or 'backup'")
+    print("argument must be 'ai' or 'backup' or 'mysql'")
