@@ -731,6 +731,34 @@ ContentsJs.prototype.contentsMap = function () {
   };
 
   const map = {
+    conid: { name: "아이디", position: "conid", type: "string", searchBoo: true, },
+    pid: { name: "p-아이디", position: "conid", type: "string", searchBoo: true, },
+    desid: { name: "디자이너", position: "conid", type: "string", searchBoo: true, },
+    rid: { name: "r-아이디", position: "conid", type: "string", searchBoo: true, },
+    portfolioDate: { name: "포트폴리오 발행일", position: "conid", type: "string", searchBoo: true, },
+    reviewDate: { name: "고객후기 발행일", position: "conid", type: "string", searchBoo: true, },
+    titleMain: { name: "포트폴리오 제목", position: "conid", type: "string", searchBoo: true, },
+    titleSub: { name: "포트폴리오 부제목", position: "conid", type: "string", searchBoo: true, },
+    reviewTitleMain: { name: "고객 후기 제목", position: "conid", type: "string", searchBoo: true, },
+    reviewTitleSub: { name: "고객 후기 부제목", position: "conid", type: "string", searchBoo: true, },
+    space: { name: "공간", position: "conid", type: "string", searchBoo: true, },
+    pyeong: { name: "평수", position: "conid", type: "string", searchBoo: true, },
+    region: { name: "지역", position: "conid", type: "string", searchBoo: true, },
+    method: { name: "서비스 방식", position: "conid", type: "string", searchBoo: true, },
+    color: { name: "컬러", position: "conid", type: "string", searchBoo: true, },
+    photodae: { name: "대표사진", position: "conid", type: "string", searchBoo: true, },
+    reviewPhotodae: { name: "리뷰 대표사진", position: "conid", type: "string", searchBoo: true, },
+    photosg: { name: "sg 상수", position: "conid", type: "string", searchBoo: true, },
+    slide: { name: "슬라이드", position: "conid", type: "string", searchBoo: true, },
+    tag: { name: "태그", position: "conid", type: "string", searchBoo: true, },
+    service: { name: "서비스", position: "conid", type: "string", searchBoo: true, },
+    key8: { name: "인기순 지수", position: "conid", type: "string", searchBoo: true, },
+    key9: { name: "최근순 지수", position: "conid", type: "string", searchBoo: true, },
+    order: { name: "리뷰 순서 지수", position: "conid", type: "string", searchBoo: true, },
+
+
+
+
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
     cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
     phone: { name: "연락처", position: "phone", type: "string", searchBoo: true, },
