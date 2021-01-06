@@ -41,6 +41,8 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
     map = DataPatch.designerMap();
   } else if (window.location.pathname === "/project") {
     map = DataPatch.projectMap();
+  } else if (window.location.pathname === "/contents") {
+    map = DataPatch.contentsMap();
   }
 
   switch (map[column].type) {
@@ -114,6 +116,8 @@ GeneralJs.updateValue = async function (dataObj) {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
     } else if (window.location.pathname === "/project") {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
+    } else if (window.location.pathname === "/contents") {
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
     }
 
     if (response.message !== "success") {

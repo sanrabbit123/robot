@@ -113,6 +113,18 @@ const widthTools = function (Contents) {
 
 const widthToolsArr = function (ContentsArr) {
 
+  ContentsArr.prototype.flatDeath = function () {
+    let tong, tempArr;
+    tong = [];
+    for (let i of this) {
+      tempArr = i.flatDeath();
+      for (let j of tempArr) {
+        tong.push(j);
+      }
+    }
+    return tong;
+  }
+
   return ContentsArr;
 }
 

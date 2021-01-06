@@ -2768,10 +2768,12 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               let contractFirst, supply, vat, consumer, classification, percentage, bankName, bankTo, calculate, ratio;
               let method;
               let updateQuery;
-
+              let thisProject_raw;
               let selectedDesigner_raw, selectedDesigner;
               try {
                 selectedDesigner_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
+                thisProject_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
+
                 selectedDesigner = selectedDesigner_raw[0];
 
                 updateQuery = { desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" };
@@ -2824,6 +2826,8 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
+                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ cliid: thisProject_raw[0].cliid }) + "&updateQuery=" + JSON.stringify({ "requests.0.analytics.response.status": "진행" }), "/rawUpdateClient");
+
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
               } catch (e) {
                 console.log(e);
@@ -3060,7 +3064,9 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
   }
   this.domBox.get("고객 선택").children[0].style.color = "#59af89";
   this.domBox.get("고객 선택").children[1].style.background = "white";
-  if (document.querySelector("#pp_title_sub_b")) { document.querySelector("#pp_title_sub_b").remove(); }
+  if (document.querySelector("#pp_title_sub_b")) {
+    document.querySelector("#pp_title_sub_b").remove();
+  }
   this.domBox.get("고객 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + obj.cliid + '" style="color:#59af89;font-weight:300"> : ' + obj.client + '</b>');
   this.toggleSetting.first = 1;
 }

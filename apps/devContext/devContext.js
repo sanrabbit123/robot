@@ -670,8 +670,8 @@ class DevContext extends Array {
 
       // kakao token
 
-      const app = new KakaoTalk();
-      await app.generateToken();
+      // const app = new KakaoTalk();
+      // await app.generateToken();
 
       // contents backup
 

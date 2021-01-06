@@ -4569,7 +4569,118 @@ DataPatch.prototype.projectMap = function () {
 //CONTENTS --------------------------------------------------------------------------------------
 
 DataPatch.prototype.contentsStandard = function () {
+  let model = {};
+  let targetArr, margin;
 
+  model.standard = {
+    conid: {
+      name: "아이디",
+      left: 35,
+    },
+    pid: {
+      name: "별칭",
+      left: 128,
+    },
+  };
+  model.info = {
+    desid: {
+      name: "디자이너",
+      width: 90,
+      left: 40,
+    },
+    rid: {
+      name: "후기 별칭",
+      width: 80,
+    },
+    portfolioDate: {
+      name: "포트폴리오 발행일",
+      width: 160,
+    },
+    reviewDate: {
+      name: "고객후기 발행일",
+      width: 160,
+    },
+    titleMain: {
+      name: "포트폴리오 제목",
+      width: 400,
+    },
+    titleSub: {
+      name: "포트폴리오 부제목",
+      width: 320,
+    },
+    reviewTitleMain: {
+      name: "고객 후기 제목",
+      width: 440,
+    },
+    reviewTitleSub: {
+      name: "고객 후기 부제목",
+      width: 280,
+    },
+    space: {
+      name: "공간",
+      width: 120,
+    },
+    pyeong: {
+      name: "평수",
+      width: 70,
+    },
+    region: {
+      name: "지역",
+      width: 120,
+    },
+    method: {
+      name: "서비스 방식",
+      width: 140,
+    },
+    color: {
+      name: "컬러",
+      width: 210,
+    },
+    photodae: {
+      name: "대표사진",
+      width: 80,
+    },
+    reviewPhotodae: {
+      name: "리뷰사진",
+      width: 80,
+    },
+    photosg: {
+      name: "sg 상수",
+      width: 80,
+    },
+    slide: {
+      name: "슬라이드",
+      width: 180,
+    },
+    tag: {
+      name: "태그",
+      width: 360,
+    },
+    service: {
+      name: "서비스",
+      width: 110,
+    },
+    key8: {
+      name: "인기순 지수",
+      width: 80,
+    },
+    key9: {
+      name: "최근순 지수",
+      width: 90,
+    },
+    order: {
+      name: "순서 지수",
+      width: 80,
+    },
+  };
+
+  targetArr = Object.keys(model.info);
+  margin = 20;
+  for (let i = 1; i < targetArr.length; i++) {
+    model.info[targetArr[i]].left = model.info[targetArr[i - 1]].width + model.info[targetArr[i - 1]].left + margin;
+  }
+
+  return model;
 }
 
 DataPatch.prototype.contentsCardViewStandard = function () {
@@ -4577,11 +4688,1242 @@ DataPatch.prototype.contentsCardViewStandard = function () {
 }
 
 DataPatch.prototype.contentsWhiteViewStandard = function () {
+  const targetColumns = {
+    standard: [
+      "name",
+      "cliid",
+    ],
+    info: [
+      { name: "디자이너", target: "desid" },
+      { name: "후기 별칭", target: "rid" },
+      { name: "포트폴리오 발행일", target: "portfolioDate" },
+      { name: "고객후기 발행일", target: "reviewDate" },
+      { name: "포트폴리오 제목", target: "titleMain" },
+      { name: "포트폴리오 부제목", target: "titleSub" },
+      { name: "고객 후기 제목", target: "reviewTitleMain" },
+      { name: "고객 후기 부제목", target: "reviewTitleSub" },
+      { name: "공간", target: "space" },
+      { name: "평수", target: "pyeong" },
+      { name: "지역", target: "region" },
+      { name: "서비스 방식", target: "method" },
+      { name: "컬러", target: "color" },
+      { name: "대표사진", target: "photodae" },
+      { name: "리뷰 대표사진", target: "reviewPhotodae" },
+      { name: "sg 상수", target: "photosg" },
+      { name: "슬라이드", target: "slide" },
+      { name: "태그", target: "tag" },
+      { name: "서비스", target: "service" },
+      { name: "최근순 지수", target: "key9" },
+      { name: "리뷰 순서 지수", target: "order" },
+    ],
+  };
 
+  return targetColumns;
 }
 
 DataPatch.prototype.contentsMap = function () {
+  const colorToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let selectedValue;
+    let temp, tempArr;
+    let finalValue;
 
+    if (/ \/ /g.test(value)) {
+      temp = value.split(" / ");
+      if (temp.length !== 3) {
+        boo = true;
+      } else {
+        for (let i of temp) {
+          if (!/^\#/.test(i)) {
+            boo = true;
+          }
+        }
+      }
+    } else {
+      boo = true;
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (boo) {
+      selectedValue = pastValue;
+    } else {
+      selectedValue = value;
+    }
+
+    tempArr = selectedValue.split(" / ");
+    temp = {
+      main: "",
+      sub: "",
+      title: "",
+    };
+    temp.main = tempArr[0];
+    temp.sub = tempArr[1];
+    temp.title = tempArr[2];
+
+    finalValue = temp;
+
+    return finalValue;
+  };
+  const colorInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyle0, buttonDetailStyle1;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelectorAll(".inputTargetProperty");
+      let inputs1 = document.querySelectorAll(".inputTargetValue");
+      let totalString = '';
+
+      for (let i = 0; i < inputs1.length; i++) {
+        if (/^\#/.test(inputs1[i].value)) {
+          if (inputs1[i].value.length === 7) {
+            totalString += inputs1[i].value;
+          } else {
+            totalString += "#f2f2f2";
+          }
+        } else {
+          if (inputs1[i].value.length === 6) {
+            totalString += '#' + inputs1[i].value;
+          } else {
+            totalString += "#f2f2f2";
+          }
+        }
+        totalString += " / ";
+      }
+
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -3);
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(" / ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "550";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyle0 = {
+      position: "absolute",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      width: "30%",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    buttonDetailStyle1 = {
+      position: "absolute",
+      right: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(70% - " + String(Math.floor(height / 4)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      button_clone2.classList.add("removeTarget");
+      for (let j in buttonDetailStyle0) {
+        button_clone2.style[j] = buttonDetailStyle0[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTargetProperty");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = ([ "main", "sub", "title" ])[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone2.appendChild(input_clone);
+      button_clone.appendChild(button_clone2);
+
+      button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      button_clone2.classList.add("removeTarget");
+      for (let j in buttonDetailStyle1) {
+        button_clone2.style[j] = buttonDetailStyle1[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTargetValue");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone2.appendChild(input_clone);
+      button_clone.appendChild(button_clone2);
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const photodaeToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let selectedValue;
+    let temp, tempArr;
+    let finalValue;
+
+    if (value !== "") {
+      if (/, /g.test(value)) {
+        temp = value.split(", ");
+        if (temp.length !== 2) {
+          boo = true;
+        } else {
+          for (let i of temp) {
+            if (Number.isNaN(Number(i))) {
+              boo = true;
+            }
+          }
+        }
+      } else {
+        boo = true;
+      }
+    } else {
+      boo = false;
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (value !== "") {
+      if (boo) {
+        selectedValue = pastValue;
+      } else {
+        selectedValue = value;
+      }
+
+      tempArr = selectedValue.split(", ");
+      temp = [];
+      temp.push(Number(tempArr[0].replace(/[^0-9\.\-]/, '')));
+      temp.push(Number(tempArr[1].replace(/[^0-9\.\-]/, '')));
+
+      finalValue = temp;
+    } else {
+      finalValue = [];
+    }
+
+    return finalValue;
+  };
+  const photodaeInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyle0, buttonDetailStyle1;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelector(".inputTargetProperty");
+      let inputs1 = document.querySelector(".inputTargetValue");
+      let totalString = '';
+
+      if (inputs0.value === "" && inputs1.value === "") {
+        totalString = "";
+      } else {
+        if (Number.isNaN(Number(inputs0.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs0.value;
+        }
+        totalString += ", ";
+        if (Number.isNaN(Number(inputs1.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs1.value;
+        }
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "550";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyle0 = {
+      position: "absolute",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    buttonDetailStyle1 = {
+      position: "absolute",
+      right: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    button_clone = GeneralJs.nodes.div.cloneNode(true);
+    button_clone.classList.add("removeTarget");
+    for (let j in buttonStyle) {
+      button_clone.style[j] = buttonStyle[j];
+    }
+
+    button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    button_clone2.classList.add("removeTarget");
+    for (let j in buttonDetailStyle0) {
+      button_clone2.style[j] = buttonDetailStyle0[j];
+    }
+    input_clone = GeneralJs.nodes.input.cloneNode(true);
+    input_clone.classList.add("inputTargetProperty");
+    for (let j in inputStyle) {
+      input_clone.style[j] = inputStyle[j];
+    }
+    input_clone.value = (inputArr[0] === undefined) ? "" : inputArr[0];
+    input_clone.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+    });
+    input_clone.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13) {
+        endEvent.call(this, e);
+      }
+    });
+    button_clone2.appendChild(input_clone);
+    button_clone.appendChild(button_clone2);
+
+    button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    button_clone2.classList.add("removeTarget");
+    for (let j in buttonDetailStyle1) {
+      button_clone2.style[j] = buttonDetailStyle1[j];
+    }
+    input_clone = GeneralJs.nodes.input.cloneNode(true);
+    input_clone.classList.add("inputTargetValue");
+    for (let j in inputStyle) {
+      input_clone.style[j] = inputStyle[j];
+    }
+    input_clone.value = (inputArr[1] === undefined) ? "" : inputArr[1];
+    input_clone.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+    });
+    input_clone.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13) {
+        endEvent.call(this, e);
+      }
+    });
+    button_clone2.appendChild(input_clone);
+    button_clone.appendChild(button_clone2);
+
+    div_clone.appendChild(button_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const photosgToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let selectedValue;
+    let temp, tempArr;
+    let finalValue;
+
+    if (value !== "") {
+      if (/, /g.test(value)) {
+        temp = value.split(", ");
+        if (temp.length !== 2) {
+          boo = true;
+        } else {
+          for (let i of temp) {
+            if (Number.isNaN(Number(i))) {
+              boo = true;
+            }
+          }
+        }
+      } else {
+        boo = true;
+      }
+    } else {
+      boo = false;
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (value !== "") {
+      if (boo) {
+        selectedValue = pastValue;
+      } else {
+        selectedValue = value;
+      }
+      tempArr = selectedValue.split(", ");
+      temp = {
+        first: 0,
+        last: 0,
+      };
+      temp.first = Number(tempArr[0].replace(/[^0-9\.\-]/, ''));
+      temp.last = Number(tempArr[1].replace(/[^0-9\.\-]/, ''));
+      finalValue = temp;
+    } else {
+      finalValue = {
+        first: 0,
+        last: 0,
+      };
+    }
+
+    return finalValue;
+  };
+  const photosgInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyle0, buttonDetailStyle1;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelector(".inputTargetProperty");
+      let inputs1 = document.querySelector(".inputTargetValue");
+      let totalString = '';
+
+      if (inputs0.value === "" && inputs1.value === "") {
+        totalString = "";
+      } else {
+        if (Number.isNaN(Number(inputs0.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs0.value;
+        }
+        totalString += ", ";
+        if (Number.isNaN(Number(inputs1.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs1.value;
+        }
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "550";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyle0 = {
+      position: "absolute",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    buttonDetailStyle1 = {
+      position: "absolute",
+      right: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    button_clone = GeneralJs.nodes.div.cloneNode(true);
+    button_clone.classList.add("removeTarget");
+    for (let j in buttonStyle) {
+      button_clone.style[j] = buttonStyle[j];
+    }
+
+    button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    button_clone2.classList.add("removeTarget");
+    for (let j in buttonDetailStyle0) {
+      button_clone2.style[j] = buttonDetailStyle0[j];
+    }
+    input_clone = GeneralJs.nodes.input.cloneNode(true);
+    input_clone.classList.add("inputTargetProperty");
+    for (let j in inputStyle) {
+      input_clone.style[j] = inputStyle[j];
+    }
+    input_clone.value = (inputArr[0] === undefined) ? "" : inputArr[0];
+    input_clone.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+    });
+    input_clone.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13) {
+        endEvent.call(this, e);
+      }
+    });
+    button_clone2.appendChild(input_clone);
+    button_clone.appendChild(button_clone2);
+
+    button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    button_clone2.classList.add("removeTarget");
+    for (let j in buttonDetailStyle1) {
+      button_clone2.style[j] = buttonDetailStyle1[j];
+    }
+    input_clone = GeneralJs.nodes.input.cloneNode(true);
+    input_clone.classList.add("inputTargetValue");
+    for (let j in inputStyle) {
+      input_clone.style[j] = inputStyle[j];
+    }
+    input_clone.value = (inputArr[1] === undefined) ? "" : inputArr[1];
+    input_clone.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+    });
+    input_clone.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13) {
+        endEvent.call(this, e);
+      }
+    });
+    button_clone2.appendChild(input_clone);
+    button_clone.appendChild(button_clone2);
+
+    div_clone.appendChild(button_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const slideToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let selectedValue;
+    let temp, tempArr;
+    let finalValue;
+
+    if (/, /g.test(value)) {
+      temp = value.split(", ");
+      if (temp.length !== 9) {
+        boo = true;
+      } else {
+        for (let i of temp) {
+          if (Number.isNaN(Number(i))) {
+            boo = true;
+          }
+        }
+      }
+    } else {
+      boo = true;
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (boo) {
+      selectedValue = pastValue;
+    } else {
+      selectedValue = value;
+    }
+
+    tempArr = selectedValue.split(", ");
+    temp = [];
+    for (let i = 0; i < 9; i++) {
+      temp.push(Number(tempArr[i].replace(/[^0-9\.\-]/, '')));
+    }
+
+    finalValue = temp;
+
+    return finalValue;
+  };
+  const slideInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyle;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs = document.querySelectorAll(".inputTarget");
+      let totalString = '';
+
+      for (let i of inputs) {
+        if (Number.isNaN(Number(i.value))) {
+          totalString += "1";
+        } else {
+          totalString += i.value;
+        }
+        totalString += ", ";
+      }
+
+      totalString = totalString.slice(0, -2);
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = 300;
+    if (width === '' || Number.isNaN(width)) {
+      width = "550";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyle = {
+      position: "absolute",
+      left: String(0) + ea,
+      top: String(0) + ea,
+      width: "calc(calc(100% / 9) - " + String(Math.floor(height / 8)) + ea + ")",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    button_clone = GeneralJs.nodes.div.cloneNode(true);
+    button_clone.classList.add("removeTarget");
+    for (let j in buttonStyle) {
+      button_clone.style[j] = buttonStyle[j];
+    }
+
+    for (let i = 0; i < 9; i++) {
+      button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      button_clone2.classList.add("removeTarget");
+      for (let j in buttonDetailStyle) {
+        button_clone2.style[j] = buttonDetailStyle[j];
+      }
+      button_clone2.style.left = "calc(calc(calc(calc(100% / 9) * " + String(i) + ") - " + String(Math.floor(height / 8)) + ea + ") + " + String(Math.floor(height / 8)) + ea + ")";
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = (inputArr[i] === undefined) ? "" : inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone2.appendChild(input_clone);
+      button_clone.appendChild(button_clone2);
+    }
+    div_clone.appendChild(button_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const tagToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let selectedValue;
+    let temp, tempArr;
+    let finalValue;
+
+    if (!/, /g.test(value)) {
+      boo = true;
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    if (boo) {
+      selectedValue = pastValue;
+    } else {
+      selectedValue = value;
+    }
+
+    tempArr = selectedValue.split(", ");
+    temp = [];
+    for (let i = 0; i < tempArr.length; i++) {
+      temp.push(tempArr[i].trim());
+    }
+
+    finalValue = temp;
+
+    return finalValue;
+  };
+  const tagInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyle0, buttonDetailStyle1;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let inputArr;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs0 = document.querySelector(".inputTargetProperty");
+      let inputs1 = document.querySelector(".inputTargetValue");
+      let totalString = '';
+
+      if (inputs0.value === "" && inputs1.value === "") {
+        totalString = "";
+      } else {
+        if (Number.isNaN(Number(inputs0.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs0.value;
+        }
+        totalString += ", ";
+        if (Number.isNaN(Number(inputs1.value))) {
+          totalString += "1";
+        } else {
+          totalString += inputs1.value;
+        }
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "550";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyle0 = {
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      background: "#2fa678",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      fontSize: "inherit",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(Math.floor(height / 4)) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    button_clone = GeneralJs.nodes.div.cloneNode(true);
+    button_clone.classList.add("removeTarget");
+    for (let j in buttonStyle) {
+      button_clone.style[j] = buttonStyle[j];
+    }
+
+    for (let i = 0; i < inputArr.length; i++) {
+      button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      button_clone2.classList.add("removeTarget");
+      for (let j in buttonDetailStyle0) {
+        button_clone2.style[j] = buttonDetailStyle0[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTargetProperty");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone2.appendChild(input_clone);
+      button_clone.appendChild(button_clone2);
+    }
+
+    div_clone.appendChild(button_clone);
+
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
+  const map = {
+    conid: { name: "아이디", position: "conid", type: "string", searchBoo: true, },
+    pid: { name: "별칭", position: "contents.portfolio.pid", type: "string", searchBoo: true, },
+    desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
+    rid: { name: "후기 별칭", position: "contents.review.rid", type: "string", searchBoo: true, },
+    portfolioDate: { name: "포트폴리오 발행일", position: "contents.portfolio.date", type: "date", searchBoo: true, },
+    reviewDate: { name: "고객후기 발행일", position: "contents.review.date", type: "date", searchBoo: true, },
+    titleMain: { name: "포트폴리오 제목", position: "contents.portfolio.title.main", type: "string", searchBoo: true, },
+    titleSub: { name: "포트폴리오 부제목", position: "contents.portfolio.title.sub", type: "string", searchBoo: true, },
+    reviewTitleMain: { name: "고객 후기 제목", position: "contents.review.title.main", type: "string", searchBoo: true, },
+    reviewTitleSub: { name: "고객 후기 부제목", position: "contents.review.title.sub", type: "string", searchBoo: true, },
+    space: { name: "공간", position: "contents.portfolio.spaceInfo.space", type: "string", searchBoo: true, },
+    pyeong: { name: "평수", position: "contents.portfolio.spaceInfo.pyeong", type: "number", searchBoo: true, },
+    region: { name: "지역", position: "contents.portfolio.spaceInfo.region", type: "string", searchBoo: true, },
+    method: { name: "서비스 방식", position: "contents.portfolio.spaceInfo.method", type: "string", searchBoo: true, },
+    color: { name: "컬러", position: "contents.portfolio.color", type: "object", inputFunction: colorInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: colorToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    photodae: { name: "대표사진", position: "contents.portfolio.detailInfo.photodae", type: "object", inputFunction: photodaeInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: photodaeToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    reviewPhotodae: { name: "리뷰 대표사진", position: "contents.review.detailInfo.photodae", type: "object", inputFunction: photodaeInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: photodaeToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    photosg: { name: "sg 상수", position: "contents.portfolio.detailInfo.photosg", type: "object", inputFunction: photosgInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: photosgToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    slide: { name: "슬라이드", position: "contents.portfolio.detailInfo.slide", type: "object", inputFunction: slideInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: slideToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    tag: { name: "태그", position: "contents.portfolio.detailInfo.tag", type: "object", inputFunction: tagInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: tagToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    service: { name: "서비스", position: "contents.portfolio.detailInfo.service", items: [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "상업공간 스타일링" ], type: "string", searchBoo: true, },
+    key8: { name: "인기순 지수", position: "contents.portfolio.detailInfo.sort.key8", type: "string", searchBoo: true, },
+    key9: { name: "최근순 지수", position: "contents.portfolio.detailInfo.sort.key9", type: "string", searchBoo: true, },
+    order: { name: "리뷰 순서 지수", position: "contents.review.detailInfo.order", type: "number", searchBoo: true, },
+  };
+  return map;
 }
 
 module.exports = DataPatch;

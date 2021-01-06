@@ -435,6 +435,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           }
         }
       } else if (req.url === "/getContents") {
+        standard = instance.patch.contentsStandard();
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
             raw_data = await instance.back.getLatestContentsArr(req.body.limit, { withTools: true, selfMongo: instance.mongo });
@@ -450,7 +451,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
       }
 
-      if (req.body.noFlat === undefined && req.url !== "/getContents") {
+      if (req.body.noFlat === undefined) {
         data = raw_data.flatDeath();
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
@@ -468,7 +469,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners" ];
+  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res) {
     try {
       let standard;
@@ -488,6 +489,9 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       } else if (req.url === "/searchDesigners") {
         standard = instance.patch.designerStandard();
         map = instance.patch.designerMap();
+      } else if (req.url === "/searchContents") {
+        standard = instance.patch.contentsStandard();
+        map = instance.patch.contentsMap();
       }
 
       mapArr = Object.values(map);
@@ -551,6 +555,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             }
 
           }
+
           filteredArr = [];
           for (let obj of rawJson) {
             if (obj.desid !== "") {
@@ -568,10 +573,13 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             }
             return tong;
           }
+
           rawJson = filteredArr;
         }
       } else if (req.url === "/searchDesigners") {
         rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+      } else if (req.url === "/searchContents") {
+        rawJson = await instance.back.getContentsArrByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
       }
 
       if (req.body.noFlat === undefined) {
@@ -592,7 +600,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   let obj = {};
-  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject" ];
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
     try {
       let { thisId, requestIndex, column, value, pastValue } = req.body;
@@ -609,6 +617,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         map = instance.patch.designerMap();
       } else if (req.url === "/updateProject") {
         map = instance.patch.projectMap();
+      } else if (req.url === "/updateContents") {
+        map = instance.patch.contentsMap();
       }
 
       switch (map[column].type) {
@@ -676,7 +686,11 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         whereQuery[map.desid.position] = thisId;
       } else if (req.url === "/updateProject") {
         whereQuery[map.proid.position] = thisId;
+      } else if (req.url === "/updateContents") {
+        whereQuery[map.conid.position] = thisId;
       }
+
+      console.log(whereQuery, updateQuery)
 
       if (req.url === "/updateClient") {
         message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
@@ -684,6 +698,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/updateProject") {
         message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/updateContents") {
+        message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
 
       res.set("Content-Type", "application/json");
