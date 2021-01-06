@@ -105,7 +105,26 @@ GeneralJs.updateValue = async function (dataObj) {
   }
   const instance = this;
   try {
+    const cookies = GeneralJs.getCookiesAll();
     let dataString, response;
+
+    if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
+      //set user
+      dataObj.user = cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail;
+      //contents lock
+      if (window.location.pathname === "/contents") {
+        if (cookies.homeliaisonConsoleLoginedEmail !== "uragenbooks@gmail.com") {
+          dataObj.value = dataObj.pastValue;
+        }
+      }
+    } else {
+      //set user
+      dataObj.user = "unknown" + "__split__" + "unknown@unknown";
+      //contents lock
+      if (window.location.pathname === "/contents") {
+        dataObj.value = dataObj.pastValue;
+      }
+    }
 
     GeneralJs.updateHistoryTong.unshift(dataObj);
     dataString = GeneralJs.objectToRawquery(dataObj);
@@ -151,6 +170,8 @@ GeneralJs.returnValue = async function () {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateDesigner"));
       } else if (window.location.pathname === "/project") {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
+      } else if (window.location.pathname === "/contents") {
+        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
       }
 
       if (response.message !== "success") {

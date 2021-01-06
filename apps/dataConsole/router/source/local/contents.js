@@ -1026,12 +1026,16 @@ ContentsJs.prototype.spreadData = async function (search = null) {
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
+    let designers;
 
     if (search === null) {
       contentsArr = JSON.parse(await GeneralJs.ajaxPromise("limit=200", "/getContents"));
     } else {
       contentsArr = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchContents"));
     }
+
+    designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
+    GeneralJs.stacks.allDesignerTong = designers;
 
     const { standard, data } = contentsArr;
 
@@ -4254,10 +4258,10 @@ ContentsJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.backGrayBar();
     await this.spreadData();
-    // this.addTransFormEvent();
-    // this.addSearchEvent();
-    // this.addExtractEvent();
-    // this.whiteResize();
+    this.addTransFormEvent();
+    this.addSearchEvent();
+    this.addExtractEvent();
+    this.whiteResize();
 
     const getObj = GeneralJs.returnGet();
 

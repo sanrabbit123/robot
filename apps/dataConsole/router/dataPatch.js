@@ -4722,6 +4722,192 @@ DataPatch.prototype.contentsWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.contentsMap = function () {
+  const designerToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValueObj, finalValue;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    finalValueObj = /d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(value);
+    if (finalValueObj === null) {
+      finalValue = "";
+    } else {
+      finalValue = finalValueObj[0];
+    }
+
+    return finalValue;
+  };
+  const designerInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let count;
+    let valuesTong;
+    let toHtml;
+    let originalValue;
+
+    valuesTong = [];
+    count = 4;
+    tempArr = null;
+    toHtml = function (designer, desid) {
+      return designer + ' <b style="font-weight:200;font-size:11px;color:white">' + desid + '</b>';
+    };
+    for (let { designer, desid } of GeneralJs.stacks.allDesignerTong) {
+      if (count < 4) {
+        tempArr.push(toHtml(designer, desid));
+        count++;
+      } else {
+        if (tempArr !== null) {
+          valuesTong.push(tempArr);
+        }
+        tempArr = [];
+        tempArr.push(toHtml(designer, desid));
+        count = 0;
+      }
+    }
+    if (Array.isArray(tempArr)) {
+      if (tempArr.length > 0) {
+        valuesTong.push(tempArr);
+      }
+    }
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = this.getAttribute("target");
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 590;
+    if (width === '' || Number.isNaN(width)) {
+      width = "600";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: String(0) + ea,
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: String(0) + ea,
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [];
+    for (let z = 0; z < 5; z++) {
+      buttonDetailStyles.push({
+        position: "absolute",
+        left: String(20 * z) + '%',
+        top: String(0) + ea,
+        width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      });
+    }
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: GeneralJs.isMac() ? "16%" : "22%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < valuesTong[i].length; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget");
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.setAttribute("switch", "off");
+        input_clone.insertAdjacentHTML("beforeend", valuesTong[i][z]);
+        input_clone.setAttribute("target", input_clone.querySelector('b').textContent);
+        input_clone.addEventListener("click", endEvent);
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+
   const colorToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
@@ -4925,10 +5111,6 @@ DataPatch.prototype.contentsMap = function () {
         input_clone.style[j] = inputStyle[j];
       }
       input_clone.value = ([ "main", "sub", "title" ])[i];
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-      });
       input_clone.addEventListener("keypress", function (e) {
         if (e.keyCode === 13) {
           endEvent.call(this, e);
@@ -4948,10 +5130,6 @@ DataPatch.prototype.contentsMap = function () {
         input_clone.style[j] = inputStyle[j];
       }
       input_clone.value = inputArr[i];
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-      });
       input_clone.addEventListener("keypress", function (e) {
         if (e.keyCode === 13) {
           endEvent.call(this, e);
@@ -5179,10 +5357,6 @@ DataPatch.prototype.contentsMap = function () {
       input_clone.style[j] = inputStyle[j];
     }
     input_clone.value = (inputArr[0] === undefined) ? "" : inputArr[0];
-    input_clone.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-    });
     input_clone.addEventListener("keypress", function (e) {
       if (e.keyCode === 13) {
         endEvent.call(this, e);
@@ -5202,10 +5376,6 @@ DataPatch.prototype.contentsMap = function () {
       input_clone.style[j] = inputStyle[j];
     }
     input_clone.value = (inputArr[1] === undefined) ? "" : inputArr[1];
-    input_clone.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-    });
     input_clone.addEventListener("keypress", function (e) {
       if (e.keyCode === 13) {
         endEvent.call(this, e);
@@ -5436,10 +5606,6 @@ DataPatch.prototype.contentsMap = function () {
       input_clone.style[j] = inputStyle[j];
     }
     input_clone.value = (inputArr[0] === undefined) ? "" : inputArr[0];
-    input_clone.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-    });
     input_clone.addEventListener("keypress", function (e) {
       if (e.keyCode === 13) {
         endEvent.call(this, e);
@@ -5459,10 +5625,6 @@ DataPatch.prototype.contentsMap = function () {
       input_clone.style[j] = inputStyle[j];
     }
     input_clone.value = (inputArr[1] === undefined) ? "" : inputArr[1];
-    input_clone.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-    });
     input_clone.addEventListener("keypress", function (e) {
       if (e.keyCode === 13) {
         endEvent.call(this, e);
@@ -5665,10 +5827,6 @@ DataPatch.prototype.contentsMap = function () {
         input_clone.style[j] = inputStyle[j];
       }
       input_clone.value = (inputArr[i] === undefined) ? "" : inputArr[i];
-      input_clone.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
-      });
       input_clone.addEventListener("keypress", function (e) {
         if (e.keyCode === 13) {
           endEvent.call(this, e);
@@ -5739,26 +5897,17 @@ DataPatch.prototype.contentsMap = function () {
     let endEvent;
 
     endEvent = function (e) {
-      let inputs0 = document.querySelector(".inputTargetProperty");
-      let inputs1 = document.querySelector(".inputTargetValue");
+      let inputs = document.querySelectorAll(".inputTargetProperty");
       let totalString = '';
-
-      if (inputs0.value === "" && inputs1.value === "") {
-        totalString = "";
-      } else {
-        if (Number.isNaN(Number(inputs0.value))) {
-          totalString += "1";
-        } else {
-          totalString += inputs0.value;
-        }
-        totalString += ", ";
-        if (Number.isNaN(Number(inputs1.value))) {
-          totalString += "1";
-        } else {
-          totalString += inputs1.value;
+      for (let i of inputs) {
+        if (i.value !== '') {
+          totalString += i.value;
+          totalString += ", ";
         }
       }
-
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -2);
+      }
       input.style.transition = "0s all ease";
       input.style.color = "transparent";
       input.value = totalString;
@@ -5808,7 +5957,6 @@ DataPatch.prototype.contentsMap = function () {
       left: (width !== "550" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
       fontSize: "inherit",
       color: "#ffffff",
       zIndex: String(3),
@@ -5820,7 +5968,7 @@ DataPatch.prototype.contentsMap = function () {
     buttonDetailStyle0 = {
       position: "relative",
       width: "100%",
-      height: "100%",
+      height: String(height * 1.5) + ea,
       background: "#2fa678",
       zIndex: String(3),
       borderRadius: String(3) + ea,
@@ -5866,7 +6014,7 @@ DataPatch.prototype.contentsMap = function () {
       input_clone.value = inputArr[i];
       input_clone.addEventListener("contextmenu", function (e) {
         e.preventDefault();
-        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+        this.parentElement.parentElement.removeChild(this.parentElement);
       });
       input_clone.addEventListener("keypress", function (e) {
         if (e.keyCode === 13) {
@@ -5879,19 +6027,57 @@ DataPatch.prototype.contentsMap = function () {
 
     div_clone.appendChild(button_clone);
 
-
     svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
       bottom: String(0),
       width: String(iconWidth) + ea,
-      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+      left:  "calc(50% - " + String(3 + iconWidth) + ea + ")",
     };
     for (let i in style) {
       svg_clone.style[i] = style[i];
     }
     svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% + " + String(3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let button_clone2, input_clone;
+
+      button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      button_clone2.classList.add("removeTarget");
+      for (let j in buttonDetailStyle0) {
+        button_clone2.style[j] = buttonDetailStyle0[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTargetProperty");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone2.appendChild(input_clone);
+      button_clone.appendChild(button_clone2);
+    });
+
     div_clone.appendChild(svg_clone);
 
     mother.appendChild(div_clone);
@@ -5900,7 +6086,7 @@ DataPatch.prototype.contentsMap = function () {
   const map = {
     conid: { name: "아이디", position: "conid", type: "string", searchBoo: true, },
     pid: { name: "별칭", position: "contents.portfolio.pid", type: "string", searchBoo: true, },
-    desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
+    desid: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     rid: { name: "후기 별칭", position: "contents.review.rid", type: "string", searchBoo: true, },
     portfolioDate: { name: "포트폴리오 발행일", position: "contents.portfolio.date", type: "date", searchBoo: true, },
     reviewDate: { name: "고객후기 발행일", position: "contents.review.date", type: "date", searchBoo: true, },
@@ -5923,6 +6109,7 @@ DataPatch.prototype.contentsMap = function () {
     key9: { name: "최근순 지수", position: "contents.portfolio.detailInfo.sort.key9", type: "string", searchBoo: true, },
     order: { name: "리뷰 순서 지수", position: "contents.review.detailInfo.order", type: "number", searchBoo: true, },
   };
+
   return map;
 }
 

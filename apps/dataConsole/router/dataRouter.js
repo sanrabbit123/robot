@@ -603,7 +603,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
     try {
-      let { thisId, requestIndex, column, value, pastValue } = req.body;
+      let { thisId, requestIndex, column, value, pastValue, user } = req.body;
       let map;
       let whereQuery, updateQuery;
       let message;
@@ -690,7 +690,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         whereQuery[map.conid.position] = thisId;
       }
 
-      console.log(whereQuery, updateQuery)
+      //update log
+      await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), { user: user, where: JSON.stringify(whereQuery), update: JSON.stringify(updateQuery), date: (new Date()) }, { local: null, console: true, selfMongo: null });
 
       if (req.url === "/updateClient") {
         message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
