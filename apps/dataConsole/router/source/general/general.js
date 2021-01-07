@@ -144,6 +144,7 @@ GeneralJs.updateValue = async function (dataObj) {
     }
 
     return response.message;
+
   } catch (e) {
     console.log(e);
   }

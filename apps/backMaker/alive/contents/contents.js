@@ -179,4 +179,68 @@ Contents.prototype.toOriginalPath = function () {
   return arr;
 }
 
+Contents.prototype.getPortfolioDetail = function () {
+  return this.contents.portfolio.contents.detail;
+}
+
+Contents.prototype.getReviewDetail = function () {
+  return this.contents.review.contents.detail;
+}
+
+Contents.prototype.getGsArr = function () {
+  let arr = [];
+  for (let { gs } of this.photos.detail) {
+    arr.push(gs);
+  }
+  return arr;
+}
+
+Contents.prototype.getContentsFlatDetail = function () {
+  const { contents: { portfolio: { contents: { detail: portfolioDetail } }, review: { contents: { detail: reviewDetail } } } } = this;
+  let portfolio, review;
+  let pastKey = null;
+
+  portfolio = "";
+  for (let { photoKey, title, contents, smallTalk: { title: smallTalkTitle, contents: smallTalkContents } } of portfolioDetail) {
+    if (pastKey !== null) {
+      portfolio += String(pastKey + 1) + " - " + String(photoKey);
+      portfolio += "\n\n";
+      portfolio += title;
+      portfolio += "\n\n";
+    }
+    portfolio += contents;
+    if (smallTalkTitle !== "") {
+      portfolio += "\n\n";
+      portfolio += smallTalkTitle;
+      portfolio += "\n";
+      portfolio += smallTalkContents;
+    }
+    portfolio += "\n\n";
+    pastKey = photoKey;
+  }
+  portfolio = portfolio.slice(0, -2);
+
+  review = "";
+  for (let { type, photos, contents } of reviewDetail) {
+    if (type === "init") {
+      for (let { answer } of contents) {
+        review += answer;
+        review += "\n\n";
+      }
+    } else {
+      review += photos.join(" ");
+      review += "\n\n";
+      for (let { question, answer } of contents) {
+        review += "Q. " + question;
+        review += "\n\n";
+        review += "A. " + answer;
+        review += "\n\n";
+      }
+    }
+  }
+  review = review.slice(0, -2);
+
+  return { portfolio, review };
+}
+
 module.exports = Contents;

@@ -167,7 +167,6 @@ ContentsJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(conid, num));
     }
 
     if (num !== 0) {
@@ -1553,7 +1552,6 @@ ContentsJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = nameStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
           div_clone.appendChild(div_clone2);
 
           //cliid
@@ -1564,7 +1562,6 @@ ContentsJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = cliidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
           div_clone.appendChild(div_clone2);
 
           //bar
@@ -1661,11 +1658,303 @@ ContentsJs.prototype.cardViewMaker = function () {
   }
 }
 
+ContentsJs.prototype.viewDetail = async function (mother, leftMargin, fontSize, thisCase) {
+  const instance = this;
+  try {
+    const { conid, pid } = thisCase;
+    const [ portfolio, review, photoGs ] = JSON.parse(await GeneralJs.ajaxPromise("id=" + conid + "&noFlat=true", "/getContentsDetail"));
+    let div_clone, div_clone2;
+    let style;
+    let scrollBox, contentsBox, photoKeyBox, photoScrollBox, photoBox, titleBox, smallTalkTitleBox, smallTalkContentsBox;
+    let photoStyle, photoScrollStyle, contentsStyle, photoKeyStyle, titleStyle, smallTalkTitleStyle, smallTalkContentsStyle;
+    let margin;
+    let ea;
+    let pastKey = null;
+    let totalWidth;
+
+    ea = "px";
+    margin = fontSize * (0.58);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+      height: String(100) + "%",
+      top: String(0) + ea,
+      left: String(leftMargin) + ea,
+      border: "1px solid #dddddd",
+      borderRadius: String(5) + ea,
+      overflow: "hidden",
+      animation: "justfadeinoriginal 0.4s ease forwards",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    scrollBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      display: "block",
+      position: "relative",
+      left: String(fontSize * 1.6) + ea,
+      top: String(fontSize * 2) + ea,
+      width: "calc(100% - " + String(fontSize * 3.2) + ea + ")",
+      height: "calc(100% - " + String(fontSize * 4) + ea + ")",
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      scrollBox.style[i] = style[i];
+    }
+    div_clone.appendChild(scrollBox);
+
+    style = {
+      display: "block",
+      position: "relative",
+      width: String(100) + "%",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(300),
+      lineHeight: String(1.7),
+      marginBottom: String(56) + ea,
+    };
+
+    contentsStyle = JSON.parse(JSON.stringify(style));
+    titleStyle = JSON.parse(JSON.stringify(style));
+    smallTalkTitleStyle = JSON.parse(JSON.stringify(style));
+    smallTalkContentsStyle = JSON.parse(JSON.stringify(style));
+
+    photoKeyStyle = {
+      display: "block",
+      position: "relative",
+      width: String(100) + "%",
+      height: String(fontSize * 15) + ea,
+      marginBottom: String(54) + ea,
+      overflow: "scroll",
+      borderRadius: String(6) + ea,
+      border: "1px solid #dddddd",
+      boxSizing: "border-box",
+    };
+
+    photoScrollStyle = {
+      position: "absolute",
+      left: String(fontSize * 1) + ea,
+      top: String(fontSize * 1) + ea,
+      height: String(fontSize * 13) + ea,
+      width: String(5000) + ea,
+    };
+
+    photoStyle = {
+      display: "inline-block",
+      position: "relative",
+      height: String(fontSize * 13) + ea,
+      marginRight: String(margin) + ea,
+      borderRadius: String(3) + ea,
+      cursor: "pointer",
+    };
+
+    titleStyle.fontWeight = "700";
+    titleStyle.fontSize = String(fontSize + 2) + ea;
+    titleStyle.marginBottom = String(2) + ea;
+
+    smallTalkTitleStyle.color = "#2fa678";
+    smallTalkTitleStyle.fontWeight = "600";
+    smallTalkTitleStyle.marginBottom = String(1) + ea;
+    smallTalkTitleStyle.fontSize = String(fontSize - 2) + ea;
+
+    smallTalkContentsStyle.fontSize = smallTalkTitleStyle.fontSize;
+
+
+    //portfolio
+    for (let { photoKey, title, contents, smallTalk: { title: smallTalkTitle, contents: smallTalkContents } } of portfolio) {
+
+      if (pastKey !== null) {
+
+        //photo base box
+        photoKeyBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in photoKeyStyle) {
+          photoKeyBox.style[i] = photoKeyStyle[i];
+        }
+
+        //photo scroll box
+        photoScrollBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in photoScrollStyle) {
+          photoScrollBox.style[i] = photoScrollStyle[i];
+        }
+
+        //photos
+        totalWidth = 0;
+        if (pastKey !== photoKey) {
+          for (let p = pastKey + 1; p < photoKey + 1; p++) {
+            photoBox = GeneralJs.nodes.img.cloneNode(true);
+            photoBox.src = S3HOST + "/corePortfolio/listImage/" + pid + "/t" + String(p) + pid + ".jpg";
+            photoBox.classList.add("hoverDefault_lite");
+            photoBox.addEventListener("dblclick", function (e) {
+              e.preventDefault();
+              window.open(S3HOST + "/corePortfolio/original/" + pid + "/i" + String(p) + pid + ".jpg", "_blank");
+            });
+            for (let i in photoStyle) {
+              photoBox.style[i] = photoStyle[i];
+            }
+            photoScrollBox.appendChild(photoBox);
+            totalWidth += (fontSize * 13) * ((photoGs[p - 1] === 'g') ? (297 / 210) : (210 / 297));
+            totalWidth += margin;
+          }
+        } else {
+          photoBox = GeneralJs.nodes.img.cloneNode(true);
+          photoBox.src = S3HOST + "/corePortfolio/listImage/" + pid + "/t" + String(photoKey) + pid + ".jpg";
+          for (let i in photoStyle) {
+            photoBox.style[i] = photoStyle[i];
+          }
+          photoScrollBox.appendChild(photoBox);
+          totalWidth += (fontSize * 13) * ((photoGs[photoKey - 1] === 'g') ? (297 / 210) : (210 / 297));
+          totalWidth += margin;
+        }
+
+        totalWidth += margin;
+        photoScrollBox.style.width = String(totalWidth) + ea;
+        photoKeyBox.appendChild(photoScrollBox);
+        scrollBox.appendChild(photoKeyBox);
+
+        //title
+        titleBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in titleStyle) {
+          titleBox.style[i] = titleStyle[i];
+        }
+        titleBox.textContent = title;
+        scrollBox.appendChild(titleBox);
+      }
+
+      //contents
+      contentsBox = GeneralJs.nodes.div.cloneNode(true);
+      for (let i in contentsStyle) {
+        contentsBox.style[i] = contentsStyle[i];
+      }
+      contentsBox.textContent = contents;
+      scrollBox.appendChild(contentsBox);
+
+
+      if (smallTalkTitle !== '') {
+        contentsBox.style.marginBottom = String(10) + ea;
+
+        //small talk title
+        smallTalkTitleBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in smallTalkTitleStyle) {
+          smallTalkTitleBox.style[i] = smallTalkTitleStyle[i];
+        }
+        smallTalkTitleBox.textContent = smallTalkTitle;
+        scrollBox.appendChild(smallTalkTitleBox);
+
+        //small talk contents
+        smallTalkContentsBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in smallTalkContentsStyle) {
+          smallTalkContentsBox.style[i] = smallTalkContentsStyle[i];
+        }
+        smallTalkContentsBox.textContent = smallTalkContents;
+        scrollBox.appendChild(smallTalkContentsBox);
+      }
+
+      pastKey = photoKey;
+    }
+
+    //bar
+    if (review.length > 0) {
+      for (let i = 0; i < 3; i++) {
+        photoKeyBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in photoKeyStyle) {
+          photoKeyBox.style[i] = photoKeyStyle[i];
+        }
+        photoKeyBox.style.height = String(0) + ea;
+        photoKeyBox.style.borderTop = String(0) + ea;
+        if (i !== 1) {
+          photoKeyBox.style.border = String(0) + ea;
+        }
+        scrollBox.appendChild(photoKeyBox);
+      }
+    }
+
+    //review
+    for (let { type, photos, contents } of review) {
+      if (type === "init") {
+        for (let { answer } of contents) {
+          contentsBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in contentsStyle) {
+            contentsBox.style[i] = contentsStyle[i];
+          }
+          contentsBox.textContent = answer;
+          scrollBox.appendChild(contentsBox);
+        }
+      } else {
+
+        //photo entire box
+        photoKeyBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in photoKeyStyle) {
+          photoKeyBox.style[i] = photoKeyStyle[i];
+        }
+
+        //photo scroll box
+        photoScrollBox = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in photoScrollStyle) {
+          photoScrollBox.style[i] = photoScrollStyle[i];
+        }
+
+        //photos
+        totalWidth = 0;
+        for (let p of photos) {
+          photoBox = GeneralJs.nodes.img.cloneNode(true);
+          photoBox.src = S3HOST + "/corePortfolio/listImage/" + pid + "/t" + String(p) + pid + ".jpg";
+          photoBox.classList.add("hoverDefault_lite");
+          photoBox.addEventListener("dblclick", function (e) {
+            e.preventDefault();
+            window.open(S3HOST + "/corePortfolio/original/" + pid + "/i" + String(p) + pid + ".jpg", "_blank");
+          });
+          for (let i in photoStyle) {
+            photoBox.style[i] = photoStyle[i];
+          }
+          photoScrollBox.appendChild(photoBox);
+          totalWidth += (fontSize * 13) * ((photoGs[p - 1] === 'g') ? (297 / 210) : (210 / 297));
+          totalWidth += margin;
+        }
+
+        totalWidth += margin;
+        photoScrollBox.style.width = String(totalWidth) + ea;
+        photoKeyBox.appendChild(photoScrollBox);
+        scrollBox.appendChild(photoKeyBox);
+
+        //review contents
+        for (let { question, answer } of contents) {
+          contentsBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in contentsStyle) {
+            contentsBox.style[i] = contentsStyle[i];
+          }
+          contentsBox.style.fontWeight = String(600);
+          contentsBox.style.marginBottom = String(4) + ea;
+          contentsBox.textContent = "Q. " + question;
+          scrollBox.appendChild(contentsBox);
+
+          contentsBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in contentsStyle) {
+            contentsBox.style[i] = contentsStyle[i];
+          }
+          contentsBox.style.fontWeight = String(300);
+          contentsBox.style.marginBottom = String(24) + ea;
+          contentsBox.textContent = "A. " + answer;
+          scrollBox.appendChild(contentsBox);
+        }
+
+        contentsBox.style.marginBottom = contentsStyle.marginBottom;
+
+      }
+    }
+
+    mother.appendChild(div_clone);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
-  let { standard, info } = DataPatch.clientWhiteViewStandard();
+  let { standard, info } = DataPatch.contentsWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
-  let propertyBox, historyBox;
+  let propertyBox, detailBox;
   let style;
   let ea = "px";
   let titleHeight, titleFontSize, topMargin, leftMargin;
@@ -1678,11 +1967,10 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let updateEventFunction;
   let contentsBoxHeight, contentsBoxBottom;
   let lineHeightRatio;
-  let historyTongTarget, historyTargetHeightConst;
-  let historyFocusEvent, historyBlurEvent;
+  let detailTongTarget, detailTargetHeightConst;
+  let detailFocusEvent, detailBlurEvent;
   let visualSpecificMarginTop;
   let textAreas;
-  let notionEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
 
   //entire box -------------------------------------
@@ -1706,7 +1994,6 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
-  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1720,7 +2007,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone2.style[i] = style[i];
   }
 
-  //name
+  //pid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[0]];
   div_clone3.classList.add("hoverDefault_lite");
@@ -1729,17 +2016,23 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#404040",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (9 / 60) : (2 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", function (e) {
+    const homeliaison = "https://home-liaison.com";
+    window.open(homeliaison + "/portdetail.php?qqq=" + thisCase.pid, "_blank");
+    if (thisCase.rid !== "re999") {
+      window.open(homeliaison + "/revdetail.php?qqq=" + thisCase.rid, "_blank");
+    }
+  });
   div_clone2.appendChild(div_clone3);
 
-  //cliid
+  //conid
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   div_clone3.textContent = thisCase[standard[1]];
   div_clone3.classList.add("hoverDefault_lite");
@@ -1748,13 +2041,12 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#2fa678",
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
-    left: String(leftMargin * 3) + ea,
+    left: String(leftMargin * 2.3) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -2176,7 +2468,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   dropEventFunction = function (e) {
     e.preventDefault();
     this.style.opacity = String(1);
-    const { info } = DataPatch.clientWhiteViewStandard();
+    const { info } = DataPatch.contentsWhiteViewStandard();
     const movingColumn = e.dataTransfer.getData("dragData");
     const thisColumn = this.parentNode.getAttribute("index");
     let originalColumns, originalColumns_filtered, originalTops;
@@ -2236,7 +2528,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       this.parentNode.parentNode.insertBefore(originalColumns_filtered[originalColumns_filtered.length - 1 - c].dom, this.parentNode.parentNode.firstChild);
     }
 
-    window.localStorage.setItem("client_whiteOrder", JSON.stringify(thisStorage));
+    window.localStorage.setItem("contents_whiteOrder", JSON.stringify(thisStorage));
 
     e.stopPropagation();
   }
@@ -2264,8 +2556,8 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     propertyBox.style[i] = style[i];
   }
 
-  if (window.localStorage.getItem("client_whiteOrder") !== null && window.localStorage.getItem("client_whiteOrder") !== undefined) {
-    info = JSON.parse(window.localStorage.getItem("client_whiteOrder"));
+  if (window.localStorage.getItem("contents_whiteOrder") !== null && window.localStorage.getItem("contents_whiteOrder") !== undefined) {
+    info = JSON.parse(window.localStorage.getItem("contents_whiteOrder"));
   }
 
   for (let i = 0; i < info.length; i++) {
@@ -2334,8 +2626,8 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(propertyBox);
   this.whiteBox.propertyBox = propertyBox;
 
-  //history box
-  historyBox = GeneralJs.nodes.div.cloneNode(true);
+  //detail box
+  detailBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
     height: "100%",
@@ -2344,43 +2636,39 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     width: "calc(55% - " + String(leftMargin) + ea + ")",
   };
   for (let i in style) {
-    historyBox.style[i] = style[i];
+    detailBox.style[i] = style[i];
   }
 
-  //histoty title box
+  //detail title box
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = "HISTORY";
+  div_clone3.textContent = "DETAIL";
   style = {
     position: "absolute",
-    width: String(fontSize * 6) + ea,
+    width: String(fontSize * 5) + ea,
     height: "100%",
     fontSize: String(fontSize) + ea,
     fontWeight: String(700),
-    cursor: "pointer",
+    top: String(-1) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  historyBox.appendChild(div_clone3);
+  detailBox.appendChild(div_clone3);
 
-  //history text box tong
-  historyTongTarget = [
-    { column: "history", name: "응대 기록", dom: null },
-    { column: "space", name: "현장 관련", dom: null },
-    { column: "styling", name: "스타일링 관련", dom: null },
-    { column: "construct", name: "시공 관련", dom: null },
-    { column: "budget", name: "예산 관련", dom: null },
-    { column: "progress", name: "기타 메모", dom: null },
+  //detail text box tong
+  detailTongTarget = [
+    { column: "history", name: "포트폴리오", dom: null },
+    { column: "space", name: "고객 후기", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
-  historyTargetHeightConst = (fontSize * 1) + visualSpecificMarginTop;
+  detailTargetHeightConst = (fontSize * 1) + visualSpecificMarginTop;
   textAreas = [];
 
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    left: String(fontSize * 6) + ea,
-    width: "calc(100% - " + String((fontSize * 6) + 1) + ea + ")",
+    left: String(fontSize * 5) + ea,
+    width: "calc(100% - " + String((fontSize * 5) + 1) + ea + ")",
     height: "100%",
     fontSize: String(fontSize) + ea,
     fontWeight: String(300),
@@ -2389,88 +2677,33 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.style[i] = style[i];
   }
 
-  for (let i = 0; i < historyTongTarget.length; i++) {
+  for (let i = 0; i < detailTongTarget.length; i++) {
 
     //focus event
-    historyFocusEvent = function (e) {
+    detailFocusEvent = function (e) {
       const thisIndex = i;
-      for (let { dom } of historyTongTarget) {
+      for (let { dom } of detailTongTarget) {
         if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(5) + "% - " + String(historyTargetHeightConst) + ea + ")";
+          dom.style.height = "calc(" + String(5) + "% - " + String(detailTargetHeightConst) + ea + ")";
         } else {
           this.parentElement.scroll(0, 0);
-          dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
+          dom.style.height = "calc(" + String(100 - (5 * (detailTongTarget.length - 1))) + "% - " + String(detailTargetHeightConst) + ea + ")";
         }
       }
       this.style.color = "#202020";
     }
 
     //blur event
-    historyBlurEvent = function (e) {
+    detailBlurEvent = function (e) {
       const thisIndex = i;
       let target;
-      for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+      for (let { dom } of detailTongTarget) {
+        dom.style.height = "calc(" + String(100 / detailTongTarget.length) + "% - " + String(detailTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }
       }
       this.style.color = "#cccccc";
-
-      const originalValue = target.value;
-      const originalValueArr = originalValue.split("\n");
-
-      let tempString;
-      let vaildTong;
-      let item = null;
-      let tong = [];
-      for (let text of originalValueArr) {
-        if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
-          tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-          tong.push('- ' + tempString);
-        } else if (/^\<\%item\%\>/.test(text)) {
-          item = text;
-        }
-      }
-
-      if (item !== null) {
-        target.value = item + "\n\n" + tong.join("\n");
-      } else {
-        target.value = tong.join("\n");
-      }
-
-      target.value = target.value.replace(/\&/g, ",");
-
-      if (thisIndex !== 2 && thisIndex !== 3) {
-        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
-      } else if (thisIndex === 2) {
-        vaildTong = target.value.split("\n");
-        if (!/^\<\%item\%\>/.test(vaildTong[0])) {
-          alert("스타일링 범위 정의를 입력해주셔야 합니다! (스타일링 타이틀 우클릭)");
-          target.value = "<%item%> 재배치" + "\n\n" + target.value;
-          e.preventDefault();
-          this.focus();
-        } else {
-          if (!(/컨셉/g.test(vaildTong[2]) && /\:/g.test(vaildTong[2]))) {
-            alert("선호 컨셉을 가장 앞줄에 적어주셔야 합니다! (형식 => - 선호 컨셉 : 컨셉명)");
-            target.value = item + "\n\n" + "- 선호 컨셉 : 모던 화이트\n" + tong.join("\n");
-            e.preventDefault();
-            this.focus();
-          } else {
-            GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
-          }
-        }
-      } else if (thisIndex === 3) {
-        vaildTong = target.value.split("\n");
-        if (!/^\<\%item\%\>/.test(vaildTong[0])) {
-          alert("시공 범위 정의를 입력해주셔야 합니다! (시공 타이틀 우클릭)");
-          target.value = "<%item%> 시공 없음" + "\n\n" + target.value;
-          e.preventDefault();
-          this.focus();
-        } else {
-          GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
-        }
-      }
     }
 
     //margin box
@@ -2491,7 +2724,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       position: "relative",
       width: "100%",
       marginTop: String(visualSpecificMarginTop) + ea,
-      height: "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")",
+      height: "calc(" + String(100 / detailTongTarget.length) + "% - " + String(detailTargetHeightConst) + ea + ")",
       fontSize: String(fontSize) + ea,
       fontWeight: String(300),
       border: "solid 1px #dddddd",
@@ -2504,7 +2737,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     //title
     div_clone5 = GeneralJs.nodes.div.cloneNode(true);
     div_clone5.classList.add("hoverDefault_lite");
-    div_clone5.textContent = historyTongTarget[i].name;
+    div_clone5.textContent = detailTongTarget[i].name;
     style = {
       position: "absolute",
       top: String(((fontSize * (GeneralJs.isMac() ? (5 / 15.3027) : (4 / 15.3027))) + visualSpecificMarginTop) * -1) + ea,
@@ -2521,150 +2754,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       div_clone5.style[j] = style[j];
     }
 
-    if (i === 2 || i === 3) {
-      div_clone5.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        if (!/historyMenuItem/gi.test(this.className)) {
-          const motherTong = this.parentElement;
-          let itemTargets;
-          let menu_tong;
-          let div_clone, div_clone2;
-          let style;
-          let ea = "px";
-
-          const thisIndex = i;
-          for (let { dom } of historyTongTarget) {
-            if (Number(dom.getAttribute("index")) !== thisIndex) {
-              dom.style.height = "calc(" + String(5) + "% - " + String(historyTargetHeightConst) + ea + ")";
-            } else {
-              this.parentElement.scroll(0, 0);
-              dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
-            }
-          }
-          this.style.color = "#202020";
-
-          if (i === 2) {
-            itemTargets = [
-              "재배치",
-              "재배치 > 구매",
-              "재배치 < 구매",
-              "전체 구매"
-            ];
-          } else {
-            itemTargets = [
-              "시공 없음",
-              "부분 시공",
-              "전체 시공",
-            ];
-          }
-
-          //cancel back
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          div_clone.classList.add("historyMenuItem");
-          style = {
-            position: "fixed",
-            width: "100%",
-            height: "100%",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            background: "transparent",
-            zIndex: String(4),
-          };
-          for (let z in style) {
-            div_clone.style[z] = style[z];
-          }
-          div_clone.addEventListener("click", function (e) {
-            const targets = document.querySelectorAll(".historyMenuItem");
-            for (let dom of targets) {
-              dom.parentNode.removeChild(dom);
-            }
-          });
-          this.parentElement.appendChild(div_clone);
-
-          //menu tong
-          menu_tong = GeneralJs.nodes.div.cloneNode(true);
-          menu_tong.classList.add("historyMenuItem");
-          style = {
-            position: "absolute",
-            width: String((i === 2) ? 106 : 85) + ea,
-            top: String(19) + ea,
-            left: String(-3) + ea,
-            zIndex: String(4),
-            animation: "fadeuplite 0.3s ease forwards",
-          };
-          for (let z in style) {
-            menu_tong.style[z] = style[z];
-          }
-
-          for (let t = 0; t < itemTargets.length; t++) {
-            //items
-            div_clone = GeneralJs.nodes.div.cloneNode(true);
-            style = {
-              position: "relative",
-              width: String(100) + "%",
-              height: String(32) + ea,
-              borderRadius: String(4) + ea,
-              background: "#2fa678",
-              marginBottom: String(4) + ea,
-            };
-            for (let z in style) {
-              div_clone.style[z] = style[z];
-            }
-            div_clone.addEventListener("click", function (e) {
-              const targetTextTong = motherTong.children[motherTong.children.length - 3].querySelector("textarea");
-              const originalValue = targetTextTong.value;
-              const originalValueArr = originalValue.split("\n");
-              const thisValue = this.firstChild.textContent;
-
-              let tempString;
-              let tong = [];
-              for (let text of originalValueArr) {
-                if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
-                  tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-                  tong.push('- ' + tempString);
-                }
-              }
-
-              targetTextTong.value = "<%item%> " + thisValue + "\n\n" + tong.join("\n");
-              targetTextTong.focus();
-              targetTextTong.selectionEnd = 0;
-              targetTextTong.parentElement.scroll(0, 0);
-
-              const removeTargets = document.querySelectorAll(".historyMenuItem");
-              for (let dom of removeTargets) {
-                dom.parentNode.removeChild(dom);
-              }
-            });
-
-            //text
-            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.textContent = itemTargets[t];
-            div_clone2.classList.add("hoverDefault");
-            style = {
-              position: "absolute",
-              top: String(6) + ea,
-              left: String(0) + ea,
-              color: "#ffffff",
-              fontSize: String(14) + ea,
-              fontWeight: String(300),
-              width: "100%",
-              textAlign: "center",
-              cursor: "pointer",
-            };
-            for (let z in style) {
-              div_clone2.style[z] = style[z];
-            }
-            div_clone.appendChild(div_clone2);
-            menu_tong.appendChild(div_clone);
-          }
-
-          motherTong.appendChild(menu_tong);
-
-        }
-      });
-    }
-
-    div_clone5.addEventListener("click", historyFocusEvent);
+    div_clone5.addEventListener("click", detailFocusEvent);
     div_clone4.appendChild(div_clone5);
 
     //textarea tong
@@ -2697,9 +2787,9 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let j in style) {
       textArea_clone.style[j] = style[j];
     }
-    textArea_clone.addEventListener("focus", historyFocusEvent);
-    textArea_clone.addEventListener("blur", historyBlurEvent);
-    if (i === historyTongTarget.length - 1) {
+    textArea_clone.addEventListener("focus", detailFocusEvent);
+    textArea_clone.addEventListener("blur", detailBlurEvent);
+    if (i === detailTongTarget.length - 1) {
       textArea_clone.addEventListener("keydown", function (e) {
         if (e.keyCode === 9) {
           e.preventDefault();
@@ -2713,26 +2803,32 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     div_clone4.appendChild(div_clone5);
     div_clone4.setAttribute("index", String(i));
-    historyTongTarget[i].dom = div_clone4;
+    detailTongTarget[i].dom = div_clone4;
 
     div_clone3.appendChild(div_clone4);
   }
 
-  historyBox.appendChild(div_clone3);
-  div_clone2.appendChild(historyBox);
-  this.whiteBox.historyBox = historyBox;
+  detailBox.appendChild(div_clone3);
+  div_clone2.appendChild(detailBox);
+  this.whiteBox.detailBox = detailBox;
 
   //h initial event
   GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-  hInitialBox.addEventListener("click", function (e) {
-    if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
-      propertyBox.style.opacity = String(0);
-      historyBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
-    } else {
-      propertyBox.style.opacity = String(1);
-      historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+  hInitialBox.addEventListener("click", async function (e) {
+    try {
+      if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
+        propertyBox.style.opacity = String(0);
+        detailBox.style.opacity = String(0);
+        await instance.viewDetail(div_clone2, leftMargin, fontSize, thisCase);
+        GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
+      } else {
+        div_clone2.removeChild(div_clone2.lastChild);
+        propertyBox.style.opacity = String(1);
+        detailBox.style.opacity = String(1);
+        GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
+      }
+    } catch (e) {
+      console.log(e);
     }
   });
 
@@ -2741,10 +2837,10 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   rInitialBox.addEventListener("click", function (e) {
     if (GeneralJs.stacks["rInitialBoxButtonToggle"] === 0) {
-      for (let { dom } of historyTongTarget) {
+      for (let { dom } of detailTongTarget) {
         dom.style.opacity = String(0);
       }
-      const mother = historyTongTarget[0].dom.parentElement;
+      const mother = detailTongTarget[0].dom.parentElement;
       let div_clone4, div_clone5, div_clone6;
       let textArea_clone;
       let saveEventFunction;
@@ -2755,7 +2851,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         position: "absolute",
         width: "100%",
         marginTop: String(visualSpecificMarginTop) + ea,
-        height: "calc(" + String(100) + "% - " + String(historyTargetHeightConst) + ea + ")",
+        height: "calc(" + String(100) + "% - " + String(detailTargetHeightConst) + ea + ")",
         fontSize: String(fontSize) + ea,
         fontWeight: String(300),
         border: "solid 1px #dddddd",
@@ -2874,7 +2970,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let t = 0; t < matrix.length; t++) {
 
             if (t !== 2 && t !== 3) {
-              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
             } else if (t === 2) {
               vaildTong = matrix[t];
               if (!/^\<\%item\%\>/.test(vaildTong[0])) {
@@ -2887,7 +2983,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   rInitialBox.click();
                   return;
                 } else {
-                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
                 }
               }
             } else if (t === 3) {
@@ -2897,7 +2993,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 rInitialBox.click();
                 return;
               } else {
-                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
               }
             }
           }
@@ -3039,8 +3135,8 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
         const dataArr = JSON.parse(res);
         let totalString = '\n';
-        for (let i = 0; i < historyTongTarget.length; i++) {
-          totalString += "[" + String(i + 1) + "] " + historyTongTarget[i].name;
+        for (let i = 0; i < detailTongTarget.length; i++) {
+          totalString += "[" + String(i + 1) + "] " + detailTongTarget[i].name;
           totalString += "\n\n";
           totalString += dataArr[i];
           totalString += "\n\n\n";
@@ -3050,7 +3146,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       GeneralJs.stacks["rInitialBoxButtonToggle"] = 1;
     } else {
-      for (let { dom } of historyTongTarget) {
+      for (let { dom } of detailTongTarget) {
         dom.style.opacity = '';
       }
       if (GeneralJs.stacks["rInitialBoxButtonDom"] !== null) {
@@ -3062,17 +3158,10 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
+  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getContentsDetail", function (res) {
     const dataArr = JSON.parse(res);
     for (let i = 0; i < textAreas.length; i++) {
       textAreas[i].value = dataArr[i];
-    }
-    if (!/요청 사항 : /gi.test(dataArr[dataArr.length - 1])) {
-      if (textAreas[textAreas.length - 1].value !== '') {
-        textAreas[textAreas.length - 1].value = textAreas[textAreas.length - 1].value + "\n\n" + "요청 사항 : " + thisCase["comment"];
-      } else {
-        textAreas[textAreas.length - 1].value = "요청 사항 : " + thisCase["comment"];
-      }
     }
   });
 
@@ -3127,7 +3216,7 @@ ContentsJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
 
 ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
-  const { standard, info } = DataPatch.clientWhiteViewStandard();
+  const { standard, info } = DataPatch.contentsWhiteViewStandard();
   return function () {
     const thisCase = { ...instance.cases[index], index };
     let div_clone;
@@ -3185,7 +3274,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     div_clone.classList.add("totalWhite");
 
     indexArr = [];
-    for (let dom of document.querySelectorAll('.' + thisCase["cliid"])) {
+    for (let dom of document.querySelectorAll('.' + thisCase["conid"])) {
       indexArr.push(Number(dom.getAttribute("index")));
     }
     indexArr.sort((a, b) => { return a - b; });
@@ -3195,7 +3284,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       }
     }
 
-    div_clone.setAttribute("index", thisCase["cliid"]);
+    div_clone.setAttribute("index", thisCase["conid"]);
     div_clone.setAttribute("request", String(requestIndex));
 
     style = {
@@ -3217,6 +3306,8 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     instance.whiteBox.contentsBox = div_clone;
     instance.whiteBox.index = index;
     instance.whiteBox.id = thisCase[standard[1]];
+    console.log(instance.whiteBox.id)
+    console.log(standard)
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
   }
@@ -4181,38 +4272,6 @@ ContentsJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-ContentsJs.prototype.makeNotionEvent = function (id, index) {
-  const instance = this;
-  return async function (e) {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-
-    let indexArr, requestIndex;
-
-    index = Number(index);
-    indexArr = [];
-    for (let dom of document.querySelectorAll('.' + id)) {
-      indexArr.push(Number(dom.getAttribute("index")));
-    }
-    indexArr.sort((a, b) => { return a - b; });
-    for (let z = 0; z < indexArr.length; z++) {
-      if (indexArr[z] === index) {
-        requestIndex = z;
-      }
-    }
-
-    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: id }), "/getClients");
-    const client = JSON.parse(clients)[0];
-    const notionId = client.requests[requestIndex].request.notionId;
-    if (notionId !== '') {
-      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-    } else {
-      alert("노션에 정보가 없습니다!");
-    }
-  }
-}
-
 ContentsJs.prototype.whiteResize = function () {
   const instance = this;
   this.resizeStack = 0;
@@ -4223,7 +4282,7 @@ ContentsJs.prototype.whiteResize = function () {
     const reEvent = function () {
       if (instance.whiteBox !== undefined && instance.whiteBox !== null) {
         if (instance.whiteBox.id !== undefined) {
-          window.location.search = "cliid=" + instance.whiteBox.id;
+          window.location.search = "conid=" + instance.whiteBox.id;
         } else {
           window.location.reload();
         };
@@ -4264,6 +4323,47 @@ ContentsJs.prototype.launching = async function () {
     this.whiteResize();
 
     const getObj = GeneralJs.returnGet();
+    let getTarget;
+    let tempFunction;
+
+    getTarget = null;
+    if (getObj.conid !== undefined) {
+      for (let dom of this.standardDoms) {
+        if ((new RegExp(getObj.conid, 'gi')).test(dom.textContent)) {
+          getTarget = dom;
+        }
+      }
+      if (getTarget === null) {
+        tempFunction = this.makeSearchEvent(getObj.conid);
+        await tempFunction({ keyCode: 13 });
+        for (let dom of this.standardDoms) {
+          if ((new RegExp(getObj.conid, 'gi')).test(dom.textContent)) {
+            getTarget = dom;
+          }
+        }
+      }
+      if (getTarget !== null) {
+        getTarget.click();
+      }
+    } else if (getObj.pid !== undefined) {
+      for (let dom of this.standardDoms) {
+        if ((new RegExp(getObj.pid, 'gi')).test(dom.textContent)) {
+          getTarget = dom;
+        }
+      }
+      if (getTarget === null) {
+        tempFunction = this.makeSearchEvent(getObj.pid);
+        await tempFunction({ keyCode: 13 });
+        for (let dom of this.standardDoms) {
+          if ((new RegExp(getObj.pid, 'gi')).test(dom.textContent)) {
+            getTarget = dom;
+          }
+        }
+      }
+      if (getTarget !== null) {
+        getTarget.click();
+      }
+    }
 
   } catch (e) {
     console.log(e);

@@ -4690,8 +4690,8 @@ DataPatch.prototype.contentsCardViewStandard = function () {
 DataPatch.prototype.contentsWhiteViewStandard = function () {
   const targetColumns = {
     standard: [
-      "name",
-      "cliid",
+      "pid",
+      "conid",
     ],
     info: [
       { name: "디자이너", target: "desid" },

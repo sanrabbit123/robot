@@ -630,6 +630,21 @@ class DevContext extends Array {
       */
 
 
+      // const back = new BackMaker();
+      // const projects = await back.getProjectsAll();
+      // let stack = [];
+      // for (let i = 0; i < projects.length; i++) {
+      //   if (projects[i].cliid !== "" && projects[i].desid !== "") {
+      //     if (i !== 0) {
+      //       if (stack.includes(projects[i].cliid + "_" + projects[i].desid)) {
+      //         console.log(projects[i]);
+      //       }
+      //     }
+      //     stack.push(projects[i].cliid + "_" + projects[i].desid);
+      //   }
+      // }
+
+
 
 
 

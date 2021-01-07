@@ -607,9 +607,12 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       let map;
       let whereQuery, updateQuery;
       let message;
-      let finalValue, valueTemp;
+      let finalValue, valueTemp, pastFinalValue, pastValueTemp;
       let temp, temp2, temp3;
       let tempFunction;
+      let position;
+      let userArr;
+      let today;
 
       if (req.url === "/updateClient") {
         map = instance.patch.clientMap();
@@ -624,6 +627,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       switch (map[column].type) {
         case "string":
           finalValue = String(value);
+          pastFinalValue = String(pastValue);
           break;
         case "number":
           if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
@@ -631,6 +635,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           } else {
             finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
           }
+          pastFinalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
           break;
         case "date":
           if (value === "-" || value === "") {
@@ -651,6 +656,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           } else {
             finalValue = new Date(pastValue);
           }
+          pastFinalValue = new Date(pastValue);
           break;
         case "boolean":
           if (value === "true") {
@@ -660,24 +666,32 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           } else {
             finalValue = Boolean(value);
           }
+          pastFinalValue = Boolean(pastValue);
           break;
         case "array":
           finalValue = [];
+          pastFinalValue = [];
           valueTemp = value.split(", ");
+          pastValueTemp = pastValue.split(", ");
           for (let i of valueTemp) {
             finalValue.push(i);
+          }
+          for (let i of pastValueTemp) {
+            pastFinalValue.push(i);
           }
           break;
         case "object":
           tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
           finalValue = tempFunction(value, pastValue, false);
+          pastFinalValue = tempFunction(pastValue, pastValue, false);
           break;
         default:
           throw new Error("invaild type");
       }
 
       updateQuery = {};
-      updateQuery[map[column].position.replace(/\.0\./, ("." + requestIndex + "."))] = finalValue;
+      position = map[column].position.replace(/\.0\./, ("." + requestIndex + "."));
+      updateQuery[position] = finalValue;
 
       whereQuery = {};
       if (req.url === "/updateClient") {
@@ -701,18 +715,20 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       }
 
       //update log
+      userArr = user.split("__split__");
+      today = new Date();
       await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
         user: {
-          name: (user.split("__split__"))[0],
-          email: (user.split("__split__"))[1]
+          name: userArr[0],
+          email: userArr[1]
         },
         where: thisId,
         update: {
-          target: map[column].position.replace(/\.0\./, ("." + requestIndex + ".")),
-          value: value,
-          pastValue: pastValue
+          target: position,
+          value: finalValue,
+          pastValue: pastFinalValue
         },
-        date: (new Date())
+        date: today
       }, { local: null, console: true, selfMongo: null });
 
       res.set("Content-Type", "application/json");
@@ -1218,6 +1234,31 @@ DataRouter.prototype.rou_post_updateHistory = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getContentsDetail = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = [ "/getContentsDetail" ];
+  obj.func = async function (req, res) {
+    try {
+      let contents;
+
+      contents = await back.getContentsById(req.body.id);
+      const { portfolio, review } = contents.getContentsFlatDetail();
+
+      res.set("Content-Type", "application/json");
+      if (req.body.noFlat === undefined) {
+        res.send(JSON.stringify([ portfolio, review ]));
+      } else {
+        res.send(JSON.stringify([ contents.getPortfolioDetail(), contents.getReviewDetail(), contents.getGsArr() ]));
+      }
     } catch (e) {
       console.log(e);
     }

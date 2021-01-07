@@ -2461,7 +2461,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
         if (i !== contents.length) {
           div_clone2.addEventListener("click", function (e) {
-            window.open("https://home-liaison.com/portdetail.php?qqq=" + contents[i].contents.portfolio.pid, "_blank");
+            window.open(window.location.protocol + "//" + window.location.host + "/contents?pid=" + contents[i].contents.portfolio.pid, "_blank");
           });
         }
         div_clone.appendChild(div_clone2);
