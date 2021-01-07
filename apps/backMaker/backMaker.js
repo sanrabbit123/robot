@@ -901,9 +901,18 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
   try {
-    let dummy, latestClient;
+    let dummy, latestClient, latestClientArr;
+    let newOption = {};
 
-    latestClient = await this.getLatestClient(option);
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "cliid": -1 };
+    newOption.limit = 1;
+
+    latestClientArr = await this.getClientsByQuery({}, newOption);
+    latestClient = latestClientArr[0];
     dummy = {
       structure: {
         name: "",
