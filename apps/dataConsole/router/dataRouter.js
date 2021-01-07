@@ -690,9 +690,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         whereQuery[map.conid.position] = thisId;
       }
 
-      //update log
-      await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), { user: user, where: JSON.stringify(whereQuery), update: JSON.stringify(updateQuery), date: (new Date()) }, { local: null, console: true, selfMongo: null });
-
       if (req.url === "/updateClient") {
         message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/updateDesigner") {
@@ -702,6 +699,18 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       } else if (req.url === "/updateContents") {
         message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
+
+      //update log
+      await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
+        user: user,
+        where: thisId,
+        update: {
+          target: map[column].position.replace(/\.0\./, ("." + requestIndex + ".")),
+          value: value,
+          pastValue: pastValue
+        },
+        date: (new Date())
+      }, { local: null, console: true, selfMongo: null });
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
