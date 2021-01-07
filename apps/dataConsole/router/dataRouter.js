@@ -702,7 +702,10 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 
       //update log
       await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
-        user: user,
+        user: {
+          name: (user.split("__split__"))[0],
+          email: (user.split("__split__"))[1]
+        },
         where: thisId,
         update: {
           target: map[column].position.replace(/\.0\./, ("." + requestIndex + ".")),
