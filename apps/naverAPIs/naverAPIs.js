@@ -146,6 +146,7 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "냉장 고장", "냉장고장" ],
     [ "신경 서서", "신경써서" ],
     [ "그레이 톤", "그레이톤" ],
+    [ "리모델렝", "리모델링" ],
   ];
   try {
     let resultArr = [];

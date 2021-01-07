@@ -645,17 +645,6 @@ class DevContext extends Array {
       // }
 
 
-      let json1, json2;
-
-      json1 = {"name":"천진영","phone":"010-2890-8171","email":"pipim427@naver.com","cliid":"c2101_aa01s","requests":[{"request":{"timeline":new Date("2021-01-01T05:20:00.111Z"),"notionId":"","budget":"1,000만원","family":"부부 아들1(6세)","space":{"address":"경기 고양시 덕양구 오부자로 77 지축중흥s클래스 101동 2701호","contract":"자가","pyeong":32,"spec":{"room":3,"bathroom":2,"valcony":true},"resident":{"living":false,"expected":new Date("2021-02-15T15:00:00Z")}},"etc":{"comment":"84a형 집전체가 그레이 아이보리 근데 밝은톤이 아니라 집 전체가 우중충해보여 가구 선택이 너무 어려워 가입합니다.","channel":"지인 소개"}},"analytics":{"googleAnalytics":{"timeline":new Date(1800, 0, 1),"userType":"","referrer":{"name":"","detail":{"host":null,"queryString":{}}},"device":{"type":"","os":"","mobileDevice":""},"region":{"country":"","city":"","latitude":0,"longitude":0},"personalInfo":{"age":null,"gender":null},"campaign":"","history":[]},"response":{"status":"응대중","outreason":[]},"date":{"callHistory":[new Date("2021-01-03T15:00:00Z")],"space":{"precheck":new Date(1800, 0, 1),"empty":new Date("2021-02-15T15:00:00Z"),"movein":new Date("2021-02-15T15:00:00Z")}},"picture":{"space":false,"prefer":false}},"proposal":{"proid":"p2101_aa03s"}}]};
-
-
-      json2 = {"name":"탁지선","phone":"010-2766-7390","email":"","cliid":"c2101_aa02s","requests":[{"request":{"timeline":new Date("2021-01-01T15:52:01.458Z"),"notionId":"","budget":"1,500만원","family":"부부, 딸 1명, 5세","space":{"address":"경기 하남시 위례광장로 265 109동 603호","contract":"자가","pyeong":37,"spec":{"room":4,"bathroom":2,"valcony":true},"resident":{"living":false,"expected":new Date("2021-02-28T15:00:00Z")}},"etc":{"comment":"내년 5년차 아파트, 큰공사없이 도배와 조명 정도 진행하고, 가구 구입 포함한 홈스타일링 원합니다. 미니멀, 내추럴 스타일","channel":"인터넷 검색"}},"analytics":{"googleAnalytics":{"timeline":new Date(1800, 0, 1),"userType":"","referrer":{"name":"","detail":{"host":null,"queryString":{}}},"device":{"type":"","os":"","mobileDevice":""},"region":{"country":"","city":"","latitude":0,"longitude":0},"personalInfo":{"age":null,"gender":null},"campaign":"","history":[]},"response":{"status":"드랍","outreason":["직접 진행"]},"date":{"callHistory":[new Date("2021-01-03T15:00:00Z")],"space":{"precheck":new Date(1800, 0, 1),"empty":new Date(1800, 0, 1),"movein":new Date("2021-02-28T15:00:00Z")}},"picture":{"space":false,"prefer":false}},"proposal":{"proid":""}}]}
-
-
-
-      await this.MONGOC.db(`miro81`).collection(`client`).insertOne(json1);
-      await this.MONGOC.db(`miro81`).collection(`client`).insertOne(json2);
 
 
 
@@ -664,13 +653,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "박미진";
-      // const pid = "p73";
-      // const rid = "re067";
+      // const client = "강영후";
+      // const pid = "p77";
+      // const rid = "re071";
       // const links = [
-      //   "https://docs.google.com/document/d/1DWGQaNn56gQPLmjVQHwDzQmfAROYC_JHyL2u-VUgk9U/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1WwWI6iBgjG6sXs5wFFiZXaAq4T64nrpkftf1Kkxji9Q/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1E_FSUiuw-xlgPm7sKWyxV6v0Jd4qD-Kx?usp=sharing",
+      //   "https://docs.google.com/document/d/1G9qMTqJC1j0hrr9HT0Bb6PrX42zcHkbIxKbVOTSq5Qg/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/19stRqaANwH1DFY0izMvhyUqd8GvG9iYg5sybWEs1q0I/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1h18Z5NSAhWY-8cevvJjUpIgKwj03X1B4?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -714,7 +703,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p73");
+      // await this.spellCheck("p77");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
