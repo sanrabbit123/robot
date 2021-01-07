@@ -1303,9 +1303,18 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "contents";
   try {
-    let dummy, latestClient;
+    let dummy, latestContents, latestContentsArr;
+    let newOption = {};
 
-    latestClient = await this.getLatestContents(option);
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "conid": -1 };
+    newOption.limit = 1;
+
+    latestContentsArr = await this.getContentsArrByQuery({}, newOption);
+    latestContents = latestContentsArr[0];
     dummy = {
       structure: {
         conid: "",
@@ -1371,7 +1380,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
         }
       }
     };
-    dummy.structure.conid = this.idMaker(latestClient.conid);
+    dummy.structure.conid = this.idMaker(latestContents.conid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
@@ -1674,9 +1683,19 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "designer";
   try {
-    let dummy, dummySetting, latestClient;
+    let dummy, dummySetting, latestDesigner, latestDesignerArr;
+    let newOption = {};
 
-    latestClient = await this.getLatestDesigner(option);
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "desid": -1 };
+    newOption.limit = 1;
+
+    latestDesignerArr = await this.getDesignersByQuery({}, newOption);
+    latestDesigner = latestDesignerArr[0];
+
     dummy = {
       structure: {
         designer: "",
@@ -1775,7 +1794,6 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
         },
       },
     };
-
     dummySetting = function (num) {
       let settingObj = {
           name : "기본 세팅 " + String(num),
@@ -1819,8 +1837,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
       };
       return JSON.parse(JSON.stringify(settingObj));
     }
-
-    dummy.structure.desid = this.idMaker(latestClient.desid);
+    dummy.structure.desid = this.idMaker(latestDesigner.desid);
     for (let i = 0; i < 5; i++) {
       dummy.structure.setting.proposal.push(dummySetting(i));
     }
@@ -2095,10 +2112,20 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "project";
   try {
-    let dummy, latestClient;
+    let dummy, latestProject, latestProjectArr;
+    let newOption = {};
     let temp;
 
-    latestClient = await this.getLatestProject(option);
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "proid": -1 };
+    newOption.limit = 1;
+
+    latestProjectArr = await this.getProjectsByQuery({}, newOption);
+    latestProject = latestProjectArr[0];
+
     dummy = {
       structure: {
         proid: "",
@@ -2215,8 +2242,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         },
       }
     };
-
-    dummy.structure.proid = this.idMaker(latestClient.proid);
+    dummy.structure.proid = this.idMaker(latestProject.proid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
