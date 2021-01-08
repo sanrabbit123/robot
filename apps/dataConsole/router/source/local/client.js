@@ -832,7 +832,7 @@ ClientJs.prototype.infoArea = function (info) {
                   instance.caseDoms[j].style.display = "block";
                 }
               } else {
-                if (/^1[6789]/.test(instance.caseDoms[j].children[z].textContent)) {
+                if (/^1[6789]/.test(instance.caseDoms[j].children[z].textContent) || instance.caseDoms[j].children[z].textContent === '' || instance.caseDoms[j].children[z].textContent === '-') {
                   instance.standardDoms[j].style.display = this.textContent === "Y" ? "none": "block";
                   instance.caseDoms[j].style.display = this.textContent === "Y" ? "none": "block";
                 } else {
