@@ -62,7 +62,10 @@ async def illustrator(request):
 
 
 async def mongoToJson():
-    targetDir = os.getcwd() + "/" + "backup"
+    robotDir = os.getcwd()
+    robotDirList = robotDir.split("/");
+    robotDirList.pop()
+    targetDir = '/'.join(robotDirList) + "/" + "backup"
     infoJson = {}
     with open(os.getcwd() + "/apps/infoObj.js", "rt") as info:
         infoJson = json.loads(re.sub(pattern="module.exports = ", repl='', string=info.read()))
@@ -208,7 +211,7 @@ if sys.argv.__len__() > 1:
         except (KeyboardInterrupt, SystemExit):
             pass
 
-    elif sys.argv[1] == "backuptest":
+    elif sys.argv[1] == "backupnow":
         asyncio.run(mongoToJson())
 
     elif sys.argv[1] == "mysql":
