@@ -1101,556 +1101,847 @@ ContentsJs.prototype.cardViewMaker = function () {
 
       totalMother.classList.add("justfadeoutoriginal");
 
-      let temp;
       let totalFather;
-      let nameStyle, cliidStyle, barStyle;
-      let style, styles;
-      let areaStyle, areaNameStyle, areaTongStyle;
-      let areaNumberStyle;
+      let createViewBase;
+      let createViewDoms;
       let div_clone, div_clone2, div_clone3;
-      let size, margin;
-      let ea = "px";
-      let num;
-      let cardWidthConstant;
-      let intend, totalWidth;
-      let lineHeight, titleTop, startTop;
-      let divideNumber;
-      let fontSize, nameFontSize;
-      let fixedHeightSize;
-      let exceptionMargin;
-      let whereQuery;
-      let tempResult, tempBoo;
-      let division, divisionName;
-      let numbers;
-      let updateState;
-      let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
+      let input_clone, label_clone;
+      let blockStyle;
+      let style;
+      let ea;
+      let leftMargin;
+      let titles;
+      let tempObj;
+      let projects;
+      let cliidArr;
+      let clients;
+      let desidArr;
+      let cliidArrPure;
+      let desidArrPure;
+      let designers;
+      let clickEvent;
+      let resetEvent;
+      let originalHeight, compressHeight, expandHeight, expandGrayHeight;
+      let domStyle, titleStyle, grayStyle;
 
-      //total father div
+      createViewDoms = [];
+      ea = "px";
+      leftMargin = 48;
+      titles = [
+        "원본 없는 프로젝트",
+        "원본 종류 선택",
+        "저장된 프로젝트 원본"
+      ];
+      originalHeight = "calc(calc(100% / " + String(titles.length) + ") - " + String(21) + ea + ")";
+      originalMarginBottom = String(21) + ea;
+      compressHeight = String(3.2) + "vh";
+      expandHeight = "calc(69.5% - 3.2vh - 63px)";
+      expandGrayHeight = "calc(90% + 0.9vh)";
+
       totalFather = GeneralJs.nodes.div.cloneNode(true);
       totalFather.classList.add("totalFather");
+      style = {
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "calc(100vh - " + String(instance.belowHeight) + ea + ")",
+        overflow: "hidden",
+      };
+      for (let i in style) {
+        totalFather.style[i] = style[i];
+      }
 
-      margin = 12;
-      lineHeight = 20;
-      cardWidthConstant = 170;
-      divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
-      size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
-      fixedHeightSize = 107;
-      intend = 22;
-      titleTop = 13;
-      startTop = titleTop + 16;
-      exceptionMargin = 12;
-      fontSize = 13;
-      nameFontSize = fontSize + 4;
-      totalWidth = size - (intend * 2) - 1;
 
-      //style maker
+      //make base
+      createViewBase = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+        display: "block",
+        width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+        height: "calc(100% - " + String((leftMargin + 8) * 2) + ea + ")",
+      };
+      for (let i in style) {
+        createViewBase.style[i] = style[i];
+      }
+
+      domStyle = {
+        width: "100%",
+        display: "block",
+        height: originalHeight,
+        marginBottom: originalMarginBottom,
+        overflow: "hidden",
+      };
+
+      titleStyle = {
+        fontSize: String(1.8) + "vh",
+        fontWeight: String(700),
+        display: "block",
+        height: String(10) + "%",
+        cursor: "pointer",
+        color: "#404040",
+      };
+
+      grayStyle = {
+        display: "block",
+        height: "calc(" + String(100 - 10) + "% - " + String(10) + ea + ")",
+        marginTop: String(10) + ea,
+        background: "#f7f7f7",
+        borderRadius: String(10) + ea,
+        paddingRight: String(30) + ea,
+        paddingLeft: String(30) + ea,
+        boxSizing: "border-box",
+      };
+
+      blockStyle = {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        height: "calc(100% - " + String(33) + ea + ")",
+        top: String(16) + ea,
+        overflow: "scroll"
+      };
+
+      resetEvent = function (e) {
+        let num;
+
+        if (document.getElementById("returnIcon") !== null) {
+          document.getElementById("returnIcon").remove();
+          document.getElementById("interActionIcon").remove();
+        }
+        if (document.getElementById("textZone") !== null) {
+          document.getElementById("textZone").remove();
+          createViewDoms[1].gray.firstChild.style.display = "block";
+        }
+
+        num = 0;
+        for (let { dom, title, gray } of createViewDoms) {
+          for (let i in domStyle) {
+            dom.style[i] = domStyle[i];
+          }
+          for (let i in titleStyle) {
+            title.style[i] = titleStyle[i];
+            title.textContent = titles[num];
+          }
+          for (let i in grayStyle) {
+            gray.style[i] = grayStyle[i];
+          }
+
+          if (num === 0) {
+            for (let { style } of gray.firstChild.children) {
+              style.background = "#ffffff";
+              style.color = "#404040";
+            }
+          } else if (num === 1) {
+            for (let dom of gray.firstChild.children) {
+              dom.setAttribute("cliid", "null");
+              dom.setAttribute("proid", "null");
+              dom.setAttribute("name", "null");
+              dom.setAttribute("desid", "null");
+              dom.setAttribute("designer", "null");
+              dom.firstChild.setAttribute("cliid", "null");
+              dom.firstChild.setAttribute("proid", "null");
+              dom.firstChild.setAttribute("name", "null");
+              dom.firstChild.setAttribute("desid", "null");
+              dom.firstChild.setAttribute("designer", "null");
+              dom.style.background = "#dddddd";
+              dom.firstChild.style.color = "#aaaaaa";
+              dom.firstChild.style.fontSize = String(2) + "vh";
+            }
+          } else {
+            for (let { style } of gray.firstChild.children) {
+              style.background = "#eaeaea";
+              style.color = "#bbbbbb";
+            }
+          }
+
+          num++;
+        }
+      }
+
+      for (let z = 0; z < titles.length; z++) {
+
+        tempObj = {};
+
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in domStyle) {
+          div_clone.style[i] = domStyle[i];
+        }
+
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in titleStyle) {
+          div_clone2.style[i] = titleStyle[i];
+        }
+        div_clone2.textContent = titles[z];
+        div_clone2.addEventListener("click", resetEvent);
+        tempObj.title = div_clone2;
+        div_clone.appendChild(div_clone2);
+
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let i in grayStyle) {
+          div_clone2.style[i] = grayStyle[i];
+        }
+        tempObj.gray = div_clone2;
+        div_clone.appendChild(div_clone2);
+
+        tempObj.dom = div_clone;
+        createViewDoms.push(tempObj);
+        createViewBase.appendChild(div_clone);
+      }
+
+      //first - get projects
+      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
+      cliidArr = [];
+      cliidArrPure = [];
+      desidArr = [];
+      desidArrPure = [];
+      for (let i of projects) {
+        if (!cliidArrPure.includes(i.cliid)) {
+          cliidArr.push({ cliid: i.cliid });
+        }
+        if (!desidArrPure.includes(i.desid)) {
+          desidArr.push({ desid: i.desid });
+        }
+        cliidArrPure.push(i.cliid);
+        desidArrPure.push(i.desid);
+      }
+      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ "$or": cliidArr }), "/getClients"));
+      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ "$or": desidArr }), "/getDesigners"));
+      for (let i of projects) {
+        for (let j of clients) {
+          if (i.cliid === j.cliid) {
+            i.name = j.name;
+          }
+        }
+        for (let j of designers) {
+          if (i.desid === j.desid) {
+            i.designer = j.designer;
+          }
+        }
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      for (let i in blockStyle) {
+        div_clone.style[i] = blockStyle[i];
+      }
+
       style = {
         display: "inline-block",
         position: "relative",
-        width: String(size) + ea,
-        height: String(fixedHeightSize) + ea,
-        marginLeft: String(margin) + ea,
-        marginTop: String(margin) + ea,
-        background: "#ffffff",
+        fontSize: String(1.3) + "vh",
+        fontWeight: String(600),
+        padding: String(15) + ea,
+        paddingTop: (GeneralJs.isMac() ? String(6) : String(7)) + ea,
+        paddingBottom: (GeneralJs.isMac() ? String(8) : String(7)) + ea,
+        background: "white",
+        margin: String(3) + ea,
         borderRadius: String(5) + ea,
+        boxSizing: "border-box",
         cursor: "pointer",
-      };
-
-      nameStyle = {
-        position: "absolute",
-        fontSize: String(nameFontSize) + ea,
-        fontWeight: String(500),
-        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
-        left: String(intend) + ea,
         color: "#404040",
-        cursor: "pointer",
+        transition: "all 0.3s ease",
       };
 
-      cliidStyle = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        color: "#2fa678",
-        cursor: "pointer",
-      };
+      clickEvent = function (e) {
+        const that = this;
+        const { dom, title, gray } = createViewDoms[0];
+        const { title: title2 } = createViewDoms[1];
+        const { title: title3 } = createViewDoms[2];
+        let appendHtml;
+        let inputHtml;
+        let cliid, proid, name, desid, designer;
 
-      barStyle = {
-        position: "absolute",
-        background: "#ececec",
-        top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(intend) + ea,
-        width: String(totalWidth) + ea,
-        height: String(1) + ea,
-      };
+        for (let i of GeneralJs.stacks.firstContentsCreateViewDoms) {
+          if (i.getAttribute("index") === this.getAttribute("index")) {
+            i.style.background = "#2fa678";
+            i.style.color = "#ffffff";
+            cliid = this.getAttribute("cliid");
+            proid = this.getAttribute("proid");
+            name = this.getAttribute("name");
+            desid = this.getAttribute("desid");
+            designer = this.getAttribute("designer");
+          } else {
+            i.style.background = "#ffffff";
+            i.style.color = "#404040";
+          }
+        }
 
-      //info style
-      styles = [];
-      for (let i = 0; i < DataPatch.clientCardViewStandard().info.length; i++) {
-        temp = {
-          position: "absolute",
-          fontSize: String(fontSize) + ea,
-          fontWeight: String(500),
-          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 3)) + ea,
-          left: String(intend) + ea,
-          width: String(totalWidth) + ea,
-          color: "#404040",
-          lineHeight: String(1.5),
-        };
-        styles.push(temp);
+        appendHtml = function (color, detail = false) {
+          let html;
+          html = '<b style="font-weight:300;color:' + color + '"> : ' + that.getAttribute('name');
+          if (detail) {
+            html += " 고객님의 포트폴리오 or 고객 후기";
+          }
+          html += '</b>';
+          return html;
+        }
+
+        if (/\:/.test(title.textContent)) {
+          inputHtml = (title.textContent.split(" : "))[0] + appendHtml("#2fa678");
+        } else {
+          inputHtml = title.textContent + appendHtml("#2fa678");
+        }
+        title.textContent = "";
+        title.insertAdjacentHTML("beforeend", inputHtml);
+        title.style.color = "#2fa678";
+
+        if (/\:/.test(title2.textContent)) {
+          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml("#2fa678", true);
+        } else {
+          inputHtml = title2.textContent + appendHtml("#2fa678", true);
+        }
+        title2.textContent = "";
+        title2.insertAdjacentHTML("beforeend", inputHtml);
+        title2.style.color = "#2fa678";
+
+        title3.style.color = "#cccccc";
+
+        GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = setTimeout(function () {
+          const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
+          const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
+          const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
+          const [ portfolio, review ] = gray1.children[0].children;
+
+          gray0.style.background = "#f7f7f7";
+          dom0.style.height = originalHeight;
+          dom0.style.borderBottom = "";
+
+          dom1.style.height = expandHeight;
+          gray1.style.height = expandGrayHeight;
+          gray1.style.marginTop = String(-0.9) + "vh";
+
+          gray2.style.background = "white";
+          dom2.style.height = compressHeight;
+          dom2.style.borderBottom = "1px solid #ececec";
+
+          portfolio.style.background = review.style.background = "white";
+          portfolio.firstChild.style.color = review.firstChild.style.color = "#2fa678";
+          portfolio.firstChild.style.fontSize = review.firstChild.style.fontSize = String(2.5) + "vh";
+
+          portfolio.setAttribute("cliid", cliid);
+          portfolio.setAttribute("proid", proid);
+          portfolio.setAttribute("name", name);
+          portfolio.setAttribute("desid", desid);
+          portfolio.setAttribute("designer", designer);
+
+          portfolio.firstChild.setAttribute("cliid", cliid);
+          portfolio.firstChild.setAttribute("proid", proid);
+          portfolio.firstChild.setAttribute("name", name);
+          portfolio.firstChild.setAttribute("desid", desid);
+          portfolio.firstChild.setAttribute("designer", designer);
+
+          review.setAttribute("cliid", cliid);
+          review.setAttribute("proid", proid);
+          review.setAttribute("name", name);
+          review.setAttribute("desid", desid);
+          review.setAttribute("designer", designer);
+
+          review.firstChild.setAttribute("cliid", cliid);
+          review.firstChild.setAttribute("proid", proid);
+          review.firstChild.setAttribute("name", name);
+          review.firstChild.setAttribute("desid", desid);
+          review.firstChild.setAttribute("designer", designer);
+
+          clearTimeout(GeneralJs.timeouts.firstContentsCreateViewDomsTimeout);
+          GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = null;
+        }, 300);
       }
 
-      //area style
-      areaStyle = {
-        position: "relative",
-        marginLeft: String(margin) + ea,
-        marginRight: String(margin) + ea,
-        marginTop: String(margin * 1.75) + ea,
-        paddingTop: String(margin * 1.2) + ea,
-        paddingBottom: String(margin * 1.2) + ea,
-        paddingRight: String(margin * 1.2) + ea,
-        paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed #cccccc",
+      GeneralJs.stacks.firstContentsCreateViewDoms = [];
+      for (let i = 0; i < projects.length; i++) {
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in style) {
+          div_clone2.style[j] = style[j];
+        }
+        div_clone2.textContent = projects[i].proid + " | " + projects[i].name;
+        div_clone2.addEventListener("click", clickEvent);
+        div_clone2.setAttribute("index", String(i));
+        div_clone2.setAttribute("name", projects[i].name);
+        div_clone2.setAttribute("proid", projects[i].proid);
+        div_clone2.setAttribute("cliid", projects[i].cliid);
+        div_clone2.setAttribute("desid", projects[i].desid);
+        div_clone2.setAttribute("designer", projects[i].designer);
+        GeneralJs.stacks.firstContentsCreateViewDoms.push(div_clone2);
+        div_clone.appendChild(div_clone2);
+      }
+
+      createViewDoms[0].gray.appendChild(div_clone);
+
+
+      //second - get method
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      for (let i in blockStyle) {
+        div_clone.style[i] = blockStyle[i];
+      }
+      div_clone.style.height = "calc(100% - 54px)";
+      div_clone.style.top = String(28) + ea;
+
+      style = {
+        display: "inline-flex",
+        height: "100%",
+        width: "calc(calc(100% / 2) - 5px)",
+        background: "#dddddd",
+        marginRight: String(5) + ea,
+        marginBottom: String(5) + ea,
         borderRadius: String(5) + ea,
-      };
-
-      areaNameStyle = {
-        position: "absolute",
-        top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 6) + ea,
-        fontWeight: String(600),
-        color: "#404040",
-      };
-
-      areaNumberStyle = {
-        position: "absolute",
-        top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 4) + ea,
-        fontWeight: String(200),
-        color: "#aaaaaa",
-      };
-
-      areaTongStyle = {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: String(1) + ea,
         position: "relative",
-        paddingBottom: String(margin) + ea,
-        minHeight: String(fixedHeightSize + margin) + ea,
-        background: "#f2f2f2",
-        borderRadius: String(5) + ea,
+        cursor: "pointer",
       };
 
-      //set map
-      division = new Map();
-      numbers = new Map();
-
-      //update value
-      updateState = async function (from, to) {
+      intoTextEvent = async function (e) {
         try {
-          let toValue;
-          let cliid, originalStatus, index;
-          let motherDiv, originalDiv;
-          let requests, requestIndex;
-          let column;
-          let finalValue;
-
-          cliid = from.getAttribute("cliid");
-          index = from.getAttribute("index");
-          originalStatus = from.getAttribute("thisStatus");
-
-          numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
-          numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
-          numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
-          numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
-
-          from.setAttribute("thisStatus", to);
-          if (to === "드랍") {
-            from.setAttribute("dropDetail", originalStatus);
-          } else if (from.hasAttribute("dropDetail")) {
-            from.setAttribute("dropDetail", "");
+          if (this.getAttribute("name") === "null") {
+            return;
           }
 
-          requests = [];
-          for (let i = 1; i < instance.cases.length; i++) {
-            if (instance.cases[i].cliid === cliid) {
-              requests.push(instance.cases[i]);
-            }
+          const that = this;
+          const proid = this.getAttribute("proid");
+          const cliid = this.getAttribute("cliid");
+          const desid = this.getAttribute("desid");
+          const name = this.getAttribute("name");
+          const designer = this.getAttribute("designer");
+          const method = this.getAttribute("method");
+          const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method, "/getRawContents"));
+          const { dom, title, gray } = createViewDoms[1];
+          let temp, tempArr;
+          let interActionIcon, returnIcon;
+          let div_clone, textArea_clone;
+          let controlPannel;
+          let button, buttonText;
+          let buttonWidth, buttonHeight, buttonMargin;
+          let style, buttonStyle, buttonDetailStyle;
+          let margin;
+          let ea = "px";
+
+          createViewDoms[0].dom.style.height = String(0);
+          createViewDoms[0].dom.style.marginBottom = String(0);
+          createViewDoms[0].dom.style.borderBottom = "";
+          createViewDoms[2].dom.style.height = String(0);
+          createViewDoms[2].dom.style.marginBottom = String(0);
+          createViewDoms[2].dom.style.borderBottom = "";
+
+          dom.style.height = "calc(100% - 21px)";
+          title.style.color = title.querySelector("b").style.color = "#404040";
+          tempArr = title.querySelector("b").textContent.split(" ");
+          temp = '';
+          temp += tempArr[0] + ' ' + tempArr[1] + ' ' + tempArr[2] + ' ' + tempArr[3] + ' ';
+          if (method === "portfolio") {
+            temp += "포트폴리오";
+          } else {
+            temp += "고객 후기";
           }
-          for (let i = 0; i < requests.length; i++) {
-            if (requests[i] === instance.cases[Number(index)]) {
-              requestIndex = i;
-            }
+          title.querySelector("b").textContent = temp;
+          title.style.height = String(6.5) + "%";
+          gray.style.height = "calc(" + String(100 - 6.5) + "% + 0.9vh)";
+          gray.firstChild.style.display = "none";
+
+          interActionIcon = SvgTong.stringParsing(instance.mother.returnInterAction("#aaaaaa"));
+          interActionIcon.classList.add("hoverDefault_lite");
+          interActionIcon.id = "interActionIcon";
+          style = {
+            position: "absolute",
+            top: String(8) + ea,
+            right: String(26) + ea,
+            height: String(19.5) + ea,
+            width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
+            animation: "justfadeinoriginal 0.4s ease forwards",
+          };
+          for (let i in style) {
+            interActionIcon.style[i] = style[i];
           }
-
-          column = "status";
-
-          motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
-          for (let i = 0; i < motherDiv.children.length; i++) {
-            if (motherDiv.children[i].getAttribute("column") === column) {
-              originalDiv = motherDiv.children[i];
-            }
-          }
-
-          if (to === "통화 전") {
-            toValue = "응대중";
-          } else if (to === "제안 전") {
-            toValue = "응대중";
-          } else if (to === "제안 후") {
-            toValue = "응대중";
-          } else if (to === "진행") {
-            toValue = "진행";
-          } else if (to === "드랍") {
-            toValue = "드랍";
-          }
-
-          finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
-
-          await GeneralJs.updateValue({
-            thisId: cliid,
-            requestIndex: requestIndex,
-            column: column,
-            pastValue: originalStatus,
-            value: finalValue,
-            index: Number(index),
+          interActionIcon.addEventListener("click", function (e) {
+            e.stopPropagation();
+            that.setAttribute("method", (method === "portfolio" ? "review" : "portfolio"));
+            setTimeout(function () {
+              that.click();
+            }, 0);
+            document.getElementById("returnIcon").remove();
+            document.getElementById("interActionIcon").remove();
+            document.getElementById("textZone").remove();
           });
+          title.appendChild(interActionIcon);
 
-          instance.cases[Number(index)][column] = finalValue;
-          originalDiv.textContent = finalValue;
+          returnIcon = SvgTong.stringParsing(instance.mother.returnReturn("#aaaaaa"));
+          returnIcon.classList.add("hoverDefault_lite");
+          returnIcon.id = "returnIcon";
+          style = {
+            position: "absolute",
+            top: String(6) + ea,
+            right: String(1) + ea,
+            height: String(22) + ea,
+            width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
+            animation: "justfadeinoriginal 0.4s ease forwards",
+          };
+          for (let i in style) {
+            returnIcon.style[i] = style[i];
+          }
+          title.appendChild(returnIcon);
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          div_clone.id = "textZone";
+          for (let i in blockStyle) {
+            div_clone.style[i] = blockStyle[i];
+          }
+          div_clone.style.background = "white";
+          div_clone.style.height = "calc(100% - 54px)";
+          div_clone.style.top = String(28) + ea;
+          div_clone.style.borderRadius = String(5) + ea;
+
+          margin = 20;
+
+          textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
+          textArea_clone.value = text;
+          style = {
+            width: "calc(100% - " + String(margin * 2) + ea + ")",
+            height: "calc(100% - " + String(margin * 2) + ea + ")",
+            position: "absolute",
+            top: String(margin * 1) + ea,
+            left: String(margin * 1) + ea,
+            border: String(0),
+            outline: String(0),
+            fontSize: String(15) + ea,
+            lineHeight: String(1.7),
+          };
+          for (let i in style) {
+            textArea_clone.style[i] = style[i];
+          }
+          div_clone.appendChild(textArea_clone);
+
+          controlPannel = GeneralJs.nodes.div.cloneNode(true);
+          controlPannel.classList.add("hoverdefault_lite_reverse");
+          style = {
+            width: String(360) + ea,
+            height: String(120) + ea,
+            position: "absolute",
+            bottom: String(margin) + ea,
+            right: String(margin) + ea,
+            background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+            borderRadius: String(5) + ea,
+          };
+          for (let i in style) {
+            controlPannel.style[i] = style[i];
+          }
+
+          buttonWidth = 141;
+          buttonHeight = 35;
+          buttonMargin = 6;
+          controlPannel.style.height = String((buttonHeight * 3) + (buttonMargin * 6)) + ea;
+          controlPannel.style.width = String((buttonWidth * 1.5) + (buttonMargin * 5)) + ea;
+
+          buttonStyle = {
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            color: "#2fa678",
+            position: "absolute",
+            top: String(buttonMargin * 2) + ea,
+            right: String(buttonMargin * 2) + ea,
+            background: "white",
+            borderRadius: String(5) + ea,
+            boxShadow: "0px 8px 15px -11px #2fa678",
+          };
+
+          buttonDetailStyle = {
+            width: String(100) + "%",
+            fontSize: String(13) + ea,
+            fontWeight: String(600),
+            color: "#2fa678",
+            position: "absolute",
+            top: String(7.1) + ea,
+            textAlign: "center",
+          };
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = proid + " | " + name;
+          button.appendChild(buttonText);
+          button.addEventListener("click", function (e) {
+            window.open((window.location.protocol + "//" + window.location.host + "/project?proid=" + proid), "_blank");
+          });
+          controlPannel.appendChild(button);
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          button.style.top = String((buttonMargin * 2) + buttonHeight + buttonMargin) + ea;
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = cliid + " | " + name;
+          button.appendChild(buttonText);
+          button.addEventListener("click", function (e) {
+            window.open((window.location.protocol + "//" + window.location.host + "/client?cliid=" + cliid), "_blank");
+          });
+          controlPannel.appendChild(button);
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = desid + " | " + designer;
+          button.appendChild(buttonText);
+          button.addEventListener("click", function (e) {
+            window.open((window.location.protocol + "//" + window.location.host + "/designer?desid=" + desid), "_blank");
+          });
+          controlPannel.appendChild(button);
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          button.style.width = String(buttonWidth * 0.5) + ea;
+          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = "저장";
+          button.appendChild(buttonText);
+          controlPannel.appendChild(button);
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          button.style.width = String(buttonWidth * 0.5) + ea;
+          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 1)) + ea;
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = "되돌리기";
+          button.appendChild(buttonText);
+          controlPannel.appendChild(button);
+
+          button = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonStyle) {
+            button.style[i] = buttonStyle[i];
+          }
+          button.style.width = String(buttonWidth * 0.5) + ea;
+          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
+          buttonText = GeneralJs.nodes.div.cloneNode(true);
+          for (let i in buttonDetailStyle) {
+            buttonText.style[i] = buttonDetailStyle[i];
+          }
+          buttonText.textContent = "삭제";
+          button.appendChild(buttonText);
+          controlPannel.appendChild(button);
+
+          div_clone.appendChild(controlPannel);
+
+          gray.appendChild(div_clone);
 
         } catch (e) {
           console.log(e);
         }
       }
 
-      //drag and drop events
-      dragstart_event = function (e) {
-        e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
-      }
-
-      dragend_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragenter_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragleave_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragover_event = function (e) {
-        e.preventDefault();
-      }
-
-      drop_event = async function (e) {
-        try {
-          e.preventDefault();
-          const index = e.dataTransfer.getData("dragData");
-          const targetDom = instance.totalFatherChildren[Number(index) - 1];
-          const status = targetDom.getAttribute("thisStatus");
-          let area, dropDetail;
-          if (e.target.hasAttribute("kinds")) {
-            if (e.target.getAttribute("kinds") === "area") {
-              area = e.target;
-            } else {
-              area = e.target.parentElement;
-            }
-          } else {
-            area = e.target.parentElement.parentElement;
-          }
-
-          if (area.getAttribute("name") === "통화 전") {
-            if (status === "통화 전") {
-              //pass
-            } else if (status === "제안 전") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "제안 후") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail !== "통화 전") {
-                alert("통화 기록은 되돌릴 수 없습니다!");
-              } else {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "통화 전");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "제안 전") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              //pass
-            } else if (status === "제안 후") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 전");
-              } else if (dropDetail === "제안 후") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
-              } else if (dropDetail === "진행") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "제안 후") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
-              //pass
-            } else if (status === "진행") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "제안 후");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "진행") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "진행");
-            } else if (status === "진행") {
-              //pass
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "드랍") {
-            if (status === "통화 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "제안 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "제안 후") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "진행") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "드랍") {
-              //pass
-            }
-          }
-
-          e.stopPropagation();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      //make division
-      divisionName = [
-        "통화 전",
-        "제안 전",
-        "제안 후",
-        "진행",
-        "드랍",
-      ];
-      for (let i = 0; i < divisionName.length; i++) {
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaStyle) {
-          div_clone.style[i] = areaStyle[i];
-        }
-
-        //title
+      GeneralJs.stacks.secondContentsCreateViewDoms = [];
+      for (let i = 0; i < 2; i++) {
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = divisionName[i];
-        for (let i in areaNameStyle) {
-          div_clone2.style[i] = areaNameStyle[i];
+        for (let j in style) {
+          div_clone2.style[j] = style[j];
         }
+        div_clone2.setAttribute("cliid", "null");
+        div_clone2.setAttribute("proid", "null");
+        div_clone2.setAttribute("name", "null");
+        div_clone2.setAttribute("desid", "null");
+        div_clone2.setAttribute("designer", "null");
+        div_clone2.setAttribute("method", (["portfolio", "review"])[i]);
+
+        div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone3.classList.add("hoverDefault");
+        div_clone3.style.fontSize = String(2) + "vh";
+        div_clone3.style.fontWeight = String(200);
+        div_clone3.style.color = "#aaaaaa";
+        div_clone3.style.position = "absolute";
+        div_clone3.style.marginTop = String(-1) + "vh";
+        div_clone3.textContent = ([ "포트폴리오", "고객 후기" ])[i];
+        div_clone3.setAttribute("cliid", "null");
+        div_clone3.setAttribute("proid", "null");
+        div_clone3.setAttribute("name", "null");
+        div_clone3.setAttribute("desid", "null");
+        div_clone3.setAttribute("designer", "null");
+        div_clone3.setAttribute("method", (["portfolio", "review"])[i]);
+        div_clone2.appendChild(div_clone3);
+
+        div_clone2.addEventListener("click", intoTextEvent);
+        GeneralJs.stacks.secondContentsCreateViewDoms.push(div_clone2);
         div_clone.appendChild(div_clone2);
-
-        //number
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = String(0) + "명";
-        for (let i in areaNumberStyle) {
-          div_clone2.style[i] = areaNumberStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "number");
-        numbers.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        //tong
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaTongStyle) {
-          div_clone2.style[i] = areaTongStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "area");
-        div_clone2.setAttribute("name", divisionName[i]);
-        division.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        totalFather.appendChild(div_clone);
-
-        div_clone2.addEventListener("dragenter", dragenter_event);
-        div_clone2.addEventListener("dragleave", dragleave_event);
-        div_clone2.addEventListener("dragover", dragover_event);
-        div_clone2.addEventListener("drop", drop_event);
       }
 
-      //make card
-      instance.totalFatherChildren = [];
+      createViewDoms[1].gray.appendChild(div_clone);
 
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let i = 1; i < cases.length; i++) {
-        whereQuery["$or"].push({ cliid: cases[i].cliid });
-      }
-      tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
 
-      num = 0;
-      for (let obj of cases) {
-        if (num !== 0) {
-
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in style) {
-            div_clone.style[i] = style[i];
-          }
-
-          //name
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.name;
-          for (let i in nameStyle) {
-            div_clone2.style[i] = nameStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone.appendChild(div_clone2);
-
-          //cliid
-          cliidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.cliid;
-          for (let i in cliidStyle) {
-            div_clone2.style[i] = cliidStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone.appendChild(div_clone2);
-
-          //bar
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in barStyle) {
-            div_clone2.style[i] = barStyle[i];
-          }
-          div_clone.appendChild(div_clone2);
-
-          //sub info
-          for (let j = 0; j < DataPatch.clientCardViewStandard().info.length; j++) {
-            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.classList.add("father_" + DataPatch.clientCardViewStandard().info[j]);
-            div_clone2.textContent = obj[DataPatch.clientCardViewStandard().info[j]];
-            for (let i in styles[j]) {
-              div_clone2.style[i] = styles[j][i];
-            }
-            div_clone.appendChild(div_clone2);
-          }
-
-          div_clone.setAttribute("index", String(num));
-          div_clone.setAttribute("kinds", "card");
-          div_clone.setAttribute("cliid", obj.cliid);
-
-          tempBoo = false;
-          for (let { cliid } of tempResult) {
-            if (obj.cliid === cliid) {
-              tempBoo = true;
-            }
-          }
-
-          if (obj.status === "응대중" && obj.callHistory === "") {
-            div_clone.setAttribute("thisStatus", "통화 전");
-            division.get("통화 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && !tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 전");
-            division.get("제안 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 후");
-            division.get("제안 후").appendChild(div_clone);
-          } else if (obj.status === "진행") {
-            div_clone.setAttribute("thisStatus", "진행");
-            division.get("진행").appendChild(div_clone);
-          } else if (obj.status === "드랍") {
-            div_clone.setAttribute("thisStatus", "드랍");
-            if (obj.callHistory === "") {
-              div_clone.setAttribute("dropDetail", "통화 전");
-            } else if (!tempBoo) {
-              div_clone.setAttribute("dropDetail", "제안 전");
-            } else {
-              div_clone.setAttribute("dropDetail", "제안 후");
-            }
-            division.get("드랍").appendChild(div_clone);
-          } else if (obj.status === "완료") {
-            div_clone.setAttribute("thisStatus", "드랍");
-            div_clone.setAttribute("dropDetail", "제안 후");
-            division.get("드랍").appendChild(div_clone);
-          } else {
-            throw new Error("invaild status");
-          }
-
-          div_clone.setAttribute("draggable", "true");
-          div_clone.addEventListener("dragstart", dragstart_event);
-          div_clone.addEventListener("dragend", dragend_event);
-          div_clone.addEventListener("dragenter", dragenter_event);
-          div_clone.addEventListener("dragleave", dragleave_event);
-
-          instance.totalFatherChildren.push(div_clone);
-        }
-        num++;
-      }
-
-      numbers.forEach((value, key, map) => {
-        numbers.get(key).textContent = String(division.get(key).children.length) + "명";
-        numbers.get(key).setAttribute("number", String(division.get(key).children.length));
-      });
-
-      totalFather.style.paddingLeft = String(margin * 0.75) + ea;
-      totalFather.style.paddingRight = String(margin * 0.75) + ea;
-      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px)";
-      totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
-      totalFather.style.zIndex = String(1);
-
+      //third - complete contents
       div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.style.height = String(margin * 2) + ea;
-      totalFather.appendChild(div_clone);
+      for (let i in blockStyle) {
+        div_clone.style[i] = blockStyle[i];
+      }
 
+      style = {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(1.3) + "vh",
+        fontWeight: String(600),
+        padding: String(15) + ea,
+        paddingTop: (GeneralJs.isMac() ? String(6) : String(7)) + ea,
+        paddingBottom: (GeneralJs.isMac() ? String(8) : String(7)) + ea,
+        background: "#eaeaea",
+        margin: String(3) + ea,
+        borderRadius: String(5) + ea,
+        boxSizing: "border-box",
+        cursor: "pointer",
+        color: "#bbbbbb",
+        transition: "all 0.3s ease",
+      };
+
+      clickEvent = function (e) {
+        const that = this;
+        const { dom, title, gray } = createViewDoms[2];
+        const { title: title2 } = createViewDoms[1];
+        const { title: title3 } = createViewDoms[0];
+        let appendHtml;
+        let inputHtml;
+        let cliid, proid, name, desid, designer;
+
+        for (let i of GeneralJs.stacks.thirdContentsCreateViewDoms) {
+          if (i.getAttribute("index") === this.getAttribute("index")) {
+            i.style.background = "#2fa678";
+            i.style.color = "#ffffff";
+            cliid = this.getAttribute("cliid");
+            proid = this.getAttribute("proid");
+            name = this.getAttribute("name");
+            desid = this.getAttribute("desid");
+            designer = this.getAttribute("designer");
+          } else {
+            i.style.background = "#eaeaea";
+            i.style.color = "#bbbbbb";
+          }
+        }
+
+        appendHtml = function (color, detail = false) {
+          let html;
+          html = '<b style="font-weight:300;color:' + color + '"> : ' + that.getAttribute('name');
+          if (detail) {
+            html += " 고객님의 포트폴리오 or 고객 후기";
+          }
+          html += '</b>';
+          return html;
+        }
+
+        if (/\:/.test(title.textContent)) {
+          inputHtml = (title.textContent.split(" : "))[0] + appendHtml("#2fa678");
+        } else {
+          inputHtml = title.textContent + appendHtml("#2fa678");
+        }
+        title.textContent = "";
+        title.insertAdjacentHTML("beforeend", inputHtml);
+        title.style.color = "#2fa678";
+
+        if (/\:/.test(title2.textContent)) {
+          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml("#2fa678", true);
+        } else {
+          inputHtml = title2.textContent + appendHtml("#2fa678", true);
+        }
+        title2.textContent = "";
+        title2.insertAdjacentHTML("beforeend", inputHtml);
+        title2.style.color = "#2fa678";
+
+        title3.style.color = "#cccccc";
+
+        GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout = setTimeout(function () {
+          const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
+          const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
+          const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
+          const [ portfolio, review ] = gray1.children[0].children;
+
+          gray0.style.background = "white";
+          dom0.style.height = compressHeight;
+          dom0.style.borderBottom = "1px solid #ececec";
+
+          dom1.style.height = expandHeight;
+          gray1.style.height = expandGrayHeight;
+          gray1.style.marginTop = String(-0.9) + "vh";
+
+          gray2.style.background = "#f7f7f7";
+          dom2.style.height = originalHeight;
+          dom2.style.borderBottom = "";
+
+          portfolio.style.background = review.style.background = "white";
+          portfolio.firstChild.style.color = review.firstChild.style.color = "#2fa678";
+          portfolio.firstChild.style.fontSize = review.firstChild.style.fontSize = String(2.5) + "vh";
+          portfolio.firstChild.style.marginTop = review.firstChild.style.marginTop = String(-1) + "vh";
+
+          portfolio.setAttribute("cliid", cliid);
+          portfolio.setAttribute("proid", proid);
+          portfolio.setAttribute("name", name);
+          portfolio.setAttribute("desid", desid);
+          portfolio.setAttribute("designer", designer);
+
+          portfolio.firstChild.setAttribute("cliid", cliid);
+          portfolio.firstChild.setAttribute("proid", proid);
+          portfolio.firstChild.setAttribute("name", name);
+          portfolio.firstChild.setAttribute("desid", desid);
+          portfolio.firstChild.setAttribute("designer", designer);
+
+          review.setAttribute("cliid", cliid);
+          review.setAttribute("proid", proid);
+          review.setAttribute("name", name);
+          review.setAttribute("desid", desid);
+          review.setAttribute("designer", designer);
+
+          review.firstChild.setAttribute("cliid", cliid);
+          review.firstChild.setAttribute("proid", proid);
+          review.firstChild.setAttribute("name", name);
+          review.firstChild.setAttribute("desid", desid);
+          review.firstChild.setAttribute("designer", designer);
+
+          clearTimeout(GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout);
+          GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout = null;
+        }, 300);
+      }
+
+      GeneralJs.stacks.thirdContentsCreateViewDoms = [];
+      for (let i = 0; i < projects.length; i++) {
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        for (let j in style) {
+          div_clone2.style[j] = style[j];
+        }
+        div_clone2.textContent = projects[i].proid + " | " + projects[i].name;
+        div_clone2.addEventListener("click", clickEvent);
+        div_clone2.setAttribute("index", String(i));
+        div_clone2.setAttribute("name", projects[i].name);
+        div_clone2.setAttribute("proid", projects[i].proid);
+        div_clone2.setAttribute("cliid", projects[i].cliid);
+        div_clone2.setAttribute("desid", projects[i].desid);
+        div_clone2.setAttribute("designer", projects[i].designer);
+        GeneralJs.stacks.thirdContentsCreateViewDoms.push(div_clone2);
+        div_clone.appendChild(div_clone2);
+      }
+
+      createViewDoms[2].gray.appendChild(div_clone);
+
+      //end
+      totalFather.appendChild(createViewBase);
       totalFather.classList.add("fadein");
-
       totalContents.appendChild(totalFather);
       instance.totalFather = totalFather;
     }
@@ -3393,23 +3684,6 @@ ContentsJs.prototype.returnValueEventMaker = function () {
       for (let node of totalWhiteNode) {
         if (node.getAttribute("index") === pastObj.column) {
           textTargets.push(node.children[1]);
-        }
-      }
-    }
-
-    //father
-    if (document.querySelector(".totalFather") !== null) {
-      nodeArr = [];
-      for (let node of instance.totalFatherChildren) {
-        if (node.getAttribute("cliid") === pastObj.thisId) {
-          nodeArr.push(node);
-        }
-      }
-      nodeArr.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
-      targetFatherNode = nodeArr[Number(pastObj.requestIndex)];
-      for (let node of targetFatherNode.children) {
-        if (node.className.split("_")[1] === pastObj.column) {
-          textTargets.push(node);
         }
       }
     }

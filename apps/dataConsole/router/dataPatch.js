@@ -4684,7 +4684,22 @@ DataPatch.prototype.contentsStandard = function () {
 }
 
 DataPatch.prototype.contentsCardViewStandard = function () {
+  const targetColumns = {
+    standard: [
+      "pid",
+      "conid",
+    ],
+    info: [
+      "portfolioDate",
+      "reviewDate",
+    ],
+    exceptionHeight: [
+      false,
+      false,
+    ],
+  };
 
+  return targetColumns;
 }
 
 DataPatch.prototype.contentsWhiteViewStandard = function () {

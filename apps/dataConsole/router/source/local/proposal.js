@@ -16,8 +16,12 @@ const ProposalJs = function () {
 }
 
 ProposalJs.prototype.totalInitial = function () {
+  const instance = this;
   let div_clone;
   let style;
+  let ea;
+
+  ea = "px";
 
   //total contents
   style = {
@@ -25,7 +29,7 @@ ProposalJs.prototype.totalInitial = function () {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    height: "calc(100vh - 123px)",
+    height: "calc(100vh - " + String(123) + ea + ")",
     overflow: "hidden",
   };
   for (let i in style) {
@@ -37,8 +41,8 @@ ProposalJs.prototype.totalInitial = function () {
   style = {
     position: "relative",
     display: "block",
-    width: "calc(100% - 96px)",
-    height: "calc(100% - 112px)",
+    width: "calc(100% - " + String(96) + ea + ")",
+    height: "calc(100% - " + String(112) + ea + ")",
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
@@ -50,11 +54,11 @@ ProposalJs.prototype.totalInitial = function () {
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    zIndex: "-1",
+    zIndex: String(-1),
     width: "100%",
     height: "100%",
-    top: "0",
-    left: "0",
+    top: String(0) + ea,
+    left: String(0) + ea,
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
@@ -70,7 +74,7 @@ ProposalJs.prototype.toggleSetting = {
   fourth: 0,
   listCreate: 0,
   load: 0,
-}
+};
 
 ProposalJs.below_events = {
   save: async function (e) {
@@ -376,7 +380,7 @@ ProposalJs.below_events = {
       }
     },
   },
-}
+};
 
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
@@ -679,7 +683,7 @@ ProposalJs.toggleTimeout = {
   load_zero: {},
   load_second: {},
   load_third: {},
-}
+};
 
 ProposalJs.prototype.firstToggle = function (button, domBox) {
   const instance = this;
@@ -703,11 +707,11 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
           service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
           for (let i of service) {
             i.style.background = "white";
-            i.children[0].style.color = "#59af89";
+            i.children[0].style.color = "#2fa678";
             i.children[0].style.fontSize = "1.7vh";
           }
 
-          if (/^M/g.test(navigator.platform)) {
+          if (/^M/g.test(window.navigator.platform)) {
             for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
             for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
             for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
@@ -720,18 +724,18 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
           service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
           for (let i of service_input) {
             if (i.checked) {
-              i.nextElementSibling.style.background = "#59af89";
+              i.nextElementSibling.style.background = "#2fa678";
               i.nextElementSibling.children[0].style.color = "white";
             }
           }
-          title.style.color = "#59af89";
+          title.style.color = "#2fa678";
           contents.style.background = "white";
 
           if (document.querySelector("#pp_title_sub_b") !== null) {
             document.querySelector("#pp_title_sub_b").remove();
           }
 
-          title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+          title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
 
           instance.toggleSetting.first = 1;
         }, 300);
@@ -771,13 +775,16 @@ ProposalJs.prototype.firstProcess = async function () {
   const instance = this;
   let h;
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
-  let titles = [ "pp_firstprocess_box", "pp_secondprocess_box", "pp_thirdprocess_box" ];
-  let titles_con = [ "고객 선택", "서비스 선택", "디자이너 선택" ];
+  let titles;
+  let titles_con;
   let domBox;
   let clients;
   let style;
-  let ea = "px";
+  let ea;
 
+  titles = [ "pp_firstprocess_box", "pp_secondprocess_box", "pp_thirdprocess_box" ];
+  titles_con = [ "고객 선택", "서비스 선택", "디자이너 선택" ];
+  ea = "px";
   h = document.createDocumentFragment();
   domBox = new Map();
 
@@ -894,7 +901,7 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
           i.style.background = "white";
-          i.children[0].style.color = "#59af89";
+          i.children[0].style.color = "#2fa678";
           i.children[0].style.fontSize = "1.7vh";
         }
 
@@ -911,21 +918,21 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         selectionBoxBack = e.target.parentNode.parentNode;
         selectionBoxWording = e.target.parentNode.parentNode.children[0];
 
-        selectionBoxBack.style.background = "#59af89";
+        selectionBoxBack.style.background = "#2fa678";
         selectionBoxWording.style.color = "white";
 
         ProposalJs.toggleTimeout.second = setTimeout(function () {
 
           instance.below_launching("third", button);
 
-          domBox.get("서비스 선택").children[0].style.color = "#59af89";
+          domBox.get("서비스 선택").children[0].style.color = "#2fa678";
           domBox.get("서비스 선택").children[1].style.background = "white";
 
           if (document.querySelector("#pp_title2_sub_b") !== null) {
             document.querySelector("#pp_title2_sub_b").remove();
           }
 
-          domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+          domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
           domBox.get("서비스 선택").style.height = "3.2vh";
           domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
 
@@ -942,8 +949,8 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
 
           instance.thirdChildren.get("box1_designerInput").focus();
-          instance.thirdChildren.get("box1_designerInput").style.color = "#59af89";
-          instance.thirdChildren.get("box1_title").style.color = "#59af89";
+          instance.thirdChildren.get("box1_designerInput").style.color = "#2fa678";
+          instance.thirdChildren.get("box1_title").style.color = "#2fa678";
           instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
           instance.thirdChildren.get("box1_title").style.fontSize = "24px";
           instance.thirdChildren.get("box1").style.background = "white";
@@ -982,7 +989,7 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         for (let i of service) {
           i.style.opacity = "";
           i.style.background = "white";
-          i.children[0].style.color = "#59af89";
+          i.children[0].style.color = "#2fa678";
           i.children[0].style.fontSize = "1.7vh";
         }
 
@@ -997,7 +1004,7 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         }
 
         service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-        for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#59af89";i.nextElementSibling.children[0].style.color = "white"; } }
+        for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#2fa678";i.nextElementSibling.children[0].style.color = "white"; } }
         domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
         domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
         domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
@@ -1250,8 +1257,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[1].children[0].style;
       }
     }
-    getnode(0).color = "#59af89";
-    getnode(1).background = "#59af89";
+    getnode(0).color = "#2fa678";
+    getnode(1).background = "#2fa678";
     getnode(1, false).color = "white";
 
     let target;
@@ -1506,7 +1513,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         }
       }
       div_clone.style.color = "white";
-      dom.style.background = "#59af89";
+      dom.style.background = "#2fa678";
     }
     //------------------------------------------------------------------------
     div_clone.setAttribute("cus_id", 's' + String(n));
@@ -1519,7 +1526,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     let target0, target1, target2, target3;
 
     fourth.box.style.display = "none";
-    fourth.title.style.color = "#59af89";
+    fourth.title.style.color = "#2fa678";
     fourth.contents.style.background = "white";
     fourth.contents.style.border = "1px solid #ececec";
     fourth.contents.style.borderRadius = "6px";
@@ -2609,7 +2616,7 @@ ProposalJs.prototype.list_menu = function () {
       { key: "delete", name: "삭제", }
     ];
     // style
-    this.style.color = "#59af89";
+    this.style.color = "#2fa678";
 
     // cancel
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2969,14 +2976,14 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
   for (let i of service) {
     i.style.opacity = "";
     i.style.background = "white";
-    i.children[0].style.color = "#59af89";
+    i.children[0].style.color = "#2fa678";
     i.children[0].style.fontSize = "1.7vh";
   }
   for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
   for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
   for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
   let service_input = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-  for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#59af89";i.nextElementSibling.children[0].style.color = "white"; } }
+  for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#2fa678";i.nextElementSibling.children[0].style.color = "white"; } }
   this.domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
   this.domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
   this.domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
@@ -3048,7 +3055,7 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
   for (let i of service) {
     i.style.background = "white";
-    i.children[0].style.color = "#59af89";
+    i.children[0].style.color = "#2fa678";
     i.children[0].style.fontSize = "1.7vh";
   }
   for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
@@ -3058,16 +3065,16 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
   let service_input = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
   for (let i of service_input) {
     if (i.checked) {
-      i.nextElementSibling.style.background = "#59af89";
+      i.nextElementSibling.style.background = "#2fa678";
       i.nextElementSibling.children[0].style.color = "white";
     }
   }
-  this.domBox.get("고객 선택").children[0].style.color = "#59af89";
+  this.domBox.get("고객 선택").children[0].style.color = "#2fa678";
   this.domBox.get("고객 선택").children[1].style.background = "white";
   if (document.querySelector("#pp_title_sub_b")) {
     document.querySelector("#pp_title_sub_b").remove();
   }
-  this.domBox.get("고객 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + obj.cliid + '" style="color:#59af89;font-weight:300"> : ' + obj.client + '</b>');
+  this.domBox.get("고객 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + obj.cliid + '" style="color:#2fa678;font-weight:300"> : ' + obj.client + '</b>');
   this.toggleSetting.first = 1;
 }
 
@@ -3083,7 +3090,7 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
   for (let i of service) {
     i.style.background = "white";
-    i.children[0].style.color = "#59af89";
+    i.children[0].style.color = "#2fa678";
     i.children[0].style.fontSize = "1.7vh";
   }
   for (let i = 0; i < 4; i++) {
@@ -3098,13 +3105,13 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   let target0 = e.target.parentNode.parentNode;
   let target1 = e.target.parentNode.parentNode.children[0];
 
-  target0.style.background = "#59af89";
+  target0.style.background = "#2fa678";
   target1.style.color = "white";
   ProposalJs.toggleTimeout.load_second = setTimeout(function () {
-    instance.domBox.get("서비스 선택").children[0].style.color = "#59af89";
+    instance.domBox.get("서비스 선택").children[0].style.color = "#2fa678";
     instance.domBox.get("서비스 선택").children[1].style.background = "white";
     if (document.querySelector("#pp_title2_sub_b")) { document.querySelector("#pp_title2_sub_b").remove(); }
-    instance.domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#59af89;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+    instance.domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
     instance.domBox.get("서비스 선택").style.height = "3.2vh";
     instance.domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
     for (let i of service) { i.style.opacity = "0"; }
@@ -3115,9 +3122,9 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     instance.domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
     if (instance.thirdChildren instanceof Map) {
       instance.thirdChildren.get("box1_designerInput").focus();
-      instance.thirdChildren.get("box1_designerInput").style.color = "#59af89";
+      instance.thirdChildren.get("box1_designerInput").style.color = "#2fa678";
       instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(obj.proposal.length) + "명");
-      instance.thirdChildren.get("box1_title").style.color = "#59af89";
+      instance.thirdChildren.get("box1_title").style.color = "#2fa678";
       instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
       instance.thirdChildren.get("box1_title").style.fontSize = "24px";
       instance.thirdChildren.get("box1").style.background = "white";
@@ -3447,7 +3454,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   .pp_service_wording{
     font-size: 1.2vh;
-    font-weight: 600;
+    font-weight: 200;
     color: #aaaaaa;
     position: absolute;
     margin-top: -1px;
@@ -3457,7 +3464,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: none;
   }
   .pp_clients_input:checked + div {
-    background:#59af89;
+    background:#2fa678;
   }
   .pp_clients_input:checked + div > div {
     color:white;
@@ -3641,7 +3648,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box_contents_designers_input:checked + .pp_designer_selected_box_contents_designers{
-    background: #59af89;
+    background: #2fa678;
     color:white;
   }
 
@@ -3667,11 +3674,11 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box_contents_service_input:checked + .pp_designer_selected_box_contents_service{
-    color:#59af89;
+    color:#2fa678;
   }
 
   .pp_designer_selected_box_contents_service_input:checked + .pp_designer_selected_box_contents_service > .pp_designer_selected_box_contents_service_won{
-    background: #59af89;
+    background: #2fa678;
   }
 
   .pp_designer_selected_box_contents_service_won{
@@ -3706,7 +3713,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-right: 2px;
     border: 0;
-    color: #59af89;
+    color: #2fa678;
     font-weight: 600;
     outline: 0;
     background: transparent;
@@ -3862,7 +3869,7 @@ ProposalJs.prototype.cssInjection = function () {
     bottom: 3.2vh;
     width: 54px;
     height: 28px;
-    background: #59af89;
+    background: #2fa678;
     border-radius: 4px;
     color: #fff;
     font-size: 14px;
@@ -4120,7 +4127,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .blewpp_fifthevent_box:hover{
-    color: #59af89;
+    color: #2fa678;
     background: #fbfbfb;
   }
 
@@ -4221,7 +4228,7 @@ ProposalJs.prototype.cssInjection = function () {
     width: 86px;
     position: absolute;
     top: ${GeneralJs.isMac() ? String(6) : String(7)}px;
-    color: #59af89;
+    color: #2fa678;
   }
 
   .listpp_mainArea_tong_name{
@@ -4319,7 +4326,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   }
   .listpp_menuEvent:hover{
-    color:#59af89;
+    color:#2fa678;
   }
   .listpp_menuEvent_pending{
     margin-top: 13px;

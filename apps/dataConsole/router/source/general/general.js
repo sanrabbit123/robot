@@ -442,6 +442,12 @@ GeneralJs.prototype.generalCss = function () {
     cursor: pointer;
   }
   .hoverdefault_reverse:hover{ opacity: 0.4; }
+  .hoverdefault_lite_reverse{
+    opacity: 0.7;
+    transition:all 0.5s ease;
+    cursor: pointer;
+  }
+  .hoverdefault_lite_reverse:hover{ opacity: 0.95; }
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
   @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
@@ -573,6 +579,10 @@ GeneralJs.prototype.returnOk = function (color) {
 
 GeneralJs.prototype.returnExtract = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.679 388.43"><path d="M310.776 204.421h-67.473c-0.985 0-1.783 0.799-1.783 1.783v173.779c0 4.666-3.782 8.447-8.447 8.447H81.607c-4.665 0-8.447-3.782-8.447-8.447V206.204c0-0.985-0.799-1.783-1.783-1.783H3.903c-3.232 0-5.059-3.709-3.089-6.271L151.189 3.029c3.106-4.038 9.196-4.038 12.301 0l150.374 195.12C315.835 200.711 314.008 204.421 310.776 204.421z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnInterAction = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 446.1 446.1"><path class="st0" d="M446 437.3L414.4 193c-0.4-3.3-4.4-4.5-6.6-2.3L360 238.4c-0.7 0.7-1.8 0.7-2.5 0l-26.9-26.9 0 0L207.6 88.6c-0.7-0.7-0.7-1.8 0-2.5l47.7-47.7c2.3-2.3 1-6.2-2.3-6.6L8.8 0.1c-5-0.6-9.3 3.7-8.7 8.7l31.6 244.3c0.4 3.3 4.4 4.5 6.6 2.3L86 207.6c0.7-0.7 1.8-0.7 2.5 0l27 27 0 0 122.9 122.9c0.7 0.7 0.7 1.8 0 2.5l-47.7 47.7c-2.3 2.3-1 6.2 2.3 6.6L437.3 446C442.4 446.7 446.7 442.4 446 437.3z" fill="${color}"/></svg>`;
 }
 
 GeneralJs.prototype.returnTalk = function (color) {
