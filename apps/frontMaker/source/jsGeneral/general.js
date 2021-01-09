@@ -483,6 +483,232 @@ GeneralJs.addScrollXEvent = function (node, name = "") {
   return variablesName;
 }
 
+GeneralJs.getDateMatrix = function (year, month) {
+  let tempObj, tempArr;
+
+  if (year === "today" || (year === undefined && month === undefined)) {
+    tempObj = new Date();
+    year = tempObj.getFullYear();
+    month = tempObj.getMonth();
+  } else if (typeof year === "string" && month === undefined && /\-/g.test(year)) {
+    tempArr = year.split("-");
+    tempObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+    year = tempObj.getFullYear();
+    month = tempObj.getMonth();
+  } else if (typeof year === "object") {
+    month = year.getMonth();
+    year = year.getFullYear();
+  }
+
+  const getLastDate = function (year, month) {
+    const today = new Date(year, month, 1);
+    let newMonth, lastDate;
+    for (let i = 27; i < 33; i++) {
+      today.setDate(i);
+      newMonth = today.getMonth();
+      if (month !== newMonth) {
+        lastDate = i - 1;
+        break;
+      }
+    }
+    return lastDate;
+  }
+
+  const firstDate = 1;
+  const firstDay = (new Date(year, month, 1)).getDay();
+  const lastDate = getLastDate(year, month);
+
+  const DateMatrix = function (year, month) {
+    this.year = year;
+    this.month = month;
+    this.matrix = null;
+  }
+
+  DateMatrix.prototype.getYearString = function () {
+    return String(this.year) + "년";
+  }
+
+  DateMatrix.prototype.getMonthString = function () {
+    return String(this.month + 1) + "월";
+  }
+
+  DateMatrix.prototype.getMatrix = function () {
+    return this.matrix;
+  }
+
+  DateMatrix.prototype.getNormalMatrix = function () {
+    let justTong, justArr;
+    justTong = [];
+    justArr = [];
+    for (let arr of this.matrix) {
+      justArr = [];
+      for (let obj of arr) {
+        if (obj === null) {
+          justArr.push(null);
+        } else {
+          justArr.push(obj.date);
+        }
+      }
+      justTong.push(justArr);
+    }
+    return justTong;
+  }
+
+  DateMatrix.prototype.getDateArr = function () {
+    let justTong;
+    justTong = [];
+    for (let arr of this.matrix) {
+      for (let obj of arr) {
+        if (obj !== null) {
+          justTong.push(obj);
+        }
+      }
+    }
+    return justTong;
+  }
+
+  DateMatrix.prototype.nextMatrix = function () {
+    if (this.month === 11) {
+      return GeneralJs.getDateMatrix(this.year + 1, 0);
+    } else {
+      return GeneralJs.getDateMatrix(this.year, this.month + 1);
+    }
+  }
+
+  DateMatrix.prototype.previousMatrix = function () {
+    if (this.month === 0) {
+      return GeneralJs.getDateMatrix(this.year - 1, 11);
+    } else {
+      return GeneralJs.getDateMatrix(this.year, this.month - 1);
+    }
+  }
+
+  DateMatrix.prototype.yearMatrix = function () {
+    let arr = [];
+    for (let i = 0; i < 12; i++) {
+      arr.push(GeneralJs.getDateMatrix(this.year, i));
+    }
+    return arr;
+  }
+
+  DateMatrix.prototype.nextYearMatrix = function () {
+    let arr = [];
+    for (let i = 0; i < 12; i++) {
+      arr.push(GeneralJs.getDateMatrix(this.year + 1, i));
+    }
+    return arr;
+  }
+
+  DateMatrix.prototype.previousYearMatrix = function () {
+    let arr = [];
+    for (let i = 0; i < 12; i++) {
+      arr.push(GeneralJs.getDateMatrix(this.year - 1, i));
+    }
+    return arr;
+  }
+
+  DateMatrix.prototype.rangeMatrix = function (range = 3) {
+    let arr = [];
+    let tempMatrix;
+
+    tempMatrix = this.previousMatrix();
+    arr.unshift(tempMatrix);
+    for (let i = 1; i < range; i++) {
+      tempMatrix = tempMatrix.previousMatrix();
+      arr.unshift(tempMatrix);
+    }
+
+    arr.push(this);
+
+    tempMatrix = this.nextMatrix();
+    arr.push(tempMatrix);
+    for (let i = 1; i < range; i++) {
+      tempMatrix = tempMatrix.nextMatrix();
+      arr.push(tempMatrix);
+    }
+
+    return arr;
+  }
+
+  const DateFactor = function (year, month, date, index) {
+    this.year = year;
+    this.month = month;
+    this.date = date;
+    this.day = ([ '월', '화', '수', '목', '금', '토', '일' ])[index];
+    this.dateObject = new Date(year, month, date);
+    this.dayday = this.dateObject.getDay()
+  }
+
+  DateFactor.prototype.getDateString = function () {
+    const zeroAddition = function (num) {
+      if (typeof num === 'string') {
+        if (Number.isNaN(Number(num))) {
+          throw new Error("invaild type");
+        } else {
+          num = Number(num);
+        }
+      }
+      if (num < 10) {
+        return '0' + String(num);
+      } else {
+        return String(num);
+      }
+    }
+    return (String(this.year) + '-' + zeroAddition(this.month + 1) + '-' + zeroAddition(this.date));
+  }
+
+  let tempDate, arr;
+  let tong;
+  let pastLength;
+  let result;
+  let num;
+
+  result = new DateMatrix(year, month);
+  tong = [];
+  arr = [];
+
+  if (firstDay !== 0) {
+    for (let i = 0; i < firstDay - 1; i++) {
+      arr.push(null);
+    }
+  } else {
+    for (let i = 0; i < 6; i++) {
+      arr.push(null);
+    }
+  }
+
+  for (let i = firstDate; i < lastDate + 1; i++) {
+    tempDate = new Date(year, month, i);
+    arr.push(tempDate.getDay());
+    if (arr.length % 7 === 0) {
+      tong.push(arr);
+      arr = [];
+    }
+  }
+
+  if (arr.length !== 7 && arr.length !== 0) {
+    pastLength = arr.length;
+    for (let i = 0; i < 7 - pastLength; i++) {
+      arr.push(null);
+    }
+    tong.push(arr);
+  }
+
+  num = 1;
+  for (let arr of tong) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== null) {
+        arr[i] = new DateFactor(year, month, num, i);
+        num++;
+      }
+    }
+  }
+
+  result.matrix = tong;
+
+  return result;
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
