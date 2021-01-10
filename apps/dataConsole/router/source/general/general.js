@@ -1490,3 +1490,241 @@ GeneralJs.prototype.loginBox = async function () {
     // window.location.href = "https://home-liaison.com";
   }
 }
+
+GeneralJs.prototype.makeCalendar = function (date, option = { width: 500, height: 520 }) {
+  const instance = this;
+  const { width, height } = option;
+  const thisMatrix = GeneralJs.getDateMatrix(date);
+  this.dateMatrix = thisMatrix;
+  let thisDate = null;
+  if (typeof date === "string") {
+    if (date.length === 10) {
+      thisDate = Number(((date.split("-"))[2]).replace(/^0/, ''));
+    } else {
+      thisDate = Number((((date.split(" ")[0]).split("-"))[2]).replace(/^0/, ''));
+    }
+  } else if (date === "object") {
+    thisDate = date.getDate();
+  }
+  const { year, month, matrix } = this.dateMatrix;
+
+  let calendarBase;
+  let titleZone, contentsZone;
+  let div_clone, div_clone2, svg_clone;
+  let style;
+  let titleZoneStyle, contentsZoneStyle;
+  let ea;
+  let titleHeight;
+  let visualSpecific;
+  let arrowWidth, leftMargin;
+  let finalHeight0, finalHeight1, finalHeight2;
+
+  if (width === undefined || height === undefined) {
+    throw new Error("invalid option");
+  }
+
+  ea = "px";
+  titleHeight = height * 0.2;
+  finalHeight0 = titleHeight;
+  finalHeight2 = finalHeight0 * 0.38;
+
+  //matrix make function
+  const matrixMaker = function (mother, matrix, thisDate, width, height, titleHeight) {
+    let div_clone, div_clone2, div_clone3;
+    let style;
+    let ea;
+    let leftMargin;
+
+    ea = "px";
+    leftMargin = 12;
+
+    for (let i = 0; i < matrix.length + 1; i++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+        height: String(height / 9) + ea,
+        background: "aqua",
+        width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+        left: String(leftMargin * 1) + ea,
+      };
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
+
+      for (let j = 0; j < 7; j++) {
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(100% / 7)",
+          height: String(height / 8) + ea,
+          background: "white",
+        };
+        for (let k in style) {
+          div_clone2.style[k] = style[k];
+        }
+
+        div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          fontFamily: "graphik",
+          fontSize: String(titleHeight * 0.25) + ea,
+          fontWeight: ((i === 0) ? String(500) : String(200)),
+          width: "100%",
+          textAlign: "center",
+          color: ((j < 5) ? "#404040" : "#2fa678"),
+        };
+        for (let k in style) {
+          div_clone3.style[k] = style[k];
+        }
+        if (i === 0) {
+          div_clone3.textContent = ([ 'M', 'T', 'W', 'T', 'F', 'S', 'S' ])[j];
+        } else {
+          if (matrix[i - 1][j] !== null) {
+            div_clone3.textContent = String(matrix[i - 1][j].date);
+            if (thisDate === matrix[i - 1][j].date) {
+              div_clone3.style.color = "#2fa678";
+              div_clone3.style.fontWeight = String(400);
+            }
+          } else {
+            div_clone3.textContent = '';
+          }
+        }
+
+        div_clone2.appendChild(div_clone3);
+        div_clone.appendChild(div_clone2);
+      }
+
+      mother.appendChild(div_clone);
+    }
+  }
+
+  //base maker
+  calendarBase = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    top: String(0) + ea,
+    left: String(0) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    calendarBase.style[i] = style[i];
+  }
+
+  //style
+  titleZoneStyle = {
+    position: "relative",
+    height: String(titleHeight) + ea,
+  };
+  contentsZoneStyle = {
+    position: "relative",
+    height: "calc(100% - " + String(titleHeight) + ea + ")",
+    marginTop: String(6) + ea,
+  };
+
+  //title zone -------------------------------------------------------------- start
+  titleZone = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in titleZoneStyle) {
+    titleZone.style[i] = titleZoneStyle[i];
+  }
+
+  //year month number
+  visualSpecific = 1.5;
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    height: String(titleHeight / 2) + ea,
+    fontFamily: "graphik",
+    fontSize: String(titleHeight * 0.38) + ea,
+    fontWeight: String(300),
+    bottom: String(8) + ea,
+    width: "100%",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  div_clone.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+  titleZone.appendChild(div_clone);
+
+  //previous arrow
+  arrowWidth = 9;
+  svg_clone = SvgTong.stringParsing(this.returnArrow("left", "#2fa678"));
+  style = {
+    position: "absolute",
+    width: String(arrowWidth) + ea,
+    height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
+    bottom: String(17) + ea,
+    left: String(23) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  svg_clone.addEventListener("click", function (e) {
+    const whiteBox = calendarBase.parentNode;
+    instance.dateMatrix = instance.dateMatrix.previousMatrix();
+    const { year, month, matrix } = instance.dateMatrix;
+    titleZone.firstChild.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+    calendarBase.removeChild(contentsZone);
+    contentsZone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in contentsZoneStyle) {
+      contentsZone.style[i] = contentsZoneStyle[i];
+    }
+    matrixMaker(contentsZone, matrix, null, width, height, titleHeight);
+    finalHeight1 = (height / 9) * (matrix.length + 1);
+    contentsZone.style.height = String(finalHeight1) + ea;
+    calendarBase.appendChild(contentsZone);
+    calendarBase.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+    whiteBox.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+  });
+  titleZone.appendChild(svg_clone);
+
+  //next arrow
+  svg_clone = SvgTong.stringParsing(this.returnArrow("right", "#2fa678"));
+  style = {
+    position: "absolute",
+    width: String(arrowWidth) + ea,
+    height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
+    bottom: String(17) + ea,
+    right: String(23) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  svg_clone.addEventListener("click", function (e) {
+    const whiteBox = calendarBase.parentNode;
+    instance.dateMatrix = instance.dateMatrix.nextMatrix();
+    const { year, month, matrix } = instance.dateMatrix;
+    titleZone.firstChild.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+    calendarBase.removeChild(contentsZone);
+    contentsZone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in contentsZoneStyle) {
+      contentsZone.style[i] = contentsZoneStyle[i];
+    }
+    matrixMaker(contentsZone, matrix, null, width, height, titleHeight);
+    finalHeight1 = (height / 9) * (matrix.length + 1);
+    contentsZone.style.height = String(finalHeight1) + ea;
+    calendarBase.appendChild(contentsZone);
+    calendarBase.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+    whiteBox.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+  });
+  titleZone.appendChild(svg_clone);
+
+  calendarBase.appendChild(titleZone);
+  //title zone -------------------------------------------------------------- end
+
+  //contents zone ----------------------------------------------------------- start
+  contentsZone = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in contentsZoneStyle) {
+    contentsZone.style[i] = contentsZoneStyle[i];
+  }
+  matrixMaker(contentsZone, matrix, thisDate, width, height, titleHeight);
+  finalHeight1 = (height / 9) * (matrix.length + 1);
+  contentsZone.style.height = String(finalHeight1) + ea;
+  calendarBase.appendChild(contentsZone);
+  //contents zone -------------------------------------------------------------- end
+
+  calendarBase.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+
+  return { calendarDom: calendarBase, calendarHeight: finalHeight0 + finalHeight1 + finalHeight2 };
+}

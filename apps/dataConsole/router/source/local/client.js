@@ -551,7 +551,44 @@ ClientJs.prototype.infoArea = function (info) {
         const map = DataPatch.clientMap();
         const thisMap = map[this.getAttribute("column")];
 
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
+        if (thisMap.type === "date" && e.type === "click") {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          width = 260;
+          height = 280;
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            height: String(260) + ea,
+            background: "white",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#2fa678",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #808080",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+          const { calendarDom, calendarHeight } = instance.mother.makeCalendar(this.textContent, { width, height });
+          // button_clone.addEventListener("click", updateValueEvent);
+          button_clone.appendChild(calendarDom);
+          button_clone.style.height = String(calendarHeight) + ea;
+          this.appendChild(button_clone);
+
+        } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";

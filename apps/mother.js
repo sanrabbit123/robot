@@ -857,15 +857,22 @@ Mother.prototype.sleep = function (time) {
 
 Mother.prototype.getDateMatrix = function (year, month) {
   const motherInstance = this;
-  let tempObj, tempArr;
+  let tempObj, tempArr, tempArr2, tempArr3;
 
   if (year === "today" || (year === undefined && month === undefined)) {
     tempObj = new Date();
     year = tempObj.getFullYear();
     month = tempObj.getMonth();
   } else if (typeof year === "string" && month === undefined && /\-/g.test(year)) {
-    tempArr = year.split("-");
-    tempObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+    if (year.length === 10) {
+      tempArr = year.split("-");
+      tempObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+    } else {
+      tempArr = year.split(" ");
+      tempArr2 = tempArr[0].split("-");
+      tempArr3 = tempArr[1].split(":");
+      tempObj = new Date(Number(tempArr2[0]), Number(tempArr2[1].replace(/^0/, '')) - 1, Number(tempArr2[2].replace(/^0/, '')), Number(tempArr3[0].replace(/^0/, '')), Number(tempArr3[1].replace(/^0/, '')), Number(tempArr3[2].replace(/^0/, '')));
+    }
     year = tempObj.getFullYear();
     month = tempObj.getMonth();
   } else if (typeof year === "object") {

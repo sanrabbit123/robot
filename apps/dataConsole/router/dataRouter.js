@@ -116,6 +116,77 @@ DataRouter.baseMaker = function (target) {
             font-weight: 600;
             font-style: normal;
         }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff') format('woff');
+            font-weight: 200;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
+            font-weight: 200;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff') format('woff');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
+            font-weight: 300;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
+            font-weight: 400;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
+            font-weight: 500;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff') format('woff');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'graphik';
+            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
+                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
+            font-weight: 600;
+            font-style: italic;
+        }
       </style>
       <script>${dataPatchScript}</script>
     </head>
