@@ -20,23 +20,23 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//factor title
+  //factor title
   tong = [];
-	for (let i = 0; i < main.length; i++) {
-		for (let j = 0; j < main[i].children.length; j++) {
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
       tong.push({ contents: main[i].children[j].title, xyz: [ i, j, 9 ] });
-			if (main[i].children[j].subtitles !== undefined) {
-				for (let k = 0; k < main[i].children[j].subtitles.length; k++) {
-				  if (main[i].children[j].subtitles[k].mobileLevelUp) {
-						 tong.push({ contents: main[i].children[j].subtitles[k].title, xyz: [ i, j, k ], mobile: true });
-						 if (main[i].children[j].subtitles[k].mobileException !== undefined) {
-							 tong.push({ contents: main[i].children[j].subtitles[k].mobileException.title, xyz: [ i, j, k ], mobile: true });
-						 }
-					}
-				}
-			}
-		}
-	}
+      if (main[i].children[j].subtitles !== undefined) {
+        for (let k = 0; k < main[i].children[j].subtitles.length; k++) {
+          if (main[i].children[j].subtitles[k].mobileLevelUp) {
+             tong.push({ contents: main[i].children[j].subtitles[k].title, xyz: [ i, j, k ], mobile: true });
+             if (main[i].children[j].subtitles[k].mobileException !== undefined) {
+               tong.push({ contents: main[i].children[j].subtitles[k].mobileException.title, xyz: [ i, j, k ], mobile: true });
+             }
+          }
+        }
+      }
+    }
+  }
 
   for (let obj of tong) {
     if (obj.mobile !== undefined) {
@@ -70,7 +70,7 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//sub title
+  //sub title
   tong = [];
   for (let i = 0; i < main.length; i++) {
     for (let j = 0; j < main[i].children.length; j++) {
@@ -104,54 +104,54 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//button
+  //button
   const { survey: { children: subButtons }, terms, submit } = sub;
-	let buttons = {
-		desktop: {
-			arrow: [],
-			check: [],
-			white: [],
-		},
-		mobile: {
-			green: [],
-			check: [],
-			white: [],
-		},
-	};
+  let buttons = {
+    desktop: {
+      arrow: [],
+      check: [],
+      white: [],
+    },
+    mobile: {
+      green: [],
+      check: [],
+      white: [],
+    },
+  };
 
   //set data
-	for (let i = 0; i < main.length; i++) {
-		for (let j = 0; j < main[i].children.length; j++) {
-			if (main[i].children[j].buttons !== undefined) {
-				for (let k = 0; k < main[i].children[j].buttons.length; k++) {
-					buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
-					buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
-				}
-			}
-		}
-	}
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].buttons !== undefined) {
+        for (let k = 0; k < main[i].children[j].buttons.length; k++) {
+          buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
+          buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
+        }
+      }
+    }
+  }
 
-	for (let i = 0; i < subButtons.length; i++) {
-		for (let j = 0; j < subButtons[i].buttons.length; j++) {
-			buttons.desktop[subButtons[i].buttons[j].type.desktop].push({ contents: subButtons[i].buttons[j].title, xyz: [ 9, i, j ], flatform: "desktop", exception: {} });
-			buttons.mobile[subButtons[i].buttons[j].type.mobile].push({ contents: subButtons[i].buttons[j].title, xyz: [ 9, i, j ], flatform: "mobile", exception: {} });
-		}
-	}
+  for (let i = 0; i < subButtons.length; i++) {
+    for (let j = 0; j < subButtons[i].buttons.length; j++) {
+      buttons.desktop[subButtons[i].buttons[j].type.desktop].push({ contents: subButtons[i].buttons[j].title, xyz: [ 9, i, j ], flatform: "desktop", exception: {} });
+      buttons.mobile[subButtons[i].buttons[j].type.mobile].push({ contents: subButtons[i].buttons[j].title, xyz: [ 9, i, j ], flatform: "mobile", exception: {} });
+    }
+  }
 
-	buttons.desktop[terms.type.desktop].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "desktop", exception: {} });
-	buttons.mobile[terms.type.mobile].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "mobile", exception: {} });
+  buttons.desktop[terms.type.desktop].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "desktop", exception: {} });
+  buttons.mobile[terms.type.mobile].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "mobile", exception: {} });
 
-	for (let i = 0; i < submit.length; i++) {
-		buttons.desktop[submit[i].type.desktop].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "desktop", exception: { font: "SDGothicNeoa-fSm" } });
-		buttons.mobile[submit[i].type.mobile].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "mobile", exception: { font: "SDGothicNeoa-fSm" } });
-	}
+  for (let i = 0; i < submit.length; i++) {
+    buttons.desktop[submit[i].type.desktop].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "desktop", exception: { font: "SDGothicNeoa-fSm" } });
+    buttons.mobile[submit[i].type.mobile].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "mobile", exception: { font: "SDGothicNeoa-fSm" } });
+  }
 
   const { desktop: { arrow: desktopArrow, check: desktopCheck, white: desktopWhite }, mobile: { green: mobileGreen, check: mobileCheck, white: mobileWhite } } = buttons;
 
   //buttonCheck - desktopCheck.concat(mobileCheck)
-	//buttonWhite - desktopWhite.concat(mobileWhite)
-	//buttonArrow - desktopArrow
-	//buttonGreen - mobileGreen
+  //buttonWhite - desktopWhite.concat(mobileWhite)
+  //buttonArrow - desktopArrow
+  //buttonGreen - mobileGreen
 
   //buttonCheck
   for (let { xyz: [ x, y, z ], flatform, exception } of desktopCheck.concat(mobileCheck)) {
@@ -205,7 +205,7 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//buttonWhite
+  //buttonWhite
   for (let { xyz: [ x, y, z ], flatform, exception } of desktopWhite.concat(mobileWhite)) {
     temp_reg = new RegExp("^b_white" + String(x) + String(y) + String(z));
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
@@ -231,7 +231,7 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//buttonArrow
+  //buttonArrow
   for (let { xyz: [ x, y, z ], flatform, exception } of desktopArrow) {
     temp_reg = new RegExp("^b_arrow" + String(x) + String(y) + String(z) + "_off");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
@@ -279,7 +279,7 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//buttonGreen
+  //buttonGreen
   for (let { xyz: [ x, y, z ], flatform, exception } of mobileGreen) {
     temp_reg = new RegExp("^b_green" + String(x) + String(y) + String(z) + "_off");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
@@ -327,18 +327,18 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//notice
+  //notice
   tong = [];
-	for (let i = 0; i < main.length; i++) {
-		for (let j = 0; j < main[i].children.length; j++) {
-			if (main[i].children[j].notice !== undefined) {
-				tong.push({ contents: main[i].children[j].notice.title, xyz: [ i, j, 9 ] });
-				if (main[i].children[j].notice.mobileException !== undefined) {
-					tong.push({ contents: main[i].children[j].notice.mobileException, xyz: [ i, j, 9 ], mobile: true });
-				}
-			}
-		}
-	}
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].notice !== undefined) {
+        tong.push({ contents: main[i].children[j].notice.title, xyz: [ i, j, 9 ] });
+        if (main[i].children[j].notice.mobileException !== undefined) {
+          tong.push({ contents: main[i].children[j].notice.mobileException, xyz: [ i, j, 9 ], mobile: true });
+        }
+      }
+    }
+  }
   for (let obj of tong) {
     if (obj.mobile !== undefined) {
       temp_reg = new RegExp("^monotice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]));
@@ -358,7 +358,7 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
-	//survey
+  //survey
   temp_reg = new RegExp("^surveyTitle");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.survey.src.desktop = z;
@@ -372,21 +372,28 @@ module.exports = function(map, source_rawArr) {
     svgTong.sync.push(z);
   }}
 
-	//pending
+  //pending
   temp_reg = new RegExp("^pending");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.etc.pending.src = z;
     svgTong.sync.push(z);
   }}
 
-	//arrow
+  //certification
+  temp_reg = new RegExp("^certification");
+  for (let z of source_rawArr) { if (temp_reg.test(z)) {
+    sub.etc.certification.src = z;
+    svgTong.sync.push(z);
+  }}
+
+  //arrow
   temp_reg = new RegExp("^arrow");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.etc.arrow[0].src = z;
     svgTong.sync.push(z);
   }}
 
-	//thankyou
+  //thankyou
   const { thankyou: { main: thankyouMain, sub: thankyouSub } } = sub;
   const { whiteTitle, etc: { clickWording, fileSend: { factorTitle, white: fileSendWhite }, complete } } = thankyouSub;
 
@@ -455,7 +462,7 @@ module.exports = function(map, source_rawArr) {
     svgTong.async.push(z);
   }}
 
-	//white title
+  //white title
   temp_reg = new RegExp("^gt_consulting_desktop");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.title.desktop.words.src = z

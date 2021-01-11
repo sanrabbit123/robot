@@ -54,7 +54,7 @@ module.exports = function () {
   .fadeInmainclass{animation:fadeInmain0821 1.1s ease forwards;}
   #loader{position:fixed;width:100%;height:100vh;top:0;left:0;}
   .loaderfadeout{animation:fadeInmainout0821 1.1s ease forwards;}
-  .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear 20;}
+  .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear 50;}
   @media (min-width:1611px) {.loaderc{width:60px;height:60px;margin-left:-30px;top:46vh;}}
   @media (min-width:901px) and (max-width:1610px) {.loaderc{width:50px;height:50px;margin-left:-25px;top:46vh;}}
   @media (max-width:900px) {.loaderc{width:40px;height:40px;margin-left:-20px;top:46vh;}}

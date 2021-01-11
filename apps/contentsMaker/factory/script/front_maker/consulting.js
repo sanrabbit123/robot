@@ -439,6 +439,22 @@ ExecMain.prototype.pendingMaker = function () {
   this.saveSvg(this_ai, to);
 }
 
+ExecMain.prototype.certificationMaker = function () {
+  const { sub: { etc: { certification: { title: text } } } } = this.text;
+  let this_ai, from, to, contents, temp;
+  this_ai = this.createDoc();
+  from = "general";
+  to = "certification";
+  contents = text;
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setParagraph({ from: contents, to: to });
+  temp = this.createElements(this_ai, this.createSetting[to]);
+  temp = temp.createOutline();
+  this.mother.fit_box();
+  app.doScript("expandall", "contents_maker");
+  this.saveSvg(this_ai, to);
+}
+
 ExecMain.prototype.arrowMaker = function () {
   let this_ai = this.createDoc();
   this.mother.return_arrow();
@@ -1103,6 +1119,7 @@ ExecMain.prototype.start = function (dayString) {
   this.noticeMaker();
   this.surveyMaker();
   this.pendingMaker();
+  this.certificationMaker();
   this.arrowMaker();
   this.whiteTitle();
   this.thankyouMaker();

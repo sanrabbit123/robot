@@ -70,9 +70,11 @@ ConsultingJs.prototype.pendingBox = function (mother, boo, clear = false, partia
     div_back = GeneralJs.nodes.div.cloneNode(true);
     div_back.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox_back";
     mother.appendChild(div_back);
+
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox";
     height = (boo === "desktop") ? 20 : 5;
+
     svg_clone = SvgTong.tongMaker();
     svg_clone.src = pending.src;
     width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((boo === "desktop") ? 0 : -1);
@@ -94,6 +96,7 @@ ConsultingJs.prototype.pendingBox = function (mother, boo, clear = false, partia
     svg_clone.src = loader;
     svg_clone.classList.add("loading");
     svg_clone.classList.add("loaderc");
+
     width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
     style = {
       top: String((boo === "desktop") ? 62 : 16) + ea,
@@ -119,6 +122,196 @@ ConsultingJs.prototype.pendingBox = function (mother, boo, clear = false, partia
     }
 
   }
+}
+
+ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, callback) {
+  const instance = this;
+  const { sub: { etc: { pending, certification } } } = this.map;
+  const { sub: { loader } } = this.mother.map;
+
+  const randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+  const randomKey = randomArr[Math.floor(Math.random() * 10)];
+  const randomStr = String(randomKey);
+  let randomValue;
+
+  if (randomStr.length > 6) {
+    randomValue = randomStr.slice(0, 6);
+  } else {
+    randomValue = randomStr;
+    for (let i = randomStr.length; i < 6; i++) {
+      randomValue += String(Math.floor(Math.random() * 10));
+    }
+    randomValue = randomStr;
+  }
+
+  console.log(name);
+  console.log(phone);
+  console.log(randomValue);
+
+  let div_back, div_clone, div_clone2, svg_clone;
+  let input_back, input_clone;
+  let height, width, ea = (boo === "desktop") ? "px" : "vw";
+  let wordWidth, whiteWidth, whiteHeight;
+  let style = {};
+
+  whiteWidth = (boo === "desktop") ? 334 : 77;
+  whiteHeight = (boo === "desktop") ? 132 : 31;
+
+  div_back = GeneralJs.nodes.div.cloneNode(true);
+  div_back.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox_back";
+  mother.appendChild(div_back);
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox";
+  style = {
+    width: String(whiteWidth) + ea,
+    height: String(whiteHeight) + ea,
+    left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  height = (boo === "desktop") ? 19 : 4.5;
+
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = certification.src;
+  wordWidth = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((boo === "desktop") ? 0 : -1);
+  style = {
+    position: "absolute",
+    top: String((boo === "desktop") ? 31 : 7) + ea,
+    left: "calc(50% - " + String(wordWidth / 2) + ea + ")",
+    width: String(wordWidth) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  div_clone2 = SvgTong.parsing(svg_clone);
+  div_clone.appendChild(div_clone2);
+
+  height = (boo === "desktop") ? 30 : 7.6;
+  svg_clone = SvgTong.tongMaker();
+  svg_clone.src = loader;
+  svg_clone.classList.add("loading");
+  svg_clone.classList.add("loaderc");
+
+  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+  style = {
+    top: String((boo === "desktop") ? 67 : 15.5) + ea,
+    left: "calc(50% - " + String((wordWidth / 2) + ((boo === "desktop") ? 1 : 0.5)) + ea + ")",
+    marginLeft: String(0) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  div_clone.appendChild(SvgTong.parsing(svg_clone));
+
+  input_back = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    bottom: String((boo === "desktop") ? 32 : 7.5) + ea,
+    left: String((boo === "desktop") ? 80 : 18) + ea,
+    borderRadius: String((boo === "desktop") ? 4 : 1) + ea,
+    width: String((boo === "desktop") ? 219 : 51.4) + ea,
+    height: String((boo === "desktop") ? 34 : 8) + ea,
+    background: "#f2f2f2",
+  };
+  for (let i in style) {
+    input_back.style[i] = style[i];
+  }
+
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
+  input_clone.setAttribute("type", "text");
+  style = {
+    width: "100%",
+    border: String(0) + ea,
+    fontSize: String((boo === "desktop") ? 15 : 3.8) + ea,
+    outline: String(0) + ea,
+    fontFamily: "Noto Sans KR",
+    background: "transparent",
+    height: String((boo === "desktop") ? 29 : 6.8) + ea,
+    textAlign: "center",
+  };
+  for (let i in style) {
+    input_clone.style[i] = style[i];
+  }
+  input_back.appendChild(input_clone);
+  div_clone.appendChild(input_back);
+
+  mother.appendChild(div_clone);
+
+  input_clone.focus();
+  setTimeout(function () {
+    window.location.reload();
+  }, (10 * 60 * 1000));
+  input_clone.addEventListener("keyup", function (e) {
+    let svg_clone, div_clone2;
+    let style;
+    let width, height;
+    let whiteWidth, whiteHeight;
+    let ea;
+
+    ea = (boo === "desktop") ? "px" : "vw";
+
+    if (e.keyCode === 13 || this.value.length > 5) {
+      if (this.value === randomValue) {
+        while (div_clone.firstChild) {
+          div_clone.removeChild(div_clone.lastChild);
+        }
+
+        whiteWidth = (boo === "desktop") ? 200 : 46;
+        whiteHeight = (boo === "desktop") ? 132 : 31;
+
+        height = (boo === "desktop") ? 19 : 4.5;
+        svg_clone = SvgTong.tongMaker();
+        svg_clone.src = pending.src;
+        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((boo === "desktop") ? 0 : -1);
+        style = {
+          position: "absolute",
+          top: String((boo === "desktop") ? 31 : 7) + ea,
+          left: "calc(50% - " + String(width / 2) + ea + ")",
+          width: String(width) + ea,
+          height: String(height) + ea,
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        div_clone2 = SvgTong.parsing(svg_clone);
+        div_clone.appendChild(div_clone2);
+
+        height = (boo === "desktop") ? 39 : 9.6;
+        svg_clone = SvgTong.tongMaker();
+        svg_clone.src = loader;
+        svg_clone.classList.add("loading");
+        svg_clone.classList.add("loaderc");
+
+        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+        style = {
+          top: String((boo === "desktop") ? 63 : 14.5) + ea,
+          left: "50%",
+          marginLeft: '-' + String(width / 2) + ea,
+          width: String(width) + ea,
+          height: String(height) + ea,
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        div_clone.appendChild(SvgTong.parsing(svg_clone));
+
+        div_clone.style.width = String(whiteWidth) + ea;
+        div_clone.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+        div_clone.style.height = String(whiteHeight) + ea;
+
+        callback();
+
+      } else {
+        alert("인증번호를 정확히 입력해주세요!");
+        this.value = '';
+      }
+    }
+  });
 }
 
 ConsultingJs.prototype.completeBox = function (mother, boo) {
@@ -293,21 +486,16 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         icon.parentNode.lastChild.style.display = "none";
       }
 
-      //view pendingBox
-      instance.pendingBox(mother, boo);
-
-      //send google analytics
-      if (obj.cellphone !== "010-2747-3403") {
-        window.gtag('event', 'login');
-      }
-
-      //submit
-      if (submitNamePhone[0] === '') {
-        GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "성함을 정확히 입력해주세요!");
-      } else {
+      //view certificationBox
+      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, function () {
+        //send google analytics
+        if (obj.cellphone !== "010-2747-3403") {
+          window.gtag('event', 'login');
+        }
+        //submit
         GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
-      }
+      });
 
       //test
       /*
@@ -2804,7 +2992,7 @@ ConsultingJs.prototype.serveyBox = function (boo) {
 
   //details
   if (boo === "desktop") {
-    
+
     //question
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("below_servey_question");
