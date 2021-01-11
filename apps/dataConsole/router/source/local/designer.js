@@ -429,13 +429,21 @@ DesignerJs.prototype.infoArea = function (info) {
         let thisId, requestIndex, column;
         let idDom;
         let mothers, targetDom;
-        let originalDiv = this.parentNode;
+        let originalDiv;
         let finalValue;
         let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
 
-          idDom = this.parentNode.parentNode;
+          if (this.hasAttribute("dateEventMethod")) {
+            originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
+            column = originalDiv.getAttribute("column");
+            idDom = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+          } else {
+            originalDiv = this.parentNode;
+            column = this.parentNode.getAttribute("column");
+            idDom = this.parentNode.parentNode;
+          }
 
           idDom.setAttribute("active", "true");
           thisId = idDom.getAttribute("class");
@@ -448,7 +456,6 @@ DesignerJs.prototype.infoArea = function (info) {
               }
             }
           }
-          column = this.parentNode.getAttribute("column");
 
           if (originalDiv.childNodes[0] !== undefined && originalDiv.childNodes[0].nodeType === 3) {
             pastRawData = originalDiv.childNodes[0].data;
@@ -548,7 +555,43 @@ DesignerJs.prototype.infoArea = function (info) {
         const map = DataPatch.designerMap();
         const thisMap = map[this.getAttribute("column")];
 
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
+        if (thisMap.type === "date" && e.type === "click") {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          width = 260;
+          height = 280;
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            height: String(260) + ea,
+            background: "white",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#2fa678",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #808080",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          button_clone.appendChild(calendar.calendarBase);
+          button_clone.style.height = String(calendar.calendarHeight) + ea;
+          this.appendChild(button_clone);
+
+        } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -1656,13 +1699,20 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let thisId, requestIndex, column;
         let targetDom;
         let fatherTarget = null;
-        let originalDiv = this.parentNode;
+        let originalDiv;
         let finalValue;
         let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
-          mother = this.parentNode.parentNode;
+
+          if (this.hasAttribute("dateEventMethod")) {
+            mother = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+            originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
+          } else {
+            mother = this.parentNode.parentNode;
+            originalDiv = this.parentNode;
+          }
 
           thisId = grandMother.getAttribute("index");
           requestIndex = grandMother.getAttribute("request");
@@ -1784,7 +1834,43 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         const map = DataPatch.designerMap();
         const thisMap = map[this.parentNode.getAttribute("index")];
 
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
+        if (thisMap.type === "date" && e.type === "click") {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          width = 260;
+          height = 280;
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(0) + ea,
+            width: String(width) + ea,
+            height: String(260) + ea,
+            background: "white",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#2fa678",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #808080",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          button_clone.appendChild(calendar.calendarBase);
+          button_clone.style.height = String(calendar.calendarHeight) + ea;
+          this.appendChild(button_clone);
+
+        } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";

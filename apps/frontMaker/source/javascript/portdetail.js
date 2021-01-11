@@ -90,7 +90,6 @@ PortdetailJs.prototype.slideBox = function () {
   return slideBox;
 }
 
-
 PortdetailJs.prototype.designerBox = function () {
   const instance = this;
   let designerBox, div_clone, div_clone2, img_clone;
@@ -245,26 +244,15 @@ PortdetailJs.prototype.designerBox = function () {
   return designerBox;
 }
 
-
 PortdetailJs.prototype.titleBox = function () {
   const instance = this;
   let titleBox, div_clone;
   let style = {};
   let ea = "px";
   titleBox = GeneralJs.nodes.div.cloneNode(true);
-
-
-
-
+  //dev doing
   return titleBox;
 }
-
-
-
-
-
-
-
 
 PortdetailJs.prototype.standard = 0;
 
@@ -447,9 +435,6 @@ PortdetailJs.prototype.launching = async function () {
   const instance = this;
   try {
     await this.setContents();
-
-    console.log(this.contents);
-
     this.slilaunching();
   } catch (e) {
     console.log(e);

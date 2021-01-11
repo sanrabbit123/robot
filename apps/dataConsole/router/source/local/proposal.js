@@ -2666,7 +2666,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
     case "confirm":
       return_func = async function (e) {
         let message = "제안서 확인 후, 컨펌 부탁드리겠습니다! link: ";
-        await GeneralJs.ajaxPromise("linkmake=true&link=/mongo/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
+        await GeneralJs.ajaxPromise("linkmake=true&link=/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([{ standard: "proid", value: proid },])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
         await mother_name(obj);
         reset_event(this);
       }

@@ -4520,6 +4520,148 @@ DataPatch.prototype.projectMap = function () {
     return Number(result + 330000);
   };
 
+  const contentsPhotoDateToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+    finalValue = pastValue;
+    return finalValue;
+  };
+  const contentsPhotoDateInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let originalValue;
+
+    originalValue = input.value;
+
+    inputArr = [ "촬영 일자 기입", "촬영 일자 요청" ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      if (i === 0) {
+        input_clone.addEventListener("click", function (e) {
+          let thisId;
+          if (mother.hasAttribute("column")) {
+            thisId = (/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(grandMother.className))[0];
+          } else {
+            thisId = grandMother.parentNode.parentNode.parentNode.parentNode.getAttribute("index");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/contents?proid=" + thisId + "&view=create";
+        });
+      } else {
+        input_clone.addEventListener("click", async function (e) {
+          try {
+            let thisId, message;
+            let projects, clients;
+            if (mother.hasAttribute("column")) {
+              thisId = (/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(grandMother.className))[0];
+            } else {
+              thisId = grandMother.parentNode.parentNode.parentNode.parentNode.getAttribute("index");
+            }
+            projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: thisId }), "/getProjects"));
+            clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: projects[0].cliid }), "/getClients"));
+            message = clients[0].name + " 고객님의 촬영 일자 조정을 부탁드립니다! | 촬영 일자 기입 link: ";
+            await GeneralJs.ajaxPromise("linkmake=true&link=/contents&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: thisId }, { standard: "view", value: "create" } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      }
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+
   const map = {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
@@ -4559,7 +4701,7 @@ DataPatch.prototype.projectMap = function () {
     paymentsRemainDate: { name: "잔금 지급일", position: "process.calculation.payments.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     paymentsRemainCancel: { name: "잔금 환수일", position: "process.calculation.payments.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     paymentsRemainRefund: { name: "잔금 환수액", position: "process.calculation.payments.remain.refund", type: "number", searchBoo: true, moneyBoo: true },
-    contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "object", inputFunction: contentsPhotoDateInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: contentsPhotoDateToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     photographer: { name: "촬영 작가", position: "contents.photo.info.photographer", type: "string", searchBoo: true, },
     interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", searchBoo: true, },
   };

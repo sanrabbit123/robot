@@ -430,13 +430,21 @@ ContentsJs.prototype.infoArea = function (info) {
         let thisId, requestIndex, column;
         let idDom;
         let mothers, targetDom;
-        let originalDiv = this.parentNode;
+        let originalDiv;
         let finalValue;
         let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
 
-          idDom = this.parentNode.parentNode;
+          if (this.hasAttribute("dateEventMethod")) {
+            originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
+            column = originalDiv.getAttribute("column");
+            idDom = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+          } else {
+            originalDiv = this.parentNode;
+            column = this.parentNode.getAttribute("column");
+            idDom = this.parentNode.parentNode;
+          }
 
           idDom.setAttribute("active", "true");
           thisId = idDom.getAttribute("class");
@@ -449,7 +457,6 @@ ContentsJs.prototype.infoArea = function (info) {
               }
             }
           }
-          column = this.parentNode.getAttribute("column");
 
           if (originalDiv.childNodes[0] !== undefined && originalDiv.childNodes[0].nodeType === 3) {
             pastRawData = originalDiv.childNodes[0].data;
@@ -549,7 +556,43 @@ ContentsJs.prototype.infoArea = function (info) {
         const map = DataPatch.contentsMap();
         const thisMap = map[this.getAttribute("column")];
 
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
+        if (thisMap.type === "date" && e.type === "click") {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          width = 260;
+          height = 280;
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            height: String(260) + ea,
+            background: "white",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#2fa678",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #808080",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          button_clone.appendChild(calendar.calendarBase);
+          button_clone.style.height = String(calendar.calendarHeight) + ea;
+          this.appendChild(button_clone);
+
+        } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -1123,6 +1166,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       let resetEvent;
       let originalHeight, compressHeight, expandHeight, expandGrayHeight;
       let domStyle, titleStyle, grayStyle;
+      let raws;
 
       createViewDoms = [];
       ea = "px";
@@ -1137,6 +1181,11 @@ ContentsJs.prototype.cardViewMaker = function () {
       compressHeight = String(3.2) + "vh";
       expandHeight = "calc(69.5% - 3.2vh - 63px)";
       expandGrayHeight = "calc(90% + 0.9vh)";
+      raws = [
+        "포트폴리오",
+        "고객 후기",
+        "원본 사진"
+      ];
 
       totalFather = GeneralJs.nodes.div.cloneNode(true);
       totalFather.classList.add("totalFather");
@@ -1151,7 +1200,6 @@ ContentsJs.prototype.cardViewMaker = function () {
       for (let i in style) {
         totalFather.style[i] = style[i];
       }
-
 
       //make base
       createViewBase = GeneralJs.nodes.div.cloneNode(true);
@@ -1370,7 +1418,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           let html;
           html = '<b style="font-weight:300;color:' + color + '"> : ' + that.getAttribute('name');
           if (detail) {
-            html += " 고객님의 포트폴리오 or 고객 후기";
+            html += " 고객님의 포트폴리오 / 고객 후기 / 원본 사진";
           }
           html += '</b>';
           return html;
@@ -1400,7 +1448,6 @@ ContentsJs.prototype.cardViewMaker = function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
           const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
-          const [ portfolio, review ] = gray1.children[0].children;
 
           gray0.style.background = "#f7f7f7";
           dom0.style.height = originalHeight;
@@ -1414,33 +1461,42 @@ ContentsJs.prototype.cardViewMaker = function () {
           dom2.style.height = compressHeight;
           dom2.style.borderBottom = "1px solid #ececec";
 
-          portfolio.style.background = review.style.background = "white";
-          portfolio.firstChild.style.color = review.firstChild.style.color = "#2fa678";
-          portfolio.firstChild.style.fontSize = review.firstChild.style.fontSize = String(2.5) + "vh";
+          for (let z of gray1.children[0].children) {
+            z.style.background = "white";
+            z.firstChild.style.color = "#2fa678";
+            z.firstChild.style.fontSize = String(2.5) + "vh";
 
-          portfolio.setAttribute("cliid", cliid);
-          portfolio.setAttribute("proid", proid);
-          portfolio.setAttribute("name", name);
-          portfolio.setAttribute("desid", desid);
-          portfolio.setAttribute("designer", designer);
+            z.setAttribute("cliid", cliid);
+            z.setAttribute("proid", proid);
+            z.setAttribute("name", name);
+            z.setAttribute("desid", desid);
+            z.setAttribute("designer", designer);
 
-          portfolio.firstChild.setAttribute("cliid", cliid);
-          portfolio.firstChild.setAttribute("proid", proid);
-          portfolio.firstChild.setAttribute("name", name);
-          portfolio.firstChild.setAttribute("desid", desid);
-          portfolio.firstChild.setAttribute("designer", designer);
+            z.firstChild.setAttribute("cliid", cliid);
+            z.firstChild.setAttribute("proid", proid);
+            z.firstChild.setAttribute("name", name);
+            z.firstChild.setAttribute("desid", desid);
+            z.firstChild.setAttribute("designer", designer);
+          }
 
-          review.setAttribute("cliid", cliid);
-          review.setAttribute("proid", proid);
-          review.setAttribute("name", name);
-          review.setAttribute("desid", desid);
-          review.setAttribute("designer", designer);
+          //adjust photo date
+          instance.mother.getWhitePrompt("big", function (white) {
+            let div_clone;
+            let style;
+            let ea;
+            let width, height;
 
-          review.firstChild.setAttribute("cliid", cliid);
-          review.firstChild.setAttribute("proid", proid);
-          review.firstChild.setAttribute("name", name);
-          review.firstChild.setAttribute("desid", desid);
-          review.firstChild.setAttribute("designer", designer);
+            ea = "px";
+            white.style.height = String(456) + ea;
+
+            const calendar = instance.mother.makeCalendar((new Date()), function (e) {
+
+            }, { left: 18, title: 0.9, titleBottom: -2, margin: 1.4, height: 1.1, factorFont: 0.85, scaleUp: 1.4, arrow: { width: 11, bottom: 20, left: 29 } });
+            white.appendChild(calendar.calendarBase);
+            white.style.height = String(calendar.calendarHeight) + ea;
+            white.style.transition = "all 0s";
+
+          });
 
           clearTimeout(GeneralJs.timeouts.firstContentsCreateViewDomsTimeout);
           GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = null;
@@ -1458,6 +1514,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("index", String(i));
         div_clone2.setAttribute("name", projects[i].name);
         div_clone2.setAttribute("proid", projects[i].proid);
+        div_clone2.setAttribute("id", projects[i].proid);
         div_clone2.setAttribute("cliid", projects[i].cliid);
         div_clone2.setAttribute("desid", projects[i].desid);
         div_clone2.setAttribute("designer", projects[i].designer);
@@ -1479,7 +1536,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       style = {
         display: "inline-flex",
         height: "100%",
-        width: "calc(calc(100% / 2) - 5px)",
+        width: "calc(calc(100% / " + String(raws.length) + ") - " + String(5 * (raws.length - 1)) + "px)",
         background: "#dddddd",
         marginRight: String(5) + ea,
         marginBottom: String(5) + ea,
@@ -1493,10 +1550,6 @@ ContentsJs.prototype.cardViewMaker = function () {
 
       intoTextEvent = async function (e) {
         try {
-          if (this.getAttribute("name") === "null") {
-            return;
-          }
-
           const that = this;
           const proid = this.getAttribute("proid");
           const cliid = this.getAttribute("cliid");
@@ -1504,257 +1557,263 @@ ContentsJs.prototype.cardViewMaker = function () {
           const name = this.getAttribute("name");
           const designer = this.getAttribute("designer");
           const method = this.getAttribute("method");
-          const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method, "/getRawContents"));
-          const { dom, title, gray } = createViewDoms[1];
-          let temp, tempArr;
-          let interActionIcon, returnIcon;
-          let div_clone, textArea_clone;
-          let controlPannel;
-          let button, buttonText;
-          let buttonWidth, buttonHeight, buttonMargin;
-          let style, buttonStyle, buttonDetailStyle;
-          let margin;
-          let ea = "px";
 
-          createViewDoms[0].dom.style.height = String(0);
-          createViewDoms[0].dom.style.marginBottom = String(0);
-          createViewDoms[0].dom.style.borderBottom = "";
-          createViewDoms[2].dom.style.height = String(0);
-          createViewDoms[2].dom.style.marginBottom = String(0);
-          createViewDoms[2].dom.style.borderBottom = "";
-
-          dom.style.height = "calc(100% - 21px)";
-          title.style.color = title.querySelector("b").style.color = "#404040";
-          tempArr = title.querySelector("b").textContent.split(" ");
-          temp = '';
-          temp += tempArr[0] + ' ' + tempArr[1] + ' ' + tempArr[2] + ' ' + tempArr[3] + ' ';
-          if (method === "portfolio") {
-            temp += "포트폴리오";
-          } else {
-            temp += "고객 후기";
-          }
-          title.querySelector("b").textContent = temp;
-          title.style.height = String(6.5) + "%";
-          gray.style.height = "calc(" + String(100 - 6.5) + "% + 0.9vh)";
-          gray.firstChild.style.display = "none";
-
-          interActionIcon = SvgTong.stringParsing(instance.mother.returnInterAction("#aaaaaa"));
-          interActionIcon.classList.add("hoverDefault_lite");
-          interActionIcon.id = "interActionIcon";
-          style = {
-            position: "absolute",
-            top: String(8) + ea,
-            right: String(26) + ea,
-            height: String(19.5) + ea,
-            width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
-            animation: "justfadeinoriginal 0.4s ease forwards",
-          };
-          for (let i in style) {
-            interActionIcon.style[i] = style[i];
-          }
-          interActionIcon.addEventListener("click", function (e) {
-            e.stopPropagation();
-            that.setAttribute("method", (method === "portfolio" ? "review" : "portfolio"));
-            setTimeout(function () {
-              that.click();
-            }, 0);
-            document.getElementById("returnIcon").remove();
-            document.getElementById("interActionIcon").remove();
-            document.getElementById("textZone").remove();
-          });
-          title.appendChild(interActionIcon);
-
-          returnIcon = SvgTong.stringParsing(instance.mother.returnReturn("#aaaaaa"));
-          returnIcon.classList.add("hoverDefault_lite");
-          returnIcon.id = "returnIcon";
-          style = {
-            position: "absolute",
-            top: String(6) + ea,
-            right: String(1) + ea,
-            height: String(22) + ea,
-            width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
-            animation: "justfadeinoriginal 0.4s ease forwards",
-          };
-          for (let i in style) {
-            returnIcon.style[i] = style[i];
-          }
-          title.appendChild(returnIcon);
-
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          div_clone.id = "textZone";
-          for (let i in blockStyle) {
-            div_clone.style[i] = blockStyle[i];
-          }
-          div_clone.style.background = "white";
-          div_clone.style.height = "calc(100% - 54px)";
-          div_clone.style.top = String(28) + ea;
-          div_clone.style.borderRadius = String(5) + ea;
-
-          margin = 20;
-
-          textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
-          textArea_clone.value = text;
-          style = {
-            width: "calc(100% - " + String(margin * 2) + ea + ")",
-            height: "calc(100% - " + String(margin * 2) + ea + ")",
-            position: "absolute",
-            top: String(margin * 1) + ea,
-            left: String(margin * 1) + ea,
-            border: String(0),
-            outline: String(0),
-            fontSize: String(15) + ea,
-            lineHeight: String(1.7),
-          };
-          for (let i in style) {
-            textArea_clone.style[i] = style[i];
-          }
-          div_clone.appendChild(textArea_clone);
-
-          controlPannel = GeneralJs.nodes.div.cloneNode(true);
-          controlPannel.classList.add("hoverdefault_lite_reverse");
-          style = {
-            width: String(360) + ea,
-            height: String(120) + ea,
-            position: "absolute",
-            bottom: String(margin) + ea,
-            right: String(margin) + ea,
-            background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-            borderRadius: String(5) + ea,
-          };
-          for (let i in style) {
-            controlPannel.style[i] = style[i];
+          if (this.getAttribute("name") === "null") {
+            return;
           }
 
-          buttonWidth = 141;
-          buttonHeight = 35;
-          buttonMargin = 6;
-          controlPannel.style.height = String((buttonHeight * 3) + (buttonMargin * 6)) + ea;
-          controlPannel.style.width = String((buttonWidth * 1.5) + (buttonMargin * 5)) + ea;
+          if (this.getAttribute("method") !== "photo") {
+            const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method, "/getRawContents"));
+            const { dom, title, gray } = createViewDoms[1];
+            let temp, tempArr;
+            let interActionIcon, returnIcon;
+            let div_clone, textArea_clone;
+            let controlPannel;
+            let button, buttonText;
+            let buttonWidth, buttonHeight, buttonMargin;
+            let style, buttonStyle, buttonDetailStyle;
+            let margin;
+            let ea = "px";
 
-          buttonStyle = {
-            width: String(buttonWidth) + ea,
-            height: String(buttonHeight) + ea,
-            color: "#2fa678",
-            position: "absolute",
-            top: String(buttonMargin * 2) + ea,
-            right: String(buttonMargin * 2) + ea,
-            background: "white",
-            borderRadius: String(5) + ea,
-            boxShadow: "0px 8px 15px -11px #2fa678",
-          };
+            createViewDoms[0].dom.style.height = String(0);
+            createViewDoms[0].dom.style.marginBottom = String(0);
+            createViewDoms[0].dom.style.borderBottom = "";
+            createViewDoms[2].dom.style.height = String(0);
+            createViewDoms[2].dom.style.marginBottom = String(0);
+            createViewDoms[2].dom.style.borderBottom = "";
 
-          buttonDetailStyle = {
-            width: String(100) + "%",
-            fontSize: String(13) + ea,
-            fontWeight: String(600),
-            color: "#2fa678",
-            position: "absolute",
-            top: String(7.1) + ea,
-            textAlign: "center",
-          };
+            dom.style.height = "calc(100% - 21px)";
+            title.style.color = title.querySelector("b").style.color = "#404040";
+            tempArr = title.querySelector("b").textContent.split(" ");
+            temp = '';
+            temp += tempArr[0] + ' ' + tempArr[1] + ' ' + tempArr[2] + ' ' + tempArr[3] + ' ';
+            if (method === "portfolio") {
+              temp += "포트폴리오";
+            } else {
+              temp += "고객 후기";
+            }
+            title.querySelector("b").textContent = temp;
+            title.style.height = String(6.5) + "%";
+            gray.style.height = "calc(" + String(100 - 6.5) + "% + 0.9vh)";
+            gray.firstChild.style.display = "none";
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
-          }
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = proid + " | " + name;
-          button.appendChild(buttonText);
-          button.addEventListener("click", function (e) {
-            window.open((window.location.protocol + "//" + window.location.host + "/project?proid=" + proid), "_blank");
-          });
-          controlPannel.appendChild(button);
+            interActionIcon = SvgTong.stringParsing(instance.mother.returnInterAction("#aaaaaa"));
+            interActionIcon.classList.add("hoverDefault_lite");
+            interActionIcon.id = "interActionIcon";
+            style = {
+              position: "absolute",
+              top: String(8) + ea,
+              right: String(26) + ea,
+              height: String(19.5) + ea,
+              width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
+              animation: "justfadeinoriginal 0.4s ease forwards",
+            };
+            for (let i in style) {
+              interActionIcon.style[i] = style[i];
+            }
+            interActionIcon.addEventListener("click", function (e) {
+              e.stopPropagation();
+              that.setAttribute("method", (method === "portfolio" ? "review" : "portfolio"));
+              setTimeout(function () {
+                that.click();
+              }, 0);
+              document.getElementById("returnIcon").remove();
+              document.getElementById("interActionIcon").remove();
+              document.getElementById("textZone").remove();
+            });
+            title.appendChild(interActionIcon);
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
-          }
-          button.style.top = String((buttonMargin * 2) + buttonHeight + buttonMargin) + ea;
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = cliid + " | " + name;
-          button.appendChild(buttonText);
-          button.addEventListener("click", function (e) {
-            window.open((window.location.protocol + "//" + window.location.host + "/client?cliid=" + cliid), "_blank");
-          });
-          controlPannel.appendChild(button);
+            returnIcon = SvgTong.stringParsing(instance.mother.returnReturn("#aaaaaa"));
+            returnIcon.classList.add("hoverDefault_lite");
+            returnIcon.id = "returnIcon";
+            style = {
+              position: "absolute",
+              top: String(6) + ea,
+              right: String(1) + ea,
+              height: String(22) + ea,
+              width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
+              animation: "justfadeinoriginal 0.4s ease forwards",
+            };
+            for (let i in style) {
+              returnIcon.style[i] = style[i];
+            }
+            title.appendChild(returnIcon);
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
-          }
-          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = desid + " | " + designer;
-          button.appendChild(buttonText);
-          button.addEventListener("click", function (e) {
-            window.open((window.location.protocol + "//" + window.location.host + "/designer?desid=" + desid), "_blank");
-          });
-          controlPannel.appendChild(button);
+            div_clone = GeneralJs.nodes.div.cloneNode(true);
+            div_clone.id = "textZone";
+            for (let i in blockStyle) {
+              div_clone.style[i] = blockStyle[i];
+            }
+            div_clone.style.background = "white";
+            div_clone.style.height = "calc(100% - 54px)";
+            div_clone.style.top = String(28) + ea;
+            div_clone.style.borderRadius = String(5) + ea;
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
-          }
-          button.style.width = String(buttonWidth * 0.5) + ea;
-          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = "저장";
-          button.appendChild(buttonText);
-          controlPannel.appendChild(button);
+            margin = 20;
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
-          }
-          button.style.width = String(buttonWidth * 0.5) + ea;
-          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
-          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 1)) + ea;
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = "되돌리기";
-          button.appendChild(buttonText);
-          controlPannel.appendChild(button);
+            textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
+            textArea_clone.value = text;
+            style = {
+              width: "calc(100% - " + String(margin * 2) + ea + ")",
+              height: "calc(100% - " + String(margin * 2) + ea + ")",
+              position: "absolute",
+              top: String(margin * 1) + ea,
+              left: String(margin * 1) + ea,
+              border: String(0),
+              outline: String(0),
+              fontSize: String(15) + ea,
+              lineHeight: String(1.7),
+            };
+            for (let i in style) {
+              textArea_clone.style[i] = style[i];
+            }
+            div_clone.appendChild(textArea_clone);
 
-          button = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonStyle) {
-            button.style[i] = buttonStyle[i];
+            controlPannel = GeneralJs.nodes.div.cloneNode(true);
+            controlPannel.classList.add("hoverdefault_lite_reverse");
+            style = {
+              width: String(360) + ea,
+              height: String(120) + ea,
+              position: "absolute",
+              bottom: String(margin) + ea,
+              right: String(margin) + ea,
+              background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+              borderRadius: String(5) + ea,
+            };
+            for (let i in style) {
+              controlPannel.style[i] = style[i];
+            }
+
+            buttonWidth = 141;
+            buttonHeight = 35;
+            buttonMargin = 6;
+            controlPannel.style.height = String((buttonHeight * 3) + (buttonMargin * 6)) + ea;
+            controlPannel.style.width = String((buttonWidth * 1.5) + (buttonMargin * 5)) + ea;
+
+            buttonStyle = {
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              color: "#2fa678",
+              position: "absolute",
+              top: String(buttonMargin * 2) + ea,
+              right: String(buttonMargin * 2) + ea,
+              background: "white",
+              borderRadius: String(5) + ea,
+              boxShadow: "0px 8px 15px -11px #2fa678",
+            };
+
+            buttonDetailStyle = {
+              width: String(100) + "%",
+              fontSize: String(13) + ea,
+              fontWeight: String(600),
+              color: "#2fa678",
+              position: "absolute",
+              top: String(7.1) + ea,
+              textAlign: "center",
+            };
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = proid + " | " + name;
+            button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+              window.open((window.location.protocol + "//" + window.location.host + "/project?proid=" + proid), "_blank");
+            });
+            controlPannel.appendChild(button);
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            button.style.top = String((buttonMargin * 2) + buttonHeight + buttonMargin) + ea;
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = cliid + " | " + name;
+            button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+              window.open((window.location.protocol + "//" + window.location.host + "/client?cliid=" + cliid), "_blank");
+            });
+            controlPannel.appendChild(button);
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = desid + " | " + designer;
+            button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+              window.open((window.location.protocol + "//" + window.location.host + "/designer?desid=" + desid), "_blank");
+            });
+            controlPannel.appendChild(button);
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            button.style.width = String(buttonWidth * 0.5) + ea;
+            button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = "저장";
+            button.appendChild(buttonText);
+            controlPannel.appendChild(button);
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            button.style.width = String(buttonWidth * 0.5) + ea;
+            button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+            button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 1)) + ea;
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = "되돌리기";
+            button.appendChild(buttonText);
+            controlPannel.appendChild(button);
+
+            button = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonStyle) {
+              button.style[i] = buttonStyle[i];
+            }
+            button.style.width = String(buttonWidth * 0.5) + ea;
+            button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
+            button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
+            buttonText = GeneralJs.nodes.div.cloneNode(true);
+            for (let i in buttonDetailStyle) {
+              buttonText.style[i] = buttonDetailStyle[i];
+            }
+            buttonText.textContent = "삭제";
+            button.appendChild(buttonText);
+            controlPannel.appendChild(button);
+
+            div_clone.appendChild(controlPannel);
+
+            gray.appendChild(div_clone);
           }
-          button.style.width = String(buttonWidth * 0.5) + ea;
-          button.style.right = String((buttonMargin * 3) + (buttonWidth * 1)) + ea;
-          button.style.top = String((buttonMargin * 2) + ((buttonHeight + buttonMargin) * 2)) + ea;
-          buttonText = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in buttonDetailStyle) {
-            buttonText.style[i] = buttonDetailStyle[i];
-          }
-          buttonText.textContent = "삭제";
-          button.appendChild(buttonText);
-          controlPannel.appendChild(button);
-
-          div_clone.appendChild(controlPannel);
-
-          gray.appendChild(div_clone);
-
         } catch (e) {
           console.log(e);
         }
       }
 
       GeneralJs.stacks.secondContentsCreateViewDoms = [];
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < raws.length; i++) {
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         for (let j in style) {
           div_clone2.style[j] = style[j];
@@ -1764,7 +1823,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("name", "null");
         div_clone2.setAttribute("desid", "null");
         div_clone2.setAttribute("designer", "null");
-        div_clone2.setAttribute("method", (["portfolio", "review"])[i]);
+        div_clone2.setAttribute("method", ([ "portfolio", "review", "photo" ])[i]);
 
         div_clone3 = GeneralJs.nodes.div.cloneNode(true);
         div_clone3.classList.add("hoverDefault");
@@ -1773,13 +1832,13 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone3.style.color = "#aaaaaa";
         div_clone3.style.position = "absolute";
         div_clone3.style.marginTop = String(-1) + "vh";
-        div_clone3.textContent = ([ "포트폴리오", "고객 후기" ])[i];
+        div_clone3.textContent = raws[i];
         div_clone3.setAttribute("cliid", "null");
         div_clone3.setAttribute("proid", "null");
         div_clone3.setAttribute("name", "null");
         div_clone3.setAttribute("desid", "null");
         div_clone3.setAttribute("designer", "null");
-        div_clone3.setAttribute("method", (["portfolio", "review"])[i]);
+        div_clone3.setAttribute("method", ([ "portfolio", "review", "photo" ])[i]);
         div_clone2.appendChild(div_clone3);
 
         div_clone2.addEventListener("click", intoTextEvent);
@@ -1841,7 +1900,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           let html;
           html = '<b style="font-weight:300;color:' + color + '"> : ' + that.getAttribute('name');
           if (detail) {
-            html += " 고객님의 포트폴리오 or 고객 후기";
+            html += " 고객님의 포트폴리오 / 고객 후기 / 원본 사진";
           }
           html += '</b>';
           return html;
@@ -1871,7 +1930,6 @@ ContentsJs.prototype.cardViewMaker = function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
           const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
-          const [ portfolio, review ] = gray1.children[0].children;
 
           gray0.style.background = "white";
           dom0.style.height = compressHeight;
@@ -1885,34 +1943,23 @@ ContentsJs.prototype.cardViewMaker = function () {
           dom2.style.height = originalHeight;
           dom2.style.borderBottom = "";
 
-          portfolio.style.background = review.style.background = "white";
-          portfolio.firstChild.style.color = review.firstChild.style.color = "#2fa678";
-          portfolio.firstChild.style.fontSize = review.firstChild.style.fontSize = String(2.5) + "vh";
-          portfolio.firstChild.style.marginTop = review.firstChild.style.marginTop = String(-1) + "vh";
+          for (let z of gray1.children[0].children) {
+            z.style.background = "white";
+            z.firstChild.style.color = "#2fa678";
+            z.firstChild.style.fontSize = String(2.5) + "vh";
 
-          portfolio.setAttribute("cliid", cliid);
-          portfolio.setAttribute("proid", proid);
-          portfolio.setAttribute("name", name);
-          portfolio.setAttribute("desid", desid);
-          portfolio.setAttribute("designer", designer);
+            z.setAttribute("cliid", cliid);
+            z.setAttribute("proid", proid);
+            z.setAttribute("name", name);
+            z.setAttribute("desid", desid);
+            z.setAttribute("designer", designer);
 
-          portfolio.firstChild.setAttribute("cliid", cliid);
-          portfolio.firstChild.setAttribute("proid", proid);
-          portfolio.firstChild.setAttribute("name", name);
-          portfolio.firstChild.setAttribute("desid", desid);
-          portfolio.firstChild.setAttribute("designer", designer);
-
-          review.setAttribute("cliid", cliid);
-          review.setAttribute("proid", proid);
-          review.setAttribute("name", name);
-          review.setAttribute("desid", desid);
-          review.setAttribute("designer", designer);
-
-          review.firstChild.setAttribute("cliid", cliid);
-          review.firstChild.setAttribute("proid", proid);
-          review.firstChild.setAttribute("name", name);
-          review.firstChild.setAttribute("desid", desid);
-          review.firstChild.setAttribute("designer", designer);
+            z.firstChild.setAttribute("cliid", cliid);
+            z.firstChild.setAttribute("proid", proid);
+            z.firstChild.setAttribute("name", name);
+            z.firstChild.setAttribute("desid", desid);
+            z.firstChild.setAttribute("designer", designer);
+          }
 
           clearTimeout(GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout);
           GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout = null;
@@ -1930,6 +1977,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("index", String(i));
         div_clone2.setAttribute("name", projects[i].name);
         div_clone2.setAttribute("proid", projects[i].proid);
+        div_clone2.setAttribute("id", projects[i].proid);
         div_clone2.setAttribute("cliid", projects[i].cliid);
         div_clone2.setAttribute("desid", projects[i].desid);
         div_clone2.setAttribute("designer", projects[i].designer);
@@ -1944,6 +1992,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       totalFather.classList.add("fadein");
       totalContents.appendChild(totalFather);
       instance.totalFather = totalFather;
+      instance.createViewDoms = createViewDoms;
     }
     instance.onView = "father";
   }
@@ -2487,13 +2536,20 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let thisId, requestIndex, column;
         let targetDom;
         let fatherTarget = null;
-        let originalDiv = this.parentNode;
+        let originalDiv;
         let finalValue;
         let pastRawData;
 
         if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
-          mother = this.parentNode.parentNode;
+
+          if (this.hasAttribute("dateEventMethod")) {
+            mother = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+            originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
+          } else {
+            mother = this.parentNode.parentNode;
+            originalDiv = this.parentNode;
+          }
 
           thisId = grandMother.getAttribute("index");
           requestIndex = grandMother.getAttribute("request");
@@ -2615,7 +2671,43 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         const map = DataPatch.contentsMap();
         const thisMap = map[this.parentNode.getAttribute("index")];
 
-        if (thisMap.type !== "object" && thisMap.items !== undefined) {
+        if (thisMap.type === "date" && e.type === "click") {
+
+          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+
+          this.style.overflow = "";
+          width = 260;
+          height = 280;
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(0) + ea,
+            width: String(width) + ea,
+            height: String(260) + ea,
+            background: "white",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#2fa678",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #808080",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          button_clone.appendChild(calendar.calendarBase);
+          button_clone.style.height = String(calendar.calendarHeight) + ea;
+          this.appendChild(button_clone);
+
+        } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
@@ -4637,6 +4729,17 @@ ContentsJs.prototype.launching = async function () {
       if (getTarget !== null) {
         getTarget.click();
       }
+    }
+
+    if (getObj.view === "create") {
+      tempFunction = this.cardViewMaker();
+      tempFunction.call({ type: "click" }, this.mother.belowButtons.square.up).then(function () {
+        if (getObj.proid !== undefined) {
+          if (instance.createViewDoms[0].gray.firstChild.querySelector("#" + getObj.proid) !== null) {
+            instance.createViewDoms[0].gray.firstChild.querySelector("#" + getObj.proid).click();
+          }
+        }
+      });
     }
 
   } catch (e) {
