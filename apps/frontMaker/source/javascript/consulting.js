@@ -129,7 +129,13 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   const { sub: { etc: { pending, certification } } } = this.map;
   const { sub: { loader } } = this.mother.map;
 
-  const randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+  let randomArr;
+  if (GeneralJs.isIE()) {
+    randomArr = window.msCrypto.getRandomValues(new Uint32Array(10));
+  } else {
+    randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+  }
+
   const randomKey = randomArr[Math.floor(Math.random() * 10)];
   const randomStr = String(randomKey);
   let randomValue;
@@ -151,6 +157,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   let height, width, ea = (boo === "desktop") ? "px" : "vw";
   let wordWidth, whiteWidth, whiteHeight;
   let style = {};
+  let endEvent;
 
   whiteWidth = (boo === "desktop") ? 334 : 77;
   whiteHeight = (boo === "desktop") ? 132 : 31;
@@ -210,7 +217,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   style = {
     position: "absolute",
     bottom: String((boo === "desktop") ? 32 : 7.5) + ea,
-    left: String((boo === "desktop") ? 80 : 18) + ea,
+    left: String((boo === "desktop") ? (GeneralJs.isMac() ? 80 : 79) : 18) + ea,
     borderRadius: String((boo === "desktop") ? 4 : 1) + ea,
     width: String((boo === "desktop") ? 219 : 51.4) + ea,
     height: String((boo === "desktop") ? 34 : 8) + ea,
@@ -244,7 +251,8 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   setTimeout(function () {
     window.location.reload();
   }, (10 * 60 * 1000));
-  input_clone.addEventListener("keyup", function (e) {
+
+  endEvent = function (e) {
     let svg_clone, div_clone2;
     let style;
     let width, height;
@@ -253,7 +261,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
 
     ea = (boo === "desktop") ? "px" : "vw";
 
-    if (e.keyCode === 13 || this.value.length > 5) {
+    if (this.value.length > 5) {
       if (this.value === randomValue) {
         while (div_clone.firstChild) {
           div_clone.removeChild(div_clone.lastChild);
@@ -309,7 +317,10 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
         this.value = '';
       }
     }
-  });
+  }
+
+  input_clone.addEventListener("keyup", endEvent);
+  input_clone.addEventListener("blur", endEvent);
 }
 
 ConsultingJs.prototype.completeBox = function (mother, boo) {

@@ -27,7 +27,7 @@ class Smssend {
       'rdate' => '',
       'rtime' => '',
       'testmode_yn' => 'N',
-      'title' => '홈리에종 휴대폰 인증번호',
+      'title' => '휴대폰 인증',
       'msg_type' => $this->meth
     );
 
