@@ -4649,7 +4649,7 @@ DataPatch.prototype.projectMap = function () {
             projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: thisId }), "/getProjects"));
             clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: projects[0].cliid }), "/getClients"));
             message = clients[0].name + " 고객님의 촬영 일자 조정을 부탁드립니다! | 촬영 일자 기입 link: ";
-            await GeneralJs.ajaxPromise("linkmake=true&link=/contents&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: thisId }, { standard: "view", value: "create" } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
+            await GeneralJs.ajaxPromise("linkmake=true&link=/contents&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: thisId }, { standard: "view", value: "create", force: "true" } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
           } catch (e) {
             console.log(e);
           }

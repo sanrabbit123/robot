@@ -5,6 +5,7 @@ const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
+const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
@@ -645,6 +646,9 @@ class DevContext extends Array {
       // }
 
 
+
+      const calendar = new GoogleCalendar();
+      await calendar.makeSchedule("안녕", "상세", new Date());
 
 
 

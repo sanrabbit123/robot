@@ -11,7 +11,9 @@ const GoogleAPIs = function (credentials = "default") {
       gmail: {},
     },
   }
-  if (credentials !== "default") { this.oAuth2Info.credentials = credentials; }
+  if (credentials !== "default") {
+    this.oAuth2Info.credentials = credentials;
+  }
   this.oAuth2Client = new this.google.auth.OAuth2(this.oAuth2Info.credentials.installed.client_id, this.oAuth2Info.credentials.installed.client_secret, this.oAuth2Info.credentials.installed.redirect_uris[0]);
 }
 
@@ -136,6 +138,9 @@ GoogleAPIs.prototype.get_app = async function (app) {
       break;
     case "gmail":
       return_app = this.google.gmail({ version: 'v1', auth: this.oAuth2Client });
+      break;
+    case "calendar":
+      return_app = this.google.calendar({ version: 'v3', auth: this.oAuth2Client });
       break;
   }
   return return_app;

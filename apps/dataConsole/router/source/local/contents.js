@@ -1391,6 +1391,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       };
 
       clickEvent = function (e) {
+        const getObj = GeneralJs.returnGet();
         const that = this;
         const { dom, title, gray } = createViewDoms[0];
         const { title: title2 } = createViewDoms[1];
@@ -1398,6 +1399,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         let appendHtml;
         let inputHtml;
         let cliid, proid, name, desid, designer;
+        let thisClientName, thisDesignerName;
 
         for (let i of GeneralJs.stacks.firstContentsCreateViewDoms) {
           if (i.getAttribute("index") === this.getAttribute("index")) {
@@ -1414,9 +1416,12 @@ ContentsJs.prototype.cardViewMaker = function () {
           }
         }
 
+        thisClientName = this.getAttribute('name');
+        thisDesignerName = this.getAttribute('designer');
+
         appendHtml = function (color, detail = false) {
           let html;
-          html = '<b style="font-weight:300;color:' + color + '"> : ' + that.getAttribute('name');
+          html = '<b style="font-weight:300;color:' + color + '"> : ' + thisClientName;
           if (detail) {
             html += " 고객님의 포트폴리오 / 고객 후기 / 원본 사진";
           }
@@ -1444,10 +1449,11 @@ ContentsJs.prototype.cardViewMaker = function () {
 
         title3.style.color = "#cccccc";
 
-        GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = setTimeout(function () {
+        GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = setTimeout(async function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
           const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
+          let thisProjects, thisProject;
 
           gray0.style.background = "#f7f7f7";
           dom0.style.height = originalHeight;
@@ -1480,23 +1486,409 @@ ContentsJs.prototype.cardViewMaker = function () {
           }
 
           //adjust photo date
-          instance.mother.getWhitePrompt("big", function (white) {
-            let div_clone;
-            let style;
-            let ea;
-            let width, height;
+          thisProjects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
+          thisProject = thisProjects[0];
+          if (getObj.force !== undefined || /^1[6789]/.test(thisProject.contents.photo.date)) {
+            instance.mother.getWhitePrompt("big", function (white, cancelBox) {
+              let div_clone, div_clone2;
+              let input_clone;
+              let style;
+              let inputTitleStyle, inputInputStyle, inputTextStyle;
+              let ea;
+              let tempObj, tempDate;
+              let width, height;
+              let whiteWidth;
+              let barTop;
+              let titleIndent;
+              let inputMargin;
+              let buttonBottom;
+              let inputTitleTop;
+              let injectionHtml;
+              let inputTitles;
+              let photoInput;
+              let photographerInput;
+              let interviewerInput;
+              let pastValuesArr;
+              let inputTargetMaps;
 
-            ea = "px";
-            white.style.height = String(456) + ea;
+              ea = "px";
+              whiteWidth = 800;
+              barTop = 45;
+              titleIndent = 46;
+              inputMargin = 39;
+              buttonBottom = 49;
+              inputTitleTop = 150;
+              inputTitles = [
+                "촬영 일자",
+                "사진 작가",
+                "인터뷰어"
+              ];
+              inputTargetMaps = [
+                "contents.photo.date",
+                "contents.photo.info.photographer",
+                "contents.photo.info.interviewer",
+              ];
+              photoInput = {};
+              photographerInput = {};
+              interviewerInput = {};
+              pastValuesArr = [];
 
-            const calendar = instance.mother.makeCalendar((new Date()), function (e) {
+              //style
+              inputTitleStyle = {
+                position: "absolute",
+                left: "calc(50% + " + String(47) + ea + ")",
+                fontSize: String(18) + ea,
+                fontWeight: String(500),
+                top: String(inputTitleTop) + ea,
+              };
 
-            }, { left: 18, title: 0.9, titleBottom: -2, margin: 1.4, height: 1.1, factorFont: 0.85, scaleUp: 1.4, arrow: { width: 11, bottom: 20, left: 29 } });
-            white.appendChild(calendar.calendarBase);
-            white.style.height = String(calendar.calendarHeight) + ea;
-            white.style.transition = "all 0s";
+              inputInputStyle = {
+                position: "absolute",
+                left: "calc(50% + " + String(128) + ea + ")",
+                background: "#f2f2f2",
+                width: String(226) + ea,
+                height: String(31) + ea,
+                top: String(inputTitleTop - 1) + ea,
+                borderRadius: String(4) + ea,
+              };
 
-          });
+              inputTextStyle = {
+                position: "absolute",
+                width: String(100) + "%",
+                height: String(30) + ea,
+                top: String(0) + ea,
+                left: String(0) + ea,
+                border: String(0),
+                outline: String(0),
+                fontSize: String(15) + ea,
+                background: "transparent",
+                textAlign: "center",
+              };
+
+              //calendar and white
+              const calendar = instance.mother.makeCalendar((new Date()), function (e) {
+                const grandMother = this.parentNode.parentNode;
+                let allDates;
+
+                photoInput.value = this.getAttribute("buttonValue") + " 14:00:00";
+                photographerInput.focus();
+
+                allDates = [];
+                for (let i = 1; i < grandMother.children.length; i++) {
+                  for (let j = 0; j < grandMother.children[i].children.length; j++) {
+                    allDates.push({ dom: grandMother.children[i].children[j], day: j });
+                  }
+                }
+
+                for (let i = 0; i < allDates.length; i++) {
+                  allDates[i].dom.firstChild.style.transition = "all 0s ease";
+                  if (allDates[i].dom.firstChild.textContent !== '') {
+                    if (allDates[i].dom !== this) {
+                      allDates[i].dom.firstChild.style.fontWeight = String(200);
+                      allDates[i].dom.firstChild.style.color = (allDates[i].day > 4) ? "#2fa678" : "#404040";
+                    } else {
+                      allDates[i].dom.firstChild.style.fontWeight = String(400);
+                      allDates[i].dom.firstChild.style.color = "#2fa678";
+                    }
+                  }
+                }
+
+              }, { left: 19, title: 0.9, titleBottom: -4, margin: 1.6, height: 1.1, factorFont: 0.85, scaleUp: 1.4, arrow: { width: 11, bottom: 20, left: 29 } });
+              white.appendChild(calendar.calendarBase);
+              white.style.height = String(calendar.calendarHeight) + ea;
+              white.style.transition = "all 0s";
+              white.style.width = String(whiteWidth) + ea;
+              white.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+              white.style.top = "calc(calc(calc(100% - " + String(instance.belowHeight) + ea + ") / 2) - " + String(calendar.calendarHeight / 2) + ea + ")";
+
+              //bar
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                height: "calc(100% - " + String(barTop * 2) + ea + ")",
+                borderRight: "1px solid #dddddd",
+                top: String(barTop) + ea,
+                left: "50%",
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+              white.appendChild(div_clone);
+
+              //proid
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                left: "calc(50% + " + String(titleIndent) + ea + ")",
+                fontSize: String(23.5) + ea,
+                fontWeight: String(500),
+                top: String(65) + ea,
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+
+              injectionHtml = '';
+              injectionHtml += thisClientName;
+              injectionHtml += " ";
+              injectionHtml += '<b style="font-size:15px;color:#2fa678;font-weight:200">';
+              injectionHtml += proid;
+              injectionHtml += "</b>";
+
+              div_clone.insertAdjacentHTML("beforeend", injectionHtml);
+              div_clone.classList.add("hoverDefault");
+              div_clone.addEventListener("click", function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid, "_blank");
+              });
+              white.appendChild(div_clone);
+
+              //desid
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style.top = String(99) + ea;
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+
+              injectionHtml = '';
+              injectionHtml += thisDesignerName;
+              injectionHtml += " ";
+              injectionHtml += '<b style="font-size:15px;color:#2fa678;font-weight:200">';
+              injectionHtml += desid;
+              injectionHtml += "</b>";
+
+              div_clone.insertAdjacentHTML("beforeend", injectionHtml);
+              div_clone.classList.add("hoverDefault");
+              div_clone.addEventListener("click", function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/designer?desid=" + desid, "_blank");
+              });
+              white.appendChild(div_clone);
+
+              //inputs
+              for (let i = 0; i < inputTitles.length; i++) {
+
+                //inputs - title
+                div_clone = GeneralJs.nodes.div.cloneNode(true);
+                inputTitleStyle.top = String(inputTitleTop + (inputMargin * i)) + ea;
+                for (let j in inputTitleStyle) {
+                  div_clone.style[j] = inputTitleStyle[j];
+                }
+                div_clone.textContent = inputTitles[i];
+                white.appendChild(div_clone);
+
+                //inputs - input
+                div_clone = GeneralJs.nodes.div.cloneNode(true);
+                inputInputStyle.top = String((inputTitleTop - 1) + (inputMargin * i)) + ea;
+                for (let j in inputInputStyle) {
+                  div_clone.style[j] = inputInputStyle[j];
+                }
+                white.appendChild(div_clone);
+
+                //inputs - text input
+                input_clone = GeneralJs.nodes.input.cloneNode(true);
+                input_clone.setAttribute("type", "text");
+
+                tempObj = thisProject;
+                for (let k of inputTargetMaps[i].split(".")) {
+                  tempObj = tempObj[k];
+                }
+                if (i === 0) {
+                  if (/^1[678]/.test(tempObj)) {
+                    tempObj = '-';
+                  } else {
+                    tempDate = new Date(tempObj);
+                    tempObj = String(tempDate.getFullYear()) + '-' + ((tempDate.getMonth() < 9) ? '0' + String(tempDate.getMonth() + 1) : String(tempDate.getMonth() + 1)) + '-' + ((tempDate.getDate() < 10) ? '0' + String(tempDate.getDate()) : String(tempDate.getDate()));
+                  }
+                }
+
+                input_clone.value = tempObj;
+                pastValuesArr.push(tempObj);
+                for (let j in inputTextStyle) {
+                  input_clone.style[j] = inputTextStyle[j];
+                }
+                div_clone.appendChild(input_clone);
+                if (i === 0) {
+                  photoInput = input_clone;
+                  photoInput.addEventListener("blur", function (e) {
+                    if (this.value !== "-") {
+                      if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(this.value)) {
+                        alert("포맷에 맞게 정확히 입력해주세요! (촬영 시간 포맷 : yyyy-mm-dd hh:mm:ss)");
+                      } else {
+                        if (Number((((this.value.split(" "))[1]).split(":"))[0].replace(/^0/, '')) < 7) {
+                          alert("시간이 새벽으로 설정됩니다! 오전 / 오후 개념을 정확히 반영한 시간대를 알려주세요. (촬영 시간 포맷 : yyyy-mm-dd hh:mm:ss)");
+                        }
+                      }
+                    }
+                  });
+                } else if (i === 1) {
+                  photographerInput = input_clone;
+                } else {
+                  interviewerInput = input_clone;
+                }
+
+              }
+
+              //button0
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault");
+              style = {
+                position: "absolute",
+                bottom: String(buttonBottom) + ea,
+                right: String(122.5) + ea,
+                width: String(46) + ea,
+                height: String(30) + ea,
+                background: "#2fa678",
+                borderRadius: String(3) + ea,
+              };
+              for (let j in style) {
+                div_clone.style[j] = style[j];
+              }
+
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                fontSize: String(14) + ea,
+                color: "white",
+                fontWeight: String(600),
+                position: "absolute",
+                top: String(4) + ea,
+                left: String(11) + ea,
+              };
+              for (let j in style) {
+                div_clone2.style[j] = style[j];
+              }
+              div_clone2.textContent = "저장";
+              div_clone.appendChild(div_clone2);
+              div_clone.addEventListener("click", async function (e) {
+                try {
+                  let message;
+                  let whereQuery, updateQuery;
+                  let tempDateArr, tempDateStr;
+                  let tempDateArr2, tempDateArr3;
+                  let title, description, start, end;
+                  let loadingBack, loadingIcon;
+                  let width;
+                  let style = {};
+                  let ea = "px";
+
+                  if (!/^1[6789]/.test(photoInput.value) && photoInput.value !== '' && photoInput.value !== '-' && /^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(photoInput.value.trim()) && photographerInput.value !== '' && photographerInput.value !== '-' && interviewerInput.value !== '' && interviewerInput.value !== '-') {
+
+                    loadingBack = GeneralJs.nodes.div.cloneNode(true);
+                    style = {
+                      position: "absolute",
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      top: String(0) + ea,
+                      left: String(0) + ea,
+                      background: "gray",
+                      opacity: String(0.25),
+                      borderRadius: String(5) + ea,
+                    };
+                    for (let z in style) {
+                      loadingBack.style[z] = style[z];
+                    }
+                    white.appendChild(loadingBack);
+
+                    width = 50;
+                    loadingIcon = instance.mother.returnLoadingIcon();
+                    style = {
+                      position: "absolute",
+                      zIndex: String(2),
+                      width: String(width) + ea,
+                      height: String(width) + ea,
+                      top: "calc(50% - " + String((width / 2) + 3) + ea + ")",
+                      left: "calc(50% - " + String(width / 2) + ea + ")",
+                    };
+                    for (let z in style) {
+                      loadingIcon.style[z] = style[z];
+                    }
+                    white.appendChild(loadingIcon);
+
+                    //update
+                    whereQuery = {};
+                    updateQuery = {};
+                    dateQuery = {};
+
+                    whereQuery.proid = proid;
+
+                    tempDateStr = GeneralJs.queryFilter(photoInput.value.trim());
+                    tempDateArr = tempDateStr.split(' ');
+                    tempDateArr2 = tempDateArr[0].split("-");
+                    tempDateArr3 = tempDateArr[1].split(":");
+
+                    updateQuery["contents.photo.date"] = new Date(Number(tempDateArr2[0]), Number(tempDateArr2[1].replace(/^0/g, '')) - 1, Number(tempDateArr2[2].replace(/^0/g, '')), Number(tempDateArr3[0].replace(/^0/g, '')), Number(tempDateArr3[1].replace(/^0/g, '')), Number(tempDateArr3[2].replace(/^0/g, '')));
+                    updateQuery["contents.photo.info.photographer"] = GeneralJs.queryFilter(photographerInput.value.trim());
+                    updateQuery["contents.photo.info.interviewer"] = GeneralJs.queryFilter(interviewerInput.value.trim());
+
+                    dateQuery["contents.photo.date"] = true;
+                    dateQuery["contents.photo.info.photographer"] = false;
+                    dateQuery["contents.photo.info.interviewer"] = false;
+
+                    await GeneralJs.ajaxPromise("where=" + JSON.stringify(whereQuery) + "&updateQuery=" + JSON.stringify(updateQuery) + "&dateQuery=" + JSON.stringify(dateQuery), "/rawUpdateProject");
+
+                    title = thisClientName + "C/" + thisDesignerName + "D 촬영";
+                    description = "포토 : " + updateQuery["contents.photo.info.photographer"];
+                    description += "\n";
+                    description += "인터뷰어 : " + updateQuery["contents.photo.info.interviewer"];
+                    start = updateQuery["contents.photo.date"];
+                    end = updateQuery["contents.photo.date"];
+                    await GeneralJs.ajaxPromise("requestObj=" + JSON.stringify({ title, description, start, end }), "/makeSchedule");
+
+                    //slack
+                    message = '';
+                    message += thisClientName;
+                    message += " 고객님의 촬영 일자(" + photoInput.value + ")를 조정하였습니다! 원본 글, 원본 사진을 입력해주세요! link: ";
+                    await GeneralJs.ajaxPromise("linkmake=true&link=/contents&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: proid }, { standard: "view", value: "create" } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
+
+                    //end
+                    cancelBox.click();
+
+                  } else {
+                    alert("모든 값을 포맷에 맞춰 정확히 입력해주세요! (촬영 시간 포맷 : yyyy-mm-dd hh:mm:ss)");
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+              white.appendChild(div_clone);
+
+              //button1
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault");
+              style = {
+                position: "absolute",
+                bottom: String(buttonBottom) + ea,
+                right: String(46) + ea,
+                width: String(72) + ea,
+                height: String(30) + ea,
+                background: "#2fa678",
+                borderRadius: String(3) + ea,
+              };
+              for (let j in style) {
+                div_clone.style[j] = style[j];
+              }
+
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                fontSize: String(14) + ea,
+                color: "white",
+                fontWeight: String(600),
+                position: "absolute",
+                top: String(4) + ea,
+                left: String(12) + ea,
+              };
+              for (let j in style) {
+                div_clone2.style[j] = style[j];
+              }
+              div_clone2.textContent = "되돌리기";
+              div_clone.appendChild(div_clone2);
+              div_clone.addEventListener("click", function (e) {
+                photoInput.value = pastValuesArr[0];
+                photographerInput.value = pastValuesArr[1];
+                interviewerInput.value = pastValuesArr[2];
+              });
+              white.appendChild(div_clone);
+
+            });
+          }
 
           clearTimeout(GeneralJs.timeouts.firstContentsCreateViewDomsTimeout);
           GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = null;
@@ -1573,7 +1965,9 @@ ContentsJs.prototype.cardViewMaker = function () {
             let buttonWidth, buttonHeight, buttonMargin;
             let style, buttonStyle, buttonDetailStyle;
             let margin;
-            let ea = "px";
+            let ea;
+
+            ea = "px";
 
             createViewDoms[0].dom.style.height = String(0);
             createViewDoms[0].dom.style.marginBottom = String(0);
@@ -1637,6 +2031,17 @@ ContentsJs.prototype.cardViewMaker = function () {
             for (let i in style) {
               returnIcon.style[i] = style[i];
             }
+            returnIcon.addEventListener("click", function (e) {
+              e.stopPropagation();
+              resetEvent.call(e, this.parentNode);
+              GeneralJs.timeouts.returnIconResetEvent = setTimeout(function () {
+                if (createViewDoms[0].gray.firstChild.querySelector("#" + proid) !== null) {
+                  createViewDoms[0].gray.firstChild.querySelector("#" + proid).click();
+                }
+                clearTimeout(GeneralJs.timeouts.returnIconResetEvent);
+                GeneralJs.timeouts.returnIconResetEvent = null;
+              }, 0);
+            });
             title.appendChild(returnIcon);
 
             div_clone = GeneralJs.nodes.div.cloneNode(true);

@@ -818,7 +818,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   obj.func = async function (req, res) {
     try {
       let raw_data;
-      let whereQuery, updateQuery;
+      let whereQuery, updateQuery, dateQuery;
 
       whereQuery = JSON.parse(req.body.where);
 
@@ -833,6 +833,18 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         }
       } else {
         updateQuery = JSON.parse(req.body.updateQuery);
+        if (req.body.dateQuery !== undefined) {
+          dateQuery = JSON.parse(req.body.dateQuery);
+          for (let z in dateQuery) {
+            if (dateQuery[z]) {
+              if (updateQuery[z] === undefined) {
+                throw new Error("invaild date query");
+              } else {
+                updateQuery[z] = new Date(updateQuery[z]);
+              }
+            }
+          }
+        }
       }
 
       if (req.url === "/rawUpdateClient") {
@@ -1791,6 +1803,36 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_makeSchedule = function () {
+  const instance = this;
+  const { shell, shellLink } = this.mother;
+  const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
+  let obj = {};
+  obj.link = "/makeSchedule";
+  obj.func = async function (req, res) {
+    try {
+      let { title, description, start } = JSON.parse(req.body.requestObj);
+      let end;
+
+      start = new Date(start);
+      if (JSON.parse(req.body.requestObj).end === undefined) {
+        end = new Date(start);
+      } else {
+        end = new Date(JSON.parse(req.body.requestObj).end);
+      }
+
+      const calendar = new GoogleCalendar();
+      await calendar.makeSchedule(title, description, start, end);
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ "message": "done" }));
     } catch (e) {
       console.log(e);
     }

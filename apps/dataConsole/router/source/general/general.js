@@ -1309,18 +1309,19 @@ GeneralJs.prototype.memberView = function () {
   }
 }
 
-GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function (white) {}) {
+GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function (white, cancelBox) {}) {
   if (typeof size === "object") {
     callback = size;
     size = "big";
   }
   const instance = this;
+  let cancelBox;
   let div_clone;
   let style;
   let ea = "px";
 
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.classList.add("whitePrompt");
+  cancelBox = GeneralJs.nodes.div.cloneNode(true);
+  cancelBox.classList.add("whitePrompt");
   style = {
     position: "fixed",
     width: "100%",
@@ -1334,14 +1335,14 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
     cursor: "pointer",
   };
   for (let i in style) {
-    div_clone.style[i] = style[i];
+    cancelBox.style[i] = style[i];
   }
-  div_clone.addEventListener("click", function (e) {
+  cancelBox.addEventListener("click", function (e) {
     while (document.querySelectorAll(".whitePrompt").length !== 0) {
       document.body.removeChild(document.querySelector(".whitePrompt"));
     }
   });
-  document.body.appendChild(div_clone);
+  document.body.appendChild(cancelBox);
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("whitePrompt");
@@ -1379,7 +1380,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
   }
   document.body.appendChild(div_clone);
 
-  callback(div_clone);
+  callback(div_clone, cancelBox);
 }
 
 GeneralJs.prototype.loginBox = async function () {
