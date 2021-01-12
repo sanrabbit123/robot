@@ -219,7 +219,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
     bottom: String((boo === "desktop") ? 32 : 7.5) + ea,
     left: String((boo === "desktop") ? (GeneralJs.isMac() ? 80 : 79) : 18) + ea,
     borderRadius: String((boo === "desktop") ? 4 : 1) + ea,
-    width: String((boo === "desktop") ? 219 : 51.4) + ea,
+    width: String((boo === "desktop") ? 218 : 51.4) + ea,
     height: String((boo === "desktop") ? 34 : 8) + ea,
     background: "#f2f2f2",
   };
@@ -319,8 +319,16 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
     }
   }
 
-  input_clone.addEventListener("keyup", endEvent);
-  input_clone.addEventListener("blur", endEvent);
+  if (boo === "desktop") {
+    input_clone.addEventListener("keyup", endEvent);
+  } else {
+    input_clone.addEventListener("keyup", function (e) {
+      if (this.value.length > 5) {
+        this.blur();
+      }
+    });
+    input_clone.addEventListener("blur", endEvent);
+  }
 }
 
 ConsultingJs.prototype.completeBox = function (mother, boo) {
