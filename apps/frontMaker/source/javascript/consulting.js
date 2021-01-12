@@ -144,9 +144,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
     randomValue = randomStr;
   }
 
-  console.log(name);
-  console.log(phone);
-  console.log(randomValue);
+  GeneralJs.ajax(("name=" + name + "&phone=" + phone + "&certification=" + randomValue), "/engine/Smssend.php", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;

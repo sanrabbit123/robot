@@ -6,10 +6,10 @@ class Smssend {
   private $sender;
   private $meth = 'LMS';
 
-  function __construct($a, $b, $c) {
-    $this->id = $a;
-    $this->key = $b;
-    $this->sender = $c;
+  function __construct($id, $key, $sender) {
+    $this->id = $id;
+    $this->key = $key;
+    $this->sender = $sender;
   }
 
   public function setmethod($m) {
@@ -27,7 +27,7 @@ class Smssend {
       'rdate' => '',
       'rtime' => '',
       'testmode_yn' => 'N',
-      'title' => '홈리에종 서비스 신청 완료',
+      'title' => '홈리에종 휴대폰 인증번호',
       'msg_type' => $this->meth
     );
 
@@ -50,7 +50,7 @@ class Smssend {
 
 }
 
-$instance = new Smssend();
+$instance = new Smssend("hliaison", "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2", "0220392252");
 $instance->sndSms($_POST["name"], $_POST["phone"], $_POST["certification"]);
 
 ?>`;
