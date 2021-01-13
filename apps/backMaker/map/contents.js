@@ -2,6 +2,8 @@ module.exports = {
   structure: {
     conid: "",
     desid: "",
+    cliid: "",
+    proid: "",
     contents: {
       portfolio: {
         pid: "",

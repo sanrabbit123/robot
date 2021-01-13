@@ -646,7 +646,6 @@ class DevContext extends Array {
       // }
 
 
-
       /*
 
       p1 박혜연 실장님 소희진 고객님
@@ -662,1815 +661,214 @@ class DevContext extends Array {
       p14 박혜연 실장님 김복자 고객님
       p15 박혜연 실장님 송진혜 고객님
 
+      no project
 
+      p10 박혜연 실장님 유정민 고객님 ("p1905_aa06s", "c1905_aa02s", "d1701_aa01s", "s2011_aa01s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
+      p24 곽수빈 실장님 신동연 고객님 ("p1910_aa10s", "c1910_aa13s", "d1904_aa13s", "s2011_aa01s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
+      p27 임은숙 실장님 김기용 고객님 ("p1909_aa05s", "c1909_aa11s", "d1902_aa01s", "s2011_aa02s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
+      p44 한서원 실장님 황시우 고객님 ("p2002_aa13s", "c2002_aa04s", "d1912_aa01s", "s2011_aa01s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
+      p50 임은숙 실장님 송희경 고객님 ("p1910_aa11s", "c1910_aa06s", "d1902_aa01s", "s2011_aa03s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
+
+      const MONGOC = this.MONGOC;
+      function returnProjectJson(proid, cliid, desid, serid, firstDate, lastDate, supply, percentage, totalAmount) {
+        let projectJson;
+        let method;
+
+        if (desid === "d1902_aa01s" || desid === "p1905_aa06s") {
+          method = "사업자(일반)";
+        } else {
+          method = "프리랜서";
+        }
+
+        projectJson = {
+          proid: proid,
+          cliid: cliid,
+          desid: desid,
+          service: {
+            serid: serid,
+            xValue: "M",
+            online: false,
+          },
+          proposal: {
+            status: "완료",
+            date: firstDate,
+            detail: [
+                {
+                  "desid" : desid,
+                  "fee" : [
+                      {
+                          "method" : "offline",
+                          "partial" : false,
+                          "amount" : supply
+                      }
+                  ],
+                  "pictureSettings" : [
+                      {
+                          "position" : "0",
+                          "sgTrue" : "g",
+                          "unionPo" : "union",
+                          "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
+                      },
+                      {
+                          "position" : "1",
+                          "sgTrue" : "s",
+                          "unionPo" : "right",
+                          "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
+                      },
+                      {
+                          "position" : "2",
+                          "sgTrue" : "g",
+                          "unionPo" : "union",
+                          "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
+                      },
+                      {
+                          "position" : "3",
+                          "sgTrue" : "g",
+                          "unionPo" : "union",
+                          "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
+                      },
+                      {
+                          "position" : "4",
+                          "sgTrue" : "g",
+                          "unionPo" : "union",
+                          "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
+                      }
+                  ],
+                  "description" : [
+                      "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
+                      "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
+                      "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
+                  ]
+              }
+            ],
+          },
+          process: {
+            status: "완료",
+            contract: {
+              first: {
+                guide: new Date(1800, 0, 1),
+                date: firstDate,
+                cancel: new Date(1800, 0, 1),
+                calculation: {
+                  amount: 330000,
+                  info: {
+                    method: "",
+                    proof: "",
+                    to: "",
+                  },
+                  refund: 0,
+                },
+              },
+              remain: {
+                guide: new Date(1800, 0, 1),
+                date: firstDate,
+                cancel: new Date(1800, 0, 1),
+                calculation: {
+                  amount: {
+                    supply: supply,
+                    vat: (supply * 0.1),
+                    consumer: (supply * 1.1),
+                  },
+                  info: {
+                    method: "",
+                    proof: "",
+                    to: "",
+                  },
+                  refund: 0,
+                },
+              },
+              form: {
+                id: "",
+                guide: new Date(1800, 0, 1),
+                date: {
+                  from: new Date(1800, 0, 1),
+                  to: new Date(1800, 0, 1),
+                  cancel: new Date(1800, 0, 1),
+                }
+              },
+              meeting: {
+                date: new Date(1800, 0, 1),
+                pastDesigners: []
+              },
+            },
+            design: {
+              proposal: {
+                provided: false,
+                limit: null,
+                detail: []
+              },
+              construct: {
+                provided: false,
+                detail: [],
+              },
+              purchase: {
+                provided: false,
+                detail: [],
+              },
+            },
+            calculation: {
+              method: method,
+              percentage: percentage,
+              info: {
+                account: "",
+                proof: "",
+                to: "",
+              },
+              payments: {
+                totalAmount: totalAmount,
+                first: {
+                  amount: (totalAmount / 2),
+                  date: lastDate,
+                  cancel: new Date(1800, 0, 1),
+                  refund: 0,
+                },
+                remain: {
+                  amount: (totalAmount / 2),
+                  date: lastDate,
+                  cancel: new Date(1800, 0, 1),
+                  refund: 0,
+                }
+              }
+            },
+          },
+          contents: {
+            photo: {
+              date: new Date(1800, 0, 1),
+              info: {
+                photographer: "",
+                interviewer: "",
+              }
+            },
+            conid: "",
+          },
+        };
+        return projectJson;
+      }
+
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1905_aa06s", "c1905_aa02s", "d1701_aa01s", "s2011_aa01s", (new Date(2019, 4, 1, 13, 0, 0)), (new Date(2019, 4, 16, 13, 0, 0)), 1500000, 100, 0));
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1910_aa10s", "c1910_aa13s", "d1904_aa13s", "s2011_aa01s", (new Date(2019, 9, 21, 13, 0, 0)), (new Date(2019, 11, 18, 13, 0, 0)), 1400000, 40, 1102380));
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1909_aa05s", "c1909_aa11s", "d1902_aa01s", "s2011_aa02s", (new Date(2019, 8, 11, 13, 0, 0)), (new Date(2020, 0, 13, 13, 0, 0)), 2300000, 13, 2201100));
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p2002_aa13s", "c2002_aa04s", "d1912_aa01s", "s2011_aa01s", (new Date(2020, 1, 6, 20, 0, 0)), (new Date(2020, 5, 22, 13, 0, 0)), 909091, 30, 615364));
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1910_aa11s", "c1910_aa06s", "d1902_aa01s", "s2011_aa03s", (new Date(2019, 9, 8, 13, 0, 0)), (new Date(2020, 6, 27, 13, 0, 0)), 5159091, 27, 4142750));
 
       */
 
 
-      // if (p.middle.serid === "s2011_aa01s") {
-      //   serviceWording = "홈퍼니싱";
-      // } else if (p.middle.serid === "s2011_aa02s") {
-      //   serviceWording = "홈스타일링";
-      // } else if (p.middle.serid === "s2011_aa03s") {
-      //   serviceWording = "토탈 스타일링";
-      // }
-      //
-      // if (p.middle.xValue === 'M') {
-      //   serviceWording += " mini";
-      // } else if (p.middle.xValue === 'B') {
-      //   serviceWording += " basic";
-      // } else if (p.middle.xValue === 'P') {
-      //   serviceWording += " premium";
-      // }
+      /*
 
       const MONGOC = this.MONGOC;
-      let clientJson, projectJson;
-
-
-      //p1 박혜연 실장님 소희진 고객님 : ok
-      clientJson = {
-        name: "소희진",
-        phone: "010-2627-6393",
-        email: "",
-        cliid: "c1806_aa01s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 5, 1, 13, 0, 0),
-              notionId: "",
-              budget: "5,000만원 이상",
-              family: "부부, 아들 1, 딸 1",
-              space: {
-                address: "서울 서초구 잠원로 150 잠원 한신아파트 4동 307호",
-                contract: "자가",
-                pyeong: 34,
-                spec: {
-                  room: 3,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(2018, 6, 18),
-                },
-              },
-              etc: {
-                comment: "",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1806_aa01s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1806_aa01s",
-        cliid: "c1806_aa01s",
-        desid: "d1701_aa01s",
-        service: {
-          serid: "s2011_aa03s",
-          xValue: "P",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 5, 2, 13, 0, 0),
-          detail: [
-              {
-                "desid" : "d1701_aa01s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 3500000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 5, 3, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 5, 3, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 3500000,
-                  vat: 350000,
-                  consumer: 3850000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 100,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 0,
-              first: {
-                amount: 0,
-                date: new Date(2018, 5, 4, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 0,
-                date: new Date(2018, 5, 4, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p2 김은설 실장님 오현우 고객님 : ok
-      clientJson = {
-        name: "오현우",
-        phone: "010-4031-4776",
-        email: "exodus27@naver.com",
-        cliid: "c1809_aa01s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 8, 5, 21, 50, 17),
-              notionId: "",
-              budget: "1,000만원",
-              family: "혼자",
-              space: {
-                address: "경기 평택시 비전푸르지오3차 311동 2304호",
-                contract: "전월세",
-                pyeong: 34,
-                spec: {
-                  room: 3,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(2018, 9, 1),
-                },
-              },
-              etc: {
-                comment: "28일부터 가능하고 입주 예정일은 10월 첫주나 둘째주입니다. 무인양품스타일 따뜻한느낌 간접조명",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1809_aa01s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1809_aa01s",
-        cliid: "c1809_aa01s",
-        desid: "d1904_aa11s",
-        service: {
-          serid: "s2011_aa01s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 8, 6, 13, 0, 0),
-          detail: [
-              {
-                "desid" : "d1904_aa11s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 2000000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 8, 7, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 8, 7, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 2000000,
-                  vat: 200000,
-                  consumer: 2200000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 30,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 2000000,
-              first: {
-                amount: 1000000,
-                date: new Date(2018, 8, 8, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 1000000,
-                date: new Date(2018, 8, 8, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p3 김인선 실장님 홍순제 고객님 : ok
-      clientJson = {
-        name: "홍순제",
-        phone: "010-2776-1333",
-        email: "soonje@gmail.com",
-        cliid: "c1812_aa01s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 11, 10, 12, 10, 40),
-              notionId: "",
-              budget: "500만원 이하",
-              family: "알 수 없음",
-              space: {
-                address: "서울 용산구 녹사평대로26나길 6",
-                contract: "전월세",
-                pyeong: 50,
-                spec: {
-                  room: 4,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: true,
-                  expected: new Date(2018, 11, 10, 12, 10, 40),
-                },
-              },
-              etc: {
-                comment: "심플했으면 합니다.",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1812_aa01s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1812_aa01s",
-        cliid: "c1812_aa01s",
-        desid: "d1904_aa08s",
-        service: {
-          serid: "s2011_aa01s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 11, 11, 12, 10, 40),
-          detail: [
-              {
-                "desid" : "d1904_aa08s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 3500000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 11, 12, 12, 10, 40),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 11, 12, 12, 10, 40),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 3500000,
-                  vat: 350000,
-                  consumer: 3850000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 17,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 2905000,
-              first: {
-                amount: 1452500,
-                date: new Date(2018, 11, 13, 12, 10, 40),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 1452500,
-                date: new Date(2018, 11, 13, 12, 10, 40),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p4 김지은 실장님 이석암 고객님 : ok
-      clientJson = {
-        name: "이석암",
-        phone: "010-6245-0506",
-        email: "seokam87@gmail.com",
-        cliid: "c1811_aa02s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 10, 22, 16, 5, 9),
-              notionId: "",
-              budget: "500만원 이하",
-              family: "셰어하우스",
-              space: {
-                address: "서울 마포구 잔다리로 7길 30 2층",
-                contract: "전월세",
-                pyeong: 23,
-                spec: {
-                  room: 3,
-                  bathroom: 1,
-                  valcony: true
-                },
-                resident: {
-                  living: true,
-                  expected: new Date(2018, 10, 22, 16, 5, 9),
-                },
-              },
-              etc: {
-                comment: "모던&내츄럴, 블랙앤화이트, 아늑, 플랜테리어",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1811_aa02s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1811_aa02s",
-        cliid: "c1811_aa02s",
-        desid: "d1904_aa12s",
-        service: {
-          serid: "s2011_aa01s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 10, 23, 16, 5, 9),
-          detail: [
-              {
-                "desid" : "d1904_aa12s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 1200000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 24, 16, 5, 9),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 24, 16, 5, 9),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 1200000,
-                  vat: 120000,
-                  consumer: 1320000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 35,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 754260,
-              first: {
-                amount: 377130,
-                date: new Date(2018, 10, 25, 16, 5, 9),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 377130,
-                date: new Date(2018, 10, 25, 16, 5, 9),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p5 전소영 실장님 김유나 고객님 : ok
-      clientJson = {
-        name: "김유나",
-        phone: "010-9373-3994",
-        email: "cocosable@naver.com",
-        cliid: "c1811_aa01s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 10, 13, 22, 18, 58),
-              notionId: "",
-              budget: "3,000만원",
-              family: "부부.여아1",
-              space: {
-                address: "서울 서초구 고무래로 35 반포리체",
-                contract: "자가",
-                pyeong: 25,
-                spec: {
-                  room: 2,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(2019, 0, 13, 22, 18, 58),
-                },
-              },
-              etc: {
-                comment: "디자인도움만 받고 시공은 따로할지 한번에 맡길지 고민중입니다",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1811_aa01s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1811_aa01s",
-        cliid: "c1811_aa01s",
-        desid: "d1904_aa05s",
-        service: {
-          serid: "s2011_aa03s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 10, 14, 22, 18, 58),
-          detail: [
-              {
-                "desid" : "d1904_aa05s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 2500000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 15, 22, 18, 58),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 15, 22, 18, 58),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 2500000,
-                  vat: 250000,
-                  consumer: 2750000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 10,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 2175750,
-              first: {
-                amount: 1087875,
-                date: new Date(2018, 10, 16, 22, 18, 58),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 1087875,
-                date: new Date(2018, 10, 16, 22, 18, 58),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p6 박혜연 실장님 정가혜 고객님 : ok
-      clientJson = {
-        name: "정가혜",
-        phone: "010-6346-7692",
-        email: "gahyejung@gmail.com",
-        cliid: "c1807_aa01s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 6, 19, 13, 0, 0),
-              notionId: "",
-              budget: "4,000만원",
-              family: "알 수 없음",
-              space: {
-                address: "서울 동작구 여의대방로54길 6 대방동 경남아너스빌",
-                contract: "자가",
-                pyeong: 34,
-                spec: {
-                  room: 3,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(2018, 7, 19, 13, 0, 0),
-                },
-              },
-              etc: {
-                comment: "",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1807_aa01s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1807_aa01s",
-        cliid: "c1807_aa01s",
-        desid: "d1701_aa01s",
-        service: {
-          serid: "s2011_aa03s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 6, 20, 13, 0, 0),
-          detail: [
-              {
-                "desid" : "d1701_aa01s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 2700000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 6, 21, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 6, 21, 13, 0, 0),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 2700000,
-                  vat: 270000,
-                  consumer: 2970000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 100,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 0,
-              first: {
-                amount: 0,
-                date: new Date(2018, 6, 22, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 0,
-                date: new Date(2018, 6, 22, 13, 0, 0),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p7 한혜원 실장님 조선영 고객님
-      clientJson = {
-        name: "조선영",
-        phone: "010-4155-9092",
-        email: "pupil200@hotmail.com",
-        cliid: "c1811_aa03s",
-        requests: [
-          {
-            request: {
-              timeline: new Date(2018, 10, 17, 2, 13, 41),
-              notionId: "",
-              budget: "1,500만원",
-              family: "부부 아들 하나(36개월)",
-              space: {
-                address: "경기 시흥시 은계남로 11 한양수자인 더 클래스",
-                contract: "자가",
-                pyeong: 30,
-                spec: {
-                  room: 3,
-                  bathroom: 2,
-                  valcony: true
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(2019, 0, 1, 13, 0, 0),
-                },
-              },
-              etc: {
-                comment: "편안한 느낌에 따뜻한 분위기로 수납 많고 청소하기 쉬운 스타일 원해요~~거실창쪽으로는 아이공간을 만드려고요(간단한 독서공간&장난감공간)",
-                channel: "인터넷 검색",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "완료",
-                outreason: [],
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "p1811_aa03s",
-            },
-          },
-        ],
-      };
-      await MONGOC.db(`miro81`).collection(`client`).insertOne(clientJson);
-      projectJson = {
-        proid: "p1811_aa03s",
-        cliid: "c1811_aa03s",
-        desid: "d1904_aa16s",
-        service: {
-          serid: "s2011_aa01s",
-          xValue: "B",
-          online: false,
-        },
-        proposal: {
-          status: "완료",
-          timeline: new Date(2018, 10, 18, 2, 13, 41),
-          detail: [
-              {
-                "desid" : "d1904_aa16s",
-                "fee" : [
-                    {
-                        "method" : "offline",
-                        "partial" : false,
-                        "amount" : 1800000
-                    }
-                ],
-                "pictureSettings" : [
-                    {
-                        "position" : "0",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%;"
-                    },
-                    {
-                        "position" : "1",
-                        "sgTrue" : "s",
-                        "unionPo" : "right",
-                        "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%;"
-                    },
-                    {
-                        "position" : "2",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 0%;"
-                    },
-                    {
-                        "position" : "3",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 33%; height: 33%; top: 67%; left: 33.5%;"
-                    },
-                    {
-                        "position" : "4",
-                        "sgTrue" : "g",
-                        "unionPo" : "union",
-                        "styleText" : "width: 32.8%; height: 33%; top: 67%; left: 67.2%;"
-                    }
-                ],
-                "description" : [
-                    "내추럴하면서도 컬러를 조화롭게 사용하여 전체적으로 따뜻하고 차분한 스타일입니다.",
-                    "고객이 합리적인 선택을 할 수 있도록 전문가 입장에서 조언해드립니다.",
-                    "사진, 문서 등 다양한 방식으로 커뮤니케이션 잘 하시는 편입니다."
-                ]
-            }
-          ],
-        },
-        process: {
-          status: "완료",
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 19, 2, 13, 41),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 330000,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(2018, 10, 19, 2, 13, 41),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 1800000,
-                  vat: 180000,
-                  consumer: 1980000,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 30,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 1218420,
-              first: {
-                amount: 609210,
-                date: new Date(2018, 10, 20, 2, 13, 41),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 609210,
-                date: new Date(2018, 10, 20, 2, 13, 41),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          photo: {
-            date: new Date(1800, 0, 1),
-            info: {
-              photographer: "",
-              interviewer: "",
-            }
-          },
-          conid: "",
-        },
-      };
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(projectJson);
-
-
-      //p8 박혜연 실장님 수달사순 고객님??
-
-
-
-      //p9 임은숙 실장님 홍선희 고객님
-
-
-
-      //p12 한혜원 실장님 김이경 고객님
-
-
-
-      //p14 박혜연 실장님 김복자 고객님??
-
-
-
-      //p15 박혜연 실장님 송진혜 고객님
-
-
-
-
-
-
-
-
-
-
-
       const back = new BackMaker();
       let note, targetArr;
       let temp, tempArr;
       let resultArr;
       let updateArr = [];
-      let clients;
+      let clients, client;
+      let contents, content;
+      let designers, designer;
+      let projects, project;
+      let searchQuery;
+      let thisProject;
+      let desid, cliid, proid, conid;
 
       for (let i = 1; i < 85; i++) {
         note = new AppleAPIs({ folder: "portfolio", subject: "p" + String(i) });
@@ -2478,11 +876,42 @@ class DevContext extends Array {
         if (targetArr.length > 0) {
           tempArr = targetArr[1].split(" ");
           clients = await back.getClientsByQuery({ name: tempArr[2].trim() });
-          if (clients.length === 0) {
-            console.log(targetArr[0], targetArr[1]);
+          designers = await back.getDesignersByQuery({ designer: tempArr[0].trim() });
+
+          thisProject = null;
+          for (let c of clients) {
+            searchQuery = { "$and": [ { desid: designers[0].desid }, { cliid: c.cliid } ] };
+            projects = await back.getProjectsByQuery(searchQuery);
+            if (projects.length > 0) {
+              thisProject = projects[0];
+              proid = thisProject.proid;
+              desid = designers[0].desid;
+              cliid = c.cliid;
+            }
           }
+          contents = await back.getContentsArrByQuery({ "contents.portfolio.pid": targetArr[0].trim() });
+          conid = contents[0].conid;
+
+
+          console.log(targetArr[0], targetArr[1], conid, desid, cliid, proid)
+
+          // await back.updateContents([ { conid: conid }, { cliid: cliid } ]);
+          // console.log("cliid done");
+          //
+          // await back.updateContents([ { conid: conid }, { proid: proid } ]);
+          // console.log("proid done");
+
+
+
+          console.log("---------------------------------------------------------------------");
         }
       }
+
+
+      */
+
+
+
 
       // for (let i of targetArr) {
       //   temp = await app.paragraphChecker(i);
@@ -2491,11 +920,6 @@ class DevContext extends Array {
       // console.log(updateArr);
       // updateArr.shift();
       // await note.updateNote(updateArr.join('<br><br><br>'));
-
-
-
-
-
 
 
 

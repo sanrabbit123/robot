@@ -6,6 +6,8 @@ const PhotoTong = require(CONTENTS_DIR + "/photoTong.js");
 const Contents = function (json) {
   this.conid = json.conid;
   this.desid = json.desid;
+  this.cliid = json.cliid;
+  this.proid = json.proid;
   this.contents = new ContentsTong(json.contents);
   this.photos = new PhotoTong(json.photos);
 }
@@ -14,6 +16,8 @@ Contents.prototype.toNormal = function () {
   let obj = {};
   obj.conid = this.conid;
   obj.desid = this.desid;
+  obj.cliid = this.cliid;
+  obj.proid = this.proid;
   obj.contents = this.contents.toNormal();
   obj.photos = this.photos.toNormal();
 

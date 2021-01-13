@@ -1319,6 +1319,8 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
       structure: {
         conid: "",
         desid: "",
+        cliid: "",
+        proid: "",
         contents: {
           portfolio: {
             pid: "",
