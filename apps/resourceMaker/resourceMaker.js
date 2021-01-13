@@ -1,7 +1,9 @@
 const ResourceMaker = function (p_id) {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
+  this.back = new BackMaker();
   this.s3Host = ADDRESS.s3info.host;
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
@@ -45,7 +47,7 @@ ResourceMaker.prototype.infoMaker = function () {
   for (let i = key + 1; i < count; i++) {
     totalInfo.push(this.arr[i]);
   }
-  result.designer = totalInfo[0];
+  result.designer = totalInfo[0].trim();
   result.pyeong = totalInfo[1];
 
   let portfolioKey = 0;
@@ -144,6 +146,7 @@ ResourceMaker.prototype.infoMaker = function () {
     result.review.r_info.order = Number(reviewInfo[twoKey + 4]);
 
   }
+
   this.result = result;
 }
 
@@ -509,6 +512,8 @@ ResourceMaker.prototype.modelingMap = function () {
     structure: {
       conid: "",
       desid: "",
+      cliid: "",
+      proid: "",
       contents: {
         portfolio: {
           pid: "",
@@ -596,7 +601,7 @@ ResourceMaker.prototype.modelingMap = function () {
   return JSON.parse(JSON.stringify(model));
 }
 
-ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
+ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cliid) {
   const instance = this;
   const { fileSystem, orderSystem } = this.mother;
   const past = this.final;
@@ -618,6 +623,8 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr) {
 
     tempObj.conid = "";
     tempObj.desid = past.designer;
+    tempObj.cliid = cliid;
+    tempObj.proid = proid;
 
     portfolio = tempObj.contents.portfolio;
 
@@ -769,6 +776,13 @@ ResourceMaker.prototype.launching = async function () {
     let tempResponse, index;
     let tempObject;
 
+    let namesArr;
+    let clients;
+    let thisProject;
+    let searchQuery;
+    let projects;
+    let proid, cliid;
+
     //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
     tempHome = process.env.HOME + "/" + tempFolderName;
@@ -798,28 +812,50 @@ ResourceMaker.prototype.launching = async function () {
       await fileSystem(`writeBinary`, [ tempHome + "/i" + String(i) + this.p_id + ".jpg", tempObject ]);
       console.log(`download success`);
     }
-
     this.targetFolder = tempHome;
 
+    //make info and write raw file
     this.infoMaker();
     this.portfolio_maker();
-
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}_raw.js`, JSON.stringify(this.final, null, 2) ]);
 
+    //parsing cliid, proid
+    namesArr = this.arr[1].split(" ");
+    clients = await this.back.getClientsByQuery({ name: namesArr[2].trim() });
+    thisProject = null;
+    proid = null;
+    cliid = null;
+    for (let c of clients) {
+      searchQuery = { "$and": [ { desid: this.result.designer }, { cliid: c.cliid } ] };
+      projects = await this.back.getProjectsByQuery(searchQuery);
+      if (projects.length > 0) {
+        thisProject = projects[0];
+        proid = thisProject.proid;
+        cliid = c.cliid;
+      }
+    }
+    if (cliid === null) {
+      throw new Error("can not find client");
+    }
+    if (proid === null) {
+      throw new Error("can not find project");
+    }
+
+    //rendering resource and write file
     await MONGOC.connect();
     temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).limit(1).toArray();
-    await this.portfolio_modeling(temp);
-
+    await this.portfolio_modeling(temp, proid, cliid);
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
 
+    //on view
     shell.exec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
     shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
     shell.exec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
-
     console.log(this.final);
 
+    //confirm
     input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "Y") {
+    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
     }
 
