@@ -39,18 +39,23 @@ ParsingHangul.prototype.launching = async function () {
 
     let problemsCodes, fixedCodes;
 
+    problemsCodes = {
+      son: [],
+      mother: [],
+      base: []
+    };
+    fixedCodes = {
+      son: [],
+      mother: [],
+      base: []
+    };
 
-    problemsCodes = [
-
-    ];
-    fixedCodes = [
-
-    ];
+    for (let i = 0; i < this.problems.son.length; i++) {
+      
 
 
 
-    for (let i = 0; i < this.problems.mother.length; i++) {
-      console.log(this.problems.base[i].charCodeAt(0), this.fixed.base[i].charCodeAt(0));
+      console.log(this.problems.son[i].charCodeAt(0), this.fixed.son[i].charCodeAt(0));
     }
 
 
