@@ -17,6 +17,7 @@ const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
+const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 
 class DevContext extends Array {
 
@@ -910,6 +911,59 @@ class DevContext extends Array {
 
       */
 
+
+
+      const robotDirArr = (process.cwd()).split('/');
+      robotDirArr.pop();
+      robotDirArr.push("target");
+      robotDirArr.push("portfolio");
+      robotDirArr.join('/')
+      const targetDir = robotDirArr.join('/');
+      const { stdout } = shell.exec(`ls -al ${targetDir}`, { silent: true });
+
+
+      let tong;
+      let tempArr, tempArr2;
+      let rawTarget;
+      let refined;
+      let originalName;
+      let client, designer;
+
+      rawTarget = stdout.split('\n');
+      tong = [];
+      for (let i of rawTarget) {
+        if (!/\.$/.test(i) && !/\.DS_Store$/.test(i) && !/\.\.$/.test(i) && !/^total/.test(i)) {
+          refined = i.replace(/\.txt$/, '').replace(/ /g, '').replace(/[0-9]/g, '').replace(/\-/g, '').replace(/C/gi, "고객").replace(/D/gi, "디자이너").replace(/실장/gi, "디자이너").replace(/박혜연/gi, "박혜연디자이너").replace(/clare/gi, "박혜연디자이너").replace(/bae고객/gi, "");
+          if (!/p$/.test(refined)) {
+            originalName = i.split(' ')[i.split(' ').length - 1];
+            if (refined !== '' && originalName !== '') {
+              tempArr = refined.split('_');
+              client = null;
+              designer = null;
+              for (let j of tempArr) {
+                if (/고객/g.test(j) || /고객/g.test(j) ) {
+                  client = j;
+                }
+                if (/디자이너/g.test(j) || /디자이너/g.test(j) ) {
+                  designer = j;
+                }
+              }
+              tong.push({ tempArr, client, designer });
+              // tong.push({ refined: refined, originalName: originalName });
+            }
+          }
+        }
+      }
+
+      // console.log(tong)
+
+
+
+
+
+      const parsing = new ParsingHangul();
+
+      await parsing.launching();
 
 
 
