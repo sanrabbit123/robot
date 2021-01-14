@@ -127,10 +127,46 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone) {
   }
 }
 
-KakaoTalk.prototype.sendTalk = async function (method, name, phone) {
+KakaoTalk.prototype.setCertification = async function (name, phone, certification) {
   const instance = this;
   try {
-    let options = await this.setTalk(method, name, phone);
+    let client = { name: name, phone: phone, certification: certification };
+    let targetId = "TC_9600";
+    let options = {
+      apikey: this.authObj.apikey,
+      userid: this.authObj.userid,
+      token: this.authObj.token,
+      senderkey: this.authObj.senderkey,
+      tpl_code: targetId,
+      sender: "0220392252",
+      receiver_1: client.phone.replace(/-/g, ''),
+      recvname_1: client.name,
+      subject_1: this.templates[targetId].templtName,
+      message_1: this.templates[targetId].templtContent.replace(/#\{회사명\}/g, "홈리에종").replace(/#\{고객명\}/g, client.name).replace(/#\{인증번호\}/g, client.certification),
+      button_1: { button: this.templates[targetId].buttons },
+      failover: "Y",
+      fsubject_1: this.templates[targetId].templtName,
+      fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, client.name)
+    };
+
+    this.message = options;
+    return options;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+KakaoTalk.prototype.sendTalk = async function (method, name, phone, certification = null) {
+  const instance = this;
+  try {
+    let options;
+
+    if (method !== 'certification') {
+      options = await this.setTalk(method, name, phone);
+    } else {
+      options = await this.setCertification(name, phone, certification);
+    }
+
     const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
     console.log(data);
   } catch (e) {

@@ -1560,7 +1560,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       style = {
         position: "relative",
         height: String(height / 9) + ea,
-        background: "aqua",
+        background: "white",
         width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
         left: String(leftMargin * 1) + ea,
       };

@@ -531,6 +531,24 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - certification
+  funcObj.post_certification = async function (req, res) {
+    try {
+      const resultObj = req.body;
+      await KAKAO.sendTalk("certification", requestObj["name"], requestObj["phone"], requestObj["certification"]);
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send("success");
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {

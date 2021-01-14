@@ -1172,9 +1172,9 @@ ContentsJs.prototype.cardViewMaker = function () {
       ea = "px";
       leftMargin = 48;
       titles = [
-        "원본 없는 프로젝트",
+        "발행전 프로젝트",
         "원본 종류 선택",
-        "저장된 프로젝트 원본"
+        "발행된 프로젝트"
       ];
       originalHeight = "calc(calc(100% / " + String(titles.length) + ") - " + String(21) + ea + ")";
       originalMarginBottom = String(21) + ea;
@@ -1338,35 +1338,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       }
 
       //first - get projects
-      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
-      cliidArr = [];
-      cliidArrPure = [];
-      desidArr = [];
-      desidArrPure = [];
-      for (let i of projects) {
-        if (!cliidArrPure.includes(i.cliid)) {
-          cliidArr.push({ cliid: i.cliid });
-        }
-        if (!desidArrPure.includes(i.desid)) {
-          desidArr.push({ desid: i.desid });
-        }
-        cliidArrPure.push(i.cliid);
-        desidArrPure.push(i.desid);
-      }
-      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ "$or": cliidArr }), "/getClients"));
-      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ "$or": desidArr }), "/getDesigners"));
-      for (let i of projects) {
-        for (let j of clients) {
-          if (i.cliid === j.cliid) {
-            i.name = j.name;
-          }
-        }
-        for (let j of designers) {
-          if (i.desid === j.desid) {
-            i.designer = j.designer;
-          }
-        }
-      }
+      projects = JSON.parse(await GeneralJs.ajaxPromise("button=projectNoConid", "/getRawContents"));
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       for (let i in blockStyle) {
@@ -1955,7 +1927,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           }
 
           if (this.getAttribute("method") !== "photo") {
-            const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method, "/getRawContents"));
+            const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method + "&button=get", "/getRawContents"));
             const { dom, title, gray } = createViewDoms[1];
             let temp, tempArr;
             let interActionIcon, returnIcon;
@@ -2255,6 +2227,8 @@ ContentsJs.prototype.cardViewMaker = function () {
 
 
       //third - complete contents
+      projects = JSON.parse(await GeneralJs.ajaxPromise("button=projectYesConid", "/getRawContents"));
+
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       for (let i in blockStyle) {
         div_clone.style[i] = blockStyle[i];

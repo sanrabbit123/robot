@@ -2832,10 +2832,12 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
                 updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
+                await GeneralJs.ajaxPromise("whereQuery=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify({ cliid: thisProject_raw[0].cliid, desid: desid }) + "&button=createRawContents", "/getRawContents");
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ cliid: thisProject_raw[0].cliid }) + "&updateQuery=" + JSON.stringify({ "requests.0.analytics.response.status": "진행" }), "/rawUpdateClient");
 
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
+
               } catch (e) {
                 console.log(e);
               }

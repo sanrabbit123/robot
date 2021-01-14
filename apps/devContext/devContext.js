@@ -670,16 +670,14 @@ class DevContext extends Array {
       p44 한서원 실장님 황시우 고객님 ("p2002_aa13s", "c2002_aa04s", "d1912_aa01s", "s2011_aa01s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
       p50 임은숙 실장님 송희경 고객님 ("p1910_aa11s", "c1910_aa06s", "d1902_aa01s", "s2011_aa03s", (new Date(2018, 5, 2, 13, 0, 0)), (new Date(2018, 5, 2, 13, 0, 0)), 2500000, 30, 2500000)
 
+
+
       const MONGOC = this.MONGOC;
       function returnProjectJson(proid, cliid, desid, serid, firstDate, lastDate, supply, percentage, totalAmount) {
         let projectJson;
         let method;
 
-        if (desid === "d1902_aa01s" || desid === "p1905_aa06s") {
-          method = "사업자(일반)";
-        } else {
-          method = "프리랜서";
-        }
+        method = "프리랜서";
 
         projectJson = {
           proid: proid,
@@ -846,14 +844,10 @@ class DevContext extends Array {
         return projectJson;
       }
 
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1905_aa06s", "c1905_aa02s", "d1701_aa01s", "s2011_aa01s", (new Date(2019, 4, 1, 13, 0, 0)), (new Date(2019, 4, 16, 13, 0, 0)), 1500000, 100, 0));
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1910_aa10s", "c1910_aa13s", "d1904_aa13s", "s2011_aa01s", (new Date(2019, 9, 21, 13, 0, 0)), (new Date(2019, 11, 18, 13, 0, 0)), 1400000, 40, 1102380));
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1909_aa05s", "c1909_aa11s", "d1902_aa01s", "s2011_aa02s", (new Date(2019, 8, 11, 13, 0, 0)), (new Date(2020, 0, 13, 13, 0, 0)), 2300000, 13, 2201100));
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p2002_aa13s", "c2002_aa04s", "d1912_aa01s", "s2011_aa01s", (new Date(2020, 1, 6, 20, 0, 0)), (new Date(2020, 5, 22, 13, 0, 0)), 909091, 30, 615364));
-      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1910_aa11s", "c1910_aa06s", "d1902_aa01s", "s2011_aa03s", (new Date(2019, 9, 8, 13, 0, 0)), (new Date(2020, 6, 27, 13, 0, 0)), 5159091, 27, 4142750));
+      await MONGOC.db(`miro81`).collection(`project`).insertOne(returnProjectJson("p1911_aa21s", "c1911_aa08s", "d1906_aa01s", "s2011_aa01s", (new Date(2019, 10, 4, 13, 0, 0)), (new Date(2020, 1, 24, 13, 0, 0)), 1909091, 30, 1292264));
+
 
       */
-
 
       /*
 
@@ -908,11 +902,14 @@ class DevContext extends Array {
         }
       }
 
-
       */
 
 
+      /*
 
+      const MONGOC = this.MONGOC;
+      const hangulParsing = new ParsingHangul();
+      const back = new BackMaker();
       const robotDirArr = (process.cwd()).split('/');
       robotDirArr.pop();
       robotDirArr.push("target");
@@ -921,50 +918,157 @@ class DevContext extends Array {
       const targetDir = robotDirArr.join('/');
       const { stdout } = shell.exec(`ls -al ${targetDir}`, { silent: true });
 
-
       let tong;
       let tempArr, tempArr2;
       let rawTarget;
       let refined;
-      let originalName;
+      let originalName,fixedName;
       let client, designer;
+      let resultClients, resultClient;
+      let resultDesigners, resultDesigner;
+      let resultProjects, resultProjectsTemp;
+      let resultContents;
+      let finalObj, finalName;
+      let cliid, proid;
+      let order;
 
       rawTarget = stdout.split('\n');
       tong = [];
       for (let i of rawTarget) {
         if (!/\.$/.test(i) && !/\.DS_Store$/.test(i) && !/\.\.$/.test(i) && !/^total/.test(i)) {
-          refined = i.replace(/\.txt$/, '').replace(/ /g, '').replace(/[0-9]/g, '').replace(/\-/g, '').replace(/C/gi, "고객").replace(/D/gi, "디자이너").replace(/실장/gi, "디자이너").replace(/박혜연/gi, "박혜연디자이너").replace(/clare/gi, "박혜연디자이너").replace(/bae고객/gi, "");
+          originalName = i.split(' ')[i.split(' ').length - 1];
+          fixedName = hangulParsing.fixString(originalName);
+          refined = hangulParsing.fixString(i);
+          refined = refined.replace(/\.txt$/, '').replace(/ /g, '').replace(/[0-9]/g, '').replace(/\-/g, '').replace(/C/gi, "고객").replace(/D/gi, "디자이너").replace(/실장/gi, "디자이너").replace(/박혜연/gi, "박혜연디자이너").replace(/clare/gi, "박혜연디자이너").replace(/bae고객/gi, "");
           if (!/p$/.test(refined)) {
-            originalName = i.split(' ')[i.split(' ').length - 1];
             if (refined !== '' && originalName !== '') {
+              finalObj = {};
+              finalName = '';
               tempArr = refined.split('_');
               client = null;
               designer = null;
               for (let j of tempArr) {
-                if (/고객/g.test(j) || /고객/g.test(j) ) {
+                if (/고객/g.test(j)) {
                   client = j;
+                  client = client.replace(/디자이너글/g, '').replace(/고객님/g, '').replace(/고객/g, '').replace(/[^가-힣]/g, '');
                 }
-                if (/디자이너/g.test(j) || /디자이너/g.test(j) ) {
+                if (/디자이너/g.test(j)) {
                   designer = j;
+                  designer = designer.replace(/디자이너글/g, '').replace(/디자이너님/g, '').replace(/디자이너/g, '').replace(/실장님/g, '').replace(/실장/g, '').replace(/[^가-힣]/g, '');
                 }
               }
-              tong.push({ tempArr, client, designer });
-              // tong.push({ refined: refined, originalName: originalName });
+
+              resultClients = await back.getClientsByQuery({ name: client }, { selfMongo: MONGOC });
+              resultDesigners = await back.getDesignersByQuery({ designer: designer }, { selfMongo: MONGOC });
+
+              resultProjects = null;
+              for (let z of resultClients) {
+                resultProjectsTemp = await back.getProjectsByQuery({ "$and": [ { cliid: z.cliid }, { desid: (resultDesigners[0]).desid } ] }, { selfMongo: MONGOC });
+                if (resultProjectsTemp.length > 0) {
+                  resultProjects = resultProjectsTemp[0];
+                }
+              }
+
+              resultContents = await back.getContentsArrByQuery({ proid: resultProjects.proid }, { selfMongo: MONGOC });
+
+              finalObj.cliid = resultProjects.cliid;
+              finalObj.desid = (resultDesigners[0]).desid;
+              finalObj.proid = resultProjects.proid;
+              finalObj.conid = 'none';
+              if (resultContents.length > 0) {
+                finalObj.conid = resultContents[0].conid;
+              }
+
+              finalName = finalObj.cliid + '-' + finalObj.desid + '-' + finalObj.proid + '-' + finalObj.conid + '.txt';
+              finalObj.originalName = originalName;
+              finalObj.fixedName = finalName;
+
+              tong.push(finalObj);
             }
           }
         }
       }
 
-      // console.log(tong)
+      for (let { originalName, fixedName } of tong) {
+        order = `mv ${targetDir}/'${originalName}' ${targetDir}/${fixedName}`;
+        shell.exec(order);
+      }
+
+      */
 
 
 
+      /*
 
+      const MONGOCHOME = new this.mother.mongo(("mongodb://uragen:Dpdhdn941!@220.117.13.12:27017/admin"), { useUnifiedTopology: true });
+      await MONGOCHOME.connect();
+      const MONGOC = this.MONGOC;
+      const hangulParsing = new ParsingHangul();
+      const back = new BackMaker();
+      const robotDirArr = (process.cwd()).split('/');
+      robotDirArr.pop();
+      robotDirArr.push("target");
+      robotDirArr.push("portfolio");
+      robotDirArr.join('/')
+      const targetDir = robotDirArr.join('/');
+      const { stdout } = shell.exec(`ls -al ${targetDir}`, { silent: true });
 
-      const parsing = new ParsingHangul();
+      let rawTarget;
+      let temp;
+      let fileName;
+      let fileArr;
+      let uploadObj;
+      let reviewContents;
 
-      await parsing.launching();
+      rawTarget = stdout.split('\n');
 
+      for (let i of rawTarget) {
+        if (!/\.$/.test(i) && !/\.DS_Store$/.test(i) && !/\.\.$/.test(i) && !/^total/.test(i)) {
+          temp = i.split(' ');
+          if (temp[temp.length - 1] !== '') {
+            fileName = temp[temp.length - 1];
+            fileArr = fileName.replace(/\.txt$/, '').split('-');
+
+            uploadObj = {};
+
+            uploadObj.proid = fileArr[2];
+            uploadObj.cliid = fileArr[0];
+            uploadObj.desid = fileArr[1];
+            if (fileArr[3] === 'none') {
+              uploadObj.conid = '';
+            } else {
+              uploadObj.conid = fileArr[3];
+            }
+
+            uploadObj.portfolio = {};
+            uploadObj.review = {};
+            uploadObj.photo = {};
+
+            uploadObj.portfolio.exist = true;
+            uploadObj.portfolio.contents = await fileSystem('readString', [ targetDir + '/' + fileName ]);
+
+            uploadObj.review.exist = false;
+            uploadObj.review.contents = '';
+
+            if (uploadObj.conid !== '') {
+              reviewContents = await back.getContentsById(uploadObj.conid, { selfMongo: MONGOC });
+              if (reviewContents.getRid() !== 're999') {
+                uploadObj.review.exist = true;
+                uploadObj.review.contents = reviewContents.getContentsFlatDetail().review;
+              }
+            }
+
+            uploadObj.photo.link = '';
+
+            console.log(uploadObj);
+            await MONGOCHOME.db(`miro81`).collection(`contentsRaw`).insertOne(uploadObj);
+          }
+        }
+      }
+
+      MONGOCHOME.close();
+
+      */
 
 
       // for (let i of targetArr) {
@@ -974,6 +1078,73 @@ class DevContext extends Array {
       // console.log(updateArr);
       // updateArr.shift();
       // await note.updateNote(updateArr.join('<br><br><br>'));
+
+
+
+
+
+
+
+      /*
+
+      const back = new BackMaker();
+
+      let arr0, arr1, arr2;
+      let uploadObj;
+      let temp;
+
+      arr0 = await back.mongoRead("contentsRaw", {}, { home: true });
+      arr1 = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+
+      let proidArr = [];
+      for (let i of arr0) {
+        proidArr.push(i.proid);
+      }
+
+      let targets = [];
+      for (let i of arr1) {
+        if (!proidArr.includes(i.proid)) {
+          targets.push(i.proid);
+        }
+      }
+
+      let targetsDom = [];
+      for (let i of targets) {
+        temp = await back.getProjectById(i);
+        if (temp !== null) {
+          targetsDom.push(temp);
+        }
+      }
+
+      for (let i of targetsDom) {
+
+        uploadObj = {};
+
+        uploadObj.proid = i.proid;
+        uploadObj.cliid = i.cliid;
+        uploadObj.desid = i.desid;
+        uploadObj.conid = "";
+
+        uploadObj.portfolio = {};
+        uploadObj.review = {};
+        uploadObj.photo = {};
+
+        uploadObj.portfolio.exist = false;
+        uploadObj.portfolio.contents = '';
+
+        uploadObj.review.exist = false;
+        uploadObj.review.contents = '';
+
+        uploadObj.photo.link = '';
+
+        await back.mongoCreate("contentsRaw", uploadObj, { home: true });
+
+      }
+
+
+      */
+
+
 
 
 

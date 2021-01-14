@@ -2601,9 +2601,9 @@ BackMaker.prototype.createProjectHistory = async function (updateQuery, option =
 
 // general mongo CRUD  --------------------------------------------------------------------
 
-BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, selfMongo: null }) {
+BackMaker.prototype.mongoCreate = async function (collection, json, option = { local: null, console: null, home: null, bridge: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
 
     let MONGOC;
@@ -2611,6 +2611,10 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     } else if (option.console !== undefined && option.console !== null) {
       MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else if (option.home !== undefined && option.home !== null) {
+      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    } else if (option.bridge !== undefined && option.bridge !== null) {
+      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2629,15 +2633,19 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
   }
 }
 
-BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, selfMongo: null }) {
+BackMaker.prototype.mongoRead = async function (collection, query, option = { local: null, console: null, home: null, bridge: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     } else if (option.console !== undefined && option.console !== null) {
       MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else if (option.home !== undefined && option.home !== null) {
+      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    } else if (option.bridge !== undefined && option.bridge !== null) {
+      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2673,9 +2681,9 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
   }
 }
 
-BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, selfMongo: null }) {
+BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, bridge: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
@@ -2683,6 +2691,10 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     } else if (option.console !== undefined && option.console !== null) {
       MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else if (option.home !== undefined && option.home !== null) {
+      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    } else if (option.bridge !== undefined && option.bridge !== null) {
+      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }
@@ -2699,15 +2711,19 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
   }
 }
 
-BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, console: null, selfMongo: null }) {
+BackMaker.prototype.mongoDelete = async function (collection, query, option = { local: null, console: null, home: null, bridge: null, selfMongo: null }) {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     let MONGOC;
     if (option.local !== undefined && option.local !== null) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     } else if (option.console !== undefined && option.console !== null) {
       MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else if (option.home !== undefined && option.home !== null) {
+      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    } else if (option.bridge !== undefined && option.bridge !== null) {
+      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
     } else {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     }

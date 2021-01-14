@@ -2,8 +2,8 @@ const ParsingHangul = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const Hangul = require(`${process.cwd()}/apps/parsingHangul/module/hangulModule.js`);
-  const problems = require(`${process.cwd()}/apps/parsingHangul/lib/problems.js`);
-  const fixed = require(`${process.cwd()}/apps/parsingHangul/lib/fixed.js`);
+  const problems = require(`${process.cwd()}/apps/parsingHangul/library/problems.js`);
+  const fixed = require(`${process.cwd()}/apps/parsingHangul/library/fixed.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
@@ -13,63 +13,79 @@ const ParsingHangul = function () {
   this.fixed = fixed;
 }
 
+ParsingHangul.prototype.setMap = function () {
+  const instance = this;
+  let problemsCodes, problemsCodesArr, problemsCodesArrFlat;
+  let target;
+  let temp, tempObj;
+
+  target = [
+    "son",
+    "mother",
+    "base"
+  ];
+
+  problemsCodes = {
+    son: [],
+    mother: [],
+    base: []
+  };
+
+  for (let t of target) {
+    for (let i = 0; i < this.problems[t].length; i++) {
+      temp = [];
+      for (let j = 0; j < this.fixed[t][i].length; j++) {
+        temp.push(this.fixed[t][i][j].charCodeAt(0));
+      }
+      tempObj = { char: this.fixed[t][i], code: temp };
+      problemsCodes[t].push({ char: this.problems[t][i], code: this.problems[t][i].charCodeAt(0), fixed: tempObj });
+    }
+  }
+
+  problemsCodesArr = [];
+  problemsCodesArrFlat = [];
+  for (let i in problemsCodes) {
+    for (let j of problemsCodes[i]) {
+      problemsCodesArr.push(j.code);
+      problemsCodesArrFlat.push(j);
+    }
+  }
+
+  this.map = problemsCodes;
+  this.flatMap = problemsCodesArrFlat;
+  this.problemsCodes = problemsCodesArr;
+  return problemsCodes;
+}
+
 ParsingHangul.prototype.fixString = function (ugly) {
   if (typeof ugly !== 'string') {
     throw new Error("must be string arguments");
   }
-
   const instance = this;
   const { disassemble, assemble } = this.hangul;
-  let codeArr;
-
-  codeArr = [];
-  for (let i of ugly) {
-    codeArr.push(i.charCodeAt(0));
-  }
-
-  return assemble(this.convertArr(codeArr));
-}
-
-ParsingHangul.prototype.launching = async function () {
-  const instance = this;
-  const { disassemble, assemble } = this.hangul;
-  const { fileSystem } =  this.mother;
-  try {
-
-
-    let problemsCodes, fixedCodes;
-
-    problemsCodes = {
-      son: [],
-      mother: [],
-      base: []
-    };
-    fixedCodes = {
-      son: [],
-      mother: [],
-      base: []
-    };
-
-    for (let i = 0; i < this.problems.son.length; i++) {
-      
-
-
-
-      console.log(this.problems.son[i].charCodeAt(0), this.fixed.son[i].charCodeAt(0));
+  const get = function (num) {
+    let result;
+    for (let i of instance.flatMap) {
+      if (i.code === num) {
+        result = i;
+      }
     }
-
-
-
-
-
-  } catch (e) {
-    console.log(e);
+    return result;
   }
+  let newString;
+
+  this.setMap();
+
+  newString = [];
+  for (let i of ugly) {
+    if (this.problemsCodes.includes(i.charCodeAt(0))) {
+      newString.push(get(i.charCodeAt(0)).fixed.char);
+    } else {
+      newString.push(i);
+    }
+  }
+
+  return assemble(newString);
 }
-
-
-
-
-
 
 module.exports = ParsingHangul;
