@@ -1,6 +1,6 @@
 const ResourceMaker = function (p_id) {
   const Mother = require(process.cwd() + "/apps/mother.js");
-  const BackMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();

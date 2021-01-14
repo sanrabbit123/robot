@@ -1148,18 +1148,22 @@ class DevContext extends Array {
 
 
 
+
+
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
 
       // contents upload
 
-      // const client = "강영후";
-      // const pid = "p77";
-      // const rid = "re071";
+      // const client = "송경진";
+      // const pid = "p74";
+      // const rid = "re068";
       // const links = [
-      //   "https://docs.google.com/document/d/1G9qMTqJC1j0hrr9HT0Bb6PrX42zcHkbIxKbVOTSq5Qg/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/19stRqaANwH1DFY0izMvhyUqd8GvG9iYg5sybWEs1q0I/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1h18Z5NSAhWY-8cevvJjUpIgKwj03X1B4?usp=sharing",
+      //   "https://docs.google.com/document/d/1yBI9RnLYSBwOnu1h-dCzWcck9NYVU_jqMNWQogE6IYs/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/16z8ijM8ziyQg5i5Js5r4kx2lc7DcHm-FmDkO7PMx5cM/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1XGKKRTJS6Dh3HoLJAjdA0qAlHbnqZFWA?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1203,7 +1207,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p77");
+      // await this.spellCheck("p74");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
