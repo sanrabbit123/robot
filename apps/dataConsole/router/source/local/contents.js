@@ -1143,6 +1143,7 @@ ContentsJs.prototype.cardViewMaker = function () {
     } else {
 
       totalMother.classList.add("justfadeoutoriginal");
+      instance.mother.belowButtons.moveArea.left.style.display = "none";
 
       let initLoadingIcon, initLoadingIconWidth;
       let totalFather;
@@ -1168,6 +1169,8 @@ ContentsJs.prototype.cardViewMaker = function () {
       let originalHeight, compressHeight, expandHeight, expandGrayHeight;
       let domStyle, titleStyle, grayStyle;
       let raws;
+      let overrideSearch;
+      let allSearchTargets;
 
       createViewDoms = [];
       ea = "px";
@@ -1187,6 +1190,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         "고객 후기",
         "원본 사진"
       ];
+      allSearchTargets = [];
 
       //loading
       initLoadingIconWidth = 50;
@@ -1196,6 +1200,12 @@ ContentsJs.prototype.cardViewMaker = function () {
       initLoadingIcon.style.top = "calc(50% - " + String((instance.mother.belowHeight + initLoadingIconWidth) / 2) + ea + ")";
       initLoadingIcon.style.left = "calc(50% - " + String(initLoadingIconWidth / 2) + ea + ")";
       document.body.appendChild(initLoadingIcon);
+
+      //new search setting
+      overrideSearch = instance.mother.searchInput.parentNode.cloneNode(true);
+      instance.mother.below.appendChild(overrideSearch);
+      instance.overrideSearch = overrideSearch;
+      instance.mother.searchInput.style.opacity = String(0);
 
       //make father
       totalFather = GeneralJs.nodes.div.cloneNode(true);
@@ -1271,6 +1281,9 @@ ContentsJs.prototype.cardViewMaker = function () {
         if (document.getElementById("textZone") !== null) {
           document.getElementById("textZone").remove();
           createViewDoms[1].gray.firstChild.style.display = "block";
+        }
+        while (document.querySelectorAll(".whitePrompt").length !== 0) {
+          document.body.removeChild(document.querySelector(".whitePrompt"));
         }
 
         num = 0;
@@ -1430,6 +1443,12 @@ ContentsJs.prototype.cardViewMaker = function () {
         title2.insertAdjacentHTML("beforeend", inputHtml);
         title2.style.color = "#2fa678";
 
+        if (/\:/.test(title3.textContent)) {
+          inputHtml = (title3.textContent.split(" : "))[0] ;
+        } else {
+          inputHtml = title3.textContent;
+        }
+        title3.textContent = inputHtml;
         title3.style.color = "#cccccc";
 
         GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = setTimeout(async function () {
@@ -1907,12 +1926,13 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
         div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
 
+        allSearchTargets.push({ dom: div_clone2, keywords: [ projects[i].name, projects[i].proid, projects[i].cliid, projects[i].desid, projects[i].designer ] });
+
         GeneralJs.stacks.firstContentsCreateViewDoms.push(div_clone2);
         div_clone.appendChild(div_clone2);
       }
 
       createViewDoms[0].gray.appendChild(div_clone);
-
 
       //second - get method
       div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1955,7 +1975,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             const { text } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&method=" + method + "&button=get", "/getRawContents"));
             const { dom, title, gray } = createViewDoms[1];
             let temp, tempArr;
-            let interActionIcon, returnIcon;
+            let interActionIcon, returnIcon, returnIconEvent;
             let div_clone, textArea_clone;
             let controlPannel;
             let button, buttonText;
@@ -1963,6 +1983,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             let style, buttonStyle, buttonDetailStyle;
             let margin;
             let ea;
+            let saveFunction;
 
             ea = "px";
 
@@ -2028,9 +2049,9 @@ ContentsJs.prototype.cardViewMaker = function () {
             for (let i in style) {
               returnIcon.style[i] = style[i];
             }
-            returnIcon.addEventListener("click", function (e) {
+            returnIconEvent = function (e) {
               e.stopPropagation();
-              resetEvent.call(e, this.parentNode);
+              resetEvent.call(this.parentNode, e);
               GeneralJs.timeouts.returnIconResetEvent = setTimeout(function () {
                 if (createViewDoms[0].gray.firstChild.querySelector("#" + proid) !== null) {
                   createViewDoms[0].gray.firstChild.querySelector("#" + proid).click();
@@ -2038,7 +2059,8 @@ ContentsJs.prototype.cardViewMaker = function () {
                 clearTimeout(GeneralJs.timeouts.returnIconResetEvent);
                 GeneralJs.timeouts.returnIconResetEvent = null;
               }, 0);
-            });
+            }
+            returnIcon.addEventListener("click", returnIconEvent);
             title.appendChild(returnIcon);
 
             div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2173,7 +2195,8 @@ ContentsJs.prototype.cardViewMaker = function () {
             }
             buttonText.textContent = "저장";
             button.appendChild(buttonText);
-            button.addEventListener("click", function (e) {
+
+            saveFunction = function (e) {
 
               let refined, ajaxObj;
               let loadingIcon;
@@ -2226,15 +2249,40 @@ ContentsJs.prototype.cardViewMaker = function () {
 
               GeneralJs.ajax(GeneralJs.objectToRawquery(ajaxObj), "/getRawContents", function (data) {
                 const response = JSON.parse(data);
+                const forefather = document.getElementById(proid);
 
-                alert("저장되었습니다!");
-                window.open(response.link, "_blank");
-                window.open("https://drive.google.com/drive/folders/" + ajaxObj.parentId + "?usp=sharing", "_blank");
+                instance.mother.greenAlert(`${name} 고객님의 ${((method === "portfolio") ? "포트폴리오" : "고객 후기")}가 저장되었습니다!`);
+
+                if (textArea_clone.value !== "" && textArea_clone.value !== "미지정") {
+                  window.open(response.link, "_blank");
+                  window.open("https://drive.google.com/drive/folders/" + ajaxObj.parentId + "?usp=sharing", "_blank");
+                }
+
+                if (textArea_clone.value !== "") {
+                  that.style.color = "#2fa678";
+                  if (that.firstChild !== null) {
+                    that.firstChild.style.color = "#2fa678";
+                  }
+                  forefather.setAttribute(method + "Exist", "true");
+                } else {
+                  that.style.color = "rgb(221, 221, 221)";
+                  if (that.firstChild !== null) {
+                    that.firstChild.style.color = "rgb(221, 221, 221)";
+                  }
+                  forefather.setAttribute(method + "Exist", "false");
+                }
 
                 div_clone.removeChild(loadingBack);
                 div_clone.removeChild(loadingIcon);
+
+                returnIconEvent.call(returnIcon, {
+                  type: "click",
+                  stopPropagation: (new Function())
+                });
               });
-            });
+            }
+
+            button.addEventListener("click", saveFunction);
             controlPannel.appendChild(button);
 
             button = GeneralJs.nodes.div.cloneNode(true);
@@ -2266,11 +2314,11 @@ ContentsJs.prototype.cardViewMaker = function () {
             for (let i in buttonDetailStyle) {
               buttonText.style[i] = buttonDetailStyle[i];
             }
-            buttonText.textContent = "삭제";
+            buttonText.textContent = "미지정";
             button.appendChild(buttonText);
             button.addEventListener("click", function (e) {
-              textArea_clone.value = "";
-              textArea_clone.focus();
+              textArea_clone.value = "미지정";
+              saveFunction.call(this, e);
             });
             controlPannel.appendChild(button);
 
@@ -2279,10 +2327,224 @@ ContentsJs.prototype.cardViewMaker = function () {
             gray.appendChild(div_clone);
 
           } else {
-            const { link } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&button=photo", "/getRawContents"));
+            let { link } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&button=photo", "/getRawContents"));
+            link = decodeURIComponent(link);
+
             instance.mother.getWhitePrompt("big", function (white, cancelBox) {
-              console.log(white);
-              console.log(link);
+              let whiteWidth, whiteHeight;
+              let div_clone, div_clone2;
+              let input_clone;
+              let style;
+              let buttonStyle, buttonTextStyle;
+              let ea;
+
+              ea = "px";
+              whiteWidth = 650;
+              whiteHeight = 257;
+
+              white.style.width = String(whiteWidth) + ea;
+              white.style.height = String(whiteHeight) + ea;
+              white.style.top = "calc(calc(calc(100% - " + String(instance.mother.belowHeight) + ea + ") / 2) - " + String(whiteHeight / 2) + ea + ")";
+              white.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                fontSize: String(28) + ea,
+                fontWeight: String(500),
+                position: "absolute",
+                top: String(41) + ea,
+                width: "100%",
+                textAlign: "center",
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+              div_clone.textContent = "원본 사진의 링크를 기입해주세요!";
+              white.appendChild(div_clone);
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                width: "100%",
+                textAlign: "center",
+                fontSize: String(15) + ea,
+                color: "#2fa678",
+                top: String(83) + ea,
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+              div_clone.textContent = "*링크가 없을 경우, 드라이브 등의 클라우드상에서 링크를 만들어 기입해주세요.";
+              white.appendChild(div_clone);
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                top: String(117) + ea,
+                width: String(540) + ea,
+                height: String(40) + ea,
+                background: "#f2f2f2",
+                borderRadius: String(4) + ea,
+                left: "calc(50% - " + String(270) + ea + ")",
+                overflow: "hidden",
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+
+              input_clone = GeneralJs.nodes.input.cloneNode(true);
+              style = {
+                width: "calc(100% - " + String(30) + ea + ")",
+                height: String(37) + ea,
+                left: String(15) + ea,
+                position: "absolute",
+                border: String(0) + ea,
+                outline: String(0) + ea,
+                background: "transparent",
+                textAlign: "center",
+                fontSize: String(15) + ea,
+                overflow: "hidden",
+              };
+              for (let i in style) {
+                input_clone.style[i] = style[i];
+              }
+
+              input_clone.setAttribute("type", "text");
+              input_clone.value = link;
+              div_clone.appendChild(input_clone);
+              white.appendChild(div_clone);
+
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault_lite");
+              buttonStyle = {
+                position: "absolute",
+                bottom: String(50) + ea,
+                width: String(47) + ea,
+                height: String(32) + ea,
+                background: "#2fa678",
+                color: "white",
+                borderRadius: String(3) + ea,
+                left: "calc(50% - " + String(113) + ea + ")",
+                fontSize: String(12) + ea,
+              };
+              for (let i in buttonStyle) {
+                div_clone.style[i] = buttonStyle[i];
+              }
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              buttonTextStyle = {
+                position: "absolute",
+                color: "white",
+                fontSize: String(14) + ea,
+                fontWeight: String(600),
+                top: String(5) + ea,
+                left: String(11) + ea,
+              };
+              for (let i in buttonTextStyle) {
+                div_clone2.style[i] = buttonTextStyle[i];
+              }
+              div_clone2.textContent = "저장";
+              div_clone.addEventListener("click", async function (e) {
+                try {
+                  let target, final;
+                  const forefather = document.getElementById(proid);
+
+                  target = encodeURIComponent(input_clone.value.trim());
+
+                  if (!/^http/.test(target) && target !== '') {
+                    alert("올바른 형식의 링크가 아닙니다!");
+                    return;
+                  } else {
+                    final = target.trim().replace(/\=/g, '').replace(/\&/g, '');
+                    await GeneralJs.ajaxPromise("button=insertPhoto" + "&id=" + proid + "&link=" + final + "&clientName=" + name + "&designerName=" + designer, "/getRawContents");
+
+                    instance.mother.greenAlert(`${name} 고객님의 원본 사진이 저장되었습니다!`);
+
+                    if (final !== "") {
+                      that.style.color = "#2fa678";
+                      if (that.firstChild !== null) {
+                        that.firstChild.style.color = "#2fa678";
+                      }
+                      forefather.setAttribute("rawLink", "true");
+                    } else {
+                      that.style.color = "rgb(221, 221, 221)";
+                      if (that.firstChild !== null) {
+                        that.firstChild.style.color = "rgb(221, 221, 221)";
+                      }
+                      forefather.setAttribute("rawLink", "");
+                    }
+
+                    cancelBox.click();
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+              div_clone.appendChild(div_clone2);
+              white.appendChild(div_clone);
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault_lite");
+              for (let i in buttonStyle) {
+                div_clone.style[i] = buttonStyle[i];
+              }
+              div_clone.style.width = String(70) + ea;
+              div_clone.style.left = "calc(50% - " + String(62) + ea + ")";
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              for (let i in buttonTextStyle) {
+                div_clone2.style[i] = buttonTextStyle[i];
+              }
+              div_clone2.textContent = "되돌리기";
+              div_clone.addEventListener("click", function (e) {
+                input_clone.value = link;
+                input_clone.focus();
+              });
+              div_clone.appendChild(div_clone2);
+              white.appendChild(div_clone);
+
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault_lite");
+              for (let i in buttonStyle) {
+                div_clone.style[i] = buttonStyle[i];
+              }
+              div_clone.style.left = "calc(50% + " + String(13) + ea + ")";
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              for (let i in buttonTextStyle) {
+                div_clone2.style[i] = buttonTextStyle[i];
+              }
+              div_clone2.textContent = "복사";
+              div_clone.addEventListener("click", async function (e) {
+                try {
+                  await window.navigator.clipboard.writeText(input_clone.value);
+                  instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+              div_clone.appendChild(div_clone2);
+              white.appendChild(div_clone);
+
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              div_clone.classList.add("hoverDefault_lite");
+              for (let i in buttonStyle) {
+                div_clone.style[i] = buttonStyle[i];
+              }
+              div_clone.style.left = "calc(50% + " + String(65) + ea + ")";
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              for (let i in buttonTextStyle) {
+                div_clone2.style[i] = buttonTextStyle[i];
+              }
+              div_clone2.textContent = "이동";
+              div_clone.addEventListener("click", function (e) {
+                window.open(input_clone.value, "_blank");
+              });
+              div_clone.appendChild(div_clone2);
+              white.appendChild(div_clone);
+
+              input_clone.focus();
+
             });
           }
 
@@ -2307,7 +2569,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone3 = GeneralJs.nodes.div.cloneNode(true);
         div_clone3.classList.add("hoverDefault");
         div_clone3.style.fontSize = String(2) + "vh";
-        div_clone3.style.fontWeight = String(200);
+        div_clone3.style.fontWeight = String(300);
         div_clone3.style.color = "#aaaaaa";
         div_clone3.style.position = "absolute";
         div_clone3.style.marginTop = String(-1) + "vh";
@@ -2326,7 +2588,6 @@ ContentsJs.prototype.cardViewMaker = function () {
       }
 
       createViewDoms[1].gray.appendChild(div_clone);
-
 
       //third - complete contents
       projects = JSON.parse(await GeneralJs.ajaxPromise("button=projectYesConid", "/getRawContents"));
@@ -2405,6 +2666,12 @@ ContentsJs.prototype.cardViewMaker = function () {
         title2.insertAdjacentHTML("beforeend", inputHtml);
         title2.style.color = "#2fa678";
 
+        if (/\:/.test(title3.textContent)) {
+          inputHtml = (title3.textContent.split(" : "))[0] ;
+        } else {
+          inputHtml = title3.textContent;
+        }
+        title3.textContent = inputHtml;
         title3.style.color = "#cccccc";
 
         GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout = setTimeout(function () {
@@ -2475,11 +2742,51 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("portfolioExist", String(projects[i].raw.portfolio.exist));
         div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
         div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
+
+        allSearchTargets.push({ dom: div_clone2, keywords: [ projects[i].name, projects[i].proid, projects[i].cliid, projects[i].desid, projects[i].designer ] });
+
         GeneralJs.stacks.thirdContentsCreateViewDoms.push(div_clone2);
         div_clone.appendChild(div_clone2);
       }
 
       createViewDoms[2].gray.appendChild(div_clone);
+
+      //make search event
+      instance.overrideSearch.querySelector("input").addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          let targetDoms, intervalId, num;
+          targetDoms = [];
+          for (let { dom, keywords } of allSearchTargets) {
+            if (keywords.includes(this.value)) {
+              targetDoms.push(dom);
+            }
+          }
+          if (targetDoms.length >= 1) {
+
+            while (document.querySelectorAll(".whitePrompt").length !== 0) {
+              document.body.removeChild(document.querySelector(".whitePrompt"));
+            }
+            createViewDoms[0].title.click();
+            targetDoms[0].click();
+
+            if (targetDoms.length > 1) {
+              num = 1;
+              intervalId = setInterval(function () {
+                if (num < targetDoms.length) {
+                  while (document.querySelectorAll(".whitePrompt").length !== 0) {
+                    document.body.removeChild(document.querySelector(".whitePrompt"));
+                  }
+                  targetDoms[num].click();
+                  num = num + 1;
+                } else {
+                  clearInterval(intervalId);
+                }
+              }, 1000);
+            }
+
+          }
+        }
+      });
 
       //end
       totalFather.appendChild(createViewBase);
@@ -2488,6 +2795,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       instance.totalFather = totalFather;
       instance.createViewDoms = createViewDoms;
       document.body.removeChild(initLoadingIcon);
+      instance.overrideSearch.querySelector("input").focus();
     }
     instance.onView = "father";
   }
@@ -4222,6 +4530,9 @@ ContentsJs.prototype.rowViewMaker = function () {
       if (instance.totalFather !== null) {
         instance.totalFatherChildren = [];
         instance.totalFather.remove();
+        instance.overrideSearch.remove();
+        instance.mother.searchInput.style.opacity = '';
+        instance.mother.belowButtons.moveArea.left.style.display = "block";
       }
       instance.totalFather = null;
       instance.totalMother.classList.remove("justfadeinoriginal");
@@ -4857,6 +5168,9 @@ ContentsJs.prototype.makeSearchEvent = function (search = null) {
         GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
           instance.totalFatherChildren = [];
           instance.totalFather.remove();
+          instance.overrideSearch.remove();
+          instance.mother.searchInput.style.opacity = '';
+          instance.mother.belowButtons.moveArea.left.style.display = "block";
           instance.totalFather = null;
           instance.totalMother.classList.remove("justfadeinoriginal");
           clearTimeout(GeneralJs.timeouts.fadeinTimeout);
@@ -5228,11 +5542,12 @@ ContentsJs.prototype.launching = async function () {
 
     if (getObj.view === "create") {
       tempFunction = this.cardViewMaker();
-      tempFunction.call({ type: "click" }, this.mother.belowButtons.square.up).then(function () {
+      tempFunction.call(this.mother.belowButtons.square.up, { type: "click" }).then(function () {
         if (getObj.proid !== undefined) {
-          if (instance.createViewDoms[0].gray.firstChild.querySelector("#" + getObj.proid) !== null) {
-            instance.createViewDoms[0].gray.firstChild.querySelector("#" + getObj.proid).click();
+          if (document.querySelector("#" + getObj.proid) !== null) {
+            document.querySelector("#" + getObj.proid).click();
           }
+
         }
       });
     }

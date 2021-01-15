@@ -167,7 +167,7 @@ ClientJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(cliid, num));
+      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(cliid));
     }
 
     if (num !== 0) {
@@ -1605,7 +1605,7 @@ ClientJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = nameStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
+          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.cliid));
           div_clone.appendChild(div_clone2);
 
           //cliid
@@ -1616,7 +1616,7 @@ ClientJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = cliidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.cliid, num));
+          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.cliid));
           div_clone.appendChild(div_clone2);
 
           //bar
@@ -1758,7 +1758,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
-  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
+  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -4276,34 +4276,17 @@ ClientJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-ClientJs.prototype.makeNotionEvent = function (id, index) {
+ClientJs.prototype.makeClipBoardEvent = function (id) {
   const instance = this;
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
     }
-
-    let indexArr, requestIndex;
-
-    index = Number(index);
-    indexArr = [];
-    for (let dom of document.querySelectorAll('.' + id)) {
-      indexArr.push(Number(dom.getAttribute("index")));
-    }
-    indexArr.sort((a, b) => { return a - b; });
-    for (let z = 0; z < indexArr.length; z++) {
-      if (indexArr[z] === index) {
-        requestIndex = z;
-      }
-    }
-
-    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: id }), "/getClients");
-    const client = JSON.parse(clients)[0];
-    const notionId = client.requests[requestIndex].request.notionId;
-    if (notionId !== '') {
-      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-    } else {
-      alert("노션에 정보가 없습니다!");
+    try {
+      await window.navigator.clipboard.writeText(id);
+      alert("복사되었습니다!");
+    } catch (e) {
+      console.log(e);
     }
   }
 }

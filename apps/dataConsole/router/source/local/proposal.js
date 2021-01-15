@@ -1782,7 +1782,12 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
   // Left
   let leftList = [ "title", "picturebox", "description" ];
   let target_value = document.querySelectorAll(".pp_designer_selected");
-  let values = target_value[id].querySelector(".pp_designer_selected_box_value").textContent;
+  let values;
+  if (target_value[id] === undefined) {
+    values = '';
+  } else {
+    values = target_value[id].querySelector(".pp_designer_selected_box_value").textContent;
+  }
 
   // Default 0
   let descriptions = pictureSettings[0].description;

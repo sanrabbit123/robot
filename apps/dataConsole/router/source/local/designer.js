@@ -166,7 +166,7 @@ DesignerJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(desid, num));
+      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(desid));
     }
 
     if (num !== 0) {
@@ -1174,7 +1174,6 @@ DesignerJs.prototype.cardViewMaker = function () {
       let tempResult, tempResult2, tempInfo, tempTarget, tempArr;
       let division, divisionName;
       let numbers;
-      let makeNotionEvent;
 
       //total father div
       totalFather = GeneralJs.nodes.div.cloneNode(true);
@@ -1192,34 +1191,6 @@ DesignerJs.prototype.cardViewMaker = function () {
       fontSize = 13;
       nameFontSize = fontSize + 4;
       totalWidth = size - (intend * 2) - 1;
-      makeNotionEvent = function (obj) {
-        return async function (e) {
-          if (e.cancelable) {
-            e.preventDefault();
-          }
-
-          let thisCliid, requestIndex;
-
-          const projects = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: obj.proid }), "/getProjects");
-          thisCliid = JSON.parse(projects)[0].cliid;
-
-          const tempProjects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: thisCliid }), "/getProjects"));
-          for (let z = 0; z < tempProjects.length; z++) {
-            if (tempProjects[z].proid === obj.proid) {
-              requestIndex = z;
-            }
-          }
-
-          const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: thisCliid }), "/getClients");
-          const client = JSON.parse(clients)[0];
-          const notionId = client.requests[requestIndex].request.notionId;
-          if (notionId !== '') {
-            window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-          } else {
-            alert("노션에 정보가 없습니다!");
-          }
-        }
-      }
 
       //style maker
       style = {
@@ -1410,7 +1381,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         div_clone2.addEventListener("click", function (e) {
           window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
         });
-        div_clone2.addEventListener("contextmenu", makeNotionEvent(obj));
+        div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
         div_clone.appendChild(div_clone2);
 
         //proid
@@ -1423,7 +1394,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         div_clone2.addEventListener("click", function (e) {
           window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
         });
-        div_clone2.addEventListener("contextmenu", makeNotionEvent(obj));
+        div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
         div_clone.appendChild(div_clone2);
 
         //bar
@@ -1529,7 +1500,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
-  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
+  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -3767,34 +3738,17 @@ DesignerJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-DesignerJs.prototype.makeNotionEvent = function (id, index) {
+DesignerJs.prototype.makeClipBoardEvent = function (id) {
   const instance = this;
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
     }
-
-    let indexArr, requestIndex;
-
-    index = Number(index);
-    indexArr = [];
-    for (let dom of document.querySelectorAll('.' + id)) {
-      indexArr.push(Number(dom.getAttribute("index")));
-    }
-    indexArr.sort((a, b) => { return a - b; });
-    for (let z = 0; z < indexArr.length; z++) {
-      if (indexArr[z] === index) {
-        requestIndex = z;
-      }
-    }
-
-    const designers = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: id }), "/getDesigners");
-    const designer = JSON.parse(designers)[0];
-    const notionId = designer.information.notionId;
-    if (notionId !== '') {
-      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-    } else {
-      alert("노션에 정보가 없습니다!");
+    try {
+      await window.navigator.clipboard.writeText(id);
+      alert("복사되었습니다!");
+    } catch (e) {
+      console.log(e);
     }
   }
 }

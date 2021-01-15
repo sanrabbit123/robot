@@ -1843,6 +1843,7 @@ DataRouter.prototype.rou_post_makeSchedule = function () {
 DataRouter.prototype.rou_post_getRawContents = function () {
   const instance = this;
   const back = this.back;
+  const slack = this.mother.slack_bot;
   const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
   const docs = new GoogleDocs();
   let obj = {};
@@ -1867,8 +1868,10 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       let parentFolder;
       let docId;
       let rawContentsArr, rawContents;
+      let thisObj;
 
       responseObj = {};
+      thisObj = null;
 
       if (button === "get") {
         resultObjArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
@@ -1966,6 +1969,9 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         whereQuery = {};
 
         whereQuery.proid = id;
+        thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
+        thisObj = thisObj[0];
+
         if (req.body.text === '') {
           updateQuery[(method + ".exist")] = false;
           updateQuery[(method + ".contents")] = "";
@@ -1976,20 +1982,39 @@ DataRouter.prototype.rou_post_getRawContents = function () {
 
         await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
 
-        parentFolder = req.body.parentId;
-        fileName = req.body.clientName + "C_" + req.body.designerName + "D_" + method + "_" + instance.mother.todayMaker("total");
+        responseObj.link = "none";
 
-        docId = await docs.create_newDocs_inPython(fileName, parentFolder);
-        await docs.update_value_inPython(docId, req.body.text);
-
-        responseObj.link = "https://docs.google.com/document/d/" + docId + "/edit?usp=sharing";
+        if (req.body.text !== '' && req.body.text !== "미지정") {
+          parentFolder = req.body.parentId;
+          fileName = req.body.clientName + "C_" + req.body.designerName + "D_" + method + "_" + instance.mother.todayMaker("total");
+          docId = await docs.create_newDocs_inPython(fileName, parentFolder);
+          await docs.update_value_inPython(docId, req.body.text);
+          responseObj.link = "https://docs.google.com/document/d/" + docId + "/edit?usp=sharing";
+        }
 
       } else if (button === "photo") {
 
         rawContentsArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
         rawContents = rawContentsArr[0];
         responseObj.link = rawContents.photo.link;
-        
+
+      } else if (button === "insertPhoto") {
+
+        updateQuery = {};
+        whereQuery = {};
+
+        whereQuery.proid = id;
+        thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
+        thisObj = thisObj[0];
+        updateQuery["photo.link"] = req.body.link;
+        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+
+      }
+
+      if (thisObj !== null) {
+        if (thisObj.portfolio.exist && thisObj.review.exist && thisObj.photo !== "") {
+          await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 컨텐츠 교정 준비가 완료되었습니다! 보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
+        }
       }
 
       res.set("Content-Type", "application/json");

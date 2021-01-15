@@ -166,7 +166,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeNotionEvent(proid, num));
+      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(proid));
     }
 
     if (num !== 0) {
@@ -1835,7 +1835,7 @@ ProjectJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = nameStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.proid, num));
+          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
           div_clone.appendChild(div_clone2);
 
           //proid
@@ -1846,7 +1846,7 @@ ProjectJs.prototype.cardViewMaker = function () {
             div_clone2.style[i] = proidStyle[i];
           }
           div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeNotionEvent(obj.proid, num));
+          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
           div_clone.appendChild(div_clone2);
 
           //bar
@@ -2011,7 +2011,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, ''));
-  notionEvent = instance.makeNotionEvent(thisCase[standard[1]], thisCase["index"]);
+  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
 
   //title ------------------------------------------
 
@@ -4197,35 +4197,17 @@ ProjectJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-ProjectJs.prototype.makeNotionEvent = function (id, index) {
+ProjectJs.prototype.makeClipBoardEvent = function (id) {
   const instance = this;
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
     }
-
-    let indexArr, requestIndex;
-
-    index = Number(index);
-    indexArr = [];
-    for (let dom of document.querySelectorAll('.' + id)) {
-      indexArr.push(Number(dom.getAttribute("index")));
-    }
-    indexArr.sort((a, b) => { return a - b; });
-    for (let z = 0; z < indexArr.length; z++) {
-      if (indexArr[z] === index) {
-        requestIndex = z;
-      }
-    }
-
-    const projects = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: id }), "/getProjects");
-    const clients = await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: JSON.parse(projects)[0].cliid }), "/getClients");
-    const client = JSON.parse(clients)[0];
-    const notionId = client.requests[requestIndex].request.notionId;
-    if (notionId !== '') {
-      window.open("https://notion.so/" + notionId.split('-')[0] + "?p=" + notionId.split('-')[1], "_blank");
-    } else {
-      alert("노션에 정보가 없습니다!");
+    try {
+      await window.navigator.clipboard.writeText(id);
+      alert("복사되었습니다!");
+    } catch (e) {
+      console.log(e);
     }
   }
 }
