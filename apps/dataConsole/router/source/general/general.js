@@ -1434,7 +1434,7 @@ GeneralJs.prototype.greenAlert = function (message) {
       clearTimeout(GeneralJs.timeouts["greenAlertLevel1_TimeOut"]);
       GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = null;
     }, 600);
-  }, 4000);
+  }, 3000);
 }
 
 
