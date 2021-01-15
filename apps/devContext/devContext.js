@@ -1085,64 +1085,65 @@ class DevContext extends Array {
 
 
 
-      /*
-
-      const back = new BackMaker();
-
-      let arr0, arr1, arr2;
-      let uploadObj;
-      let temp;
-
-      arr0 = await back.mongoRead("contentsRaw", {}, { home: true });
-      arr1 = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
-
-      let proidArr = [];
-      for (let i of arr0) {
-        proidArr.push(i.proid);
-      }
-
-      let targets = [];
-      for (let i of arr1) {
-        if (!proidArr.includes(i.proid)) {
-          targets.push(i.proid);
-        }
-      }
-
-      let targetsDom = [];
-      for (let i of targets) {
-        temp = await back.getProjectById(i);
-        if (temp !== null) {
-          targetsDom.push(temp);
-        }
-      }
-
-      for (let i of targetsDom) {
-
-        uploadObj = {};
-
-        uploadObj.proid = i.proid;
-        uploadObj.cliid = i.cliid;
-        uploadObj.desid = i.desid;
-        uploadObj.conid = "";
-
-        uploadObj.portfolio = {};
-        uploadObj.review = {};
-        uploadObj.photo = {};
-
-        uploadObj.portfolio.exist = false;
-        uploadObj.portfolio.contents = '';
-
-        uploadObj.review.exist = false;
-        uploadObj.review.contents = '';
-
-        uploadObj.photo.link = '';
-
-        await back.mongoCreate("contentsRaw", uploadObj, { home: true });
-
-      }
 
 
-      */
+      // const back = new BackMaker();
+      //
+      // let arr0, arr1, arr2;
+      // let uploadObj;
+      // let temp;
+      //
+      // arr0 = await back.mongoRead("contentsRaw", {}, { home: true });
+      // arr1 = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      //
+      // let proidArr = [];
+      // for (let i of arr0) {
+      //   proidArr.push(i.proid);
+      // }
+      //
+      // let targets = [];
+      // for (let i of arr1) {
+      //   if (!proidArr.includes(i.proid)) {
+      //     targets.push(i.proid);
+      //   }
+      // }
+      //
+      // let targetsDom = [];
+      // for (let i of targets) {
+      //   temp = await back.getProjectById(i);
+      //   if (temp !== null) {
+      //     targetsDom.push(temp);
+      //   }
+      // }
+      //
+      // for (let i of targetsDom) {
+      //
+      //   uploadObj = {};
+      //
+      //   uploadObj.proid = i.proid;
+      //   uploadObj.cliid = i.cliid;
+      //   uploadObj.desid = i.desid;
+      //   uploadObj.conid = "";
+      //
+      //   uploadObj.portfolio = {};
+      //   uploadObj.review = {};
+      //   uploadObj.photo = {};
+      //
+      //   uploadObj.portfolio.exist = false;
+      //   uploadObj.portfolio.contents = '';
+      //
+      //   uploadObj.review.exist = false;
+      //   uploadObj.review.contents = '';
+      //
+      //   uploadObj.photo.link = '';
+      //   console.log(uploadObj);
+      //
+      //   await back.mongoCreate("contentsRaw", uploadObj, { home: true });
+      //   console.log("done");
+      // }
+
+
+
 
 
 
