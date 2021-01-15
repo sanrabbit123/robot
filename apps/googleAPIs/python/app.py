@@ -58,6 +58,7 @@ from google.googleAnalytics import GoogleAnalytics
 from google.googleSearchConsole import GoogleSearchConsole
 from google.googleSheet import GoogleSheet
 from google.googleDrive import GoogleDrive
+from google.googleDocs import GoogleDocs
 
 try:
 
@@ -142,6 +143,21 @@ try:
         driveApp = GoogleDrive()
         result = driveApp.webPublish(data["targetId"])
         print(result)
+
+    elif argv[1] == 'docs' and argv[2] == 'readDocs':
+        docsApp = GoogleDocs()
+        result = docsApp.readDocs(data["id"])
+        print(dumps(result))
+
+    elif argv[1] == 'docs' and argv[2] == 'createDocs':
+        docsApp = GoogleDocs()
+        id = docsApp.createDocs(data["title"])
+        print(dumps({ "id": id }))
+
+    elif argv[1] == 'docs' and argv[2] == 'insertText':
+        docsApp = GoogleDocs()
+        docsApp.insertText(data["id"], data["longText"])
+        print(dumps({ "id": data["id"] }))
 
 except Exception as e:
     print(e)

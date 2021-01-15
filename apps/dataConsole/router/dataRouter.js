@@ -1843,6 +1843,8 @@ DataRouter.prototype.rou_post_makeSchedule = function () {
 DataRouter.prototype.rou_post_getRawContents = function () {
   const instance = this;
   const back = this.back;
+  const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
+  const docs = new GoogleDocs();
   let obj = {};
   obj.link = "/getRawContents";
   obj.func = async function (req, res) {
@@ -1861,6 +1863,10 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       let proid, desid, cliid;
       let updateQuery, whereQuery;
       let uploadObj;
+      let fileName;
+      let parentFolder;
+      let docId;
+      let rawContentsArr, rawContents;
 
       responseObj = {};
 
@@ -1911,9 +1917,21 @@ DataRouter.prototype.rou_post_getRawContents = function () {
               i.designer = j.designer;
             }
           }
+          for (let j of tempArr) {
+            if (i.proid === j.proid) {
+              i.raw = {};
+              i.raw.portfolio = {};
+              i.raw.review = {};
+              i.raw.photo = {};
+              i.raw.portfolio.exist = j.portfolio.exist;
+              i.raw.review.exist = j.review.exist;
+              i.raw.photo.link = j.photo.link;
+            }
+          }
         }
 
       } else if (button === "createRawContents") {
+
         updateQuery = JSON.parse(req.body.updateQuery);
         whereQuery = JSON.parse(req.body.whereQuery);
 
@@ -1941,6 +1959,37 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         uploadObj.photo.link = '';
 
         await back.mongoCreate("contentsRaw", uploadObj, { home: true });
+
+      } else if (button === "insertText") {
+
+        updateQuery = {};
+        whereQuery = {};
+
+        whereQuery.proid = id;
+        if (req.body.text === '') {
+          updateQuery[(method + ".exist")] = false;
+          updateQuery[(method + ".contents")] = "";
+        } else {
+          updateQuery[(method + ".exist")] = true;
+          updateQuery[(method + ".contents")] = req.body.text;
+        }
+
+        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+
+        parentFolder = req.body.parentId;
+        fileName = req.body.clientName + "C_" + req.body.designerName + "D_" + method + "_" + instance.mother.todayMaker("total");
+
+        docId = await docs.create_newDocs_inPython(fileName, parentFolder);
+        await docs.update_value_inPython(docId, req.body.text);
+
+        responseObj.link = "https://docs.google.com/document/d/" + docId + "/edit?usp=sharing";
+
+      } else if (button === "photo") {
+
+        rawContentsArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
+        rawContents = rawContentsArr[0];
+        responseObj.link = rawContents.photo.link;
+        
       }
 
       res.set("Content-Type", "application/json");

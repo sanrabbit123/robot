@@ -120,6 +120,28 @@ Mother.prototype.todayMaker = function (startPoint = "month") {
     } else {
       dayString += String(today.getDate());
     }
+  } else if (startPoint === "total") {
+    dayString += String(today.getFullYear()).slice(2, 4);
+    if (today.getMonth() + 1 < 10) {
+      dayString += '0' + String(today.getMonth() + 1);
+    } else {
+      dayString += String(today.getMonth() + 1);
+    }
+    if (today.getDate() < 10) {
+      dayString += '0' + String(today.getDate());
+    } else {
+      dayString += String(today.getDate());
+    }
+    if (today.getHours() < 10) {
+      dayString += '0' + String(today.getHours());
+    } else {
+      dayString += String(today.getHours());
+    }
+    if (today.getMinutes() < 10) {
+      dayString += '0' + String(today.getMinutes());
+    } else {
+      dayString += String(today.getMinutes());
+    }
   } else {
     throw new Error("invaild option");
   }

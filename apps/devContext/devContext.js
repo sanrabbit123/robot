@@ -1087,7 +1087,7 @@ class DevContext extends Array {
 
 
 
-      // const back = new BackMaker();
+      const back = new BackMaker();
       //
       // let arr0, arr1, arr2;
       // let uploadObj;
@@ -1141,11 +1141,6 @@ class DevContext extends Array {
       //   await back.mongoCreate("contentsRaw", uploadObj, { home: true });
       //   console.log("done");
       // }
-
-
-
-
-
 
 
 

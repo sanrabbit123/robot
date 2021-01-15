@@ -1144,6 +1144,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
       totalMother.classList.add("justfadeoutoriginal");
 
+      let initLoadingIcon, initLoadingIconWidth;
       let totalFather;
       let createViewBase;
       let createViewDoms;
@@ -1187,6 +1188,16 @@ ContentsJs.prototype.cardViewMaker = function () {
         "원본 사진"
       ];
 
+      //loading
+      initLoadingIconWidth = 50;
+      initLoadingIcon = instance.mother.returnLoadingIcon();
+      initLoadingIcon.style.width = String(initLoadingIconWidth) + ea;
+      initLoadingIcon.style.height = String(initLoadingIconWidth) + ea;
+      initLoadingIcon.style.top = "calc(50% - " + String((instance.mother.belowHeight + initLoadingIconWidth) / 2) + ea + ")";
+      initLoadingIcon.style.left = "calc(50% - " + String(initLoadingIconWidth / 2) + ea + ")";
+      document.body.appendChild(initLoadingIcon);
+
+      //make father
       totalFather = GeneralJs.nodes.div.cloneNode(true);
       totalFather.classList.add("totalFather");
       style = {
@@ -1426,6 +1437,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
           let thisProjects, thisProject;
+          let zNum;
 
           gray0.style.background = "#f7f7f7";
           dom0.style.height = originalHeight;
@@ -1439,9 +1451,16 @@ ContentsJs.prototype.cardViewMaker = function () {
           dom2.style.height = compressHeight;
           dom2.style.borderBottom = "1px solid #ececec";
 
-          for (let z of gray1.children[0].children) {
+          zNum = 0;
+          for (let z of gray1.firstChild.children) {
             z.style.background = "white";
-            z.firstChild.style.color = "#2fa678";
+            if (zNum === 0) {
+              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? "#2fa678" : "#dddddd";
+            } else if (zNum === 1) {
+              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? "#2fa678" : "#dddddd";
+            } else {
+              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? "#2fa678" : "#dddddd";
+            }
             z.firstChild.style.fontSize = String(2.5) + "vh";
 
             z.setAttribute("cliid", cliid);
@@ -1455,6 +1474,8 @@ ContentsJs.prototype.cardViewMaker = function () {
             z.firstChild.setAttribute("name", name);
             z.firstChild.setAttribute("desid", desid);
             z.firstChild.setAttribute("designer", designer);
+
+            zNum++;
           }
 
           //adjust photo date
@@ -1882,6 +1903,10 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("cliid", projects[i].cliid);
         div_clone2.setAttribute("desid", projects[i].desid);
         div_clone2.setAttribute("designer", projects[i].designer);
+        div_clone2.setAttribute("portfolioExist", String(projects[i].raw.portfolio.exist));
+        div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
+        div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
+
         GeneralJs.stacks.firstContentsCreateViewDoms.push(div_clone2);
         div_clone.appendChild(div_clone2);
       }
@@ -2148,6 +2173,68 @@ ContentsJs.prototype.cardViewMaker = function () {
             }
             buttonText.textContent = "저장";
             button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+
+              let refined, ajaxObj;
+              let loadingIcon;
+              let loadingBack;
+              let loadingWidth;
+              let style;
+              let ea;
+
+              loadingWidth = 50;
+              ea = "px";
+
+              refined = textArea_clone.value.replace(/[\=\&]/gi, '').replace(/[\=\&]/gi, '').replace(/[\=\&]/gi, '');
+              ajaxObj = {
+                button: "insertText",
+                id: proid,
+                clientName: name,
+                designerName: designer,
+                method: method,
+                text: refined,
+                parentId: ((method === "portfolio") ? "1k-vo9L_WB90ACup7WarklVIUFq1mf1ay" : "1jEV0Ii-_TnvpgTygs2-NkIiltmia91mf")
+              };
+
+              loadingBack = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                top: String(0) + ea,
+                left: String(0) + ea,
+                background: "gray",
+                opacity: String(0.2),
+                animation: "fadeupbacklite 0.3s ease forwards",
+              };
+              for (let i in style) {
+                loadingBack.style[i] = style[i];
+              }
+              div_clone.appendChild(loadingBack);
+
+              loadingIcon = instance.mother.returnLoadingIcon();
+              style = {
+                top: "calc(50% - " + String((loadingWidth / 2) + 2) + ea + ")",
+                left: "calc(50% - " + String(loadingWidth / 2) + ea + ")",
+                width: String(loadingWidth) + ea,
+                height: String(loadingWidth) + ea,
+              };
+              for (let i in style) {
+                loadingIcon.style[i] = style[i];
+              }
+              div_clone.appendChild(loadingIcon);
+
+              GeneralJs.ajax(GeneralJs.objectToRawquery(ajaxObj), "/getRawContents", function (data) {
+                const response = JSON.parse(data);
+
+                alert("저장되었습니다!");
+                window.open(response.link, "_blank");
+                window.open("https://drive.google.com/drive/folders/" + ajaxObj.parentId + "?usp=sharing", "_blank");
+
+                div_clone.removeChild(loadingBack);
+                div_clone.removeChild(loadingIcon);
+              });
+            });
             controlPannel.appendChild(button);
 
             button = GeneralJs.nodes.div.cloneNode(true);
@@ -2163,6 +2250,9 @@ ContentsJs.prototype.cardViewMaker = function () {
             }
             buttonText.textContent = "되돌리기";
             button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+              textArea_clone.value = text;
+            });
             controlPannel.appendChild(button);
 
             button = GeneralJs.nodes.div.cloneNode(true);
@@ -2178,12 +2268,24 @@ ContentsJs.prototype.cardViewMaker = function () {
             }
             buttonText.textContent = "삭제";
             button.appendChild(buttonText);
+            button.addEventListener("click", function (e) {
+              textArea_clone.value = "";
+              textArea_clone.focus();
+            });
             controlPannel.appendChild(button);
 
             div_clone.appendChild(controlPannel);
 
             gray.appendChild(div_clone);
+
+          } else {
+            const { link } = JSON.parse(await GeneralJs.ajaxPromise("id=" + proid + "&button=photo", "/getRawContents"));
+            instance.mother.getWhitePrompt("big", function (white, cancelBox) {
+              console.log(white);
+              console.log(link);
+            });
           }
+
         } catch (e) {
           console.log(e);
         }
@@ -2309,6 +2411,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
           const { dom: dom1, title: title1, gray: gray1 } = createViewDoms[1];
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
+          let zNum;
 
           gray0.style.background = "white";
           dom0.style.height = compressHeight;
@@ -2322,9 +2425,16 @@ ContentsJs.prototype.cardViewMaker = function () {
           dom2.style.height = originalHeight;
           dom2.style.borderBottom = "";
 
+          zNum = 0;
           for (let z of gray1.children[0].children) {
             z.style.background = "white";
-            z.firstChild.style.color = "#2fa678";
+            if (zNum === 0) {
+              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? "#2fa678" : "#dddddd";
+            } else if (zNum === 1) {
+              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? "#2fa678" : "#dddddd";
+            } else {
+              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? "#2fa678" : "#dddddd";
+            }
             z.firstChild.style.fontSize = String(2.5) + "vh";
 
             z.setAttribute("cliid", cliid);
@@ -2338,6 +2448,8 @@ ContentsJs.prototype.cardViewMaker = function () {
             z.firstChild.setAttribute("name", name);
             z.firstChild.setAttribute("desid", desid);
             z.firstChild.setAttribute("designer", designer);
+
+            zNum++;
           }
 
           clearTimeout(GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout);
@@ -2360,6 +2472,9 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone2.setAttribute("cliid", projects[i].cliid);
         div_clone2.setAttribute("desid", projects[i].desid);
         div_clone2.setAttribute("designer", projects[i].designer);
+        div_clone2.setAttribute("portfolioExist", String(projects[i].raw.portfolio.exist));
+        div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
+        div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
         GeneralJs.stacks.thirdContentsCreateViewDoms.push(div_clone2);
         div_clone.appendChild(div_clone2);
       }
@@ -2372,6 +2487,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       totalContents.appendChild(totalFather);
       instance.totalFather = totalFather;
       instance.createViewDoms = createViewDoms;
+      document.body.removeChild(initLoadingIcon);
     }
     instance.onView = "father";
   }

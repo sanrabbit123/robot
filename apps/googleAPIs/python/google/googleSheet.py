@@ -18,8 +18,8 @@ class GoogleSheet:
 
         # make access token
         creds = None
-        if osPath.exists(thisFolderPath + '/tokens/token.pickle'):
-            with open((thisFolderPath + '/tokens/token.pickle'), 'rb') as token:
+        if osPath.exists(thisFolderPath + '/tokens/sheetsToken.pickle'):
+            with open((thisFolderPath + '/tokens/sheetsToken.pickle'), 'rb') as token:
                 creds = pickle.load(token)
 
         if not creds or not creds.valid:
@@ -29,7 +29,7 @@ class GoogleSheet:
                 flow = InstalledAppFlow.from_client_secrets_file(thisFolderPath + ('/tokens/client_secrets.json'), [ 'https://www.googleapis.com/auth/spreadsheets' ])
                 creds = flow.run_local_server(port=0)
 
-            with open((thisFolderPath + '/tokens/token.pickle'), 'wb') as token:
+            with open((thisFolderPath + '/tokens/sheetsToken.pickle'), 'wb') as token:
                 pickle.dump(creds, token)
 
         # ready sheet app

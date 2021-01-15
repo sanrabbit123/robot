@@ -1,11 +1,13 @@
 const GoogleDocs = function (credentials = "default") {
-  const GoogleAPIs = require("./googleAPIs.js");
+  const GoogleAPIs = require(process.cwd() + "/apps/googleAPIs/googleAPIs.js");
   this.general = new GoogleAPIs(credentials);
   this.docs = {};
+  this.dir = process.cwd() + "/apps/googleAPIs";
+  this.pythonApp = this.dir + "/python/app.py";
 }
 
 GoogleDocs.prototype.get_docs = function (id) {
-  let instance = this;
+  const instance = this;
   return new Promise(function (resolve, reject) {
     instance.docs.documents.get({
         documentId: id,
@@ -31,7 +33,7 @@ GoogleDocs.prototype.text_filter_lite = function (str) {
 }
 
 GoogleDocs.prototype.callback_execute = async function (callback) {
-  let instance = this;
+  const instance = this;
   try {
     this.docs = await this.general.get_app("docs");
     let result = await callback(this);
@@ -42,7 +44,7 @@ GoogleDocs.prototype.callback_execute = async function (callback) {
 }
 
 GoogleDocs.prototype.total_make = async function () {
-  let instance = this;
+  const instance = this;
   try {
     let arr = [];
     this.docs = await this.general.get_app("docs");
@@ -60,6 +62,29 @@ GoogleDocs.prototype.total_make = async function () {
     console.log(arr);
   } catch (e) {
     console.log(e.message);
+  }
+}
+
+GoogleDocs.prototype.create_newDocs_inPython = async function (title, parent) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    const { id } = await mother.pythonExecute(this.pythonApp, [ "docs", "createDocs" ], { title });
+    await mother.pythonExecute(this.pythonApp, [ "drive", "moveFolder" ], { targetId: id, parent: parent });
+    return id;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleDocs.prototype.update_value_inPython = async function (id, longText) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertText" ], { id, longText });
+    return result;
+  } catch (e) {
+    console.log(e);
   }
 }
 

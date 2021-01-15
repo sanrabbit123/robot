@@ -775,13 +775,14 @@ ResourceMaker.prototype.launching = async function () {
     let input;
     let tempResponse, index;
     let tempObject;
-
     let namesArr;
     let clients;
     let thisProject;
     let searchQuery;
     let projects;
     let proid, cliid;
+    let whereQuery, updateQuery;
+    let targetContents, targetRawContentsArr, targetRawContents;
 
     //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
@@ -857,6 +858,34 @@ ResourceMaker.prototype.launching = async function () {
     input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+
+      //update raw contents db
+      whereQuery = {};
+      updateQuery = {};
+
+      targetRawContentsArr = await this.back.mongoRead("contentsRaw", { proid: proid }, { home: true });
+      targetRawContents = targetRawContentsArr[0];
+      targetContents = await this.back.getContentsById(this.final.conid);
+
+      whereQuery = { proid: proid };
+      updateQuery = { conid: this.final.conid };
+
+      if (!targetRawContents.portfolio.exist) {
+        updateQuery["portfolio.exist"] = true;
+        updateQuery["portfolio.contents"] = targetContents.getContentsFlatDetail().portfolio;
+      }
+
+      if (targetContents.contents.review.rid !== "re999") {
+        if (!targetRawContents.review.exist) {
+          updateQuery["review.exist"] = true;
+          updateQuery["review.contents"] = targetContents.getContentsFlatDetail().review;
+        }
+      } else {
+        updateQuery["review.exist"] = false;
+      }
+
+      await this.back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+
     }
 
   } catch (e) {

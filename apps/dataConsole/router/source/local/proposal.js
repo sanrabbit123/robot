@@ -1881,8 +1881,8 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
     for (let s in style) {
       leftArea.style[s] = style[s];
     }
-    leftArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
-    leftArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
+    // leftArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
+    // leftArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
     div_clone2.appendChild(leftArea);
 
 
@@ -1900,8 +1900,8 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
     for (let s in style) {
       rightArea.style[s] = style[s];
     }
-    rightArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
-    rightArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "right", order: j, id: id, }));
+    // rightArea.addEventListener("mouseover", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
+    // rightArea.addEventListener("mouseleave", this.fifthScrollX("mouseout", { direction: "right", order: j, id: id, }));
     div_clone2.appendChild(rightArea);
 
 
@@ -1917,6 +1917,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
           div_clone3.textContent = "기타 미등록 포트폴리오";
         }
       }
+
       //pictures
       else if (i === 1) {
 
@@ -1973,6 +1974,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
         scroll_box.style.width = String((125 * (sgTong.s.length)) + (238 * (sgTong.g.length))) + "px";
         div_clone3.appendChild(scroll_box);
       }
+
       //buttonup
       else if (i === 2) {
         img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", "#2fa678"));
@@ -1986,19 +1988,19 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
         div_clone4.classList.add("ppw_right_buttonup_div_left");
         div_clone4.addEventListener("click", this.fifthScrollX("click", { direction: "left", order: j, id: id, }));
-        div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
-        div_clone4.addEventListener("mouseup", this.fifthScrollX("mouseup", { direction: "left", order: j, id: id, }));
-        div_clone4.addEventListener("mouseleave", this.fifthScrollX("mouseleave", { direction: "left", order: j, id: id, }));
-        div_clone4.addEventListener("mouseout", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
+        // div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "left", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseup", this.fifthScrollX("mouseup", { direction: "left", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseleave", this.fifthScrollX("mouseleave", { direction: "left", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseout", this.fifthScrollX("mouseout", { direction: "left", order: j, id: id, }));
 
         div_clone3.appendChild(div_clone4);
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
         div_clone4.classList.add("ppw_right_buttonup_div_right");
         div_clone4.addEventListener("click", this.fifthScrollX("click", { direction: "right", order: j, id: id, }));
-        div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
-        div_clone4.addEventListener("mouseup", this.fifthScrollX("mouseup", { direction: "right", order: j, id: id, }));
-        div_clone4.addEventListener("mouseleave", this.fifthScrollX("mouseleave", { direction: "right", order: j, id: id, }));
-        div_clone4.addEventListener("mouseout", this.fifthScrollX("mouseout", { direction: "right", order: j, id: id, }));
+        // div_clone4.addEventListener("mousedown", this.fifthScrollX("mousedown", { direction: "right", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseup", this.fifthScrollX("mouseup", { direction: "right", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseleave", this.fifthScrollX("mouseleave", { direction: "right", order: j, id: id, }));
+        // div_clone4.addEventListener("mouseout", this.fifthScrollX("mouseout", { direction: "right", order: j, id: id, }));
 
         div_clone3.appendChild(div_clone4);
       }
