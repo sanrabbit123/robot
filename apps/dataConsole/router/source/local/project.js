@@ -4205,7 +4205,7 @@ ProjectJs.prototype.makeClipBoardEvent = function (id) {
     }
     try {
       await window.navigator.clipboard.writeText(id);
-      alert("복사되었습니다!");
+      instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
     } catch (e) {
       console.log(e);
     }
