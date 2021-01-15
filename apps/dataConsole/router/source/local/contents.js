@@ -2026,7 +2026,14 @@ ContentsJs.prototype.cardViewMaker = function () {
             interActionIcon.addEventListener("click", function (e) {
               e.stopPropagation();
               that.setAttribute("method", (method === "portfolio" ? "review" : "portfolio"));
-              setTimeout(function () {
+              GeneralJs.timeouts["interActionIconTimeouts0"] = setTimeout(function () {
+                GeneralJs.timeouts["interActionIconTimeouts1"] = setTimeout(function () {
+                  that.setAttribute("method", (method === "portfolio" ? "portfolio" : "review"));
+                  clearTimeout(GeneralJs.timeouts["interActionIconTimeouts1"]);
+                  GeneralJs.timeouts["interActionIconTimeouts1"] = null;
+                  clearTimeout(GeneralJs.timeouts["interActionIconTimeouts0"]);
+                  GeneralJs.timeouts["interActionIconTimeouts0"] = null;
+                }, 0);
                 that.click();
               }, 0);
               document.getElementById("returnIcon").remove();
@@ -2053,8 +2060,8 @@ ContentsJs.prototype.cardViewMaker = function () {
               e.stopPropagation();
               resetEvent.call(this.parentNode, e);
               GeneralJs.timeouts.returnIconResetEvent = setTimeout(function () {
-                if (createViewDoms[0].gray.firstChild.querySelector("#" + proid) !== null) {
-                  createViewDoms[0].gray.firstChild.querySelector("#" + proid).click();
+                if (document.querySelector("#" + proid) !== null) {
+                  document.querySelector("#" + proid).click();
                 }
                 clearTimeout(GeneralJs.timeouts.returnIconResetEvent);
                 GeneralJs.timeouts.returnIconResetEvent = null;

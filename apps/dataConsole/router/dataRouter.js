@@ -2012,7 +2012,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       }
 
       if (thisObj !== null) {
-        if (thisObj.portfolio.exist && thisObj.review.exist && thisObj.photo !== "") {
+        if (thisObj.portfolio.exist && thisObj.review.exist && thisObj.photo.link !== "") {
           await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 컨텐츠 교정 준비가 완료되었습니다! 보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
         }
       }
