@@ -1618,6 +1618,26 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   div_clone2.appendChild(hInitialBox);
 
+  //m initial icon
+  convertIcon = SvgTong.stringParsing(this.mother.returnMinitial("#2fa678"));
+  for (let i in style) {
+    convertIcon.style[i] = style[i];
+  }
+  convertIcon.style.right = String(leftMargin + (leftMargin * (50 / 60))) + ea;
+  convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (11 / 60))) + ea;
+  div_clone2.appendChild(convertIcon);
+
+  //m initial button
+  convertIconBox = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in style) {
+    convertIconBox.style[i] = style[i];
+  }
+  convertIconBox.style.right = String(leftMargin + (leftMargin * (48 / 60))) + ea;
+  convertIconBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  convertIconBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  convertIconBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  div_clone2.appendChild(convertIconBox);
+
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2671,30 +2691,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //convert event
-  convertIcon = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
-  style = {
-    position: "absolute",
-    width: String(leftMargin * (12 / 60)) + ea,
-    bottom: String(leftMargin * (17 / 60)) + ea,
-    right: String(leftMargin + 100) + ea,
-    cursor: "pointer",
-  };
-  for (let i in style) {
-    convertIcon.style[i] = style[i];
-  }
-  titleArea.appendChild(convertIcon);
-
-  convertIconBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    convertIconBox.style[i] = style[i];
-  }
-  convertIconBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  convertIconBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  convertIconBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  convertIconBox.style.right = String(leftMargin - 3 + 100) + ea;
   convertIconBox.addEventListener("click", this.convertWhiteContents(div_clone, titleArea, contentsArea, leftMargin, thisCase));
-  titleArea.appendChild(convertIconBox);
-
   GeneralJs.timeouts["convertChaining"] = setTimeout(async function () {
     try {
       let num = instance.whiteConvert;
