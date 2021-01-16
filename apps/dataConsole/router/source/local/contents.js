@@ -1375,7 +1375,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         fontSize: String(1.3) + "vh",
         fontWeight: String(600),
         padding: String(15) + ea,
-        paddingTop: (GeneralJs.isMac() ? String(6) : String(7)) + ea,
+        paddingTop: (GeneralJs.isMac() ? String(6) : String(7.5)) + ea,
         paddingBottom: (GeneralJs.isMac() ? String(8) : String(7)) + ea,
         background: "white",
         margin: String(3) + ea,
@@ -1464,7 +1464,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           dom1.style.height = expandHeight;
           gray1.style.height = expandGrayHeight;
-          gray1.style.marginTop = String(-0.9) + "vh";
+          gray1.style.marginTop = String(GeneralJs.isMac() ? -0.9 : 0) + "vh";
 
           gray2.style.background = "white";
           dom2.style.height = compressHeight;
@@ -2579,7 +2579,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         div_clone3.style.fontWeight = String(300);
         div_clone3.style.color = "#aaaaaa";
         div_clone3.style.position = "absolute";
-        div_clone3.style.marginTop = String(-1) + "vh";
+        div_clone3.style.marginTop = String(GeneralJs.isMac() ? -1 : 0) + "vh";
         div_clone3.textContent = raws[i];
         div_clone3.setAttribute("cliid", "null");
         div_clone3.setAttribute("proid", "null");
@@ -2693,7 +2693,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           dom1.style.height = expandHeight;
           gray1.style.height = expandGrayHeight;
-          gray1.style.marginTop = String(-0.9) + "vh";
+          gray1.style.marginTop = String(GeneralJs.isMac() ? -0.9 : 0) + "vh";
 
           gray2.style.background = "#f7f7f7";
           dom2.style.height = originalHeight;
