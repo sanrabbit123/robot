@@ -1529,7 +1529,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               titleIndent = 46;
               inputMargin = 39;
               buttonBottom = 49;
-              inputTitleTop = GeneralJs.isMac() ? 150 : 153;
+              inputTitleTop = GeneralJs.isMac() ? 150 : 156;
               inputTitles = [
                 "촬영 일자",
                 "사진 작가",
@@ -2015,7 +2015,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             interActionIcon.id = "interActionIcon";
             style = {
               position: "absolute",
-              top: String(4) + ea,
+              top: String(4 + ((GeneralJs.isMac()) ? 0 : -2)) + ea,
               right: String(26) + ea,
               height: String(19.5) + ea,
               width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
@@ -2048,7 +2048,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             returnIcon.id = "returnIcon";
             style = {
               position: "absolute",
-              top: String(2) + ea,
+              top: String(2 + ((GeneralJs.isMac()) ? 0 : -2)) + ea,
               right: String(1) + ea,
               height: String(22) + ea,
               width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
@@ -2140,7 +2140,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               fontWeight: String(600),
               color: "#2fa678",
               position: "absolute",
-              top: String(GeneralJs.isMac() ? 7.1 : 8.5) + ea,
+              top: String(GeneralJs.isMac() ? 7.1 : 9) + ea,
               textAlign: "center",
             };
 
