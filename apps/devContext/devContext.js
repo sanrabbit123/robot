@@ -361,182 +361,7 @@ class DevContext extends Array {
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
-
-      // let app;
-      // for (let i of aTargets) {
-      //   app = new ResourceMaker(i);
-      //   await app.launching();
-      // }
-      //
-      // for (let i of pTargets) {
-      //   app = new ResourceMaker(i);
-      //   await app.launching();
-      // }
-
-      // for (let i of pTargets) {
-      //   await this.reviewVerification(i);
-      // }
-
-      // const app = new BackMaker();
-      // console.log((await app.getContentsByPid("p59")).toAiState());
-      // const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-      // let tempResponse, index, endPoint;
-      // tempResponse = 200;
-      // index = -1;
-      // while (tempResponse === 200) {
-      //   index++;
-      //   tempResponse = await this.mother.headRequest(ADDRESS.s3info.host + "/corePortfolio/original/p61/i" + String(index) + "p61.jpg");
-      //   tempResponse = tempResponse.statusCode;
-      // }
-      // endPoint = index - 1;
-      // console.log(endPoint);
-
-
-      // {
-      //
-      //   const resultFolder = process.env.HOME + "/photoOriginal";
-      //   let fromArr, toArr;
-      //   let pidList_raw, pidList;
-      //   let targetFolder, targetFolderList_raw, targetFolderList;
-      //
-      //
-      //   pidList_raw = await fileSystem(`readDir`, [ resultFolder ]);
-      //   pidList = [];
-      //   for (let i of pidList_raw) {
-      //     if (i !== `.DS_Store`) {
-      //       pidList.push(i);
-      //     }
-      //   }
-      //
-      //   for (let pid of pidList) {
-      //
-      //     targetFolder = resultFolder + "/" + pid;
-      //     targetFolderList_raw = await fileSystem(`readDir`, [ targetFolder ]);
-      //     targetFolderList = [];
-      //     for (let i of targetFolderList_raw) {
-      //       if (i !== `.DS_Store`) {
-      //         targetFolderList.push(i);
-      //       }
-      //     }
-      //
-      //     fromArr = [];
-      //     toArr = [];
-      //     for (let i of targetFolderList) {
-      //       if (i !== `.DS_Store`) {
-      //         fromArr.push(`${shellLink(targetFolder)}/${i}`);
-      //         toArr.push(`corePortfolio/original/${pid}/${i}`);
-      //       }
-      //     }
-      //
-      //     console.log(fromArr);
-      //     console.log(toArr);
-      //
-      //     await this.mother.s3FileUpload(fromArr, toArr);
-      //
-      //   }
-      //
-      // }
-
-
-
-
-      // const notion = new NotionAPIs();
-      // const notionCard = await notion.getElementById("d2003_aa01s");
-      // console.log(notionCard)
-      // await notion.pastToNewDesid()
-      // await notion.updateConsoleLink();
-
-      // await this.mother.requestSystem("http://52.79.119.72:3000/toNotion", { cliid: "c2011_aa47s" });
-
-      // const back = new BackMaker();
-      // console.log(await back.getClientsAll());
-
-
-      // const { mongo } = this.mother;
-      // const MONGOCTEST = new mongo("mongodb://" + "uragen" + ':' + "Dpdhdn941!" + '@' + "3.34.233.59" + ':' + String(27017) + "/admin", { useUnifiedTopology: true });
-      // let tempArr;
-      // let targetCollections = [
-      //   `clientHistory`,
-      //   `projectHistory`,
-      //   `realtimeDesigner`,
-      // ];
-      //
-      // await MONGOCTEST.connect();
-      //
-      // for (let t of targetCollections) {
-      //   tempArr = await this.MONGOLOCALC.db(`miro81`).collection(t).find({}).toArray();
-      //   await MONGOCTEST.db(`miro81`).collection(t).deleteMany({});
-      //   for (let i of tempArr) {
-      //     await MONGOCTEST.db(`miro81`).collection(t).insertOne(i);
-      //   }
-      // }
-      //
-      // MONGOCTEST.close();
-
-
-      // const MONGOC = this.MONGOC;
-      // const projects = await MONGOC.db(`miro81`).collection(`project`).find({}).toArray();
-      // let whereQuery, updateQuery;
-      // let tempObj, tempObj2, tempObj3, tempObj4, tempObj5;
-      //
-      // for (let p of projects) {
-      //   whereQuery = { proid: p.proid };
-      //
-      //   tempObj = p.process.contract.first;
-      //   tempObj.cancel = new Date(1800, 0, 1);
-      //   tempObj.calculation.refund = 0;
-      //
-      //   tempObj2 = p.process.contract.remain;
-      //   tempObj2.cancel = new Date(1800, 0, 1);
-      //   tempObj2.calculation.refund = 0;
-      //
-      //   tempObj3 = p.process.contract.form;
-      //   tempObj3.date.cancel = new Date(1800, 0, 1);
-      //
-      //   tempObj4 = p.process.calculation.payments.first;
-      //   tempObj4.cancel = new Date(1800, 0, 1);
-      //   tempObj4.refund = 0;
-      //
-      //   tempObj5 = p.process.calculation.payments.remain;
-      //   tempObj5.cancel = new Date(1800, 0, 1);
-      //   tempObj5.refund = 0;
-      //
-      //   updateQuery = { "process.contract.first": tempObj, "process.contract.remain": tempObj2, "process.contract.form": tempObj3, "process.calculation.payments.first": tempObj4, "process.calculation.payments.remain": tempObj5 };
-      //   await MONGOC.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
-      // }
-
-
-
-
-
-      // const back = new BackMaker();
-      // let clients = await back.getClientsByQuery({ "$or": [ { "requests.0.analytics.response.status": "진행" }, { "requests.0.analytics.response.status": "완료" } ] });
-      //
-      // let tong = [ [ "이름", "전화번호" ] ];
-      // let tempTong;
-      // for (let i of clients) {
-      //   tempTong = [];
-      //   tempTong.push(i.name);
-      //   tempTong.push(i.phone);
-      //   tong.push(tempTong);
-      // }
-      // console.log(tong);
-      //
-      // const sheets = new GoogleSheet();
-      // const drive = new GoogleDrive();
-      //
-      // let sheetsId, response;
-      //
-      // sheetsId = await sheets.create_newSheets_inPython("진행 및 완료 고객 이름, 번호", "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c");
-      // await sheets.update_value_inPython(sheetsId, '', tong, [ 0, 0 ]);
-      // await sheets.setting_cleanView_inPython(sheetsId);
-      // response = await drive.read_webView_inPython(sheetsId);
-      //
-      //
-      // console.log(response);
-
-
-
+      const back = new BackMaker();
 
       // let clients = await back.getLatestClients(1, { withTools: true });
       //
@@ -1071,78 +896,94 @@ class DevContext extends Array {
       */
 
 
-      // for (let i of targetArr) {
-      //   temp = await app.paragraphChecker(i);
-      //   updateArr.push(temp);
-      // }
-      // console.log(updateArr);
-      // updateArr.shift();
-      // await note.updateNote(updateArr.join('<br><br><br>'));
 
 
-
-
-
-
-
-
-
-      const back = new BackMaker();
+      // let json, matrixA, matrixB, today;
+      // let temp0, temp1;
+      // let standardsA, standardsB;
       //
-      // let arr0, arr1, arr2;
-      // let uploadObj;
-      // let temp;
+      // today = new Date();
       //
-      // arr0 = await back.mongoRead("contentsRaw", {}, { home: true });
-      // arr1 = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      // standardsA = {
+      //   xValues: [
+      //     "F",
+      //     "S",
+      //     "T",
+      //     "XT"
+      //   ],
+      //   yValues: [
+      //     "B",
+      //     "N",
+      //     "O"
+      //   ],
+      //   zValues: [
+      //     "premium",
+      //     "normal",
+      //     "economy"
+      //   ]
+      // };
       //
-      // let proidArr = [];
-      // for (let i of arr0) {
-      //   proidArr.push(i.proid);
-      // }
+      // standardsB = {
+      //   xValues: [
+      //     "디자인",
+      //     "스타일링",
+      //     "시공 운영",
+      //     "부가 서비스",
+      //     "제작 여부",
+      //     "현장 경험",
+      //     "고객 응대",
+      //     "고객 평가",
+      //     "리스크 관리",
+      //     "홈리에종",
+      //   ],
+      //   yValues: [
+      //     "10",
+      //     "9",
+      //     "8",
+      //     "7",
+      //     "6",
+      //     "5",
+      //     "4",
+      //     "3",
+      //     "2",
+      //     "1",
+      //   ],
+      // };
       //
-      // let targets = [];
-      // for (let i of arr1) {
-      //   if (!proidArr.includes(i.proid)) {
-      //     targets.push(i.proid);
+      // matrixA = [];
+      // for (let i = 0; i < 4; i++) {
+      //   temp0 = [];
+      //   for (let j = 0; j < 3; j++) {
+      //     temp1 = [];
+      //     for (let k = 0; k < 3; k++) {
+      //       temp1.push(0);
+      //     }
+      //     temp0.push(temp1);
       //   }
+      //   matrixA.push(temp0);
       // }
       //
-      // let targetsDom = [];
-      // for (let i of targets) {
-      //   temp = await back.getProjectById(i);
-      //   if (temp !== null) {
-      //     targetsDom.push(temp);
-      //   }
+      // matrixB = [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ];
+      //
+      // const designers = await back.getDesignersAll();
+      // for (let d of designers) {
+      //   json = {
+      //     desid: d.desid,
+      //     matrix: {
+      //       matrixA: {
+      //         standard: standardsA,
+      //         value: matrixA,
+      //         update: today,
+      //       },
+      //       matrixB: {
+      //         standard: standardsB,
+      //         value: matrixB,
+      //         update: today,
+      //       },
+      //     }
+      //   };
+      //   await back.mongoCreate("designerMatrix", json, { console: true });
       // }
-      //
-      // for (let i of targetsDom) {
-      //
-      //   uploadObj = {};
-      //
-      //   uploadObj.proid = i.proid;
-      //   uploadObj.cliid = i.cliid;
-      //   uploadObj.desid = i.desid;
-      //   uploadObj.conid = "";
-      //
-      //   uploadObj.portfolio = {};
-      //   uploadObj.review = {};
-      //   uploadObj.photo = {};
-      //
-      //   uploadObj.portfolio.exist = false;
-      //   uploadObj.portfolio.contents = '';
-      //
-      //   uploadObj.review.exist = false;
-      //   uploadObj.review.contents = '';
-      //
-      //   uploadObj.photo.link = '';
-      //   console.log(uploadObj);
-      //
-      //   await back.mongoCreate("contentsRaw", uploadObj, { home: true });
-      //   console.log("done");
-      // }
-
-
 
 
 

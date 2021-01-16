@@ -455,6 +455,8 @@ GeneralJs.prototype.generalCss = function () {
 
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
+  @keyframes fadeoutlite{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-20px);}}
+  @keyframes fadeinlite{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   .justfadeinoriginal{animation:justfadeinoriginal 0.4s ease forwards;}
   .justfadeoutoriginal{animation:justfadeoutoriginal 0.4s ease forwards;}

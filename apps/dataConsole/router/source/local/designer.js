@@ -18,6 +18,9 @@ const DesignerJs = function () {
   this.totalFather = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
+  this.whiteConvert = 0;
+  this.whiteMatrixA = null;
+  this.whiteMatrixB = null;
 }
 
 DesignerJs.prototype.standardBar = function (standard) {
@@ -1478,6 +1481,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let textAreas;
   let notionEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let convertIcon, convertIconBox;
+  let titleArea, contentsArea;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1627,6 +1632,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.style[i] = style[i];
   }
   div_clone2.appendChild(div_clone3);
+  titleArea = div_clone2;
 
   div_clone.appendChild(div_clone2);
 
@@ -2647,6 +2653,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   div_clone2.appendChild(portfolioBox);
+  contentsArea = div_clone2;
   this.whiteBox.portfolioBox = portfolioBox;
 
   //h inital event
@@ -2663,11 +2670,825 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
   });
 
-  div_clone.appendChild(div_clone2);
+  //convert event
+  convertIcon = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  style = {
+    position: "absolute",
+    width: String(leftMargin * (12 / 60)) + ea,
+    bottom: String(leftMargin * (17 / 60)) + ea,
+    right: String(leftMargin + 100) + ea,
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    convertIcon.style[i] = style[i];
+  }
+  titleArea.appendChild(convertIcon);
+
+  convertIconBox = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in style) {
+    convertIconBox.style[i] = style[i];
+  }
+  convertIconBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  convertIconBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  convertIconBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  convertIconBox.style.right = String(leftMargin - 3 + 100) + ea;
+  convertIconBox.addEventListener("click", this.convertWhiteContents(div_clone, titleArea, contentsArea, leftMargin, thisCase));
+  titleArea.appendChild(convertIconBox);
+
+  GeneralJs.timeouts["convertChaining"] = setTimeout(async function () {
+    try {
+      let num = instance.whiteConvert;
+      instance.whiteConvert = 0;
+      instance.whiteMatrixA = null;
+      instance.whiteMatrixB = null;
+      for (let i = 0; i < num; i++) {
+        convertIconBox.click();
+        await GeneralJs.sleep(400);
+      }
+      clearTimeout(GeneralJs.timeouts["convertChaining"]);
+      GeneralJs.timeouts["convertChaining"] = null;
+    } catch (e) {
+      console.log(e);
+    }
+  }, 400);
 
   //end ---------------------------------------------
+  div_clone.appendChild(contentsArea);
   mother.appendChild(div_clone);
 }
+
+
+DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, contentsArea, leftMargin, thisCase) {
+  const instance = this;
+  const { designer, desid } = thisCase;
+  return async function (e) {
+    try {
+
+      let div_clone;
+      let style, style2, style3;
+      let ea = "px";
+      let temp;
+
+      if (instance.whiteConvert === 0) {
+
+        //convert animation
+        if (instance.whiteMatrixB !== null) {
+          instance.whiteMatrixB.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        if (contentsArea.style.animation !== "fadeoutlite 0.3s ease forwards") {
+          contentsArea.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        instance.whiteConvert = 3;
+        GeneralJs.timeouts["whiteConvertMatrixA"] = setTimeout(function () {
+          if (instance.whiteMatrixB !== null) {
+            motherArea.removeChild(instance.whiteMatrixB);
+          }
+          instance.whiteConvert = 1;
+          instance.whiteMatrixB = null;
+          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixA"]);
+          GeneralJs.timeouts["whiteConvertMatrixA"] = null;
+        }, 301);
+
+        //start matrixA
+        div_clone = contentsArea.cloneNode(false);
+        div_clone.style.animation = "fadeinlite 0.3s ease forwards";
+
+        const { matrixA, values } = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixA", "/designerMatrix"));
+        const { xValues, yValues, zValues } = values;
+        const classNameConst = "designerMatrixFactor";
+
+        let matrixBase;
+        let matrix;
+        let leftWordWidth;
+        let bottomWordWidth;
+        let margin;
+        let boxNumber;
+        let matrixFactor;
+        let matrixStyle, matrixMargin;
+        let xTitleBoxesTong, yTitleBoxesTong;
+        let xTitleBox, yTitleBox, zTitleBox;
+        let xTitleBoxWord, yTitleBoxWord, zTitleBoxWord;
+        let zToggleEvent;
+        let invisible;
+        let invisibleStyle;
+        let invisibleText;
+        let invisibleTextStyle;
+        let totalMatrix;
+        let x, y, z;
+
+        totalMatrix = [];
+        leftWordWidth = 30;
+        bottomWordWidth = 34;
+        margin = 10;
+        matrixMargin = 8;
+        boxNumber = xValues.length * yValues.length;
+
+        //base
+        matrixBase = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(leftMargin) + ea,
+          width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+          height: String(100) + '%',
+          background: "white",
+        };
+        for (let i in style) {
+          matrixBase.style[i] = style[i];
+        }
+
+        //entire matrix
+        matrix = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          right: String(0) + ea,
+          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
+          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
+          background: "#f2f2f2",
+          borderRadius: String(5) + ea,
+          border: "1px solid #dddddd",
+        };
+        for (let i in style) {
+          matrix.style[i] = style[i];
+        }
+
+        //make 12 boxes
+        matrixStyle = {
+          position: "absolute",
+          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ")",
+          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ")",
+          borderRadius: String(5) + ea,
+          background: "white",
+          overflow: "hidden",
+        };
+
+        style2 = {
+          position: "relative",
+          display: "block",
+          height: "calc(100% / " + String(zValues.length) + ")",
+          background: "transparent",
+          cursor: "pointer",
+          transition: "all 0s ease",
+          borderBottom: "1px dashed #dddddd",
+          color: "#dddddd",
+        };
+
+        style3 = {
+          position: "absolute",
+          fontSize: String(14) + ea,
+          top: "calc(50% - " + String(13.5) + ea + ")",
+          width: String(100) + '%',
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          color: "inherit",
+        };
+
+        invisibleStyle = {
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(100) + '%',
+          top: String(0) + ea,
+          left: String(0) + ea,
+          color: "transparent",
+          fontSize: String(38) + ea,
+          fontWeight: String(400),
+          fontFamily: "graphik",
+        };
+
+        invisibleTextStyle = {
+          position: "absolute",
+          top: "calc(50% - " + String(32.5) + ea + ")",
+          width: String(84) + ea,
+          left: "calc(50% - " + String(42) + ea + ")",
+          textAlign: "center",
+          color: "inherit",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          fontFamily: "inherit",
+          cursor: "pointer",
+          zIndex: String(0),
+        };
+
+        zToggleEvent = async function (e) {
+          try {
+            const xyzArr = this.getAttribute("xyz").split("_");
+            const [ x, y, z ] = xyzArr;
+            const xyz = xyzArr.join("");
+            const xy = xyzArr[0] + xyzArr[1];
+            let friends, boo, invisible;
+            let temp0, temp1, temp2;
+
+            if (this.getAttribute("toggle") === "off") {
+              this.style.background = "#2fa678";
+              this.style.color = "white";
+              this.firstChild.textContent = this.getAttribute("name") + " : " + this.getAttribute("original");
+              this.setAttribute("toggle", "on");
+            } else if (this.getAttribute("toggle") === "on") {
+              this.style.background = "transparent";
+              this.style.color = "#dddddd";
+              this.firstChild.textContent = this.getAttribute("original");
+              this.setAttribute("toggle", "off");
+            }
+
+            friends = document.querySelectorAll("." + classNameConst + xy);
+            boo = true;
+            invisible = document.getElementById(classNameConst + xy + "invisible");
+
+            for (let i of friends) {
+              if (i.getAttribute("toggle") === "off") {
+                boo = false;
+              }
+            }
+
+            if (boo) {
+              for (let i = 0; i < friends.length - 1; i++) {
+                friends[i].style.borderBottom = "1px dashed #2fa678";
+                friends[i].style.color = "transparent";
+              }
+              friends[friends.length - 1].style.color = "transparent";
+              invisible.style.color = "white";
+              invisible.firstChild.style.zIndex = String(1);
+            } else {
+              for (let i = 0; i < friends.length - 1; i++) {
+                if (friends[i].getAttribute("toggle") === "on") {
+                  friends[i].style.color = "white";
+                } else {
+                  friends[i].style.color = "#dddddd";
+                }
+                friends[i].style.borderBottom = "1px dashed #dddddd";
+              }
+              if (friends[friends.length - 1].getAttribute("toggle") === "on") {
+                friends[friends.length - 1].style.color = "white";
+              } else {
+                friends[friends.length - 1].style.color = "#dddddd";
+              }
+              invisible.style.color = "transparent";
+              invisible.firstChild.style.zIndex = String(0);
+            }
+
+            temp0 = [];
+            for (let i = 0; i < xValues.length; i++) {
+              temp1 = [];
+              for (let j = 0; j < yValues.length; j++) {
+                temp2 = [];
+                for (let k = 0; k < zValues.length; k++) {
+                  if (totalMatrix[i][j][k].getAttribute("toggle") === "on") {
+                    temp2.push(1);
+                  } else {
+                    temp2.push(0);
+                  }
+                }
+                temp1.push(temp2);
+              }
+              temp0.push(temp1);
+            }
+
+            await GeneralJs.ajaxPromise("button=update" + "&desid=" + desid + "&matrixA=" + JSON.stringify(temp0), "/designerMatrix");
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        //make totalMatrix dom
+        for (let i = 0; i < xValues.length; i++) {
+          temp = [];
+          for (let j = 0; j < yValues.length; j++) {
+            temp.push([]);
+          }
+          totalMatrix.push(temp);
+        }
+
+        for (let i = 0; i < boxNumber; i++) {
+          x = i % xValues.length;
+          y = Math.floor(i / xValues.length);
+
+          matrixFactor = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in matrixStyle) {
+            matrixFactor.style[j] = matrixStyle[j];
+          }
+          matrixFactor.style.top = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(y) + "))";
+          matrixFactor.style.left = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(x) + "))";
+
+          //make invisible background
+          invisible = GeneralJs.nodes.div.cloneNode(true);
+          invisible.id = classNameConst + String(x) + String(y) + "invisible";
+          for (let j in invisibleStyle) {
+            invisible.style[j] = invisibleStyle[j];
+          }
+          invisibleText = GeneralJs.nodes.div.cloneNode(true);
+          invisibleText.classList.add("hoverDefault_lite");
+          for (let j in invisibleTextStyle) {
+            invisibleText.style[j] = invisibleTextStyle[j];
+          }
+          invisibleText.textContent = xValues[x] + yValues[y];
+          invisibleText.addEventListener("click", function (e) {
+            document.getElementById(classNameConst + String(x) + String(y) + String(1)).click();
+          });
+          invisible.appendChild(invisibleText);
+          matrixFactor.appendChild(invisible);
+
+          //make z titles
+          for (let j = 0; j < zValues.length; j++) {
+            z = j;
+
+            zTitleBox = GeneralJs.nodes.div.cloneNode(true);
+            zTitleBox.classList.add(classNameConst);
+            zTitleBox.classList.add(classNameConst + String(x) + String(y));
+            zTitleBox.id = classNameConst + String(x) + String(y) + String(j);
+            zTitleBox.setAttribute("name", xValues[x] + yValues[y]);
+            zTitleBox.setAttribute("original", zValues[j]);
+            zTitleBox.setAttribute("xyz", String(x) + '_' + String(y) + '_' + String(j));
+
+            if (matrixA[x][y][z] === 0) {
+              zTitleBox.setAttribute("toggle", "off");
+              style2.background = "transparent";
+              style2.color = "#dddddd";
+            } else {
+              zTitleBox.setAttribute("toggle", "on");
+              style2.background = "#2fa678";
+              style2.color = "white";
+            }
+
+            for (let k in style2) {
+              zTitleBox.style[k] = style2[k];
+            }
+            if (j === zValues.length - 1) {
+              zTitleBox.style.borderBottom = "";
+            }
+            zTitleBox.addEventListener("click", zToggleEvent);
+
+            zTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
+            for (let k in style3) {
+              zTitleBoxWord.style[k] = style3[k];
+            }
+            zTitleBoxWord.textContent = zValues[j];
+            zTitleBox.appendChild(zTitleBoxWord);
+
+            totalMatrix[x][y].push(zTitleBox);
+            matrixFactor.appendChild(zTitleBox);
+          }
+
+          if (!matrixA[x][y].includes(0)) {
+            for (let z = 0; z < totalMatrix[x][y].length; z++) {
+              if (z !== totalMatrix[x][y].length - 1) {
+                totalMatrix[x][y][z].style.borderBottom = "1px dashed #2fa678";
+              }
+              totalMatrix[x][y][z].style.color = "transparent";
+            }
+            invisible.style.color = "white";
+            invisible.firstChild.style.zIndex = String(1);
+          }
+
+          matrix.appendChild(matrixFactor);
+        }
+        matrixBase.appendChild(matrix);
+
+
+        //make x-titles
+        xTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          bottom: String(0) + ea,
+          right: String(0) + ea,
+          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
+          height: String(bottomWordWidth) + ea,
+        };
+        for (let i in style) {
+          xTitleBoxesTong.style[i] = style[i];
+        }
+        style = {
+          position: "absolute",
+          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ")",
+          height: String(bottomWordWidth) + ea,
+        };
+        style2 = {
+          position: "absolute",
+          width: String(100) + '%',
+          fontSize: String(23) + ea,
+          bottom: String(0),
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+        };
+        for (let i = 0; i < xValues.length; i++) {
+          xTitleBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style) {
+            xTitleBox.style[j] = style[j];
+          }
+          xTitleBox.style.left = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i % xValues.length) + "))";
+
+          xTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style2) {
+            xTitleBoxWord.style[j] = style2[j];
+          }
+          xTitleBoxWord.textContent = xValues[i];
+          xTitleBox.appendChild(xTitleBoxWord);
+
+          xTitleBoxesTong.appendChild(xTitleBox);
+        }
+        matrixBase.appendChild(xTitleBoxesTong);
+
+        //make ytitles
+        yTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(leftWordWidth + margin) + ea,
+          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
+        };
+        for (let i in style) {
+          yTitleBoxesTong.style[i] = style[i];
+        }
+        style = {
+          position: "absolute",
+          width: String(leftWordWidth) + ea,
+          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ")",
+          left: String(0) + ea,
+        };
+        style2 = {
+          position: "absolute",
+          fontSize: String(23) + ea,
+          top: "calc(50% - " + String(16) + ea + ")",
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+        };
+        for (let i = 0; i < yValues.length; i++) {
+          yTitleBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style) {
+            yTitleBox.style[j] = style[j];
+          }
+          yTitleBox.style.top = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i) + "))";
+
+          yTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style2) {
+            yTitleBoxWord.style[j] = style2[j];
+          }
+          yTitleBoxWord.textContent = yValues[i];
+          yTitleBox.appendChild(yTitleBoxWord);
+
+          yTitleBoxesTong.appendChild(yTitleBox);
+        }
+        matrixBase.appendChild(yTitleBoxesTong);
+
+        div_clone.appendChild(matrixBase);
+        instance.whiteMatrixA = div_clone;
+        motherArea.appendChild(div_clone);
+
+      } else if (instance.whiteConvert === 1) {
+
+        //convert animation
+        if (instance.whiteMatrixA !== null) {
+          instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        if (contentsArea.style.animation !== "fadeoutlite 0.3s ease forwards") {
+          contentsArea.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        instance.whiteConvert = 3;
+        GeneralJs.timeouts["whiteConvertMatrixB"] = setTimeout(function () {
+          if (instance.whiteMatrixA !== null) {
+            motherArea.removeChild(instance.whiteMatrixA);
+          }
+          instance.whiteConvert = 2;
+          instance.whiteMatrixA = null;
+          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixB"]);
+          GeneralJs.timeouts["whiteConvertMatrixB"] = null;
+        }, 301);
+
+        //start matrixB
+        div_clone = contentsArea.cloneNode(false);
+        div_clone.style.animation = "fadeinlite 0.3s ease forwards";
+
+        const { matrixB, values } = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixB", "/designerMatrix"));
+        const { xValues, yValues } = values;
+        const classNameConst = "designerMatrixFactor";
+
+        let matrixBase;
+        let matrix;
+        let leftWordWidth;
+        let bottomWordWidth;
+        let margin;
+        let boxNumber;
+        let matrixFactor;
+        let matrixStyle, matrixMargin;
+        let xTitleBoxesTong, yTitleBoxesTong;
+        let xTitleBox, yTitleBox;
+        let xTitleBoxWord, yTitleBoxWord;
+        let x, y;
+        let hoverEvent, leaveEvent, clickEvent;
+        let domBox;
+
+        domBox = [];
+        leftWordWidth = 26;
+        bottomWordWidth = 30;
+        margin = 10;
+        matrixMargin = 6;
+        boxNumber = xValues.length * yValues.length;
+
+        //base
+        matrixBase = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(leftMargin) + ea,
+          width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+          height: String(100) + '%',
+          background: "white",
+        };
+        for (let i in style) {
+          matrixBase.style[i] = style[i];
+        }
+
+        //entire matrix
+        matrix = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          right: String(0) + ea,
+          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
+          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
+          borderRadius: String(5) + ea,
+        };
+        for (let i in style) {
+          matrix.style[i] = style[i];
+        }
+
+        //make boxes
+        matrixStyle = {
+          position: "absolute",
+          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ")",
+          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ")",
+          borderRadius: String(5) + ea,
+          background: "white",
+          overflow: "hidden",
+          border: "1px solid #dddddd",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        };
+
+        hoverEvent = function (e) {
+          const xyArr = this.getAttribute("xy").split("_");
+          const thisLevel = this.getAttribute("level");
+          const [ x, y ] = xyArr;
+          let targets;
+
+          if (this.getAttribute("hover") === "off" && this.getAttribute("toggle") === "off") {
+            targets = document.querySelectorAll('.' + classNameConst + x);
+            for (let dom of targets) {
+              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
+                if (dom.getAttribute("toggle") === "off") {
+                  dom.style.background = "#d5ede4";
+                  dom.setAttribute("hover", "on");
+                }
+              }
+            }
+            this.style.background = "#acdbc9";
+            this.setAttribute("hover", "on");
+          } else {
+            this.style.background = "#acdbc9";
+            this.setAttribute("hover", "on");
+          }
+        }
+
+        leaveEvent = function (e) {
+          const xyArr = this.getAttribute("xy").split("_");
+          const thisLevel = this.getAttribute("level");
+          const [ x, y ] = xyArr;
+          let targets;
+
+          if (this.getAttribute("hover") === "on" && this.getAttribute("toggle") === "off") {
+            targets = document.querySelectorAll('.' + classNameConst + x);
+            for (let dom of targets) {
+              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
+                if (dom.getAttribute("toggle") === "off") {
+                  dom.style.background = "";
+                  dom.setAttribute("hover", "off");
+                }
+              }
+            }
+            this.style.background = "";
+            this.setAttribute("hover", "off");
+          } else {
+            this.style.background = "#2fa678";
+            this.setAttribute("hover", "off");
+          }
+        }
+
+        clickEvent = async function (e) {
+          try {
+            const xyArr = this.getAttribute("xy").split("_");
+            const thisLevel = this.getAttribute("level");
+            const [ x, y ] = xyArr;
+            let targets;
+            let resultArr;
+            let num;
+
+            targets = document.querySelectorAll('.' + classNameConst + x);
+            for (let dom of targets) {
+              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
+                dom.style.background = "#2fa678";
+                dom.setAttribute("toggle", "on");
+              } else {
+                dom.style.background = "";
+                dom.setAttribute("toggle", "off");
+              }
+            }
+            this.style.background = "#2fa678";
+            this.setAttribute("toggle", "on");
+
+            resultArr = [];
+            for (let arr of domBox) {
+              num = 0;
+              for (let dom of arr) {
+                if (dom.getAttribute("toggle") === "on") {
+                  num = num + 1;
+                }
+              }
+              resultArr.push(num);
+            }
+
+            await GeneralJs.ajaxPromise("button=update" + "&desid=" + desid + "&matrixB=" + JSON.stringify(resultArr), "/designerMatrix");
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        for (let i = 0; i < xValues.length; i++) {
+          temp = [];
+          for (let j = 0; j < yValues.length; j++) {
+            temp.push({});
+          }
+          domBox.push(temp);
+        }
+
+        for (let i = 0; i < boxNumber; i++) {
+          x = i % xValues.length;
+          y = Math.floor(i / xValues.length);
+
+          matrixFactor = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in matrixStyle) {
+            matrixFactor.style[j] = matrixStyle[j];
+          }
+          matrixFactor.style.top = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(y) + "))";
+          matrixFactor.style.left = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(x) + "))";
+
+          matrixFactor.classList.add(classNameConst + String(x));
+          matrixFactor.setAttribute("hover", "off");
+          matrixFactor.setAttribute("xy", String(x) + "_" + String(y));
+          matrixFactor.setAttribute("level", yValues[y]);
+
+          matrixFactor.addEventListener("mouseover", hoverEvent);
+          matrixFactor.addEventListener("mouseleave", leaveEvent);
+          matrixFactor.addEventListener("click", clickEvent);
+
+          domBox[x][y] = matrixFactor;
+          matrix.appendChild(matrixFactor);
+        }
+        matrixBase.appendChild(matrix);
+
+        for (let i = 0; i < domBox.length; i++) {
+          for (let j = 0; j < domBox[i].length; j++) {
+            if (j >= matrixB[i]) {
+              domBox[i][domBox[i].length - j - 1].setAttribute("toggle", "off");
+              domBox[i][domBox[i].length - j - 1].style.background = "transparent";
+            } else {
+              domBox[i][domBox[i].length - j - 1].setAttribute("toggle", "on");
+              domBox[i][domBox[i].length - j - 1].style.background = "#2fa678";
+            }
+          }
+        }
+
+        //make x-titles
+        xTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          bottom: String(0) + ea,
+          right: String(0) + ea,
+          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
+          height: String(bottomWordWidth) + ea,
+        };
+        for (let i in style) {
+          xTitleBoxesTong.style[i] = style[i];
+        }
+        style = {
+          position: "absolute",
+          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ")",
+          height: String(bottomWordWidth) + ea,
+        };
+        style2 = {
+          position: "absolute",
+          width: String(100) + '%',
+          fontSize: String(17) + ea,
+          bottom: String(0),
+          textAlign: "center",
+          fontWeight: String(600),
+        };
+        for (let i = 0; i < xValues.length; i++) {
+          xTitleBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style) {
+            xTitleBox.style[j] = style[j];
+          }
+          xTitleBox.style.left = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i % xValues.length) + "))";
+
+          xTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style2) {
+            xTitleBoxWord.style[j] = style2[j];
+          }
+          xTitleBoxWord.textContent = xValues[i];
+          xTitleBox.appendChild(xTitleBoxWord);
+
+          xTitleBoxesTong.appendChild(xTitleBox);
+        }
+        matrixBase.appendChild(xTitleBoxesTong);
+
+        //make ytitles
+        yTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(leftWordWidth + margin) + ea,
+          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
+        };
+        for (let i in style) {
+          yTitleBoxesTong.style[i] = style[i];
+        }
+        style = {
+          position: "absolute",
+          width: String(leftWordWidth) + ea,
+          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ")",
+          left: String(0) + ea,
+        };
+        style2 = {
+          position: "absolute",
+          fontSize: String(18) + ea,
+          top: "calc(50% - " + String(12) + ea + ")",
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+        };
+        for (let i = 0; i < yValues.length; i++) {
+          yTitleBox = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style) {
+            yTitleBox.style[j] = style[j];
+          }
+          yTitleBox.style.top = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i) + "))";
+
+          yTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style2) {
+            yTitleBoxWord.style[j] = style2[j];
+          }
+          yTitleBoxWord.textContent = yValues[i];
+          yTitleBox.appendChild(yTitleBoxWord);
+
+          yTitleBoxesTong.appendChild(yTitleBox);
+        }
+        matrixBase.appendChild(yTitleBoxesTong);
+
+        div_clone.appendChild(matrixBase);
+
+        instance.whiteMatrixB = div_clone;
+        motherArea.appendChild(div_clone);
+
+      } else if (instance.whiteConvert === 2) {
+
+        //convert animation
+        if (instance.whiteMatrixA !== null) {
+          instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        if (instance.whiteMatrixB !== null) {
+          instance.whiteMatrixB.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        contentsArea.style.animation = "fadeinlite 0.3s ease forwards";
+        instance.whiteConvert = 3;
+        GeneralJs.timeouts["whiteConvertMatrixReturn"] = setTimeout(function () {
+          if (instance.whiteMatrixA !== null) {
+            motherArea.removeChild(instance.whiteMatrixA);
+          }
+          if (instance.whiteMatrixB !== null) {
+            motherArea.removeChild(instance.whiteMatrixB);
+          }
+          instance.whiteConvert = 0;
+          instance.whiteMatrixA = null;
+          instance.whiteMatrixB = null;
+          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixReturn"]);
+          GeneralJs.timeouts["whiteConvertMatrixReturn"] = null;
+        }, 301);
+
+      } else {
+        //pass
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 
 DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
   const instance = this;
@@ -2813,6 +3634,8 @@ DesignerJs.prototype.whiteViewMaker = function (index) {
   const instance = this;
   return function (e) {
     let tempFunc;
+    instance.whiteMatrixA = null;
+    instance.whiteMatrixB = null;
     if (GeneralJs.stacks.whiteBox !== 1 && instance.cases[index] !== undefined) {
       if (instance.whiteBox !== null && instance.whiteBox.index !== index) {
         tempFunc = instance.whiteCancelMaker(instance.whiteViewMakerDetail(index, true), true);
@@ -3625,6 +4448,8 @@ DesignerJs.prototype.extractViewMaker = function (link) {
   const instance = this;
   return function (e) {
     let tempFunc;
+    instance.whiteMatrixA = null;
+    instance.whiteMatrixB = null;
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
         tempFunc = instance.whiteCancelMaker(instance.extractViewMakerDetail(true, link), true);

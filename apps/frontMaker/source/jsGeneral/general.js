@@ -716,6 +716,16 @@ GeneralJs.getDateMatrix = function (year, month) {
   return result;
 }
 
+GeneralJs.sleep = function (time) {
+  let timeoutId = null;
+  return new Promise(function (resolve, reject) {
+    timeoutId = setTimeout(function () {
+      resolve('awake');
+      clearTimeout(timeoutId);
+    }, time);
+  });
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

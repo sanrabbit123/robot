@@ -2026,6 +2026,132 @@ DataRouter.prototype.rou_post_getRawContents = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_designerMatrix = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/designerMatrix";
+  obj.func = async function (req, res) {
+    try {
+      const { button, desid } = req.body;
+      let responseObj;
+      let thisObjs, thisObj;
+      let temp0, temp1;
+      let matrixA, matrixB;
+      let json;
+      let standardA, standardB;
+      let today;
+
+      responseObj = {};
+
+      if (button === "get") {
+        thisObjs = await back.mongoRead("designerMatrix", { desid }, { console: true });
+        if (thisObjs.length > 0) {
+          thisObj = thisObjs[0];
+          responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
+          responseObj["values"] = thisObj.matrix[req.body.target].standard;
+        } else {
+          today = new Date();
+          standardA = {
+            xValues: [
+              "F",
+              "S",
+              "T",
+              "XT"
+            ],
+            yValues: [
+              "B",
+              "N",
+              "O"
+            ],
+            zValues: [
+              "premium",
+              "normal",
+              "economy"
+            ]
+          };
+          standardB = {
+            xValues: [
+              "디자인",
+              "스타일링",
+              "시공 운영",
+              "부가 서비스",
+              "제작 여부",
+              "현장 경험",
+              "고객 응대",
+              "고객 평가",
+              "리스크 관리",
+              "홈리에종",
+            ],
+            yValues: [
+              "10",
+              "9",
+              "8",
+              "7",
+              "6",
+              "5",
+              "4",
+              "3",
+              "2",
+              "1",
+            ],
+          };
+
+          matrixA = [];
+          for (let i = 0; i < 4; i++) {
+            temp0 = [];
+            for (let j = 0; j < 3; j++) {
+              temp1 = [];
+              for (let k = 0; k < 3; k++) {
+                temp1.push(0);
+              }
+              temp0.push(temp1);
+            }
+            matrixA.push(temp0);
+          }
+
+          matrixB = [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ];
+
+          json = {
+            desid: desid,
+            matrix: {
+              matrixA: {
+                standard: standardA,
+                value: matrixA,
+                update: today,
+              },
+              matrixB: {
+                standard: standardB,
+                value: matrixB,
+                update: today,
+              },
+            }
+          };
+          await back.mongoCreate("designerMatrix", json, { console: true });
+
+          responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
+          responseObj["values"] = thisObj.matrix[req.body.target].standard;
+        }
+      } else if (button === "update") {
+        if (req.body.matrixA !== undefined) {
+          matrixA = JSON.parse(req.body.matrixA);
+          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixA.value": matrixA, "matrix.matrixA.update": (new Date()) } ], { console: true });
+        } else {
+          matrixB = JSON.parse(req.body.matrixB);
+          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixB.value": matrixB, "matrix.matrixB.update": (new Date()) } ], { console: true });
+        }
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(responseObj));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.getAll = function () {
