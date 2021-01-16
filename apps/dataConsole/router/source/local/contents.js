@@ -1464,7 +1464,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           dom1.style.height = expandHeight;
           gray1.style.height = expandGrayHeight;
-          gray1.style.marginTop = String(GeneralJs.isMac() ? -0.9 : 0) + "vh";
+          gray1.style.marginTop = String(-0.9) + "vh";
 
           gray2.style.background = "white";
           dom2.style.height = compressHeight;
@@ -1529,7 +1529,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               titleIndent = 46;
               inputMargin = 39;
               buttonBottom = 49;
-              inputTitleTop = 150;
+              inputTitleTop = GeneralJs.isMac() ? 150 : 153;
               inputTitles = [
                 "촬영 일자",
                 "사진 작가",
@@ -1761,7 +1761,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 color: "white",
                 fontWeight: String(600),
                 position: "absolute",
-                top: String(4) + ea,
+                top: String(GeneralJs.isMac() ? 4 : 5) + ea,
                 left: String(11) + ea,
               };
               for (let j in style) {
@@ -1884,7 +1884,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 color: "white",
                 fontWeight: String(600),
                 position: "absolute",
-                top: String(4) + ea,
+                top: String(GeneralJs.isMac() ? 4 : 5) + ea,
                 left: String(12) + ea,
               };
               for (let j in style) {
@@ -2139,7 +2139,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               fontWeight: String(600),
               color: "#2fa678",
               position: "absolute",
-              top: String(7.1) + ea,
+              top: String(GeneralJs.isMac() ? 7.1 : 8.5) + ea,
               textAlign: "center",
             };
 
@@ -2693,7 +2693,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           dom1.style.height = expandHeight;
           gray1.style.height = expandGrayHeight;
-          gray1.style.marginTop = String(GeneralJs.isMac() ? -0.9 : 0) + "vh";
+          gray1.style.marginTop = String(-0.9) + "vh";
 
           gray2.style.background = "#f7f7f7";
           dom2.style.height = originalHeight;
