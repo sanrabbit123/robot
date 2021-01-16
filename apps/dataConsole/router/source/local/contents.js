@@ -2360,7 +2360,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 fontSize: String(28) + ea,
                 fontWeight: String(500),
                 position: "absolute",
-                top: String(41) + ea,
+                top: String(GeneralJs.isMac() ? 42 : 47) + ea,
                 width: "100%",
                 textAlign: "center",
               };
@@ -2377,7 +2377,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 textAlign: "center",
                 fontSize: String(15) + ea,
                 color: "#2fa678",
-                top: String(83) + ea,
+                top: String(GeneralJs.isMac() ? 83 : 85) + ea,
               };
               for (let i in style) {
                 div_clone.style[i] = style[i];
@@ -2388,7 +2388,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               div_clone = GeneralJs.nodes.div.cloneNode(true);
               style = {
                 position: "absolute",
-                top: String(117) + ea,
+                top: String(GeneralJs.isMac() ? 117 : 118) + ea,
                 width: String(540) + ea,
                 height: String(40) + ea,
                 background: "#f2f2f2",
@@ -2427,7 +2427,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               div_clone.classList.add("hoverDefault_lite");
               buttonStyle = {
                 position: "absolute",
-                bottom: String(50) + ea,
+                bottom: String(GeneralJs.isMac() ? 50 : 49) + ea,
                 width: String(47) + ea,
                 height: String(32) + ea,
                 background: "#2fa678",
@@ -2445,8 +2445,9 @@ ContentsJs.prototype.cardViewMaker = function () {
                 color: "white",
                 fontSize: String(14) + ea,
                 fontWeight: String(600),
-                top: String(5) + ea,
-                left: String(11) + ea,
+                top: String(GeneralJs.isMac() ? 5 : 6) + ea,
+                width: String(100) + '%',
+                textAlign: "center",
               };
               for (let i in buttonTextStyle) {
                 div_clone2.style[i] = buttonTextStyle[i];
