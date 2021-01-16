@@ -2006,8 +2006,8 @@ ContentsJs.prototype.cardViewMaker = function () {
             }
             title.querySelector("b").textContent = temp;
             title.style.height = String(6.5) + "%";
-            gray.style.marginTop = String(-1.2) + "vh";
-            gray.style.height = "calc(" + String(100 - 6.5) + "% + 1.2vh)";
+            gray.style.marginTop = String(GeneralJs.isMac() ? -1.2 : -1.3) + "vh";
+            gray.style.height = "calc(" + String(100 - 6.5) + "% + " + String(GeneralJs.isMac() ? 1.2 : 1.3) + "vh" + ")";
             gray.firstChild.style.display = "none";
 
             interActionIcon = SvgTong.stringParsing(instance.mother.returnInterAction("#aaaaaa"));
@@ -2015,7 +2015,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             interActionIcon.id = "interActionIcon";
             style = {
               position: "absolute",
-              top: String(4 + ((GeneralJs.isMac()) ? 0 : -6)) + ea,
+              top: String(4 + ((GeneralJs.isMac()) ? 0 : -5)) + ea,
               right: String(26) + ea,
               height: String(19.5) + ea,
               width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
@@ -2048,7 +2048,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             returnIcon.id = "returnIcon";
             style = {
               position: "absolute",
-              top: String(2 + ((GeneralJs.isMac()) ? 0 : -6)) + ea,
+              top: String(2 + ((GeneralJs.isMac()) ? 0 : -5)) + ea,
               right: String(1) + ea,
               height: String(22) + ea,
               width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
@@ -2140,7 +2140,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               fontWeight: String(600),
               color: "#2fa678",
               position: "absolute",
-              top: String(GeneralJs.isMac() ? 7.1 : 9) + ea,
+              top: String(GeneralJs.isMac() ? 7.1 : 8.5) + ea,
               textAlign: "center",
             };
 
