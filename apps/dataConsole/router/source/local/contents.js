@@ -1529,7 +1529,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               titleIndent = 46;
               inputMargin = 39;
               buttonBottom = 49;
-              inputTitleTop = GeneralJs.isMac() ? 150 : 156;
+              inputTitleTop = GeneralJs.isMac() ? 150 : 153;
               inputTitles = [
                 "촬영 일자",
                 "사진 작가",
@@ -1689,7 +1689,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
                 //inputs - input
                 div_clone = GeneralJs.nodes.div.cloneNode(true);
-                inputInputStyle.top = String((inputTitleTop - 1) + (inputMargin * i)) + ea;
+                inputInputStyle.top = String((inputTitleTop - (GeneralJs.isMac() ? 1 : 4)) + (inputMargin * i)) + ea;
                 for (let j in inputInputStyle) {
                   div_clone.style[j] = inputInputStyle[j];
                 }
@@ -2015,7 +2015,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             interActionIcon.id = "interActionIcon";
             style = {
               position: "absolute",
-              top: String(4 + ((GeneralJs.isMac()) ? 0 : -2)) + ea,
+              top: String(4 + ((GeneralJs.isMac()) ? 0 : -6)) + ea,
               right: String(26) + ea,
               height: String(19.5) + ea,
               width: String(19.5 * SvgTong.getRatio(interActionIcon)) + ea,
@@ -2048,7 +2048,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             returnIcon.id = "returnIcon";
             style = {
               position: "absolute",
-              top: String(2 + ((GeneralJs.isMac()) ? 0 : -2)) + ea,
+              top: String(2 + ((GeneralJs.isMac()) ? 0 : -6)) + ea,
               right: String(1) + ea,
               height: String(22) + ea,
               width: String(22 * SvgTong.getRatio(returnIcon)) + ea,
