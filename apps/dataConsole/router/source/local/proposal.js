@@ -2777,9 +2777,15 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
             div_clone3.classList.add("selected_button_contents");
 
             div_clone3.addEventListener("click", async function (e) {
+              let moneyParsingTarget, moneyParsingTargetArr;
+
+              moneyParsingTarget = this.textContent;
+              moneyParsingTarget = moneyParsingTarget.replace(/\(부분 공간\)/gi, '');
+              moneyParsingTargetArr = moneyParsingTarget.split(" ");
+
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
               const onoffLine = /온라인/gi.test(this.textContent);
-              const thisMoney = Number((this.textContent.split(" ")[this.textContent.split(" ").length - 1]).replace(/[^0-9]/g, '')) * 10000;
+              const thisMoney = Number((moneyParsingTargetArr[moneyParsingTargetArr.length - 1]).replace(/[^0-9]/g, '')) * 10000;
               let contractFirst, supply, vat, consumer, classification, percentage, bankName, bankTo, calculate, ratio;
               let method;
               let updateQuery;

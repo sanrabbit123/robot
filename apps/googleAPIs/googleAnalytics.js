@@ -312,6 +312,7 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, t
 
 GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", end = "today") {
   const instance = this;
+  const queryString = require('querystring');
   const zeroAddtion = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -327,11 +328,11 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     users.sort((a, b) => { return Number(b[0].replace(/[^0-9\.\-]/, '')) - Number(a[0].replace(/[^0-9\.\-]/, '')); });
     return users;
   }
-  const queryString = require('querystring');
   try {
     const today = new Date();
     const monthAgo = new Date();
     monthAgo.setMonth(monthAgo.getMonth() - 1);
+
     let startDate, endDate;
     let dimensionsArr;
     let users, dimensions, dimensions_values, result;
@@ -344,7 +345,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     let temp;
     let num;
 
-
     if (end === "today") {
       endDate = zeroAddtion(today.getFullYear()) + '-' + zeroAddtion(today.getMonth() + 1) + '-' + zeroAddtion(today.getDate());
     } else {
@@ -356,7 +356,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
     } else {
       startDate = date;
     }
-
 
     dimensionsArr = [
       [

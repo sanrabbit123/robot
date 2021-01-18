@@ -373,47 +373,70 @@ class DevContext extends Array {
 
 
       // const analytics = new GoogleAnalytics();
-      // const startDay = "2020-12-21";
-      // const endDay = "2020-12-29";
+      // const startDay = "2020-12-22";
+      // const endDay = "2020-12-22";
       // const users = await analytics.getUsersByDate(startDay, endDay);
       // await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
 
-
-      /*
-
-      const targets = [
-        "analyticsExports_2019-03-01_2019-05-01.js",
-        "analyticsExports_2019-05-01_2019-07-01.js",
-        "analyticsExports_2019-07-01_2019-09-01.js",
-        "analyticsExports_2019-09-01_2019-11-01.js",
-        "analyticsExports_2019-11-01_2020-01-01.js",
-        "analyticsExports_2020-01-01_2020-02-01.js",
-        "analyticsExports_2020-02-01_2020-04-01.js",
-        "analyticsExports_2020-04-01_2020-06-01.js",
-        "analyticsExports_2020-06-01_2020-08-01.js",
-        "analyticsExports_2020-08-01_2020-10-01.js",
-        "analyticsExports_2020-10-01_2020-12-01.js",
-        "analyticsExports_2020-12-01_2020-12-29.js",
-      ];
-
-      let totalTong = [];
-      let tempArr;
-      for (let i of targets) {
-        tempArr = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/${i}` ]));
-        for (let j = 0; j < tempArr.length; j++) {
-          totalTong.push(tempArr[tempArr.length - 1 - j]);
+      const analytics = new GoogleAnalytics();
+      const dateChaining = function (startDate) {
+        const dateToString = function (dateObj) {
+          let str;
+          str = '';
+          str += String(dateObj.getFullYear());
+          str += '-';
+          if (dateObj.getMonth() < 9) {
+            str += '0' + String(dateObj.getMonth() + 1);
+          } else {
+            str += String(dateObj.getMonth() + 1);
+          }
+          str += '-';
+          if (dateObj.getDate() < 10) {
+            str += '0' + String(dateObj.getDate());
+          } else {
+            str += String(dateObj.getDate());
+          }
+          return str;
         }
+
+        let tempArr0, tempArr1, tempArr2;
+        let today;
+        let resultArr;
+        let dateRange;
+        let temp;
+
+        if (typeof startDate === "string") {
+          if (startDate.length === 10) {
+            tempArr0 = startDate.split("-");
+            startDate = new Date(Number(tempArr0[0]), Number(tempArr0[1].replace(/^0/, '')) - 1, Number(tempArr0[2].replace(/^0/, '')));
+          } else {
+            tempArr0 = startDate.split(" ");
+            tempArr1 = tempArr0.split("-");
+            tempArr2 = tempArr0.split(":");
+            startDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+          }
+        } else {
+          startDate = startDate;
+        }
+
+        today = new Date();
+        if (startDate.valueOf() > today.valueOf()) {
+          throw new Error("invaild start date value")
+        }
+
+        resultArr = [];
+        dateRange = Math.floor(((((today.valueOf() - startDate.valueOf()) / 1000) / 60) / 60) / 24);
+
+        for (let i = 0; i < dateRange; i++) {
+          temp = [];
+          temp.push(dateToString(startDate));
+          startDate.setDate(startDate.getDate() + 1);
+          temp.push(dateToString(startDate));
+          resultArr.push(temp);
+        }
+
+        return resultArr;
       }
-
-      // await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_totalTong.js`, JSON.stringify(totalTong) ]);
-
-      const { mongo, mongoinfo } = this.mother;
-      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-      const MONGOCPYTHON = new mongo(("mongodb://" + ADDRESS.pythoninfo.user + ':' + ADDRESS.pythoninfo.password + '@' + ADDRESS.pythoninfo.host + ':' + String(ADDRESS.pythoninfo.port) + "/admin"), { useUnifiedTopology: true });
-
-
-      await MONGOCPYTHON.connect();
-
       const stringToArr = function (dateString) {
         let tempArr0, tempArr1, tempArr2;
         tempArr0 = dateString.split(' ');
@@ -421,40 +444,86 @@ class DevContext extends Array {
         tempArr2 = tempArr0[1].split(':');
         return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
       }
-
+      const dateChain = dateChaining("2021-01-16");
+      const { mongo, mongoinfo } = this.mother;
+      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
+      let users;
+      let fileName, fileNameArr;
+      let tempDir;
+      let totalTong, useridTong;
+      let tempArr;
+      let certTotal;
       let already;
 
-      for (let i of totalTong) {
-        i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
-        i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
-        for (let j = 0; j < i.history.length; j++) {
-          i.history[j].time = new Date(...stringToArr(i.history[j].time));
-        }
-        for (let j in i.referrer.detail.queryString) {
-          if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
-            delete i.referrer.detail.queryString[j];
+      tempDir = process.cwd() + "/temp";
+      fileNameArr = [];
+
+      for (let [ start, end ] of dateChain) {
+        users = await analytics.getUsersByDate(start, end);
+        fileName = `analyticsExports_${start}_${end}.js`;
+        fileNameArr.push(fileName);
+        await fileSystem(`write`, [ `${tempDir}/${fileName}`, JSON.stringify(users, null, 2) ]);
+        console.log(`analyticsExports_${start}_${end} done`);
+      }
+
+      totalTong = [];
+      useridTong = [];
+      for (let i of fileNameArr) {
+        tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${i}` ]));
+        for (let j = 0; j < tempArr.length; j++) {
+          if (!useridTong.includes(tempArr[tempArr.length - 1 - j]["userid"])) {
+            totalTong.push(tempArr[tempArr.length - 1 - j]);
           }
+          useridTong.push(tempArr[tempArr.length - 1 - j]["userid"]);
         }
-        if (i.source !== undefined) {
-          delete i.source;
+      }
+
+      certTotal = [];
+      for (let i of totalTong) {
+        certTotal.push(i.userid);
+      }
+
+      certTotal = Array.from(new Set(certTotal));
+
+      if (certTotal.length === totalTong.length) {
+
+        await MONGOCHOME.connect();
+
+        for (let i of totalTong) {
+          i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
+          i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
+          for (let j = 0; j < i.history.length; j++) {
+            i.history[j].time = new Date(...stringToArr(i.history[j].time));
+          }
+          for (let j in i.referrer.detail.queryString) {
+            if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
+              delete i.referrer.detail.queryString[j];
+            }
+          }
+          if (i.source !== undefined) {
+            delete i.source;
+          }
+
+          i.device.type = i.device.category;
+          i.device.mobileDevice = i.device.model;
+          delete i.device.category;
+          delete i.device.model;
+
+          already = await back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { home: true });
+          if (already.length === 0) {
+            await back.mongoCreate(`googleAnalytics_total`, i, { home: true });
+          }
+          console.log(i.userid + " success");
         }
 
-        i.device.type = i.device.category;
-        i.device.mobileDevice = i.device.model;
-        delete i.device.category;
-        delete i.device.model;
+        MONGOCHOME.close();
 
-        already = await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).find({ "userid": i.userid }).toArray();
-        if (already.length === 0) {
-          await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).insertOne(i);
-        }
-        console.log(i.userid + " success");
+      } else {
+        throw new Error("invaild length");
       }
 
 
-      MONGOCPYTHON.close();
-
-      */
 
 
       // const back = new BackMaker();
