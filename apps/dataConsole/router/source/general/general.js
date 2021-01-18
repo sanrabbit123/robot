@@ -862,11 +862,20 @@ GeneralJs.prototype.greenBar = function () {
 
   //navigator icons
   const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
-  let naviIconsHost, naviIconsLinks, naviIconsLeftException;
+  let naviIconsHost, naviIconsLeftException;
+  let naviIconsLinks, naviIconsContextLinks
 
   naviIconsHost = window.location.protocol + "//" + window.location.host;
   naviIconsLinks = [
     "/client",
+    "/proposal",
+    "/project",
+    "/designer",
+    "/contents",
+    "/service",
+  ];
+  naviIconsContextLinks = [
+    "/analytics",
     "/proposal",
     "/project",
     "/designer",
@@ -899,6 +908,10 @@ GeneralJs.prototype.greenBar = function () {
       svg_icon.style[i] = additionalStyle[i];
     }
     GeneralJs.addHrefEvent(svg_icon, (naviIconsHost + naviIconsLinks[i]));
+    svg_icon.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      window.location.href = naviIconsHost + naviIconsContextLinks[i];
+    });
     this.belowButtons.naviIcons[naviIconsLinks[i].replace(/^\//, '')] = svg_icon;
     div_clone.appendChild(svg_icon);
   }

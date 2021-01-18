@@ -265,15 +265,6 @@ AnalyticsJs.prototype.infoArea = function (info) {
   num = (info.search === null ? 0 : 1);
   eventFunction = function (left) {
     return function (e) {
-      if (e.type === "click" && e.altKey) {
-        const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];
-        const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
-        onOffObj[this.getAttribute("column")] = !onOffObj[this.getAttribute("column")];
-        window.localStorage.setItem(thisId, JSON.stringify(onOffObj));
-        if (onOffObj[this.getAttribute("column")]) {
-          this.style.color = "#2fa678";
-        }
-      }
       const targets = document.querySelectorAll(".moveTarget");
       const ea = "px";
       if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
@@ -580,8 +571,6 @@ AnalyticsJs.prototype.infoArea = function (info) {
     e.stopPropagation();
   }
 
-
-
   for (let obj of target) {
     if (num === 1) {
       style3.fontWeight = "500";
@@ -619,8 +608,6 @@ AnalyticsJs.prototype.infoArea = function (info) {
         div_clone3.addEventListener("dragover", dragoverEventFunction);
         div_clone3.addEventListener("drop", dropEventFunction);
       } else {
-        // div_clone3.addEventListener("mouseenter", enterEventFunction);
-        // div_clone3.addEventListener("mouseleave", leaveEventFunction);
         div_clone3.addEventListener("click", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
         div_clone3.addEventListener("contextmenu", eventFunction(leftPosition[z] - (window.innerWidth / 2) + grayBarWidth));
       }
@@ -843,16 +830,28 @@ AnalyticsJs.prototype.spreadData = async function (search = null) {
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
+    let searchQuery;
 
     if (search === null) {
       users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: yesyesterDaySting, endDate: yesterDaySting }), "/getAnalytics_total"));
     } else {
-      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: search.start, endDate: search.end }), "/getAnalytics_total"));
+      searchQuery = {};
+      if (search.start !== undefined && search.start !== null) {
+        searchQuery.startDate = search.start;
+      }
+      if (search.end !== undefined && search.end !== null) {
+        searchQuery.endDate = search.end;
+      }
+      if (search.value !== undefined && search.value !== null) {
+        searchQuery.search = search.value;
+      }
+      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify(searchQuery), "/getAnalytics_total"));
     }
 
     this.casesRaw = users;
     const standard = this.analyticsStandard();
     const data = this.analyticsFlatDeath(users);
+    this.casesFlat = data;
 
     for (let i of data) {
       standardDataTong.push(i.standard);
@@ -889,7 +888,7 @@ AnalyticsJs.prototype.spreadData = async function (search = null) {
     this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
 
     if (search === null) {
-      instance.whitePromptEvent();
+      instance.whitePromptEvent(null);
     }
 
   } catch (e) {
@@ -3697,14 +3696,10 @@ AnalyticsJs.prototype.addTransFormEvent = function () {
   returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
-AnalyticsJs.prototype.makeSearchEvent = function (search = null) {
+AnalyticsJs.prototype.makeSearchEvent = function (option = null) {
   const instance = this;
   return async function (e) {
     if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
-
-      if (search === null) {
-        this.value = this.value.replace(/[ \n]/g, '');
-      }
 
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
         instance.totalFather.style.zIndex = String(-1);
@@ -3727,17 +3722,13 @@ AnalyticsJs.prototype.makeSearchEvent = function (search = null) {
       instance.whiteBox = null;
       instance.onView = "mother";
 
-      if (search === null) {
-        await instance.spreadData(this.value);
-      } else {
-        await instance.spreadData(search);
-      }
+      await instance.spreadData(option);
 
     }
   }
 }
 
-AnalyticsJs.prototype.whitePromptEvent = function () {
+AnalyticsJs.prototype.whitePromptEvent = function (callback = null) {
   const instance = this;
   this.mother.getWhitePrompt("small", function (white, cancelBox) {
     cancelBox.style.opacity = String(0.3);
@@ -4014,13 +4005,18 @@ AnalyticsJs.prototype.whitePromptEvent = function () {
         }
         white.appendChild(loadingIcon);
 
-        await instance.spreadData({ start: startInput.value + " 00:00:00", end: endInput.value + " 00:00:00" });
+        if (callback === null) {
+          await instance.spreadData({ start: startInput.value + " 00:00:00", end: endInput.value + " 00:00:00" });
+        }
 
         white.style.animation = "justfadeoutoriginal 0.3s ease forwards";
         cancelBox.style.animation = "justfadeout 0.3s ease forwards";
 
         GeneralJs.timeouts["whitePromptBox"] = setTimeout(function () {
           cancelBox.click();
+          if (callback !== null) {
+            callback({ start: startInput.value + " 00:00:00", end: endInput.value + " 00:00:00" });
+          }
           clearTimeout(GeneralJs.timeouts["whitePromptBox"]);
           GeneralJs.timeouts["whitePromptBox"] = null;
         }, 400);
@@ -4037,10 +4033,15 @@ AnalyticsJs.prototype.whitePromptEvent = function () {
 AnalyticsJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
-  input.addEventListener("click", function (e) {
-    instance.whitePromptEvent();
+  input.addEventListener("keypress", function (e) {
+    let that = this;
+    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+      instance.whitePromptEvent(function (option) {
+        let searchEvent = instance.makeSearchEvent({ ...option, value: that.value });
+        searchEvent.call(that, e);
+      });
+    }
   });
-  // input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
 AnalyticsJs.prototype.backGrayBar = function () {
@@ -4066,230 +4067,45 @@ AnalyticsJs.prototype.backGrayBar = function () {
   this.totalContents.appendChild(div_clone);
 }
 
-AnalyticsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
-  const instance = this;
-  try {
-    return function () {
-      let div_clone;
-      let style;
-      let ea = "px";
-      let margin;
-      let domTargets;
-      let motherBoo;
-      let width;
-      let iframe;
-      let whiteArea;
-
-      motherBoo = (instance.onView === "mother") ? true : false;
-
-      margin = 30;
-
-      if (!recycle) {
-
-        instance.whiteBox = {};
-
-        //cancel box
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        div_clone.classList.add("justfadein");
-        style = {
-          position: "fixed",
-          background: "#404040",
-          top: String(0) + ea,
-          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
-          height: String(window.innerHeight - instance.belowHeight) + ea,
-          zIndex: String(2),
-        };
-        for (let i in style) {
-          div_clone.style[i] = style[i];
-        }
-
-        div_clone.addEventListener("click", instance.whiteCancelMaker());
-
-        instance.whiteBox.cancelBox = div_clone;
-        instance.totalContents.appendChild(div_clone);
-
-      }
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("fadeup");
-      div_clone.classList.add("totalWhite");
-      style = {
-        position: "fixed",
-        background: "white",
-        top: String(margin) + ea,
-        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
-        borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px #808080",
-        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
-        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-        zIndex: String(2),
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-
-      iframe = document.createElement("IFRAME");
-      iframe.setAttribute("src", link);
-      iframe.setAttribute("width", "90%");
-      iframe.setAttribute("height", "90%");
-      style = {
-        border: 0,
-        width: "calc(100% - 50px)",
-        height: "calc(100% - 60px)",
-        top: "30px",
-        left: "25px",
-        position: "absolute",
-        borderRadius: "5px",
-        overflow: "hidden",
-      };
-      for (let i in style) {
-        iframe.style[i] = style[i];
-      }
-      div_clone.appendChild(iframe);
-
-
-      whiteArea = document.createElement("A");
-      style = {
-        border: 0,
-        width: "calc(100% - 50px)",
-        height: "calc(25% - 60px)",
-        top: "30px",
-        left: "25px",
-        position: "absolute",
-        cursor: "pointer",
-      };
-      for (let i in style) {
-        whiteArea.style[i] = style[i];
-      }
-      whiteArea.setAttribute('href', link);
-      whiteArea.setAttribute('target', '_blank');
-      div_clone.appendChild(whiteArea);
-
-      instance.whiteBox.contentsBox = div_clone;
-      instance.totalContents.appendChild(div_clone);
-
-      GeneralJs.stacks.whiteBox = 0;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-AnalyticsJs.prototype.extractViewMaker = function (link) {
-  const instance = this;
-  return function (e) {
-    let tempFunc;
-    if (GeneralJs.stacks.whiteBox !== 1) {
-      if (instance.whiteBox !== null) {
-        tempFunc = instance.whiteCancelMaker(instance.extractViewMakerDetail(true, link), true);
-        tempFunc();
-      } else {
-        tempFunc = instance.extractViewMakerDetail(false, link);
-        tempFunc();
-      }
-    }
-  }
-}
-
 AnalyticsJs.prototype.addExtractEvent = function () {
   const instance = this;
   const { sub: { extractIcon } } = this.mother.belowButtons;
-  let sendEvent;
+  let sendEvent, today;
 
-  sendEvent = async function (e) {
-    try {
-      const today = new Date();
-      const caseCopied = JSON.parse(JSON.stringify(instance.cases));
-      caseCopied.shift();
-      const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-      const map = this.analyticsStandard();
+  today = new Date();
 
-      let data;
-      let valuesArr;
-      let temp, temp2;
-      let div_clone, svg_clone;
-      let style;
-      let ea = "px";
-      let width;
+  sendEvent = function (e) {
+    let csv, columns, standardKey, fileName;
 
-      valuesArr = [];
-
-      temp2 = Object.keys(caseCopied[0]);
-      temp = [];
-      for (let i of temp2) {
-        temp.push(map[i].name);
-      }
-      valuesArr.push(temp);
-
-      for (let i = 0; i < caseCopied.length; i++) {
-        temp2 = Object.values(caseCopied[i]);
-        valuesArr.push(temp2);
-      }
-
-      data = '';
-      data += "values=";
-      data += JSON.stringify(valuesArr).replace(/&/g, '').replace(/=/g, '');
-      data += "&newMake=";
-      data += "true";
-      data += "&parentId=";
-      data += parentId;
-      data += "&sheetName=";
-      data += "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker();
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("justfadein");
-      style = {
-        position: "fixed",
-        zIndex: String(2),
-        background: "#404040",
-        opacity: String(0.2),
-        width: "100%",
-        height: "100%",
-        top: String(0),
-        left: String(0),
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      instance.totalMother.appendChild(div_clone);
-
-      width = 50;
-      svg_clone = instance.mother.returnLoadingIcon();
-      style = {
-        position: "fixed",
-        zIndex: String(2),
-        width: String(width) + ea,
-        height: String(width) + ea,
-        top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
-        left: "calc(50% - " + String((width / 2)) + ea + ")",
-      };
-      for (let i in style) {
-        svg_clone.style[i] = style[i];
-      }
-      instance.totalMother.appendChild(svg_clone);
-
-      GeneralJs.ajax(data, "/sendSheets", function (res) {
-        const link = JSON.parse(res).link;
-        div_clone.classList.remove("justfadein");
-        div_clone.classList.add("justfadeout");
-        svg_clone.style.opacity = "0";
-        GeneralJs.timeouts["extractPendingBack"] = setTimeout(function () {
-          let viewFunction;
-          instance.totalMother.removeChild(instance.totalMother.lastChild);
-          instance.totalMother.removeChild(instance.totalMother.lastChild);
-          viewFunction = instance.extractViewMaker(link);
-          viewFunction();
-          clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
-          GeneralJs.timeouts["extractPendingBack"] = null;
-        }, 401);
-      })
-
-    } catch (e) {
-      console.log(e);
+    if (instance.casesFlat.length === 0) {
+      return;
     }
-  }
 
+    fileName = "analyticsExtract_";
+    fileName += String(today.valueOf());
+
+    columns = Object.keys(instance.casesFlat[0].info);
+    standardKey = Object.keys(instance.casesFlat[0].standard)[0];
+
+    csv = standardKey.replace(/,/gi, '');
+    for (let c of columns) {
+      csv += ',';
+      csv += c.replace(/,/gi, '');
+    }
+    csv += "\n";
+
+    for (let { info, standard } of instance.casesFlat) {
+      csv += standard[standardKey].replace(/,/gi, '');
+      for (let c of columns) {
+        csv += ',';
+        csv += info[c].replace(/,/gi, '');
+      }
+      csv += "\n";
+    }
+
+    GeneralJs.downloadString(csv, fileName + ".csv", "csv");
+    GeneralJs.downloadString(JSON.stringify(instance.casesRaw, null, 2), fileName + ".json", "json");
+  }
   extractIcon.addEventListener("click", sendEvent);
 }
 
@@ -4340,7 +4156,7 @@ AnalyticsJs.prototype.launching = async function () {
     await this.spreadData();
     this.addTransFormEvent();
     this.addSearchEvent();
-    // this.addExtractEvent();
+    this.addExtractEvent();
     this.whiteResize();
 
     const getObj = GeneralJs.returnGet();

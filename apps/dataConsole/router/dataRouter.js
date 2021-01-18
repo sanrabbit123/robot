@@ -1786,14 +1786,48 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
   obj.link = "/getAnalytics_total";
   obj.func = async function (req, res) {
     try {
-      let { startDate, endDate } = JSON.parse(req.body.range);
+      let rangeObj = JSON.parse(req.body.range);
+      let { startDate, endDate } = rangeObj;
       let searchQuery, rows;
+      let andSearchQuery, orSearchQuery, search;
+      const columns = [
+        "userid",
+        "userType",
+        "campaign",
+        "referrer.name",
+        "referrer.detail.host",
+        "referrer.raw",
+        "device.type",
+        "device.os",
+        "device.mobileDevice",
+        "region.country",
+        "region.city",
+      ];
+      let temp;
 
       startDate = new Date(...stringToArr(startDate));
       endDate = new Date(...stringToArr(endDate));
       searchQuery = { "latestTimeline": { "$gte": startDate, "$lte": endDate } };
 
-      rows = await instance.back.mongoRead("googleAnalytics_total", searchQuery, { home: true });
+      if (rangeObj.search !== undefined) {
+        andSearchQuery = {};
+        andSearchQuery["$and"] = [];
+        andSearchQuery["$and"].push(searchQuery);
+
+        orSearchQuery = {};
+        orSearchQuery["$or"] = [];
+        for (let c of columns) {
+          temp = {};
+          temp[c] = { "$regex": rangeObj.search };
+          orSearchQuery["$or"].push(temp);
+        }
+
+        andSearchQuery["$and"].push(orSearchQuery);
+      } else {
+        andSearchQuery = searchQuery;
+      }
+
+      rows = await instance.back.mongoRead("googleAnalytics_total", andSearchQuery, { home: true });
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));

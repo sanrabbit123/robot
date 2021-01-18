@@ -726,6 +726,44 @@ GeneralJs.sleep = function (time) {
   });
 }
 
+GeneralJs.downloadString = function (text, fileName, fileType = "plain") {
+  if (/csv/gi.test(fileType)) {
+    fileType = "text/csv"
+  } else if (/csv/gi.test(fileType)) {
+    fileType = "application/json"
+  } else if (/csv/gi.test(fileType)) {
+    fileType = "application/js"
+  } else if (/svg/gi.test(fileType)) {
+    fileType = "image/svg+xml"
+  } else if (/xml/gi.test(fileType)) {
+    fileType = "application/xml"
+  } else if (/html/gi.test(fileType)) {
+    fileType = "text/html"
+  } else if (/pdf/gi.test(fileType)) {
+    fileType = "application/pdf"
+  } else {
+    fileType = "text/plain"
+  }
+
+  let blob, a, timeoutId;
+
+  blob = new Blob([text], { type: fileType });
+
+  a = document.createElement('A');
+  a.download = fileName;
+  a.href = URL.createObjectURL(blob);
+  a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  timeoutId = setTimeout(function() {
+    URL.revokeObjectURL(a.href);
+    clearTimeout(timeoutId);
+  }, 1500);
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
