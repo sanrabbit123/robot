@@ -626,6 +626,7 @@ ProjectJs.prototype.infoArea = function (info) {
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
             boxShadow: "0px 2px 11px -6px #808080",
+            transition: "all 0s ease",
           };
           for (let j in style) {
             button_clone.style[j] = style[j];
@@ -2416,6 +2417,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
             boxShadow: "0px 2px 11px -6px #808080",
+            transition: "all 0s ease",
           };
           for (let j in style) {
             button_clone.style[j] = style[j];

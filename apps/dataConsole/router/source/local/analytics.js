@@ -825,16 +825,29 @@ AnalyticsJs.prototype.analyticsFlatDeath = function (tong) {
 
 AnalyticsJs.prototype.spreadData = async function (search = null) {
   const instance = this;
+  const zeroAddtion = function (num) {
+    if (num < 10) {
+      return `0${String(num)}`;
+    } else {
+      return String(num);
+    }
+  }
   try {
+    const today = new Date();
+    today.setDate(today.getDate() - 2);
+    const yesterDaySting = `${String(today.getFullYear())}-${zeroAddtion(today.getMonth() + 1)}-${zeroAddtion(today.getDate())} ${zeroAddtion(today.getHours())}:${zeroAddtion(today.getMinutes())}:${zeroAddtion(today.getSeconds())}`;
+    today.setDate(today.getDate() - 1);
+    const yesyesterDaySting = `${String(today.getFullYear())}-${zeroAddtion(today.getMonth() + 1)}-${zeroAddtion(today.getDate())} ${zeroAddtion(today.getHours())}:${zeroAddtion(today.getMinutes())}:${zeroAddtion(today.getSeconds())}`;
+
     let users, totalMother;
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
-      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: "2020-11-18 00:00:00", endDate: "2020-11-28 00:00:00" }), "/getAnalytics_total"));
+      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: yesyesterDaySting, endDate: yesterDaySting }), "/getAnalytics_total"));
     } else {
-      // users = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
+      users = JSON.parse(await GeneralJs.ajaxPromise("range=" + JSON.stringify({ startDate: search.start, endDate: search.end }), "/getAnalytics_total"));
     }
 
     this.casesRaw = users;
@@ -874,6 +887,10 @@ AnalyticsJs.prototype.spreadData = async function (search = null) {
 
     this.standardBar({ standard: standard.standard, data: standardDataTong, search: search });
     this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
+
+    if (search === null) {
+      instance.whitePromptEvent();
+    }
 
   } catch (e) {
     console.log(e);
@@ -3720,10 +3737,310 @@ AnalyticsJs.prototype.makeSearchEvent = function (search = null) {
   }
 }
 
+AnalyticsJs.prototype.whitePromptEvent = function () {
+  const instance = this;
+  this.mother.getWhitePrompt("small", function (white, cancelBox) {
+    cancelBox.style.opacity = String(0.3);
+
+    let div_clone, div_clone2;
+    let input_clone;
+    let svg_clone;
+    let style;
+    let ea;
+    let inputTop, inputLeft;
+    let arrowHeight, arrowWidth;
+    let titleTop;
+    let whiteWidth, whiteHeight;
+    let startInput, endInput;
+    let calendarEvent;
+
+    ea = "px";
+    titleTop = GeneralJs.isMac() ? 36 : 39;
+    inputTop = titleTop + 80;
+    inputLeft = 52;
+    whiteWidth = 477;
+    whiteHeight = 248;
+    startInput = null;
+    endInput = null;
+    calendarEvent = function (start = true) {
+      return function (e) {
+        let calendar_back;
+        let button_clone;
+        let width, height, fontSize, top;
+        let style;
+        let ea;
+
+        width = 260;
+        height = 280;
+        ea = "px";
+
+        calendar_back = GeneralJs.nodes.div.cloneNode(true);
+        calendar_back.classList.add("removeTarget");
+        style = {
+          position: "fixed",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+          zIndex: String(4),
+          animation: "fadeuplite 0.3s ease forwards",
+        };
+        for (let i in style) {
+          calendar_back.style[i] = style[i];
+        }
+        calendar_back.addEventListener("click", function (e) {
+          while (document.querySelectorAll(".removeTarget").length > 0) {
+            document.querySelector(".removeTarget").remove();
+          }
+        });
+        document.body.insertBefore(calendar_back, white);
+
+        button_clone = GeneralJs.nodes.div.cloneNode(true);
+        button_clone.classList.add("removeTarget");
+        style = {
+          position: "absolute",
+          top: String(50) + ea,
+          left: "calc(50% - " + String(width / 2) + ea + ")",
+          width: String(width) + ea,
+          height: String(260) + ea,
+          background: "white",
+          textAlign: "center",
+          fontSize: "inherit",
+          color: "#2fa678",
+          zIndex: String(5),
+          borderRadius: String(3) + ea,
+          animation: "fadeuplite 0.3s ease forwards",
+          boxShadow: "0px 2px 11px -6px #808080",
+          transition: "all 0s ease",
+        };
+        for (let j in style) {
+          button_clone.style[j] = style[j];
+        }
+        const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+          let target;
+          let value;
+          if (start) {
+            target = startInput;
+          } else {
+            target = endInput;
+          }
+          value = this.getAttribute("buttonValue");
+          target.value = value;
+          while (document.querySelectorAll(".removeTarget").length > 0) {
+            document.querySelector(".removeTarget").remove();
+          }
+        });
+        button_clone.appendChild(calendar.calendarBase);
+        button_clone.style.height = String(calendar.calendarHeight) + ea;
+        this.parentNode.appendChild(button_clone);
+      }
+    }
+
+    white.style.width = String(whiteWidth) + ea;
+    white.style.height = String(whiteHeight) + ea;
+    white.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+    white.style.top = "calc(calc(calc(100% - " + String(instance.mother.belowHeight) + ea + ") / 2) - " + String(whiteHeight / 2) + ea + ")";
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      fontSize: String(28) + ea,
+      fontWeight: String(500),
+      position: "absolute",
+      top: String(titleTop) + ea,
+      width: "100%",
+      textAlign: "center",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    div_clone.textContent = "날짜의 범위를 입력해주세요!";
+    white.appendChild(div_clone);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: "100%",
+      textAlign: "center",
+      fontSize: String(15) + ea,
+      color: "#2fa678",
+      top: String(titleTop + 42) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    div_clone.textContent = "*날짜의 범위는 최대 한 달을 넘어갈 수 없습니다.";
+    white.appendChild(div_clone);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(inputTop) + ea,
+      width: String(150) + ea,
+      height: String(36) + ea,
+      background: "#f2f2f2",
+      borderRadius: String(4) + ea,
+      left: String(inputLeft) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    white.appendChild(div_clone);
+
+    startInput = GeneralJs.nodes.input.cloneNode(true);
+    style = {
+      width: "calc(100% - " + String(30) + ea + ")",
+      height: String(33) + ea,
+      left: String(15) + ea,
+      position: "absolute",
+      border: String(0) + ea,
+      outline: String(0) + ea,
+      background: "transparent",
+      textAlign: "center",
+      fontSize: String(15) + ea,
+    };
+    for (let i in style) {
+      startInput.style[i] = style[i];
+    }
+    startInput.setAttribute("type", "text");
+    startInput.addEventListener("focus", calendarEvent(true));
+    div_clone.appendChild(startInput);
+    white.appendChild(div_clone);
+
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(inputTop) + ea,
+      width: String(150) + ea,
+      height: String(36) + ea,
+      background: "#f2f2f2",
+      borderRadius: String(4) + ea,
+      right: String(inputLeft) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    white.appendChild(div_clone);
+
+    endInput = GeneralJs.nodes.input.cloneNode(true);
+    style = {
+      width: "calc(100% - " + String(30) + ea + ")",
+      height: String(34) + ea,
+      left: String(15) + ea,
+      position: "absolute",
+      border: String(0) + ea,
+      outline: String(0) + ea,
+      background: "transparent",
+      textAlign: "center",
+      fontSize: String(15) + ea,
+    };
+    for (let i in style) {
+      endInput.style[i] = style[i];
+    }
+    endInput.setAttribute("type", "text");
+    endInput.addEventListener("focus", calendarEvent(false));
+    div_clone.appendChild(endInput);
+    white.appendChild(div_clone);
+
+    svg_clone = SvgTong.stringParsing(instance.mother.returnLongArrow("#2fa678"));
+    arrowHeight = 13;
+    arrowWidth = SvgTong.getRatio(svg_clone) * arrowHeight;
+    style = {
+      position: "absolute",
+      top: String(inputTop + 10) + ea,
+      width: String(arrowWidth) + ea,
+      height: String(arrowHeight) + ea,
+      left: "calc(50% - " + String(arrowWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    white.appendChild(svg_clone);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("hoverDefault_lite");
+    style = {
+      position: "absolute",
+      top: String(inputTop + 57) + ea,
+      width: String(76) + ea,
+      height: String(32) + ea,
+      background: "#2fa678",
+      color: "white",
+      borderRadius: String(3) + ea,
+      left: "calc(50% - " + String(38) + ea + ")",
+      fontSize: String(12) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      color: "white",
+      fontSize: String(14) + ea,
+      fontWeight: String(600),
+      top: String(GeneralJs.isMac() ? 5 : 6) + ea,
+      width: String(100) + '%',
+      textAlign: "center",
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = "검색 시작";
+    div_clone.appendChild(div_clone2);
+    div_clone.addEventListener("click", async function (e) {
+      try {
+        let loadingIcon;
+        let style;
+        let ea = "px";
+        let width = 50;
+
+        loadingIcon = instance.mother.returnLoadingIcon();
+        style = {
+          position: "absolute",
+          width: String(width) + ea,
+          height: String(width) + ea,
+          top: "calc(50% - " + String(width / 2) + ea + ")",
+          left: "calc(50% - " + String(width / 2) + ea + ")",
+        };
+        for (let i in style) {
+          loadingIcon.style[i] = style[i];
+        }
+
+        while (white.firstChild !== null) {
+          white.removeChild(white.firstChild);
+        }
+        white.appendChild(loadingIcon);
+
+        await instance.spreadData({ start: startInput.value + " 00:00:00", end: endInput.value + " 00:00:00" });
+
+        white.style.animation = "justfadeoutoriginal 0.3s ease forwards";
+        cancelBox.style.animation = "justfadeout 0.3s ease forwards";
+
+        GeneralJs.timeouts["whitePromptBox"] = setTimeout(function () {
+          cancelBox.click();
+          clearTimeout(GeneralJs.timeouts["whitePromptBox"]);
+          GeneralJs.timeouts["whitePromptBox"] = null;
+        }, 400);
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    white.appendChild(div_clone);
+  });
+}
+
 AnalyticsJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
-  input.addEventListener("keypress", this.makeSearchEvent(null));
+  input.addEventListener("click", function (e) {
+    instance.whitePromptEvent();
+  });
+  // input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
 AnalyticsJs.prototype.backGrayBar = function () {
@@ -4021,10 +4338,10 @@ AnalyticsJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.backGrayBar();
     await this.spreadData();
-    // this.addTransFormEvent();
-    // this.addSearchEvent();
+    this.addTransFormEvent();
+    this.addSearchEvent();
     // this.addExtractEvent();
-    // this.whiteResize();
+    this.whiteResize();
 
     const getObj = GeneralJs.returnGet();
 

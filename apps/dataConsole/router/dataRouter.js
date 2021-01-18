@@ -1774,7 +1774,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
 DataRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
-  const { shell, shellLink, mongo } = this.mother;
+  const { shell, shellLink } = this.mother;
   const stringToArr = function (dateString) {
     let tempArr0, tempArr1, tempArr2;
     tempArr0 = dateString.split(' ');
@@ -1791,15 +1791,9 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
 
       startDate = new Date(...stringToArr(startDate));
       endDate = new Date(...stringToArr(endDate));
-
-      const MONGOCPYTHON = new mongo(("mongodb://" + instance.address.pythoninfo.user + ':' + instance.address.pythoninfo.password + '@' + instance.address.pythoninfo.host + ':' + String(instance.address.pythoninfo.port) + "/admin"), { useUnifiedTopology: true });
-      await MONGOCPYTHON.connect();
-
       searchQuery = { "latestTimeline": { "$gte": startDate, "$lte": endDate } };
 
-      rows = await MONGOCPYTHON.db(`miro81`).collection(`googleAnalytics_total`).find(searchQuery).toArray();
-
-      MONGOCPYTHON.close();
+      rows = await instance.back.mongoRead("googleAnalytics_total", searchQuery, { home: true });
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
