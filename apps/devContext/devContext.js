@@ -355,29 +355,13 @@ class DevContext extends Array {
     await fileSystem(`write`, [ `${process.cwd()}/temp/serviceTong.js`, JSON.stringify(finalTong, null, 2) ]);
   }
 
-  async launching() {
+  async analyticsToMongo(startDate) {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload } = this.mother;
+    const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
+    const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+    const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
     try {
-      await this.MONGOC.connect();
-      await this.MONGOLOCALC.connect();
       const back = new BackMaker();
-
-      // let clients = await back.getLatestClients(1, { withTools: true });
-      //
-      // console.log(clients)
-      // console.log(clients[0].requests)
-      // console.log(clients[0].requests[0].analytics.googleAnalytics)
-      // console.log(clients[0].requests[0].analytics.response)
-
-
-
-      // const analytics = new GoogleAnalytics();
-      // const startDay = "2020-12-22";
-      // const endDay = "2020-12-22";
-      // const users = await analytics.getUsersByDate(startDay, endDay);
-      // await fileSystem(`write`, [ `${process.cwd()}/temp/analyticsExports_${startDay}_${endDay}.js`, JSON.stringify(users, null, 2) ]);
-
       const analytics = new GoogleAnalytics();
       const dateChaining = function (startDate) {
         const dateToString = function (dateObj) {
@@ -444,16 +428,13 @@ class DevContext extends Array {
         tempArr2 = tempArr0[1].split(':');
         return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
       }
-      const dateChain = dateChaining("2021-01-16");
-      const { mongo, mongoinfo } = this.mother;
-      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-      const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
+      const dateChain = dateChaining(startDate);
+
       let users;
       let fileName, fileNameArr;
       let tempDir;
-      let totalTong, useridTong;
+      let totalTong;
       let tempArr;
-      let certTotal;
       let already;
 
       tempDir = process.cwd() + "/temp";
@@ -467,28 +448,15 @@ class DevContext extends Array {
         console.log(`analyticsExports_${start}_${end} done`);
       }
 
-      totalTong = [];
-      useridTong = [];
-      for (let i of fileNameArr) {
-        tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${i}` ]));
+      await MONGOCHOME.connect();
+
+      for (let f of fileNameArr) {
+        totalTong = [];
+        tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${f}` ]));
         for (let j = 0; j < tempArr.length; j++) {
-          if (!useridTong.includes(tempArr[tempArr.length - 1 - j]["userid"])) {
-            totalTong.push(tempArr[tempArr.length - 1 - j]);
-          }
-          useridTong.push(tempArr[tempArr.length - 1 - j]["userid"]);
+          totalTong.push(tempArr[tempArr.length - 1 - j]);
         }
-      }
-
-      certTotal = [];
-      for (let i of totalTong) {
-        certTotal.push(i.userid);
-      }
-
-      certTotal = Array.from(new Set(certTotal));
-
-      if (certTotal.length === totalTong.length) {
-
-        await MONGOCHOME.connect();
+        console.log(`analyticsExports read`);
 
         for (let i of totalTong) {
           i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
@@ -510,18 +478,37 @@ class DevContext extends Array {
           delete i.device.category;
           delete i.device.model;
 
-          already = await back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { home: true });
+          already = await back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
           if (already.length === 0) {
-            await back.mongoCreate(`googleAnalytics_total`, i, { home: true });
+            await back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
           }
           console.log(i.userid + " success");
         }
-
-        MONGOCHOME.close();
-
-      } else {
-        throw new Error("invaild length");
       }
+
+      MONGOCHOME.close();
+
+      for (let i of fileNameArr) {
+        shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+
+  async launching() {
+    const instance = this;
+    const { fileSystem, shell, shellLink, s3FileUpload } = this.mother;
+    try {
+      await this.MONGOC.connect();
+      await this.MONGOLOCALC.connect();
+      const back = new BackMaker();
+
+
+      await this.analyticsToMongo("2021-01-14");
+
 
 
 

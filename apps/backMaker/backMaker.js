@@ -2607,19 +2607,19 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
   try {
 
     let MONGOC;
-    if (option.local !== undefined && option.local !== null) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    } else if (option.console !== undefined && option.console !== null) {
-      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    } else if (option.home !== undefined && option.home !== null) {
-      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
-    } else if (option.bridge !== undefined && option.bridge !== null) {
-      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
-    } else {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.home !== undefined && option.home !== null) {
+        MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+      } else if (option.bridge !== undefined && option.bridge !== null) {
+        MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).insertOne(json);
       MONGOC.close();
@@ -2638,18 +2638,6 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     let MONGOC;
-    if (option.local !== undefined && option.local !== null) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    } else if (option.console !== undefined && option.console !== null) {
-      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    } else if (option.home !== undefined && option.home !== null) {
-      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
-    } else if (option.bridge !== undefined && option.bridge !== null) {
-      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
-    } else {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    }
-
     let tong;
     let sortQuery;
 
@@ -2660,6 +2648,17 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.home !== undefined && option.home !== null) {
+        MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+      } else if (option.bridge !== undefined && option.bridge !== null) {
+        MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
       await MONGOC.connect();
       if (option.limit !== undefined) {
         tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -2687,18 +2686,19 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
-    if (option.local !== undefined && option.local !== null) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    } else if (option.console !== undefined && option.console !== null) {
-      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    } else if (option.home !== undefined && option.home !== null) {
-      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
-    } else if (option.bridge !== undefined && option.bridge !== null) {
-      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
-    } else {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.home !== undefined && option.home !== null) {
+        MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+      } else if (option.bridge !== undefined && option.bridge !== null) {
+        MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
       MONGOC.close();
@@ -2716,18 +2716,19 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     let MONGOC;
-    if (option.local !== undefined && option.local !== null) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    } else if (option.console !== undefined && option.console !== null) {
-      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    } else if (option.home !== undefined && option.home !== null) {
-      MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
-    } else if (option.bridge !== undefined && option.bridge !== null) {
-      MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
-    } else {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.home !== undefined && option.home !== null) {
+        MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+      } else if (option.bridge !== undefined && option.bridge !== null) {
+        MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).deleteOne(query);
       MONGOC.close();
