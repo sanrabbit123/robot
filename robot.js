@@ -166,6 +166,16 @@ Robot.prototype.bridgeCloud = async function (sw) {
   }
 }
 
+Robot.prototype.analyticsParsing = async function () {
+  try {
+    const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+    const app = new GoogleAnalytics();
+    await app.analyticsToMongo();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -223,6 +233,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/bridgeserver/gi.test(process.argv[2])) {
       await this.bridgeCloud();
+
+    } else if (/analyticsParsing/gi.test(process.argv[2])) {
+      await this.analyticsParsing();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

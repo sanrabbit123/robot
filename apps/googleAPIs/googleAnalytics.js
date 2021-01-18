@@ -1,6 +1,8 @@
 const GoogleAnalytics = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   this.mother = new Mother();
+  this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.pythonApp = this.dir + "/python/app.py";
   this.tempDir = process.cwd() + "/temp";
@@ -620,6 +622,155 @@ GoogleAnalytics.prototype.getSearchData = async function (startDay = "2020-01-01
     }
 
     return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "default") {
+  const instance = this;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
+  try {
+
+    let today;
+    if (startDate === "default") {
+      today = new Date();
+      today.setDate(today.getDate() - 1);
+      startDate = today;
+    }
+
+    const dateChaining = function (startDate) {
+      const dateToString = function (dateObj) {
+        let str;
+        str = '';
+        str += String(dateObj.getFullYear());
+        str += '-';
+        if (dateObj.getMonth() < 9) {
+          str += '0' + String(dateObj.getMonth() + 1);
+        } else {
+          str += String(dateObj.getMonth() + 1);
+        }
+        str += '-';
+        if (dateObj.getDate() < 10) {
+          str += '0' + String(dateObj.getDate());
+        } else {
+          str += String(dateObj.getDate());
+        }
+        return str;
+      }
+
+      let tempArr0, tempArr1, tempArr2;
+      let today;
+      let resultArr;
+      let dateRange;
+      let temp;
+
+      if (typeof startDate === "string") {
+        if (startDate.length === 10) {
+          tempArr0 = startDate.split("-");
+          startDate = new Date(Number(tempArr0[0]), Number(tempArr0[1].replace(/^0/, '')) - 1, Number(tempArr0[2].replace(/^0/, '')));
+        } else {
+          tempArr0 = startDate.split(" ");
+          tempArr1 = tempArr0.split("-");
+          tempArr2 = tempArr0.split(":");
+          startDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+        }
+      } else {
+        startDate = startDate;
+      }
+
+      today = new Date();
+      if (startDate.valueOf() > today.valueOf()) {
+        throw new Error("invaild start date value")
+      }
+
+      resultArr = [];
+      dateRange = Math.floor(((((today.valueOf() - startDate.valueOf()) / 1000) / 60) / 60) / 24);
+
+      for (let i = 0; i < dateRange; i++) {
+        temp = [];
+        temp.push(dateToString(startDate));
+        startDate.setDate(startDate.getDate() + 1);
+        temp.push(dateToString(startDate));
+        resultArr.push(temp);
+      }
+
+      return resultArr;
+    }
+    const stringToArr = function (dateString) {
+      let tempArr0, tempArr1, tempArr2;
+      tempArr0 = dateString.split(' ');
+      tempArr1 = tempArr0[0].split('-');
+      tempArr2 = tempArr0[1].split(':');
+      return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
+    }
+    const dateChain = dateChaining(startDate);
+
+    let users;
+    let fileName, fileNameArr;
+    let tempDir;
+    let totalTong;
+    let tempArr;
+    let already;
+
+    tempDir = process.cwd() + "/temp";
+    fileNameArr = [];
+
+    for (let [ start, end ] of dateChain) {
+      users = await this.getUsersByDate(start, end);
+      fileName = `analyticsExports_${start}_${end}.js`;
+      fileNameArr.push(fileName);
+      await fileSystem(`write`, [ `${tempDir}/${fileName}`, JSON.stringify(users, null, 2) ]);
+      console.log(`analyticsExports_${start}_${end} done`);
+    }
+
+    await MONGOCHOME.connect();
+
+    for (let f of fileNameArr) {
+      totalTong = [];
+      tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${f}` ]));
+      for (let j = 0; j < tempArr.length; j++) {
+        totalTong.push(tempArr[tempArr.length - 1 - j]);
+      }
+      console.log(`analyticsExports read`);
+
+      for (let i of totalTong) {
+        i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
+        i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
+        for (let j = 0; j < i.history.length; j++) {
+          i.history[j].time = new Date(...stringToArr(i.history[j].time));
+        }
+        for (let j in i.referrer.detail.queryString) {
+          if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
+            delete i.referrer.detail.queryString[j];
+          }
+        }
+        if (i.source !== undefined) {
+          delete i.source;
+        }
+
+        i.device.type = i.device.category;
+        i.device.mobileDevice = i.device.model;
+        delete i.device.category;
+        delete i.device.model;
+
+        already = await this.back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
+        if (already.length !== 0) {
+          await this.back.mongoDelete(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+        }
+        await this.back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+        console.log(i.userid + " success");
+      }
+    }
+
+    MONGOCHOME.close();
+
+    for (let i of fileNameArr) {
+      shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
+    }
+
   } catch (e) {
     console.log(e);
   }

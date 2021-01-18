@@ -184,6 +184,7 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
         print("npm install -g pm2")
         print("python3 -m venv .")
         print("source ./bin/activate")
+        print("pip3 install wheel")
         print("pip3 install aiohttp")
         print("pip3 install gunicorn")
         print("pip3 install requests")
