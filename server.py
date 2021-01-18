@@ -195,6 +195,18 @@ async def mysqlCopy():
     conn.close()
 
 
+async def analyticsParsing():
+    robotDir = os.getcwd()
+
+    timeString = re.sub(pattern=' ', repl='', string=str(datetime.now()))
+    timeString = re.sub(pattern=':', repl='', string=timeString[0:18])
+    timeString = re.sub(pattern='-', repl='', string=timeString)
+
+    await run([ 'mongoexport', f'--uri="mongodb://{infoJson["mongoinfo"]["host"]}/{infoJson["mongoinfo"]["database"]}"', "--username=" + infoJson["mongoinfo"]["user"], "--password=" + infoJson["mongoinfo"]["password"], f'--port={str(infoJson["mongoinfo"]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
+
+    return 0
+
+
 if sys.argv.__len__() > 1:
 
     if sys.argv[1] == "ai":
@@ -212,10 +224,23 @@ if sys.argv.__len__() > 1:
             pass
 
     elif sys.argv[1] == "backupnow":
-        asyncio.run(mongoToJson())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(mongoToJson())
+        loop.close()
 
     elif sys.argv[1] == "mysql":
-        asyncio.run(mysqlCopy())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(mysqlCopy())
+        loop.close()
+
+    elif sys.argv[1] == "analyticsParsing":
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(analyticsParsing, 'cron', hour='23', minute='50', second='30')
+        scheduler.start()
+        try:
+            asyncio.get_event_loop().run_forever()
+        except (KeyboardInterrupt, SystemExit):
+            pass
 
 else:
     print("argument must be 'ai' or 'backup' or 'mysql'")

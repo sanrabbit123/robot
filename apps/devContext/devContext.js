@@ -479,9 +479,10 @@ class DevContext extends Array {
           delete i.device.model;
 
           already = await back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
-          if (already.length === 0) {
+          if (already.length !== 0) {
             await back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
           }
+          await back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
           console.log(i.userid + " success");
         }
       }
@@ -497,6 +498,143 @@ class DevContext extends Array {
     }
   }
 
+  async analyticsToMongoFromFile() {
+    const instance = this;
+    const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
+    const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+    const MONGOCHOME = new mongo(("mongodb://" + ADDRESS.homeinfo.user + ':' + ADDRESS.homeinfo.password + '@' + ADDRESS.homeinfo.ip.outer + ':' + String(ADDRESS.homeinfo.port) + "/admin"), { useUnifiedTopology: true });
+    try {
+      const back = new BackMaker();
+      const analytics = new GoogleAnalytics();
+      const dateChaining = function (startDate) {
+        const dateToString = function (dateObj) {
+          let str;
+          str = '';
+          str += String(dateObj.getFullYear());
+          str += '-';
+          if (dateObj.getMonth() < 9) {
+            str += '0' + String(dateObj.getMonth() + 1);
+          } else {
+            str += String(dateObj.getMonth() + 1);
+          }
+          str += '-';
+          if (dateObj.getDate() < 10) {
+            str += '0' + String(dateObj.getDate());
+          } else {
+            str += String(dateObj.getDate());
+          }
+          return str;
+        }
+
+        let tempArr0, tempArr1, tempArr2;
+        let today;
+        let resultArr;
+        let dateRange;
+        let temp;
+
+        if (typeof startDate === "string") {
+          if (startDate.length === 10) {
+            tempArr0 = startDate.split("-");
+            startDate = new Date(Number(tempArr0[0]), Number(tempArr0[1].replace(/^0/, '')) - 1, Number(tempArr0[2].replace(/^0/, '')));
+          } else {
+            tempArr0 = startDate.split(" ");
+            tempArr1 = tempArr0.split("-");
+            tempArr2 = tempArr0.split(":");
+            startDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+          }
+        } else {
+          startDate = startDate;
+        }
+
+        today = new Date();
+        if (startDate.valueOf() > today.valueOf()) {
+          throw new Error("invaild start date value")
+        }
+
+        resultArr = [];
+        dateRange = Math.floor(((((today.valueOf() - startDate.valueOf()) / 1000) / 60) / 60) / 24);
+
+        for (let i = 0; i < dateRange; i++) {
+          temp = [];
+          temp.push(dateToString(startDate));
+          startDate.setDate(startDate.getDate() + 1);
+          temp.push(dateToString(startDate));
+          resultArr.push(temp);
+        }
+
+        return resultArr;
+      }
+      const stringToArr = function (dateString) {
+        let tempArr0, tempArr1, tempArr2;
+        tempArr0 = dateString.split(' ');
+        tempArr1 = tempArr0[0].split('-');
+        tempArr2 = tempArr0[1].split(':');
+        return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
+      }
+      const dateChain = dateChaining(startDate);
+
+      let users;
+      let fileName, fileNameArr, fileNameArrDir;
+      let tempDir;
+      let totalTong;
+      let tempArr;
+      let already;
+
+      tempDir = process.cwd() + "/temp";
+      fileNameArr = [];
+
+      fileNameArrDir = await fileSystem(`readDir`, [ `${tempDir}/analytics` ]);
+
+      for (let i of fileNameArrDir) {
+        if (/^analyticsExports_/.test(i)) {
+          fileNameArr.push(i);
+        }
+      }
+
+      await MONGOCHOME.connect();
+
+      for (let f of fileNameArr) {
+        totalTong = [];
+        tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/analytics/${f}` ]));
+        for (let j = 0; j < tempArr.length; j++) {
+          totalTong.push(tempArr[tempArr.length - 1 - j]);
+        }
+        console.log(`analyticsExports read`);
+
+        for (let i of totalTong) {
+          i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
+          i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
+          for (let j = 0; j < i.history.length; j++) {
+            i.history[j].time = new Date(...stringToArr(i.history[j].time));
+          }
+          for (let j in i.referrer.detail.queryString) {
+            if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
+              delete i.referrer.detail.queryString[j];
+            }
+          }
+          if (i.source !== undefined) {
+            delete i.source;
+          }
+
+          i.device.type = i.device.category;
+          i.device.mobileDevice = i.device.model;
+          delete i.device.category;
+          delete i.device.model;
+
+          already = await back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
+          if (already.length === 0) {
+            await back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+          }
+          console.log(i.userid + " success");
+        }
+      }
+
+      MONGOCHOME.close();
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   async launching() {
     const instance = this;
@@ -507,10 +645,7 @@ class DevContext extends Array {
       const back = new BackMaker();
 
 
-      await this.analyticsToMongo("2021-01-14");
-
-
-
+      await this.analyticsToMongoFromFile();
 
 
       // const back = new BackMaker();
