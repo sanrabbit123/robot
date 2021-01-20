@@ -364,8 +364,6 @@ class DevContext extends Array {
       const back = new BackMaker();
 
 
-      const app = new GoogleAnalytics();
-      await app.analyticsToMongo();
 
 
 

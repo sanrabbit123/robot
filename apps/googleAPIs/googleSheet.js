@@ -193,6 +193,28 @@ GoogleSheet.prototype.setting_cleanView_inPython = async function (id) {
   }
 }
 
+GoogleSheet.prototype.update_defaultSheetName_inPython = async function (id, title) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    const result = await mother.pythonExecute(this.pythonApp, [ "sheets", "updateDefaultSheetName" ], { id, title });
+    return result.message;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleSheet.prototype.add_newSheet_inPython = async function (id, nameArr) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    const result = await mother.pythonExecute(this.pythonApp, [ "sheets", "addSheet" ], { id, nameArr });
+    return result.message;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleSheet.prototype.get_value_inPython = async function (id, range) {
   const instance = this;
   const mother = this.general;

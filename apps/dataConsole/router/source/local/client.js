@@ -4133,7 +4133,6 @@ ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
       }
       div_clone.appendChild(iframe);
 
-
       whiteArea = document.createElement("A");
       style = {
         border: 0,

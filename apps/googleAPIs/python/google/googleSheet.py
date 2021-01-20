@@ -46,6 +46,7 @@ class GoogleSheet:
         spreadsheet = self.app.create(body=spreadsheet, fields='spreadsheetId').execute()
         return dumps({ "id": spreadsheet.get('spreadsheetId') })
 
+
     def getValue(self, id, range):
         result = self.app.values().get(spreadsheetId=id, range=range).execute()
         values = result.get('values', [])
@@ -58,86 +59,138 @@ class GoogleSheet:
         return dumps({ "response": response })
 
 
-    def cleanView(self, id):
+    def addSheet(self, id, nameArr):
+        for name in nameArr:
+            batch_update_spreadsheet_request_body = {
+                "requests": [
+                    {
+                        "addSheet": {
+                            "properties": {
+                                "title": name,
+                            }
+                        }
+                    }
+                ]
+            }
+            request = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+            response = request.execute()
+        return dumps({ "message": "success" })
+
+
+    def updateDefaultSheetName(self, id, title):
         batch_update_spreadsheet_request_body = {
             "requests": [
                 {
-                    "updateDimensionProperties": {
-                        "range": {
-                            "dimension": "COLUMNS",
-                            "startIndex": 0,
-                        },
+                    "updateSheetProperties": {
                         "properties": {
-                            "pixelSize": 120
+                            "title": title
                         },
-                        "fields": "pixelSize"
-                    }
-                },
-                {
-                    "updateDimensionProperties": {
-                        "range": {
-                            "dimension": "ROWS",
-                            "startIndex": 0,
-                        },
-                        "properties": {
-                            "pixelSize": 30
-                        },
-                        "fields": "pixelSize"
-                    }
-                },
-                {
-                    "repeatCell": {
-                        "range": {
-                            "startRowIndex": 1,
-                        },
-                        "cell": {
-                            "userEnteredFormat": {
-                                "backgroundColor": {
-                                    "red": 1.0,
-                                    "green": 1.0,
-                                    "blue": 1.0
-                                },
-                                "horizontalAlignment" : "CENTER",
-                                "verticalAlignment": "MIDDLE",
-                                "textFormat": {
-                                    "fontSize": 10,
-                                }
-                            }
-                        },
-                        "fields": "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
-                    }
-                },
-                {
-                    "repeatCell": {
-                        "range": {
-                            "startRowIndex": 0,
-                            "endRowIndex": 1
-                        },
-                        "cell": {
-                            "userEnteredFormat": {
-                                "backgroundColor": {
-                                    "red": 166,
-                                    "green": 120,
-                                    "blue": 47
-                                },
-                                "horizontalAlignment" : "CENTER",
-                                "verticalAlignment": "MIDDLE",
-                                "textFormat": {
-                                    "foregroundColor": {
-                                        "red": 1.0,
-                                        "green": 1.0,
-                                        "blue": 1.0
-                                    },
-                                    "fontSize": 10,
-                                    "bold": True
-                                }
-                            }
-                        },
-                        "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)"
+                        "fields": "title"
                     }
                 }
             ]
         }
         request = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
         response = request.execute()
+        return dumps({ "message": "success" })
+
+
+    def getAllSheetIds(self, id):
+        sheet_metadata = self.app.get(spreadsheetId=id).execute()
+        properties = sheet_metadata.get('sheets')
+        sheet_ids = []
+        for item in properties:
+           sheet_ids.append(item.get("properties").get('sheetId'))
+        return sheet_ids
+
+
+    def cleanView(self, id):
+        sheet_ids = self.getAllSheetIds(id)
+
+        for i in sheet_ids:
+            batch_update_spreadsheet_request_body = {
+                "requests": [
+                    {
+                        "updateDimensionProperties": {
+                            "range": {
+                                "sheetId": i,
+                                "dimension": "COLUMNS",
+                                "startIndex": 0,
+                            },
+                            "properties": {
+                                "pixelSize": 120
+                            },
+                            "fields": "pixelSize"
+                        }
+                    },
+                    {
+                        "updateDimensionProperties": {
+                            "range": {
+                                "sheetId": i,
+                                "dimension": "ROWS",
+                                "startIndex": 0,
+                            },
+                            "properties": {
+                                "pixelSize": 30
+                            },
+                            "fields": "pixelSize"
+                        }
+                    },
+                    {
+                        "repeatCell": {
+                            "range": {
+                                "sheetId": i,
+                                "startRowIndex": 1,
+                            },
+                            "cell": {
+                                "userEnteredFormat": {
+                                    "backgroundColor": {
+                                        "red": 1.0,
+                                        "green": 1.0,
+                                        "blue": 1.0
+                                    },
+                                    "horizontalAlignment" : "CENTER",
+                                    "verticalAlignment": "MIDDLE",
+                                    "textFormat": {
+                                        "fontSize": 10,
+                                    }
+                                }
+                            },
+                            "fields": "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+                        }
+                    },
+                    {
+                        "repeatCell": {
+                            "range": {
+                                "sheetId": i,
+                                "startRowIndex": 0,
+                                "endRowIndex": 1
+                            },
+                            "cell": {
+                                "userEnteredFormat": {
+                                    "backgroundColor": {
+                                        "red": 166,
+                                        "green": 120,
+                                        "blue": 47
+                                    },
+                                    "horizontalAlignment" : "CENTER",
+                                    "verticalAlignment": "MIDDLE",
+                                    "textFormat": {
+                                        "foregroundColor": {
+                                            "red": 1.0,
+                                            "green": 1.0,
+                                            "blue": 1.0
+                                        },
+                                        "fontSize": 10,
+                                        "bold": True
+                                    }
+                                }
+                            },
+                            "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)"
+                        }
+                    }
+                ]
+            }
+            request = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+            response = request.execute()
         return dumps({ "message": "success" })

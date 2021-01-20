@@ -94,6 +94,11 @@ try:
         result = analyticsApp.getAgeGender()
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'generalMetric':
+        analytics = GoogleAnalytics()
+        result = analytics.getGeneralMetric(data["startDate"], data["endDate"], data["dimensions"])
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'monthSearch':
         analyticsApp = GoogleSearchConsole()
         result = analyticsApp.getAllMonthData(data["monthBox"])
@@ -117,6 +122,16 @@ try:
     elif argv[1] == 'sheets' and argv[2] == 'cleanView':
         sheetsApp = GoogleSheet()
         result = sheetsApp.cleanView(data["id"])
+        print(result)
+
+    elif argv[1] == 'sheets' and argv[2] == 'addSheet':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.addSheet(data["id"], data["nameArr"])
+        print(result)
+
+    elif argv[1] == 'sheets' and argv[2] == 'updateDefaultSheetName':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.updateDefaultSheetName(data["id"], data["title"])
         print(result)
 
     elif argv[1] == 'drive' and argv[2] == 'fileUpload':
@@ -158,6 +173,12 @@ try:
         docsApp = GoogleDocs()
         docsApp.insertText(data["id"], data["longText"])
         print(dumps({ "id": data["id"] }))
+
+    elif argv[1] == 'test' and argv[2] == 'test':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.test("1AAhENYhHmPhpau9cUmO7SjR0w5ssgLHJvVufZN5MkJc")
+        print(result)
+
 
 except Exception as e:
     print(e)
