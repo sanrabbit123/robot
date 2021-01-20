@@ -18,6 +18,8 @@ const ContentsJs = function () {
   this.totalFather = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
+  this.whiteConvert = 0;
+  this.whiteMatrixA = null;
 }
 
 ContentsJs.prototype.standardBar = function (standard) {
@@ -3116,7 +3118,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let rightArrowBox, leftArrowBox;
   let rightArrow, leftArrow;
   let hInitial, hInitialBox;
-  let rInitial, rInitialBox;
+  let mInitial, mInitialBox;
   let updateEventFunction;
   let contentsBoxHeight, contentsBoxBottom;
   let lineHeightRatio;
@@ -3125,6 +3127,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let visualSpecificMarginTop;
   let textAreas;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let titleArea, contentsArea;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -3269,28 +3272,28 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   hInitialBox.style.background = "white";
   div_clone2.appendChild(hInitialBox);
 
-  //r initial icon
-  rInitial = SvgTong.stringParsing(this.mother.returnRinitial("#2fa678"));
+  //m initial icon
+  mInitial = SvgTong.stringParsing(this.mother.returnMinitial("#2fa678"));
   for (let i in style) {
-    rInitial.style[i] = style[i];
+    mInitial.style[i] = style[i];
   }
-  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (GeneralJs.isMac() ? (35.5 / 60) : (36 / 60)))) + ea;
-  rInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (9.7 / 60) : (10.7 / 60))) + ea;
-  div_clone2.appendChild(rInitial);
+  mInitial.style.right = String(leftMargin + (leftMargin * (50 / 60))) + ea;
+  mInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (11 / 60))) + ea;
+  div_clone2.appendChild(mInitial);
 
-  //r initial button
-  rInitialBox = GeneralJs.nodes.div.cloneNode(true);
-  rInitialBox.classList.add("hoverdefault_reverse");
+  //m initial button
+  mInitialBox = GeneralJs.nodes.div.cloneNode(true);
+  mInitialBox.classList.add("hoverdefault_reverse");
   for (let i in style) {
-    rInitialBox.style[i] = style[i];
+    mInitialBox.style[i] = style[i];
   }
-  rInitialBox.style.opacity = '';
-  rInitialBox.style.right = String(leftMargin + (1.5 * leftMargin * (31 / 60))) + ea;
-  rInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  rInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  rInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  rInitialBox.style.background = "white";
-  div_clone2.appendChild(rInitialBox);
+  mInitialBox.style.opacity = '';
+  mInitialBox.style.right = String(leftMargin + (leftMargin * (48 / 60))) + ea;
+  mInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  mInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  mInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  mInitialBox.style.background = "white";
+  div_clone2.appendChild(mInitialBox);
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -3306,6 +3309,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.style[i] = style[i];
   }
   div_clone2.appendChild(div_clone3);
+  titleArea = div_clone2;
 
   div_clone.appendChild(div_clone2);
 
@@ -3821,6 +3825,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   div_clone2.appendChild(propertyBox);
+  contentsArea = div_clone2;
   this.whiteBox.propertyBox = propertyBox;
 
   //detail box
@@ -4029,330 +4034,23 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     }
   });
 
-  //r initial event
-  GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
-  GeneralJs.stacks["rInitialBoxButtonDom"] = null;
-  rInitialBox.addEventListener("click", function (e) {
-    if (GeneralJs.stacks["rInitialBoxButtonToggle"] === 0) {
-      for (let { dom } of detailTongTarget) {
-        dom.style.opacity = String(0);
+  //m initial event
+  mInitialBox.addEventListener("click", this.convertWhiteContents(div_clone, titleArea, contentsArea, leftMargin, thisCase));
+  GeneralJs.timeouts["convertChaining"] = setTimeout(async function () {
+    try {
+      let num = instance.whiteConvert;
+      instance.whiteConvert = 0;
+      instance.whiteMatrixA = null;
+      for (let i = 0; i < num; i++) {
+        mInitialBox.click();
+        await GeneralJs.sleep(400);
       }
-      const mother = detailTongTarget[0].dom.parentElement;
-      let div_clone4, div_clone5, div_clone6;
-      let textArea_clone;
-      let saveEventFunction;
-
-      //contents box
-      div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: "100%",
-        marginTop: String(visualSpecificMarginTop) + ea,
-        height: "calc(" + String(100) + "% - " + String(detailTargetHeightConst) + ea + ")",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(300),
-        border: "solid 1px #dddddd",
-        borderRadius: String(5) + ea,
-        top: String(fontSize * (1 / 5)) + ea,
-        animation: "fadeuplite 0.3s ease forwards",
-      };
-      for (let j in style) {
-        div_clone4.style[j] = style[j];
-      }
-
-      //title
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone5.classList.add("hoverDefault_lite");
-      div_clone5.textContent = "홈스타일링 의뢰서";
-      style = {
-        position: "absolute",
-        top: String(((fontSize * (5 / 15.3027)) + visualSpecificMarginTop) * -1) + ea,
-        left: String(fontSize * (2 / 15.3027) * -1) + ea,
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(600),
-        color: "#404040",
-        background: "white",
-        paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
-        paddingRight: String(fontSize * (12 / 15.3027)) + ea,
-        cursor: "pointer",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone4.appendChild(div_clone5);
-
-      //textarea tong
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone5.classList.add("noScrollBar");
-      style = {
-        position: "absolute",
-        bottom: String(0) + ea,
-        left: String(fontSize * (15 / 15.3027)) + ea,
-        width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
-        height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
-        overflow: "scroll",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-
-      //textarea
-      textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
-      style = {
-        width: "100%",
-        height: String(5000) + ea,
-        fontSize: String(fontSize * 0.9) + ea,
-        fontWeight: String(400),
-        color: "#202020",
-        border: String(0),
-        outline: String(0),
-        lineHeight: String(1.6),
-      };
-      for (let j in style) {
-        textArea_clone.style[j] = style[j];
-      }
-      div_clone5.appendChild(textArea_clone);
-      div_clone4.appendChild(div_clone5);
-
-      //save event
-      saveEventFunction = async function (e) {
-        try {
-          const targetValue = textArea_clone.value;
-          const totalParsingArr = targetValue.split("\n");
-
-          let indexArr;
-          let matrix;
-          let temp;
-          let tempString;
-          let vaildTong;
-          let item;
-          let createRequestDocumentResponse;
-
-          indexArr = [];
-          for (let t = 0; t < totalParsingArr.length; t++) {
-            if (/^\[/.test(totalParsingArr[t])) {
-              indexArr.push(t);
-            }
-          }
-
-          matrix = [];
-          for (let t = 1; t < indexArr.length; t++) {
-            temp = [];
-            for (let s = indexArr[t - 1] + 1; s < indexArr[t]; s++) {
-              if (totalParsingArr[s] !== '' && totalParsingArr[s] !== '\n' && totalParsingArr[s] !== ' ' && totalParsingArr[s] !== '  ') {
-                if (!/^\<\%item\%\>/.test(totalParsingArr[s]) && /[^ \n]/g.test(totalParsingArr[s].replace(/[\n ]/g, ''))) {
-                  tempString = totalParsingArr[s].trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-                  temp.push('- ' + tempString);
-                } else if (/^\<\%item\%\>/.test(totalParsingArr[s])) {
-                  temp.push(totalParsingArr[s]);
-                }
-              }
-            }
-            matrix.push(temp);
-          }
-
-          temp = [];
-          for (let s = indexArr[indexArr.length - 1] + 1; s < totalParsingArr.length; s++) {
-            if (totalParsingArr[s] !== '' && totalParsingArr[s] !== '\n' && totalParsingArr[s] !== ' ' && totalParsingArr[s] !== '  ') {
-              if (!/^\<\%item\%\>/.test(totalParsingArr[s]) && /[^ \n]/g.test(totalParsingArr[s].replace(/[\n ]/g, ''))) {
-                tempString = totalParsingArr[s].trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-                temp.push('- ' + tempString);
-              } else if (/^\<\%item\%\>/.test(totalParsingArr[s])) {
-                temp.push(totalParsingArr[s]);
-              }
-            }
-          }
-          matrix.push(temp);
-
-          for (let t = 0; t < matrix.length; t++) {
-
-            if (t !== 2 && t !== 3) {
-              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
-            } else if (t === 2) {
-              vaildTong = matrix[t];
-              if (!/^\<\%item\%\>/.test(vaildTong[0])) {
-                alert("스타일링 범위 정의를 입력해주셔야 합니다! (스타일링 타이틀 우클릭)");
-                rInitialBox.click();
-                return;
-              } else {
-                if (!(/컨셉/g.test(vaildTong[1]) && /\:/g.test(vaildTong[1]))) {
-                  alert("선호 컨셉을 가장 앞줄에 적어주셔야 합니다! (형식 => - 선호 컨셉 : 컨셉명)");
-                  rInitialBox.click();
-                  return;
-                } else {
-                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
-                }
-              }
-            } else if (t === 3) {
-              vaildTong = matrix[t];
-              if (!/^\<\%item\%\>/.test(vaildTong[0])) {
-                alert("시공 범위 정의를 입력해주셔야 합니다! (시공 타이틀 우클릭)");
-                rInitialBox.click();
-                return;
-              } else {
-                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + detailTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
-              }
-            }
-          }
-
-          if (this.textContent === "제작") {
-            createRequestDocumentResponse = JSON.parse(await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]], "/createRequestDocument"));
-            window.alert(createRequestDocumentResponse.alert);
-          }
-
-          GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
-            const dataArr = JSON.parse(res);
-            for (let i = 0; i < textAreas.length; i++) {
-              textAreas[i].value = dataArr[i];
-            }
-            rInitialBox.click();
-          });
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
-      //button0
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: String(55) + ea,
-        height: String(30) + ea,
-        bottom: String(13) + ea,
-        right: String(12) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-        background: "#2fa678",
-        borderRadius: String(5) + ea,
-        opacity: String(0.92),
-        cursor: "pointer",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone6.classList.add("hoverDefault_lite");
-      div_clone6.textContent = "제작";
-      style = {
-        position: "absolute",
-        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(15) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-      };
-      for (let j in style) {
-        div_clone6.style[j] = style[j];
-      }
-      div_clone6.addEventListener("click", saveEventFunction);
-      div_clone5.appendChild(div_clone6);
-      div_clone4.appendChild(div_clone5);
-
-      //button1
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: String(55) + ea,
-        height: String(30) + ea,
-        bottom: String(13) + ea,
-        right: String(73) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-        background: "#2fa678",
-        borderRadius: String(5) + ea,
-        opacity: String(0.92),
-        cursor: "pointer",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone6.classList.add("hoverDefault_lite");
-      div_clone6.textContent = "취소";
-      style = {
-        position: "absolute",
-        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(15) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-      };
-      for (let j in style) {
-        div_clone6.style[j] = style[j];
-      }
-      div_clone6.addEventListener("click", function (e) {
-        rInitialBox.click();
-      });
-      div_clone5.appendChild(div_clone6);
-      div_clone4.appendChild(div_clone5);
-
-      //button2
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: String(55) + ea,
-        height: String(30) + ea,
-        bottom: String(13) + ea,
-        right: String(134) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-        background: "#2fa678",
-        borderRadius: String(5) + ea,
-        opacity: String(0.92),
-        cursor: "pointer",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone6 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone6.classList.add("hoverDefault_lite");
-      div_clone6.textContent = "저장";
-      style = {
-        position: "absolute",
-        top: String(4 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(15) + ea,
-        fontSize: String(fontSize * 0.92) + ea,
-        fontWeight: String(600),
-        color: "white",
-      };
-      for (let j in style) {
-        div_clone6.style[j] = style[j];
-      }
-      div_clone6.addEventListener("click", saveEventFunction);
-      div_clone5.appendChild(div_clone6);
-      div_clone4.appendChild(div_clone5);
-
-      GeneralJs.stacks["rInitialBoxButtonDom"] = div_clone4;
-      mother.appendChild(div_clone4);
-
-      GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
-        const dataArr = JSON.parse(res);
-        let totalString = '\n';
-        for (let i = 0; i < detailTongTarget.length; i++) {
-          totalString += "[" + String(i + 1) + "] " + detailTongTarget[i].name;
-          totalString += "\n\n";
-          totalString += dataArr[i];
-          totalString += "\n\n\n";
-        }
-        textArea_clone.value = totalString;
-      });
-
-      GeneralJs.stacks["rInitialBoxButtonToggle"] = 1;
-    } else {
-      for (let { dom } of detailTongTarget) {
-        dom.style.opacity = '';
-      }
-      if (GeneralJs.stacks["rInitialBoxButtonDom"] !== null) {
-        GeneralJs.stacks["rInitialBoxButtonDom"].parentElement.removeChild(GeneralJs.stacks["rInitialBoxButtonDom"]);
-      }
-      GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
-      GeneralJs.stacks["rInitialBoxButtonDom"] = null;
+      clearTimeout(GeneralJs.timeouts["convertChaining"]);
+      GeneralJs.timeouts["convertChaining"] = null;
+    } catch (e) {
+      console.log(e);
     }
-  });
+  }, 400);
 
   //get textAreaTong
   GeneralJs.ajax("id=" + thisCase[standard[1]], "/getContentsDetail", function (res) {
@@ -4366,6 +4064,508 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //end ---------------------------------------------
   mother.appendChild(div_clone);
+}
+
+ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, contentsArea, leftMargin, thisCase) {
+  const instance = this;
+  const { pid, conid } = thisCase;
+  return async function (e) {
+    try {
+      let div_clone;
+      let treeBox;
+      let style, style2, style3;
+      let ea = "px";
+      let temp;
+      let formBox, formBoxText;
+      let matrix;
+      let formStyle, formTextStyle;
+      let num, matrixNum;
+      let widthArr, topArr, leftArr;
+      let dateBox;
+      let dateStyle;
+      let margin;
+      let height;
+      let lineDom;
+      let dateWidth;
+      let marginMiddle;
+      let heightMargin;
+      let lineColor;
+      let titleArr;
+      let titleBox;
+      let keyHeight;
+      let treeTop;
+      let dateText;
+      let dateTextStyle;
+      let dateTextBar;
+      let widthRatio, heightRatio;
+
+      if (instance.whiteConvert === 0) {
+
+        //convert animation
+        if (contentsArea.style.animation !== "fadeoutlite 0.3s ease forwards") {
+          contentsArea.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        instance.whiteConvert = 3;
+        GeneralJs.timeouts["whiteConvertMatrixA"] = setTimeout(function () {
+          instance.whiteConvert = 1;
+          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixA"]);
+          GeneralJs.timeouts["whiteConvertMatrixA"] = null;
+        }, 301);
+
+        //start matrixA
+        div_clone = contentsArea.cloneNode(false);
+        div_clone.style.animation = "fadeinlite 0.3s ease forwards";
+
+        widthRatio = function (number) {
+          return (window.innerWidth * (number / 1712));
+        }
+
+        heightRatio = function (number) {
+          return (window.innerHeight * (number / 977));
+        }
+
+        titleArr = [
+          "원본 소스",
+          "산문 형태",
+          "카드 형태",
+          "영상 형태",
+        ];
+
+        matrix = [
+          [
+            "Contents form 0",
+            "Contents form 1",
+            "Contents form 2",
+          ],
+          [
+            "Web",
+            "Blog",
+          ],
+          [
+            "Insta",
+            "Post",
+            "Story"
+          ],
+          [
+            "Youtube",
+            "NaverTV",
+            "KakaoTV",
+            "Vimeo"
+          ],
+        ];
+
+        widthArr = [
+          widthRatio(270),
+          widthRatio(140),
+          widthRatio(140),
+          widthRatio(180)
+        ];
+
+        keyHeight = (144);
+
+        topArr = [
+          0,
+          keyHeight,
+          heightRatio(keyHeight * 2),
+          heightRatio(keyHeight * 3)
+        ];
+
+        leftArr = [
+          0,
+          widthRatio(660),
+          widthRatio(350),
+          0
+        ];
+
+        treeTop = heightRatio(34);
+        margin = 5;
+        height = heightRatio(106);
+        dateWidth = widthRatio(100);
+
+        treeBox = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "relative",
+          width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+          height: String(topArr[topArr.length - 1] + height) + ea,
+          left: String(leftMargin) + ea,
+          top: String(treeTop) + ea,
+        };
+        for (let i in style) {
+          treeBox.style[i] = style[i];
+        }
+
+        formStyle = {
+          position: "absolute",
+          background: "#ececec",
+          borderRadius: String(5) + ea,
+          width: String(270) + ea,
+          height: String(height) + ea,
+          borderTopRightRadius: String(0) + ea,
+          borderBottomRightRadius: String(0) + ea,
+        };
+
+        formTextStyle = {
+          position: "absolute",
+          fontSize: String(22) + ea,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          textAlign: "center",
+          width: String(100) + '%',
+          top: "calc(50% - " + String(21) + ea + ")",
+          color: "#606060",
+        };
+
+        dateStyle = {
+          position: "absolute",
+          border: "1px solid #dddddd",
+          borderRadius: String(5) + ea,
+          width: String(dateWidth) + ea,
+          height: String(height) + ea,
+          boxSizing: "border-box",
+          borderTopLeftRadius: String(0) + ea,
+          borderBottomLeftRadius: String(0) + ea,
+        };
+
+        dateTextStyle = {
+          position: "absolute",
+          width: String(100) + '%',
+          textAlign: "center",
+          fontSize: String(19) + ea,
+          fontWeight: String(100),
+          height: String(30) + ea,
+        };
+
+        matrixNum = 0;
+        for (let arr of matrix) {
+
+          num = 0;
+          for (let i of arr) {
+            formBox = GeneralJs.nodes.div.cloneNode(true);
+            for (let j in formStyle) {
+              formBox.style[j] = formStyle[j];
+            }
+
+            if (matrixNum === 0 && num === 0) {
+              formBox.style.background = "#2fa678";
+            }
+
+            formBox.style.width = String(widthArr[matrixNum]) + ea;
+            formBox.style.top = String(topArr[num]) + ea;
+            if (matrixNum === 0) {
+              formBox.style.left = String(0) + ea;
+              if (num === 2) {
+                formBox.style.top = String(topArr[num + 1]) + ea;
+              }
+            } else {
+              formBox.style.right = String(leftArr[matrixNum] + dateWidth) + ea;
+            }
+
+            if (matrixNum === 0) {
+              formBox.style.borderTopRightRadius = String(5) + ea;
+              formBox.style.borderBottomRightRadius = String(5) + ea;
+            }
+
+            formBoxText = GeneralJs.nodes.div.cloneNode(true);
+            for (let j in formTextStyle) {
+              formBoxText.style[j] = formTextStyle[j];
+            }
+            formBoxText.textContent = i;
+
+            if (matrixNum === 0 && num === 0) {
+              formBoxText.style.color = "white";
+            }
+
+            formBox.appendChild(formBoxText);
+            treeBox.appendChild(formBox);
+
+            if (matrixNum !== 0) {
+
+              dateBox = GeneralJs.nodes.div.cloneNode(true);
+              for (let j in dateStyle) {
+                dateBox.style[j] = dateStyle[j];
+              }
+              dateBox.style.top = String(topArr[num]) + ea;
+              dateBox.style.right = String(leftArr[matrixNum]) + ea;
+
+              dateText = GeneralJs.nodes.div.cloneNode(true);
+              dateText.textContent = "06 / 24";
+              for (let j in dateTextStyle) {
+                dateText.style[j] = dateTextStyle[j];
+              }
+              dateText.style.top = "calc(25% - " + String(15) + ea + ")";
+              dateBox.appendChild(dateText);
+
+              dateTextBar = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                borderBottom: "1px dashed #dddddd",
+                width: String(70) + '%',
+                left: String(15) + '%',
+                top: String(50) + '%',
+              };
+              for (let j in style) {
+                dateTextBar.style[j] = style[j];
+              }
+              dateBox.appendChild(dateTextBar);
+
+              dateText = GeneralJs.nodes.div.cloneNode(true);
+              dateText.textContent = "07 / 02";
+              for (let j in dateTextStyle) {
+                dateText.style[j] = dateTextStyle[j];
+              }
+              dateText.style.top = "calc(75% - " + String(15) + ea + ")";
+              dateBox.appendChild(dateText);
+
+              treeBox.appendChild(dateBox);
+
+            }
+            num++;
+          }
+          matrixNum++;
+        }
+
+
+        marginMiddle = (leftArr[2] - (widthArr[3] + dateWidth)) / 2;
+        heightMargin = topArr[1] - topArr[0] - height;
+        lineColor = "#cccccc";
+
+
+        //line third
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[0] + (height / 2)) + ea,
+          right: String(widthArr[3] + dateWidth) + ea,
+          width: String(marginMiddle) + ea,
+          height: String(topArr[3] - topArr[0]) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderBottom: String(0) + ea,
+          borderTopLeftRadius: String(5) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[1] + (height / 2)) + ea,
+          right: String(widthArr[3] + dateWidth) + ea,
+          width: String(marginMiddle) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderLeft: String(0) + ea,
+          borderBottom: String(0) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[2] + (height / 2)) + ea,
+          right: String(widthArr[3] + dateWidth) + ea,
+          width: String(marginMiddle) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderLeft: String(0) + ea,
+          borderBottom: String(0) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[3] + (height / 2)) + ea,
+          right: String(widthArr[3] + dateWidth) + ea,
+          width: "calc(100% - " + String(widthArr[0] + widthArr[3] + dateWidth) + ea + ")",
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderLeft: String(0) + ea,
+          borderTop: String(0) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+
+        //line second
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[0] + (height / 2)) + ea,
+          right: String(widthArr[2] + dateWidth + leftArr[2]) + ea,
+          width: String(marginMiddle) + ea,
+          height: String(topArr[2] - topArr[0]) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderBottom: String(0) + ea,
+          borderTopLeftRadius: String(5) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[1] + (height / 2)) + ea,
+          right: String(widthArr[2] + dateWidth + leftArr[2]) + ea,
+          width: String(marginMiddle) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderLeft: String(0) + ea,
+          borderBottom: String(0) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[1] + height) + ea,
+          right: String(widthArr[2] + dateWidth + leftArr[2]) + ea,
+          width: "calc(100% - " + String((widthArr[0] / 2) + widthArr[2] + dateWidth + leftArr[2]) + ea + ")",
+          height: String(topArr[2] - topArr[1] - (height / 2)) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderTop: String(0) + ea,
+          borderBottomLeftRadius: String(5) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+
+        //line first
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[0] + (height / 2)) + ea,
+          right: String(widthArr[1] + dateWidth + leftArr[1]) + ea,
+          width: "calc(100% - " + String(widthArr[0] + widthArr[1] + dateWidth + leftArr[1]) + ea + ")",
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderLeft: String(0) + ea,
+          borderRight: String(0) + ea,
+          borderBottom: String(0) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        lineDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(topArr[0] + (height / 2)) + ea,
+          right: String(widthArr[1] + dateWidth + leftArr[1]) + ea,
+          width: String(marginMiddle) + ea,
+          height: String(topArr[1] - topArr[0]) + ea,
+          border: "1px solid " + lineColor,
+          boxSizing: "border-box",
+          borderRight: String(0) + ea,
+          borderTop: String(0) + ea,
+          borderBottomLeftRadius: String(5) + ea,
+        };
+        for (let i in style) {
+          lineDom.style[i] = style[i];
+        }
+        treeBox.appendChild(lineDom);
+
+        for (let i = 0; i < titleArr.length; i++) {
+          titleBox = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            fontSize: String(17) + ea,
+            fontWeight: String(600),
+            width: String(widthArr[i] + ((i === 0) ? 0 : dateWidth)) + ea,
+            textAlign: "center",
+            height: String(30) + ea,
+            top: String(-33) + ea,
+          };
+          for (let j in style) {
+            titleBox.style[j] = style[j];
+          }
+          titleBox.textContent = titleArr[i];
+
+          if (i === 0) {
+            titleBox.style.left = String(leftArr[i]) + ea;
+          } else {
+            titleBox.style.right = String(leftArr[i]) + ea;
+          }
+
+          treeBox.appendChild(titleBox);
+        }
+
+        titleBox = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          fontSize: String(14) + ea,
+          fontWeight: String(500),
+          textAlign: "left",
+          height: String(15) + ea,
+          bottom: String(2) + ea,
+          left: String(widthArr[0] + 16) + ea,
+        };
+        for (let j in style) {
+          titleBox.style[j] = style[j];
+        }
+        titleBox.textContent = "*원본 소스는 폴더에 모아 드라이브의 링크 형태로 담아주세요.";
+        treeBox.appendChild(titleBox);
+
+        div_clone.appendChild(treeBox);
+
+        instance.whiteMatrixA = div_clone;
+        motherArea.appendChild(div_clone);
+
+      } else if (instance.whiteConvert === 1) {
+
+        //convert animation
+        if (instance.whiteMatrixA !== null) {
+          instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
+        }
+        contentsArea.style.animation = "fadeinlite 0.3s ease forwards";
+        instance.whiteConvert = 3;
+        GeneralJs.timeouts["whiteConvertMatrixReturn"] = setTimeout(function () {
+          if (instance.whiteMatrixA !== null) {
+            motherArea.removeChild(instance.whiteMatrixA);
+          }
+          instance.whiteConvert = 0;
+          instance.whiteMatrixA = null;
+          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixReturn"]);
+          GeneralJs.timeouts["whiteConvertMatrixReturn"] = null;
+        }, 301);
+
+      } else {
+        //pass
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 ContentsJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
@@ -4503,8 +4703,6 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     instance.whiteBox.contentsBox = div_clone;
     instance.whiteBox.index = index;
     instance.whiteBox.id = thisCase[standard[1]];
-    console.log(instance.whiteBox.id)
-    console.log(standard)
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
   }
