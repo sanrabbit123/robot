@@ -664,7 +664,7 @@ AnalyticsJs.prototype.analyticsStandard = function () {
       width: 120,
     },
     campaign: {
-      name: "캠패인",
+      name: "캠페인",
       width: 150,
     },
     referrer: {

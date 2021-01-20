@@ -2242,7 +2242,7 @@ DataRouter.prototype.rou_post_analyticsReport = function () {
       const title = "analyticsReport_" + startDate + "_" + endDate;
 
       instance.async_analyticsReport(startDate, endDate, title, parentId).then(function (link) {
-        slack.chat.postMessage({ text: "어널리틱스 보고서가 완성되었습니다! (" + title + ") link: " + link, channel: "#error_log" });
+        slack.chat.postMessage({ text: "어널리틱스 보고서가 완성되었습니다! (" + title + ") link: " + link, channel: "#500_marketing" });
       }).catch(function (e) {
         throw new Error(e);
       });
