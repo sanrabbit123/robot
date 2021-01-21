@@ -22,6 +22,15 @@ const ContentsJs = function () {
   this.whiteMatrixA = null;
 }
 
+ContentsJs.abandonProjects = [
+  "p2002_aa09s",
+  "p1911_aa19s",
+  "p1911_aa01s",
+  "p1908_aa04s",
+  "p1906_aa03s",
+  "p1906_aa01s",
+];
+
 ContentsJs.prototype.standardBar = function (standard) {
   const instance = this;
   let div_clone, div_clone2, div_clone3;
@@ -1123,6 +1132,324 @@ ContentsJs.prototype.spreadData = async function (search = null) {
   }
 }
 
+ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback) {
+  const instance = this;
+  const today = new Date();
+  const area = [
+    {
+      title: "촬영 일자 조정 필요",
+      condition: function () {
+        let num, doms, eventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          if (obj.photoDate === null) {
+            num = num + 1;
+            doms.push(obj);
+          }
+        }
+
+        eventFunc = function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/contents?" + "proid=" + this.getAttribute("proid") + "&view=create", "_blank");
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc };
+      },
+    },
+    {
+      title: "촬영 대기중",
+      condition: function () {
+        let num, doms, eventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          if (obj.photoDate !== null) {
+            if (obj.photoDate.valueOf() >= today.valueOf()) {
+              num = num + 1;
+              doms.push(obj);
+            }
+          }
+        }
+
+        eventFunc = function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc };
+      },
+    },
+    {
+      title: "원본 사진 대기중",
+      condition: function () {
+        let num, doms, eventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          if (obj.photoDate !== null) {
+            if (obj.photoDate.valueOf() < today.valueOf()) {
+              if (!/^htt/.test(obj.rawLink)) {
+                num = num + 1;
+                doms.push(obj);
+              }
+            }
+          }
+        }
+
+        eventFunc = function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc };
+      },
+    },
+    {
+      title: "원본 컨텐츠 대기중",
+      condition: function () {
+        let num, doms, eventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          if (obj.photoDate !== null) {
+            if (!obj.portfolioExist || !obj.reviewExist) {
+              num = num + 1;
+              doms.push(obj);
+            }
+          }
+        }
+
+        eventFunc = function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc };
+      },
+    },
+    {
+      title: "컨텐츠 교정 대기중",
+      condition: function () {
+        let num, doms, eventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          if (obj.photoDate !== null) {
+            if (obj.portfolioExist && obj.reviewExist && /^htt/.test(obj.rawLink)) {
+              num = num + 1;
+              doms.push(obj);
+            }
+          }
+        }
+
+        eventFunc = function (e) {
+          window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc };
+      },
+    },
+  ];
+  const motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/gi, ''));
+  const motherHeight = Number(mother.style.height.replace(/[^0-9\.\-]/gi, ''));
+  let tong, entireBox, titleBox, poolBox;
+  let scrollBase, scrollBox;
+  let div_clone, div_clone2;
+  let style;
+  let entireStyle, titleStyle, poolStyle;
+  let scrollBaseStyle, scrollBoxStyle;
+  let factorStyle;
+  let cardStyle, cardStyle2;
+  let ea;
+  let margin;
+  let entireWidth, entireHeight;
+  let titleHeight, areaMargin;
+  let titleFont;
+  let result;
+
+  ea = "px";
+  margin = 50;
+  entireWidth = motherWidth - (margin * 2);
+  entireHeight = motherHeight - (margin * 2);
+  titleHeight = 32;
+  areaMargin = 19;
+  titleFont = 17;
+
+  entireStyle = {
+    display: "inline-block",
+    position: "relative",
+    width: String(Math.floor((entireWidth + areaMargin) / area.length)) + ea,
+    height: String(100) + '%',
+  };
+
+  titleStyle = {
+    position: "absolute",
+    top: String(0) + ea,
+    left: String(1) + ea,
+    fontSize: String(titleFont) + ea,
+    fontWeight: String(600),
+  };
+
+  poolStyle = {
+    position: "relative",
+    marginTop: String(titleHeight) + ea,
+    width: "calc(100% - " + String(areaMargin) + ea + ")",
+    height: "calc(100% - " + String(titleHeight) + ea + ")",
+    border: "1px solid #dddddd",
+    borderRadius: String(5) + ea,
+  };
+
+  scrollBaseStyle = {
+    position: "absolute",
+    background: "#f2f2f2",
+    borderRadius: String(5) + ea,
+    width: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    height: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    top: String(areaMargin * (2 / 3)) + ea,
+    left: String(areaMargin * (2 / 3)) + ea,
+    overflow: "scroll",
+    border: "3px solid #f2f2f2",
+    boxSizing: "border-box",
+  };
+
+  scrollBoxStyle = {
+    position: "relative",
+    height: String(motherHeight * 5) + ea,
+    background: "#f2f2f2",
+    width: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    top: String(areaMargin * (2 / 3)) + ea,
+    left: String(areaMargin * (2 / 3)) + ea,
+  };
+
+  factorStyle = {
+    display: "block",
+    position: "relative",
+    width: String(100) + '%',
+    height: String(42) + ea,
+    background: "white",
+    marginBottom: String(Math.floor(areaMargin * 0.4)) + ea,
+    borderRadius: String(3) + ea,
+    cursor: "pointer",
+  };
+
+  cardStyle = {
+    fontSize: String(16) + ea,
+    fontWeight: String(200),
+    position: "absolute",
+    top: String(9) + ea,
+    left: String(13) + ea,
+    color: "#202020",
+    cursor: "pointer",
+  };
+
+  cardStyle2 = {
+    fontSize: String(12) + ea,
+    fontWeight: String(400),
+    position: "absolute",
+    top: String(11.5) + ea,
+    right: String(13) + ea,
+    color: "#2fa678",
+    cursor: "pointer",
+  };
+
+  tong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "block",
+    position: "relative",
+    left: String(margin) + ea,
+    top: String(margin) + ea,
+    width: String(entireWidth + areaMargin) + ea,
+    height: String(entireHeight) + ea,
+  };
+  for (let i in style) {
+    tong.style[i] = style[i];
+  }
+
+  for (let i = 0; i < area.length; i++) {
+    entireBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in entireStyle) {
+      entireBox.style[j] = entireStyle[j];
+    }
+
+    titleBox = GeneralJs.nodes.div.cloneNode(true);
+    titleBox.textContent = area[i].title;
+    for (let j in titleStyle) {
+      titleBox.style[j] = titleStyle[j];
+    }
+    entireBox.appendChild(titleBox);
+
+    poolBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in poolStyle) {
+      poolBox.style[j] = poolStyle[j];
+    }
+
+    scrollBase = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in scrollBaseStyle) {
+      scrollBase.style[j] = scrollBaseStyle[j];
+    }
+
+    scrollBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in scrollBoxStyle) {
+      scrollBox.style[j] = scrollBoxStyle[j];
+    }
+
+    result = area[i].condition();
+
+    for (let j = 0; j < result.number; j++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in factorStyle) {
+        div_clone.style[k] = factorStyle[k];
+      }
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in cardStyle) {
+        div_clone2.style[k] = cardStyle[k];
+      }
+      div_clone2.insertAdjacentHTML("beforeend", `${result.doms[j].name}C / ${result.doms[j].designer}D`);
+      div_clone.appendChild(div_clone2);
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in cardStyle2) {
+        div_clone2.style[k] = cardStyle2[k];
+      }
+      div_clone2.insertAdjacentHTML("beforeend", `${result.doms[j].proid}`);
+      div_clone.appendChild(div_clone2);
+
+      div_clone.setAttribute("cliid", result.doms[j].cliid);
+      div_clone.setAttribute("proid", result.doms[j].proid);
+      div_clone.setAttribute("name", result.doms[j].name);
+      div_clone.setAttribute("desid", result.doms[j].desid);
+      div_clone.setAttribute("designer", result.doms[j].designer);
+      div_clone.addEventListener("click", result.eventFunc);
+
+      scrollBox.appendChild(div_clone);
+    }
+
+    scrollBase.appendChild(scrollBox);
+    poolBox.appendChild(scrollBase);
+    entireBox.appendChild(poolBox);
+
+    tong.appendChild(entireBox);
+  }
+
+  mother.appendChild(tong);
+
+  callback();
+}
+
+
 ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false) {
   const instance = this;
   return function () {
@@ -1198,8 +1525,9 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
       loadingIcon.style[i] = style[i];
     }
     div_clone.appendChild(loadingIcon);
-
-    // instance.whiteContentsMaker(thisCase, div_clone);
+    instance.filterContentsMaker(proidArr, div_clone, function () {
+      div_clone.removeChild(loadingIcon);
+    });
     instance.whiteBox.contentsBox = div_clone;
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
@@ -1695,6 +2023,7 @@ ContentsJs.prototype.cardViewMaker = function () {
       let raws;
       let overrideSearch;
       let allSearchTargets;
+      let proidArrMaker;
 
       createViewDoms = [];
       ea = "px";
@@ -1902,6 +2231,34 @@ ContentsJs.prototype.cardViewMaker = function () {
         }
       }
 
+      proidArrMaker = function () {
+        return function (e) {
+          let proidArr;
+          let whiteOnEvent;
+          const { gray } = createViewDoms[0];
+
+          proidArr = [];
+          for (let dom of gray.firstChild.children) {
+            proidArr.push({
+              index: dom.getAttribute("index"),
+              name: dom.getAttribute("name"),
+              proid: dom.getAttribute("proid"),
+              id: dom.getAttribute("id"),
+              cliid: dom.getAttribute("cliid"),
+              desid: dom.getAttribute("desid"),
+              designer: dom.getAttribute("designer"),
+              portfolioExist: (dom.getAttribute("portfolioExist") === "true" ? true : false),
+              reviewExist: (dom.getAttribute("reviewExist") === "true" ? true : false),
+              rawLink: dom.getAttribute("rawLink"),
+              photoDate: (dom.getAttribute("photoDate") === "false" ? null : new Date(dom.getAttribute("photoDate"))),
+            });
+          }
+
+          whiteOnEvent = instance.filterViewMaker(proidArr);
+          whiteOnEvent.call(this, e);
+        }
+      }
+
       for (let z = 0; z < titles.length; z++) {
 
         tempObj = {};
@@ -1925,7 +2282,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
         if (z === 0) {
           icon_clone = SvgTong.stringParsing(instance.mother.returnFilter("#aaaaaa"));
-          icon_clone.addEventListener("click", instance.filterViewMaker([]));
+          icon_clone.addEventListener("click", proidArrMaker());
           iconStyle.height = String(1.7) + 'vh';
         } else if (z === 1) {
           icon_clone = SvgTong.stringParsing(instance.mother.returnCalendar("#aaaaaa"));
@@ -2128,27 +2485,30 @@ ContentsJs.prototype.cardViewMaker = function () {
 
       GeneralJs.stacks.firstContentsCreateViewDoms = [];
       for (let i = 0; i < projects.length; i++) {
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let j in style) {
-          div_clone2.style[j] = style[j];
+        if (!ContentsJs.abandonProjects.includes(projects[i].proid)) {
+          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in style) {
+            div_clone2.style[j] = style[j];
+          }
+          div_clone2.textContent = projects[i].proid + " | " + projects[i].name;
+          div_clone2.addEventListener("click", clickEvent);
+          div_clone2.setAttribute("index", String(i));
+          div_clone2.setAttribute("name", projects[i].name);
+          div_clone2.setAttribute("proid", projects[i].proid);
+          div_clone2.setAttribute("id", projects[i].proid);
+          div_clone2.setAttribute("cliid", projects[i].cliid);
+          div_clone2.setAttribute("desid", projects[i].desid);
+          div_clone2.setAttribute("designer", projects[i].designer);
+          div_clone2.setAttribute("portfolioExist", String(projects[i].raw.portfolio.exist));
+          div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
+          div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
+          div_clone2.setAttribute("photoDate", (/^1[6789]/.test(projects[i].contents.photo.date) ? "false" : projects[i].contents.photo.date));
+
+          allSearchTargets.push({ dom: div_clone2, keywords: [ projects[i].name, projects[i].proid, projects[i].cliid, projects[i].desid, projects[i].designer ] });
+
+          GeneralJs.stacks.firstContentsCreateViewDoms.push(div_clone2);
+          div_clone.appendChild(div_clone2);
         }
-        div_clone2.textContent = projects[i].proid + " | " + projects[i].name;
-        div_clone2.addEventListener("click", clickEvent);
-        div_clone2.setAttribute("index", String(i));
-        div_clone2.setAttribute("name", projects[i].name);
-        div_clone2.setAttribute("proid", projects[i].proid);
-        div_clone2.setAttribute("id", projects[i].proid);
-        div_clone2.setAttribute("cliid", projects[i].cliid);
-        div_clone2.setAttribute("desid", projects[i].desid);
-        div_clone2.setAttribute("designer", projects[i].designer);
-        div_clone2.setAttribute("portfolioExist", String(projects[i].raw.portfolio.exist));
-        div_clone2.setAttribute("reviewExist", String(projects[i].raw.review.exist));
-        div_clone2.setAttribute("rawLink", String(projects[i].raw.photo.link));
-
-        allSearchTargets.push({ dom: div_clone2, keywords: [ projects[i].name, projects[i].proid, projects[i].cliid, projects[i].desid, projects[i].designer ] });
-
-        GeneralJs.stacks.firstContentsCreateViewDoms.push(div_clone2);
-        div_clone.appendChild(div_clone2);
       }
 
       createViewDoms[0].gray.appendChild(div_clone);

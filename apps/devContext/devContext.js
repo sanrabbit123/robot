@@ -880,6 +880,22 @@ class DevContext extends Array {
       //   await back.mongoCreate("designerMatrix", json, { console: true });
       // }
 
+      // const MONGOC = this.MONGOC;
+      // let projects, tempArr;
+      //
+      //
+      // projects = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      //
+      //
+      // for (let project of projects) {
+      //   tempArr = await MONGOC.db(`miro81`).collection(`BP2_calculation`).find({ a4_customernumber: project.cliid }).toArray();
+      //   if (tempArr.length > 0) {
+      //     if (Number(tempArr[0].c1_supply.replace(/[^0-9]/g, '')) !== Number(project.process.contract.remain.calculation.amount.supply)) {
+      //       console.log(project)
+      //     }
+      //   }
+      // }
+
 
 
 
