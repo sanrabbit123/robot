@@ -905,13 +905,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "송경진";
-      // const pid = "p74";
-      // const rid = "re068";
+      // const client = "고윤태";
+      // const pid = "p78";
+      // const rid = "re072";
       // const links = [
-      //   "https://docs.google.com/document/d/1yBI9RnLYSBwOnu1h-dCzWcck9NYVU_jqMNWQogE6IYs/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/16z8ijM8ziyQg5i5Js5r4kx2lc7DcHm-FmDkO7PMx5cM/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1XGKKRTJS6Dh3HoLJAjdA0qAlHbnqZFWA?usp=sharing",
+      //   "https://docs.google.com/document/d/1orHVlpAQtdQKDYBSJldMeVdvLsqifdX9y5eOIqh1K_s/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1Jp_zH1w02LxaQBhlUv2nnBWLEdt6PO78_svoeqX59v0/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1fPqMT9jcP627M5FgLR9nn92_PfhHIPE8?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -951,11 +951,11 @@ class DevContext extends Array {
       //addtional photo repair
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p73", 10);
+      // await filter.addtionalRepair("p78", 3);
 
       // etc tools
 
-      // await this.spellCheck("p74");
+      // await this.spellCheck("p78");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

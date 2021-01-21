@@ -1114,4 +1114,180 @@ Mother.prototype.getDateMatrix = function (year, month) {
   return result;
 }
 
+Mother.prototype.treeParsing = function (target) {
+  const shell = require(`shelljs`);
+  const makeFileArr = function (target) {
+    const { stdout } = shell.exec(`ls -al ${target}`, { silent: true });
+    let fileList;
+    let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
+    let temp, str;
+    let newArr;
+
+    fileList = stdout.split("\n");
+    fileList.shift();
+    fileList.pop();
+
+    tempArr = [];
+    for (let i of fileList) {
+      newArr = [];
+      for (let j of i.split(" ")) {
+        if (j !== '' && j !== ' ') {
+          newArr.push(j);
+        }
+      }
+      tempArr.push(newArr);
+    }
+
+    tempArr2 = [];
+    for (let i of tempArr) {
+      temp = {};
+
+      if (i[0][0] === 'd') {
+        temp.directory = true;
+      } else {
+        temp.directory = false;
+      }
+
+      if (i.length > 9) {
+        str = '';
+        for (let j = 8; j < i.length; j++) {
+          str += i[j];
+          str += ' ';
+        }
+        temp.fileName = str.slice(0, -1);
+      } else {
+        temp.fileName = i[8];
+      }
+
+      if (temp.fileName[0] === '.') {
+        temp.hidden = true;
+      } else {
+        temp.hidden = false;
+      }
+
+      temp.absolute = target + "/" + temp.fileName;
+      tempArr2.push(temp);
+    }
+
+    tempArr3 = [];
+    for (let i of tempArr2) {
+      if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName)) {
+        tempArr3.push(i);
+      }
+    }
+
+    tempArr4 = [];
+    for (let i of tempArr3) {
+      if (i.directory) {
+        tempArr4.push(i);
+        tempArr5 = makeFileArr(i.absolute);
+        for (let j of tempArr5) {
+          tempArr4.push(j);
+        }
+      } else {
+        tempArr4.push(i);
+      }
+    }
+
+    return tempArr4;
+  }
+  const setTree = function (target) {
+    const result = makeFileArr(target);
+    let absolutes, tempList;
+    let filter;
+    let filterSplit;
+    let filterSplitJoin;
+    let temp, temp2;
+    let finalJson;
+    let maxLength, minLength;
+    let lengthArr;
+    let tree;
+
+    absolutes = [];
+    for (let i of result) {
+      tempList = i.absolute.split("/");
+      tempList.pop();
+      absolutes.push(tempList.join("/"));
+    }
+
+    filter = Array.from(new Set(absolutes));
+
+    filterSplit = [];
+    for (let i of filter) {
+      filterSplit.push(i.split("/"));
+    }
+
+    filterSplit.sort((a, b) => {
+      return a.length - b.length;
+    });
+
+    filterSplitJoin = [];
+    for (let i of filterSplit) {
+      temp = {
+        directory: true,
+        fileName: i[i.length - 1],
+        hidden: (i[i.length - 1][0] === '.'),
+        absolute: i.join("/"),
+        files: [],
+        length: i.length,
+      };
+      for (let j of result) {
+        temp2 = j.absolute.split("/");
+        if (!j.directory) {
+          if (temp2.length - 1 === i.length) {
+            if ((new RegExp('^' + temp.absolute)).test(j.absolute)) {
+              temp.files.push(j);
+            }
+          }
+        }
+      }
+      filterSplitJoin.push(temp);
+    }
+
+    filterSplitJoin.sort((a, b) => {
+      return a.length - b.length;
+    });
+
+    maxLength = filterSplitJoin[filterSplitJoin.length - 1].length;
+    minLength = filterSplitJoin[0].length;
+
+    lengthArr = [];
+    for (let i = minLength; i < maxLength + 1; i++) {
+      temp = [];
+      for (let j of filterSplitJoin) {
+        if (j.length === i) {
+          temp.push(j);
+        }
+      }
+      lengthArr.push(temp);
+    }
+
+    finalJson = [];
+    finalJson.push(filterSplitJoin[0]);
+
+    const directoryParsing = function (arr) {
+      for (let obj of arr) {
+        if (obj.directory) {
+          for (let i = 0; i < filterSplitJoin.length; i++) {
+            if (filterSplitJoin[i].directory) {
+              if ((new RegExp('^' + obj.absolute)).test(filterSplitJoin[i].absolute) && (obj.length + 1 === filterSplitJoin[i].length)) {
+                obj.files.push(filterSplitJoin[i]);
+              }
+            }
+          }
+        }
+      }
+      for (let i of arr) {
+        if (i.files !== undefined) {
+          i.files = directoryParsing(i.files);
+        }
+      }
+      return arr;
+    }
+
+    return directoryParsing(finalJson);
+  }
+  return { flat: makeFileArr(target), tree: setTree(target) };
+}
+
 module.exports = Mother;
