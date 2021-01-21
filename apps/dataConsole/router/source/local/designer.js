@@ -3571,8 +3571,8 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
         background: "#404040",
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
-        height: String(window.innerHeight - instance.belowHeight) + ea,
+        width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+        height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
         zIndex: String(2),
       };
       for (let i in style) {
@@ -4176,8 +4176,8 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
   //         background: "#404040",
   //         top: String(0) + ea,
   //         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-  //         width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
-  //         height: String(window.innerHeight - instance.belowHeight) + ea,
+  //         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+  //         height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
   //         zIndex: String(2),
   //       };
   //       for (let i in style) {
@@ -4363,8 +4363,8 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
           background: "#404040",
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0)) + ea,
-          height: String(window.innerHeight - instance.belowHeight) + ea,
+          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
           zIndex: String(2),
         };
         for (let i in style) {
