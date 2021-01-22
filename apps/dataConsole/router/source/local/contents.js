@@ -1153,15 +1153,24 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
         }
 
         eventFunc = function (e) {
-          if (this.style.background === "white") {
-            this.style.background = "#2fa678";
-            for (let i of this.children) {
-              i.style.color = "white";
+          const thisIndex = Number(this.getAttribute("index"));
+          let temp;
+          for (let i = 0; i < GeneralJs.stacks["snsAdjustDom0"].length; i++) {
+            if (i !== thisIndex) {
+              temp = GeneralJs.stacks["snsAdjustDom0"][i].dom;
+              GeneralJs.stacks["snsAdjustDom0"][i].onoff = "off";
+              temp.style.background = "white";
+              temp.firstChild.style.color = "#202020";
+              temp.lastChild.style.color = "#2fa678";
+            } else {
+              temp = GeneralJs.stacks["snsAdjustDom0"][thisIndex].dom;
+              GeneralJs.stacks["snsAdjustDom0"][thisIndex].onoff = "on";
+              GeneralJs.stacks["snsAdjustDom0"].target = GeneralJs.stacks["snsAdjustDom0"][thisIndex].dom;
+              temp.style.background = "#2fa678";
+              for (let j of temp.children) {
+                j.style.color = "white";
+              }
             }
-          } else {
-            this.style.background = "white";
-            this.firstChild.style.color = "#202020";
-            this.lastChild.style.color = "#2fa678";
           }
         }
 
@@ -1177,67 +1186,35 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
         const today = new Date();
 
         doms = [
-          { method: "블로그", link: "blog.naver.com" },
-          { method: "인스타그램", link: "instagram.com" },
-          { method: "유튜브", link: "youtube.com" },
+          { method: "블로그", link: "blog.naver.com", keyWords: "B", },
+          { method: "인스타그램", link: "instagram.com", keyWords: "I", },
+          { method: "유튜브", link: "youtube.com", keyWords: "Y", },
         ];
         num = doms.length;
 
         eventFunc = function (e) {
-          if (this.style.background === "white") {
-            this.style.background = "#2fa678";
-            for (let i of this.children) {
-              i.style.color = "white";
+          const thisIndex = Number(this.getAttribute("index"));
+          let temp;
+          for (let i = 0; i < GeneralJs.stacks["snsAdjustDom1"].length; i++) {
+            if (i !== thisIndex) {
+              temp = GeneralJs.stacks["snsAdjustDom1"][i].dom;
+              GeneralJs.stacks["snsAdjustDom1"][i].onoff = "off";
+              temp.style.background = "white";
+              temp.firstChild.style.color = "#202020";
+              temp.lastChild.style.color = "#2fa678";
+            } else {
+              temp = GeneralJs.stacks["snsAdjustDom1"][thisIndex].dom;
+              GeneralJs.stacks["snsAdjustDom1"][thisIndex].onoff = "on";
+              GeneralJs.stacks["snsAdjustDom1"].target = GeneralJs.stacks["snsAdjustDom1"][thisIndex].dom;
+              temp.style.background = "#2fa678";
+              for (let j of temp.children) {
+                j.style.color = "white";
+              }
             }
-          } else {
-            this.style.background = "white";
-            this.firstChild.style.color = "#202020";
-            this.lastChild.style.color = "#2fa678";
           }
         }
 
-        titleEventFunc = function (e) {
-          let num, eventArr;
-          if (this.getAttribute("onoff") === "off") {
-            eventArr = [];
-            num = 0;
-            for (let obj of filterDoms) {
-              if (num !== 1) {
-                obj.entire.style.display = "none";
-              }
-              num++;
-            }
-            this.setAttribute("onoff", "on");
-            for (let { photoDate, name, designer, proid } of doms) {
-              eventArr.push({ date: photoDate, title: `${name}C / ${designer}D`, eventFunc: function (e) {
-                window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + proid, "_blank");
-              }});
-            }
-
-            const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
-              bigMode: true,
-              width: "calc(100% - 333px)",
-              height: "calc(100% - 29px)",
-              events: eventArr
-            });
-            calendar.calendarBase.style.position = "absolute";
-            calendar.calendarBase.style.top = String(31) + ea;
-            calendar.calendarBase.style.left = String(314) + ea;
-            filterDoms.tong.appendChild(calendar.calendarBase);
-
-
-          } else {
-            num = 0;
-            for (let obj of filterDoms) {
-              if (num !== 1) {
-                obj.entire.style.display = "inline-block";
-              }
-              num++;
-            }
-            this.setAttribute("onoff", "off");
-            filterDoms.tong.removeChild(filterDoms.tong.lastChild);
-          }
-        }
+        titleEventFunc = function (e) {}
 
         return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
@@ -1249,21 +1226,30 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
         const today = new Date();
 
         doms = [
-          { method: "포트폴리오", link: "portfolio" },
-          { method: "고객 후기", link: "review" },
+          { method: "포트폴리오", link: "portfolio", keyWords: "portfolio" },
+          { method: "고객 후기", link: "review", keyWords: "review" },
         ];
         num = doms.length;
 
         eventFunc = function (e) {
-          if (this.style.background === "white") {
-            this.style.background = "#2fa678";
-            for (let i of this.children) {
-              i.style.color = "white";
+          const thisIndex = Number(this.getAttribute("index"));
+          let temp;
+          for (let i = 0; i < GeneralJs.stacks["snsAdjustDom2"].length; i++) {
+            if (i !== thisIndex) {
+              temp = GeneralJs.stacks["snsAdjustDom2"][i].dom;
+              GeneralJs.stacks["snsAdjustDom2"][i].onoff = "off";
+              temp.style.background = "white";
+              temp.firstChild.style.color = "#202020";
+              temp.lastChild.style.color = "#2fa678";
+            } else {
+              temp = GeneralJs.stacks["snsAdjustDom2"][thisIndex].dom;
+              GeneralJs.stacks["snsAdjustDom2"][thisIndex].onoff = "on";
+              GeneralJs.stacks["snsAdjustDom2"].target = GeneralJs.stacks["snsAdjustDom2"][thisIndex].dom;
+              temp.style.background = "#2fa678";
+              for (let j of temp.children) {
+                j.style.color = "white";
+              }
             }
-          } else {
-            this.style.background = "white";
-            this.firstChild.style.color = "#202020";
-            this.lastChild.style.color = "#2fa678";
           }
         }
 
@@ -1439,10 +1425,15 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
       scrollBox.style[j] = scrollBoxStyle[j];
     }
 
+    GeneralJs.stacks["snsAdjustDom" + String(i)] = [];
+    GeneralJs.stacks["snsAdjustDom" + String(i)].target = null;
     for (let j = 0; j < result.number; j++) {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       for (let k in factorStyle) {
         div_clone.style[k] = factorStyle[k];
+      }
+      if (i !== 0) {
+        div_clone.setAttribute("keywords", result.doms[j].keyWords);
       }
 
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -1476,8 +1467,9 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
         div_clone.setAttribute("photoDate", ((result.doms[j].photoDate === null) ? "null" : String(result.doms[j].photoDate.valueOf())));
       }
 
+      div_clone.setAttribute("index", String(j));
       div_clone.addEventListener("click", result.eventFunc);
-
+      GeneralJs.stacks["snsAdjustDom" + String(i)].push({ dom: div_clone, onoff: "off" });
       scrollBox.appendChild(div_clone);
     }
 
@@ -1491,7 +1483,22 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
     filterDoms.push(tempObj);
   }
 
-  const calendar = this.mother.makeCalendar(new Date(), function (e) {}, {
+  const calendar = this.mother.makeCalendar(new Date(), function (e) {
+    let [ year, month, date ] = this.getAttribute("buttonValue").split("-");
+    let title;
+
+    if (GeneralJs.stacks["snsAdjustDom0"].target !== null && GeneralJs.stacks["snsAdjustDom1"].target !== null && GeneralJs.stacks["snsAdjustDom2"].target !== null) {
+      year = Number(year);
+      month = Number(month) - 1;
+      date = Number(date);
+
+      title = GeneralJs.stacks["snsAdjustDom1"].target.getAttribute("keywords") + ") " + GeneralJs.stacks["snsAdjustDom0"].target.getAttribute("name") + " " + GeneralJs.stacks["snsAdjustDom2"].target.getAttribute("keywords");
+      this.setDateEvents([ { date: new Date(year, month, date, 11, 0, 0), title, eventFunc: function (e) {} } ], false);
+    } else {
+      instance.mother.greenAlert("컨텐츠 / 채널 / 종류를 선택해주세요!");
+    }
+
+  }, {
     bigMode: true,
     width: "calc(100% - " + String((Math.floor((entireWidth + areaMargin) / 5) * 2) + areaMargin) + ea + ")",
     height: "calc(100% - " + String(29) + ea + ")",

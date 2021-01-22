@@ -1702,10 +1702,122 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     let leftMargin;
     let indexNumber;
     let lineHeight;
+    let matrixField;
+    let eventStyle, circleEventStyle;
+    let eventInitTop, eventLeft;
+    let circleEventInitTop, circleEventLeft;
 
     ea = "px";
     leftMargin = 12;
     lineHeight = 20;
+
+    indexNumber = 0;
+    circleEventInitTop = 38.5;
+    circleEventLeft = 14;
+    eventInitTop = 32.5;
+    eventLeft = 21;
+
+    circleEventStyle = {
+      position: "absolute",
+      transformOrigin: "0 0",
+      transform: "scale(0.3)",
+      top: String(circleEventInitTop + (lineHeight * indexNumber)) + ea,
+      left: String(circleEventLeft) + ea,
+    };
+
+    eventStyle = {
+      position: "absolute",
+      fontSize: String(12) + ea,
+      fontWeight: String(400),
+      textAlign: "left",
+      color: "#404040",
+      cursor: "pointer",
+      top: String(eventInitTop + (lineHeight * indexNumber)) + ea,
+      left: String(eventLeft) + ea,
+    };
+
+    class MatrixDiv extends HTMLDivElement {
+
+      constructor() {
+        super();
+      }
+
+      setYear(year) {
+        this.year = year;
+      }
+
+      setMonth(month) {
+        this.month = month;
+      }
+
+      setDate(date) {
+        this.date = date;
+      }
+
+      setDateEvents(eventArr, hourOutput = true) {
+        const that = this;
+        let svg_clone;
+        let div_clone3;
+        let indexNumber;
+        let ea = "px";
+
+        eventArr.sort((a, b) => {
+          return a.date.valueOf() - b.date.valueOf();
+        });
+
+        if (this.indexNumber !== undefined) {
+          indexNumber = this.indexNumber;
+        } else {
+          indexNumber = 0;
+        }
+
+        if (this.getAttribute("date") !== null) {
+          for (let { date, title, eventFunc } of eventArr) {
+            if (date.getFullYear() === this.year && date.getMonth() === this.month && date.getDate() === this.date) {
+              svg_clone = SvgTong.stringParsing(instance.returnCircle("", "#2fa678"));
+              for (let k in circleEventStyle) {
+                svg_clone.style[k] = circleEventStyle[k];
+              }
+              svg_clone.style.top = String(circleEventInitTop + (lineHeight * indexNumber)) + ea;
+              this.appendChild(svg_clone);
+
+              div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+              div_clone3.classList.add("hoverDefault_lite");
+              for (let k in eventStyle) {
+                div_clone3.style[k] = eventStyle[k];
+              }
+              div_clone3.style.top = String(eventInitTop + (lineHeight * indexNumber)) + ea;
+              if (hourOutput) {
+                div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+              } else {
+                div_clone3.textContent = title;
+              }
+              div_clone3.addEventListener("click", function (e) {
+                e.stopPropagation();
+                eventFunc.call(this, e);
+              });
+              div_clone3.addEventListener("contextmenu", function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                this.parentNode.removeChild(this.previousElementSibling);
+                this.parentNode.removeChild(this);
+                that.indexNumber = that.indexNumber - 1;
+              });
+              this.appendChild(div_clone3);
+
+              indexNumber++;
+            }
+          }
+          this.indexNumber = indexNumber;
+        }
+
+      }
+
+    }
+    if (customElements.get("matrix-div") === undefined) {
+      customElements.define("matrix-div", MatrixDiv, { extends: "div" });
+    }
+    matrixField = document.createElement("div", { is : "matrix-div" });
 
     for (let i = 0; i < matrix.length + 1; i++) {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1728,7 +1840,9 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       }
 
       for (let j = 0; j < 7; j++) {
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2 = matrixField.cloneNode(true);
+        div_clone2.setYear(year);
+        div_clone2.setMonth(month);
         style = {
           display: "inline-block",
           position: "relative",
@@ -1736,6 +1850,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           height: ((option.bigMode === undefined) ? String(height / 8) + ea : String(100) + '%'),
           background: "white",
           cursor: "pointer",
+          overflow: "scroll",
           borderBottom: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
           borderRight: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
           boxSizing: ((option.bigMode === undefined) ? "initial" : "border-box"),
@@ -1767,6 +1882,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
 
         if (i !== 0 && matrix[i - 1][j] !== null) {
+          div_clone2.setDate(matrix[i - 1][j].date);
+          div_clone2.setAttribute("date", String(matrix[i - 1][j].date));
           div_clone2.setAttribute("buttonValue", dateToString(year, month, matrix[i - 1][j].date));
           div_clone2.setAttribute("dateEventMethod", "true");
           div_clone2.addEventListener("click", callback);
@@ -1812,48 +1929,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         if (option.events !== undefined) {
           if (i !== 0) {
             if (matrix[i - 1][j] !== null) {
-              indexNumber = 0;
-              option.events.sort((a, b) => {
-                return a.date.valueOf() - b.date.valueOf();
-              });
-              for (let { date, title, eventFunc } of option.events) {
-                if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === matrix[i - 1][j].date) {
-
-                  svg_clone = SvgTong.stringParsing(instance.returnCircle("", "#2fa678"));
-                  style = {
-                    position: "absolute",
-                    transformOrigin: "0 0",
-                    transform: "scale(0.35)",
-                    top: String(38.5 + (lineHeight * indexNumber)) + ea,
-                    left: String(14) + ea,
-                  };
-                  for (let k in style) {
-                    svg_clone.style[k] = style[k];
-                  }
-                  div_clone2.appendChild(svg_clone);
-
-                  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-                  div_clone3.classList.add("hoverDefault_lite");
-                  style = {
-                    position: "absolute",
-                    fontSize: String(12.5) + ea,
-                    fontWeight: String(400),
-                    textAlign: "left",
-                    color: "#404040",
-                    cursor: "pointer",
-                    top: String(32 + (lineHeight * indexNumber)) + ea,
-                    left: String(23) + ea,
-                  };
-                  for (let k in style) {
-                    div_clone3.style[k] = style[k];
-                  }
-                  div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
-                  div_clone3.addEventListener("click", eventFunc);
-                  div_clone2.appendChild(div_clone3);
-
-                  indexNumber++;
-                }
-              }
+              div_clone2.setDateEvents(option.events)
             }
           }
         }
