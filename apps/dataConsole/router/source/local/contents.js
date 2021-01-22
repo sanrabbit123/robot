@@ -1214,7 +1214,6 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               }});
             }
 
-
             const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
               bigMode: true,
               width: "calc(100% - 333px)",
@@ -1513,6 +1512,32 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
   const instance = this;
   const today = new Date();
   const filterDoms = [];
+  const motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/gi, ''));
+  const motherHeight = Number(mother.style.height.replace(/[^0-9\.\-]/gi, ''));
+  let tong, entireBox, titleBox, poolBox;
+  let scrollBase, scrollBox;
+  let div_clone, div_clone2;
+  let style;
+  let entireStyle, titleStyle, poolStyle;
+  let scrollBaseStyle, scrollBoxStyle;
+  let factorStyle;
+  let cardStyle, cardStyle2;
+  let ea;
+  let margin;
+  let entireWidth, entireHeight;
+  let titleHeight, areaMargin;
+  let titleFont;
+  let result;
+  let tempObj;
+
+  ea = "px";
+  margin = 50;
+  entireWidth = motherWidth - (margin * 2);
+  entireHeight = motherHeight - (margin * 2);
+  titleHeight = 32;
+  areaMargin = 19;
+  titleFont = 17;
+
   const area = [
     {
       title: "촬영 일자 조정 필요",
@@ -1580,13 +1605,13 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
             }
             const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
               bigMode: true,
-              width: "calc(100% - 333px)",
+              width: "calc(100% - " + String((Math.floor((entireWidth + areaMargin) / area.length)) + areaMargin) + ea + ")",
               height: "calc(100% - 29px)",
               events: eventArr
             });
             calendar.calendarBase.style.position = "absolute";
             calendar.calendarBase.style.top = String(31) + ea;
-            calendar.calendarBase.style.left = String(314) + ea;
+            calendar.calendarBase.style.left = String(Math.floor((entireWidth + areaMargin) / area.length)) + ea;
             filterDoms.tong.appendChild(calendar.calendarBase);
           } else {
             num = 0;
@@ -1647,14 +1672,15 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
             }
             const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
               bigMode: true,
-              width: "calc(100% - 333px)",
+              width: "calc(100% - " + String((Math.floor((entireWidth + areaMargin) / area.length)) + areaMargin) + ea + ")",
               height: "calc(100% - 29px)",
               events: eventArr
             });
             calendar.calendarBase.style.position = "absolute";
             calendar.calendarBase.style.top = String(31) + ea;
-            calendar.calendarBase.style.left = String(314) + ea;
+            calendar.calendarBase.style.left = String(Math.floor((entireWidth + areaMargin) / area.length)) + ea;
             filterDoms.tong.appendChild(calendar.calendarBase);
+
           } else {
             num = 0;
             for (let obj of filterDoms) {
@@ -1712,13 +1738,13 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
             }
             const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
               bigMode: true,
-              width: "calc(100% - 333px)",
+              width: "calc(100% - " + String((Math.floor((entireWidth + areaMargin) / area.length)) + areaMargin) + ea + ")",
               height: "calc(100% - 29px)",
               events: eventArr
             });
             calendar.calendarBase.style.position = "absolute";
             calendar.calendarBase.style.top = String(31) + ea;
-            calendar.calendarBase.style.left = String(314) + ea;
+            calendar.calendarBase.style.left = String(Math.floor((entireWidth + areaMargin) / area.length)) + ea;
             filterDoms.tong.appendChild(calendar.calendarBase);
           } else {
             num = 0;
@@ -1764,31 +1790,6 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
       },
     },
   ];
-  const motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/gi, ''));
-  const motherHeight = Number(mother.style.height.replace(/[^0-9\.\-]/gi, ''));
-  let tong, entireBox, titleBox, poolBox;
-  let scrollBase, scrollBox;
-  let div_clone, div_clone2;
-  let style;
-  let entireStyle, titleStyle, poolStyle;
-  let scrollBaseStyle, scrollBoxStyle;
-  let factorStyle;
-  let cardStyle, cardStyle2;
-  let ea;
-  let margin;
-  let entireWidth, entireHeight;
-  let titleHeight, areaMargin;
-  let titleFont;
-  let result;
-  let tempObj;
-
-  ea = "px";
-  margin = 50;
-  entireWidth = motherWidth - (margin * 2);
-  entireHeight = motherHeight - (margin * 2);
-  titleHeight = 32;
-  areaMargin = 19;
-  titleFont = 17;
 
   entireStyle = {
     display: "inline-block",
