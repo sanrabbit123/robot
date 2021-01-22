@@ -1680,7 +1680,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
 
   resultObj = new CalendarMatrix(this.dateMatrix);
   ea = "px";
-  titleHeight = height * 0.2;
+  titleHeight = (option.bigMode === undefined) ? height * 0.2 : 48;
   finalHeight0 = titleHeight;
   finalHeight2 = finalHeight0 * 0.38;
 
@@ -1696,24 +1696,35 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       return str;
     }
     let div_clone, div_clone2, div_clone3;
+    let svg_clone;
     let style;
     let ea;
     let leftMargin;
+    let indexNumber;
+    let lineHeight;
 
     ea = "px";
     leftMargin = 12;
+    lineHeight = 20;
 
     for (let i = 0; i < matrix.length + 1; i++) {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "relative",
-        height: String(height / 9) + ea,
+        height: ((option.bigMode === undefined) ? String(height / 9) + ea : "calc(calc(100% - " + String(36) + ea + ") / " + String(matrix.length) + ")"),
         background: "white",
         width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
         left: String(leftMargin * 1) + ea,
       };
+      if (option.bigMode !== undefined) {
+        style.width = String(100) + '%';
+        style.left = String(0) + ea;
+      }
       for (let j in style) {
         div_clone.style[j] = style[j];
+      }
+      if (option.bigMode !== undefined && i === 0) {
+        div_clone.style.height = String(36) + ea;
       }
 
       for (let j = 0; j < 7; j++) {
@@ -1722,13 +1733,39 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           display: "inline-block",
           position: "relative",
           width: "calc(100% / 7)",
-          height: String(height / 8) + ea,
+          height: ((option.bigMode === undefined) ? String(height / 8) + ea : String(100) + '%'),
           background: "white",
           cursor: "pointer",
+          borderBottom: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
+          borderRight: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
+          boxSizing: ((option.bigMode === undefined) ? "initial" : "border-box"),
         };
         for (let k in style) {
           div_clone2.style[k] = style[k];
         }
+
+        if (option.bigMode !== undefined && i === 0) {
+          div_clone2.style.background = "#f7f7f7";
+          div_clone2.style.borderTop = "1px solid #dddddd";
+          if (j === 0) {
+            div_clone2.style.borderTopLeftRadius = String(5) + ea;
+          } else if (j === 6) {
+            div_clone2.style.borderTopRightRadius = String(5) + ea;
+          }
+        }
+
+        if (option.bigMode !== undefined && j === 0) {
+          div_clone2.style.borderLeft = "1px solid #dddddd";
+        }
+
+        if (option.bigMode !== undefined && i === matrix.length) {
+          if (j === 0) {
+            div_clone2.style.borderBottomLeftRadius = String(5) + ea;
+          } else if (j === 6) {
+            div_clone2.style.borderBottomRightRadius = String(5) + ea;
+          }
+        }
+
         if (i !== 0 && matrix[i - 1][j] !== null) {
           div_clone2.setAttribute("buttonValue", dateToString(year, month, matrix[i - 1][j].date));
           div_clone2.setAttribute("dateEventMethod", "true");
@@ -1742,7 +1779,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           fontSize: String(titleHeight * 0.25 * ((option.factorFont !== undefined) ? option.factorFont : 1)) + ea,
           fontWeight: ((i === 0) ? String(500) : String(200)),
           width: "100%",
-          textAlign: "center",
+          textAlign: ((option.bigMode === undefined) ? "center" : "left"),
           color: ((j < 5) ? "#404040" : "#2fa678"),
           cursor: "pointer",
         };
@@ -1751,19 +1788,76 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
         if (i === 0) {
           div_clone3.textContent = ([ 'M', 'T', 'W', 'T', 'F', 'S', 'S' ])[j];
+          if (option.bigMode !== undefined) {
+            div_clone3.style.textAlign = "center";
+            div_clone3.style.fontSize = String(14) + ea;
+            div_clone3.style.top = String(5.5) + ea;
+          }
         } else {
+          div_clone3.textContent = (matrix[i - 1][j] !== null) ? String(matrix[i - 1][j].date) : '';
+          if (option.bigMode !== undefined) {
+            div_clone3.style.fontSize = String(16) + ea;
+            div_clone3.style.top = String(6.5) + ea;
+            div_clone3.style.textIndent = String(14) + ea;
+          }
           if (matrix[i - 1][j] !== null) {
-            div_clone3.textContent = String(matrix[i - 1][j].date);
             if (thisDate === matrix[i - 1][j].date) {
               div_clone3.style.color = "#2fa678";
               div_clone3.style.fontWeight = String(400);
             }
-          } else {
-            div_clone3.textContent = '';
+          }
+        }
+        div_clone2.appendChild(div_clone3);
+
+        if (option.events !== undefined) {
+          if (i !== 0) {
+            if (matrix[i - 1][j] !== null) {
+              indexNumber = 0;
+              option.events.sort((a, b) => {
+                return a.date.valueOf() - b.date.valueOf();
+              });
+              for (let { date, title, eventFunc } of option.events) {
+                if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === matrix[i - 1][j].date) {
+
+                  svg_clone = SvgTong.stringParsing(instance.returnCircle("", "#2fa678"));
+                  style = {
+                    position: "absolute",
+                    transformOrigin: "0 0",
+                    transform: "scale(0.35)",
+                    top: String(38.5 + (lineHeight * indexNumber)) + ea,
+                    left: String(14) + ea,
+                  };
+                  for (let k in style) {
+                    svg_clone.style[k] = style[k];
+                  }
+                  div_clone2.appendChild(svg_clone);
+
+                  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+                  div_clone3.classList.add("hoverDefault_lite");
+                  style = {
+                    position: "absolute",
+                    fontSize: String(12.5) + ea,
+                    fontWeight: String(400),
+                    textAlign: "left",
+                    color: "#404040",
+                    cursor: "pointer",
+                    top: String(32 + (lineHeight * indexNumber)) + ea,
+                    left: String(23) + ea,
+                  };
+                  for (let k in style) {
+                    div_clone3.style[k] = style[k];
+                  }
+                  div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+                  div_clone3.addEventListener("click", eventFunc);
+                  div_clone2.appendChild(div_clone3);
+
+                  indexNumber++;
+                }
+              }
+            }
           }
         }
 
-        div_clone2.appendChild(div_clone3);
         div_clone.appendChild(div_clone2);
       }
 
@@ -1777,8 +1871,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     position: "relative",
     top: String(0) + ea,
     left: String(option.left !== undefined ? option.left : 0) + ea,
-    width: String(width) + ea,
-    height: String(height) + ea,
+    width: ((option.bigMode === undefined) ? String(width) + ea : option.width),
+    height: ((option.bigMode === undefined) ? String(height) + ea : option.height),
   };
   for (let i in style) {
     calendarBase.style[i] = style[i];
@@ -1794,6 +1888,9 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     height: "calc(100% - " + String(titleHeight) + ea + ")",
     marginTop: String(6 * ((option.margin !== undefined) ? option.margin : 1)) + ea,
   };
+  if (option.bigMode !== undefined) {
+    contentsZoneStyle.marginTop = String(0) + ea;
+  }
 
   //title zone -------------------------------------------------------------- start
   titleZone = GeneralJs.nodes.div.cloneNode(true);
@@ -1817,6 +1914,13 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
+
+  if (option.bigMode !== undefined) {
+    div_clone.style.bottom = "";
+    div_clone.style.top = String(-6) + ea;
+    div_clone.style.fontSize = String(29) + ea;
+  }
+
   div_clone.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
   titleZone.appendChild(div_clone);
 
@@ -1826,13 +1930,18 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   } else {
     arrowWidth = 9;
   }
+
+  if (option.bigMode !== undefined) {
+    arrowWidth = 11;
+  }
+
   svg_clone = SvgTong.stringParsing(this.returnArrow("left", "#2fa678"));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,
     height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
-    bottom: String(17) + ea,
-    left: String(23) + ea,
+    bottom: String(17 + ((option.bigMode === undefined) ? 0 : 7.5)) + ea,
+    left: String((option.bigMode === undefined) ? 23 : 1) + ea,
   };
   if (option.arrow !== undefined) {
     if (option.arrow.bottom !== undefined) {
@@ -1852,8 +1961,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     position: "absolute",
     width: String(arrowWidth + 15) + ea,
     height: String(arrowWidth + 15) + ea,
-    bottom: String(9) + ea,
-    left: String(16) + ea,
+    bottom: String(9 + ((option.bigMode === undefined) ? 0 : 7.5)) + ea,
+    left: String((option.bigMode === undefined) ? 16 : 1) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
@@ -1890,8 +1999,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     position: "absolute",
     width: String(arrowWidth) + ea,
     height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
-    bottom: String(17) + ea,
-    right: String(23) + ea,
+    bottom: String(17 + ((option.bigMode === undefined) ? 0 : 7.5)) + ea,
+    right: String((option.bigMode === undefined) ? 23 : 1) + ea,
   };
   if (option.arrow !== undefined) {
     if (option.arrow.bottom !== undefined) {
@@ -1911,8 +2020,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     position: "absolute",
     width: String(arrowWidth + 15) + ea,
     height: String(arrowWidth + 15) + ea,
-    bottom: String(9) + ea,
-    right: String(16) + ea,
+    bottom: String(9 + ((option.bigMode === undefined) ? 0 : 7.5)) + ea,
+    right: String((option.bigMode === undefined) ? 16 : 1) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
@@ -1951,12 +2060,16 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     contentsZone.style[i] = contentsZoneStyle[i];
   }
   matrixMaker(contentsZone, year, month, matrix, thisDate, width, height, titleHeight);
-  finalHeight1 = (height / 9) * (matrix.length + 1);
-  contentsZone.style.height = String(finalHeight1) + ea;
+  if (option.bigMode === undefined) {
+    finalHeight1 = (height / 9) * (matrix.length + 1);
+    contentsZone.style.height = String(finalHeight1) + ea;
+  }
   calendarBase.appendChild(contentsZone);
   //contents zone -------------------------------------------------------------- end
 
-  calendarBase.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+  if (option.bigMode === undefined) {
+    calendarBase.style.height = String(finalHeight0 + finalHeight1 + finalHeight2) + ea;
+  }
   resultObj.setHeight(finalHeight0 + finalHeight1 + finalHeight2);
   resultObj.setDoms(calendarBase, titleZone, contentsZone);
 

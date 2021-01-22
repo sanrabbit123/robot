@@ -1897,11 +1897,13 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       let docId;
       let rawContentsArr, rawContents;
       let thisObj;
+      let findContents;
 
       responseObj = {};
       thisObj = null;
       whereQuery = null;
       updateQuery = null;
+      findContents = null;
 
       if (button === "get") {
         resultObjArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
@@ -2040,7 +2042,10 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
 
         if (updateQuery["photo.link"] !== '') {
-          await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 원본 사진이 등록되었습니다! 선보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
+          findContents = await back.getContentsArrByQuery({ proid: id }, { selfMongo: instance.mongo });
+          if (findContents.length === 0) {
+            await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 원본 사진이 등록되었습니다! 선보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
+          }
         }
 
       }
@@ -2050,7 +2055,12 @@ DataRouter.prototype.rou_post_getRawContents = function () {
           thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
           thisObj = thisObj[0];
           if (thisObj.portfolio.exist && thisObj.review.exist && thisObj.photo.link !== "") {
-            await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 컨텐츠 교정 준비가 완료되었습니다! 보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
+            if (findContents === null) {
+              findContents = await back.getContentsArrByQuery({ proid: id }, { selfMongo: instance.mongo });
+            }
+            if (findContents.length === 0) {
+              await slack.chat.postMessage({ text: `${req.body.clientName}C_${req.body.designerName}D님의 컨텐츠 교정 준비가 완료되었습니다! 보정을 시작해주세요! link: https://${instance.address.backinfo.host}/contents?view=create&proid=${id}`, channel: "#503_contents" });
+            }
           }
         }
       }

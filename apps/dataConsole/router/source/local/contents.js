@@ -1132,14 +1132,392 @@ ContentsJs.prototype.spreadData = async function (search = null) {
   }
 }
 
+ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
+  const instance = this;
+  const today = new Date();
+  const filterDoms = [];
+  const items = [];
+  const area = [
+    {
+      title: "준비된 컨텐츠",
+      condition: function () {
+        let num, doms, eventFunc, titleEventFunc;
+        const today = new Date();
+
+        num = 0;
+        doms = [];
+
+        for (let obj of proidArr) {
+          num = num + 1;
+          doms.push(obj);
+        }
+
+        eventFunc = function (e) {
+          if (this.style.background === "white") {
+            this.style.background = "#2fa678";
+            for (let i of this.children) {
+              i.style.color = "white";
+            }
+          } else {
+            this.style.background = "white";
+            this.firstChild.style.color = "#202020";
+            this.lastChild.style.color = "#2fa678";
+          }
+        }
+
+        titleEventFunc = function (e) {}
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
+      },
+    },
+    {
+      title: "발행 채널",
+      condition: function () {
+        let num, doms, eventFunc, titleEventFunc;
+        const today = new Date();
+
+        doms = [
+          { method: "블로그", link: "blog.naver.com" },
+          { method: "인스타그램", link: "instagram.com" },
+          { method: "유튜브", link: "youtube.com" },
+        ];
+        num = doms.length;
+
+        eventFunc = function (e) {
+          if (this.style.background === "white") {
+            this.style.background = "#2fa678";
+            for (let i of this.children) {
+              i.style.color = "white";
+            }
+          } else {
+            this.style.background = "white";
+            this.firstChild.style.color = "#202020";
+            this.lastChild.style.color = "#2fa678";
+          }
+        }
+
+        titleEventFunc = function (e) {
+          let num, eventArr;
+          if (this.getAttribute("onoff") === "off") {
+            eventArr = [];
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 1) {
+                obj.entire.style.display = "none";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "on");
+            for (let { photoDate, name, designer, proid } of doms) {
+              eventArr.push({ date: photoDate, title: `${name}C / ${designer}D`, eventFunc: function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + proid, "_blank");
+              }});
+            }
+
+
+            const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
+              bigMode: true,
+              width: "calc(100% - 333px)",
+              height: "calc(100% - 29px)",
+              events: eventArr
+            });
+            calendar.calendarBase.style.position = "absolute";
+            calendar.calendarBase.style.top = String(31) + ea;
+            calendar.calendarBase.style.left = String(314) + ea;
+            filterDoms.tong.appendChild(calendar.calendarBase);
+
+
+          } else {
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 1) {
+                obj.entire.style.display = "inline-block";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "off");
+            filterDoms.tong.removeChild(filterDoms.tong.lastChild);
+          }
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
+      },
+    },
+    {
+      title: "컨텐츠 종류",
+      condition: function () {
+        let num, doms, eventFunc, titleEventFunc;
+        const today = new Date();
+
+        doms = [
+          { method: "포트폴리오", link: "portfolio" },
+          { method: "고객 후기", link: "review" },
+        ];
+        num = doms.length;
+
+        eventFunc = function (e) {
+          if (this.style.background === "white") {
+            this.style.background = "#2fa678";
+            for (let i of this.children) {
+              i.style.color = "white";
+            }
+          } else {
+            this.style.background = "white";
+            this.firstChild.style.color = "#202020";
+            this.lastChild.style.color = "#2fa678";
+          }
+        }
+
+        titleEventFunc = function (e) {}
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
+      },
+    },
+  ];
+  const motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/gi, ''));
+  const motherHeight = Number(mother.style.height.replace(/[^0-9\.\-]/gi, ''));
+  let tong, entireBox, titleBox, poolBox;
+  let scrollBase, scrollBox;
+  let div_clone, div_clone2;
+  let style;
+  let entireStyle, titleStyle, poolStyle;
+  let scrollBaseStyle, scrollBoxStyle;
+  let factorStyle;
+  let cardStyle, cardStyle2;
+  let ea;
+  let margin;
+  let entireWidth, entireHeight;
+  let titleHeight, areaMargin;
+  let titleFont;
+  let result;
+  let tempObj, tempArr;
+
+  ea = "px";
+  margin = 50;
+  entireWidth = motherWidth - (margin * 2);
+  entireHeight = motherHeight - (margin * 2);
+  titleHeight = 32;
+  areaMargin = 19;
+  titleFont = 17;
+
+  entireStyle = {
+    display: "inline-block",
+    position: "relative",
+    width: String(Math.floor((entireWidth + areaMargin) / 5)) + ea,
+    height: String(100) + '%',
+  };
+
+  titleStyle = {
+    position: "absolute",
+    top: String(0) + ea,
+    left: String(1) + ea,
+    fontSize: String(titleFont) + ea,
+    fontWeight: String(600),
+  };
+
+  poolStyle = {
+    position: "relative",
+    marginTop: String(titleHeight) + ea,
+    width: "calc(100% - " + String(areaMargin) + ea + ")",
+    height: "calc(100% - " + String(titleHeight) + ea + ")",
+    border: "1px solid #dddddd",
+    borderRadius: String(5) + ea,
+  };
+
+  scrollBaseStyle = {
+    position: "absolute",
+    background: "#f2f2f2",
+    borderRadius: String(5) + ea,
+    width: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    height: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    top: String(areaMargin * (2 / 3)) + ea,
+    left: String(areaMargin * (2 / 3)) + ea,
+    overflow: "scroll",
+    border: "3px solid #f2f2f2",
+    boxSizing: "border-box",
+  };
+
+  scrollBoxStyle = {
+    position: "relative",
+    height: String(motherHeight * 5) + ea,
+    background: "#f2f2f2",
+    width: "calc(100% - " + String(areaMargin * (4 / 3)) + ea + ")",
+    top: String(areaMargin * (2 / 3)) + ea,
+    left: String(areaMargin * (2 / 3)) + ea,
+  };
+
+  factorStyle = {
+    display: "block",
+    position: "relative",
+    width: String(100) + '%',
+    height: String(42) + ea,
+    background: "white",
+    marginBottom: String(Math.floor(areaMargin * 0.4)) + ea,
+    borderRadius: String(3) + ea,
+    cursor: "pointer",
+    transition: "all 0s ease",
+  };
+
+  cardStyle = {
+    fontSize: String(16) + ea,
+    fontWeight: String(200),
+    position: "absolute",
+    top: String(9) + ea,
+    left: String(13) + ea,
+    color: "#202020",
+    cursor: "pointer",
+    transition: "all 0s ease",
+  };
+
+  cardStyle2 = {
+    fontSize: String(12) + ea,
+    fontWeight: String(400),
+    position: "absolute",
+    top: String(11.5) + ea,
+    right: String(13) + ea,
+    color: "#2fa678",
+    cursor: "pointer",
+    transition: "all 0s ease",
+  };
+
+  tong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "block",
+    position: "relative",
+    left: String(margin) + ea,
+    top: String(margin) + ea,
+    width: String(entireWidth + areaMargin) + ea,
+    height: String(entireHeight) + ea,
+  };
+  for (let i in style) {
+    tong.style[i] = style[i];
+  }
+
+  for (let i = 0; i < area.length; i++) {
+    result = area[i].condition();
+    tempObj = {};
+    tempArr = [];
+
+    entireBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in entireStyle) {
+      entireBox.style[j] = entireStyle[j];
+    }
+    tempObj.entire = entireBox;
+    if (i !== 0) {
+      entireBox.style.position = "absolute";
+      entireBox.style.height = String(48.7) + '%';
+      entireBox.style.left = entireStyle.width;
+      if (i === 1) {
+        entireBox.style.top = String(0) + ea;
+      } else {
+        entireBox.style.bottom = String(0) + ea;
+      }
+    }
+
+    titleBox = GeneralJs.nodes.div.cloneNode(true);
+    titleBox.classList.add("hoverDefault_lite");
+    titleBox.textContent = area[i].title;
+    for (let j in titleStyle) {
+      titleBox.style[j] = titleStyle[j];
+    }
+    titleBox.addEventListener("click", result.titleEventFunc);
+    titleBox.setAttribute("onoff", "off");
+    entireBox.appendChild(titleBox);
+    tempObj.title = titleBox;
+
+    poolBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in poolStyle) {
+      poolBox.style[j] = poolStyle[j];
+    }
+
+    scrollBase = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in scrollBaseStyle) {
+      scrollBase.style[j] = scrollBaseStyle[j];
+    }
+
+    scrollBox = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in scrollBoxStyle) {
+      scrollBox.style[j] = scrollBoxStyle[j];
+    }
+
+    for (let j = 0; j < result.number; j++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in factorStyle) {
+        div_clone.style[k] = factorStyle[k];
+      }
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in cardStyle) {
+        div_clone2.style[k] = cardStyle[k];
+      }
+      if (i === 0) {
+        div_clone2.insertAdjacentHTML("beforeend", `${result.doms[j].name}C / ${result.doms[j].designer}D`);
+      } else {
+        div_clone2.insertAdjacentHTML("beforeend", result.doms[j].method);
+      }
+      div_clone.appendChild(div_clone2);
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      for (let k in cardStyle2) {
+        div_clone2.style[k] = cardStyle2[k];
+      }
+      if (i === 0) {
+        div_clone2.insertAdjacentHTML("beforeend", `${result.doms[j].proid}`);
+      } else {
+        div_clone2.insertAdjacentHTML("beforeend", `${result.doms[j].link}`);
+      }
+      div_clone.appendChild(div_clone2);
+
+      if (i === 0) {
+        div_clone.setAttribute("cliid", result.doms[j].cliid);
+        div_clone.setAttribute("proid", result.doms[j].proid);
+        div_clone.setAttribute("name", result.doms[j].name);
+        div_clone.setAttribute("desid", result.doms[j].desid);
+        div_clone.setAttribute("designer", result.doms[j].designer);
+        div_clone.setAttribute("photoDate", ((result.doms[j].photoDate === null) ? "null" : String(result.doms[j].photoDate.valueOf())));
+      }
+
+      div_clone.addEventListener("click", result.eventFunc);
+
+      scrollBox.appendChild(div_clone);
+    }
+
+    scrollBase.appendChild(scrollBox);
+    poolBox.appendChild(scrollBase);
+    entireBox.appendChild(poolBox);
+
+    tempObj.pool = poolBox;
+
+    tong.appendChild(entireBox);
+    filterDoms.push(tempObj);
+  }
+
+  const calendar = this.mother.makeCalendar(new Date(), function (e) {}, {
+    bigMode: true,
+    width: "calc(100% - " + String((Math.floor((entireWidth + areaMargin) / 5) * 2) + areaMargin) + ea + ")",
+    height: "calc(100% - " + String(29) + ea + ")",
+    events: [],
+  });
+  calendar.calendarBase.style.position = "absolute";
+  calendar.calendarBase.style.top = String(31) + ea;
+  calendar.calendarBase.style.left = String(Math.floor((entireWidth + areaMargin) / 5) * 2) + ea;
+  tong.appendChild(calendar.calendarBase);
+
+  filterDoms.tong = tong;
+  mother.appendChild(tong);
+
+  callback();
+}
+
 ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback) {
   const instance = this;
   const today = new Date();
+  const filterDoms = [];
   const area = [
     {
       title: "촬영 일자 조정 필요",
       condition: function () {
-        let num, doms, eventFunc;
+        let num, doms, eventFunc, titleEventFunc;
         const today = new Date();
 
         num = 0;
@@ -1156,13 +1534,15 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
           window.open(window.location.protocol + "//" + window.location.host + "/contents?" + "proid=" + this.getAttribute("proid") + "&view=create", "_blank");
         }
 
-        return { number: num, doms: doms, eventFunc: eventFunc };
+        titleEventFunc = function (e) {}
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
     },
     {
       title: "촬영 대기중",
       condition: function () {
-        let num, doms, eventFunc;
+        let num, doms, eventFunc, titleEventFunc;
         const today = new Date();
 
         num = 0;
@@ -1181,13 +1561,53 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
           window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
         }
 
-        return { number: num, doms: doms, eventFunc: eventFunc };
+        titleEventFunc = function (e) {
+          let num, eventArr;
+          if (this.getAttribute("onoff") === "off") {
+            eventArr = [];
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 1) {
+                obj.entire.style.display = "none";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "on");
+            for (let { photoDate, name, designer, proid } of doms) {
+              eventArr.push({ date: photoDate, title: `${name}C / ${designer}D`, eventFunc: function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + proid, "_blank");
+              }});
+            }
+            const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
+              bigMode: true,
+              width: "calc(100% - 333px)",
+              height: "calc(100% - 29px)",
+              events: eventArr
+            });
+            calendar.calendarBase.style.position = "absolute";
+            calendar.calendarBase.style.top = String(31) + ea;
+            calendar.calendarBase.style.left = String(314) + ea;
+            filterDoms.tong.appendChild(calendar.calendarBase);
+          } else {
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 1) {
+                obj.entire.style.display = "inline-block";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "off");
+            filterDoms.tong.removeChild(filterDoms.tong.lastChild);
+          }
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
     },
     {
       title: "원본 사진 대기중",
       condition: function () {
-        let num, doms, eventFunc;
+        let num, doms, eventFunc, titleEventFunc;
         const today = new Date();
 
         num = 0;
@@ -1208,13 +1628,53 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
           window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
         }
 
-        return { number: num, doms: doms, eventFunc: eventFunc };
+        titleEventFunc = function (e) {
+          let num, eventArr;
+          if (this.getAttribute("onoff") === "off") {
+            eventArr = [];
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 2) {
+                obj.entire.style.display = "none";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "on");
+            for (let { photoDate, name, designer, proid } of doms) {
+              eventArr.push({ date: photoDate, title: `${name}C / ${designer}D`, eventFunc: function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + proid, "_blank");
+              }});
+            }
+            const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
+              bigMode: true,
+              width: "calc(100% - 333px)",
+              height: "calc(100% - 29px)",
+              events: eventArr
+            });
+            calendar.calendarBase.style.position = "absolute";
+            calendar.calendarBase.style.top = String(31) + ea;
+            calendar.calendarBase.style.left = String(314) + ea;
+            filterDoms.tong.appendChild(calendar.calendarBase);
+          } else {
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 2) {
+                obj.entire.style.display = "inline-block";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "off");
+            filterDoms.tong.removeChild(filterDoms.tong.lastChild);
+          }
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
     },
     {
       title: "원본 컨텐츠 대기중",
       condition: function () {
-        let num, doms, eventFunc;
+        let num, doms, eventFunc, titleEventFunc;
         const today = new Date();
 
         num = 0;
@@ -1233,13 +1693,53 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
           window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
         }
 
-        return { number: num, doms: doms, eventFunc: eventFunc };
+        titleEventFunc = function (e) {
+          let num, eventArr;
+          if (this.getAttribute("onoff") === "off") {
+            eventArr = [];
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 3) {
+                obj.entire.style.display = "none";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "on");
+            for (let { photoDate, name, designer, proid } of doms) {
+              eventArr.push({ date: photoDate, title: `${name}C / ${designer}D`, eventFunc: function (e) {
+                window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + proid, "_blank");
+              }});
+            }
+            const calendar = instance.mother.makeCalendar(new Date(), function (e) {}, {
+              bigMode: true,
+              width: "calc(100% - 333px)",
+              height: "calc(100% - 29px)",
+              events: eventArr
+            });
+            calendar.calendarBase.style.position = "absolute";
+            calendar.calendarBase.style.top = String(31) + ea;
+            calendar.calendarBase.style.left = String(314) + ea;
+            filterDoms.tong.appendChild(calendar.calendarBase);
+          } else {
+            num = 0;
+            for (let obj of filterDoms) {
+              if (num !== 3) {
+                obj.entire.style.display = "inline-block";
+              }
+              num++;
+            }
+            this.setAttribute("onoff", "off");
+            filterDoms.tong.removeChild(filterDoms.tong.lastChild);
+          }
+        }
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
     },
     {
       title: "컨텐츠 교정 대기중",
       condition: function () {
-        let num, doms, eventFunc;
+        let num, doms, eventFunc, titleEventFunc;
         const today = new Date();
 
         num = 0;
@@ -1255,10 +1755,12 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
         }
 
         eventFunc = function (e) {
-          window.open(window.location.protocol + "//" + window.location.host + "/project?" + "proid=" + this.getAttribute("proid"), "_blank");
+          window.open(window.location.protocol + "//" + window.location.host + "/contents?" + "proid=" + this.getAttribute("proid") + "&view=create", "_blank");
         }
 
-        return { number: num, doms: doms, eventFunc: eventFunc };
+        titleEventFunc = function (e) {}
+
+        return { number: num, doms: doms, eventFunc: eventFunc, titleEventFunc: titleEventFunc };
       },
     },
   ];
@@ -1278,6 +1780,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
   let titleHeight, areaMargin;
   let titleFont;
   let result;
+  let tempObj;
 
   ea = "px";
   margin = 50;
@@ -1378,17 +1881,25 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
   }
 
   for (let i = 0; i < area.length; i++) {
+    result = area[i].condition();
+    tempObj = {};
+
     entireBox = GeneralJs.nodes.div.cloneNode(true);
     for (let j in entireStyle) {
       entireBox.style[j] = entireStyle[j];
     }
+    tempObj.entire = entireBox;
 
     titleBox = GeneralJs.nodes.div.cloneNode(true);
+    titleBox.classList.add("hoverDefault_lite");
     titleBox.textContent = area[i].title;
     for (let j in titleStyle) {
       titleBox.style[j] = titleStyle[j];
     }
+    titleBox.addEventListener("click", result.titleEventFunc);
+    titleBox.setAttribute("onoff", "off");
     entireBox.appendChild(titleBox);
+    tempObj.title = titleBox;
 
     poolBox = GeneralJs.nodes.div.cloneNode(true);
     for (let j in poolStyle) {
@@ -1404,8 +1915,6 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     for (let j in scrollBoxStyle) {
       scrollBox.style[j] = scrollBoxStyle[j];
     }
-
-    result = area[i].condition();
 
     for (let j = 0; j < result.number; j++) {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1432,6 +1941,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
       div_clone.setAttribute("name", result.doms[j].name);
       div_clone.setAttribute("desid", result.doms[j].desid);
       div_clone.setAttribute("designer", result.doms[j].designer);
+      div_clone.setAttribute("photoDate", ((result.doms[j].photoDate === null) ? "null" : String(result.doms[j].photoDate.valueOf())));
       div_clone.addEventListener("click", result.eventFunc);
 
       scrollBox.appendChild(div_clone);
@@ -1441,16 +1951,20 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     poolBox.appendChild(scrollBase);
     entireBox.appendChild(poolBox);
 
+    tempObj.pool = poolBox;
+
     tong.appendChild(entireBox);
+    filterDoms.push(tempObj);
   }
+
+  filterDoms.tong = tong;
 
   mother.appendChild(tong);
 
   callback();
 }
 
-
-ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false) {
+ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false, mode = "filter") {
   const instance = this;
   return function () {
     let div_clone;
@@ -1525,25 +2039,33 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
       loadingIcon.style[i] = style[i];
     }
     div_clone.appendChild(loadingIcon);
-    instance.filterContentsMaker(proidArr, div_clone, function () {
-      div_clone.removeChild(loadingIcon);
-    });
+
+    if (mode === "filter") {
+      instance.filterContentsMaker(proidArr, div_clone, function () {
+        div_clone.removeChild(loadingIcon);
+      });
+    } else if (mode === "sns") {
+      instance.snsContentsMaker(proidArr, div_clone, function () {
+        div_clone.removeChild(loadingIcon);
+      });
+    }
+
     instance.whiteBox.contentsBox = div_clone;
     instance.totalContents.appendChild(div_clone);
     GeneralJs.stacks.whiteBox = 0;
   }
 }
 
-ContentsJs.prototype.filterViewMaker = function (proidArr) {
+ContentsJs.prototype.filterViewMaker = function (proidArr, mode = "filter") {
   const instance = this;
   return function (e) {
     let tempFunc;
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
-        tempFunc = instance.whiteCancelMaker(instance.filterViewMakerDetail(proidArr, true), true);
+        tempFunc = instance.whiteCancelMaker(instance.filterViewMakerDetail(proidArr, true, mode), true);
         tempFunc();
       } else if (instance.whiteBox === null) {
-        tempFunc = instance.filterViewMakerDetail(proidArr, false);
+        tempFunc = instance.filterViewMakerDetail(proidArr, false, mode);
         tempFunc();
       }
     }
@@ -1558,6 +2080,13 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
   const { cliid, proid, name, desid, designer } = objectInfo;
   const thisClientName = name;
   const thisDesignerName = designer;
+  const zeroAddtion = function (num) {
+    if (num < 10) {
+      return '0' + String(num);
+    } else {
+      return String(num);
+    }
+  }
   try {
     let thisProject;
     if (objectInfo.thisProject !== undefined) {
@@ -1774,7 +2303,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
             tempObj = '-';
           } else {
             tempDate = new Date(tempObj);
-            tempObj = String(tempDate.getFullYear()) + '-' + ((tempDate.getMonth() < 9) ? '0' + String(tempDate.getMonth() + 1) : String(tempDate.getMonth() + 1)) + '-' + ((tempDate.getDate() < 10) ? '0' + String(tempDate.getDate()) : String(tempDate.getDate()));
+            tempObj = String(tempDate.getFullYear()) + '-' + zeroAddtion(tempDate.getMonth() + 1) + '-' + zeroAddtion(tempDate.getDate()) + ' ' + zeroAddtion(tempDate.getHours()) + ':' + zeroAddtion(tempDate.getMinutes()) + ':' + zeroAddtion(tempDate.getSeconds());
           }
         }
 
@@ -1811,8 +2340,8 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
       style = {
         position: "absolute",
         bottom: String(buttonBottom) + ea,
-        right: String(122.5) + ea,
-        width: String(46) + ea,
+        right: String(199) + ea,
+        width: String(44.5) + ea,
         height: String(30) + ea,
         background: "#2fa678",
         borderRadius: String(3) + ea,
@@ -1823,11 +2352,11 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
 
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       style = {
-        fontSize: String(14) + ea,
+        fontSize: String(13.5) + ea,
         color: "white",
         fontWeight: String(600),
         position: "absolute",
-        top: String(GeneralJs.isMac() ? 4 : 5) + ea,
+        top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
         left: String(11) + ea,
       };
       for (let j in style) {
@@ -1934,7 +2463,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
       style = {
         position: "absolute",
         bottom: String(buttonBottom) + ea,
-        right: String(46) + ea,
+        right: String(123) + ea,
         width: String(72) + ea,
         height: String(30) + ea,
         background: "#2fa678",
@@ -1946,11 +2475,11 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
 
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       style = {
-        fontSize: String(14) + ea,
+        fontSize: String(13.5) + ea,
         color: "white",
         fontWeight: String(600),
         position: "absolute",
-        top: String(GeneralJs.isMac() ? 4 : 5) + ea,
+        top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
         left: String(12) + ea,
       };
       for (let j in style) {
@@ -1962,6 +2491,43 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
         photoInput.value = pastValuesArr[0];
         photographerInput.value = pastValuesArr[1];
         interviewerInput.value = pastValuesArr[2];
+      });
+      white.appendChild(div_clone);
+
+      //button2
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("hoverDefault");
+      style = {
+        position: "absolute",
+        bottom: String(buttonBottom) + ea,
+        right: String(46) + ea,
+        width: String(73.5) + ea,
+        height: String(30) + ea,
+        background: "#2fa678",
+        borderRadius: String(3) + ea,
+      };
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        fontSize: String(13.5) + ea,
+        color: "white",
+        fontWeight: String(600),
+        position: "absolute",
+        top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
+        left: String(12) + ea,
+      };
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      div_clone2.textContent = "촬영 취소";
+      div_clone.appendChild(div_clone2);
+      div_clone.addEventListener("click", function (e) {
+        photoInput.value = '-';
+        photographerInput.value = '';
+        interviewerInput.value = '';
       });
       white.appendChild(div_clone);
 
@@ -2231,11 +2797,11 @@ ContentsJs.prototype.cardViewMaker = function () {
         }
       }
 
-      proidArrMaker = function () {
+      proidArrMaker = function (index) {
         return function (e) {
           let proidArr;
           let whiteOnEvent;
-          const { gray } = createViewDoms[0];
+          const { gray } = createViewDoms[index];
 
           proidArr = [];
           for (let dom of gray.firstChild.children) {
@@ -2254,7 +2820,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             });
           }
 
-          whiteOnEvent = instance.filterViewMaker(proidArr);
+          whiteOnEvent = instance.filterViewMaker(proidArr, ((index === 0) ? "filter" : "sns"));
           whiteOnEvent.call(this, e);
         }
       }
@@ -2282,7 +2848,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
         if (z === 0) {
           icon_clone = SvgTong.stringParsing(instance.mother.returnFilter("#aaaaaa"));
-          icon_clone.addEventListener("click", proidArrMaker());
+          icon_clone.addEventListener("click", proidArrMaker(0));
           iconStyle.height = String(1.7) + 'vh';
         } else if (z === 1) {
           icon_clone = SvgTong.stringParsing(instance.mother.returnCalendar("#aaaaaa"));
@@ -2290,6 +2856,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           iconStyle.height = String(1.7) + 'vh';
         } else {
           icon_clone = SvgTong.stringParsing(instance.mother.returnFolder("#aaaaaa"));
+          icon_clone.addEventListener("click", proidArrMaker(2));
           iconStyle.height = String(1.6) + 'vh';
         }
         for (let i in iconStyle) {
