@@ -20,6 +20,8 @@ const ContentsJs = function () {
   this.onView = "mother";
   this.whiteConvert = 0;
   this.whiteMatrixA = null;
+  this.overrideSearch = null;
+  this.overrideSearchWhite = null;
 }
 
 ContentsJs.abandonProjects = [
@@ -1512,6 +1514,54 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
   filterDoms.tong = tong;
   mother.appendChild(tong);
 
+  this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
+    if (e.keyCode === 13) {
+      const offStandard = [
+        "white",
+        "rgb(32, 32, 32)",
+        "#2fa678",
+      ];
+      const onStandard = [
+        "#2fa678",
+        "white",
+        "white",
+      ];
+      const [ one ] = filterDoms;
+      const { pool: onePool } = one;
+
+      let childrenTargets, strings, regex, firstTargets, fianlTarget;
+
+      childrenTargets = onePool.firstChild.firstChild.children;
+
+      if (this.value !== '' && this.value !== ' ') {
+        regex = new RegExp(this.value, "gi");
+      } else {
+        regex = new RegExp("^99999999$", "gi");
+      }
+
+      firstTargets = [];
+      for (let dom of childrenTargets) {
+        strings = '';
+        strings += dom.firstChild.textContent;
+        strings += dom.lastChild.textContent;
+        strings += dom.getAttribute("cliid");
+        strings += dom.getAttribute("desid");
+        if (regex.test(strings)) {
+          firstTargets.push(dom);
+        } else {
+          dom.style.background = offStandard[0];
+          dom.firstChild.style.color = offStandard[1];
+          dom.lastChild.style.color = offStandard[1];
+        }
+      }
+
+      fianlTarget = firstTargets[firstTargets.length - 1];
+      fianlTarget.click();
+      fianlTarget.parentElement.insertBefore(fianlTarget, fianlTarget.parentElement.firstChild)
+
+    }
+  });
+
   callback();
 }
 
@@ -1853,6 +1903,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     marginBottom: String(Math.floor(areaMargin * 0.4)) + ea,
     borderRadius: String(3) + ea,
     cursor: "pointer",
+    transition: "all 0s ease",
   };
 
   cardStyle = {
@@ -1863,6 +1914,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     left: String(13) + ea,
     color: "#202020",
     cursor: "pointer",
+    transition: "all 0s ease",
   };
 
   cardStyle2 = {
@@ -1873,6 +1925,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     right: String(13) + ea,
     color: "#2fa678",
     cursor: "pointer",
+    transition: "all 0s ease",
   };
 
   tong = GeneralJs.nodes.div.cloneNode(true);
@@ -1969,6 +2022,68 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
 
   mother.appendChild(tong);
 
+  this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
+    if (e.keyCode === 13) {
+      const offStandard = [
+        "white",
+        "rgb(32, 32, 32)",
+        "#2fa678",
+      ];
+      const onStandard = [
+        "#2fa678",
+        "white",
+        "white",
+      ];
+      const [ one, two, three, four, five ] = filterDoms;
+      const { pool: onePool } = one;
+      const { pool: twoPool } = two;
+      const { pool: threePool } = three;
+      const { pool: fourPool } = four;
+      const { pool: fivePool } = five;
+
+      let childrenTargets, strings, regex, firstTargets;
+
+      childrenTargets = [
+        onePool.firstChild.firstChild.children,
+        twoPool.firstChild.firstChild.children,
+        threePool.firstChild.firstChild.children,
+        fourPool.firstChild.firstChild.children,
+        fivePool.firstChild.firstChild.children,
+      ];
+
+      if (this.value !== '' && this.value !== ' ') {
+        regex = new RegExp(this.value, "gi");
+      } else {
+        regex = new RegExp("^99999999$", "gi");
+      }
+
+      for (let i = 0; i < childrenTargets.length; i++) {
+        firstTargets = [];
+        for (let dom of childrenTargets[i]) {
+          strings = '';
+          strings += dom.firstChild.textContent;
+          strings += dom.lastChild.textContent;
+          strings += dom.getAttribute("cliid");
+          strings += dom.getAttribute("desid");
+          if (regex.test(strings)) {
+            dom.style.background = onStandard[0];
+            dom.firstChild.style.color = onStandard[1];
+            dom.lastChild.style.color = onStandard[1];
+            firstTargets.push(dom);
+          } else {
+            dom.style.background = offStandard[0];
+            dom.firstChild.style.color = offStandard[1];
+            dom.lastChild.style.color = offStandard[1];
+          }
+        }
+        for (let dom of firstTargets) {
+          dom.parentElement.insertBefore(dom, dom.parentElement.firstChild);
+        }
+      }
+
+    }
+  });
+
   callback();
 }
 
@@ -2008,7 +2123,12 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
         div_clone.style[i] = style[i];
       }
 
-      div_clone.addEventListener("click", instance.whiteCancelMaker());
+      div_clone.addEventListener("click", function (e) {
+        let generalCancelFunc = instance.whiteCancelMaker();
+        instance.mother.below.removeChild(instance.overrideSearchWhite);
+        instance.overrideSearch.querySelector("input").style.opacity = "";
+        generalCancelFunc.call(this, e);
+      });
 
       instance.whiteBox.cancelBox = div_clone;
       instance.totalContents.appendChild(div_clone);
@@ -2068,12 +2188,18 @@ ContentsJs.prototype.filterViewMaker = function (proidArr, mode = "filter") {
   const instance = this;
   return function (e) {
     let tempFunc;
+    let overrideSearch;
+
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
         tempFunc = instance.whiteCancelMaker(instance.filterViewMakerDetail(proidArr, true, mode), true);
         tempFunc();
       } else if (instance.whiteBox === null) {
         tempFunc = instance.filterViewMakerDetail(proidArr, false, mode);
+        overrideSearch = instance.overrideSearch.cloneNode(true);
+        instance.mother.below.appendChild(overrideSearch);
+        instance.overrideSearchWhite = overrideSearch;
+        instance.overrideSearch.querySelector("input").style.opacity = String(0);
         tempFunc();
       }
     }
