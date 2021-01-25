@@ -18,6 +18,7 @@ const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
+const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
 
 class DevContext extends Array {
 
@@ -897,7 +898,14 @@ class DevContext extends Array {
       // }
 
 
+      // const app = new SnsParsing();
+      // await app.contentsSheets();
+      // await app.fromToFix("p70", "a75", "portfolio");
+      // await app.fromToFix("p48", "p52", "review");
 
+      // const NaverBlogParsing = require(process.cwd() + "/apps/naverAPIs/naverBlogParsing.js");
+      // const app = new NaverBlogParsing();
+      // await app.blogToJson();
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
@@ -905,13 +913,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "고윤태";
-      // const pid = "p78";
-      // const rid = "re072";
+      // const client = "허지인";
+      // const pid = "p79";
+      // const rid = "re073";
       // const links = [
-      //   "https://docs.google.com/document/d/1orHVlpAQtdQKDYBSJldMeVdvLsqifdX9y5eOIqh1K_s/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1Jp_zH1w02LxaQBhlUv2nnBWLEdt6PO78_svoeqX59v0/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1fPqMT9jcP627M5FgLR9nn92_PfhHIPE8?usp=sharing",
+      //   "https://docs.google.com/document/d/1K1gRly8rNKrV1q46HR54ub-vwqHNH-gptqj5PcnBAE0/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1EGzRsyY2gNvsJhGKuYbVMmhibeKBMuAMabT8RdB6ZIE/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/16RUahIONQnhEz4XaoGY0Z3YlYSuXTwyL?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -951,11 +959,11 @@ class DevContext extends Array {
       //addtional photo repair
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p78", 3);
+      // await filter.addtionalRepair("p79", 4);
 
       // etc tools
 
-      // await this.spellCheck("p78");
+      // await this.spellCheck("p79");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
