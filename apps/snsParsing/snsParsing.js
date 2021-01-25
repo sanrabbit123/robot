@@ -323,7 +323,6 @@ SnsParsing.prototype.fromToFix = async function (from, to, method) {
     for (let obj of snsObj.form.long.targets) {
       if (method === obj.method) {
         targetIndex = index;
-        break;
       }
       index++;
     }
