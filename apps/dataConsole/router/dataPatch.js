@@ -1452,12 +1452,12 @@ DataPatch.prototype.designerStandard = function () {
   model.info = {
     did: {
       name: "별칭",
-      width: 75,
+      width: 50,
       left: 30,
     },
     status: {
       name: "계약 상태",
-      width: 75,
+      width: 80,
       left: 30,
     },
     date: {
