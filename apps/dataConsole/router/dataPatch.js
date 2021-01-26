@@ -1450,6 +1450,11 @@ DataPatch.prototype.designerStandard = function () {
   };
 
   model.info = {
+    did: {
+      name: "별칭",
+      width: 75,
+      left: 30,
+    },
     status: {
       name: "계약 상태",
       width: 75,
@@ -2832,6 +2837,7 @@ DataPatch.prototype.designerMap = function () {
   const map = {
     designer: { name: "성함", position: "designer", type: "string", searchBoo: true, },
     desid: { name: "아이디", position: "desid", type: "string", searchBoo: true, },
+    did: { name: "별칭", position: "information.did", type: "string", searchBoo: true, },
     status: { name: "계약 상태", position: "information.contract.status", type: "object", items: [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     date: { name: "계약일", position: "information.contract.date", type: "date", searchBoo: true, },
     phone: { name: "연락처", position: "information.phone", type: "string", searchBoo: true, },

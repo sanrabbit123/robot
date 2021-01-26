@@ -88,7 +88,7 @@ const widthTools = function (Designer) {
     let temp;
 
     const { designer, desid } = designer_raw;
-    const { contract: { status, date }, phone, email, address, personalSystem: { showRoom, webPage, sns }, business: { career, account, businessInfo: { classification, businessNumber, files }, service: { cost: { percentage }, construct: { partner, method } } } } = designer_raw.information;
+    const { contract: { status, date }, phone, email, did, address, personalSystem: { showRoom, webPage, sns }, business: { career, account, businessInfo: { classification, businessNumber, files }, service: { cost: { percentage }, construct: { partner, method } } } } = designer_raw.information;
 
     temp = {};
     temp.standard = {
@@ -100,6 +100,7 @@ const widthTools = function (Designer) {
       date: dateToString(date),
       phone,
       email,
+      did,
       address: address.join(", "),
       showRoom: String(showRoom),
       webPage: webPage.join(", "),
