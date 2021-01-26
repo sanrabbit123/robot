@@ -38,10 +38,12 @@ Mother.prototype.shellLink = function (str) {
   let arr = str.split('/');
   let newStr = '';
   for (let i of arr) {
-    if (!/ /g.test(i)) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i)) {
       newStr += i + '/';
-    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+    } else if (!/'/g.test(i)) {
       newStr += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      newStr += '"' + i + '"' + '/';
     } else {
       newStr += i + '/';
     }
