@@ -1290,4 +1290,20 @@ Mother.prototype.treeParsing = function (target) {
   return { flat: makeFileArr(target), tree: setTree(target) };
 }
 
+Mother.prototype.returnRandoms = function () {
+  return new Promise(function (resolve, reject) {
+    const crypto = require('crypto');
+    crypto.scrypt('eorgghseGehfwi3r2', 'salt', 24, (err, key) => {
+      if (err) throw err;
+      crypto.randomFill(new Uint32Array(10), (err, iv) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(iv);
+        }
+      });
+    });
+  });
+}
+
 module.exports = Mother;

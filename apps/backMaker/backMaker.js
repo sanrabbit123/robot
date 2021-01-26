@@ -1709,7 +1709,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
           },
           phone: "",
           email: "",
-          notionId: "",
+          did: "",
           address: [],
           personalSystem: {
             showRoom: false,

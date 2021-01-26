@@ -1480,7 +1480,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
-  let notionEvent;
+  let clipboardEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
   let convertIcon, convertIconBox;
   let titleArea, contentsArea;
@@ -1506,7 +1506,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
-  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
+  clipboardEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1535,7 +1535,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", clipboardEvent);
   div_clone2.appendChild(div_clone3);
 
   //desid
@@ -1552,7 +1552,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", clipboardEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow

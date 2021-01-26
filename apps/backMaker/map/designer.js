@@ -9,7 +9,7 @@ module.exports = {
       },
       phone: "",
       email: "",
-      notionId: "",
+      did: "",
       address: [],
       personalSystem: {
         showRoom: false,

@@ -299,7 +299,7 @@ const DesignerInformation = function (json) {
   this.contract = new Contract(json.contract);
   this.phone = json.phone;
   this.email = json.email;
-  this.notionId = json.notionId;
+  this.did = json.did;
   this.address = new Addresses();
   for (let i of json.address) {
     tempInstance = new Address(i);
@@ -314,7 +314,7 @@ DesignerInformation.prototype.toNormal = function () {
   obj.contract = this.contract.toNormal();
   obj.phone = this.phone;
   obj.email = this.email;
-  obj.notionId = this.notionId;
+  obj.did = this.did;
   obj.address = this.address.toNormal();
   obj.personalSystem = this.personalSystem.toNormal();
   obj.business = this.business.toNormal();

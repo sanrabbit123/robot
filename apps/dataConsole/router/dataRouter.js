@@ -1051,8 +1051,9 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
       let tempObj, tempArr;
       let startDay;
       let endDay;
-      let searchQuery0, searchQuery1, searchQuery2, searchQuery3, searchQuery4, projects;
+      let searchQuery0, searchQuery1, searchQuery2, searchQuery3, searchQuery4, searchQuery5, projects;
       let cliidArr, desidArr;
+      let tempAmount;
 
       resultObj = {};
       resultObj.today = req.body.today;
@@ -1078,9 +1079,11 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
           searchQuery2 = { "$and": [ searchQuery0, searchQuery1 ] };
         } else if (i === 3) {
           searchQuery3 = { "process.contract.remain.date": { "$gte": new Date(2000, 0, 1) } };
+          searchQuery4 = { "process.calculation.payments.first.date": { "$lt": new Date(2000, 0, 1) } };
           searchQuery0 = { "process.calculation.payments.remain.date": { "$lt": new Date(2000, 0, 1) } };
+          searchQuery5 = { "$or": [ searchQuery4, searchQuery0 ] };
           searchQuery1 = { "desid": { "$regex": "^d" } };
-          searchQuery2 = { "$and": [ searchQuery0, searchQuery1, searchQuery3 ] };
+          searchQuery2 = { "$and": [ searchQuery5, searchQuery1, searchQuery3 ] };
         } else if (i === 4) {
           searchQuery0 = { "process.calculation.payments.first.date": { "$gte": startDay, "$lt": endDay } };
           searchQuery1 = { "process.calculation.payments.remain.date": { "$gte": startDay, "$lt": endDay } };
@@ -1153,29 +1156,49 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
                 tempObj.name = temp2[z].designer;
               }
             }
-            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
+
+            tempAmount = 0;
+            if ((new Date(2000, 0, 1)).valueOf() >= temp[j].process.calculation.payments.remain.date.valueOf()) {
+              tempAmount = 0.5;
+            }
+            if ((new Date(2000, 0, 1)).valueOf() >= temp[j].process.calculation.payments.first.date.valueOf()) {
+              tempAmount = 1;
+            }
+
+            tempObj.amount = DataRouter.autoComma(Math.floor(temp[j].process.calculation.payments.totalAmount * tempAmount)) + "만원";
           } else if (i === 4) {
+
             for (let z = 0; z < temp2.length; z++) {
               if (temp2[z].desid === temp[j].desid) {
                 tempObj.name = temp2[z].designer;
               }
             }
-            tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.remain.date);
-            if (/^1[6789]/.test(tempObj.date)) {
-              tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.first.date);
+
+            tempAmount = 0;
+            if (startDay.valueOf() <= temp[j].process.calculation.payments.first.date.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.first.date.valueOf()) {
+              tempAmount += temp[j].process.calculation.payments.first.amount;
             }
-            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.amount) + "만원";
+            if (startDay.valueOf() <= temp[j].process.calculation.payments.remain.date.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.remain.date.valueOf()) {
+              tempAmount += temp[j].process.calculation.payments.remain.amount;
+            }
+
+            tempObj.amount = DataRouter.autoComma(Math.floor(tempAmount)) + "만원";
           } else if (i === 5) {
             for (let z = 0; z < temp2.length; z++) {
               if (temp2[z].desid === temp[j].desid) {
                 tempObj.name = temp2[z].designer;
               }
             }
-            tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.remain.cancel);
-            if (/^1[6789]/.test(tempObj.date)) {
-              tempObj.date = DataRouter.dateToString(temp[j].process.calculation.payments.first.cancel);
+
+            tempAmount = 0;
+            if (startDay.valueOf() <= temp[j].process.calculation.payments.first.cancel.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.first.cancel.valueOf()) {
+              tempAmount += temp[j].process.calculation.payments.first.refund;
             }
-            tempObj.amount = DataRouter.autoComma(temp[j].process.calculation.payments.first.refund) + "만원";
+            if (startDay.valueOf() <= temp[j].process.calculation.payments.remain.cancel.valueOf() && endDay.valueOf() >= temp[j].process.calculation.payments.remain.cancel.valueOf()) {
+              tempAmount += temp[j].process.calculation.payments.remain.refund;
+            }
+
+            tempObj.amount = DataRouter.autoComma(Math.floor(tempAmount)) + "만원";
           }
           tempArr.push(tempObj);
         }
