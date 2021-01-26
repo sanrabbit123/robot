@@ -907,6 +907,14 @@ class DevContext extends Array {
       // const app = new NaverBlogParsing();
       // await app.blogToJson();
 
+      const hangul = new ParsingHangul();
+      let currentArr = process.cwd().split("/");
+      currentArr.pop();
+      currentArr.pop();
+      let uragenPath = currentArr.join("/");
+
+      
+      hangul.fixDir(uragenPath + "/test");
 
 
 

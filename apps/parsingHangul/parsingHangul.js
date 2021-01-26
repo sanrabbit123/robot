@@ -88,4 +88,34 @@ ParsingHangul.prototype.fixString = function (ugly) {
   return assemble(newString);
 }
 
+ParsingHangul.prototype.fixDir = function (target) {
+  const instance = this;
+  const { shell, shellLink, treeParsing } = this.mother;
+  let boo, fixedString;
+  let temp;
+  let fixedAbsolute;
+
+  this.setMap();
+
+  const { flat, tree } = treeParsing(target);
+
+  boo = false;
+  for (let { fileName, absolute } of flat) {
+    boo = false;
+    for (let i of fileName) {
+      if (this.problemsCodes.includes(i.charCodeAt(0))) {
+        boo = true;
+      }
+    }
+    if (boo) {
+      fixedString = this.fixString(fileName);
+      temp = absolute.split("/");
+      temp.pop();
+      fixedAbsolute = temp.join("/") + "/" + fixedString;
+      shell.exec(`mv ${shellLink(absolute)} ${shellLink(fixedAbsolute)}`);
+      console.log(`fix ${fixedString}`);
+    }
+  }
+}
+
 module.exports = ParsingHangul;
