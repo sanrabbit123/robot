@@ -128,14 +128,14 @@ SnsParsing.prototype.refreshDummies = async function (force = false) {
     let whereQuery, updateQuery;
 
     for (let contents of contentsArr) {
-      tempArr = await back.mongoRead("contentsSns", { conid: contents.conid }, { home: true });
+      tempArr = await back.mongoRead("contentsSns", { conid: contents.conid }, { python: true });
       if (tempArr.length === 0) {
-        await back.mongoCreate("contentsSns", this.makeDummy(contents), { home: true });
+        await back.mongoCreate("contentsSns", this.makeDummy(contents), { python: true });
       } else if (force) {
         temp = this.makeDummy(contents);
         whereQuery = { conid: contents.conid };
         updateQuery = { form: temp.form };
-        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { home: true });
+        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { python: true });
       }
     }
 
@@ -159,7 +159,7 @@ SnsParsing.prototype.updateNaverBlogFactors = async function () {
     //portfolio
     for (let { href, title, date, conid } of portfolio.data) {
       if (conid !== null) {
-        thisSns = await back.mongoRead("contentsSns", { conid }, { home: true });
+        thisSns = await back.mongoRead("contentsSns", { conid }, { python: true });
         thisSns = thisSns[0];
         tempJson = this.makeFactor("blog", "portfolio", title, "", (new Date(date)), href);
         thisSns.form.long.targets.push(tempJson);
@@ -167,14 +167,14 @@ SnsParsing.prototype.updateNaverBlogFactors = async function () {
         whereQuery = { conid };
         updateQuery = { "form.long.targets": thisSns.form.long.targets };
 
-        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { home: true });
+        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { python: true });
       }
     }
 
     //review
     for (let { href, title, date, conid } of review.data) {
       if (conid !== null) {
-        thisSns = await back.mongoRead("contentsSns", { conid }, { home: true });
+        thisSns = await back.mongoRead("contentsSns", { conid }, { python: true });
         thisSns = thisSns[0];
         tempJson = this.makeFactor("blog", "review", title, "", (new Date(date)), href);
         thisSns.form.long.targets.push(tempJson);
@@ -182,7 +182,7 @@ SnsParsing.prototype.updateNaverBlogFactors = async function () {
         whereQuery = { conid };
         updateQuery = { "form.long.targets": thisSns.form.long.targets };
 
-        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { home: true });
+        await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { python: true });
       }
     }
 
@@ -245,7 +245,7 @@ SnsParsing.prototype.contentsSheets = async function () {
       reviewTitle = '';
       reviewLink = '';
 
-      snsObject = await back.mongoRead("contentsSns", { conid: contents.conid }, { home: true });
+      snsObject = await back.mongoRead("contentsSns", { conid: contents.conid }, { python: true });
       snsObject = snsObject[0];
       targets = snsObject.form.long.targets;
 
@@ -263,14 +263,16 @@ SnsParsing.prototype.contentsSheets = async function () {
       }
 
       for (let obj of targets) {
-        if (obj.method === "portfolio") {
-          portfolioDate = dateToString(new Date(obj.date));
-          portfolioTitle = obj.title;
-          portfolioLink = obj.href;
-        } else if (obj.method === "review") {
-          reviewDate = dateToString(new Date(obj.date));
-          reviewTitle = obj.title;
-          reviewLink = obj.href;
+        if (obj.name === "naverBlog") {
+          if (obj.method === "portfolio") {
+            portfolioDate = dateToString(new Date(obj.date));
+            portfolioTitle = obj.title;
+            portfolioLink = obj.href;
+          } else if (obj.method === "review") {
+            reviewDate = dateToString(new Date(obj.date));
+            reviewTitle = obj.title;
+            reviewLink = obj.href;
+          }
         }
       }
 
@@ -297,6 +299,148 @@ SnsParsing.prototype.contentsSheets = async function () {
   }
 }
 
+SnsParsing.prototype.getSnsReport = async function () {
+  const instance = this;
+  const { mongo, mongohomeinfo } = this.mother;
+  const back = this.back;
+  const address = require(`${process.cwd()}/apps/infoObj.js`);
+  try {
+    const allContents = await back.getContentsArrAll();
+    const empty = new Date(2000, 0, 1);
+
+    class SnsReports extends Array {
+      flatDeath() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.flatDeath());
+        }
+        return arr;
+      }
+    }
+
+    const SnsReport = function (contents) {
+      const web = `https://home-liaison.com`;
+
+      //generarl
+      this.conid = contents.conid;
+      this.pid = contents.contents.portfolio.pid;
+      this.consoleLink = "https://" + address.backinfo.host + "/contents?conid=" + contents.conid;
+
+      //web
+      this.web = {};
+      this.web.portfolio = {};
+      this.web.review = {};
+
+      this.web.portfolio.date = contents.contents.portfolio.date;
+      this.web.portfolio.title = contents.contents.portfolio.title.main;
+      this.web.portfolio.link = web + "/portdetail.php?qqq=" + contents.contents.portfolio.pid;
+      this.web.portfolio.boo = true;
+
+      this.web.review.date = contents.contents.review.date;
+      this.web.review.title = contents.contents.review.title.main;
+      this.web.review.link = "";
+      this.web.review.boo = false;
+      if (contents.contents.review.rid !== "re999") {
+        this.web.review.link = web + "/revdetail.php?qqq=" + contents.contents.review.rid;
+        this.web.review.boo = true;
+      }
+    }
+
+    SnsReport.prototype.setNaverBlog = function () {
+      const emptyDate = new Date(1800, 0, 1);
+
+      tempObj.blog = {};
+      tempObj.blog.portfolio = {};
+      tempObj.blog.review = {};
+
+      tempObj.blog.portfolio.date = emptyDate;
+      tempObj.blog.portfolio.title = "";
+      tempObj.blog.portfolio.link = "";
+
+      tempObj.blog.review.date = emptyDate;
+      tempObj.blog.review.title = "";
+      tempObj.blog.review.link = "";
+    }
+
+    SnsReport.prototype.flatDeath = function () {
+      let obj = {};
+
+      obj.conid = this.conid;
+      obj.pid = this.pid;
+      obj.consoleLink = this.consoleLink;
+      obj.portfolioDate = this.web.portfolio.date;
+      obj.portfolioTitle = this.web.portfolio.title;
+      obj.portfolioLink = this.web.portfolio.link;
+      obj.reviewDate = this.web.review.date;
+      obj.reviewTitle = this.web.review.title;
+      obj.reviewLink = this.web.review.link;
+
+      if (this.blog !== undefined) {
+        obj.blogPortfolioDate = this.blog.portfolio.date;
+        obj.blogPortfolioTitle = this.blog.portfolio.title;
+        obj.blogPortfolioLink = this.blog.portfolio.link;
+        obj.blogReviewDate = this.blog.review.date;
+        obj.blogReviewTitle = this.blog.review.title;
+        obj.blogReviewLink = this.blog.review.link;
+      }
+
+      return obj;
+    }
+
+    const MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    await MONGOC.connect();
+
+    let snsObject;
+    let targets;
+    let tempObj;
+    let resultArr;
+
+    resultArr = new SnsReports;
+
+    for (let contents of allContents) {
+      tempObj = new SnsReport(contents);
+
+      snsObject = await back.mongoRead("contentsSns", { conid: contents.conid }, { home: true, selfMongo: MONGOC });
+      snsObject = snsObject[0];
+
+      //naver blog
+      tempObj.setNaverBlog();
+
+      targets = snsObject.form.long.targets;
+      for (let obj of targets) {
+        if (obj.name === "naverBlog") {
+          if (obj.method === "portfolio") {
+            tempObj.blog.portfolio.date = new Date(obj.date);
+            tempObj.blog.portfolio.title = obj.title;
+            tempObj.blog.portfolio.link = obj.href;
+            tempObj.blog.portfolio.boo = true;
+            if (tempObj.blog.portfolio.date.valueOf() < empty.valueOf()) {
+              tempObj.blog.portfolio.boo = false;
+            }
+          } else if (obj.method === "review") {
+            tempObj.blog.review.date = new Date(obj.date);
+            tempObj.blog.review.title = obj.title;
+            tempObj.blog.review.link = obj.href;
+            tempObj.blog.review.boo = true;
+            if (tempObj.blog.review.date.valueOf() < empty.valueOf()) {
+              tempObj.blog.review.boo = false;
+            }
+          }
+        }
+      }
+
+      resultArr.push(tempObj);
+    }
+
+    MONGOC.close();
+
+    return resultArr;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 SnsParsing.prototype.fromToFix = async function (from, to, method) {
   const instance = this;
   const back = this.back;
@@ -311,11 +455,11 @@ SnsParsing.prototype.fromToFix = async function (from, to, method) {
     let whereQuery, updateQuery;
 
     contents = await back.getContentsByPid(from);
-    snsObj = await back.mongoRead("contentsSns", { conid: contents.conid }, { home: true });
+    snsObj = await back.mongoRead("contentsSns", { conid: contents.conid }, { python: true });
     snsObj = snsObj[0];
 
     toContents = await back.getContentsByPid(to);
-    toSnsObj = await back.mongoRead("contentsSns", { conid: toContents.conid }, { home: true });
+    toSnsObj = await back.mongoRead("contentsSns", { conid: toContents.conid }, { python: true });
     toSnsObj = toSnsObj[0];
 
     targetIndex = 0;
@@ -335,13 +479,13 @@ SnsParsing.prototype.fromToFix = async function (from, to, method) {
     updateQuery = {};
     whereQuery["conid"] = contents.conid;
     updateQuery["form.long.targets"] = snsObj.form.long.targets;
-    await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { home: true });
+    await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { python: true });
 
     whereQuery = {};
     updateQuery = {};
     whereQuery["conid"] = toContents.conid;
     updateQuery["form.long.targets"] = toSnsObj.form.long.targets;
-    await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { home: true });
+    await back.mongoUpdate("contentsSns", [ whereQuery, updateQuery ], { python: true });
 
   } catch (e) {
     console.log(e);

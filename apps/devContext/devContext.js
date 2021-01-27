@@ -899,13 +899,14 @@ class DevContext extends Array {
 
 
       // const app = new SnsParsing();
-      // await app.contentsSheets();
+
       // await app.fromToFix("a69", "a55", "portfolio");
       // await app.fromToFix("p48", "p52", "review");
 
       // const NaverBlogParsing = require(process.cwd() + "/apps/naverAPIs/naverBlogParsing.js");
       // const app = new NaverBlogParsing();
       // await app.blogToJson();
+
 
 
 

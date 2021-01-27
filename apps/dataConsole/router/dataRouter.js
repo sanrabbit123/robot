@@ -1214,6 +1214,31 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getContentsReport = function () {
+  const instance = this;
+  const SnsParsing = require(`${process.cwd()}/apps/snsParsing/snsParsing.js`);
+  const sns = new SnsParsing();
+  const back = this.back;
+  let obj = {};
+  obj.link = "/getContentsReport";
+  obj.func = async function (req, res) {
+    try {
+      let resultArr;
+
+      resultArr = {};
+
+      resultArr.data = await sns.getSnsReport();
+      resultArr.flat = resultArr.data.flatDeath();
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(resultArr));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
@@ -1929,7 +1954,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       findContents = null;
 
       if (button === "get") {
-        resultObjArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
+        resultObjArr = await back.mongoRead("contentsRaw", { proid: id }, { python: true });
         if (resultObjArr.length > 0) {
           responseObj.text = resultObjArr[0][method].contents;
         } else {
@@ -1937,7 +1962,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         }
       } else if (button === "projectNoConid" || button === "projectYesConid") {
 
-        tempArr = await back.mongoRead("contentsRaw", { conid: ((button === "projectNoConid") ? "" : { "$regex": "^t" }) }, { home: true });
+        tempArr = await back.mongoRead("contentsRaw", { conid: ((button === "projectNoConid") ? "" : { "$regex": "^t" }) }, { python: true });
         proidArr = [];
         for (let i of tempArr) {
           proidArr.push({ proid: i.proid });
@@ -2016,7 +2041,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
 
         uploadObj.photo.link = '';
 
-        await back.mongoCreate("contentsRaw", uploadObj, { home: true });
+        await back.mongoCreate("contentsRaw", uploadObj, { python: true });
 
       } else if (button === "insertText") {
 
@@ -2024,7 +2049,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         whereQuery = {};
 
         whereQuery.proid = id;
-        thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
+        thisObj = await back.mongoRead("contentsRaw", whereQuery, { python: true });
         thisObj = thisObj[0];
 
         if (req.body.text === '') {
@@ -2035,7 +2060,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
           updateQuery[(method + ".contents")] = req.body.text;
         }
 
-        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { python: true });
 
         responseObj.link = "none";
 
@@ -2049,7 +2074,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
 
       } else if (button === "photo") {
 
-        rawContentsArr = await back.mongoRead("contentsRaw", { proid: id }, { home: true });
+        rawContentsArr = await back.mongoRead("contentsRaw", { proid: id }, { python: true });
         rawContents = rawContentsArr[0];
         responseObj.link = rawContents.photo.link;
 
@@ -2059,10 +2084,10 @@ DataRouter.prototype.rou_post_getRawContents = function () {
         whereQuery = {};
 
         whereQuery.proid = id;
-        thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
+        thisObj = await back.mongoRead("contentsRaw", whereQuery, { python: true });
         thisObj = thisObj[0];
         updateQuery["photo.link"] = req.body.link;
-        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+        await back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { python: true });
 
         if (updateQuery["photo.link"] !== '') {
           findContents = await back.getContentsArrByQuery({ proid: id }, { selfMongo: instance.mongo });
@@ -2075,7 +2100,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
 
       if (thisObj !== null && whereQuery !== null) {
         if (whereQuery.proid !== undefined) {
-          thisObj = await back.mongoRead("contentsRaw", whereQuery, { home: true });
+          thisObj = await back.mongoRead("contentsRaw", whereQuery, { python: true });
           thisObj = thisObj[0];
           if (thisObj.portfolio.exist && thisObj.review.exist && thisObj.photo.link !== "") {
             if (findContents === null) {

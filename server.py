@@ -70,18 +70,20 @@ async def mongoToJson():
     with open(os.getcwd() + "/apps/infoObj.js", "rt") as info:
         infoJson = json.loads(re.sub(pattern="module.exports = ", repl='', string=info.read()))
 
-    client = MongoClient(f'mongodb://{infoJson["mongoinfo"]["user"]}:{infoJson["mongoinfo"]["password"]}@{infoJson["mongoinfo"]["host"]}:{str(infoJson["mongoinfo"]["port"])}')
-    db = client['miro81']
-    collections = db.list_collection_names()
-
     timeString = re.sub(pattern=' ', repl='', string=str(datetime.now()))
     timeString = re.sub(pattern=':', repl='', string=timeString[0:18])
     timeString = re.sub(pattern='-', repl='', string=timeString)
 
     await run([ "mkdir", f'{targetDir}/{timeString}' ])
 
-    for i in collections:
-        await run([ 'mongoexport', f'--uri="mongodb://{infoJson["mongoinfo"]["host"]}/{infoJson["mongoinfo"]["database"]}"', "--username=" + infoJson["mongoinfo"]["user"], "--password=" + infoJson["mongoinfo"]["password"], f'--port={str(infoJson["mongoinfo"]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
+    mongoTargets = [ "mongoinfo", "backinfo", "pythoninfo" ]
+
+    for m in mongoTargets:
+        client = MongoClient(f'mongodb://{infoJson[m]["user"]}:{infoJson[m]["password"]}@{infoJson[m]["host"]}:{str(infoJson[m]["port"])}')
+        db = client['miro81']
+        collections = db.list_collection_names()
+        for i in collections:
+            await run([ 'mongoexport', f'--uri="mongodb://{infoJson[m]["host"]}/{infoJson[m]["database"]}"', "--username=" + infoJson[m]["user"], "--password=" + infoJson[m]["password"], f'--port={str(infoJson[m]["port"])}', f'--collection={i}', f'--out="{targetDir}/{timeString}/{i}{timeString}.json"', "--authenticationDatabase", "admin" ])
 
 
 def rowsDecode(rows):
