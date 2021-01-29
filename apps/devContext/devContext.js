@@ -908,6 +908,13 @@ class DevContext extends Array {
       // await app.blogToJson();
 
 
+      const tree = this.mother.treeParsing("/Users/baechang-gyu/Desktop/garbage");
+      // console.log(tree);
+
+      console.log(tree.returnFlatMatrix());
+
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
 

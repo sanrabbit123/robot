@@ -39,7 +39,7 @@ Mother.prototype.shellLink = function (str) {
   let arr = str.split('/');
   let newStr = '';
   for (let i of arr) {
-    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i)) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
       newStr += i + '/';
     } else if (!/'/g.test(i)) {
       newStr += "'" + i + "'" + '/';
@@ -60,10 +60,12 @@ Mother.prototype.tempDelete = function (dir = null) {
     let arr = str.split('/');
     let newStr = '';
     for (let i of arr) {
-      if (!/ /g.test(i)) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
         newStr += i + '/';
-      } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      } else if (!/'/g.test(i)) {
         newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
       } else {
         newStr += i + '/';
       }
@@ -548,10 +550,12 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
     let arr = str.split('/');
     let newStr = '';
     for (let i of arr) {
-      if (!/ /g.test(i)) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
         newStr += i + '/';
-      } else if (!/^'/.test(i) && !/'$/.test(i)) {
+      } else if (!/'/g.test(i)) {
         newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
       } else {
         newStr += i + '/';
       }
@@ -610,10 +614,12 @@ Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
   targetLink = '';
   targetArr = target.split('/');
   for (let i of targetArr) {
-    if (!/ /g.test(i)) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
       targetLink += i + '/';
-    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+    } else if (!/'/g.test(i)) {
       targetLink += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      targetLink += '"' + i + '"' + '/';
     } else {
       targetLink += i + '/';
     }
@@ -783,10 +789,12 @@ Mother.prototype.s3FileUpload = function (fromArr, toArr) {
   targetLink = '';
   targetArr = target.split('/');
   for (let i of targetArr) {
-    if (!/ /g.test(i)) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
       targetLink += i + '/';
-    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+    } else if (!/'/g.test(i)) {
       targetLink += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      targetLink += '"' + i + '"' + '/';
     } else {
       targetLink += i + '/';
     }
@@ -842,10 +850,12 @@ Mother.prototype.searchDir = function (targetDirectory) {
   targetLink = '';
   targetArr = target.split('/');
   for (let i of targetArr) {
-    if (!/ /g.test(i)) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
       targetLink += i + '/';
-    } else if (!/^'/.test(i) && !/'$/.test(i)) {
+    } else if (!/'/g.test(i)) {
       targetLink += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      targetLink += '"' + i + '"' + '/';
     } else {
       targetLink += i + '/';
     }
@@ -1118,9 +1128,31 @@ Mother.prototype.getDateMatrix = function (year, month) {
 }
 
 Mother.prototype.treeParsing = function (target) {
+  if (/^\./.test(target)) {
+    target = process.cwd() + target.slice(1);
+  }
+  const targetFolderName = (target.split("/"))[target.split("/").length - 1];
   const shell = require(`shelljs`);
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+        newStr += i + '/';
+      } else if (!/'/g.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
+
   const makeFileArr = function (target) {
-    const { stdout } = shell.exec(`ls -al ${target}`, { silent: true });
+    const { stdout } = shell.exec(`ls -al ${shellLink(target)}`, { silent: true });
     let fileList;
     let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
     let temp, str;
@@ -1169,6 +1201,9 @@ Mother.prototype.treeParsing = function (target) {
       }
 
       temp.absolute = target + "/" + temp.fileName;
+
+      temp.length = temp.absolute.split("/").length;
+
       tempArr2.push(temp);
     }
 
@@ -1192,10 +1227,96 @@ Mother.prototype.treeParsing = function (target) {
       }
     }
 
+    tempArr4.unshift({
+      directory: true,
+      fileName: targetFolderName,
+      hidden: (/^\./.test(targetFolderName)),
+      absolute: target,
+      length: target.split("/").length
+    });
+
     return tempArr4;
   }
   const setTree = function (target) {
     const result = makeFileArr(target);
+    class TreeArray extends Array {
+
+      get data() {
+        return this[0];
+      }
+
+      get tree() {
+        return this[0];
+      }
+
+      get value() {
+        return this[0];
+      }
+
+      get flat() {
+        return makeFileArr(target);
+      }
+
+      get target() {
+        return target;
+      }
+
+      returnFlat() {
+        const flatArr = makeFileArr(target);
+        this.flatDeath = flatArr;
+        return flatArr;
+      }
+
+      setLength() {
+        let allFlats;
+        if (this.flatDeath === undefined || this.flatDeath === null) {
+          allFlats = this.returnFlat();
+        } else {
+          allFlats = this.flatDeath;
+        }
+        allFlats.sort((a, b) => {
+          return a.length - b.length;
+        });
+        this.minLength = allFlats[0].length;
+        this.maxLength = allFlats[allFlats.length - 1].length;
+        this.totalLength = this.maxLength - this.minLength + 1;
+      }
+
+      returnIndexFlat(index) {
+        if (this.minLength === undefined) {
+          this.setLength();
+        }
+        if (index !== "min" && index !== "max") {
+          if (typeof index !== "number") {
+            throw new Error("input must be number");
+          }
+        } else {
+          index = (index === "min") ? this.minLength : this.maxLength;
+        }
+        if (this.flatDeath === undefined || this.flatDeath === null) {
+          this.returnFlat();
+        }
+        let arr = [];
+        for (let i of this.flatDeath) {
+          if (i.length === index) {
+            arr.push(i);
+          }
+        }
+        return arr;
+      }
+
+      returnFlatMatrix() {
+        if (this.minLength === undefined) {
+          this.setLength();
+        }
+        let result = [];
+        for (let i = this.minLength; i < this.maxLength + 1; i++) {
+          result.push(this.returnIndexFlat(i));
+        }
+        return result;
+      }
+
+    }
     let absolutes, tempList;
     let filter;
     let filterSplit;
@@ -1205,12 +1326,14 @@ Mother.prototype.treeParsing = function (target) {
     let maxLength, minLength;
     let lengthArr;
     let tree;
+    let finalTree;
 
     absolutes = [];
+    absolutes.push(target);
     for (let i of result) {
-      tempList = i.absolute.split("/");
-      tempList.pop();
-      absolutes.push(tempList.join("/"));
+      if (i.directory) {
+        absolutes.push(i.absolute);
+      }
     }
 
     filter = Array.from(new Set(absolutes));
@@ -1265,7 +1388,7 @@ Mother.prototype.treeParsing = function (target) {
       lengthArr.push(temp);
     }
 
-    finalJson = [];
+    finalJson = new TreeArray();
     finalJson.push(filterSplitJoin[0]);
 
     const directoryParsing = function (arr) {
@@ -1288,9 +1411,13 @@ Mother.prototype.treeParsing = function (target) {
       return arr;
     }
 
-    return directoryParsing(finalJson);
+    finalTree = directoryParsing(finalJson);
+    finalTree.setLength();
+
+    return finalTree;
   }
-  return { flat: makeFileArr(target), tree: setTree(target) };
+
+  return setTree(target);
 }
 
 Mother.prototype.returnRandoms = function () {
