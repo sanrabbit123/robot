@@ -1760,6 +1760,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         let div_clone3;
         let indexNumber;
         let ea = "px";
+        let date, title, eventFunc;
 
         eventArr.sort((a, b) => {
           return a.date.valueOf() - b.date.valueOf();
@@ -1772,7 +1773,12 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
 
         if (this.getAttribute("date") !== null) {
-          for (let { date, title, eventFunc } of eventArr) {
+          for (let obj of eventArr) {
+
+            date = obj.date;
+            title = obj.title;
+            eventFunc = obj.eventFunc;
+
             if (date.getFullYear() === this.year && date.getMonth() === this.month && date.getDate() === this.date) {
               svg_clone = SvgTong.stringParsing(instance.returnCircle("", "#2fa678"));
               for (let k in circleEventStyle) {
@@ -1788,7 +1794,11 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
               }
               div_clone3.style.top = String(eventInitTop + (lineHeight * indexNumber)) + ea;
               if (hourOutput) {
-                div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+                if (obj.hours !== undefined) {
+                  div_clone3.textContent = title;
+                } else {
+                  div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+                }
               } else {
                 div_clone3.textContent = title;
               }

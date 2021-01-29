@@ -6134,6 +6134,10 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     ] },
   ];
 
+  class MatrixArray extends Array {
+
+  }
+
   class MatrixFactor extends Array {
     setName(name) {
       this.name = name;
@@ -6142,6 +6146,16 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     setDesigner(designer) {
       this.designer = designer;
     }
+
+    getEventArr() {
+      let arr = [];
+
+
+
+
+      return arr;
+    }
+
   }
 
   let div_clone, div_clone2;
@@ -6159,11 +6173,13 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let titleLength;
   let caseDiv;
   let matrixCaseEnter, matrixCaseLeave, matrixCaseClick;
+  let calendarArea;
+  let calendar;
 
   ea = "px";
 
   //make matrix
-  matrix = [];
+  matrix = new MatrixArray();
   for (let i = 0; i < report.data.length; i++) {
     temp = new MatrixFactor();
     for (let obj of matrixMap) {
@@ -6195,7 +6211,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   //matrix area
   margin = 40;
   matrixAreaWidth = 900;
-  titleHeight = 47;
+  titleHeight = 46;
   titleArr = matrix.shift();
   titleLength = titleArr.length;
   GeneralJs.stacks["matrixCaseTitlePopup"] = null;
@@ -6210,6 +6226,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     overflow: "scroll",
     borderRadius: String(7) + ea,
     border: "1px solid #dddddd",
+    boxSizing: "border-box",
   };
   for (let i in style) {
     matrixArea.style[i] = style[i];
@@ -6228,6 +6245,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     width: String(matrixAreaWidth) + ea,
     left: String(0) + ea,
     top: String(titleHeight + 3) + ea,
+    boxSizing: "border-box",
   };
   for (let i in style) {
     matrixScrollBox.style[i] = style[i];
@@ -6380,6 +6398,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       width: String(matrixAreaWidth) + ea,
       height: String(titleHeight - 10) + ea,
       cursor: "pointer",
+      boxSizing: "border-box",
     };
     for (let y in style) {
       caseDiv.style[y] = style[y];
@@ -6390,8 +6409,9 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       style = {
         display: "inline-block",
         position: "relative",
-        width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 40)) + ea + ")",
+        width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 39)) + ea + ")",
         height: String(titleHeight) + ea,
+        boxSizing: "border-box",
       };
       for (let j in style) {
         div_clone.style[j] = style[j];
@@ -6405,6 +6425,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
         top: String(13) + ea,
         height: String(20) + ea,
         borderRight: ((i !== titleLength - 1) ? "1px solid #e0e0e0" : ""),
+        boxSizing: "border-box",
       };
       for (let j in style) {
         div_clone2.style[j] = style[j];
@@ -6429,6 +6450,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
         cursor: "pointer",
         color: "#404040",
         transition: "all 0s ease",
+        boxSizing: "border-box",
       };
       for (let j in style) {
         div_clone2.style[j] = style[j];
@@ -6461,6 +6483,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     borderTopLeftRadius: String(6) + ea,
     borderTopRightRadius: String(6) + ea,
     border: "1px solid #dddddd",
+    boxSizing: "border-box",
   };
   for (let i in style) {
     matrixTitleBox.style[i] = style[i];
@@ -6471,8 +6494,9 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     style = {
       display: "inline-block",
       position: "relative",
-      width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 40)) + ea + ")",
+      width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 39)) + ea + ")",
       height: String(titleHeight) + ea,
+      boxSizing: "border-box",
     };
     for (let j in style) {
       div_clone.style[j] = style[j];
@@ -6487,6 +6511,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       top: String(12) + ea,
       fontSize: String(14) + ea,
       fontWeight: String(600),
+      boxSizing: "border-box",
     };
     for (let j in style) {
       div_clone2.style[j] = style[j];
@@ -6501,6 +6526,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       top: String(13) + ea,
       height: String(20) + ea,
       borderRight: ((i !== titleLength - 1) ? "1px solid #aaaaaa" : ""),
+      boxSizing: "border-box",
     };
     for (let j in style) {
       div_clone2.style[j] = style[j];
@@ -6515,7 +6541,44 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   mother.appendChild(matrixArea);
 
   instance.contentsReportMatrix = matrix;
-  console.log(matrix);
+
+  //calendar
+  calendarArea = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: "calc(100% - " + String(matrixAreaWidth + (margin * 2.5)) + ea + ")",
+    height: "calc(100% - " + String(margin * 2) + ea + ")",
+    left: String(matrixAreaWidth + (margin * 1.5)) + ea,
+    top: String(margin) + ea,
+    borderRadius: String(7) + ea,
+  };
+  for (let i in style) {
+    calendarArea.style[i] = style[i];
+  }
+
+  calendar = this.mother.makeCalendar(new Date(), function (e) {}, {
+    bigMode: true,
+    width: "calc(100%)",
+    height: "calc(100%)",
+    events: [
+      { date: new Date(), title: "안녕?", eventFunc: function (e) {}, hours: false }
+    ],
+  });
+  calendar.calendarBase.style.position = "absolute";
+  calendar.calendarBase.style.top = String(0) + ea;
+  calendar.calendarBase.style.left = String(0) + ea;
+  calendarArea.appendChild(calendar.calendarBase);
+
+
+
+
+
+
+
+
+
+  mother.appendChild(calendarArea);
+
 
 }
 
