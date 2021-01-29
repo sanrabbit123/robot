@@ -6102,17 +6102,183 @@ ContentsJs.prototype.returnValueEventMaker = function () {
 ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const instance = this;
   const report = JSON.parse(data);
+  const dateToString = function (raw) {
+    const thisDate = new Date(raw);
+    const zeroAddtion = function (number) {
+      if (number < 10) {
+        return `0${String(number)}`;
+      } else {
+        return String(number);
+      }
+    }
+    return `${String(thisDate.getFullYear())}-${zeroAddtion(thisDate.getMonth() + 1)}-${zeroAddtion(thisDate.getDate())}`;
+  }
+  const matrixMap = [
+    { column: "conid", name: "아이디" },
+    { column: "pid", name: "별칭" },
+    { column: "portfolioLink", name: "포트폴리오 웹", children: [
+      { column: "portfolioDate", name: "발행일" },
+      { column: "portfolioTitle", name: "제목" },
+    ] },
+    { column: "reviewLink", name: "고객 후기 웹", children: [
+      { column: "reviewDate", name: "발행일" },
+      { column: "reviewTitle", name: "제목" },
+    ] },
+    { column: "blogPortfolioLink", name: "포트폴리오 블로그", children: [
+      { column: "blogPortfolioDate", name: "발행일" },
+      { column: "blogPortfolioTitle", name: "제목" },
+    ] },
+    { column: "blogReviewLink", name: "고객 후기 블로그", children: [
+      { column: "blogReviewDate", name: "발행일" },
+      { column: "blogReviewTitle", name: "제목" },
+    ] },
+  ];
 
-  let div_clone;
+  let div_clone, div_clone2;
   let style;
   let ea;
+  let matrix;
+  let nameColumns;
+  let temp;
+  let matrixArea;
+  let margin;
+  let matrixAreaWidth;
+  let matrixTitleBox, matrixScrollBox;
+  let titleHeight;
+  let titleArr;
+  let titleLength;
 
   ea = "px";
 
+  //make matrix
+  matrix = [];
+  for (let i = 0; i < report.data.length; i++) {
+    temp = [];
+    for (let obj of matrixMap) {
+      if (obj.children !== undefined) {
+        if (report.flat[i][obj.column] !== '') {
+          temp.push({ date: dateToString(report.flat[i][obj.children[0].column]), title: report.flat[i][obj.children[1].column], link: report.flat[i][obj.column] });
+        } else {
+          temp.push({ date: "미발행", title: "", link: "" });
+        }
+      } else {
+        temp.push(report.flat[i][obj.column]);
+      }
+    }
+    matrix.push(temp);
+  }
 
-  console.log(report);
+  matrix.sort((a, b) => {
+    return Number(b[0].replace(/[^0-9]/g, '')) - Number(a[0].replace(/[^0-9]/g, ''));
+  });
 
+  nameColumns = [];
+  for (let { name } of matrixMap) {
+    nameColumns.push(name);
+  }
+  matrix.unshift(nameColumns);
 
+  //matrix area
+  margin = 40;
+  matrixAreaWidth = 1000;
+  titleHeight = 48;
+
+  matrixArea = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(matrixAreaWidth) + ea,
+    height: "calc(100% - " + String(margin * 2) + ea + ")",
+    left: String(margin) + ea,
+    top: String(margin) + ea,
+    overflow: "scroll",
+    borderRadius: String(7) + ea,
+  };
+  for (let i in style) {
+    matrixArea.style[i] = style[i];
+  }
+
+  //matrix scroll box
+  matrixScrollBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(matrixAreaWidth) + ea,
+    height: String(5000) + ea,
+    left: String(0) + ea,
+    top: String(titleHeight) + ea,
+    background: "linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+  };
+  for (let i in style) {
+    matrixScrollBox.style[i] = style[i];
+  }
+  matrixArea.appendChild(matrixScrollBox);
+
+  //matrix title box
+  titleArr = matrix.shift();
+  titleLength = titleArr.length;
+  matrixTitleBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "fixed",
+    width: String(matrixAreaWidth) + ea,
+    height: String(titleHeight) + ea,
+    left: String(margin) + ea,
+    top: String(margin) + ea,
+    background: "#f7f7f7",
+    borderTopLeftRadius: String(6) + ea,
+    borderTopRightRadius: String(6) + ea,
+  };
+  for (let i in style) {
+    matrixTitleBox.style[i] = style[i];
+  }
+
+  for (let i = 0; i < titleLength; i++) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      display: "inline-block",
+      position: "relative",
+      width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 30 : 70) : ((i < 4) ? 10 : 40)) + ea + ")",
+      height: String(titleHeight) + ea,
+    };
+    for (let j in style) {
+      div_clone.style[j] = style[j];
+    }
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.textContent = titleArr[i];
+    style = {
+      position: "absolute",
+      width: String(100) + '%',
+      textAlign: "center",
+      top: String(12) + ea,
+      fontSize: String(14) + ea,
+      fontWeight: String(600),
+    };
+    for (let j in style) {
+      div_clone2.style[j] = style[j];
+    }
+    div_clone.appendChild(div_clone2);
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(100) + '%',
+      textAlign: "center",
+      top: String(14) + ea,
+      height: String(19) + ea,
+      borderRight: ((i !== titleLength - 1) ? "1px solid #aaaaaa" : ""),
+    };
+    for (let j in style) {
+      div_clone2.style[j] = style[j];
+    }
+    div_clone.appendChild(div_clone2);
+
+    matrixTitleBox.appendChild(div_clone);
+  }
+
+  matrixArea.appendChild(matrixTitleBox);
+
+  mother.appendChild(matrixArea);
+
+  console.log(matrix);
 
 }
 

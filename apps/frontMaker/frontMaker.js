@@ -9,13 +9,12 @@ const FrontMaker = function () {
 FrontMaker.prototype.links = {
   app: `${process.cwd()}/apps/frontMaker`,
   source: `${process.cwd()}/apps/frontMaker/source`,
-  binary: `${process.cwd()}/binary/frontMaker`,
-  binary_www: `${process.cwd()}/binary/frontMaker/www`,
-  server: `${process.env.HOME}/poo`,
+  server: `${process.env.HOME}/butterfly`,
   server_raw: `${process.env.HOME}`,
-  server_name: `poo`,
+  server_name: `butterfly`,
   map: `${process.cwd()}/apps/mapMaker/map`,
   svgTong: `${process.cwd()}/apps/mapMaker/svgTong`,
+  binary: `${process.env.HOME}/contentsMaker/result`,
 }
 
 FrontMaker.prototype.startChrome = function (link, newBoo = true) {
@@ -413,78 +412,32 @@ FrontMaker.prototype.tokenToPoo = async function () {
   }
 }
 
-FrontMaker.prototype.imageToStatic = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  try {
-    let list, list_image;
-
-    list = await fileSystem(`readDir`, [ `${this.links.binary}` ]);
-    list_image = await fileSystem(`readDir`, [ `${this.links.server}/list_image` ]);
-
-    for (let i of list_image) {
-      if (list.indexOf(i) !== -1 && i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
-        shell.exec(`rm -rf ${shellLink(`${this.links.server}/list_image/${i}`)};`);
-        console.log(`delete image ${i} success`);
-      }
-    }
-
-    for (let i of list) {
-      if (i !== ".DS_Store" && i !== "poo" && i !== "www" && i !== "ai") {
-        shell.exec(`cp -r ${shellLink(`${this.links.binary}/${i}`)} ${shellLink(`${this.links.server}/list_image`)};`);
-        console.log(`image copy ${i} success`);
-      }
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 FrontMaker.prototype.staticSetting = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   try {
 
     console.log(`staticSetting...`);
+
+    const gitLabRepositName = "butterfly";
+    const gitLabReposit = "git@gitlab.com:uragen/butterfly.git";
     let home, pooBoo;
     let server;
     let engine;
 
-    home = await fileSystem(`readDir`, [ this.links.server_raw ]);
-    pooBoo = true;
-    for (let i of home) {
-      if (i === this.links.server_name) {
-        pooBoo = false;
-      }
-    }
-    if (pooBoo) {
-      shell.exec(`mkdir ${this.links.server};`);
+    home = await fileSystem(`readDir`, [ process.env.HOME ]);
+
+    if (home.includes(gitLabRepositName)) {
+      shell.exec(`rm -rf ${process.env.HOME}/${gitLabRepositName}`);
     }
 
-    server = await fileSystem(`readDir`, [ this.links.server ]);
-    if (server.indexOf(`js`) === -1) {
-      shell.exec(`mkdir ${this.links.server}/js`);
-    }
-    if (server.indexOf(`list_image`) === -1) {
-      shell.exec(`mkdir ${this.links.server}/list_image`);
-    }
-    if (server.indexOf(`engine`) === -1) {
-      shell.exec(`mkdir ${this.links.server}/engine`);
+    if (home.includes("www")) {
+      shell.exec(`rm -rf ${process.env.HOME}/www`);
     }
 
-    engine = await fileSystem(`readDir`, [ this.links.server + "/engine" ]);
-    if (engine.indexOf(`functions`) === -1) {
-      shell.exec(`mkdir ${this.links.server}/engine/functions`);
-    }
-    if (engine.indexOf(`token`) === -1) {
-      shell.exec(`mkdir ${this.links.server}/engine/token`);
-    }
+    shell.exec(`git clone ${gitLabReposit} ${process.env.HOME}/${gitLabRepositName}`);
 
-    shell.exec(`cp -r ${shellLink(`${this.links.binary}/poo`)} ${shellLink(this.links.server_raw)};`);
-
-    console.log(`static done`);
-    await this.imageToStatic();
+    this.links.server = `${process.env.HOME}/${gitLabRepositName}`;
 
   } catch (e) {
     console.log(e);
@@ -517,77 +470,44 @@ FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
 
 FrontMaker.prototype.totalUpdate = async function (test = true) {
   const { fileSystem, shell, shellLink, frontinfo: { host, user } } = this.mother;
-  const { server, binary, binary_www } = this.links;
-  const home = process.env.HOME;
   const dayString = this.mother.todayMaker();
-  const www = (binary_www.split('/'))[binary_www.split('/').length - 1];
   try {
-    let homeBoo, pastHomeUpdateFolder, finalUpdateDir, homeDirList;
-    let binaryTragets, binaryDirList;
     let totalOrder;
+    let binaryTarget, binaryTargetDir;
 
     await this.totalLaunching(true, true);
 
-    //read home and mkdir autoUpdateFront folder
-    homeBoo = false;
-    homeDirList = await fileSystem(`readDir`, [ home ]);
-
-    for (let i of homeDirList) {
-      if (i !== `.DS_Store`) {
-        if (/autoUpdateFront/gi.test(i)) {
-          homeBoo = true;
-          pastHomeUpdateFolder = i;
-        }
-      }
-    }
-    if (homeBoo) {
-      shell.exec(`rm -rf ${home}/${pastHomeUpdateFolder};`);
-    }
-    finalUpdateDir = home + "/autoUpdateFront";
-    shell.exec(`mkdir ${finalUpdateDir}`);
-
-    //set binary targets
-    binaryTragets = [];
-    binaryDirList = await fileSystem(`readDir`, [ binary ]);
-    for (let i of binaryDirList) {
-      if (i !== `.DS_Store` && i !== `poo` && i !== `www` && i !== `ai`) {
-        binaryTragets.push(i);
-      }
-    }
-
-    //make shellScript : update www and copy homeFolder
+    //make shellScript
     totalOrder = '';
-    totalOrder += "cd " + shellLink(server) + ";";
+    totalOrder += "cd " + shellLink(this.links.server) + ";";
     totalOrder += "git add -A" + ";";
     totalOrder += "git commit -m \"Butterfly_Autoupdate" + dayString + "\"" + ";";
     totalOrder += "git push" + ";";
-    totalOrder += "cd " + shellLink(binary_www) + ";";
-    totalOrder += "git pull" + ";";
-
-    if (!test) {
-      totalOrder += "cp -r " + shellLink(binary_www) + " " + shellLink(finalUpdateDir) + ";";
-      totalOrder += "rm -rf " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
-      totalOrder += "mkdir " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
-
-      //and copy binaries
-      for (let i of binaryTragets) {
-        totalOrder += "cp -r " + shellLink(binary) + "/" + i + " " + shellLink(finalUpdateDir) + "/" + www + "/list_image" + ";";
-      }
-      
-      //send to server
-      totalOrder += "scp -r " + shellLink(finalUpdateDir) + "/" + www + " " + user + "@" + host + ":/" + user + ";";
-    }
-
-    totalOrder += "rm -rf " + shellLink(finalUpdateDir) + ";";
 
     //execute
     shell.exec(totalOrder);
 
+    //binary setting
+    binaryTarget = await fileSystem(`readDir`, [ this.links.binary ]);
+    totalOrder = '';
+
+    if (binaryTarget.includes("binary")) {
+      shell.exec(`mkdir ${shellLink(this.links.server)}/list_image;`);
+      binaryTargetDir = await fileSystem(`readDir`, [ this.links.binary + "/binary" ]);
+      for (let i of binaryTargetDir) {
+        if (i !== `.DS_Store`) {
+          totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
+        }
+      }
+      shell.exec(totalOrder);
+    }
+
+    shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
+
+    console.log(`scp -r ${shellLink(process.env.HOME)}/www`);
+
   } catch (e) {
     console.log(e);
-  } finally {
-    console.log(`done`);
-    process.exit();
   }
 }
 

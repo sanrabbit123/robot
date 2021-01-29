@@ -67,7 +67,7 @@ DataConsole.prototype.connect = async function () {
   const app = express();
   const bodyParser = require("body-parser");
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const useragent = require('express-useragent');
+  const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));

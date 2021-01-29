@@ -14,38 +14,51 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     sw = sw.replace(/\.js$/, '');
   }
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, binaryRequest } = this.mother;
+  const MapMaker = require(`${this.links.mapMaker}/mapMaker.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const { home_dir } = this.options;
-  const binaryTotalPathParent = process.cwd() + "/binary/frontMaker/ai/";
-  const binaryTotalPath = binaryTotalPathParent + sw;
-  let binaryTotalDirParent, binaryTotalDir, targetAIList;
   try {
 
-    //init setting
-    let mapMaker, temp_scriptString;
-    const MapMaker = require(`${this.links.mapMaker}/mapMaker.js`);
-    mapMaker = new MapMaker(sw);
-    shell.exec(`mkdir ${shellLink(home_dir)}/result/${sw}`);
+    let mapMaker, temp_scriptString, tempObject;
+    let binaryTotalDir, targetAIList;
+    let resDir;
 
-    //get map object
+    //init setting and get map object
+    mapMaker = new MapMaker(sw);
     this.text = await mapMaker.mapGenerator();
 
-    //if ai file exist, add ai file info
-    binaryTotalDirParent = await fileSystem("readDir", [ binaryTotalPathParent ]);
-    if (!binaryTotalDirParent.includes(sw)) {
-      shell.exec(`mkdir ${shellLink(binaryTotalPathParent)}/${sw}`);
-    }
-    binaryTotalDir = await fileSystem("readDir", [ binaryTotalPath ]);
+    //result folder setting
+    shell.exec(`mkdir ${shellLink(home_dir)}/result/${sw}`);
+    shell.exec(`mkdir ${shellLink(home_dir)}/result/ai`);
+    shell.exec(`mkdir ${shellLink(home_dir)}/result/binary`);
+
+    //ai files download
+    tempObject = await binaryRequest(ADDRESS.s3info.host + "/frontMaker/ai/" + sw + ".zip");
+    await fileSystem(`writeBinary`, [ home_dir + "/result/ai/" + sw + ".zip", tempObject ]);
+    console.log(`download success`);
+
+    shell.exec(`unzip ${shellLink(home_dir)}/result/ai/${sw}.zip -d ${shellLink(home_dir)}/result/ai`);
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/ai/${sw}.zip`);
+    console.log(`unzip success`);
+
+    //add ai file-info
+    binaryTotalDir = await fileSystem("readDir", [ `${home_dir}/result/ai/${sw}` ]);
     targetAIList = [];
-    for (let i of binaryTotalDir) { if (/\.ai$/.test(i)) {
-      targetAIList.push(i);
-    }}
+    for (let i of binaryTotalDir) {
+      if (/\.ai$/.test(i)) {
+        targetAIList.push(i);
+      }
+    }
+
     this.options.etc = {};
     if (targetAIList.length > 0) {
-      targetAIList.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')) });
+      targetAIList.sort((a, b) => {
+        return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, ''));
+      });
       this.options.etc.targetFile = [];
       for (let i of targetAIList) {
-        this.options.etc.targetFile.push(binaryTotalPath + "/" + i);
+        this.options.etc.targetFile.push(`${home_dir}/result/ai/${sw}/${i}`);
       }
       if (this.options.etc.targetFile.length > 0) {
         console.log(this.options.etc.targetFile);
@@ -65,28 +78,29 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     //make svgTong files and make map with source written
     await mapMaker.writeMap_makeTong();
 
-    //copy binary
-    let resDir;
-    let resBinaryDirPathMother, resBinaryDirPath;
-    let resBinaryDirMother, resBinaryDir;
+    //binary files download
+    tempObject = await binaryRequest(ADDRESS.s3info.host + "/frontMaker/binary/" + sw + ".zip");
+    await fileSystem(`writeBinary`, [ home_dir + "/result/binary/" + sw + ".zip", tempObject ]);
+    console.log(`download success`);
+
+    shell.exec(`unzip ${shellLink(home_dir)}/result/binary/${sw}.zip -d ${shellLink(home_dir)}/result/binary`);
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/binary/${sw}.zip`);
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/binary/__MACOSX`);
+    console.log(`unzip success`);
+
+    //binary setting
     resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
-    resBinaryDirPathMother = `${process.cwd()}/binary/frontMaker`;
-    resBinaryDirPath = `${resBinaryDirPathMother}/${sw}`;
-    resBinaryDirMother = await fileSystem(`readDir`, [ resBinaryDirPathMother ]);
-    if (!resBinaryDirMother.includes(sw)) {
-      shell.exec(`mkdir ${shellLink(resBinaryDirPathMother)}/${sw};`);
-    }
-    resBinaryDir = await fileSystem(`readDir`, [ resBinaryDirPath ]);
-    for (let i of resBinaryDir) {
-      if (/\.png$/.test(i)) {
-        shell.exec(`rm -rf ${shellLink(resBinaryDirPath)}/${i};`);
-      }
-    }
     for (let i of resDir) {
-      if (/\.png$/.test(i)) {
-        shell.exec(`cp ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(resBinaryDirPath)};`);
+      if (!/\.png$/.test(i)) {
+        shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}/${i};`);
+      } else {
+        shell.exec(`mv ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(home_dir)}/result/binary/${sw}/${i};`);
       }
     }
+
+    //end
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/ai`);
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}`);
 
   } catch (e) {
     console.log(e);
@@ -96,10 +110,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
 AiFront.prototype.front_maker = async function (target) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
-  const MongoClient = this.mother.mongo;
-  const MONGOC = new MongoClient(this.mother.mongoinfo, { useUnifiedTopology: true });
   try {
-    await MONGOC.connect();
     await this.general.static_setting();
 
     //delete result folder
@@ -119,9 +130,11 @@ AiFront.prototype.front_maker = async function (target) {
       await this.renderSvgPng("general");
     } else {
       if (target === "entire") {
-        for (let i of mapDir) { if (i !== ".DS_Store") {
-          await this.renderSvgPng(i.replace(/\.js$/, ''));
-        }}
+        for (let i of mapDir) {
+          if (i !== ".DS_Store") {
+            await this.renderSvgPng(i.replace(/\.js$/, ''));
+          }
+        }
       } else if (mapDir.includes(target + ".js")) {
         await this.renderSvgPng(target);
       } else {
@@ -131,10 +144,6 @@ AiFront.prototype.front_maker = async function (target) {
 
   } catch (e) {
     console.log(e);
-  } finally {
-    console.log(`done`);
-    MONGOC.close();
-    process.exit();
   }
 }
 
