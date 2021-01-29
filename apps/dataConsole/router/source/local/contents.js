@@ -6134,6 +6134,16 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     ] },
   ];
 
+  class MatrixFactor extends Array {
+    setName(name) {
+      this.name = name;
+    }
+
+    setDesigner(designer) {
+      this.designer = designer;
+    }
+  }
+
   let div_clone, div_clone2;
   let style;
   let ea;
@@ -6147,13 +6157,15 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let titleHeight;
   let titleArr;
   let titleLength;
+  let caseDiv;
+  let matrixCaseEnter, matrixCaseLeave, matrixCaseClick;
 
   ea = "px";
 
   //make matrix
   matrix = [];
   for (let i = 0; i < report.data.length; i++) {
-    temp = [];
+    temp = new MatrixFactor();
     for (let obj of matrixMap) {
       if (obj.children !== undefined) {
         if (report.flat[i][obj.column] !== '') {
@@ -6165,6 +6177,8 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
         temp.push(report.flat[i][obj.column]);
       }
     }
+    temp.setName(report.data[i].name);
+    temp.setDesigner(report.data[i].designer);
     matrix.push(temp);
   }
 
@@ -6180,8 +6194,11 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
   //matrix area
   margin = 40;
-  matrixAreaWidth = 1000;
-  titleHeight = 48;
+  matrixAreaWidth = 900;
+  titleHeight = 47;
+  titleArr = matrix.shift();
+  titleLength = titleArr.length;
+  GeneralJs.stacks["matrixCaseTitlePopup"] = null;
 
   matrixArea = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -6192,29 +6209,247 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     top: String(margin) + ea,
     overflow: "scroll",
     borderRadius: String(7) + ea,
+    border: "1px solid #dddddd",
   };
   for (let i in style) {
     matrixArea.style[i] = style[i];
   }
+  matrixArea.addEventListener("mouseleave", function (e) {
+    if (GeneralJs.stacks["matrixCaseTitlePopup"] !== null) {
+      GeneralJs.stacks["matrixCaseTitlePopup"].remove();
+      GeneralJs.stacks["matrixCaseTitlePopup"] = null;
+    }
+  });
 
   //matrix scroll box
   matrixScrollBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
     width: String(matrixAreaWidth) + ea,
-    height: String(5000) + ea,
     left: String(0) + ea,
-    top: String(titleHeight) + ea,
-    background: "linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+    top: String(titleHeight + 3) + ea,
   };
   for (let i in style) {
     matrixScrollBox.style[i] = style[i];
   }
+
+  //matrix case
+  matrixCaseEnter = function (e) {
+    e.stopPropagation();
+    const index = Number(this.getAttribute("index"));
+    const position = Number(this.getAttribute("position"));
+    const thisCase = instance.contentsReportMatrix[index];
+    const thisValue = thisCase[position];
+    const thisRect = this.getBoundingClientRect();
+    const [ conid, pid ] = thisCase;
+    const targetMother = this.parentNode;
+    const { x, y, width, height } = thisRect;
+
+    let targets;
+    let div_clone, div_clone2;
+    let style;
+    let ea;
+    let popupWidth;
+    let fixedWidth;
+    let margin;
+
+    ea = "px";
+    popupWidth = 1500;
+    margin = 15;
+
+    targets = [
+      this.parentElement.parentElement.children[0].lastChild,
+      this.parentElement.parentElement.children[1].lastChild,
+      this,
+    ];
+    for (let i of targets) {
+      i.style.color = "#2fa678";
+    }
+
+    if (GeneralJs.stacks["matrixCaseTitlePopup"] !== null) {
+      GeneralJs.stacks["matrixCaseTitlePopup"].remove();
+      GeneralJs.stacks["matrixCaseTitlePopup"] = null;
+    }
+
+    //popup
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      width: String(popupWidth) + ea,
+      height: String(32) + ea,
+      background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+      zIndex: String(1),
+      top: String(y) + ea,
+      left: String(x - 29.6 - (instance.totalFather === null ? instance.grayBarWidth : 0) + (width / 2) - (popupWidth / 2)) + ea,
+      borderRadius: String(4) + ea,
+      opacity: String(0.95),
+      boxShadow: "0px 2px 12px -9px #404040",
+      transition: "all 0s ease",
+    }
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      fontSize: String(14) + ea,
+      fontWeight: String(500),
+      top: String(5) + ea,
+      left: String(margin) + ea,
+      color: "white",
+    }
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+
+    if (typeof thisValue === "string") {
+      if (thisCase.name !== '') {
+        div_clone2.textContent = `${thisCase.name}C / ${thisCase.designer}D`;
+      } else {
+        div_clone2.textContent = `${thisCase.designer}D`;
+      }
+    } else {
+      if (thisValue.date === "미발행") {
+        div_clone2.textContent = "미발행";
+      } else {
+        div_clone2.textContent = thisValue.title;
+      }
+    }
+
+    div_clone.appendChild(div_clone2);
+    targetMother.appendChild(div_clone);
+
+    fixedWidth = div_clone2.getBoundingClientRect().width;
+    popupWidth = fixedWidth + (margin * 2);
+    div_clone.style.width = String(popupWidth) + ea;
+    div_clone.style.left = String(x - 29.6 - (instance.totalFather === null ? instance.grayBarWidth : 0) + (width / 2) - (popupWidth / 2)) + ea;
+
+    GeneralJs.stacks["matrixCaseTitlePopup"] = div_clone;
+
+  }
+
+  matrixCaseLeave = function (e) {
+    e.stopPropagation();
+    const index = Number(this.getAttribute("index"));
+    const position = Number(this.getAttribute("position"));
+    const thisCase = instance.contentsReportMatrix[index];
+    const thisValue = thisCase[position];
+    const [ conid, pid ] = thisCase;
+    const targetMother = this.parentNode;
+
+    let targets;
+    targets = [
+      this.parentElement.parentElement.children[0].lastChild,
+      this.parentElement.parentElement.children[1].lastChild,
+      this,
+    ];
+    for (let i of targets) {
+      i.style.color = "#404040";
+    }
+    if (this.textContent === "미발행") {
+      this.style.color = "#dd3424";
+    }
+
+    if (GeneralJs.stacks["matrixCaseTitlePopup"] !== null) {
+      GeneralJs.stacks["matrixCaseTitlePopup"].remove();
+      GeneralJs.stacks["matrixCaseTitlePopup"] = null;
+    }
+  }
+
+  matrixCaseClick = function (e) {
+    const index = Number(this.getAttribute("index"));
+    const position = Number(this.getAttribute("position"));
+    const thisCase = instance.contentsReportMatrix[index];
+    const thisValue = thisCase[position];
+    const [ conid, pid ] = thisCase;
+    if (position > 1) {
+      if (thisValue.link !== '') {
+        window.open(thisValue.link, "_blank");
+      }
+    } else {
+      window.open("/contents?conid=" + conid, "_blank");
+    }
+  }
+
+  for (let z = 0; z < matrix.length; z++) {
+    caseDiv = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      display: "block",
+      position: "relative",
+      width: String(matrixAreaWidth) + ea,
+      height: String(titleHeight - 10) + ea,
+      cursor: "pointer",
+    };
+    for (let y in style) {
+      caseDiv.style[y] = style[y];
+    }
+
+    for (let i = 0; i < titleLength; i++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 40)) + ea + ")",
+        height: String(titleHeight) + ea,
+      };
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: String(100) + '%',
+        textAlign: "center",
+        top: String(13) + ea,
+        height: String(20) + ea,
+        borderRight: ((i !== titleLength - 1) ? "1px solid #e0e0e0" : ""),
+      };
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      div_clone.appendChild(div_clone2);
+
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.setAttribute("index", String(z));
+      div_clone2.setAttribute("position", String(i));
+      if (typeof matrix[z][i] === "string") {
+        div_clone2.textContent = matrix[z][i];
+      } else {
+        div_clone2.textContent = matrix[z][i].date;
+      }
+      style = {
+        position: "absolute",
+        width: String(100) + '%',
+        textAlign: "center",
+        top: String(12) + ea,
+        fontSize: String(14) + ea,
+        fontWeight: String(300),
+        cursor: "pointer",
+        color: "#404040",
+        transition: "all 0s ease",
+      };
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      if (div_clone2.textContent === "미발행") {
+        div_clone2.style.color = "#dd3424";
+      }
+      div_clone2.addEventListener("mouseenter", matrixCaseEnter);
+      div_clone2.addEventListener("mouseleave", matrixCaseLeave);
+      div_clone2.addEventListener("click", matrixCaseClick);
+      div_clone.appendChild(div_clone2);
+
+      caseDiv.appendChild(div_clone);
+    }
+
+    matrixScrollBox.appendChild(caseDiv);
+  }
+
   matrixArea.appendChild(matrixScrollBox);
 
   //matrix title box
-  titleArr = matrix.shift();
-  titleLength = titleArr.length;
   matrixTitleBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "fixed",
@@ -6225,6 +6460,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     background: "#f7f7f7",
     borderTopLeftRadius: String(6) + ea,
     borderTopRightRadius: String(6) + ea,
+    border: "1px solid #dddddd",
   };
   for (let i in style) {
     matrixTitleBox.style[i] = style[i];
@@ -6235,7 +6471,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     style = {
       display: "inline-block",
       position: "relative",
-      width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 30 : 70) : ((i < 4) ? 10 : 40)) + ea + ")",
+      width: "calc(calc(" + String(matrixAreaWidth) + ea + " / " + String(titleLength) + ") " + ((i < 2) ? '-' : '+') + " " + String((i < 2) ? ((i !== 1) ? 25 : 75) : ((i < 4) ? 10 : 40)) + ea + ")",
       height: String(titleHeight) + ea,
     };
     for (let j in style) {
@@ -6262,8 +6498,8 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       position: "absolute",
       width: String(100) + '%',
       textAlign: "center",
-      top: String(14) + ea,
-      height: String(19) + ea,
+      top: String(13) + ea,
+      height: String(20) + ea,
       borderRight: ((i !== titleLength - 1) ? "1px solid #aaaaaa" : ""),
     };
     for (let j in style) {
@@ -6278,6 +6514,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
   mother.appendChild(matrixArea);
 
+  instance.contentsReportMatrix = matrix;
   console.log(matrix);
 
 }

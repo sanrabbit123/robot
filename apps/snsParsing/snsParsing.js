@@ -11,6 +11,9 @@ const SnsParsing = function () {
 SnsParsing.prototype.viewBasicModel = function () {
   return {
     conid: "",
+    proid: "",
+    name: "",
+    designer: "",
     form: {
       long: {
         make: true,
@@ -73,6 +76,9 @@ SnsParsing.prototype.makeDummy = function (contents) {
   const address = require(`${process.cwd()}/apps/infoObj.js`);
   return {
     conid: contents.conid,
+    proid: "",
+    name: "",
+    designer: "",
     form: {
       long: {
         make: true,
@@ -301,7 +307,7 @@ SnsParsing.prototype.contentsSheets = async function () {
 
 SnsParsing.prototype.getSnsReport = async function () {
   const instance = this;
-  const { mongo, mongohomeinfo } = this.mother;
+  const { mongo, mongopythoninfo } = this.mother;
   const back = this.back;
   const address = require(`${process.cwd()}/apps/infoObj.js`);
   try {
@@ -323,6 +329,7 @@ SnsParsing.prototype.getSnsReport = async function () {
 
       //generarl
       this.conid = contents.conid;
+      this.proid = contents.proid;
       this.pid = contents.contents.portfolio.pid;
       this.consoleLink = "https://" + address.backinfo.host + "/contents?conid=" + contents.conid;
 
@@ -344,6 +351,14 @@ SnsParsing.prototype.getSnsReport = async function () {
         this.web.review.link = web + "/revdetail.php?qqq=" + contents.contents.review.rid;
         this.web.review.boo = true;
       }
+    }
+
+    SnsReport.prototype.setName = function (name) {
+      this.name = name;
+    }
+
+    SnsReport.prototype.setDesigner = function (designer) {
+      this.designer = designer;
     }
 
     SnsReport.prototype.setNaverBlog = function () {
@@ -368,6 +383,10 @@ SnsParsing.prototype.getSnsReport = async function () {
       obj.conid = this.conid;
       obj.pid = this.pid;
       obj.consoleLink = this.consoleLink;
+      obj.proid = obj.proid;
+      obj.name = obj.name;
+      obj.designer = obj.designer;
+
       obj.portfolioDate = this.web.portfolio.date;
       obj.portfolioTitle = this.web.portfolio.title;
       obj.portfolioLink = this.web.portfolio.link;
@@ -387,7 +406,7 @@ SnsParsing.prototype.getSnsReport = async function () {
       return obj;
     }
 
-    const MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+    const MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
     await MONGOC.connect();
 
     let snsObject;
@@ -400,8 +419,11 @@ SnsParsing.prototype.getSnsReport = async function () {
     for (let contents of allContents) {
       tempObj = new SnsReport(contents);
 
-      snsObject = await back.mongoRead("contentsSns", { conid: contents.conid }, { home: true, selfMongo: MONGOC });
+      snsObject = await back.mongoRead("contentsSns", { conid: contents.conid }, { python: true, selfMongo: MONGOC });
       snsObject = snsObject[0];
+
+      tempObj.setName(snsObject.name);
+      tempObj.setDesigner(snsObject.designer);
 
       //naver blog
       tempObj.setNaverBlog();
