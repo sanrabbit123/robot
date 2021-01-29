@@ -6135,10 +6135,28 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
   ];
 
   class MatrixArray extends Array {
+    getEventArrAll() {
+      let tempArr;
+      let result;
 
+      result = [];
+      for (let i of this) {
+        tempArr = i.getEventArr();
+        for (let j of tempArr) {
+          result.push(j);
+        }
+      }
+
+      return result;
+    }
   }
 
   class MatrixFactor extends Array {
+
+    setPid(pid) {
+      this.pid = pid;
+    }
+
     setName(name) {
       this.name = name;
     }
@@ -6148,10 +6166,36 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     }
 
     getEventArr() {
+      const that = this;
       let arr = [];
+      let tempObj;
+      let tempArr;
 
+      for (let i = 2; i < this.length; i++) {
+        if (this[i].date !== "미발행") {
+          tempObj = {};
+          tempArr = this[i].date.split("-");
 
+          tempObj.date = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+          if (i === 2) {
+            tempObj.title = "WP) " + this.pid;
+          } else if (i === 3) {
+            tempObj.title = "WR) " + this.pid;
+          } else if (i === 4) {
+            tempObj.title = "BP) " + this.pid;
+          } else {
+            tempObj.title = "BR) " + this.pid;
+          }
 
+          tempObj.eventFunc = function (e) {
+            window.open(that[i].link, "_blank");
+          }
+
+          tempObj.hours = false;
+
+          arr.push(tempObj);
+        }
+      }
 
       return arr;
     }
@@ -6193,6 +6237,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
         temp.push(report.flat[i][obj.column]);
       }
     }
+    temp.setPid(report.data[i].pid);
     temp.setName(report.data[i].name);
     temp.setDesigner(report.data[i].designer);
     matrix.push(temp);
@@ -6556,29 +6601,20 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
     calendarArea.style[i] = style[i];
   }
 
+  console.log(instance.contentsReportMatrix.getEventArrAll());
+
   calendar = this.mother.makeCalendar(new Date(), function (e) {}, {
     bigMode: true,
     width: "calc(100%)",
     height: "calc(100%)",
-    events: [
-      { date: new Date(), title: "안녕?", eventFunc: function (e) {}, hours: false }
-    ],
+    events: instance.contentsReportMatrix.getEventArrAll(),
   });
   calendar.calendarBase.style.position = "absolute";
   calendar.calendarBase.style.top = String(0) + ea;
   calendar.calendarBase.style.left = String(0) + ea;
   calendarArea.appendChild(calendar.calendarBase);
 
-
-
-
-
-
-
-
-
   mother.appendChild(calendarArea);
-
 
 }
 
