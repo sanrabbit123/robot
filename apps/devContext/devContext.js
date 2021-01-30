@@ -19,6 +19,7 @@ const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js"
 const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
+const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
 
 class DevContext extends Array {
 
@@ -908,10 +909,6 @@ class DevContext extends Array {
       // await app.blogToJson();
 
 
-      const tree = this.mother.treeParsing("/Users/baechang-gyu/Desktop/garbage");
-      // console.log(tree);
-
-      console.log(tree.returnFlatMatrix());
 
 
 
