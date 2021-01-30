@@ -7,7 +7,6 @@ class IpScan:
         commandList = []
         commandList.append("sudo")
         commandList.append("arp-scan")
-        commandList.append("--interface=eth0")
         commandList.append("--localnet")
 
         arpScanStout = subprocess.check_output(commandList, encoding="utf-8")
