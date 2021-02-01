@@ -16,6 +16,7 @@ BUTTON_LIST = [
     "proposal",
     "request",
     "contents",
+    "voice"
 ]
 
 runProcess = {}

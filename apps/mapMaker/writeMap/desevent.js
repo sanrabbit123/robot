@@ -40,7 +40,7 @@ module.exports = function(map, source_rawArr) {
   }
 
   //button
-  const { terms, submit } = sub;
+  const { terms, meeting, submit } = sub;
   let buttons = {
     desktop: {
       arrow: [],
@@ -69,6 +69,9 @@ module.exports = function(map, source_rawArr) {
   buttons.desktop[terms.type.desktop].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "desktop", exception: {} });
   buttons.mobile[terms.type.mobile].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "mobile", exception: {} });
 
+  buttons.desktop[meeting.type.desktop].push({ contents: meeting.title.replace(/\n/g, ' '), xyz: [ 10, 10, 10 ], flatform: "desktop", exception: {} });
+  buttons.mobile[meeting.type.mobile].push({ contents: meeting.title, xyz: [ 10, 10, 10 ], flatform: "mobile", exception: {} });
+
   for (let i = 0; i < submit.length; i++) {
     buttons.desktop[submit[i].type.desktop].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "desktop", exception: { font: "SDGothicNeoa-fSm" } });
     buttons.mobile[submit[i].type.mobile].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "mobile", exception: { font: "SDGothicNeoa-fSm" } });
@@ -86,7 +89,12 @@ module.exports = function(map, source_rawArr) {
     temp_reg = new RegExp("^b_check" + flatform + String(x) + String(y) + String(z) + "_off");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
 
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].off = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].off = b;
         svgTong.sync.push(b);
@@ -105,7 +113,12 @@ module.exports = function(map, source_rawArr) {
     temp_reg = new RegExp("^b_check" + flatform + String(x) + String(y) + String(z) + "_on");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
 
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].on = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].on = b;
         svgTong.sync.push(b);
@@ -127,7 +140,12 @@ module.exports = function(map, source_rawArr) {
   for (let { xyz: [ x, y, z ], flatform, exception } of desktopWhite.concat(mobileWhite)) {
     temp_reg = new RegExp("^b_white" + String(x) + String(y) + String(z));
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform] = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform] = b;
         svgTong.sync.push(b);
@@ -148,7 +166,12 @@ module.exports = function(map, source_rawArr) {
   for (let { xyz: [ x, y, z ], flatform, exception } of desktopArrow) {
     temp_reg = new RegExp("^b_arrow" + String(x) + String(y) + String(z) + "_off");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].off = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].off = b;
         svgTong.sync.push(b);
@@ -165,7 +188,12 @@ module.exports = function(map, source_rawArr) {
     }}
     temp_reg = new RegExp("^b_arrow" + String(x) + String(y) + String(z) + "_on");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
-       if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].on = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].on = b;
         svgTong.sync.push(b);
@@ -186,7 +214,12 @@ module.exports = function(map, source_rawArr) {
   for (let { xyz: [ x, y, z ], flatform, exception } of mobileGreen) {
     temp_reg = new RegExp("^b_green" + String(x) + String(y) + String(z) + "_off");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].off = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].off = b;
         svgTong.sync.push(b);
@@ -203,7 +236,12 @@ module.exports = function(map, source_rawArr) {
     }}
     temp_reg = new RegExp("^b_green" + String(x) + String(y) + String(z) + "_on");
     for (let b of source_rawArr) { if (temp_reg.test(b)) {
-      if (x === 9 && y === 9 && z === 9) {
+      if (x === 10 && y === 10 && z === 10) {
+        //meeting
+        meeting.src[flatform].on = b;
+        svgTong.sync.push(b);
+
+      } else if (x === 9 && y === 9 && z === 9) {
         //terms
         terms.src[flatform].on = b;
         svgTong.sync.push(b);

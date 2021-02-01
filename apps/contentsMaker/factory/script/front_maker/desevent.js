@@ -260,7 +260,7 @@ ExecMain.prototype.buttonGreen = function (arr) {
 }
 
 ExecMain.prototype.buttonMaker = function () {
-  const { main, sub: { terms, submit } } = this.text;
+  const { main, sub: { terms, meeting, submit } } = this.text;
   let buttons = {
     desktop: {
       arrow: [],
@@ -289,6 +289,9 @@ ExecMain.prototype.buttonMaker = function () {
   buttons.desktop[terms.type.desktop].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "desktop", exception: {} });
   buttons.mobile[terms.type.mobile].push({ contents: terms.title, xyz: [ 9, 9, 9 ], flatform: "mobile", exception: {} });
 
+  buttons.desktop[meeting.type.desktop].push({ contents: meeting.title.replace(/\n/g, ' '), xyz: [ 10, 10, 10 ], flatform: "desktop", exception: {} });
+  buttons.mobile[meeting.type.mobile].push({ contents: meeting.title, xyz: [ 10, 10, 10 ], flatform: "mobile", exception: {} });
+
   for (let i = 0; i < submit.length; i++) {
     buttons.desktop[submit[i].type.desktop].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "desktop", exception: { font: "SDGothicNeoa-fSm" } });
     buttons.mobile[submit[i].type.mobile].push({ contents: submit[i].title, xyz: [ 9, i, 9 ], flatform: "mobile", exception: { font: "SDGothicNeoa-fSm" } });
@@ -300,6 +303,43 @@ ExecMain.prototype.buttonMaker = function () {
   this.buttonWhite(desktopWhite.concat(mobileWhite));
   this.buttonArrow(desktopArrow);
   this.buttonGreen(mobileGreen);
+}
+
+ExecMain.prototype.popupMaker = function () {
+  const { main } = this.text;
+  let desktop, mobile, totalTargets;
+
+  desktop = [];
+  mobile = [];
+
+  //set data
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].popup !== undefined) {
+        desktop.push({ contents: main[i].children[j].popup.description.desktop, xyz: [ i, j, 9 ], flatform: "desktop", exception: {} });
+        mobile.push({ contents: main[i].children[j].popup.description.mobile, xyz: [ i, j, 9 ], flatform: "mobile", exception: {} });
+      }
+    }
+  }
+
+  totalTargets = desktop.concat(mobile);
+
+  //make
+  let this_ai, from, to, contents, temp;
+  for (let obj of totalTargets) {
+    this_ai = this.createDoc();
+    from = "general";
+    to = ((obj.flatform === "desktop") ? "" : "mo") + "popup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
+    contents = obj.contents.join("\n");
+    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#606060", justification: "LEFT", leading: 34 } });
+    this.setParagraph({ from: contents, to: to });
+    temp = this.createElements(this_ai, this.createSetting[to]);
+    temp = temp.createOutline();
+    this.mother.fit_box();
+    app.doScript("expandall", "contents_maker");
+    this.saveSvg(this_ai, to);
+  }
+
 }
 
 ExecMain.prototype.noticeMaker = function () {
@@ -329,11 +369,46 @@ ExecMain.prototype.noticeMaker = function () {
         to = "mo" + to;
       }
       contents = "*" + obj.contents;
-      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: ((i === 0) ? "#2fa678" : "#cccccc"), justification: "LEFT", leading: 31 } });
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: ((i === 0) ? "#2fa678" : "#cccccc"), justification: "LEFT", leading: 32 } });
       this.setParagraph({ from: contents, to: to });
       temp = this.createElements(this_ai, this.createSetting[to]);
       temp = temp.createOutline();
       this.mother.white_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to);
+    }
+  }
+
+}
+
+ExecMain.prototype.radioMaker = function () {
+  const { main } = this.text;
+  let desktop, mobile, totalTargets;
+
+  totalTargets = [];
+
+  //set data
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].radio !== undefined) {
+        totalTargets.push({ contents: main[i].children[j].radio.factors, xyz: [ i, j, 9 ], flatform: "desktop", exception: {} });
+      }
+    }
+  }
+
+  //make
+  let this_ai, from, to, contents, temp;
+  for (let obj of totalTargets) {
+    for (let k = 0; k < obj.contents.length; k++) {
+      this_ai = this.createDoc();
+      from = "general";
+      to = "radio" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(k);
+      contents = obj.contents[k];
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#ffffff" } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.fit_box();
       app.doScript("expandall", "contents_maker");
       this.saveSvg(this_ai, to);
     }
@@ -528,7 +603,10 @@ ExecMain.prototype.start = function (dayString) {
   this.factorTitleMaker();
 
   this.buttonMaker();
+
+  this.popupMaker();
   this.noticeMaker();
+  this.radioMaker();
 
   this.promptMaker();
 
@@ -537,5 +615,4 @@ ExecMain.prototype.start = function (dayString) {
 
   // this.arrowMaker();
   this.whiteTitle();
-
 }
