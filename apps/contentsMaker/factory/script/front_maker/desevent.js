@@ -83,6 +83,15 @@ ExecMain.prototype.buttonCheck = function (arr) {
   let options, this_ai, from, to, contents, temp, temp2, height;
   for (let { contents: text, xyz: [ x, y, z ], flatform, exception } of arr) {
 
+    if (flatform !== "desktop") {
+      if (/과세/gi.test(text)) {
+        text = text.replace(/ 과세\)/gi, ")");
+      }
+      if (/해당 없음/gi.test(text)) {
+        text = text.replace(/ \(해당 없음\)/gi, "");
+      }
+    }
+
     //off
     this_ai = this.createDoc();
     from = "general";
@@ -312,20 +321,22 @@ ExecMain.prototype.noticeMaker = function () {
   //make
   let this_ai, from, to, contents, temp;
   for (let obj of tong) {
-    this_ai = this.createDoc();
-    from = "general";
-    to = "notice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
-    if (obj.mobile !== undefined) {
-      to = "mo" + to;
+    for (let i = 0; i < 2; i++) {
+      this_ai = this.createDoc();
+      from = "general";
+      to = "notice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(i);
+      if (obj.mobile !== undefined) {
+        to = "mo" + to;
+      }
+      contents = "*" + obj.contents;
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: ((i === 0) ? "#2fa678" : "#cccccc"), justification: "LEFT", leading: 31 } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.white_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to);
     }
-    contents = "*" + obj.contents;
-    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#2fa678" } });
-    this.setParagraph({ from: contents, to: to });
-    temp = this.createElements(this_ai, this.createSetting[to]);
-    temp = temp.createOutline();
-    this.mother.fit_box();
-    app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
   }
 
 }
@@ -346,7 +357,7 @@ ExecMain.prototype.promptMaker = function () {
     from = "general";
     to = title;
     contents = contentsText;
-    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f", justification: "CENTER", leading: 38 } });
+    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f", justification: "CENTER", leading: 32 } });
     this.setParagraph({ from: contents, to: to });
     temp = this.createElements(this_ai, this.createSetting[to]);
     temp = temp.createOutline();
@@ -366,7 +377,7 @@ ExecMain.prototype.arrowMaker = function () {
 }
 
 ExecMain.prototype.fileSend = function () {
-  const { sub: { fileSend: obj } } = this.text;
+  const { sub: { etc: { fileSend: obj } } } = this.text;
   let this_ai, from, to, contents, temp, asterisk;
   const { factorTitle, white } = obj;
 
@@ -404,7 +415,7 @@ ExecMain.prototype.fileSend = function () {
 }
 
 ExecMain.prototype.clickWording = function () {
-  const { sub: { clickWording: obj } } = this.text;
+  const { sub: { etc: { clickWording: obj } } } = this.text;
 
   let this_ai, from, to, contents, temp;
 
@@ -474,21 +485,21 @@ ExecMain.prototype.generalTitle = function (obj) {
   if (obj.name === "presentation") {
     line = this_ai.pathItems.add();
     line.stroked = true;
-    line.setEntirePath([[this.mother.return_left(title), (title_bottom - 2.2)], [this.mother.return_right(title) - 6, (title_bottom - 2.2)]]);
+    line.setEntirePath([[this.mother.return_left(title), (title_bottom - 5.4)], [this.mother.return_right(title), (title_bottom - 5.4)]]);
     line.fillColor = new NoColor();
     line.strokeColor = this.mother.colorpick("#ffffff");
     line.strokeWidth = 0.5;
   } else {
     line = this_ai.pathItems.add();
     line.stroked = true;
-    line.setEntirePath([[this.mother.return_left(title), (title_bottom - 2.2)], [this.mother.return_left(title) + 22.3, (title_bottom - 2.2)]]);
+    line.setEntirePath([[this.mother.return_left(title), (title_bottom - 2.2)], [this.mother.return_left(title) + 46.5, (title_bottom - 2.2)]]);
     line.fillColor = new NoColor();
     line.strokeColor = this.mother.colorpick("#ffffff");
     line.strokeWidth = 0.5;
 
     line = this_ai.pathItems.add();
     line.stroked = true;
-    line.setEntirePath([[this.mother.return_left(title) + 25.3, (title_bottom - 2.2)], [this.mother.return_right(title), (title_bottom - 2.2)]]);
+    line.setEntirePath([[this.mother.return_left(title) + 49.5, (title_bottom - 2.2)], [this.mother.return_right(title), (title_bottom - 2.2)]]);
     line.fillColor = new NoColor();
     line.strokeColor = this.mother.colorpick("#ffffff");
     line.strokeWidth = 0.5;
@@ -520,6 +531,9 @@ ExecMain.prototype.start = function (dayString) {
   this.noticeMaker();
 
   this.promptMaker();
+
+  this.fileSend();
+  this.clickWording();
 
   // this.arrowMaker();
   this.whiteTitle();

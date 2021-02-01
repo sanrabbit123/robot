@@ -234,21 +234,28 @@ module.exports = function(map, source_rawArr) {
   }
   for (let obj of tong) {
     if (obj.mobile !== undefined) {
-      temp_reg = new RegExp("^monotice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]));
+      main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile = new Array(2);
     } else {
-      temp_reg = new RegExp("^notice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]));
+      main[obj.xyz[0]].children[obj.xyz[1]].notice.src.desktop = new Array(2);
     }
-    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+    for (let i = 0; i < 2; i++) {
       if (obj.mobile !== undefined) {
-        main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile = z;
+        temp_reg = new RegExp("^monotice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(i));
       } else {
-        main[obj.xyz[0]].children[obj.xyz[1]].notice.src.desktop = z;
-        if (!/^mo/.test(main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile)) {
-          main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile = z;
-        }
+        temp_reg = new RegExp("^notice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(i));
       }
-      svgTong.sync.push(z);
-    }}
+      for (let z of source_rawArr) { if (temp_reg.test(z)) {
+        if (obj.mobile !== undefined) {
+          main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i] = z;
+        } else {
+          main[obj.xyz[0]].children[obj.xyz[1]].notice.src.desktop[i] = z;
+          if (!/^mo/.test(main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i])) {
+            main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i] = z;
+          }
+        }
+        svgTong.sync.push(z);
+      }}
+    }
   }
 
   //pending
@@ -292,28 +299,28 @@ module.exports = function(map, source_rawArr) {
 
   temp_reg = new RegExp("^clickWording_desktop");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
-    clickWording.src.desktop = z;
+    sub.etc.clickWording.src.desktop = z;
     svgTong.async.push(z);
   }}
 
   temp_reg = new RegExp("^clickWording_mobile");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
-    clickWording.src.mobile = z;
+    sub.etc.clickWording.src.mobile = z;
     svgTong.async.push(z);
   }}
 
   temp_reg = new RegExp("^fileSend_title");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
-    factorTitle.src.desktop = z;
-    factorTitle.src.mobile = z;
+    sub.etc.fileSend.factorTitle.src.desktop = z;
+    sub.etc.fileSend.factorTitle.src.mobile = z;
     svgTong.async.push(z);
   }}
 
-  for (let i = 0; i < fileSendWhite.length; i++) {
+  for (let i = 0; i < sub.etc.fileSend.white.length; i++) {
     temp_reg = new RegExp("^fileSend_white_" + String(i));
     for (let z of source_rawArr) { if (temp_reg.test(z)) {
-      fileSendWhite[i].src.desktop = z;
-      fileSendWhite[i].src.mobile = z;
+      sub.etc.fileSend.white[i].src.desktop = z;
+      sub.etc.fileSend.white[i].src.mobile = z;
       svgTong.async.push(z);
     }}
   }
