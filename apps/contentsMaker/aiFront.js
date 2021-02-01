@@ -72,7 +72,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
       data: this.text,
       script: temp_scriptString,
       app: "Illustrator",
-      end: false,
+      end: true,
     });
 
     //make svgTong files and make map with source written

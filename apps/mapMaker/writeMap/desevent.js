@@ -287,13 +287,59 @@ module.exports = function(map, source_rawArr) {
           main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i] = z;
         } else {
           main[obj.xyz[0]].children[obj.xyz[1]].notice.src.desktop[i] = z;
-          if (!/^mo/.test(main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i])) {
-            main[obj.xyz[0]].children[obj.xyz[1]].notice.src.mobile[i] = z;
-          }
         }
         svgTong.sync.push(z);
       }}
     }
+  }
+
+  //popup
+  tong = [];
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].popup !== undefined) {
+        tong.push({ contents: main[i].children[j].popup.description.desktop, xyz: [ i, j, 9 ], flatform: "desktop", exception: {} });
+        tong.push({ contents: main[i].children[j].popup.description.mobile, xyz: [ i, j, 9 ], flatform: "mobile", exception: {} });
+      }
+    }
+  }
+  for (let obj of tong) {
+    if (obj.flatform === "mobile") {
+      temp_reg = new RegExp("^mopopup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(9));
+    } else {
+      temp_reg = new RegExp("^popup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(9));
+    }
+    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+      if (obj.flatform === "mobile") {
+        main[obj.xyz[0]].children[obj.xyz[1]].popup.src.mobile = z;
+      } else {
+        main[obj.xyz[0]].children[obj.xyz[1]].popup.src.desktop = z;
+      }
+      svgTong.sync.push(z);
+    }}
+  }
+
+  //radio
+  tong = [];
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].radio !== undefined) {
+        tong.push({ contents: main[i].children[j].radio.factors, xyz: [ i, j, 9 ], flatform: "desktop", exception: {} });
+      }
+    }
+  }
+  for (let obj of tong) {
+    main[obj.xyz[0]].children[obj.xyz[1]].radio.src = [];
+    for (let i = 0; i < main[obj.xyz[0]].children[obj.xyz[1]].radio.factors.length; i++) {
+      temp_reg = new RegExp("^radio" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(i));
+      for (let z of source_rawArr) { if (temp_reg.test(z)) {
+        main[obj.xyz[0]].children[obj.xyz[1]].radio.src.push(z);
+        svgTong.sync.push(z);
+      }}
+    }
+    main[obj.xyz[0]].children[obj.xyz[1]].radio.src.sort((a, b) => {
+      return Number((a.split("_")[0]).replace(/radio/gi, '').replace(/[^0-9]/g, '')) - Number((b.split("_")[0]).replace(/radio/gi, '').replace(/[^0-9]/g, ''));
+    });
   }
 
   //pending

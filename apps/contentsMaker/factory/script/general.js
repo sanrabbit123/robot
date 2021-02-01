@@ -1299,7 +1299,7 @@ ExecMain.prototype.createElements = function (doc, obj) {
   return areaTextRef;
 }
 
-ExecMain.prototype.saveSvg = function (ai, name) {
+ExecMain.prototype.saveSvg = function (ai, name, recycle = false) {
   let exportOptions = new ExportOptionsSVG();
   exportOptions.coordinatePrecision = 7;
   let fileName;
@@ -1309,7 +1309,18 @@ ExecMain.prototype.saveSvg = function (ai, name) {
     fileName = name + '_' + this.mother.ratio_string(this.mother.return_ratio()) + '_' + this.dayString;
   }
   ai.exportFile(new File(this.dir + '/' + fileName), ExportType.SVG, exportOptions);
-  ai.close(SaveOptions.DONOTSAVECHANGES);
+  if (!recycle) {
+    ai.close(SaveOptions.DONOTSAVECHANGES);
+  } else {
+    let items = [];
+    for (let i = 0; i < ai.pageItems.length; i++) {
+      items.push(ai.pageItems[i]);
+    }
+    const count = items.length;
+    for (let i = 0; i < count; i++) {
+      items[i].remove();
+    }
+  }
 }
 
 ExecMain.prototype.savePng = function (ai, name, scale, widthRatio = []) {
