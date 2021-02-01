@@ -26,10 +26,10 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.homeliaisonTalk(local_funcs);
     document.body.style.height = "";
   } catch (e) {
-    window.location.href = "https://home-liaison.com/";
+    // window.location.href = "https://home-liaison.com/";
   }
 });
 
 document.addEventListener("error", function (e) {
-  window.location.href = "https://home-liaison.com/";
+  // window.location.href = "https://home-liaison.com/";
 });

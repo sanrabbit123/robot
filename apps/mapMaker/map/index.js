@@ -221,15 +221,15 @@ module.exports = {
       "src": [
         {
           "src": "belowButton0_6rspot65_013015.svg",
-          "link": "/about.php"
-        },
-        {
-          "src": "belowButton1_6rspot901_013015.svg",
           "link": "http://hansungidschool.com/ver02/course/course2.asp"
         },
         {
+          "src": "belowButton1_6rspot901_013015.svg",
+          "link": "https://docs.google.com/forms/d/e/1FAIpQLScGbGl2S1plXOXjX0ocdiOW63xr8v1Sz5r_OZHGy4D3Pv_Xwg/viewform"
+        },
+        {
           "src": "belowButton2_5rspot644_013015.svg",
-          "link": "https://docs.google.com/forms/d/e/1FAIpQLSceV-1hP44vmNJas3zBiKQqISkLHs8916AdsDSxlj2yYytQwg/viewform"
+          "link": "https://docs.google.com/forms/d/e/1FAIpQLSfBSBHN-f6GeEzEY31yc9H4UHPGO4_dUPr3d6VcPQuf7MT6JQ/viewform"
         }
       ]
     },

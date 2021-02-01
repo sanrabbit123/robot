@@ -94,10 +94,10 @@ Robot.prototype.frontMaker = function (webpack) {
   fobot.totalLaunching(webpack);
 }
 
-Robot.prototype.frontUpdate = function () {
+Robot.prototype.frontUpdate = function (testMode) {
   const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
   let fobot = new FrontMaker();
-  fobot.totalUpdate();
+  fobot.totalUpdate(testMode);
 }
 
 Robot.prototype.consoleSource = function () {
@@ -203,7 +203,12 @@ Robot.prototype.launching = async function () {
       }
 
     } else if (process.argv[2] === "frontupdate") {
-      this.frontUpdate();
+
+      if (process.argv[3] !== undefined) {
+        this.frontUpdate(true);
+      } else {
+        this.frontUpdate(false);
+      }
 
     } else if (process.argv[2] === "consolesource") {
 

@@ -475,7 +475,7 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
     let totalOrder;
     let binaryTarget, binaryTargetDir;
 
-    await this.totalLaunching(true, true);
+    await this.totalLaunching(!test, true);
 
     //make shellScript
     totalOrder = '';
@@ -487,24 +487,32 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
     //execute
     shell.exec(totalOrder);
 
-    //binary setting
-    binaryTarget = await fileSystem(`readDir`, [ this.links.binary ]);
-    totalOrder = '';
+    if (!test) {
 
-    if (binaryTarget.includes("binary")) {
-      shell.exec(`mkdir ${shellLink(this.links.server)}/list_image;`);
-      binaryTargetDir = await fileSystem(`readDir`, [ this.links.binary + "/binary" ]);
-      for (let i of binaryTargetDir) {
-        if (i !== `.DS_Store`) {
-          totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
+      //binary setting
+      binaryTarget = await fileSystem(`readDir`, [ this.links.binary ]);
+      totalOrder = '';
+
+      if (binaryTarget.includes("binary")) {
+        shell.exec(`mkdir ${shellLink(this.links.server)}/list_image;`);
+        binaryTargetDir = await fileSystem(`readDir`, [ this.links.binary + "/binary" ]);
+        for (let i of binaryTargetDir) {
+          if (i !== `.DS_Store`) {
+            totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
+          }
         }
+        shell.exec(totalOrder);
       }
-      shell.exec(totalOrder);
+
+      shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
+
+      console.log(`scp -r ${shellLink(process.env.HOME)}/www`);
+
+    } else {
+
+      shell.exec(`rm -rf ${shellLink(this.links.server)}`);
+
     }
-
-    shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
-
-    console.log(`scp -r ${shellLink(process.env.HOME)}/www`);
 
   } catch (e) {
     console.log(e);
