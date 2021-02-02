@@ -962,7 +962,7 @@ DeseventJs.prototype.returnBlocks = function () {
     },
     {
       name: "partnership",
-      height: { desktop: 857, mobile: 240, },
+      height: { desktop: 857, mobile: 254, },
       desktop: [
         //사업자 구분
         {
@@ -1856,7 +1856,7 @@ DeseventJs.prototype.returnBlocks = function () {
             top = 692;
             height = 15;
             left = 162;
-            margin = 50;
+            margin = 30;
             totalWidth = left;
 
             h = document.createDocumentFragment();
@@ -2015,12 +2015,12 @@ DeseventJs.prototype.returnBlocks = function () {
             for (let j = 0; j < buttons.length; j++) {
               svg_clone = SvgTong.tongMaker();
               svg_clone.src = buttons[j].src.mobile.off;
-              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.1;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.2;
               style = {
                 position: "absolute",
                 transition: "opacity 0.3s ease",
-                top: String((j < 2) ? top : top + 5.1) + ea,
-                left: String((j % 2) ? 62.5 : left) + ea,
+                top: String((j < 2) ? top : top + 5.3) + ea,
+                left: String((j % 2) ? 62.4 : left) + ea,
                 width: String(width) + ea,
                 height: String(height) + ea,
                 cursor: "pointer",
@@ -2067,21 +2067,37 @@ DeseventJs.prototype.returnBlocks = function () {
         //회사명
         {
           titleStyle: {
-            top: 24.68,
+            top: 25.08,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 24.68 - 1.5;
+            top = 25.08 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
+
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2099,29 +2115,96 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts1"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts1"]);
+                GeneralJs.timeouts["mopopupTimeouts1"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //사업자 등록번호
         {
           titleStyle: {
-            top: 34.48,
+            top: 34.88,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 34.48 - 1.5;
+            top = 34.88 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
+
+            dom = DeseventJs.inputMaker(false, "mopartnership1");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2137,29 +2220,96 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts2"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts2"]);
+                GeneralJs.timeouts["mopopupTimeouts2"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //개업일
         {
           titleStyle: {
-            top: 44.28,
+            top: 44.68,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 44.28 - 1.5;
+            top = 44.68 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
+
+            dom = DeseventJs.inputMaker(false, "mopartnership2");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2175,29 +2325,96 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts3"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts3"]);
+                GeneralJs.timeouts["mopopupTimeouts3"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //대표자 성함
         {
           titleStyle: {
-            top: 54.08,
+            top: 54.48,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 54.08 - 1.5;
+            top = 54.48 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
+
+            dom = DeseventJs.inputMaker(false, "mopartnership3");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2213,13 +2430,64 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts4"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts4"]);
+                GeneralJs.timeouts["mopopupTimeouts4"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //은행명
         {
           titleStyle: {
-            top: 80.44,
+            top: 80.84,
             left: 0,
           },
           callback: function (needs) {
@@ -2232,7 +2500,7 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 80.44 - 1.5;
+            top = 80.84 - 1.5;
             left = 26;
             width = 61.1;
 
@@ -2249,7 +2517,7 @@ DeseventJs.prototype.returnBlocks = function () {
             }
             h.appendChild(line);
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            dom = DeseventJs.inputMaker(false, "mopartnership4");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2271,23 +2539,39 @@ DeseventJs.prototype.returnBlocks = function () {
         //계좌 번호
         {
           titleStyle: {
-            top: 90.24,
+            top: 90.64,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 90.24 - 1.5;
+            top = 90.64 - 1.5;
             left = 26;
             width = 61.1;
+            inputWidth = width;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
+
+            dom = DeseventJs.inputMaker(false, "mopartnership5");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2303,13 +2587,65 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts5"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts5"]);
+                GeneralJs.timeouts["mopopupTimeouts5"] = null;
+              }, 301);
+            });
+
+
             return h;
           }
         },
         //예금주명
         {
           titleStyle: {
-            top: 100.04,
+            top: 100.44,
             left: 0,
           },
           callback: function (needs) {
@@ -2321,11 +2657,11 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 100.04 - 1.5;
+            top = 100.44 - 1.5;
             left = 26;
             width = 61.1;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            dom = DeseventJs.inputMaker(false, "mopartnership6");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2347,7 +2683,7 @@ DeseventJs.prototype.returnBlocks = function () {
         //기타사항
         {
           titleStyle: {
-            top: 109.84,
+            top: 110.24,
             left: 0,
           },
           callback: function (needs) {
@@ -2359,11 +2695,11 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 109.84 - 1.5;
+            top = 110.24 - 1.5;
             left = 26;
             width = 61.1;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            dom = DeseventJs.inputMaker(false, "mopartnership7");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2385,22 +2721,38 @@ DeseventJs.prototype.returnBlocks = function () {
         //인테리어 경력
         {
           titleStyle: {
-            top: 136.2,
+            top: 136.6,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
             let line;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 136.2 - 1.5;
+            top = 136.6 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
+
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 13.5;
+            popupHeight = 20.5
+            popupMargin = 3.5;
 
             line = GeneralJs.nodes.div.cloneNode(true);
             style = {
@@ -2415,7 +2767,7 @@ DeseventJs.prototype.returnBlocks = function () {
             }
             h.appendChild(line);
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            dom = DeseventJs.inputMaker(false, "mopartnership8");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2431,29 +2783,96 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts8"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts8"]);
+                GeneralJs.timeouts["mopopupTimeouts8"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //스타일링 경력
         {
           titleStyle: {
-            top: 146,
+            top: 146.4,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let popup_dom;
+            let popupHeight;
+            let popupMargin;
+            let popupSvgHeight;
+            let svg_dom, svg_clone;
+            let margin;
+            let inputWidth;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 146 - 1.5;
+            top = 146.4 - 1.5;
             left = 36;
             width = 51.1;
+            inputWidth = width;
 
-            dom = DeseventJs.inputMaker(false, "mopartnership0");
+            height = 13;
+            margin = 12;
+
+            popupSvgHeight = 8.5;
+            popupHeight = 15.7;
+            popupMargin = 3.5;
+
+            dom = DeseventJs.inputMaker(false, "mopartnership9");
             style = {
               top: String(top) + ea,
               left: String(left) + ea,
@@ -2469,26 +2888,79 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h.appendChild(dom);
 
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - margin + 10) + ea,
+              width: String(inputWidth) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.4s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.timeouts["mopopupTimeouts9"] = setTimeout(function () {
+                popup_dom.style.display = "none";
+                clearTimeout(GeneralJs.timeouts["mopopupTimeouts9"]);
+                GeneralJs.timeouts["mopopupTimeouts9"] = null;
+              }, 301);
+            });
+
             return h;
           }
         },
         //경력 상세
         {
           titleStyle: {
-            top: 155.8,
+            top: 156.2,
             left: 0,
           },
           callback: function (needs) {
+            const { popup } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
             let box;
+            let textArea;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 155.8 - 1.5;
+            top = 156.2 - 1.5;
             left = 36;
             width = 51.1;
 
@@ -2505,6 +2977,36 @@ DeseventJs.prototype.returnBlocks = function () {
             for (let i in style) {
               box.style[i] = style[i];
             }
+
+            textArea = GeneralJs.nodes.textarea.cloneNode(true);
+            style = {
+              backgroundColor: "transparent",
+              top: String(0),
+              left: String(0),
+              border: String(0),
+              outline: String(0),
+              fontFamily: "'Noto Sans KR',sans-serif",
+              fontSize: String(3.4) + ea,
+              color: "#404040",
+              lineHeight: String(1.5),
+              letterSpacing: String(-0.5) + "px",
+              textShadow: "none",
+              textDecoration: "none",
+              textTransform: "none",
+              padding: String(2.2) + ea,
+              paddingLeft: String(3) + ea,
+              paddingRight: String(3) + ea,
+              position: "absolute",
+              width: String(100) + '%',
+              height: String(100) + '%',
+              textAlign: "left",
+            };
+            for (let i in style) {
+              textArea.style[i] = style[i];
+            }
+
+            textArea.setAttribute("placeholder", popup.description.mobile.slice(0, 3).join("\n"));
+            box.appendChild(textArea);
             h.appendChild(box);
 
             return h;
@@ -2513,7 +3015,7 @@ DeseventJs.prototype.returnBlocks = function () {
         //유입 경로
         {
           titleStyle: {
-            top: 202.8,
+            top: 203.2,
             left: 0,
           },
           callback: function (needs) {
@@ -2530,7 +3032,7 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 202.8;
+            top = 203.2;
             left = 36;
             width = 38;
 
@@ -2608,7 +3110,7 @@ DeseventJs.prototype.returnBlocks = function () {
         //포트폴리오
         {
           titleStyle: {
-            top: 212.9,
+            top: 213.3,
             left: 0,
           },
           callback: function (needs) {
@@ -2618,27 +3120,66 @@ DeseventJs.prototype.returnBlocks = function () {
             let top, left;
             let width, height;
             let box;
+            let grayWidth, grayHeight;
+            let grayTop;
+            let svg_clone, svg_dom;
+            let line;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 212.9 - 1.5;
+            top = 213.3 - 1.5;
             left = 36;
-            width = 51.1;
+            grayWidth = 87;
+            grayHeight = 20;
+            grayTop = top + 8.7;
+
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(grayTop + grayHeight + 10.18) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
 
             box = GeneralJs.nodes.div.cloneNode(true);
             style = {
               position: "absolute",
               borderRadius: String(3) + "px",
-              width: String(87) + ea,
-              height: String(20) + ea,
+              width: String(grayWidth) + ea,
+              height: String(grayHeight) + ea,
               left: String(0) + ea,
-              top: String(top + 8.7) + ea,
+              top: String(grayTop) + ea,
               background: "#f2f2f2",
             };
             for (let i in style) {
               box.style[i] = style[i];
             }
             h.appendChild(box);
+
+            height = 5.3;
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = instance.map.sub.etc.clickWording.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(grayTop + (grayHeight / 2) - (height / 2) - 0.2) + ea,
+              left: String((grayWidth / 2) - (width / 2)) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            h.appendChild(svg_dom);
 
             return h;
           }
@@ -2748,7 +3289,7 @@ DeseventJs.prototype.belowSubmit = function () {
       },
       {
         name: "submit",
-        style: "position:relative;height:60px;",
+        style: "position:relative;height:54px;",
         callback: function () {
           let div_clone, svg_clone;
           let height, width, ea = "px", style = {};
@@ -2770,7 +3311,7 @@ DeseventJs.prototype.belowSubmit = function () {
             div_clone.style[i] = style[i];
           }
 
-          height = 22;
+          height = 20;
           svg_clone = SvgTong.tongMaker();
           svg_clone.src = submit[1].src.desktop;
           svg_clone.classList.add("hoverdefault");
@@ -2780,7 +3321,7 @@ DeseventJs.prototype.belowSubmit = function () {
             height: String(22) + ea,
             left: String(50) + '%',
             marginLeft: String(-40.5) + ea,
-            top: String(17) + ea,
+            top: String(15) + ea,
             transition: "opacity 0.5s ease",
             height: String(height) + ea,
             width: String(width) + ea,
@@ -2802,102 +3343,150 @@ DeseventJs.prototype.belowSubmit = function () {
       },
     ],
     mobile: [
-      // {
-      //   name: "description",
-      //   style: "height:30.9vw;padding-top:3.8vw;background:#f2f2f2;",
-      //   callback: function () {
-      //     let div_clone = GeneralJs.nodes.div.cloneNode(true);
-      //     div_clone.classList.add("mobelow_box_policy");
-      //     div_clone.insertAdjacentHTML("beforeend", DeseventJs.policy());
-      //     return div_clone;
-      //   }
-      // },
-      // {
-      //   name: "check",
-      //   style: "height:32px;",
-      //   callback: function () {
-      //     let h, div_clone, img_clone, input_clone;
-      //     let svg_clone, height, width, ea = "vw", style = {};
-      //     let list = [ "off", "on", ];
-      //     h = document.createDocumentFragment();
-      //     function clickEvent(e) {
-      //       let target;
-      //       if (this.classList.contains("mobelow_box_checkbox_div")) {
-      //         target = this.querySelector("input");
-      //       } else {
-      //         target = this.parentElement.querySelector("input");
-      //       }
-      //       if (target.checked) {
-      //         target.checked = false;
-      //       } else {
-      //         target.checked = true;
-      //       }
-      //     }
-      //
-      //     div_clone = GeneralJs.nodes.div.cloneNode(true);
-      //     div_clone.classList.add("mobelow_box_checkbox_div");
-      //     input_clone = GeneralJs.nodes.input.cloneNode(true);
-      //     input_clone.classList.add("mobelow_box_checkbox_input");
-      //     input_clone.style.display = "none";
-      //     input_clone.setAttribute("type", "checkbox");
-      //     input_clone.setAttribute("name", "modescription");
-      //     input_clone.checked = true;
-      //     div_clone.appendChild(input_clone);
-      //     for (let i = 0; i < list.length; i++) {
-      //       height = 3.2;
-      //       svg_clone = SvgTong.tongMaker();
-      //       svg_clone.src = terms.src.desktop[list[i]];
-      //       width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-      //       style = {
-      //         height: String(height) + ea,
-      //         width: String(width) + ea,
-      //       };
-      //       for (let i in style) {
-      //         svg_clone.style[i] = style[i];
-      //       }
-      //       svg_clone.classList.add("mobelow_box_checkbox");
-      //       svg_clone.classList.add("mobelow_box_checkbox_" + list[i]);
-      //       div_clone.appendChild(SvgTong.parsing(svg_clone));
-      //     }
-      //     div_clone.addEventListener("click", clickEvent);
-      //     h.appendChild(div_clone);
-      //     return h;
-      //   }
-      // },
-      // {
-      //   name: "submit",
-      //   style: "height:12vw;",
-      //   callback: function () {
-      //     let div_clone, svg_clone;
-      //     let height, width, ea = "vw", style = {};
-      //
-      //     div_clone = GeneralJs.nodes.div.cloneNode(true);
-      //     div_clone.classList.add("mobelow_box_submit_box");
-      //     height = 4.3;
-      //     svg_clone = SvgTong.tongMaker();
-      //     svg_clone.src = submit[0].src.desktop;
-      //     width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-      //     style = {
-      //       height: String(height) + ea,
-      //       width: String(width) + ea,
-      //       left: "50%",
-      //       marginLeft: String((-1 * (width / 2)) - 0.4) + ea,
-      //     };
-      //     for (let i in style) {
-      //       svg_clone.style[i] = style[i];
-      //     }
-      //     svg_clone.classList.add("mobelow_box_submit");
-      //     div_clone.appendChild(SvgTong.parsing(svg_clone));
-      //
-      //     return div_clone;
-      //   }
-      // },
+      {
+        name: "description",
+        style: "height:30.9vw;padding-top:3.8vw;background:#f2f2f2;",
+        callback: function () {
+          let div_clone, style, ea;
+
+          ea = "vw";
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            textAlign: "left",
+            position: "relative",
+            overflow: "scroll",
+            height: String(27) + ea,
+            width: String(90) + '%',
+            paddingLeft: String(5) + '%',
+            color: "#404040",
+            lineHeight: String(165) + '%',
+            letterSpacing: String(-0.3) + "px",
+            wordSpacing: String(-0.5) + "px",
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: String(3) + ea,
+          };
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+          div_clone.insertAdjacentHTML("beforeend", DeseventJs.policy());
+          return div_clone;
+        }
+      },
+      {
+        name: "check",
+        style: "position:relative;height:32px;",
+        callback: function () {
+          let h, div_clone, img_clone;
+          let svg_clone, height, width, ea = "vw", style = {};
+          let list = [ "off", "on", ];
+          let svg_dom;
+
+          h = document.createDocumentFragment();
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            right: String(0) + ea,
+            top: String(3) + ea,
+            cursor: "pointer",
+          };
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
+          height = 3.2;
+          for (let i = 0; i < list.length; i++) {
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = terms.src.mobile[list[i]];
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) - 0.1;
+            style = {
+              position: "absolute",
+              right: String(0) + ea,
+              height: String(height) + ea,
+              width: String(width) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+            div_clone.appendChild(svg_dom);
+          }
+
+          svg_dom.setAttribute("value", "true");
+
+          div_clone.style.width = String(width) + ea;
+          div_clone.style.height = String(height) + ea;
+          div_clone.addEventListener("click", function (e) {
+            if (svg_dom.getAttribute("value") === "true") {
+              svg_dom.style.opacity = String(0);
+              svg_dom.setAttribute("value", "false");
+            } else {
+              svg_dom.style.opacity = String(1);
+              svg_dom.setAttribute("value", "true");
+            }
+          });
+
+          h.appendChild(div_clone);
+          return h;
+        }
+      },
+      {
+        name: "submit",
+        style: "position:relative;height:12vw;margin-top:6vw",
+        callback: function () {
+          let div_clone, svg_clone;
+          let height, width, ea = "vw", style = {};
+
+          div_clone = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            top: String(0),
+            left: String(50) + '%',
+            width: String(26) + ea,
+            height: String(100) + '%',
+            marginLeft: String(-13) + '%',
+            borderRadius: String(3) + "px",
+            background: "#2fa678",
+            cursor: "pointer",
+            marginTop: String(2) + ea,
+          };
+          for (let i in style) {
+            div_clone.style[i] = style[i];
+          }
+
+          height = 4.3;
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = submit[1].src.desktop;
+          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+          style = {
+            position: "absolute",
+            height: String(4.3) + ea,
+            top: String(3.5) + ea,
+            transition: "opacity 0s ease",
+            height: String(height) + ea,
+            width: String(width) + ea,
+            left: "50%",
+            marginLeft: String((-1 * (width / 2)) - 0.4) + ea,
+          };
+          for (let i in style) {
+            svg_clone.style[i] = style[i];
+          }
+
+          div_clone.style.width = String(width + (5 * 2)) + ea;
+          div_clone.style.marginLeft = String(-1 * ((width / 2) + 5)) + ea;
+
+          div_clone.appendChild(SvgTong.parsing(svg_clone));
+
+          return div_clone;
+        }
+      },
     ],
   }
   let boo = Object.keys(list);
   let styles = {
     desktop: { height: "280px" },
-    mobile: { height: "99vw" },
+    mobile: { height: "66vw" },
   }
 
   for (let i = 0; i < boo.length; i++) {

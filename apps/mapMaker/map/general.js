@@ -202,7 +202,8 @@ module.exports = {
               "Notfound",
               "Event",
               "Designer",
-              "Consulting"
+              "Consulting",
+              "Desevent"
             ],
             "menu": [
               {
@@ -363,6 +364,21 @@ module.exports = {
         ]
       },
       "desdetail": {
+        "behaviors": [
+          {
+            "wording": {
+              "desktop": "홈리에종을 통해 1:1 상담을 받아보세요!",
+              "mobile": "홈리에종을 통해 1:1 상담을 받아보세요!"
+            },
+            "action": "window.location.href = '/consulting.php';",
+            "src": {
+              "desktop": "g_interaction_desdetail_behaviors_desktop_0_15rspot96_013015.svg",
+              "mobile": "g_interaction_desdetail_behaviors_mobile_0_15rspot96_013015.svg"
+            }
+          }
+        ]
+      },
+      "desevent": {
         "behaviors": [
           {
             "wording": {
