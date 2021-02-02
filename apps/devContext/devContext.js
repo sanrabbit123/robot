@@ -916,6 +916,11 @@ class DevContext extends Array {
       let trueclient;
       let clients;
       let clientsAll;
+      let allTong;
+      let target;
+      let filteredTong, filteredTong2;
+      let client;
+      let designer;
 
       // projects = await back.getProjectsByQuery({ "$and": [ { desid: { "$regex": "^d" } }, { desid: { "$regex": "^d" } } ]});
       // total = projects.length;
@@ -925,36 +930,41 @@ class DevContext extends Array {
       //   cliidArr.push({ cliid: p.cliid });
       // }
 
-      clientsAll = await back.getClientsAll();
+      projects = await back.getProjectsAll();
 
 
-      console.log(clientsAll.length);
-
-
-      clients = await back.getClientsByQuery({ "requests.0.request.budget": "500만원 이하" });
-
-      console.log(clients.length);
-
-      cliidArr = [];
-      for (let c of clients) {
-        cliidArr.push(c.cliid);
-      }
-
-      cliidArr = Array.from(new Set(cliidArr));
-
-      trueclient = [];
-      for (let i of cliidArr) {
-        trueclient.push({ cliid: i });
+      allTong = [];
+      for (let p of projects) {
+        for (let obj of p.proposal.detail) {
+          obj.cliid = p.cliid;
+          obj.serid = p.service.serid + p.service.xValue;
+          allTong.push(obj);
+        }
       }
 
 
-      projectsAll = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      target = "d1908_aa02s";
+      filteredTong = []
+      for (let a of allTong) {
+        if (a.desid === target) {
+          filteredTong.push(a);
+          a.amount = a.fee[0].amount
+          client = await back.getClientById(a.cliid);
+          a.pyeong = client.requests[0].request.space.pyeong.value;
+          designer = await back.getDesignerById(a.desid);
+          a.designer = designer.designer;
+        }
+      }
 
-      projects = await back.getProjectsByQuery({ "$and": [ { desid: { "$regex": "^d" } }, { "$or": trueclient } ] });
 
-      console.log(projectsAll.length);
+      filteredTong2 = [];
+      for (let a of filteredTong) {
+        filteredTong2.push([ a.designer, a.amount, a.pyeong, a.serid ])
+      }
 
-      console.log(projects.length);
+
+      console.log(filteredTong2)
+
 
       // trueclient = [];
       // for (let c of clients) {

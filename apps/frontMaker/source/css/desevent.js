@@ -1,5 +1,5 @@
 module.exports = function () {
-  function css_degeneral(){
+  function css_degeneral() {
     let html = '';
     html += "@keyframes fadeout{from,50%{opacity:1;}to{opacity:0;}}";
     html += "@keyframes fadein{from,30%{opacity:0;}to{opacity:1;}}";
@@ -14,7 +14,7 @@ module.exports = function () {
     return html;
   }
 
-  function css_mogeneral(){
+  function css_mogeneral() {
     let html = '@media (max-width:900px) {';
     // general
     html += "#totalcontents{display:none;}";

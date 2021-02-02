@@ -1991,19 +1991,75 @@ DeseventJs.prototype.returnBlocks = function () {
             left: 0,
           },
           callback: function (needs) {
+            const { buttons } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let svg_clone, svg_dom;
+            let margin;
+            let onoffEvent;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 11.5 - 1.5;
-            left = 22;
+            top = 11.5;
+            left = 36;
             width = 38;
 
+            margin = 10;
+            height = 2.8;
 
+            GeneralJs.stacks["radioDoms0_mobile"] = [];
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.1;
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String((j < 2) ? top : top + 5.1) + ea,
+                left: String((j % 2) ? 62.5 : left) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              GeneralJs.stacks["radioDoms0_mobile"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms0_mobile"].length; j++) {
+                if (GeneralJs.stacks["radioDoms0_mobile"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms0_mobile"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms0_mobile"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms0_mobile"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms0_mobile"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms0_mobile"].length; j++) {
+              GeneralJs.stacks["radioDoms0_mobile"][j].addEventListener("click", onoffEvent);
+            }
 
             return h;
           }
@@ -2172,12 +2228,26 @@ DeseventJs.prototype.returnBlocks = function () {
             let style, ea;
             let top, left;
             let width, height;
+            let line;
 
             h = document.createDocumentFragment();
             ea = "vw";
             top = 80.44 - 1.5;
-            left = 27;
-            width = 60.1;
+            left = 26;
+            width = 61.1;
+
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(top - 10.18) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2214,8 +2284,8 @@ DeseventJs.prototype.returnBlocks = function () {
             h = document.createDocumentFragment();
             ea = "vw";
             top = 90.24 - 1.5;
-            left = 27;
-            width = 60.1;
+            left = 26;
+            width = 61.1;
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2252,8 +2322,8 @@ DeseventJs.prototype.returnBlocks = function () {
             h = document.createDocumentFragment();
             ea = "vw";
             top = 100.04 - 1.5;
-            left = 27;
-            width = 60.1;
+            left = 26;
+            width = 61.1;
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2290,8 +2360,8 @@ DeseventJs.prototype.returnBlocks = function () {
             h = document.createDocumentFragment();
             ea = "vw";
             top = 109.84 - 1.5;
-            left = 36;
-            width = 51.1;
+            left = 26;
+            width = 61.1;
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2324,12 +2394,26 @@ DeseventJs.prototype.returnBlocks = function () {
             let style, ea;
             let top, left;
             let width, height;
+            let line;
 
             h = document.createDocumentFragment();
             ea = "vw";
             top = 136.2 - 1.5;
             left = 36;
             width = 51.1;
+
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(top - 10.18) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
 
             dom = DeseventJs.inputMaker(false, "mopartnership0");
             style = {
@@ -2400,6 +2484,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let style, ea;
             let top, left;
             let width, height;
+            let box;
 
             h = document.createDocumentFragment();
             ea = "vw";
@@ -2407,8 +2492,20 @@ DeseventJs.prototype.returnBlocks = function () {
             left = 36;
             width = 51.1;
 
-
-
+            box = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderRadius: String(3) + "px",
+              width: String(87) + ea,
+              height: String(20) + ea,
+              left: String(0) + ea,
+              top: String(top + 8.7) + ea,
+              background: "#f2f2f2",
+            };
+            for (let i in style) {
+              box.style[i] = style[i];
+            }
+            h.appendChild(box);
 
             return h;
           }
@@ -2416,25 +2513,94 @@ DeseventJs.prototype.returnBlocks = function () {
         //유입 경로
         {
           titleStyle: {
-            top: 185.8,
+            top: 202.8,
             left: 0,
           },
           callback: function (needs) {
+            const { buttons } = needs;
             let h;
             let dom, input;
             let style, ea;
             let top, left;
             let width, height;
+            let svg_clone, svg_dom;
+            let margin;
+            let onoffEvent;
+            let line;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 185.8 - 1.5;
-            left = 22;
+            top = 202.8;
+            left = 36;
             width = 38;
 
+            margin = 10;
+            height = 2.8;
 
 
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(top - 10.18 + 1.2) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
 
+            GeneralJs.stacks["radioDoms1_mobile"] = [];
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.1;
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top + ((j < 3) ? 0 : 5.1)) + ea,
+                left: String((j % 3 === 0) ? 29 : ((j % 3 === 1) ? 51 : 73)) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              GeneralJs.stacks["radioDoms1_mobile"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+                if (GeneralJs.stacks["radioDoms1_mobile"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+              GeneralJs.stacks["radioDoms1_mobile"][j].addEventListener("click", onoffEvent);
+            }
 
             return h;
           }
@@ -2442,7 +2608,7 @@ DeseventJs.prototype.returnBlocks = function () {
         //포트폴리오
         {
           titleStyle: {
-            top: 195.6,
+            top: 212.9,
             left: 0,
           },
           callback: function (needs) {
@@ -2451,15 +2617,28 @@ DeseventJs.prototype.returnBlocks = function () {
             let style, ea;
             let top, left;
             let width, height;
+            let box;
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 195.6 - 1.5;
+            top = 212.9 - 1.5;
             left = 36;
             width = 51.1;
 
-
-
+            box = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderRadius: String(3) + "px",
+              width: String(87) + ea,
+              height: String(20) + ea,
+              left: String(0) + ea,
+              top: String(top + 8.7) + ea,
+              background: "#f2f2f2",
+            };
+            for (let i in style) {
+              box.style[i] = style[i];
+            }
+            h.appendChild(box);
 
             return h;
           }
@@ -2807,7 +2986,7 @@ DeseventJs.prototype.baseMaker = function () {
       display: "block",
       position: "relative",
       background: "white",
-      marginBottom: String(13.6) + "vw",
+      marginBottom: String(7.6) + "vw",
       width: String(87.8) + '%',
       marginLeft: "auto",
       marginRight: "auto",
@@ -3203,7 +3382,6 @@ DeseventJs.prototype.initialDom = function () {
             background: "white",
             paddingBottom: String(0.1) + ea,
             opacity: String(1),
-            paddingTop: String(9.6) + ea,
             textAlign: "center",
           };
           for (let i in style) {
