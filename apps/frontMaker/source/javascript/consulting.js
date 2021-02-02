@@ -29,9 +29,12 @@ ConsultingJs.postEvent = function (boo) {
   return function (e) {
     if (e.target.id !== "cancel_back" && e.target.id !== list.id) {
       let div_clone;
+      let ratio, scaleRatio;
+
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.id = "cancel_back";
       this.appendChild(div_clone);
+
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.id = list.id;
       new daum.Postcode({
@@ -49,6 +52,17 @@ ConsultingJs.postEvent = function (boo) {
           maxSuggestItems: 6,
       }).embed(div_clone);
       this.appendChild(div_clone);
+
+      if (boo === "mobile") {
+        ratio = window.innerWidth * (75 / 100);
+        if (ratio < 300) {
+          scaleRatio = ratio / 300;
+          div_clone.firstChild.style.transformOrigin = "0 0";
+          div_clone.firstChild.style.transform = "scale(" + String(scaleRatio) + ")";
+          div_clone.firstChild.style.height = String((1 / scaleRatio) * 100) + '%';
+        }
+      }
+      
     } else if (e.target.id === "cancel_back") {
       document.getElementById("cancel_back").parentNode.removeChild(document.getElementById("cancel_back"));
       document.getElementById(list.id).parentNode.removeChild(document.getElementById(list.id));

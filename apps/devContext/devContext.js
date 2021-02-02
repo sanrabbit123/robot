@@ -909,6 +909,61 @@ class DevContext extends Array {
       // await app.blogToJson();
 
 
+      let projectsAll;
+      let projects;
+      let total;
+      let cliidArr;
+      let trueclient;
+      let clients;
+      let clientsAll;
+
+      // projects = await back.getProjectsByQuery({ "$and": [ { desid: { "$regex": "^d" } }, { desid: { "$regex": "^d" } } ]});
+      // total = projects.length;
+      //
+      // cliidArr = [];
+      // for (let p of projects) {
+      //   cliidArr.push({ cliid: p.cliid });
+      // }
+
+      clientsAll = await back.getClientsAll();
+
+
+      console.log(clientsAll.length);
+
+
+      clients = await back.getClientsByQuery({ "requests.0.request.budget": "500만원 이하" });
+
+      console.log(clients.length);
+
+      cliidArr = [];
+      for (let c of clients) {
+        cliidArr.push(c.cliid);
+      }
+
+      cliidArr = Array.from(new Set(cliidArr));
+
+      trueclient = [];
+      for (let i of cliidArr) {
+        trueclient.push({ cliid: i });
+      }
+
+
+      projectsAll = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+
+      projects = await back.getProjectsByQuery({ "$and": [ { desid: { "$regex": "^d" } }, { "$or": trueclient } ] });
+
+      console.log(projectsAll.length);
+
+      console.log(projects.length);
+
+      // trueclient = [];
+      // for (let c of clients) {
+      //   if (c.requests[0].request.space.resident.living) {
+      //     trueclient.push(c);
+      //   }
+      // }
+      //
+      // console.log(trueclient.length);
 
 
 

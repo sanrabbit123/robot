@@ -384,20 +384,20 @@ module.exports = function(map, source_rawArr) {
   temp_reg = new RegExp("^clickWording_desktop");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.etc.clickWording.src.desktop = z;
-    svgTong.async.push(z);
+    svgTong.sync.push(z);
   }}
 
   temp_reg = new RegExp("^clickWording_mobile");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.etc.clickWording.src.mobile = z;
-    svgTong.async.push(z);
+    svgTong.sync.push(z);
   }}
 
   temp_reg = new RegExp("^fileSend_title");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
     sub.etc.fileSend.factorTitle.src.desktop = z;
     sub.etc.fileSend.factorTitle.src.mobile = z;
-    svgTong.async.push(z);
+    svgTong.sync.push(z);
   }}
 
   for (let i = 0; i < sub.etc.fileSend.white.length; i++) {
@@ -405,7 +405,7 @@ module.exports = function(map, source_rawArr) {
     for (let z of source_rawArr) { if (temp_reg.test(z)) {
       sub.etc.fileSend.white[i].src.desktop = z;
       sub.etc.fileSend.white[i].src.mobile = z;
-      svgTong.async.push(z);
+      svgTong.sync.push(z);
     }}
   }
 

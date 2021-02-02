@@ -16,7 +16,7 @@ module.exports = function () {
   sub{font-size:inherit;vertical-align:baseline;position:relative;top:0.4em}
   form{display:inline-block}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
-  textarea{resize:none}
+  textarea{resize:none;-ms-overflow-style: none}
   audio,video{display:inline-block;vertical-align:baseline}
   audio:not([controls]){display:none;height:0}[hidden],template{display:none}
   b,strong{font-weight:700}
@@ -34,6 +34,7 @@ module.exports = function () {
   input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
   input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
   svg{shape-rendering:geometricPrecision}
+  *::-webkit-scrollbar{display:none;}
 
   @keyframes fadeInmain0821 {from { opacity: 0; } 50% { opacity: 0; } to { opacity: 1; }}
   @keyframes fadeInmainout0821 {from { opacity: 1; } 50% { opacity: 1; } to { opacity: 0; }}

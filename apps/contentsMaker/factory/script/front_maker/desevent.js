@@ -98,7 +98,7 @@ ExecMain.prototype.buttonCheck = function (arr) {
     to = "b_check" + flatform + String(x) + String(y) + String(z) + "_off";
     contents = text;
     options = {
-      font: "SDGothicNeoa-eMd",
+      font: "SDGothicNeoa-cLt",
       color: "#575757",
     };
     for (let i in exception) { options[i] = exception[i]; }
@@ -125,7 +125,7 @@ ExecMain.prototype.buttonCheck = function (arr) {
     to = "b_check" + flatform + String(x) + String(y) + String(z) + "_on";
     contents = text;
     options = {
-      font: "SDGothicNeoa-eMd",
+      font: "SDGothicNeoa-cLt",
       color: "#2fa678",
     };
     for (let i in exception) { options[i] = exception[i]; }
@@ -331,7 +331,7 @@ ExecMain.prototype.popupMaker = function () {
     from = "general";
     to = ((obj.flatform === "desktop") ? "" : "mo") + "popup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
     contents = obj.contents.join("\n");
-    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#606060", justification: "LEFT", leading: 34 } });
+    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#ffffff", justification: "LEFT", leading: 34 } });
     this.setParagraph({ from: contents, to: to });
     temp = this.createElements(this_ai, this.createSetting[to]);
     temp = temp.createOutline();
