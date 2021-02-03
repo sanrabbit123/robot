@@ -25,7 +25,7 @@ ExecMain.prototype.makeNaviMenu = function () {
   for (let i = 0; i < menu.length; i++) {
 
     //gray
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "navi" + String(i);
     contents = menu[i].name;
@@ -46,10 +46,10 @@ ExecMain.prototype.makeNaviMenu = function () {
     this.mother.fit_box();
 
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("g_ngray_" + to));
+    this.saveSvg(this_ai, ("g_ngray_" + to), true);
 
     //green
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "navi" + String(i);
     contents = menu[i].name;
@@ -71,7 +71,7 @@ ExecMain.prototype.makeNaviMenu = function () {
     this.mother.fit_box();
 
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("g_ngreen_" + to));
+    this.saveSvg(this_ai, ("g_ngreen_" + to), true);
   }
 
   //mobile
@@ -79,7 +79,7 @@ ExecMain.prototype.makeNaviMenu = function () {
   let path;
   let margin = 41;
   let x, y;
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   for (let i = 0; i < menu.length; i++) {
 
     from = "general";
@@ -124,7 +124,7 @@ ExecMain.prototype.makeNaviMenu = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "g_monavi");
+  this.saveSvg(this_ai, "g_monavi", true);
 
 }
 
@@ -236,7 +236,7 @@ ExecMain.prototype.makeFooterRight = function () {
   let tops, lefts, lefts2, leftsStandard;
   let xMargin = 57.18;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = [];
   contents = [ "INFO & SUPPROT" ];
 
@@ -441,7 +441,7 @@ ExecMain.prototype.makeFooterRight = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("g_footer_right"));
+  this.saveSvg(this_ai, ("g_footer_right"), true);
 }
 
 ExecMain.prototype.makeFooterUp = function () {
@@ -661,7 +661,7 @@ ExecMain.prototype.makeInterAction = function () {
 
   //make
   for (let i = 0; i < tong.length; i++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "interaction_" + tong[i].name;
     contents = tong[i].wording;
@@ -671,7 +671,7 @@ ExecMain.prototype.makeInterAction = function () {
     temp = temp.createOutline();
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "g_" + to);
+    this.saveSvg(this_ai, "g_" + to, true);
   }
 
 
@@ -694,7 +694,7 @@ ExecMain.prototype.makeInterAction = function () {
   //make
   let green;
   for (let i = 0; i < tong.length; i++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
 
     to = "actionException_" + tong[i].name + "_green";
@@ -716,13 +716,13 @@ ExecMain.prototype.makeInterAction = function () {
 
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "g_" + to);
+    this.saveSvg(this_ai, "g_" + to, true);
   }
 
 }
 
 ExecMain.prototype.makeTriangle = function () {
-  let this_ai = this.createDoc();
+  let this_ai = app.activeDocument;
   let anchors = [
     [ 455, -248 ],
     [ 380, -204.698729810779 ],
@@ -735,7 +735,7 @@ ExecMain.prototype.makeTriangle = function () {
   newPath.strokeColor = new NoColor();
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "g_" + "itriangle");
+  this.saveSvg(this_ai, "g_" + "itriangle", true);
 }
 
 ExecMain.prototype.makeLoginWords = function () {
@@ -749,7 +749,7 @@ ExecMain.prototype.makeLoginWords = function () {
   for (let { name, title, children } of flow) {
 
     //name
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "g_loginName" + String(flowNum);
     contents = name;
@@ -759,11 +759,11 @@ ExecMain.prototype.makeLoginWords = function () {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
     //title
     for (let titleNum = 0; titleNum < list.length; titleNum++) {
-      this_ai = this.createDoc();
+      this_ai = app.activeDocument;
       from = "general";
       doms = [];
 
@@ -806,12 +806,12 @@ ExecMain.prototype.makeLoginWords = function () {
 
       this.mother.fit_box();
       app.doScript("expandall", "contents_maker");
-      this.saveSvg(this_ai, "g_loginTitle_" + list[titleNum] + String(flowNum));
+      this.saveSvg(this_ai, "g_loginTitle_" + list[titleNum] + String(flowNum), true);
     }
 
     //factor titles (children)
     for (let i = 0; i < children.length; i++) {
-      this_ai = this.createDoc();
+      this_ai = app.activeDocument;
       from = "general";
       to = "g_loginFactorTitle" + String(flowNum) + String(i);
       contents = children[i].title;
@@ -824,7 +824,7 @@ ExecMain.prototype.makeLoginWords = function () {
       asterisk.left = temp.left - 18.1;
       this.mother.fit_box();
       app.doScript("expandall", "contents_maker");
-      this.saveSvg(this_ai, to);
+      this.saveSvg(this_ai, to, true);
     }
 
     flowNum++;
@@ -836,16 +836,13 @@ ExecMain.prototype.start = function (dayString) {
   let list = [ "desktop", "mobile" ];
   this.dayString = dayString;
 
+  this.createDoc();
+
   //navigator
-  this.makeLogos();
   this.makeNaviMenu();
-  this.makeIcons();
 
   //footer
-  this.makeFooterLeft();
   this.makeFooterRight();
-  this.makeFooterUp();
-  this.makeFooterDown();
 
   //interAction
   this.makeInterAction();
@@ -853,5 +850,16 @@ ExecMain.prototype.start = function (dayString) {
 
   //login
   this.makeLoginWords();
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+
+  //navigator
+  this.makeLogos();
+  this.makeIcons();
+
+  //footer
+  this.makeFooterLeft();
+  this.makeFooterUp();
+  this.makeFooterDown();
 
 }

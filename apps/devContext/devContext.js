@@ -909,71 +909,11 @@ class DevContext extends Array {
       // await app.blogToJson();
 
 
-      let projectsAll;
-      let projects;
-      let total;
-      let cliidArr;
-      let trueclient;
-      let clients;
-      let clientsAll;
-      let allTong;
-      let target;
-      let filteredTong, filteredTong2;
-      let client;
-      let designer;
-
-      // projects = await back.getProjectsByQuery({ "$and": [ { desid: { "$regex": "^d" } }, { desid: { "$regex": "^d" } } ]});
-      // total = projects.length;
-      //
-      // cliidArr = [];
-      // for (let p of projects) {
-      //   cliidArr.push({ cliid: p.cliid });
-      // }
-
-      projects = await back.getProjectsAll();
 
 
-      allTong = [];
-      for (let p of projects) {
-        for (let obj of p.proposal.detail) {
-          obj.cliid = p.cliid;
-          obj.serid = p.service.serid + p.service.xValue;
-          allTong.push(obj);
-        }
-      }
 
 
-      target = "d1908_aa02s";
-      filteredTong = []
-      for (let a of allTong) {
-        if (a.desid === target) {
-          filteredTong.push(a);
-          a.amount = a.fee[0].amount
-          client = await back.getClientById(a.cliid);
-          a.pyeong = client.requests[0].request.space.pyeong.value;
-          designer = await back.getDesignerById(a.desid);
-          a.designer = designer.designer;
-        }
-      }
 
-
-      filteredTong2 = [];
-      for (let a of filteredTong) {
-        filteredTong2.push([ a.designer, a.amount, a.pyeong, a.serid ])
-      }
-
-
-      console.log(filteredTong2)
-
-
-      // trueclient = [];
-      // for (let c of clients) {
-      //   if (c.requests[0].request.space.resident.living) {
-      //     trueclient.push(c);
-      //   }
-      // }
-      //
-      // console.log(trueclient.length);
 
 
 

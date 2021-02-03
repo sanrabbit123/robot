@@ -28,39 +28,39 @@ module.exports = {
         "color": "#2fa678"
       },
       "src": {
-        "logo": "g_logos_navi_7rspot679_013015.svg",
+        "logo": "g_logos_navi_7rspot679_020311.svg",
         "words": {
           "desktop": [
             {
-              "gray": "g_ngray_navi0_4rspot174_013015.svg",
-              "green": "g_ngreen_navi0_4rspot174_013015.svg"
+              "gray": "g_ngray_navi0_4rspot174_020311.svg",
+              "green": "g_ngreen_navi0_4rspot174_020311.svg"
             },
             {
-              "gray": "g_ngray_navi1_3rspot99_013015.svg",
-              "green": "g_ngreen_navi1_3rspot99_013015.svg"
+              "gray": "g_ngray_navi1_3rspot99_020311.svg",
+              "green": "g_ngreen_navi1_3rspot99_020311.svg"
             },
             {
-              "gray": "g_ngray_navi2_3rspot134_013015.svg",
-              "green": "g_ngreen_navi2_3rspot134_013015.svg"
+              "gray": "g_ngray_navi2_3rspot134_020311.svg",
+              "green": "g_ngreen_navi2_3rspot134_020311.svg"
             },
             {
-              "gray": "g_ngray_navi3_3rspot393_013015.svg",
-              "green": "g_ngreen_navi3_3rspot393_013015.svg"
+              "gray": "g_ngray_navi3_3rspot393_020311.svg",
+              "green": "g_ngreen_navi3_3rspot393_020311.svg"
             },
             {
-              "gray": "g_ngray_navi4_3rspot42_013015.svg",
-              "green": "g_ngreen_navi4_3rspot42_013015.svg"
+              "gray": "g_ngray_navi4_3rspot42_020311.svg",
+              "green": "g_ngreen_navi4_3rspot42_020311.svg"
             }
           ],
           "mobile": [
             {
-              "group": "g_monavi_1rspot038_013015.svg"
+              "group": "g_monavi_1rspot038_020311.svg"
             }
           ]
         },
         "icons": {
-          "search": "g_isearch_0rspot945_013015.svg",
-          "hamburger": "g_ihamburger_1rspot567_013015.svg"
+          "search": "g_isearch_0rspot945_020311.svg",
+          "hamburger": "g_ihamburger_1rspot567_020311.svg"
         }
       }
     },
@@ -175,7 +175,7 @@ module.exports = {
             "name": "디자이너 신청",
             "action": {
               "css": "f18designersubmit",
-              "js": "window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSfBSBHN-f6GeEzEY31yc9H4UHPGO4_dUPr3d6VcPQuf7MT6JQ/viewform';"
+              "js": "window.location.href = '/desevent.php?mode=partnership';"
             }
           }
         ],
@@ -273,8 +273,8 @@ module.exports = {
                 "href": "/login.php"
               },
               {
-                "name": "디자이너 신청",
-                "href": "https://docs.google.com/forms/d/e/1FAIpQLSceV-1hP44vmNJas3zBiKQqISkLHs8916AdsDSxlj2yYytQwg/viewform"
+                "name": "디자이너 파트너십",
+                "href": "/desevent.php?mode=partnership"
               }
             ]
           }
@@ -285,17 +285,17 @@ module.exports = {
         "color": "#ffffff"
       },
       "src": {
-        "logo": "g_logos_foot_3rspot437_013015.svg",
+        "logo": "g_logos_foot_3rspot437_020311.svg",
         "desktop": {
-          "left": "g_footer_left_1rspot382_013015.svg",
-          "right": "g_footer_right_3rspot457_013015.svg"
+          "left": "g_footer_left_1rspot382_020311.svg",
+          "right": "g_footer_right_3rspot457_020311.svg"
         },
         "mobile": {
-          "A": "g_footer_up_A_3rspot67_013015.svg",
-          "B": "g_footer_up_B_3rspot67_013015.svg",
-          "C": "g_footer_up_C_3rspot67_013015.svg",
-          "D": "g_footer_up_D_3rspot67_013015.svg",
-          "Z": "g_footer_down_0rspot987_013015.svg"
+          "A": "g_footer_up_A_3rspot67_020311.svg",
+          "B": "g_footer_up_B_3rspot67_020311.svg",
+          "C": "g_footer_up_C_3rspot67_020311.svg",
+          "D": "g_footer_up_D_3rspot67_020311.svg",
+          "Z": "g_footer_down_0rspot987_020311.svg"
         }
       }
     },
@@ -309,8 +309,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_about_behaviors_desktop_0_17rspot84_013015.svg",
-              "mobile": "g_interaction_about_behaviors_mobile_0_14rspot822_013015.svg"
+              "desktop": "g_interaction_about_behaviors_desktop_0_17rspot84_020311.svg",
+              "mobile": "g_interaction_about_behaviors_mobile_0_14rspot823_020311.svg"
             }
           },
           {
@@ -320,8 +320,8 @@ module.exports = {
             },
             "action": "window.location.href = '/review.php';",
             "src": {
-              "desktop": "g_interaction_about_behaviors_desktop_1_18rspot674_013015.svg",
-              "mobile": "g_interaction_about_behaviors_mobile_1_13rspot879_013015.svg"
+              "desktop": "g_interaction_about_behaviors_desktop_1_18rspot675_020311.svg",
+              "mobile": "g_interaction_about_behaviors_mobile_1_13rspot88_020311.svg"
             }
           }
         ]
@@ -341,8 +341,8 @@ module.exports = {
                   "mobile": "성함을 알려주세요!"
                 },
                 "src": {
-                  "desktop": "g_actionException_consulting_behaviors_desktop_0_0_9rspot351_013015.svg",
-                  "mobile": "g_actionException_consulting_behaviors_mobile_0_0_9rspot351_013015.svg"
+                  "desktop": "g_actionException_consulting_behaviors_desktop_0_0_9rspot351_020311.svg",
+                  "mobile": "g_actionException_consulting_behaviors_mobile_0_0_9rspot351_020311.svg"
                 }
               },
               {
@@ -351,14 +351,14 @@ module.exports = {
                   "mobile": "남겨주신 연락처를 알려주세요!"
                 },
                 "src": {
-                  "desktop": "g_actionException_consulting_behaviors_desktop_0_1_14rspot293_013015.svg",
-                  "mobile": "g_actionException_consulting_behaviors_mobile_0_1_14rspot293_013015.svg"
+                  "desktop": "g_actionException_consulting_behaviors_desktop_0_1_14rspot293_020311.svg",
+                  "mobile": "g_actionException_consulting_behaviors_mobile_0_1_14rspot293_020311.svg"
                 }
               }
             ],
             "src": {
-              "desktop": "g_interaction_consulting_behaviors_desktop_0_14rspot871_013015.svg",
-              "mobile": "g_interaction_consulting_behaviors_mobile_0_14rspot871_013015.svg"
+              "desktop": "g_interaction_consulting_behaviors_desktop_0_14rspot871_020311.svg",
+              "mobile": "g_interaction_consulting_behaviors_mobile_0_14rspot871_020311.svg"
             }
           }
         ]
@@ -372,8 +372,8 @@ module.exports = {
             },
             "action": "window.location.href = '/consulting.php';",
             "src": {
-              "desktop": "g_interaction_desdetail_behaviors_desktop_0_15rspot96_013015.svg",
-              "mobile": "g_interaction_desdetail_behaviors_mobile_0_15rspot96_013015.svg"
+              "desktop": "g_interaction_desdetail_behaviors_desktop_0_15rspot96_020311.svg",
+              "mobile": "g_interaction_desdetail_behaviors_mobile_0_15rspot96_020311.svg"
             }
           }
         ]
@@ -382,13 +382,13 @@ module.exports = {
         "behaviors": [
           {
             "wording": {
-              "desktop": "홈리에종을 통해 1:1 상담을 받아보세요!",
-              "mobile": "홈리에종을 통해 1:1 상담을 받아보세요!"
+              "desktop": "홈리에종에서 파트너 디자이너를 모집합니다!",
+              "mobile": "홈리에종에서 파트너 디자이너를 모집합니다!"
             },
-            "action": "window.location.href = '/consulting.php';",
+            "action": "window.location.href = '/desevent.php?mode=partnership';",
             "src": {
-              "desktop": "g_interaction_desdetail_behaviors_desktop_0_15rspot96_013015.svg",
-              "mobile": "g_interaction_desdetail_behaviors_mobile_0_15rspot96_013015.svg"
+              "desktop": "g_interaction_desevent_behaviors_desktop_0_18rspot452_020311.svg",
+              "mobile": "g_interaction_desevent_behaviors_mobile_0_18rspot452_020311.svg"
             }
           }
         ]
@@ -402,8 +402,8 @@ module.exports = {
             },
             "action": "window.location.href = '/portfolio.php';",
             "src": {
-              "desktop": "g_interaction_designer_behaviors_desktop_0_16rspot323_013015.svg",
-              "mobile": "g_interaction_designer_behaviors_mobile_0_16rspot323_013015.svg"
+              "desktop": "g_interaction_designer_behaviors_desktop_0_16rspot324_020311.svg",
+              "mobile": "g_interaction_designer_behaviors_mobile_0_16rspot324_020311.svg"
             }
           },
           {
@@ -419,14 +419,14 @@ module.exports = {
                   "mobile": "디자이너의 이름을 입력해주세요!"
                 },
                 "src": {
-                  "desktop": "g_actionException_designer_behaviors_desktop_1_0_15rspot082_013015.svg",
-                  "mobile": "g_actionException_designer_behaviors_mobile_1_0_15rspot082_013015.svg"
+                  "desktop": "g_actionException_designer_behaviors_desktop_1_0_15rspot082_020311.svg",
+                  "mobile": "g_actionException_designer_behaviors_mobile_1_0_15rspot082_020311.svg"
                 }
               }
             ],
             "src": {
-              "desktop": "g_interaction_designer_behaviors_desktop_1_13rspot718_013015.svg",
-              "mobile": "g_interaction_designer_behaviors_mobile_1_13rspot718_013015.svg"
+              "desktop": "g_interaction_designer_behaviors_desktop_1_13rspot718_020311.svg",
+              "mobile": "g_interaction_designer_behaviors_mobile_1_13rspot718_020311.svg"
             }
           }
         ]
@@ -440,8 +440,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_event_behaviors_desktop_0_17rspot84_013015.svg",
-              "mobile": "g_interaction_event_behaviors_mobile_0_14rspot822_013015.svg"
+              "desktop": "g_interaction_event_behaviors_desktop_0_17rspot84_020311.svg",
+              "mobile": "g_interaction_event_behaviors_mobile_0_14rspot823_020311.svg"
             }
           },
           {
@@ -451,8 +451,8 @@ module.exports = {
             },
             "action": "window.location.href = '/review.php';",
             "src": {
-              "desktop": "g_interaction_event_behaviors_desktop_1_18rspot674_013015.svg",
-              "mobile": "g_interaction_event_behaviors_mobile_1_13rspot879_013015.svg"
+              "desktop": "g_interaction_event_behaviors_desktop_1_18rspot675_020311.svg",
+              "mobile": "g_interaction_event_behaviors_mobile_1_13rspot88_020311.svg"
             }
           }
         ]
@@ -466,8 +466,8 @@ module.exports = {
             },
             "action": "window.location.href = '/portfolio.php';",
             "src": {
-              "desktop": "g_interaction_index_behaviors_desktop_0_16rspot323_013015.svg",
-              "mobile": "g_interaction_index_behaviors_mobile_0_16rspot323_013015.svg"
+              "desktop": "g_interaction_index_behaviors_desktop_0_16rspot324_020311.svg",
+              "mobile": "g_interaction_index_behaviors_mobile_0_16rspot324_020311.svg"
             }
           },
           {
@@ -477,8 +477,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_index_behaviors_desktop_1_17rspot84_013015.svg",
-              "mobile": "g_interaction_index_behaviors_mobile_1_14rspot822_013015.svg"
+              "desktop": "g_interaction_index_behaviors_desktop_1_17rspot84_020311.svg",
+              "mobile": "g_interaction_index_behaviors_mobile_1_14rspot823_020311.svg"
             }
           }
         ]
@@ -492,8 +492,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_notfound_behaviors_desktop_0_17rspot84_013015.svg",
-              "mobile": "g_interaction_notfound_behaviors_mobile_0_14rspot822_013015.svg"
+              "desktop": "g_interaction_notfound_behaviors_desktop_0_17rspot84_020311.svg",
+              "mobile": "g_interaction_notfound_behaviors_mobile_0_14rspot823_020311.svg"
             }
           },
           {
@@ -503,8 +503,8 @@ module.exports = {
             },
             "action": "window.location.href = '/review.php';",
             "src": {
-              "desktop": "g_interaction_notfound_behaviors_desktop_1_18rspot674_013015.svg",
-              "mobile": "g_interaction_notfound_behaviors_mobile_1_13rspot879_013015.svg"
+              "desktop": "g_interaction_notfound_behaviors_desktop_1_18rspot675_020311.svg",
+              "mobile": "g_interaction_notfound_behaviors_mobile_1_13rspot88_020311.svg"
             }
           }
         ]
@@ -518,8 +518,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_payment_behaviors_desktop_0_17rspot84_013015.svg",
-              "mobile": "g_interaction_payment_behaviors_mobile_0_14rspot822_013015.svg"
+              "desktop": "g_interaction_payment_behaviors_desktop_0_17rspot84_020311.svg",
+              "mobile": "g_interaction_payment_behaviors_mobile_0_14rspot823_020311.svg"
             }
           },
           {
@@ -529,8 +529,8 @@ module.exports = {
             },
             "action": "window.location.href = '/review.php';",
             "src": {
-              "desktop": "g_interaction_payment_behaviors_desktop_1_18rspot674_013015.svg",
-              "mobile": "g_interaction_payment_behaviors_mobile_1_13rspot879_013015.svg"
+              "desktop": "g_interaction_payment_behaviors_desktop_1_18rspot675_020311.svg",
+              "mobile": "g_interaction_payment_behaviors_mobile_1_13rspot88_020311.svg"
             }
           }
         ]
@@ -544,8 +544,8 @@ module.exports = {
             },
             "action": "var d_id = document.getElementById('prd_ids').getAttribute('cus_d_id'); window.location.href = '/desdetail.php?qqq=' + d_id;",
             "src": {
-              "desktop": "g_interaction_portdetail_behaviors_desktop_0_17rspot79_013015.svg",
-              "mobile": "g_interaction_portdetail_behaviors_mobile_0_12rspot922_013015.svg"
+              "desktop": "g_interaction_portdetail_behaviors_desktop_0_17rspot79_020311.svg",
+              "mobile": "g_interaction_portdetail_behaviors_mobile_0_12rspot922_020311.svg"
             }
           }
         ]
@@ -559,8 +559,8 @@ module.exports = {
             },
             "action": "window.location.href = '/review.php';",
             "src": {
-              "desktop": "g_interaction_portfolio_behaviors_desktop_0_19rspot856_013015.svg",
-              "mobile": "g_interaction_portfolio_behaviors_mobile_0_13rspot879_013015.svg"
+              "desktop": "g_interaction_portfolio_behaviors_desktop_0_19rspot856_020311.svg",
+              "mobile": "g_interaction_portfolio_behaviors_mobile_0_13rspot88_020311.svg"
             }
           },
           {
@@ -576,14 +576,14 @@ module.exports = {
                   "mobile": "디자이너의 이름을 입력해주세요!"
                 },
                 "src": {
-                  "desktop": "g_actionException_portfolio_behaviors_desktop_1_0_15rspot082_013015.svg",
-                  "mobile": "g_actionException_portfolio_behaviors_mobile_1_0_15rspot082_013015.svg"
+                  "desktop": "g_actionException_portfolio_behaviors_desktop_1_0_15rspot082_020311.svg",
+                  "mobile": "g_actionException_portfolio_behaviors_mobile_1_0_15rspot082_020311.svg"
                 }
               }
             ],
             "src": {
-              "desktop": "g_interaction_portfolio_behaviors_desktop_1_13rspot718_013015.svg",
-              "mobile": "g_interaction_portfolio_behaviors_mobile_1_13rspot718_013015.svg"
+              "desktop": "g_interaction_portfolio_behaviors_desktop_1_13rspot718_020311.svg",
+              "mobile": "g_interaction_portfolio_behaviors_mobile_1_13rspot718_020311.svg"
             }
           }
         ]
@@ -597,8 +597,8 @@ module.exports = {
             },
             "action": "var d_id = document.getElementById('prd_ids').getAttribute('cus_d_id'); window.location.href = '/desdetail.php?qqq=' + d_id;",
             "src": {
-              "desktop": "g_interaction_revdetail_behaviors_desktop_0_15rspot204_013015.svg",
-              "mobile": "g_interaction_revdetail_behaviors_mobile_0_15rspot204_013015.svg"
+              "desktop": "g_interaction_revdetail_behaviors_desktop_0_15rspot204_020311.svg",
+              "mobile": "g_interaction_revdetail_behaviors_mobile_0_15rspot204_020311.svg"
             }
           }
         ]
@@ -612,8 +612,8 @@ module.exports = {
             },
             "action": "window.location.href = '/about.php?popup=true';",
             "src": {
-              "desktop": "g_interaction_review_behaviors_desktop_0_18rspot939_013015.svg",
-              "mobile": "g_interaction_review_behaviors_mobile_0_14rspot822_013015.svg"
+              "desktop": "g_interaction_review_behaviors_desktop_0_18rspot939_020311.svg",
+              "mobile": "g_interaction_review_behaviors_mobile_0_14rspot823_020311.svg"
             }
           },
           {
@@ -623,8 +623,8 @@ module.exports = {
             },
             "action": "window.location.href = '/consulting.php';",
             "src": {
-              "desktop": "g_interaction_review_behaviors_desktop_1_15rspot96_013015.svg",
-              "mobile": "g_interaction_review_behaviors_mobile_1_15rspot96_013015.svg"
+              "desktop": "g_interaction_review_behaviors_desktop_1_15rspot96_020311.svg",
+              "mobile": "g_interaction_review_behaviors_mobile_1_15rspot96_020311.svg"
             }
           }
         ]
@@ -635,8 +635,8 @@ module.exports = {
         {
           "name": "login",
           "src": {
-            "desktop": "g_loginName0_2rspot007_013015.svg",
-            "mobile": "g_loginName0_2rspot007_013015.svg"
+            "desktop": "g_loginName0_2rspot007_020311.svg",
+            "mobile": "g_loginName0_2rspot007_020311.svg"
           },
           "title": {
             "desktop": [
@@ -648,23 +648,23 @@ module.exports = {
               "연락처를 알려주세요!"
             ],
             "src": {
-              "desktop": "g_loginTitle_desktop0_3rspot273_013015.svg",
-              "mobile": "g_loginTitle_mobile0_3rspot135_013015.svg"
+              "desktop": "g_loginTitle_desktop0_3rspot273_020311.svg",
+              "mobile": "g_loginTitle_mobile0_3rspot135_020311.svg"
             }
           },
           "children": [
             {
               "title": "성함",
               "src": {
-                "desktop": "g_loginFactorTitle00_2rspot706_013015.svg",
-                "mobile": "g_loginFactorTitle00_2rspot706_013015.svg"
+                "desktop": "g_loginFactorTitle00_2rspot706_020311.svg",
+                "mobile": "g_loginFactorTitle00_2rspot706_020311.svg"
               }
             },
             {
               "title": "연락처",
               "src": {
-                "desktop": "g_loginFactorTitle01_3rspot509_013015.svg",
-                "mobile": "g_loginFactorTitle01_3rspot509_013015.svg"
+                "desktop": "g_loginFactorTitle01_3rspot509_020311.svg",
+                "mobile": "g_loginFactorTitle01_3rspot509_020311.svg"
               }
             }
           ]
@@ -672,8 +672,8 @@ module.exports = {
         {
           "name": "certification",
           "src": {
-            "desktop": "g_loginName1_6rspot2_013015.svg",
-            "mobile": "g_loginName1_6rspot2_013015.svg"
+            "desktop": "g_loginName1_6rspot201_020311.svg",
+            "mobile": "g_loginName1_6rspot201_020311.svg"
           },
           "title": {
             "desktop": [
@@ -685,16 +685,16 @@ module.exports = {
               "번호를 입력주세요!"
             ],
             "src": {
-              "desktop": "g_loginTitle_desktop1_4rspot549_013015.svg",
-              "mobile": "g_loginTitle_mobile1_4rspot549_013015.svg"
+              "desktop": "g_loginTitle_desktop1_4rspot549_020311.svg",
+              "mobile": "g_loginTitle_mobile1_4rspot549_020311.svg"
             }
           },
           "children": [
             {
               "title": "인증번호",
               "src": {
-                "desktop": "g_loginFactorTitle10_4rspot514_013015.svg",
-                "mobile": "g_loginFactorTitle10_4rspot514_013015.svg"
+                "desktop": "g_loginFactorTitle10_4rspot514_020311.svg",
+                "mobile": "g_loginFactorTitle10_4rspot514_020311.svg"
               }
             }
           ]
@@ -703,11 +703,11 @@ module.exports = {
     }
   },
   "sub": {
-    "loader": "g_iloader_1rspot0_013015.svg",
-    "talk": "g_italk_1rspot15_013015.svg",
-    "triangle": "g_itriangle_0rspot866_013015.svg",
-    "close": "g_iclose_1rspot0_013015.svg",
-    "greenClose": "g_igreenClose_1rspot0_013015.svg",
-    "arrow": "g_iarrow_0rspot541_013015.svg"
+    "loader": "g_iloader_1rspot0_020311.svg",
+    "talk": "g_italk_1rspot15_020311.svg",
+    "triangle": "g_itriangle_0rspot866_020311.svg",
+    "close": "g_iclose_1rspot0_020311.svg",
+    "greenClose": "g_igreenClose_1rspot0_020311.svg",
+    "arrow": "g_iarrow_0rspot541_020311.svg"
   }
 }

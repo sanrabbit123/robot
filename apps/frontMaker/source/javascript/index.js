@@ -804,7 +804,7 @@ IndexJs.prototype.asyncExec = function () {
         for (let j in style) {
           svg_clone.style[j] = style[j];
         }
-        GeneralJs.addHrefEvent(svg_clone, "/consulting.php");
+        GeneralJs.addHrefEvent(svg_clone, instance.map.main.banner.links[0]);
         mother.appendChild(SvgTong.parsing(svg_clone));
 
         //subButton
@@ -825,7 +825,7 @@ IndexJs.prototype.asyncExec = function () {
         for (let j in style) {
           svg_clone.style[j] = style[j];
         }
-        GeneralJs.addHrefEvent(svg_clone, "/consulting.php");
+        GeneralJs.addHrefEvent(svg_clone, instance.map.main.banner.links[1]);
         mother.appendChild(SvgTong.parsing(svg_clone));
 
         //button
@@ -866,7 +866,7 @@ IndexJs.prototype.asyncExec = function () {
         }
 
         div_clone.appendChild(SvgTong.parsing(svg_clone));
-        GeneralJs.addHrefEvent(div_clone, "/consulting.php");
+        GeneralJs.addHrefEvent(div_clone, instance.map.main.banner.links[2]);
         mother.appendChild(div_clone);
       },
       portfolio: async function (id, source, mother) {

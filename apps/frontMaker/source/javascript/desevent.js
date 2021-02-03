@@ -2,9 +2,14 @@ const DeseventJs = function () {
   this.mother = new GeneralJs();
   this.map = /<%map%>/;
   this.below = {};
+  this.values = {};
+  this.box = {
+    desktop: null,
+    mobile: null
+  };
 }
 
-DeseventJs.sourceLink = "/list_image/consulting";
+DeseventJs.sourceLink = "/list_image/desevent";
 
 DeseventJs.inputMaker = function (boo, id) {
   let div_clone, input_clone;
@@ -106,74 +111,6 @@ DeseventJs.postEvent = function (boo) {
       document.getElementById("cancel_back").parentNode.removeChild(document.getElementById("cancel_back"));
       document.getElementById(list.id).parentNode.removeChild(document.getElementById(list.id));
     }
-  }
-}
-
-DeseventJs.prototype.pendingBox = function (mother, boo, clear = false, partial = false) {
-  const instance = this;
-  const { sub: { etc: { pending } } } = this.map;
-  const { sub: { loader } } = this.mother.map;
-
-  let div_back, div_clone, div_clone2, svg_clone;
-  let height, width, ea = (boo === "desktop") ? "px" : "vw";
-  let style = {};
-
-  //make pending box
-  if (!clear) {
-    div_back = GeneralJs.nodes.div.cloneNode(true);
-    div_back.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox_back";
-    mother.appendChild(div_back);
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox";
-    height = (boo === "desktop") ? 20 : 5;
-
-    svg_clone = SvgTong.tongMaker();
-    svg_clone.src = pending.src;
-    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((boo === "desktop") ? 0 : -1);
-    style = {
-      position: "absolute",
-      top: String((boo === "desktop") ? 29 : 7.8) + ea,
-      left: "calc(50% - " + String(width / 2) + ea + ")",
-      width: String(width) + ea,
-      height: String(height) + ea,
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    div_clone2 = SvgTong.parsing(svg_clone);
-    div_clone.appendChild(div_clone2);
-
-    height = (boo === "desktop") ? 38 : 10;
-    svg_clone = SvgTong.tongMaker();
-    svg_clone.src = loader;
-    svg_clone.classList.add("loading");
-    svg_clone.classList.add("loaderc");
-
-    width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-    style = {
-      top: String((boo === "desktop") ? 62 : 16) + ea,
-      left: "50%",
-      marginLeft: '-' + String(width / 2) + ea,
-      width: String(width) + ea,
-      height: String(height) + ea,
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    div_clone.appendChild(SvgTong.parsing(svg_clone));
-    mother.appendChild(div_clone);
-
-  //clear pending box
-  } else {
-
-    if (document.getElementById(((boo === "desktop") ? "" : "mo") + "submit_pendingbox_back") !== null) {
-      if (!partial) {
-        mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "submit_pendingbox_back"));
-      }
-      mother.removeChild(document.getElementById(((boo === "desktop") ? "" : "mo") + "submit_pendingbox"));
-    }
-
   }
 }
 
@@ -310,6 +247,7 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
 
   endEvent = function (e) {
     let svg_clone, div_clone2;
+    let svg_dom;
     let style;
     let width, height;
     let whiteWidth, whiteHeight;
@@ -360,13 +298,14 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
         for (let i in style) {
           svg_clone.style[i] = style[i];
         }
-        div_clone.appendChild(SvgTong.parsing(svg_clone));
+        svg_dom = SvgTong.parsing(svg_clone);
+        div_clone.appendChild(svg_dom);
 
         div_clone.style.width = String(whiteWidth) + ea;
         div_clone.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
         div_clone.style.height = String(whiteHeight) + ea;
 
-        callback();
+        callback(div_clone, div_clone2, svg_dom);
 
       } else {
         alert("인증번호를 정확히 입력해주세요!");
@@ -428,158 +367,398 @@ DeseventJs.prototype.completeBox = function (mother, boo) {
   mother.appendChild(div_clone);
 }
 
-DeseventJs.prototype.submitEvent = function (boo) {
+DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
   const instance = this;
-  let flatform = boo === "desktop" ? "consultingbox" : "moconsultingbox";
-  let queryId = boo === "desktop" ? "#" : "#mo";
-  let queryClass = boo === "desktop" ? "." : ".mo";
-  const filter = function (str) {
-    let newStr;
-    if (str === '') {
-      str = "1";
-    }
-    if (/^0/.test(str)) {
-      str = str.replace(/^0/, '');
-    }
-    if (Number(str.replace(/[^0-9]/g, '')) < 10) {
-      newStr = '0' + str.replace(/[^0-9]/g, '');
-    } else {
-      newStr = str.replace(/[^0-9]/g, '');
-    }
-    return newStr;
-  }
-  const mother = document.getElementById(flatform);
-
   return function (e) {
-    let ajaxList = [ "pretext", "cellphone", "dwelling", "folk", "email", "money", "area", "movingdate", "myhomeboo", "spotspec", "description", "wayto" ];
-    let ajaxdata = '';
-    let submitNamePhone = [];
-    let obj = {};
-    for (let i = 0; i < ajaxList.length; i++) {
-      obj[ajaxList[i]] = '';
-    }
 
-    obj.pretext = mother.querySelector(queryId + "blocks_name > input").value;
-    obj.cellphone = mother.querySelector(queryId + "blocks_phone > input").value;
-    obj.dwelling = mother.querySelector(queryId + "blocks_address0 > input").value + ' ' + mother.querySelector(queryId + "blocks_address1 > input").value;
-    obj.folk = mother.querySelector(queryId + "blocks_family > input").value;
-    obj.email = mother.querySelector(queryId + "blocks_email > input").value;
+    const { mode, data } = instance.values;
+    const targetValues = data[flatform];
+    let columns, allColumns;
+    let temp, tempValue, boo;
+    let finalObj;
 
-    let budgets = mother.querySelectorAll(queryClass + "blocks_budgetbox_money_input");
-    for (let i = 0; i < budgets.length; i++) {
-      if (budgets[i].checked) { obj.money = budgets[i].value; }
-    }
-    obj.area = mother.querySelector(queryId + "blocks_pyeong > input").value;
+    columns = {};
+    finalObj = { mode };
 
-    if (mother.querySelector(queryClass + "blocks_date_resident_checkbox").checked) {
-      obj.movingdate = "거주중";
+    if (mode === "partnership") {
+      columns.green = [
+        { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
+          if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
+          if (/[^0-9\-]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
+          if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "classification", alert: "사업자 분류를 선택해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "company", alert: "회사명을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "bankName", alert: "은행명을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "bankAccount", alert: "계좌 번호를 입력해주세요!", valid: function (value) {
+          if (/[^0-9\-]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "bankTo", alert: "수신자를 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "interiorCareer", alert: "경력을 입력해주세요!", valid: function (value) {
+          if (!/년/g.test(value) || !/월/g.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "comeFrom", alert: "유입 경로를 선택해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", }
+      ];
+      columns.gray = [
+        { name: "businessNumber", alert: "사업자 등록번호를 입력해주세요!", valid: function (value) {
+          if (/[^0-9\-]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "startDate", alert: "개업일을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "representative", alert: "대표자 성함을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "bankEtc", alert: "은행 기타 사항을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "stylingCareer", alert: "스타일링 경력을 입력해주세요!", valid: function (value) {
+          if (value === '') {
+            return true;
+          } else {
+            if (!/년/g.test(value) || !/월/g.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }, value: "", },
+        { name: "careerDetail", alert: "경력 상세 사항을 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", }
+      ];
     } else {
-      obj.movingdate = mother.querySelector(queryId + "blocks_date_year > input").value + '-' + filter(mother.querySelector(queryId + "blocks_date_month > input").value) + '-' + filter(mother.querySelector(queryId + "blocks_date_day > input").value);
-    }
-    if (mother.querySelector(queryClass + "blocks_date_contract_radio").checked) {
-      obj.myhomeboo = "자가";
-    } else {
-      obj.myhomeboo = "전월세";
+      columns.green = [
+        { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
+          if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
+          if (/[^0-9\-]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
+          if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", },
+        { name: "presentationTimes", alert: "시간을 선택해주세요!", valid: function (value) {
+          if (false) {
+            return false;
+          } else {
+            return true;
+          }
+        }, value: "", }
+      ];
+      columns.gray = [];
     }
 
-    let rooms = mother.querySelectorAll(queryClass + "blocks_space_rooms_input");
-    for (let i = 0; i < rooms.length; i++) {
-      if (rooms[i].checked) { obj.room = rooms[i].value; }
-    }
-    let bathes = mother.querySelectorAll(queryClass + "blocks_space_bathes_input");
-    for (let i = 0; i < bathes.length; i++) {
-      if (bathes[i].checked) { obj.bath = bathes[i].value; }
-    }
-    let balconies = mother.querySelectorAll(queryClass + "blocks_space_baconies_input");
-    for (let i = 0; i < balconies.length; i++) {
-      if (balconies[i].checked) { obj.balcony = balconies[i].value; }
-    }
-    obj.spotspec = obj.room + " / " + obj.bath + " / " + obj.balcony;
+    allColumns = columns.green.concat(columns.gray);
 
-    obj.description = mother.querySelector(queryClass + "blocks_etc > textarea").value;
-
-    let surveies = mother.querySelectorAll(queryClass + "below_servey_detail_input");
-    for (let i = 0; i < surveies.length; i++) {
-      if (surveies[i].checked) { obj.wayto = surveies[i].value; }
-    }
-
-    //submit
-    if (obj.pretext === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "성함을 입력해주세요!");
-    } else if (/[a-zA-Z]/g.test(obj.pretext)) {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_name > input"), "한글로 성함을 입력해주세요!");
-    } else if (obj.cellphone === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_phone > input"), "연락처를 남겨주세요!");
-    } else if (mother.querySelector(queryId + "blocks_address0 > input").value === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_address0 > input"), "주소를 입력해주세요!");
-    } else if (mother.querySelector(queryId + "blocks_address1 > input").value === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_address1 > input"), "상세 주소 입력해주세요!");
-    } else if (obj.folk === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_family > input"), "가족 구성원을 알려주세요!");
-    } else if (obj.area === '') {
-      GeneralJs.inputBackward(mother.querySelector(queryId + "blocks_pyeong > input"), "평수를 알려주세요!");
-    } else {
-
-      //make ajax data
-      if (!mother.querySelector(queryClass + "below_box_checkbox_input").checked) {
-        alert("이용 약관에 동의하여 주세요!");
-        return;
+    //green validation
+    for (let c of columns.green) {
+      if (targetValues[c.name].type === "text") {
+        if (targetValues[c.name].input.value === '') {
+          GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
+          return false;
+        }
+      } else {
+        temp = false;
+        for (let svg of targetValues[c.name].input) {
+          if (svg.getAttribute("selected") === "true") {
+            temp = true;
+          }
+        }
+        if (!temp) {
+          alert(c.alert);
+          window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
+          return false;
+        }
       }
-      ajaxdata = '';
-      submitNamePhone = new Array(2);
-      for (let i = 0; i < ajaxList.length; i++) {
+    }
 
-        ajaxdata += '&';
-
-        if (ajaxList[i] === "pretext") {
-          submitNamePhone[0] = GeneralJs.escapeString(obj[ajaxList[i]], { hangul: true, noSpace: true });
-          ajaxdata += ajaxList[i] + '=' + submitNamePhone[0];
-        } else if (ajaxList[i] === "cellphone") {
-          submitNamePhone[1] = GeneralJs.escapeString(obj[ajaxList[i]], { isPhone: true });
-          ajaxdata += ajaxList[i] + '=' + submitNamePhone[1];
+    boo = false;
+    for (let c of allColumns) {
+      if (targetValues[c.name].type === "text") {
+        boo = c.valid(targetValues[c.name].input.value);
+        if (!boo) {
+          GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
+          return false;
         } else {
-          ajaxdata += ajaxList[i] + '=' + obj[ajaxList[i]].replace(/\&/g, '').replace(/\=/g, '').replace(/[\*\^\:\&\<\>\;\#\$\[\]\\\|\(\)\`\'\"\{\}]/g, '');
+          targetValues[c.name].value = targetValues[c.name].input.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/\n/g, '__space__').trim().replace(/\=/g, '').replace(/\&/g, '');
         }
-
-      }
-      ajaxdata = ajaxdata.slice(1);
-
-      //convert homeliaisonTalk
-      let icon;
-      if (document.getElementById("talkIcon") !== null) {
-        icon = document.getElementById("talkIcon");
-        icon.removeEventListener("click", GeneralJs.events["iconClickEvent"][0]);
-        GeneralJs.addHrefEvent(icon, "http://pf.kakao.com/_vxixkjxl/chat");
-        icon.parentNode.lastChild.style.display = "none";
-      }
-      if (document.getElementById("motalkIcon") !== null) {
-        icon = document.getElementById("motalkIcon");
-        icon.removeEventListener("click", GeneralJs.events["iconClickEvent"][1]);
-        GeneralJs.addHrefEvent(icon, "http://pf.kakao.com/_vxixkjxl/chat");
-        icon.parentNode.lastChild.style.display = "none";
-      }
-
-      //view certificationBox
-      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, function () {
-        //send google analytics
-        if (obj.cellphone !== "010-2747-3403") {
-          window.gtag('event', 'login');
+      } else {
+        temp = false;
+        for (let svg of targetValues[c.name].input) {
+          if (svg.getAttribute("selected") === "true") {
+            temp = true;
+            tempValue = svg.getAttribute("value");
+          }
         }
-        //submit
-        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
-        GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
-      });
-
-      //test
-      /*
-      console.log(ajaxdata);
-      let tempFunc = instance.thankyouPage(boo, [ obj.pretext.trim().replace(/[ \n]/g, ''), obj.cellphone ]);
-      setTimeout(function () {
-        tempFunc();
-      }, 1000);
-      */
-
+        if (!temp) {
+          alert(c.alert);
+          boo = false;
+          window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
+          return false;
+        } else {
+          targetValues[c.name].value = tempValue;
+        }
+      }
     }
+
+    for (let i in targetValues) {
+      finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '');
+    }
+
+    instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, function (whiteBox, wording, loader) {
+      GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
+        let style;
+        let ea;
+        let svg_clone, svg_dom;
+        let width, height, top;
+        let whiteWidth, whiteHeight;
+        let promptBox;
+        let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
+        let promptWordingTop, promptWordingLeft;
+
+        wording.style.display = "none";
+        loader.style.display = "none";
+
+        ea = (flatform === "desktop") ? "px" : "vw";
+
+        svg_clone = SvgTong.tongMaker();
+        if (finalObj.mode === "partnership") {
+          svg_clone.src = instance.map.sub.etc.partnershipComplete.src;
+          height = (flatform === "desktop") ? 19 : 4.5;
+          top = (flatform === "desktop") ? 31 : 7;
+          whiteWidth = (flatform === "desktop") ? 330 : 74;
+          whiteHeight = (flatform === "desktop") ? 86 : 19.4;
+        } else {
+          svg_clone.src = instance.map.sub.etc.presentationComplete.src;
+          height = (flatform === "desktop") ? 41 : 9;
+          top = (flatform === "desktop") ? 31 : 7;
+          whiteWidth = (flatform === "desktop") ? 356 : 76;
+          whiteHeight = (flatform === "desktop") ? 149 : 34;
+        }
+        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
+        style = {
+          position: "absolute",
+          top: String(top) + ea,
+          left: "calc(50% - " + String(width / 2) + ea + ")",
+          width: String(width) + ea,
+          height: String(height) + ea,
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        svg_dom = SvgTong.parsing(svg_clone);
+        whiteBox.appendChild(svg_dom);
+
+        if (finalObj.mode !== "partnership") {
+
+          promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
+          promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
+          promptGreenHeight = (flatform === "desktop") ? 31 : 8;
+          promptGreenBottom = (flatform === "desktop") ? 30 : 7;
+          promptGreenLeft0 = (flatform === "desktop") ? 124 : 26;
+          promptGreenLeft1 = (flatform === "desktop") ? 168 : 35.5;
+          height = (flatform === "desktop") ? 13 : 3.4;
+          promptWordingTop = (flatform === "desktop") ? 8 : 2;
+          promptWordingLeft = (flatform === "desktop") ? 14 : 2.5;
+
+          promptBox = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            width: String(promptGreenWidth0) + ea,
+            height: String(promptGreenHeight) + ea,
+            bottom: String(promptGreenBottom) + ea,
+            left: String(promptGreenLeft0) + ea,
+            background: "#2fa678",
+            borderRadius: String(3) + "px",
+            cursor: "pointer",
+          };
+          for (let i in style) {
+            promptBox.style[i] = style[i];
+          }
+
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = instance.map.sub.submit[2].src[flatform];
+          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+          style = {
+            position: "absolute",
+            top: String(promptWordingTop) + ea,
+            left: String(promptWordingLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+          };
+          for (let i in style) {
+            svg_clone.style[i] = style[i];
+          }
+          svg_dom = SvgTong.parsing(svg_clone);
+          promptBox.appendChild(svg_dom);
+          promptBox.addEventListener("click", function (e) {
+            window.location.href = "/desevent.php?mode=partnership";
+          });
+          whiteBox.appendChild(promptBox);
+
+          promptBox = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "absolute",
+            width: String(promptGreenWidth1) + ea,
+            height: String(promptGreenHeight) + ea,
+            bottom: String(promptGreenBottom) + ea,
+            left: String(promptGreenLeft1) + ea,
+            background: "#2fa678",
+            borderRadius: String(3) + "px",
+            cursor: "pointer",
+          };
+          for (let i in style) {
+            promptBox.style[i] = style[i];
+          }
+
+          svg_clone = SvgTong.tongMaker();
+          svg_clone.src = instance.map.sub.submit[3].src[flatform];
+          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+          style = {
+            position: "absolute",
+            top: String(promptWordingTop) + ea,
+            left: String(promptWordingLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+          };
+          for (let i in style) {
+            svg_clone.style[i] = style[i];
+          }
+          svg_dom = SvgTong.parsing(svg_clone);
+          promptBox.appendChild(svg_dom);
+          promptBox.addEventListener("click", function (e) {
+            window.location.href = "/index.php";
+          });
+          whiteBox.appendChild(promptBox);
+        }
+
+        whiteBox.style.width = String(whiteWidth) + ea;
+        whiteBox.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+        whiteBox.style.height = String(whiteHeight) + ea;
+        whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
+
+        if (finalObj.mode === "partnership") {
+          setTimeout(function () {
+            window.location.href = "/index.php";
+          }, 3000);
+        }
+      });
+    });
   }
 }
 
@@ -680,9 +859,10 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   mother.appendChild(div_clone);
 }
 
-DeseventJs.prototype.returnBlocks = function () {
+DeseventJs.prototype.returnBlocks = function (pageBoo) {
   const instance = this;
-  return [
+  let targetBlocks;
+  targetBlocks = [
     {
       name: "designer",
       height: { desktop: 170, mobile: 56.2, },
@@ -701,6 +881,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.desktop.designer = { type: "text", input: input };
             return dom;
           }
         },
@@ -722,6 +903,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.addEventListener("keyup", function (e) {
               this.value = GeneralJs.autoHypenPhone(this.value);
             });
+            instance.values.data.desktop.phone = { type: "text", input: input };
             return dom;
           }
         },
@@ -789,6 +971,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
+            instance.values.data.desktop.address = { type: "text", input: input };
 
             //detail address
             dom = DeseventJs.inputMaker(true, "blocks_address1");
@@ -800,6 +983,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
+            instance.values.data.desktop.detailAddress = { type: "text", input: input };
 
             return h;
           }
@@ -819,6 +1003,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textAlign = "left";
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "example@home-liaison.com");
+            instance.values.data.desktop.email = { type: "text", input: input };
             return dom;
           }
         },
@@ -838,6 +1023,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.mobile.designer = { type: "text", input: input };
             return dom;
           }
         },
@@ -859,6 +1045,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.addEventListener("keyup", function (e) {
               this.value = GeneralJs.autoHypenPhone(this.value);
             });
+            instance.values.data.mobile.phone = { type: "text", input: input };
             return dom;
           }
         },
@@ -925,6 +1112,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
+            instance.values.data.mobile.address = { type: "text", input: input };
 
             //detail address
             dom = DeseventJs.inputMaker(false, "moblocks_address1");
@@ -936,6 +1124,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
+            instance.values.data.mobile.detailAddress = { type: "text", input: input };
 
             return h;
           }
@@ -955,7 +1144,362 @@ DeseventJs.prototype.returnBlocks = function () {
             input.style.textAlign = "left";
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "example@home-liaison.com");
+            instance.values.data.mobile.email = { type: "text", input: input };
             return dom;
+          }
+        },
+      ],
+    },
+    {
+      name: "presentation",
+      height: { desktop: 251, mobile: 73, },
+      desktop: [
+        //시간
+        {
+          titleStyle: {
+            top: 57,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons } = needs;
+            let h;
+            let style;
+            let ea;
+            let svg_clone, svg_dom;
+            let top, left, height, width;
+            let margin;
+            let onoffEvent;
+
+            ea = "px";
+            top = 57;
+            height = 15;
+            left = 162;
+            margin = 191;
+
+            h = document.createDocumentFragment();
+            GeneralJs.stacks["radioDoms0_desktop"] = [];
+
+            instance.values.data.desktop.presentationTimes = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top) + ea,
+                left: String(left + (margin * j)) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+
+              instance.values.data.desktop.presentationTimes.input.push(svg_dom);
+              GeneralJs.stacks["radioDoms0_desktop"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms0_desktop"].length; j++) {
+                if (GeneralJs.stacks["radioDoms0_desktop"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms0_desktop"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms0_desktop"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms0_desktop"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms0_desktop"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms0_desktop"].length; j++) {
+              GeneralJs.stacks["radioDoms0_desktop"][j].addEventListener("click", onoffEvent);
+            }
+
+            return h;
+          }
+        },
+        //포트폴리오
+        {
+          titleStyle: {
+            top: 101,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { notice } = needs;
+            let h;
+            let dom;
+            let svg_clone, svg_dom;
+            let style;
+            let ea;
+            let top, left;
+            let width, height;
+            let grayHeight, grayWidth;
+
+            ea = "px";
+            top = 101 - 7;
+            left = 162;
+            grayWidth = 717;
+            grayHeight = 128;
+
+            h = document.createDocumentFragment();
+
+            dom = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(left) + ea,
+              width: String(grayWidth) + ea,
+              height: String(grayHeight) + ea,
+              background: "#f2f2f2",
+              borderRadius: String(3) + ea,
+              cursor: "pointer",
+            };
+            for (let i in style) {
+              dom.style[i] = style[i];
+            }
+
+            h.appendChild(dom);
+
+            height = 22;
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = instance.map.sub.etc.clickWording.src.desktop;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(top + (grayHeight / 2) - (height / 2) - 4) + ea,
+              left: String(left + (grayWidth / 2) - (width / 2) - 2) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            h.appendChild(svg_dom);
+
+            height = 14;
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = notice.src.desktop[0];
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              transition: "opacity 0.3s ease",
+              top: String(top + grayHeight + 12) + ea,
+              left: String(left + grayWidth - width) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+            h.appendChild(svg_dom);
+
+            return h;
+          }
+        },
+      ],
+      mobile: [
+        //시간
+        {
+          titleStyle: {
+            top: 11.5,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons } = needs;
+            let h;
+            let dom, input;
+            let style, ea;
+            let top, left;
+            let width, height;
+            let svg_clone, svg_dom;
+            let margin;
+            let onoffEvent;
+
+            h = document.createDocumentFragment();
+            ea = "vw";
+            top = 11.5;
+            left = 26;
+            width = 38;
+
+            margin = 10;
+            height = 2.8;
+
+            GeneralJs.stacks["radioDoms0_mobile"] = [];
+            instance.values.data.mobile.presentationTimes = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.2;
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String((j < 2) ? top : top + 5.3) + ea,
+                left: String((j % 2) ? 58 : left) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              instance.values.data.mobile.presentationTimes.input.push(svg_dom);
+              GeneralJs.stacks["radioDoms0_mobile"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms0_mobile"].length; j++) {
+                if (GeneralJs.stacks["radioDoms0_mobile"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms0_mobile"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms0_mobile"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms0_mobile"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms0_mobile"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms0_mobile"].length; j++) {
+              GeneralJs.stacks["radioDoms0_mobile"][j].addEventListener("click", onoffEvent);
+            }
+
+            return h;
+          }
+        },
+        //포트폴리오
+        {
+          titleStyle: {
+            top: 28,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { notice } = needs;
+            let h;
+            let dom, input;
+            let style, ea;
+            let top, left;
+            let width, height;
+            let box;
+            let grayWidth, grayHeight;
+            let grayTop;
+            let svg_clone, svg_dom;
+            let line;
+
+            h = document.createDocumentFragment();
+            ea = "vw";
+            top = 28 - 1.5;
+            left = 36;
+            grayWidth = 87;
+            grayHeight = 20;
+            grayTop = top + 8.7;
+
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(grayTop + grayHeight + 14.18) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
+
+            box = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderRadius: String(3) + "px",
+              width: String(grayWidth) + ea,
+              height: String(grayHeight) + ea,
+              left: String(0) + ea,
+              top: String(grayTop) + ea,
+              background: "#f2f2f2",
+            };
+            for (let i in style) {
+              box.style[i] = style[i];
+            }
+            h.appendChild(box);
+
+            height = 5.3;
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = instance.map.sub.etc.clickWording.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(grayTop + (grayHeight / 2) - (height / 2) - 0.2) + ea,
+              left: String((grayWidth / 2) - (width / 2)) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            h.appendChild(svg_dom);
+
+            height = 2.8;
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = notice.src.mobile[0];
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(grayTop + grayHeight + 2) + ea,
+              left: String(0 + grayWidth - width) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            h.appendChild(svg_dom);
+
+            return h;
           }
         },
       ],
@@ -988,6 +1532,7 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             GeneralJs.stacks["radioDoms0_desktop"] = [];
+            instance.values.data.desktop.classification = { type: "radio", input: [] };
 
             for (let j = 0; j < buttons.length; j++) {
               svg_clone = SvgTong.tongMaker();
@@ -1018,6 +1563,7 @@ DeseventJs.prototype.returnBlocks = function () {
               svg_dom.setAttribute("value", buttons[j].title);
               svg_dom.setAttribute("selected", "false");
               svg_dom.setAttribute("index", j);
+              instance.values.data.desktop.classification.input.push(svg_dom);
               GeneralJs.stacks["radioDoms0_desktop"].push(svg_dom);
             }
 
@@ -1075,6 +1621,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "회사명");
+            instance.values.data.desktop.company = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1142,6 +1689,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "000-00-00000");
+            instance.values.data.desktop.businessNumber = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1169,6 +1717,7 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              this.value = this.value.replace(/[^0-9\-\.]/g, '');
               svg_dom.style.opacity = String(1);
             });
 
@@ -1209,6 +1758,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2000-00-00");
+            instance.values.data.desktop.startDate = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1236,9 +1786,75 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
-              svg_dom.style.opacity = String(1);
-            });
+              let temp, tempArr;
 
+              svg_dom.style.opacity = String(1);
+
+              this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+
+              if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(this.value)) {
+                if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9] [0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (this.value !== "") {
+                  GeneralJs.inputBackward(this, "개업일을 정확히 입력해주세요! 형식) yyyy-mm-dd");
+                } else {
+                  this.value = "";
+                }
+              }
+
+            });
             return h;
           }
         },
@@ -1276,6 +1892,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.desktop.representative = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1323,6 +1940,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "은행명");
+            instance.values.data.desktop.bankName = { type: "text", input: input };
             return dom;
           }
         },
@@ -1362,6 +1980,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "계좌 번호");
+            instance.values.data.desktop.bankAccount = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1408,6 +2027,7 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              this.value = this.value.replace(/[^0-9\-\.]/g, '');
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["popupTimeouts0"] = setTimeout(function () {
                 popup_dom.style.display = "none";
@@ -1433,6 +2053,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.desktop.bankTo = { type: "text", input: input };
             return dom;
           }
         },
@@ -1450,6 +2071,7 @@ DeseventJs.prototype.returnBlocks = function () {
             let input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "기타");
+            instance.values.data.desktop.bankEtc = { type: "text", input: input };
             return dom;
           }
         },
@@ -1496,6 +2118,8 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2년 6개월");
+            instance.values.data.desktop.interiorCareer = { type: "text", input: input };
+            GeneralJs.stacks["interiorCareerInput_desktop"] = input;
 
             h.appendChild(dom);
 
@@ -1564,6 +2188,8 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              let temp, tempArr;
+
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               targetNotice.style.opacity = String(1);
               GeneralJs.timeouts["popupTimeouts1"] = setTimeout(function () {
@@ -1571,6 +2197,32 @@ DeseventJs.prototype.returnBlocks = function () {
                 clearTimeout(GeneralJs.timeouts["popupTimeouts1"]);
                 GeneralJs.timeouts["popupTimeouts1"] = null;
               }, 301);
+
+              this.value = this.value.trim();
+
+              if (this.value === '') {
+                this.value = '';
+              } else {
+                if (!/년/.test(this.value)) {
+                  this.value = "";
+                  GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                } else {
+                  tempArr = this.value.split("년");
+                  if (Number.isNaN(Number(tempArr[0].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number.isNaN(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number(tempArr[1].replace(/[^0-9]/g, '')) > 12) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else {
+                    this.value = String(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '년 ' + String(Number(tempArr[1].replace(/[^0-9]/g, ''))) + "개월";
+                  }
+                }
+              }
+
             });
 
             return h;
@@ -1619,6 +2271,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2년 6개월 or 위와 같음");
+            instance.values.data.desktop.stylingCareer = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -1687,6 +2340,8 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              let temp, tempArr;
+
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               targetNotice.style.opacity = String(1);
               GeneralJs.timeouts["popupTimeouts2"] = setTimeout(function () {
@@ -1694,6 +2349,36 @@ DeseventJs.prototype.returnBlocks = function () {
                 clearTimeout(GeneralJs.timeouts["popupTimeouts2"]);
                 GeneralJs.timeouts["popupTimeouts2"] = null;
               }, 301);
+
+              if (/같/gi.test(this.value)) {
+                this.value = GeneralJs.stacks["interiorCareerInput_desktop"].value;
+              }
+
+              this.value = this.value.trim();
+
+              if (this.value === '') {
+                this.value = '';
+              } else {
+                if (!/년/.test(this.value)) {
+                  this.value = "";
+                  GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                } else {
+                  tempArr = this.value.split("년");
+                  if (Number.isNaN(Number(tempArr[0].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number.isNaN(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number(tempArr[1].replace(/[^0-9]/g, '')) > 12) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else {
+                    this.value = String(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '년 ' + String(Number(tempArr[1].replace(/[^0-9]/g, ''))) + "개월";
+                  }
+                }
+              }
+
             });
 
             return h;
@@ -1778,6 +2463,7 @@ DeseventJs.prototype.returnBlocks = function () {
             textArea.setAttribute("placeholder", popup.description.desktop.join("\n"));
 
             dom.appendChild(textArea);
+            instance.values.data.desktop.careerDetail = { type: "text", input: textArea };
 
             h.appendChild(dom);
 
@@ -1861,6 +2547,7 @@ DeseventJs.prototype.returnBlocks = function () {
 
             h = document.createDocumentFragment();
             GeneralJs.stacks["radioDoms1_desktop"] = [];
+            instance.values.data.desktop.comeFrom = { type: "radio", input: [] };
 
             for (let j = 0; j < buttons.length; j++) {
               svg_clone = SvgTong.tongMaker();
@@ -1895,6 +2582,7 @@ DeseventJs.prototype.returnBlocks = function () {
               svg_dom.setAttribute("value", buttons[j].title);
               svg_dom.setAttribute("selected", "false");
               svg_dom.setAttribute("index", j);
+              instance.values.data.desktop.comeFrom.input.push(svg_dom);
               GeneralJs.stacks["radioDoms1_desktop"].push(svg_dom);
             }
 
@@ -2011,6 +2699,7 @@ DeseventJs.prototype.returnBlocks = function () {
             height = 2.8;
 
             GeneralJs.stacks["radioDoms0_mobile"] = [];
+            instance.values.data.mobile.classification = { type: "radio", input: [] };
 
             for (let j = 0; j < buttons.length; j++) {
               svg_clone = SvgTong.tongMaker();
@@ -2041,6 +2730,7 @@ DeseventJs.prototype.returnBlocks = function () {
               svg_dom.setAttribute("value", buttons[j].title);
               svg_dom.setAttribute("selected", "false");
               svg_dom.setAttribute("index", j);
+              instance.values.data.mobile.classification.input.push(svg_dom);
               GeneralJs.stacks["radioDoms0_mobile"].push(svg_dom);
             }
 
@@ -2112,6 +2802,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "회사명");
+            instance.values.data.mobile.company = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2217,6 +2908,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "000-00-00000");
+            instance.values.data.mobile.businessNumber = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2263,6 +2955,7 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              this.value = this.value.replace(/[^0-9\-\.]/g, '');
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["mopopupTimeouts2"] = setTimeout(function () {
                 popup_dom.style.display = "none";
@@ -2322,6 +3015,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2000-00-00");
+            instance.values.data.mobile.startDate = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2368,12 +3062,79 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              let temp, tempArr;
+
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["mopopupTimeouts3"] = setTimeout(function () {
                 popup_dom.style.display = "none";
                 clearTimeout(GeneralJs.timeouts["mopopupTimeouts3"]);
                 GeneralJs.timeouts["mopopupTimeouts3"] = null;
               }, 301);
+
+              this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+
+              if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(this.value)) {
+                if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+                } else if (/^[0-9][0-9] [0-9] [0-9][0-9]$/.test(this.value)) {
+                  tempArr = this.value.split("-");
+                  this.value = '20' + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+                } else if (this.value !== "") {
+                  GeneralJs.inputBackward(this, "개업일을 정확히 입력해주세요! 형식) yyyy-mm-dd");
+                } else {
+                  this.value = "";
+                }
+              }
+
             });
 
             return h;
@@ -2427,6 +3188,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.mobile.representative = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2530,6 +3292,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "은행명");
+            instance.values.data.mobile.bankName = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2584,6 +3347,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "계좌 번호");
+            instance.values.data.mobile.bankAccount = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2630,6 +3394,7 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              this.value = this.value.replace(/[^0-9\-\.]/g, '');
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["mopopupTimeouts5"] = setTimeout(function () {
                 popup_dom.style.display = "none";
@@ -2674,6 +3439,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
+            instance.values.data.mobile.bankTo = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2712,6 +3478,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "기타");
+            instance.values.data.mobile.bankEtc = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2780,6 +3547,8 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2년 6개월");
+            instance.values.data.mobile.interiorCareer = { type: "text", input: input };
+            GeneralJs.stacks["interiorCareerInput_mobile"] = input;
 
             h.appendChild(dom);
 
@@ -2826,12 +3595,40 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              let temp, tempArr;
+
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["mopopupTimeouts8"] = setTimeout(function () {
                 popup_dom.style.display = "none";
                 clearTimeout(GeneralJs.timeouts["mopopupTimeouts8"]);
                 GeneralJs.timeouts["mopopupTimeouts8"] = null;
               }, 301);
+
+              this.value = this.value.trim();
+
+              if (this.value === '') {
+                this.value = '';
+              } else {
+                if (!/년/.test(this.value)) {
+                  this.value = "";
+                  GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                } else {
+                  tempArr = this.value.split("년");
+                  if (Number.isNaN(Number(tempArr[0].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number.isNaN(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number(tempArr[1].replace(/[^0-9]/g, '')) > 12) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else {
+                    this.value = String(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '년 ' + String(Number(tempArr[1].replace(/[^0-9]/g, ''))) + "개월";
+                  }
+                }
+              }
+
             });
 
             return h;
@@ -2885,6 +3682,7 @@ DeseventJs.prototype.returnBlocks = function () {
             input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "2년 6개월 or 위와 같음");
+            instance.values.data.mobile.stylingCareer = { type: "text", input: input };
 
             h.appendChild(dom);
 
@@ -2931,12 +3729,44 @@ DeseventJs.prototype.returnBlocks = function () {
             });
 
             input.addEventListener("blur", function (e) {
+              let temp, tempArr;
+
               popup_dom.style.animation = "fadedown 0.4s ease forwards";
               GeneralJs.timeouts["mopopupTimeouts9"] = setTimeout(function () {
                 popup_dom.style.display = "none";
                 clearTimeout(GeneralJs.timeouts["mopopupTimeouts9"]);
                 GeneralJs.timeouts["mopopupTimeouts9"] = null;
               }, 301);
+
+              if (/같/gi.test(this.value)) {
+                this.value = GeneralJs.stacks["interiorCareerInput_mobile"].value;
+              }
+
+              this.value = this.value.trim();
+
+              if (this.value === '') {
+                this.value = '';
+              } else {
+                if (!/년/.test(this.value)) {
+                  this.value = "";
+                  GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                } else {
+                  tempArr = this.value.split("년");
+                  if (Number.isNaN(Number(tempArr[0].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number.isNaN(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else if (Number(tempArr[1].replace(/[^0-9]/g, '')) > 12) {
+                    this.value = "";
+                    GeneralJs.inputBackward(this, "경력을 정확히 입력해주세요! 형식) 0년 0개월");
+                  } else {
+                    this.value = String(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '년 ' + String(Number(tempArr[1].replace(/[^0-9]/g, ''))) + "개월";
+                  }
+                }
+              }
+
             });
 
             return h;
@@ -3008,6 +3838,7 @@ DeseventJs.prototype.returnBlocks = function () {
             textArea.setAttribute("placeholder", popup.description.mobile.slice(0, 3).join("\n"));
             box.appendChild(textArea);
             h.appendChild(box);
+            instance.values.data.mobile.careerDetail = { type: "text", input: textArea };
 
             return h;
           }
@@ -3039,7 +3870,6 @@ DeseventJs.prototype.returnBlocks = function () {
             margin = 10;
             height = 2.8;
 
-
             line = GeneralJs.nodes.div.cloneNode(true);
             style = {
               position: "absolute",
@@ -3054,6 +3884,7 @@ DeseventJs.prototype.returnBlocks = function () {
             h.appendChild(line);
 
             GeneralJs.stacks["radioDoms1_mobile"] = [];
+            instance.values.data.mobile.comeFrom = { type: "radio", input: [] };
 
             for (let j = 0; j < buttons.length; j++) {
               svg_clone = SvgTong.tongMaker();
@@ -3084,6 +3915,7 @@ DeseventJs.prototype.returnBlocks = function () {
               svg_dom.setAttribute("value", buttons[j].title);
               svg_dom.setAttribute("selected", "false");
               svg_dom.setAttribute("index", j);
+              instance.values.data.mobile.comeFrom.input.push(svg_dom);
               GeneralJs.stacks["radioDoms1_mobile"].push(svg_dom);
             }
 
@@ -3187,9 +4019,17 @@ DeseventJs.prototype.returnBlocks = function () {
       ],
     },
   ];
+
+  if (pageBoo) {
+    targetBlocks.splice(1, 1);
+  } else {
+    targetBlocks.splice(2, 1);
+  }
+
+  return targetBlocks;
 }
 
-DeseventJs.prototype.belowSubmit = function () {
+DeseventJs.prototype.belowSubmit = function (pageBoo) {
   const instance = this;
   const { sub: { terms, submit } } = this.map;
   let div_clone, temp, dom, mo;
@@ -3313,7 +4153,7 @@ DeseventJs.prototype.belowSubmit = function () {
 
           height = 20;
           svg_clone = SvgTong.tongMaker();
-          svg_clone.src = submit[1].src.desktop;
+          svg_clone.src = submit[(pageBoo ? 1 : 0)].src.desktop;
           svg_clone.classList.add("hoverdefault");
           width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
           style = {
@@ -3337,6 +4177,7 @@ DeseventJs.prototype.belowSubmit = function () {
 
           div_clone.style.width = String(width + (margin * 2)) + ea;
           div_clone.style.marginLeft = String(-1 * ((width + (margin * 2)) / 2)) + ea;
+          div_clone.addEventListener("click", instance.submitEvent("desktop"));
 
           return div_clone;
         }
@@ -3457,7 +4298,7 @@ DeseventJs.prototype.belowSubmit = function () {
 
           height = 4.3;
           svg_clone = SvgTong.tongMaker();
-          svg_clone.src = submit[1].src.desktop;
+          svg_clone.src = submit[(pageBoo ? 1 : 0)].src.desktop;
           width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
           style = {
             position: "absolute",
@@ -3477,6 +4318,8 @@ DeseventJs.prototype.belowSubmit = function () {
           div_clone.style.marginLeft = String(-1 * ((width / 2) + 5)) + ea;
 
           div_clone.appendChild(SvgTong.parsing(svg_clone));
+
+          div_clone.addEventListener("click", instance.submitEvent("mobile"));
 
           return div_clone;
         }
@@ -3551,7 +4394,7 @@ DeseventJs.prototype.belowSubmit = function () {
   }
 }
 
-DeseventJs.prototype.baseMaker = function () {
+DeseventJs.prototype.baseMaker = function (pageBoo) {
   let div_clone, div_clone2, div_clone4, img_clone, svg_clone;
   let temp;
   let positions = [ "left", "right" ];
@@ -3599,7 +4442,7 @@ DeseventJs.prototype.baseMaker = function () {
     }
   };
 
-  const blocks = this.returnBlocks();
+  const blocks = this.returnBlocks(pageBoo);
 
   for (let z = 0; z < flatform.length; z++) {
 
@@ -3719,7 +4562,7 @@ DeseventJs.prototype.baseMaker = function () {
   // father.appendChild(this.below.mobile);
 }
 
-DeseventJs.prototype.initialDom = function () {
+DeseventJs.prototype.initialDom = function (pageBoo) {
   const instance = this;
   const { main, sub } = this.map;
   let div_clone, div_clone2;
@@ -3765,7 +4608,7 @@ DeseventJs.prototype.initialDom = function () {
             position: "absolute",
             top: String(632) + ea,
             width: String(100) + '%',
-            height: String(1800) + ea,
+            height: String(pageBoo ? 1800 : 1200) + ea,
             backgroundColor: "#f7f7f7",
           };
           for (let i in style) {
@@ -3998,17 +4841,37 @@ DeseventJs.prototype.launching = async function () {
 
     //parsing get
     const getObj = GeneralJs.returnGet();
+    let pageBoo;
 
-    this.map.main.splice(1, 1);
-    this.map.sub.title = this.map.sub.titleSecond;
-    this.box = {
-      desktop: new Array(this.map.main.length),
-      mobile: new Array(this.map.main.length),
-    };
+    if (getObj.mode === undefined) {
+      pageBoo = true;
+    } else {
+      if (getObj.mode === "presentation") {
+        pageBoo = false;
+      } else {
+        pageBoo = true;
+      }
+    }
 
-    this.initialDom();
-    this.baseMaker();
-    this.belowSubmit();
+    if (pageBoo) {
+      this.map.main.splice(1, 1);
+      this.map.sub.title = this.map.sub.titleSecond;
+      this.values.mode = "partnership";
+    } else {
+      this.map.main.splice(2, 1);
+      this.map.sub.title = this.map.sub.titleFirst;
+      this.values.mode = "presentation";
+    }
+
+    this.values.data = {};
+    this.values.data.desktop = {};
+    this.values.data.mobile = {};
+    this.box.desktop = new Array(this.map.main.length);
+    this.box.mobile = new Array(this.map.main.length);
+
+    this.initialDom(pageBoo);
+    this.baseMaker(pageBoo);
+    this.belowSubmit(pageBoo);
 
   } catch (e) {
     console.log(e);

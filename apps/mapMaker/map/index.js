@@ -33,13 +33,13 @@ module.exports = {
         },
         "words": {
           "desktop": {
-            "main": "slideWords_3rspot633_013015.svg",
-            "sub": "slideSub_10rspot049_013015.svg"
+            "main": "slideWords_3rspot633_020311.svg",
+            "sub": "slideSub_10rspot049_020311.svg"
           },
           "mobile": {
-            "main": "slideWords_3rspot633_013015.svg",
-            "sub": "moslideSub_5rspot196_013015.svg",
-            "circles": "moslideCircles_4rspot679_013015.svg"
+            "main": "slideWords_3rspot633_020311.svg",
+            "sub": "moslideSub_5rspot196_020311.svg",
+            "circles": "moslideCircles_4rspot679_020311.svg"
           }
         }
       }
@@ -92,31 +92,31 @@ module.exports = {
       "src": {
         "desktop": {
           "left": {
-            "words": "aboutleft_1rspot791_013015.svg",
-            "button": "aboutbuttonleft_6rspot759_013015.svg",
+            "words": "aboutleft_1rspot791_020311.svg",
+            "button": "aboutbuttonleft_6rspot759_020311.svg",
             "image": "main3s1.jpg"
           },
           "right": {
-            "words": "aboutright_1rspot824_013015.svg",
-            "button": "aboutbuttonright_6rspot749_013015.svg",
+            "words": "aboutright_1rspot824_020311.svg",
+            "button": "aboutbuttonright_6rspot749_020311.svg",
             "image": "main3s2.jpg"
           }
         },
         "mobile": {
           "left": {
-            "words": "moaboutleft_2rspot746_013015.svg",
+            "words": "moaboutleft_2rspot746_020311.svg",
             "images": [
-              "moabout0_level0_1rspot378_013015.svg",
-              "moabout0_level1_1rspot378_013015.png",
-              "moabout0_level2_1rspot378_013015.svg"
+              "moabout0_level0_1rspot378_020311.svg",
+              "moabout0_level1_1rspot378_020311.png",
+              "moabout0_level2_1rspot378_020311.svg"
             ]
           },
           "right": {
-            "words": "moaboutright_2rspot721_013015.svg",
+            "words": "moaboutright_2rspot721_020311.svg",
             "images": [
-              "moabout1_level0_1rspot378_013015.svg",
-              "moabout1_level1_1rspot378_013015.png",
-              "moabout1_level2_1rspot378_013015.svg"
+              "moabout1_level0_1rspot378_020311.svg",
+              "moabout1_level1_1rspot378_020311.png",
+              "moabout1_level2_1rspot378_020311.svg"
             ]
           }
         }
@@ -124,23 +124,28 @@ module.exports = {
     },
     "banner": {
       "words": {
-        "main": "디자이너의 <b%1:1 상담%b>을 받아보세요!",
-        "sub": "우리집 인테리어를 위한 <b%가장 안정적인 선택!%b> 전문가와 함께 진행해보세요.",
+        "main": "홈리에종 <b%디자이너 파트너십%b> 신청",
+        "sub": "2021 홈리에종 디자이너 설명회를 통해, 파트너 디자이너를 모집합니다!",
         "button": "자세히 보기",
-        "subButton": "Consulting"
+        "subButton": "Partnership"
       },
       "src": {
-        "desktop": "bannerMain_7rspot209_013015.svg",
-        "mobile": "bannermoMain_8rspot363_013015.svg",
-        "button": "bannerButton_6rspot753_013015.svg",
-        "subbutton": "bannerSubButton_4rspot984_013015.svg",
-        "arrow": "bannerArrow_2rspot801_013015.svg",
+        "desktop": "bannerMain_6rspot996_020311.svg",
+        "mobile": "bannermoMain_8rspot116_020311.svg",
+        "button": "bannerButton_6rspot753_020311.svg",
+        "subbutton": "bannerSubButton_5rspot343_020311.svg",
+        "arrow": "bannerArrow_2rspot801_020311.svg",
         "shadow": [
-          "bannerShadow0_3rspot367_013015.svg",
-          "bannerShadow1_3rspot367_013015.png",
-          "bannerShadow2_3rspot367_013015.svg"
+          "bannerShadow0_3rspot367_020311.svg",
+          "bannerShadow1_3rspot367_020311.png",
+          "bannerShadow2_3rspot367_020311.svg"
         ]
-      }
+      },
+      "links": [
+        "/desevent.php?mode=presentation",
+        "/desevent.php?mode=partnership",
+        "/desevent.php?mode=presentation"
+      ]
     },
     "portfolio": {
       "words": {
@@ -156,12 +161,12 @@ module.exports = {
         ]
       },
       "src": {
-        "portfolio": "portfolio_p_8rspot491_013015.svg",
-        "review": "portfolio_r_6rspot881_013015.svg",
-        "tags": "portfolio_tags_5rspot512_013015.svg",
+        "portfolio": "portfolio_p_8rspot491_020311.svg",
+        "review": "portfolio_r_6rspot881_020311.svg",
+        "tags": "portfolio_tags_5rspot512_020311.svg",
         "icons": {
-          "search": "portfoliosearch_0rspot945_013015.svg",
-          "circles": "portfoliocircles_4rspot679_013015.svg"
+          "search": "portfoliosearch_0rspot945_020311.svg",
+          "circles": "portfoliocircles_4rspot679_020311.svg"
         }
       }
     },
@@ -191,21 +196,21 @@ module.exports = {
       },
       "src": {
         "words": {
-          "desktop": "belowAboutWord_1rspot667_013015.svg",
-          "tablet": "tabelowAboutWord_0rspot93_013015.svg",
-          "mobile": "mobelowAboutWord_2rspot615_013015.svg"
+          "desktop": "belowAboutWord_1rspot667_020311.svg",
+          "tablet": "tabelowAboutWord_0rspot93_020311.svg",
+          "mobile": "mobelowAboutWord_2rspot615_020311.svg"
         },
-        "button": "belowAboutbutton_6rspot759_013015.svg",
+        "button": "belowAboutbutton_6rspot759_020311.svg",
         "images": {
           "desktop": [
-            "belowabout_level0_2rspot332_013015.png",
-            "belowabout_level1_2rspot332_013015.svg",
-            "belowabout_level2_2rspot332_013015.png"
+            "belowabout_level0_2rspot332_020311.png",
+            "belowabout_level1_2rspot332_020311.svg",
+            "belowabout_level2_2rspot332_020311.png"
           ],
           "mobile": [
-            "mobelowabout_level0_0rspot587_013015.png",
-            "mobelowabout_level1_0rspot587_013015.svg",
-            "mobelowabout_level2_0rspot587_013015.png"
+            "mobelowabout_level0_0rspot587_020311.png",
+            "mobelowabout_level1_0rspot587_020311.svg",
+            "mobelowabout_level2_0rspot587_020311.png"
           ]
         }
       }
@@ -216,25 +221,25 @@ module.exports = {
       "words": [
         "홈스타일링 교육",
         "설명회 참여 신청",
-        "디자이너 신청"
+        "디자이너 파트너십"
       ],
       "src": [
         {
-          "src": "belowButton0_6rspot65_013015.svg",
+          "src": "belowButton0_6rspot65_020311.svg",
           "link": "http://hansungidschool.com/ver02/course/course2.asp"
         },
         {
-          "src": "belowButton1_6rspot901_013015.svg",
-          "link": "https://docs.google.com/forms/d/e/1FAIpQLScGbGl2S1plXOXjX0ocdiOW63xr8v1Sz5r_OZHGy4D3Pv_Xwg/viewform"
+          "src": "belowButton1_6rspot901_020311.svg",
+          "link": "/desevent.php?mode=presentation"
         },
         {
-          "src": "belowButton2_5rspot644_013015.svg",
-          "link": "https://docs.google.com/forms/d/e/1FAIpQLSfBSBHN-f6GeEzEY31yc9H4UHPGO4_dUPr3d6VcPQuf7MT6JQ/viewform"
+          "src": "belowButton2_7rspot487_020311.svg",
+          "link": "/desevent.php?mode=partnership"
         }
       ]
     },
     "copyRight": {
-      "src": "copyRight_25rspot227_013015.svg"
+      "src": "copyRight_25rspot227_020311.svg"
     }
   }
 }

@@ -318,13 +318,13 @@ module.exports = function(map, source_rawArr) {
 
   temp_reg = new RegExp("^belowButton1");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
-    belowButton.src.push({ src: z, link: "https://docs.google.com/forms/d/e/1FAIpQLScGbGl2S1plXOXjX0ocdiOW63xr8v1Sz5r_OZHGy4D3Pv_Xwg/viewform" });
+    belowButton.src.push({ src: z, link: "/desevent.php?mode=presentation" });
     svgTong.sync.push(z);
   }}
 
   temp_reg = new RegExp("^belowButton2");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {
-    belowButton.src.push({ src: z, link: "https://docs.google.com/forms/d/e/1FAIpQLSfBSBHN-f6GeEzEY31yc9H4UHPGO4_dUPr3d6VcPQuf7MT6JQ/viewform" });
+    belowButton.src.push({ src: z, link: "/desevent.php?mode=partnership" });
     svgTong.sync.push(z);
   }}
 

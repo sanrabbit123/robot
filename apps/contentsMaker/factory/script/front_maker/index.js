@@ -5,8 +5,10 @@ ExecMain.prototype.slideWords = function () {
   let temp, temp2;
   let doms = [];
 
+  this.createDoc();
+
   //main
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   for (let i = 0; i < main.length; i++) {
     from = "general";
     to = "indexSlideMain0" + String(i);
@@ -27,10 +29,10 @@ ExecMain.prototype.slideWords = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "slideWords");
+  this.saveSvg(this_ai, "slideWords", true);
 
   //sub - desktop
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = [];
 
   from = "general";
@@ -68,10 +70,10 @@ ExecMain.prototype.slideWords = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "slideSub");
+  this.saveSvg(this_ai, "slideSub", true);
 
   //sub - mobile
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = [];
 
   for (let i = 0; i < sub.length; i++) {
@@ -92,7 +94,9 @@ ExecMain.prototype.slideWords = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "moslideSub");
+  this.saveSvg(this_ai, "moslideSub", true);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   //icons
   this_ai = app.open(new File(this.etc.targetFile[2]));
@@ -109,8 +113,11 @@ ExecMain.prototype.aboutWords = function () {
 
   const { words } = this.text.main.about;
   let num = 0;
+
+  this.createDoc();
+
   for (let obj of words) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     doms = {};
 
     //main
@@ -171,10 +178,10 @@ ExecMain.prototype.aboutWords = function () {
 
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, "about" + (obj.setting.direction === "left" ? "right" : "left"));
+    this.saveSvg(this_ai, "about" + (obj.setting.direction === "left" ? "right" : "left"), true);
 
     //button
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     for (let i = 0; i < obj.button.length; i++) {
       from = "general";
       to = "indexAboutbutton" + obj.setting.direction + String(i);
@@ -207,10 +214,10 @@ ExecMain.prototype.aboutWords = function () {
 
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "aboutbutton" + (obj.setting.direction === "left" ? "right" : "left"));
+    this.saveSvg(this_ai, "aboutbutton" + (obj.setting.direction === "left" ? "right" : "left"), true);
 
     //mobile
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     doms = {}
 
     //main
@@ -277,10 +284,12 @@ ExecMain.prototype.aboutWords = function () {
 
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, "moabout" + (obj.setting.direction === "left" ? "right" : "left"));
+    this.saveSvg(this_ai, "moabout" + (obj.setting.direction === "left" ? "right" : "left"), true);
 
     num++;
   }
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   //mobile about info
   let motherLayer;
@@ -308,8 +317,10 @@ ExecMain.prototype.bannerWords = function () {
   let this_ai, from, to, contents;
   let temp, doms, x, y, path, path2;
 
+  this.createDoc();
+
   //main - desktop
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = [];
 
   from = "general";
@@ -348,10 +359,10 @@ ExecMain.prototype.bannerWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "bannerMain");
+  this.saveSvg(this_ai, "bannerMain", true);
 
   //main - mobile
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = [];
 
   from = "general";
@@ -390,10 +401,10 @@ ExecMain.prototype.bannerWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "bannermoMain");
+  this.saveSvg(this_ai, "bannermoMain", true);
 
   //button
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
 
   from = "general";
   to = "bannerbutton";
@@ -425,10 +436,10 @@ ExecMain.prototype.bannerWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "bannerButton");
+  this.saveSvg(this_ai, "bannerButton", true);
 
   //just arrow
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
 
   x = 0;
   y = 0;
@@ -449,10 +460,10 @@ ExecMain.prototype.bannerWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "bannerArrow");
+  this.saveSvg(this_ai, "bannerArrow", true);
 
   //subButton
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
 
   from = "general";
   to = "bannersubbutton";
@@ -467,7 +478,9 @@ ExecMain.prototype.bannerWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "bannerSubButton");
+  this.saveSvg(this_ai, "bannerSubButton", true);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   //graphic
   for (let i = 0; i < 3; i++) {
@@ -486,8 +499,10 @@ ExecMain.prototype.bannerWords = function () {
 ExecMain.prototype.portfolioWords = function () {
   const { words: { portfolio, review, tags } } = this.text.main.portfolio;
 
+  this.createDoc();
+
   //portfolio
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "portfolioPortfolio";
   contents = portfolio;
@@ -499,10 +514,10 @@ ExecMain.prototype.portfolioWords = function () {
   temp = temp.createOutline();
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "portfolio_p");
+  this.saveSvg(this_ai, "portfolio_p", true);
 
   //review
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "portfolioReview";
   contents = review;
@@ -514,7 +529,7 @@ ExecMain.prototype.portfolioWords = function () {
   temp = temp.createOutline();
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "portfolio_r");
+  this.saveSvg(this_ai, "portfolio_r", true);
 
   //tag
   let newContents = [];
@@ -536,7 +551,7 @@ ExecMain.prototype.portfolioWords = function () {
   newCtemp = newCtemp.slice(0, -2);
   newContents.push(newCtemp);
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   for (let i = 0; i < newContents.length; i++) {
     from = "general";
     to = "portfolioTag" + String(i);
@@ -557,7 +572,9 @@ ExecMain.prototype.portfolioWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "portfolio_tags");
+  this.saveSvg(this_ai, "portfolio_tags", true);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   //icons
   this_ai = app.open(new File(this.etc.targetFile[2]));
@@ -580,7 +597,9 @@ ExecMain.prototype.belowaboutWords = function () {
 
   const { words: { main, sub, tablet, mobile, button } } = this.text.main.below;
 
-  this_ai = this.createDoc();
+  this.createDoc();
+
+  this_ai = app.activeDocument;
   doms = {};
 
   //main
@@ -631,10 +650,10 @@ ExecMain.prototype.belowaboutWords = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "belowAboutWord");
+  this.saveSvg(this_ai, "belowAboutWord", true);
 
   //button
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   for (let i = 0; i < button.length; i++) {
     from = "general";
     to = "belowAboutbutton" + String(i);
@@ -667,10 +686,10 @@ ExecMain.prototype.belowaboutWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "belowAboutbutton");
+  this.saveSvg(this_ai, "belowAboutbutton", true);
 
   //tablet
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   doms = {};
 
   //main
@@ -728,11 +747,11 @@ ExecMain.prototype.belowaboutWords = function () {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "tabelowAboutWord");
+  this.saveSvg(this_ai, "tabelowAboutWord", true);
 
   //mobile
-  this_ai = this.createDoc();
-  doms = {}
+  this_ai = app.activeDocument;
+  doms = {};
 
   //main
   doms.main = [];
@@ -788,7 +807,9 @@ ExecMain.prototype.belowaboutWords = function () {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "mobelowAboutWord");
+  this.saveSvg(this_ai, "mobelowAboutWord", true);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   //graphic
   let motherLayer;
@@ -818,9 +839,11 @@ ExecMain.prototype.belowWord = function () {
   let temp, today;
   today = new Date();
 
+  this.createDoc();
+
   //main
   for (let i = 0; i < words.length; i++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "belowButton" + String(i);
     contents = words[i];
@@ -834,11 +857,11 @@ ExecMain.prototype.belowWord = function () {
     temp = temp.createOutline();
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "belowButton" + String(i));
+    this.saveSvg(this_ai, "belowButton" + String(i), true);
   }
 
   //copyright
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "copyRight";
   contents = "Copyright © " + String(today.getFullYear()) + " HomeLiaison Inc. All rights reserved.";
@@ -852,7 +875,9 @@ ExecMain.prototype.belowWord = function () {
   temp = temp.createOutline();
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "copyRight");
+  this.saveSvg(this_ai, "copyRight", true);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 }
 
 ExecMain.prototype.start = function (dayString) {

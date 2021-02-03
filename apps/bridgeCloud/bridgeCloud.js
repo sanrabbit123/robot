@@ -414,6 +414,30 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - designer submit
+  funcObj.post_designerSubmit = async function (req, res) {
+    try {
+      //request
+      const resultObj = req.body;
+      console.log("request get");
+
+      console.log(resultObj);
+
+      //end
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send("success");
+
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+
   //POST - name phone check
   funcObj.post_namephone = async function (req, res) {
     try {

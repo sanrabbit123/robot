@@ -3823,6 +3823,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     top: 21px;
     left: 21px;
+    z-index: 1;
   }
 
   .ppw_left_picturebox_inbox_detail{
