@@ -617,6 +617,87 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   }
 
   //POST - designer portfolio binary
+  funcObj.post_designerBinary = async function (req, res) {
+    try {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, async function (err, fields, files) {
+        let filesKeys = Object.keys(files);
+        if (!err && filesKeys.length > 0) {
+          const { designer, phone } = fields;
+          const cilentFolderName = ('mdh' + todayMaker()) + '_' + designer + '_' + phone.replace(/\-/g, '');
+          const uploadMap = {
+            upload0: "sitePhoto",
+            upload1: "preferredPhoto"
+          };
+          let list = [];
+          for (let i = 0; i < filesKeys.length; i++) { list.push(uploadMap[filesKeys[i]]); }
+
+          const binaryFolder = instance.dir + "/designerBinary";
+          const binrayFolderTest = new RegExp(cilentFolderName, 'g');
+          const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
+          let binrayFolderBoo = false;
+
+          let fileTong = {};
+          for (let i of list) {
+            fileTong[i] = [];
+          }
+
+          //designer folder make
+          for (let i of binaryFolderDetail) { if (binrayFolderTest.test(i)) {
+            binrayFolderBoo = true;
+          }}
+          if (!binrayFolderBoo) {
+            shell.exec(`mkdir ${shellLink(binaryFolder + '/' + cilentFolderName)}`);
+            for (let i = 0; i < list.length; i++) {
+              shell.exec(`mkdir ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i])}`);
+            }
+          }
+
+          //move and fileTong make
+          for (let i = 0; i < list.length; i++) {
+            if (Array.isArray(files[filesKeys[i]])) {
+              for (let j of files[filesKeys[i]]) {
+                shell.exec(`mv ${shellLink(j.path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name)};`);
+                fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name);
+              }
+            } else {
+              shell.exec(`mv ${shellLink(files[filesKeys[i]].path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
+              fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name);
+            }
+          }
+
+          //upload google drive
+          instance.bridgeToGoogle({ tong: fileTong, name: cilentFolderName });
+
+          //kakao and slack
+          // KAKAO.sendTalk("photo", designer, phone);
+          // slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#400_customer" });
+
+          //end
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send('success');
+
+        } else {
+          slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+          res.send('error');
+        }
+      });
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
 
   //POST - certification
   funcObj.post_certification = async function (req, res) {

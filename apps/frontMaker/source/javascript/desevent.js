@@ -373,396 +373,426 @@ DeseventJs.prototype.completeBox = function (mother, boo) {
 
 DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
   const instance = this;
-  return function (e) {
+  return async function (e) {
+    try {
+      const { mode, data } = instance.values;
+      const targetValues = data[flatform];
+      let columns, allColumns;
+      let temp, tempValue, boo;
+      let finalObj;
+      let formData;
 
-    const { mode, data } = instance.values;
-    const targetValues = data[flatform];
-    let columns, allColumns;
-    let temp, tempValue, boo;
-    let finalObj;
+      columns = {};
+      finalObj = { mode };
 
-    columns = {};
-    finalObj = { mode };
-
-    if (mode === "partnership") {
-      columns.green = [
-        { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
-          if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
-          if (/[^0-9\-]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
-          if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "classification", alert: "사업자 분류를 선택해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "company", alert: "회사명을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "bankName", alert: "은행명을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "bankAccount", alert: "계좌 번호를 입력해주세요!", valid: function (value) {
-          if (/[^0-9\-]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "bankTo", alert: "수신자를 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "interiorCareer", alert: "경력을 입력해주세요!", valid: function (value) {
-          if (!/년/g.test(value) || !/월/g.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "comeFrom", alert: "유입 경로를 선택해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", }
-      ];
-      columns.gray = [
-        { name: "businessNumber", alert: "사업자 등록번호를 입력해주세요!", valid: function (value) {
-          if (/[^0-9\-]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "startDate", alert: "개업일을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "representative", alert: "대표자 성함을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "bankEtc", alert: "은행 기타 사항을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "stylingCareer", alert: "스타일링 경력을 입력해주세요!", valid: function (value) {
-          if (value === '') {
-            return true;
-          } else {
+      if (mode === "partnership") {
+        columns.green = [
+          { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
+            if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
+            if (/[^0-9\-]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
+            if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "classification", alert: "사업자 분류를 선택해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "company", alert: "회사명을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "bankName", alert: "은행명을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "bankAccount", alert: "계좌 번호를 입력해주세요!", valid: function (value) {
+            if (/[^0-9\-]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "bankTo", alert: "수신자를 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "interiorCareer", alert: "경력을 입력해주세요!", valid: function (value) {
             if (!/년/g.test(value) || !/월/g.test(value)) {
               return false;
             } else {
               return true;
             }
-          }
-        }, value: "", },
-        { name: "careerDetail", alert: "경력 상세 사항을 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", }
-      ];
-    } else {
-      columns.green = [
-        { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
-          if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
-          if (/[^0-9\-]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
-          if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", },
-        { name: "presentationTimes", alert: "시간을 선택해주세요!", valid: function (value) {
-          if (false) {
-            return false;
-          } else {
-            return true;
-          }
-        }, value: "", }
-      ];
-      columns.gray = [];
-    }
-
-    allColumns = columns.green.concat(columns.gray);
-
-    //green validation
-    for (let c of columns.green) {
-      if (targetValues[c.name].type === "text") {
-        if (targetValues[c.name].input.value === '') {
-          GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
-          return false;
-        }
+          }, value: "", },
+          { name: "comeFrom", alert: "유입 경로를 선택해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", }
+        ];
+        columns.gray = [
+          { name: "businessNumber", alert: "사업자 등록번호를 입력해주세요!", valid: function (value) {
+            if (/[^0-9\-]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "startDate", alert: "개업일을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "representative", alert: "대표자 성함을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "bankEtc", alert: "은행 기타 사항을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "stylingCareer", alert: "스타일링 경력을 입력해주세요!", valid: function (value) {
+            if (value === '') {
+              return true;
+            } else {
+              if (!/년/g.test(value) || !/월/g.test(value)) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+          }, value: "", },
+          { name: "careerDetail", alert: "경력 상세 사항을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", }
+        ];
       } else {
-        temp = false;
-        for (let svg of targetValues[c.name].input) {
-          if (svg.getAttribute("selected") === "true") {
-            temp = true;
+        columns.green = [
+          { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
+            if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
+            if (/[^0-9\-]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "address", alert: "주소를 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "detailAddress", alert: "주소를 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
+            if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "presentationTimes", alert: "시간을 선택해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", }
+        ];
+        columns.gray = [];
+      }
+
+      allColumns = columns.green.concat(columns.gray);
+
+      //green validation
+      for (let c of columns.green) {
+        if (targetValues[c.name].type === "text") {
+          if (targetValues[c.name].input.value === '') {
+            GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
+            return false;
           }
-        }
-        if (!temp) {
-          alert(c.alert);
-          window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
-          return false;
+        } else {
+          temp = false;
+          for (let svg of targetValues[c.name].input) {
+            if (svg.getAttribute("selected") === "true") {
+              temp = true;
+            }
+          }
+          if (!temp) {
+            alert(c.alert);
+            window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
+            return false;
+          }
         }
       }
-    }
 
-    boo = false;
-    for (let c of allColumns) {
-      if (targetValues[c.name].type === "text") {
-        boo = c.valid(targetValues[c.name].input.value);
-        if (!boo) {
-          GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
-          return false;
-        } else {
-          targetValues[c.name].value = targetValues[c.name].input.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/\n/g, '__space__').trim().replace(/\=/g, '').replace(/\&/g, '');
-        }
-      } else {
-        temp = false;
-        for (let svg of targetValues[c.name].input) {
-          if (svg.getAttribute("selected") === "true") {
-            temp = true;
-            tempValue = svg.getAttribute("value");
+      boo = false;
+      for (let c of allColumns) {
+        if (targetValues[c.name].type === "text") {
+          boo = c.valid(targetValues[c.name].input.value);
+          if (!boo) {
+            GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
+            return false;
+          } else {
+            targetValues[c.name].value = targetValues[c.name].input.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/\n/g, '__space__').trim().replace(/\=/g, '').replace(/\&/g, '');
           }
-        }
-        if (!temp) {
-          alert(c.alert);
-          boo = false;
-          window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
-          return false;
         } else {
-          targetValues[c.name].value = tempValue;
+          temp = false;
+          for (let svg of targetValues[c.name].input) {
+            if (svg.getAttribute("selected") === "true") {
+              temp = true;
+              tempValue = svg.getAttribute("value");
+            }
+          }
+          if (!temp) {
+            alert(c.alert);
+            boo = false;
+            window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
+            return false;
+          } else {
+            targetValues[c.name].value = tempValue;
+          }
         }
       }
+
+      for (let i in targetValues) {
+        finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '');
+      }
+
+      formData = new FormData();
+      formData.enctype = "multipart/form-data";
+
+      formData.append("designer", finalObj.designer);
+      formData.append("phone", finalObj.phone);
+
+      for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
+        formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
+      }
+
+
+      if (instance.fileBox[flatform].files.length > 0) {
+        formData = new FormData();
+        formData.enctype = "multipart/form-data";
+
+        formData.append("designer", finalObj.designer);
+        formData.append("phone", finalObj.phone);
+
+        for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
+          formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
+        }
+
+        await GeneralJs.ajaxPromise(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary");
+      }
+
+      // instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, function (whiteBox, wording, loader) {
+      //   GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
+      //     let style;
+      //     let ea;
+      //     let svg_clone, svg_dom;
+      //     let width, height, top;
+      //     let whiteWidth, whiteHeight;
+      //     let promptBox;
+      //     let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
+      //     let promptWordingTop, promptWordingLeft;
+      //
+      //     wording.style.display = "none";
+      //     loader.style.display = "none";
+      //
+      //     ea = (flatform === "desktop") ? "px" : "vw";
+      //
+      //     svg_clone = SvgTong.tongMaker();
+      //     if (finalObj.mode === "partnership") {
+      //       svg_clone.src = instance.map.sub.etc.partnershipComplete.src;
+      //       height = (flatform === "desktop") ? 19 : 4.5;
+      //       top = (flatform === "desktop") ? 31 : 7;
+      //       whiteWidth = (flatform === "desktop") ? 330 : 74;
+      //       whiteHeight = (flatform === "desktop") ? 86 : 19.4;
+      //     } else {
+      //       svg_clone.src = instance.map.sub.etc.presentationComplete.src;
+      //       height = (flatform === "desktop") ? 41 : 9;
+      //       top = (flatform === "desktop") ? 31 : 7;
+      //       whiteWidth = (flatform === "desktop") ? 356 : 76;
+      //       whiteHeight = (flatform === "desktop") ? 149 : 34;
+      //     }
+      //     width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
+      //     style = {
+      //       position: "absolute",
+      //       top: String(top) + ea,
+      //       left: "calc(50% - " + String(width / 2) + ea + ")",
+      //       width: String(width) + ea,
+      //       height: String(height) + ea,
+      //     };
+      //     for (let i in style) {
+      //       svg_clone.style[i] = style[i];
+      //     }
+      //     svg_dom = SvgTong.parsing(svg_clone);
+      //     whiteBox.appendChild(svg_dom);
+      //
+      //     if (finalObj.mode !== "partnership") {
+      //
+      //       promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
+      //       promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
+      //       promptGreenHeight = (flatform === "desktop") ? 31 : 8;
+      //       promptGreenBottom = (flatform === "desktop") ? 30 : 7;
+      //       promptGreenLeft0 = (flatform === "desktop") ? 124 : 26;
+      //       promptGreenLeft1 = (flatform === "desktop") ? 168 : 35.5;
+      //       height = (flatform === "desktop") ? 13 : 3.4;
+      //       promptWordingTop = (flatform === "desktop") ? 8 : 2;
+      //       promptWordingLeft = (flatform === "desktop") ? 14 : 2.5;
+      //
+      //       promptBox = GeneralJs.nodes.div.cloneNode(true);
+      //       style = {
+      //         position: "absolute",
+      //         width: String(promptGreenWidth0) + ea,
+      //         height: String(promptGreenHeight) + ea,
+      //         bottom: String(promptGreenBottom) + ea,
+      //         left: String(promptGreenLeft0) + ea,
+      //         background: "#2fa678",
+      //         borderRadius: String(3) + "px",
+      //         cursor: "pointer",
+      //       };
+      //       for (let i in style) {
+      //         promptBox.style[i] = style[i];
+      //       }
+      //
+      //       svg_clone = SvgTong.tongMaker();
+      //       svg_clone.src = instance.map.sub.submit[2].src[flatform];
+      //       width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+      //       style = {
+      //         position: "absolute",
+      //         top: String(promptWordingTop) + ea,
+      //         left: String(promptWordingLeft) + ea,
+      //         width: String(width) + ea,
+      //         height: String(height) + ea,
+      //       };
+      //       for (let i in style) {
+      //         svg_clone.style[i] = style[i];
+      //       }
+      //       svg_dom = SvgTong.parsing(svg_clone);
+      //       promptBox.appendChild(svg_dom);
+      //       promptBox.addEventListener("click", function (e) {
+      //         window.location.href = "/desevent.php?mode=partnership";
+      //       });
+      //       whiteBox.appendChild(promptBox);
+      //
+      //       promptBox = GeneralJs.nodes.div.cloneNode(true);
+      //       style = {
+      //         position: "absolute",
+      //         width: String(promptGreenWidth1) + ea,
+      //         height: String(promptGreenHeight) + ea,
+      //         bottom: String(promptGreenBottom) + ea,
+      //         left: String(promptGreenLeft1) + ea,
+      //         background: "#2fa678",
+      //         borderRadius: String(3) + "px",
+      //         cursor: "pointer",
+      //       };
+      //       for (let i in style) {
+      //         promptBox.style[i] = style[i];
+      //       }
+      //
+      //       svg_clone = SvgTong.tongMaker();
+      //       svg_clone.src = instance.map.sub.submit[3].src[flatform];
+      //       width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+      //       style = {
+      //         position: "absolute",
+      //         top: String(promptWordingTop) + ea,
+      //         left: String(promptWordingLeft) + ea,
+      //         width: String(width) + ea,
+      //         height: String(height) + ea,
+      //       };
+      //       for (let i in style) {
+      //         svg_clone.style[i] = style[i];
+      //       }
+      //       svg_dom = SvgTong.parsing(svg_clone);
+      //       promptBox.appendChild(svg_dom);
+      //       promptBox.addEventListener("click", function (e) {
+      //         window.location.href = "/index.php";
+      //       });
+      //       whiteBox.appendChild(promptBox);
+      //     }
+      //
+      //     whiteBox.style.width = String(whiteWidth) + ea;
+      //     whiteBox.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+      //     whiteBox.style.height = String(whiteHeight) + ea;
+      //     whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
+      //
+      //     if (finalObj.mode === "partnership") {
+      //       setTimeout(function () {
+      //         window.location.href = "/index.php";
+      //       }, 3000);
+      //     }
+      //   });
+      // });
+
+    } catch (e) {
+      console.log(e);
     }
-
-    for (let i in targetValues) {
-      finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '');
-    }
-
-    instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, function (whiteBox, wording, loader) {
-      GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
-        let style;
-        let ea;
-        let svg_clone, svg_dom;
-        let width, height, top;
-        let whiteWidth, whiteHeight;
-        let promptBox;
-        let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
-        let promptWordingTop, promptWordingLeft;
-
-        wording.style.display = "none";
-        loader.style.display = "none";
-
-        ea = (flatform === "desktop") ? "px" : "vw";
-
-        svg_clone = SvgTong.tongMaker();
-        if (finalObj.mode === "partnership") {
-          svg_clone.src = instance.map.sub.etc.partnershipComplete.src;
-          height = (flatform === "desktop") ? 19 : 4.5;
-          top = (flatform === "desktop") ? 31 : 7;
-          whiteWidth = (flatform === "desktop") ? 330 : 74;
-          whiteHeight = (flatform === "desktop") ? 86 : 19.4;
-        } else {
-          svg_clone.src = instance.map.sub.etc.presentationComplete.src;
-          height = (flatform === "desktop") ? 41 : 9;
-          top = (flatform === "desktop") ? 31 : 7;
-          whiteWidth = (flatform === "desktop") ? 356 : 76;
-          whiteHeight = (flatform === "desktop") ? 149 : 34;
-        }
-        width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
-        style = {
-          position: "absolute",
-          top: String(top) + ea,
-          left: "calc(50% - " + String(width / 2) + ea + ")",
-          width: String(width) + ea,
-          height: String(height) + ea,
-        };
-        for (let i in style) {
-          svg_clone.style[i] = style[i];
-        }
-        svg_dom = SvgTong.parsing(svg_clone);
-        whiteBox.appendChild(svg_dom);
-
-        if (finalObj.mode !== "partnership") {
-
-          promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
-          promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
-          promptGreenHeight = (flatform === "desktop") ? 31 : 8;
-          promptGreenBottom = (flatform === "desktop") ? 30 : 7;
-          promptGreenLeft0 = (flatform === "desktop") ? 124 : 26;
-          promptGreenLeft1 = (flatform === "desktop") ? 168 : 35.5;
-          height = (flatform === "desktop") ? 13 : 3.4;
-          promptWordingTop = (flatform === "desktop") ? 8 : 2;
-          promptWordingLeft = (flatform === "desktop") ? 14 : 2.5;
-
-          promptBox = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            width: String(promptGreenWidth0) + ea,
-            height: String(promptGreenHeight) + ea,
-            bottom: String(promptGreenBottom) + ea,
-            left: String(promptGreenLeft0) + ea,
-            background: "#2fa678",
-            borderRadius: String(3) + "px",
-            cursor: "pointer",
-          };
-          for (let i in style) {
-            promptBox.style[i] = style[i];
-          }
-
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = instance.map.sub.submit[2].src[flatform];
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            top: String(promptWordingTop) + ea,
-            left: String(promptWordingLeft) + ea,
-            width: String(width) + ea,
-            height: String(height) + ea,
-          };
-          for (let i in style) {
-            svg_clone.style[i] = style[i];
-          }
-          svg_dom = SvgTong.parsing(svg_clone);
-          promptBox.appendChild(svg_dom);
-          promptBox.addEventListener("click", function (e) {
-            window.location.href = "/desevent.php?mode=partnership";
-          });
-          whiteBox.appendChild(promptBox);
-
-          promptBox = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            width: String(promptGreenWidth1) + ea,
-            height: String(promptGreenHeight) + ea,
-            bottom: String(promptGreenBottom) + ea,
-            left: String(promptGreenLeft1) + ea,
-            background: "#2fa678",
-            borderRadius: String(3) + "px",
-            cursor: "pointer",
-          };
-          for (let i in style) {
-            promptBox.style[i] = style[i];
-          }
-
-          svg_clone = SvgTong.tongMaker();
-          svg_clone.src = instance.map.sub.submit[3].src[flatform];
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-          style = {
-            position: "absolute",
-            top: String(promptWordingTop) + ea,
-            left: String(promptWordingLeft) + ea,
-            width: String(width) + ea,
-            height: String(height) + ea,
-          };
-          for (let i in style) {
-            svg_clone.style[i] = style[i];
-          }
-          svg_dom = SvgTong.parsing(svg_clone);
-          promptBox.appendChild(svg_dom);
-          promptBox.addEventListener("click", function (e) {
-            window.location.href = "/index.php";
-          });
-          whiteBox.appendChild(promptBox);
-        }
-
-        whiteBox.style.width = String(whiteWidth) + ea;
-        whiteBox.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
-        whiteBox.style.height = String(whiteHeight) + ea;
-        whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
-
-        if (finalObj.mode === "partnership") {
-          setTimeout(function () {
-            window.location.href = "/index.php";
-          }, 3000);
-        }
-      });
-    });
   }
 }
 
@@ -775,13 +805,16 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
 
   let div_clone, div_clone2, div_clone3, svg_clone;
   let ea = toggle ? "px" : "vw";
-  let size = toggle ? 14 : 3.5;
+  let size = toggle ? 14 : 2.5;
   let margin = toggle ? 12 : 2;
-  let width = toggle ? (219.6 - 24) : 20.6;
-  let height = toggle ? (((128 - 34 - 12) / 2) - 24) : 5;
+  let width = toggle ? (219.6 - 24) : ((78 / 3) - 4);
+  let height = toggle ? (((128 - 34 - 12) / 2) - 24) : ((13 / 2) - 4);
   let top, right, left;
   let style = {};
   let attribute = {};
+  let wordHeight;
+
+  wordHeight = height + margin;
 
   //white box
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -804,12 +837,12 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   }
 
   //wording area
-  top = margin + (toggle ? -3 : -0.5);
+  top = margin + (toggle ? -3 : -1.2);
   left = top + (toggle ? 3 : 0.9);
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
-    width: String(toggle ? width - (margin * 2) : 14.5) + ea,
-    height: String(height + margin) + ea,
+    width: String(toggle ? width - (margin * 2) : 17.5) + ea,
+    height: String(wordHeight) + ea,
     top: String(top) + ea,
     left: String(left) + ea,
     position: "absolute",
@@ -821,9 +854,9 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   div_clone.appendChild(div_clone2);
 
   //close button
-  top = toggle ? 14 : 3;
-  right = toggle ? 12 : 2.5;
-  height = toggle ? 10 : 2.6;
+  top = toggle ? 14 : 2;
+  right = toggle ? 12 : 2;
+  height = toggle ? 10 : 2;
   svg_clone = SvgTong.tongMaker();
   svg_clone.src = greenClose;
   width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
@@ -853,8 +886,10 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
     fontFamily: "'Noto Sans KR', sans-serif",
     fontSize: String(size) + ea,
     width: String(width) + ea,
+    height: String(wordHeight) + ea,
     position: "relative",
     textAlign: "left",
+    overflow: "hidden",
   }
   for (let i in style) {
     div_clone3.style[i] = style[i];
@@ -1389,10 +1424,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               } else {
                 fileWordingSvg.style.opacity = String(0);
                 for (let i = 0; i < files.length; i++) {
-                  instance.imageBoxMaker(dom, this, i, "desktop");
+                  instance.imageBoxMaker(dom, this, i, true);
                 }
               }
-              console.log(files);
             });
 
             dom.addEventListener("drop", function (e) {
@@ -1411,10 +1445,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               } else {
                 fileWordingSvg.style.opacity = String(0);
                 for (let i = 0; i < files.length; i++) {
-                  instance.imageBoxMaker(this, instance.fileBox.desktop, i, "desktop");
+                  instance.imageBoxMaker(this, instance.fileBox.desktop, i, true);
                 }
               }
-              console.log(instance.fileBox.desktop.files);
             });
 
             return h;
@@ -1522,6 +1555,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let grayTop;
             let svg_clone, svg_dom;
             let line;
+            let grayPadding;
+            let file_input, attribute;
+            let fileWordingSvg;
 
             h = document.createDocumentFragment();
             ea = "vw";
@@ -1530,6 +1566,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             grayWidth = 87;
             grayHeight = 20;
             grayTop = top + 8.7;
+            grayPadding = 2.5;
 
             line = GeneralJs.nodes.div.cloneNode(true);
             style = {
@@ -1548,17 +1585,29 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             style = {
               position: "absolute",
               borderRadius: String(3) + "px",
-              width: String(grayWidth) + ea,
-              height: String(grayHeight) + ea,
+              width: String(grayWidth - grayPadding) + ea,
+              height: String(grayHeight - grayPadding) + ea,
+              paddingTop: String(grayPadding) + ea,
+              paddingLeft: String(grayPadding) + ea,
               left: String(0) + ea,
               top: String(grayTop) + ea,
               background: "#f2f2f2",
+              cursor: "pointer",
+              textAlign: "left",
             };
             for (let i in style) {
               box.style[i] = style[i];
             }
             h.appendChild(box);
-
+            box.addEventListener("click", function (e) {
+              while (box.firstChild) {
+                box.removeChild(box.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.mobile.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.mobile.click();
+            });
             height = 5.3;
 
             svg_clone = SvgTong.tongMaker();
@@ -1570,13 +1619,23 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               left: String((grayWidth / 2) - (width / 2)) + ea,
               width: String(width) + ea,
               height: String(height) + ea,
+              cursor: "pointer",
             };
             for (let i in style) {
               svg_clone.style[i] = style[i];
             }
 
             svg_dom = SvgTong.parsing(svg_clone);
-
+            svg_dom.addEventListener("click", function (e) {
+              while (box.firstChild) {
+                box.removeChild(box.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.mobile.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.mobile.click();
+            });
+            fileWordingSvg = svg_dom;
             h.appendChild(svg_dom);
 
             height = 2.8;
@@ -1598,6 +1657,42 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             svg_dom = SvgTong.parsing(svg_clone);
 
             h.appendChild(svg_dom);
+
+            file_input = GeneralJs.nodes.input.cloneNode(true);
+            file_input.classList.add("targetInputs");
+            attribute = {
+              type: "file",
+              name: "upload",
+              accept: "image/*,.pdf,.ai,.zip,.psd",
+              cus_name: "fileInput"
+            };
+            style = {
+              display: "none",
+            };
+            for (let j in attribute) {
+              file_input.setAttribute(j, attribute[j]);
+            }
+            for (let j in style) {
+              file_input.style[j] = style[j];
+            }
+            for (let j = 0; j < 20; j++) {
+              file_input.setAttribute("cus_close" + String(j), "false");
+            }
+            file_input.multiple = true;
+            h.appendChild(file_input);
+            instance.fileBox.mobile = file_input;
+
+            file_input.addEventListener("change", function (e) {
+              const files = this.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(box, this, i, false);
+                }
+              }
+            });
 
             return h;
           }
@@ -2721,12 +2816,16 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let top, left;
             let width, height;
             let grayHeight, grayWidth;
+            let grayPadding;
+            let file_input, attribute;
+            let fileWordingSvg;
 
             ea = "px";
             top = 736 - 7;
             left = 162;
             grayWidth = 717;
             grayHeight = 128;
+            grayPadding = 17;
 
             h = document.createDocumentFragment();
 
@@ -2735,8 +2834,10 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               position: "absolute",
               top: String(top) + ea,
               left: String(left) + ea,
-              width: String(grayWidth) + ea,
-              height: String(grayHeight) + ea,
+              width: String(grayWidth - grayPadding) + ea,
+              paddingTop: String(grayPadding) + ea,
+              paddingLeft: String(grayPadding) + ea,
+              height: String(grayHeight - grayPadding) + ea,
               background: "#f2f2f2",
               borderRadius: String(3) + ea,
               cursor: "pointer",
@@ -2744,7 +2845,27 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             for (let i in style) {
               dom.style[i] = style[i];
             }
-
+            dom.addEventListener("click", function (e) {
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.click();
+            });
+            dom.addEventListener("dragenter", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
+            dom.addEventListener("dragover", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
+            dom.addEventListener("dragleave", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
             h.appendChild(dom);
 
             height = 22;
@@ -2764,8 +2885,74 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             }
 
             svg_dom = SvgTong.parsing(svg_clone);
-
+            svg_dom.addEventListener("click", function (e) {
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.click();
+            });
+            fileWordingSvg = svg_dom;
             h.appendChild(svg_dom);
+
+            file_input = GeneralJs.nodes.input.cloneNode(true);
+            file_input.classList.add("targetInputs");
+            attribute = {
+              type: "file",
+              name: "upload",
+              accept: "image/*,.pdf,.ai,.zip,.psd",
+              cus_name: "fileInput"
+            };
+            style = {
+              display: "none",
+            };
+            for (let j in attribute) {
+              file_input.setAttribute(j, attribute[j]);
+            }
+            for (let j in style) {
+              file_input.style[j] = style[j];
+            }
+            for (let j = 0; j < 20; j++) {
+              file_input.setAttribute("cus_close" + String(j), "false");
+            }
+            file_input.multiple = true;
+            h.appendChild(file_input);
+            instance.fileBox.desktop = file_input;
+
+            file_input.addEventListener("change", function (e) {
+              const files = this.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(dom, this, i, true);
+                }
+              }
+            });
+
+            dom.addEventListener("drop", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.files = e.dataTransfer.files;
+              const files = instance.fileBox.desktop.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(this, instance.fileBox.desktop, i, true);
+                }
+              }
+            });
 
             return h;
           }
@@ -4056,6 +4243,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let grayTop;
             let svg_clone, svg_dom;
             let line;
+            let grayPadding;
+            let file_input, attribute;
+            let fileWordingSvg;
 
             h = document.createDocumentFragment();
             ea = "vw";
@@ -4064,6 +4254,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             grayWidth = 87;
             grayHeight = 20;
             grayTop = top + 8.7;
+            grayPadding = 2.5;
 
             line = GeneralJs.nodes.div.cloneNode(true);
             style = {
@@ -4082,17 +4273,29 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             style = {
               position: "absolute",
               borderRadius: String(3) + "px",
-              width: String(grayWidth) + ea,
-              height: String(grayHeight) + ea,
+              width: String(grayWidth - grayPadding) + ea,
+              height: String(grayHeight - grayPadding) + ea,
+              paddingTop: String(grayPadding) + ea,
+              paddingLeft: String(grayPadding) + ea,
               left: String(0) + ea,
               top: String(grayTop) + ea,
               background: "#f2f2f2",
+              cursor: "pointer",
+              textAlign: "left",
             };
             for (let i in style) {
               box.style[i] = style[i];
             }
             h.appendChild(box);
-
+            box.addEventListener("click", function (e) {
+              while (box.firstChild) {
+                box.removeChild(box.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.mobile.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.mobile.click();
+            });
             height = 5.3;
 
             svg_clone = SvgTong.tongMaker();
@@ -4104,14 +4307,60 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               left: String((grayWidth / 2) - (width / 2)) + ea,
               width: String(width) + ea,
               height: String(height) + ea,
+              cursor: "pointer",
             };
             for (let i in style) {
               svg_clone.style[i] = style[i];
             }
 
             svg_dom = SvgTong.parsing(svg_clone);
-
+            svg_dom.addEventListener("click", function (e) {
+              while (box.firstChild) {
+                box.removeChild(box.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.mobile.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.mobile.click();
+            });
+            fileWordingSvg = svg_dom;
             h.appendChild(svg_dom);
+
+            file_input = GeneralJs.nodes.input.cloneNode(true);
+            file_input.classList.add("targetInputs");
+            attribute = {
+              type: "file",
+              name: "upload",
+              accept: "image/*,.pdf,.ai,.zip,.psd",
+              cus_name: "fileInput"
+            };
+            style = {
+              display: "none",
+            };
+            for (let j in attribute) {
+              file_input.setAttribute(j, attribute[j]);
+            }
+            for (let j in style) {
+              file_input.style[j] = style[j];
+            }
+            for (let j = 0; j < 20; j++) {
+              file_input.setAttribute("cus_close" + String(j), "false");
+            }
+            file_input.multiple = true;
+            h.appendChild(file_input);
+            instance.fileBox.mobile = file_input;
+
+            file_input.addEventListener("change", function (e) {
+              const files = this.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(box, this, i, false);
+                }
+              }
+            });
 
             return h;
           }
