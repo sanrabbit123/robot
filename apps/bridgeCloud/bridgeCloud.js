@@ -446,7 +446,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       if (resultObj.mode === "partnership") {
 
-        message = "새로운 디자이너 신청이 왔습니다!\n";
+        message = "새로운 디자이너 파트너십 신청서가 도착했습니다! \n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
         message += "성함 : " + filteredObj.designer + "\n";
         message += "연락처 : " + filteredObj.phone + "\n";
@@ -471,7 +471,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       } else {
 
-        message = "디자이너 설명회 참여 신청서가 도착했습니다!\n";
+        message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
         message += "성함 : " + filteredObj.designer + "\n";
         message += "연락처 : " + filteredObj.phone + "\n";
