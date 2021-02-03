@@ -450,7 +450,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
         message += "성함 : " + filteredObj.designer + "\n";
         message += "연락처 : " + filteredObj.phone + "\n";
-        message += "이메일 :" + filteredObj.email + "\n";
+        message += "이메일 : " + filteredObj.email + "\n";
         message += "주소 : " + filteredObj.address + "\n";
         message += "사업자 분류 : " + filteredObj.classification + "\n";
         message += "회사명 : " + filteredObj.company + "\n";
@@ -475,7 +475,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
         message += "성함 : " + filteredObj.designer + "\n";
         message += "연락처 : " + filteredObj.phone + "\n";
-        message += "이메일 :" + filteredObj.email + "\n";
+        message += "이메일 : " + filteredObj.email + "\n";
         message += "주소 : " + filteredObj.address + "\n";
         message += "설명회 신청 시간 : " + filteredObj.presentationTimes;
 

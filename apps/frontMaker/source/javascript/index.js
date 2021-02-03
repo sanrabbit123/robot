@@ -1388,7 +1388,7 @@ IndexJs.prototype.asyncExec = function () {
         for (let i in style) {
           svg_clone.style[i] = style[i];
         }
-        GeneralJs.addHrefEvent(svg_clone, "/consulting.php");
+        GeneralJs.addHrefEvent(svg_clone, instance.map.main.banner.links[0]);
         mother.appendChild(SvgTong.parsing(svg_clone));
 
         //arrow
@@ -1409,7 +1409,7 @@ IndexJs.prototype.asyncExec = function () {
         for (let i in style) {
           svg_clone.style[i] = style[i];
         }
-        GeneralJs.addHrefEvent(svg_clone, "/consulting.php");
+        GeneralJs.addHrefEvent(svg_clone, instance.map.main.banner.links[0]);
         mother.appendChild(SvgTong.parsing(svg_clone));
 
       },
