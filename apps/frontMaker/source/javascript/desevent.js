@@ -330,47 +330,6 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
   }
 }
 
-DeseventJs.prototype.completeBox = function (mother, boo) {
-  const instance = this;
-  const { sub: { thankyou: { sub: { etc: { complete } } } } } = this.map;
-
-  let div_clone, div_clone2, svg_clone;
-  let height, width, ea = (boo === "desktop") ? "px" : "vw";
-  let style = {};
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.id = ((boo === "desktop") ? "" : "mo") + "submit_pendingbox";
-  width = (boo === "desktop") ? 300 : 52;
-  height = (boo === "desktop") ? 84 : 28.8;
-  style = {
-    left: "calc(50% - " + String(width / 2) + ea + ")",
-    width: String(width) + ea,
-    height: String(height) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-
-  height = (boo === "desktop") ? 20 : 11.5;
-  svg_clone = SvgTongAsync.tongMaker();
-  svg_clone.src = complete.src[boo];
-  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-  style = {
-    position: "absolute",
-    top: String((boo === "desktop") ? 29 : 7.8) + ea,
-    left: "calc(50% - " + String(width / 2) + ea + ")",
-    width: String(width) + ea,
-    height: String(height) + ea,
-  };
-  for (let i in style) {
-    svg_clone.style[i] = style[i];
-  }
-  div_clone2 = SvgTongAsync.parsing(svg_clone);
-  div_clone.appendChild(div_clone2);
-
-  mother.appendChild(div_clone);
-}
-
 DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
   const instance = this;
   return async function (e) {
@@ -625,172 +584,166 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
         finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '');
       }
 
-      formData = new FormData();
-      formData.enctype = "multipart/form-data";
+      instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {
+        try {
 
-      formData.append("designer", finalObj.designer);
-      formData.append("phone", finalObj.phone);
+          if (instance.fileBox[flatform].files.length > 0) {
+            formData = new FormData();
+            formData.enctype = "multipart/form-data";
 
-      for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
-        formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
-      }
+            formData.append("designer", finalObj.designer);
+            formData.append("phone", finalObj.phone);
 
-      if (instance.fileBox[flatform].files.length > 0) {
-        formData = new FormData();
-        formData.enctype = "multipart/form-data";
+            for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
+              formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
+            }
 
-        formData.append("designer", finalObj.designer);
-        formData.append("phone", finalObj.phone);
+            await GeneralJs.ajaxPromise(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary");
+          }
 
-        for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
-          formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
+          GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
+            let style;
+            let ea;
+            let svg_clone, svg_dom;
+            let width, height, top;
+            let whiteWidth, whiteHeight;
+            let promptBox;
+            let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
+            let promptWordingTop, promptWordingLeft;
+
+            wording.style.display = "none";
+            loader.style.display = "none";
+
+            ea = (flatform === "desktop") ? "px" : "vw";
+
+            svg_clone = SvgTong.tongMaker();
+            if (finalObj.mode === "partnership") {
+              svg_clone.src = instance.map.sub.etc.partnershipComplete.src;
+              height = (flatform === "desktop") ? 19 : 4.5;
+              top = (flatform === "desktop") ? 31 : 7;
+              whiteWidth = (flatform === "desktop") ? 330 : 74;
+              whiteHeight = (flatform === "desktop") ? 86 : 19.4;
+            } else {
+              svg_clone.src = instance.map.sub.etc.presentationComplete.src;
+              height = (flatform === "desktop") ? 41 : 9;
+              top = (flatform === "desktop") ? 31 : 7;
+              whiteWidth = (flatform === "desktop") ? 356 : 76;
+              whiteHeight = (flatform === "desktop") ? 149 : 34;
+            }
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
+            style = {
+              position: "absolute",
+              top: String(top) + ea,
+              left: "calc(50% - " + String(width / 2) + ea + ")",
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+            whiteBox.appendChild(svg_dom);
+
+            if (finalObj.mode !== "partnership") {
+
+              promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
+              promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
+              promptGreenHeight = (flatform === "desktop") ? 31 : 8;
+              promptGreenBottom = (flatform === "desktop") ? 30 : 7;
+              promptGreenLeft0 = (flatform === "desktop") ? 124 : 26;
+              promptGreenLeft1 = (flatform === "desktop") ? 168 : 35.5;
+              height = (flatform === "desktop") ? 13 : 3.4;
+              promptWordingTop = (flatform === "desktop") ? 8 : 2;
+              promptWordingLeft = (flatform === "desktop") ? 14 : 2.5;
+
+              promptBox = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                width: String(promptGreenWidth0) + ea,
+                height: String(promptGreenHeight) + ea,
+                bottom: String(promptGreenBottom) + ea,
+                left: String(promptGreenLeft0) + ea,
+                background: "#2fa678",
+                borderRadius: String(3) + "px",
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                promptBox.style[i] = style[i];
+              }
+
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = instance.map.sub.submit[2].src[flatform];
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              style = {
+                position: "absolute",
+                top: String(promptWordingTop) + ea,
+                left: String(promptWordingLeft) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              promptBox.appendChild(svg_dom);
+              promptBox.addEventListener("click", function (e) {
+                window.location.href = "/desevent.php?mode=partnership";
+              });
+              whiteBox.appendChild(promptBox);
+
+              promptBox = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                width: String(promptGreenWidth1) + ea,
+                height: String(promptGreenHeight) + ea,
+                bottom: String(promptGreenBottom) + ea,
+                left: String(promptGreenLeft1) + ea,
+                background: "#2fa678",
+                borderRadius: String(3) + "px",
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                promptBox.style[i] = style[i];
+              }
+
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = instance.map.sub.submit[3].src[flatform];
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              style = {
+                position: "absolute",
+                top: String(promptWordingTop) + ea,
+                left: String(promptWordingLeft) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              promptBox.appendChild(svg_dom);
+              promptBox.addEventListener("click", function (e) {
+                window.location.href = "/index.php";
+              });
+              whiteBox.appendChild(promptBox);
+            }
+
+            whiteBox.style.width = String(whiteWidth) + ea;
+            whiteBox.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+            whiteBox.style.height = String(whiteHeight) + ea;
+            whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
+
+            if (finalObj.mode === "partnership") {
+              setTimeout(function () {
+                window.location.href = "/index.php";
+              }, 3000);
+            }
+          });
+        } catch (e) {
+          window.location.href = "/index.php";
         }
-
-        await GeneralJs.ajaxPromise(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary");
-      }
-
-      instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, function (whiteBox, wording, loader) {
-        GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
-          let style;
-          let ea;
-          let svg_clone, svg_dom;
-          let width, height, top;
-          let whiteWidth, whiteHeight;
-          let promptBox;
-          let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
-          let promptWordingTop, promptWordingLeft;
-
-          wording.style.display = "none";
-          loader.style.display = "none";
-
-          ea = (flatform === "desktop") ? "px" : "vw";
-
-          svg_clone = SvgTong.tongMaker();
-          if (finalObj.mode === "partnership") {
-            svg_clone.src = instance.map.sub.etc.partnershipComplete.src;
-            height = (flatform === "desktop") ? 19 : 4.5;
-            top = (flatform === "desktop") ? 31 : 7;
-            whiteWidth = (flatform === "desktop") ? 330 : 74;
-            whiteHeight = (flatform === "desktop") ? 86 : 19.4;
-          } else {
-            svg_clone.src = instance.map.sub.etc.presentationComplete.src;
-            height = (flatform === "desktop") ? 41 : 9;
-            top = (flatform === "desktop") ? 31 : 7;
-            whiteWidth = (flatform === "desktop") ? 356 : 76;
-            whiteHeight = (flatform === "desktop") ? 149 : 34;
-          }
-          width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
-          style = {
-            position: "absolute",
-            top: String(top) + ea,
-            left: "calc(50% - " + String(width / 2) + ea + ")",
-            width: String(width) + ea,
-            height: String(height) + ea,
-          };
-          for (let i in style) {
-            svg_clone.style[i] = style[i];
-          }
-          svg_dom = SvgTong.parsing(svg_clone);
-          whiteBox.appendChild(svg_dom);
-
-          if (finalObj.mode !== "partnership") {
-
-            promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
-            promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
-            promptGreenHeight = (flatform === "desktop") ? 31 : 8;
-            promptGreenBottom = (flatform === "desktop") ? 30 : 7;
-            promptGreenLeft0 = (flatform === "desktop") ? 124 : 26;
-            promptGreenLeft1 = (flatform === "desktop") ? 168 : 35.5;
-            height = (flatform === "desktop") ? 13 : 3.4;
-            promptWordingTop = (flatform === "desktop") ? 8 : 2;
-            promptWordingLeft = (flatform === "desktop") ? 14 : 2.5;
-
-            promptBox = GeneralJs.nodes.div.cloneNode(true);
-            style = {
-              position: "absolute",
-              width: String(promptGreenWidth0) + ea,
-              height: String(promptGreenHeight) + ea,
-              bottom: String(promptGreenBottom) + ea,
-              left: String(promptGreenLeft0) + ea,
-              background: "#2fa678",
-              borderRadius: String(3) + "px",
-              cursor: "pointer",
-            };
-            for (let i in style) {
-              promptBox.style[i] = style[i];
-            }
-
-            svg_clone = SvgTong.tongMaker();
-            svg_clone.src = instance.map.sub.submit[2].src[flatform];
-            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-            style = {
-              position: "absolute",
-              top: String(promptWordingTop) + ea,
-              left: String(promptWordingLeft) + ea,
-              width: String(width) + ea,
-              height: String(height) + ea,
-            };
-            for (let i in style) {
-              svg_clone.style[i] = style[i];
-            }
-            svg_dom = SvgTong.parsing(svg_clone);
-            promptBox.appendChild(svg_dom);
-            promptBox.addEventListener("click", function (e) {
-              window.location.href = "/desevent.php?mode=partnership";
-            });
-            whiteBox.appendChild(promptBox);
-
-            promptBox = GeneralJs.nodes.div.cloneNode(true);
-            style = {
-              position: "absolute",
-              width: String(promptGreenWidth1) + ea,
-              height: String(promptGreenHeight) + ea,
-              bottom: String(promptGreenBottom) + ea,
-              left: String(promptGreenLeft1) + ea,
-              background: "#2fa678",
-              borderRadius: String(3) + "px",
-              cursor: "pointer",
-            };
-            for (let i in style) {
-              promptBox.style[i] = style[i];
-            }
-
-            svg_clone = SvgTong.tongMaker();
-            svg_clone.src = instance.map.sub.submit[3].src[flatform];
-            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
-            style = {
-              position: "absolute",
-              top: String(promptWordingTop) + ea,
-              left: String(promptWordingLeft) + ea,
-              width: String(width) + ea,
-              height: String(height) + ea,
-            };
-            for (let i in style) {
-              svg_clone.style[i] = style[i];
-            }
-            svg_dom = SvgTong.parsing(svg_clone);
-            promptBox.appendChild(svg_dom);
-            promptBox.addEventListener("click", function (e) {
-              window.location.href = "/index.php";
-            });
-            whiteBox.appendChild(promptBox);
-          }
-
-          whiteBox.style.width = String(whiteWidth) + ea;
-          whiteBox.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
-          whiteBox.style.height = String(whiteHeight) + ea;
-          whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
-
-          if (finalObj.mode === "partnership") {
-            setTimeout(function () {
-              window.location.href = "/index.php";
-            }, 3000);
-          }
-        });
       });
-
     } catch (e) {
-      console.log(e);
+      window.location.href = "/index.php";
     }
   }
 }
