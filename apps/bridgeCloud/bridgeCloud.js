@@ -675,7 +675,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
           //kakao and slack
           // KAKAO.sendTalk("photo", designer, phone);
-          // slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#300_designer" });
+          slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#300_designer" });
 
           //end
           res.set({
