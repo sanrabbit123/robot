@@ -427,7 +427,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             return String(number);
           }
         }
-        return `${String(dateObject.getFullYearzeroAdditionString(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
+        return `${String(dateObject.getFullYear())}-${zeroAddition(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
       }
       let filteredObj, message;
       console.log("request get");
