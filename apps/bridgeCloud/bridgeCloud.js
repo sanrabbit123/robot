@@ -632,7 +632,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           let list = [];
           for (let i = 0; i < filesKeys.length; i++) { list.push(uploadMap[filesKeys[i]]); }
 
-          const binaryFolder = instance.dir + "/designerBinary";
+          const binaryFolder = instance.dir + "/binary";
           const binrayFolderTest = new RegExp(cilentFolderName, 'g');
           const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
           let binrayFolderBoo = false;
