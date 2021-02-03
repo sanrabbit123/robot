@@ -895,7 +895,7 @@ module.exports = {
         "src": "photoComplete_11rspot672_020309.svg"
       },
       "clickWording": {
-        "desktop": "파일을 드래그하여 사진 업로드",
+        "desktop": "클릭 또는 파일을 드래그하여 사진 업로드",
         "mobile": "클릭하여 사진 업로드",
         "src": {
           "desktop": "clickWording_desktop_13rspot122_020309.svg",

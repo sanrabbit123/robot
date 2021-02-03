@@ -7,6 +7,10 @@ const DeseventJs = function () {
     desktop: null,
     mobile: null
   };
+  this.fileBox = {
+    desktop: null,
+    mobile: null
+  };
 }
 
 DeseventJs.sourceLink = "/list_image/desevent";
@@ -771,10 +775,10 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
 
   let div_clone, div_clone2, div_clone3, svg_clone;
   let ea = toggle ? "px" : "vw";
-  let size = toggle ? 15 : 3.5;
+  let size = toggle ? 14 : 3.5;
   let margin = toggle ? 12 : 2;
-  let width = toggle ? 182.75 : 20.6;
-  let height = toggle ? 24.5 : 5;
+  let width = toggle ? (219.6 - 24) : 20.6;
+  let height = toggle ? (((128 - 34 - 12) / 2) - 24) : 5;
   let top, right, left;
   let style = {};
   let attribute = {};
@@ -800,12 +804,12 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   }
 
   //wording area
-  top = margin + (toggle ? -1 : -0.5);
+  top = margin + (toggle ? -3 : -0.5);
   left = top + (toggle ? 3 : 0.9);
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     width: String(toggle ? width - (margin * 2) : 14.5) + ea,
-    height: String(height) + ea,
+    height: String(height + margin) + ea,
     top: String(top) + ea,
     left: String(left) + ea,
     position: "absolute",
@@ -817,7 +821,7 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   div_clone.appendChild(div_clone2);
 
   //close button
-  top = toggle ? 16.5 : 3;
+  top = toggle ? 14 : 3;
   right = toggle ? 12 : 2.5;
   height = toggle ? 10 : 2.6;
   svg_clone = SvgTong.tongMaker();
@@ -834,7 +838,8 @@ DeseventJs.prototype.imageBoxMaker = function (mother, fileMotherinput, order, t
   for (let i in style) {
     svg_clone.style[i] = style[i];
   }
-  svg_clone.addEventListener("click", function () {
+  svg_clone.addEventListener("click", function (e) {
+    e.stopPropagation();
     fileMotherinput.setAttribute("cus_close" + String(order), "true");
     mother.removeChild(div_clone);
   });
@@ -1252,12 +1257,16 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let top, left;
             let width, height;
             let grayHeight, grayWidth;
+            let grayPadding;
+            let file_input, attribute;
+            let fileWordingSvg;
 
             ea = "px";
             top = 101 - 7;
             left = 162;
             grayWidth = 717;
             grayHeight = 128;
+            grayPadding = 17;
 
             h = document.createDocumentFragment();
 
@@ -1266,8 +1275,10 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               position: "absolute",
               top: String(top) + ea,
               left: String(left) + ea,
-              width: String(grayWidth) + ea,
-              height: String(grayHeight) + ea,
+              width: String(grayWidth - grayPadding) + ea,
+              paddingTop: String(grayPadding) + ea,
+              paddingLeft: String(grayPadding) + ea,
+              height: String(grayHeight - grayPadding) + ea,
               background: "#f2f2f2",
               borderRadius: String(3) + ea,
               cursor: "pointer",
@@ -1275,7 +1286,27 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             for (let i in style) {
               dom.style[i] = style[i];
             }
-
+            dom.addEventListener("click", function (e) {
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.click();
+            });
+            dom.addEventListener("dragenter", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
+            dom.addEventListener("dragover", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
+            dom.addEventListener("dragleave", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }, false);
             h.appendChild(dom);
 
             height = 22;
@@ -1289,13 +1320,23 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               left: String(left + (grayWidth / 2) - (width / 2) - 2) + ea,
               width: String(width) + ea,
               height: String(height) + ea,
+              cursor: "pointer",
             };
             for (let i in style) {
               svg_clone.style[i] = style[i];
             }
 
             svg_dom = SvgTong.parsing(svg_clone);
-
+            svg_dom.addEventListener("click", function (e) {
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.click();
+            });
+            fileWordingSvg = svg_dom;
             h.appendChild(svg_dom);
 
             height = 14;
@@ -1316,6 +1357,65 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             }
             svg_dom = SvgTong.parsing(svg_clone);
             h.appendChild(svg_dom);
+
+            file_input = GeneralJs.nodes.input.cloneNode(true);
+            file_input.classList.add("targetInputs");
+            attribute = {
+              type: "file",
+              name: "upload",
+              accept: "image/*,.pdf,.ai,.zip,.psd",
+              cus_name: "fileInput"
+            };
+            style = {
+              display: "none",
+            };
+            for (let j in attribute) {
+              file_input.setAttribute(j, attribute[j]);
+            }
+            for (let j in style) {
+              file_input.style[j] = style[j];
+            }
+            for (let j = 0; j < 20; j++) {
+              file_input.setAttribute("cus_close" + String(j), "false");
+            }
+            file_input.multiple = true;
+            h.appendChild(file_input);
+            instance.fileBox.desktop = file_input;
+
+            file_input.addEventListener("change", function (e) {
+              const files = this.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(dom, this, i, "desktop");
+                }
+              }
+              console.log(files);
+            });
+
+            dom.addEventListener("drop", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              while (dom.firstChild) {
+                dom.removeChild(dom.lastChild);
+              }
+              for (let j = 0; j < 20; j++) {
+                instance.fileBox.desktop.setAttribute("cus_close" + String(j), "false");
+              }
+              instance.fileBox.desktop.files = e.dataTransfer.files;
+              const files = instance.fileBox.desktop.files;
+              if (files.length === 0) {
+                fileWordingSvg.style.opacity = String(1);
+              } else {
+                fileWordingSvg.style.opacity = String(0);
+                for (let i = 0; i < files.length; i++) {
+                  instance.imageBoxMaker(this, instance.fileBox.desktop, i, "desktop");
+                }
+              }
+              console.log(instance.fileBox.desktop.files);
+            });
 
             return h;
           }

@@ -616,6 +616,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - designer portfolio binary
+
   //POST - certification
   funcObj.post_certification = async function (req, res) {
     try {
