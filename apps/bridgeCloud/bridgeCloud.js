@@ -140,7 +140,13 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       }
     }
 
-    slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#400_customer" });
+    if (obj.mode !== undefined) {
+      if (obj.mode === "designer") {
+        slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#300_designer" });
+      }
+    } else {
+      slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#400_customer" });
+    }
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -624,16 +630,14 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
           const { designer, phone } = fields;
-          const cilentFolderName = ('mdh' + todayMaker()) + '_' + designer + '_' + phone.replace(/\-/g, '');
-          const uploadMap = {
-            upload0: "sitePhoto",
-            upload1: "preferredPhoto"
-          };
+          const designerFolderName = ('mdh' + todayMaker()) + '_' + designer + '_' + phone.replace(/\-/g, '');
           let list = [];
-          for (let i = 0; i < filesKeys.length; i++) { list.push(uploadMap[filesKeys[i]]); }
+          for (let i = 0; i < filesKeys.length; i++) {
+            list.push(filesKeys[i]);
+          }
 
           const binaryFolder = instance.dir + "/binary";
-          const binrayFolderTest = new RegExp(cilentFolderName, 'g');
+          const binrayFolderTest = new RegExp(designerFolderName, 'g');
           const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
           let binrayFolderBoo = false;
 
@@ -647,9 +651,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             binrayFolderBoo = true;
           }}
           if (!binrayFolderBoo) {
-            shell.exec(`mkdir ${shellLink(binaryFolder + '/' + cilentFolderName)}`);
+            shell.exec(`mkdir ${shellLink(binaryFolder + '/' + designerFolderName)}`);
             for (let i = 0; i < list.length; i++) {
-              shell.exec(`mkdir ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i])}`);
+              shell.exec(`mkdir ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i])}`);
             }
           }
 
@@ -657,21 +661,21 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           for (let i = 0; i < list.length; i++) {
             if (Array.isArray(files[filesKeys[i]])) {
               for (let j of files[filesKeys[i]]) {
-                shell.exec(`mv ${shellLink(j.path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name)};`);
-                fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name);
+                shell.exec(`mv ${shellLink(j.path)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + j.name)};`);
+                fileTong[list[i]].push(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + j.name);
               }
             } else {
-              shell.exec(`mv ${shellLink(files[filesKeys[i]].path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
-              fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name);
+              shell.exec(`mv ${shellLink(files[filesKeys[i]].path)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
+              fileTong[list[i]].push(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name);
             }
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: cilentFolderName });
+          instance.bridgeToGoogle({ tong: fileTong, name: designerFolderName, mode: "designer" });
 
           //kakao and slack
           // KAKAO.sendTalk("photo", designer, phone);
-          // slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#400_customer" });
+          // slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#300_designer" });
 
           //end
           res.set({
