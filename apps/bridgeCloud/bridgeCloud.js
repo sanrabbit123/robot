@@ -419,9 +419,70 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     try {
       //request
       const resultObj = req.body;
+      const dateToString = function (dateObject) {
+        const zeroAddition = function (number) {
+          if (number < 10) {
+            return `0${String(number)}`;
+          } else {
+            return String(number);
+          }
+        }
+        return `${String(dateObject.getFullYearzeroAdditionString(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
+      }
+      let filteredObj, message;
       console.log("request get");
 
-      console.log(resultObj);
+      filteredObj = {};
+      for (let i in requestObj) {
+        if (i !== mode) {
+          filteredObj[i] = requestObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
+        }
+      }
+      filteredObj.date = new Date();
+      filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
+      delete filteredObj.detailAddress;
+
+      console.log(filteredObj)
+
+      if (requestObj.mode === "partnership") {
+
+        message = "새로운 디자이너 신청이 왔습니다!\n";
+        message += "문의일 : " + dateToString(filteredObj.date) + "\n";
+        message += "성함 : " + filteredObj.designer + "\n";
+        message += "연락처 : " + filteredObj.phone + "\n";
+        message += "이메일 :" + filteredObj.email + "\n";
+        message += "주소 : " + filteredObj.address + "\n";
+        message += "사업자 분류 : " + filteredObj.classification + "\n";
+        message += "회사명 : " + filteredObj.company + "\n";
+        message += "사업자 등록번호 : " + filteredObj.businessNumber + "\n";
+        message += "개업일 : " + filteredObj.startDate + "\n";
+        message += "대표자 성함 : " + filteredObj.representative + "\n";
+        message += "은행명 : " + filteredObj.bankName + "\n";
+        message += "계좌번호 : " + filteredObj.bankAccount + "\n";
+        message += "예금주 : " + filteredObj.bankTo + "\n";
+        message += "기타 사항 : " + filteredObj.bankEtc + "\n";
+        message += "인테리어 경력 : " + filteredObj.interiorCareer + "\n";
+        message += "스타일링 경력 : " + filteredObj.stylingCareer + "\n";
+        message += "경력 상세 : " + filteredObj.careerDetail + "\n";
+        message += "유입 경로 : " + filteredObj.comeFrom;
+
+        slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+        await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { home: true });
+
+      } else {
+
+        message = "새로운 상담회 신청이 왔습니다!\n";
+        message += "문의일 : " + dateToString(filteredObj.date) + "\n";
+        message += "성함 : " + filteredObj.designer + "\n";
+        message += "연락처 : " + filteredObj.phone + "\n";
+        message += "이메일 :" + filteredObj.email + "\n";
+        message += "주소 : " + filteredObj.address + "\n";
+        message += "설명회 신청 시간 : " + filteredObj.presentationTimes;
+
+        slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+        await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { home: true });
+
+      }
 
       //end
       res.set({
