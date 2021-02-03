@@ -433,18 +433,18 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       console.log("request get");
 
       filteredObj = {};
-      for (let i in requestObj) {
+      for (let i in resultObj) {
         if (i !== mode) {
-          filteredObj[i] = requestObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
+          filteredObj[i] = resultObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
         }
       }
       filteredObj.date = new Date();
       filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
       delete filteredObj.detailAddress;
 
-      console.log(filteredObj)
+      console.log(filteredObj);
 
-      if (requestObj.mode === "partnership") {
+      if (resultObj.mode === "partnership") {
 
         message = "새로운 디자이너 신청이 왔습니다!\n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
