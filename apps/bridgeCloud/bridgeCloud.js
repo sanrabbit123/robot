@@ -471,7 +471,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       } else {
 
-        message = "새로운 상담회 신청이 왔습니다!\n";
+        message = "새로운 설명회 신청이 왔습니다!\n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
         message += "성함 : " + filteredObj.designer + "\n";
         message += "연락처 : " + filteredObj.phone + "\n";
