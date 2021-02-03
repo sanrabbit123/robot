@@ -434,7 +434,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       filteredObj = {};
       for (let i in resultObj) {
-        if (i !== mode) {
+        if (i !== "mode") {
           filteredObj[i] = resultObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
         }
       }
