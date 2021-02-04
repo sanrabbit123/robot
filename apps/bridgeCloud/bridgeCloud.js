@@ -472,6 +472,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "경력 상세 : " + filteredObj.careerDetail + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
+        KAKAO.sendTalk("designerPartnership", filteredObj["designer"], filteredObj["phone"]);
         slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { local: true });
 
@@ -485,6 +486,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "주소 : " + filteredObj.address + "\n";
         message += "설명회 신청 시간 : " + filteredObj.presentationTimes;
 
+        KAKAO.sendTalk("designerPresentation", filteredObj["designer"], filteredObj["phone"]);
         slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { local: true });
 
