@@ -1222,7 +1222,13 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             }
 
             for (let j = 0; j < GeneralJs.stacks["radioDoms0_desktop"].length; j++) {
-              GeneralJs.stacks["radioDoms0_desktop"][j].addEventListener("click", onoffEvent);
+              if (!buttons[j].limit) {
+                GeneralJs.stacks["radioDoms0_desktop"][j].addEventListener("click", onoffEvent);
+              } else {
+                GeneralJs.stacks["radioDoms0_desktop"][j].addEventListener("click", function (e) {
+                  alert("해당 항목은 마감되었습니다!");
+                });
+              }
             }
 
             return h;
@@ -1483,7 +1489,13 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             }
 
             for (let j = 0; j < GeneralJs.stacks["radioDoms0_mobile"].length; j++) {
-              GeneralJs.stacks["radioDoms0_mobile"][j].addEventListener("click", onoffEvent);
+              if (!buttons[j].limit) {
+                GeneralJs.stacks["radioDoms0_mobile"][j].addEventListener("click", onoffEvent);
+              } else {
+                GeneralJs.stacks["radioDoms0_mobile"][j].addEventListener("click", function (e) {
+                  alert("해당 항목은 마감되었습니다!");
+                });
+              }
             }
 
             return h;

@@ -38,6 +38,7 @@ module.exports = {
                 "desktop": "b_white020_3rspot881_020409.svg",
                 "mobile": "b_white020_3rspot881_020409.svg"
               },
+              "limit": false,
               "type": {
                 "desktop": "white",
                 "mobile": "white"
@@ -77,6 +78,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": true,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop100_off_9rspot792_020409.svg",
@@ -94,6 +96,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop101_off_9rspot345_020409.svg",
@@ -111,6 +114,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop102_off_9rspot311_020409.svg",
@@ -187,6 +191,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop200_off_10rspot417_020409.svg",
@@ -204,6 +209,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop201_off_10rspot471_020409.svg",
@@ -221,6 +227,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop202_off_10rspot471_020409.svg",
@@ -238,6 +245,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop203_off_9rspot483_020409.svg",
@@ -614,6 +622,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2120_off_3rspot862_020409.svg",
@@ -631,6 +640,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2121_off_5rspot476_020409.svg",
@@ -648,6 +658,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2122_off_4rspot593_020409.svg",
@@ -665,6 +676,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2123_off_5rspot835_020409.svg",
@@ -682,6 +694,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2124_off_4rspot532_020409.svg",
@@ -699,6 +712,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
+              "limit": false,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop2125_off_2rspot749_020409.svg",
