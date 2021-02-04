@@ -910,51 +910,42 @@ class DevContext extends Array {
 
 
 
-      const sheets = new GoogleSheet();
-      const matrix = await sheets.get_value_inPython("141r_Or5EPIjZYMB6PT3S51N3Mska3u3lzflttVH8KSQ", "설문지 응답 시트1!A2:K10");
-      const stringToDate = function (str) {
-        let tempArr, tempArr2, tempArr3, boo;
-        str = str.replace(/ /g, '');
-        if (/오후/gi.test(str)) {
-          boo = true;
-        } else {
-          boo = false;
-        }
-        str = str.replace(/[가-힣]/gi, '/');
-        tempArr = str.split("//");
-        tempArr2 = tempArr[0].split('.');
-        tempArr3 = tempArr[1].split(':');
-        return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]) + (boo ? 12 : 0), Number(tempArr3[1]), Number(tempArr3[2])));
-      }
-
-
-      // {
-      //   date
-      //   designer
-      //   phone
-      //   address
-      //   detailAddress
-      //   email
-      //   classification
-      //   company
-      //   bankName
-      //   bankAccount
-      //   bankTo
-      //   interiorCareer
-      //   businessNumber
-      //   startDate
-      //   representative
-      //   bankEtc
-      //   stylingCareer
-      //   careerDetail
+      // const sheets = new GoogleSheet();
+      // const matrix = await sheets.get_value_inPython("141r_Or5EPIjZYMB6PT3S51N3Mska3u3lzflttVH8KSQ", "설문지 응답 시트1!A2:K10");
+      // const stringToDate = function (str) {
+      //   let tempArr, tempArr2, tempArr3, boo;
+      //   str = str.replace(/ /g, '');
+      //   if (/오후/gi.test(str)) {
+      //     boo = true;
+      //   } else {
+      //     boo = false;
+      //   }
+      //   str = str.replace(/[가-힣]/gi, '/');
+      //   tempArr = str.split("//");
+      //   tempArr2 = tempArr[0].split('.');
+      //   tempArr3 = tempArr[1].split(':');
+      //   return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]) + (boo ? 12 : 0), Number(tempArr3[1]), Number(tempArr3[2])));
       // }
-
-
-
-
-
-
-
+      // {
+      //   date: stringToDate("2021. 1. 29 오후 6:53:44"),
+      //   designer: "손병준",
+      //   phone: "",
+      //   address: "",
+      //   detailAddress: "",
+      //   email: "",
+      //   classification: "개인사업자 (일반 과세)",
+      //   company: "두부라이프",
+      //   bankName: "국민은행",
+      //   bankAccount: "027-21-0842-533",
+      //   bankTo: "손병준",
+      //   interiorCareer: "1년 0개월",
+      //   businessNumber: "8583500911",
+      //   startDate: "2021-01-11",
+      //   representative: "손병준",
+      //   bankEtc: "",
+      //   stylingCareer: "1년 0개월",
+      //   careerDetail: "아워플레이스 두달만에 슈퍼플레이스 2020 대표호스트 선정. 스튜디오 ‘두부하우스’ 대표 1년",
+      // }
       // console.log(matrix);
       // console.log(stringToDate(matrix[1][0]))
       //
@@ -967,13 +958,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "허지인";
-      // const pid = "p79";
-      // const rid = "re073";
+      // const client = "서지영";
+      // const pid = "p80";
+      // const rid = "re074";
       // const links = [
-      //   "https://docs.google.com/document/d/1K1gRly8rNKrV1q46HR54ub-vwqHNH-gptqj5PcnBAE0/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1EGzRsyY2gNvsJhGKuYbVMmhibeKBMuAMabT8RdB6ZIE/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/16RUahIONQnhEz4XaoGY0Z3YlYSuXTwyL?usp=sharing",
+      //   "https://docs.google.com/document/d/1fTWS6aT1K2ukhfFYaik6bE7Yg30LTh6t65kA2j1JPWY/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1cTTzXzHQBbAf9uN4UCN7MD7ypG0czSSsqv0zTe-cOQk/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1kx_tFYevD-8Tex-3JZLfXYxYQ1sW-jOB?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1017,7 +1008,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p79");
+      // await this.spellCheck("p80");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

@@ -1166,7 +1166,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             top = 57;
             height = 15;
             left = 162;
-            margin = 203;
+            margin = 161;
 
             h = document.createDocumentFragment();
             GeneralJs.stacks["radioDoms0_desktop"] = [];
@@ -1449,7 +1449,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               style = {
                 position: "absolute",
                 transition: "opacity 0.3s ease",
-                top: String((j < 2) ? top : top + 5.3) + ea,
+                top: String((j < 2) ? top : ((j < 4) ? top + 5.3 : top + 10.6)) + ea,
                 left: String((j % 2) ? 58 : left) + ea,
                 width: String(width) + ea,
                 height: String(height) + ea,

@@ -506,7 +506,7 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
 
       shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
 
-      console.log(`scp -r ${shellLink(process.env.HOME)}/www`);
+      console.log(`scp -r ${shellLink(process.env.HOME)}/www miro81@home-liaison.com:/miro81/`);
 
     } else {
 
