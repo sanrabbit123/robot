@@ -3,7 +3,7 @@ ExecMain.prototype.titleMaker = function () {
   let this_ai, from, to, contents, temp;
 
   for (let i = 0; i < main.length; i++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "title" + String(i);
     contents = '<g%' + String(i + 1) + '%g> <b%' + main[i].title + '%b>';
@@ -16,8 +16,9 @@ ExecMain.prototype.titleMaker = function () {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
+
 }
 
 ExecMain.prototype.factorTitleMaker = function () {
@@ -51,7 +52,7 @@ ExecMain.prototype.factorTitleMaker = function () {
   let this_ai, from, to, contents, temp, asterisk;
 
   for (let obj of greenTong) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "factorTitle" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
     if (obj.mobile !== undefined) {
@@ -67,11 +68,11 @@ ExecMain.prototype.factorTitleMaker = function () {
     asterisk.left = temp.left - 18.1;
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
 
   for (let obj of grayTong) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "factorTitle" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
     if (obj.mobile !== undefined) {
@@ -87,7 +88,7 @@ ExecMain.prototype.factorTitleMaker = function () {
     asterisk.left = temp.left - 18.1;
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
 
 }
@@ -113,7 +114,7 @@ ExecMain.prototype.subTitleMaker = function () {
   //make
   let this_ai, from, to, contents, temp, asterisk;
   for (let obj of tong) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "subTitle" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
     if (obj.mobile !== undefined) {
@@ -126,7 +127,7 @@ ExecMain.prototype.subTitleMaker = function () {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
 }
 
@@ -135,7 +136,7 @@ ExecMain.prototype.buttonCheck = function (arr) {
   for (let { contents: text, xyz: [ x, y, z ], flatform, exception } of arr) {
 
     //off
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_check" + flatform + String(x) + String(y) + String(z) + "_off";
     contents = text;
@@ -159,10 +160,10 @@ ExecMain.prototype.buttonCheck = function (arr) {
     temp2.fillColor = this.mother.colorpick("#ececec");
     this.mother.white_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
     //on
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_check" + flatform + String(x) + String(y) + String(z) + "_on";
     contents = text;
@@ -186,7 +187,7 @@ ExecMain.prototype.buttonCheck = function (arr) {
     temp2.fillColor = this.mother.colorpick("#2fa678");
     this.mother.white_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
   }
 }
@@ -195,7 +196,7 @@ ExecMain.prototype.buttonWhite = function (arr) {
   let options, this_ai, from, to, contents, temp;
   for (let { contents: text, xyz: [ x, y, z ], flatform, exception } of arr) {
 
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_white" + String(x) + String(y) + String(z);
     contents = text;
@@ -210,7 +211,7 @@ ExecMain.prototype.buttonWhite = function (arr) {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
   }
 }
@@ -220,7 +221,7 @@ ExecMain.prototype.buttonArrow = function (arr) {
   for (let { contents: text, xyz: [ x, y, z ], flatform, exception } of arr) {
 
     //off
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_arrow" + String(x) + String(y) + String(z) + "_off";
     contents = text;
@@ -235,10 +236,10 @@ ExecMain.prototype.buttonArrow = function (arr) {
     temp = temp.createOutline();
     this.mother.white_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
     //on
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_arrow" + String(x) + String(y) + String(z) + "_on";
     contents = text;
@@ -253,7 +254,7 @@ ExecMain.prototype.buttonArrow = function (arr) {
     temp = temp.createOutline();
     this.mother.white_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
   }
 }
@@ -263,7 +264,7 @@ ExecMain.prototype.buttonGreen = function (arr) {
   for (let { contents: text, xyz: [ x, y, z ], flatform, exception } of arr) {
 
     //off
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_green" + String(x) + String(y) + String(z) + "_off";
     contents = text;
@@ -278,10 +279,10 @@ ExecMain.prototype.buttonGreen = function (arr) {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
     //on
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "b_green" + String(x) + String(y) + String(z) + "_on";
     contents = text;
@@ -296,7 +297,7 @@ ExecMain.prototype.buttonGreen = function (arr) {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
 
   }
 }
@@ -370,7 +371,7 @@ ExecMain.prototype.noticeMaker = function () {
   //make
   let this_ai, from, to, contents, temp;
   for (let obj of tong) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     to = "notice" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
     if (obj.mobile !== undefined) {
@@ -383,7 +384,7 @@ ExecMain.prototype.noticeMaker = function () {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
 
 }
@@ -396,7 +397,7 @@ ExecMain.prototype.surveyMaker = function () {
   let this_ai, from, to, contents, temp;
 
   //title
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "surveyTitle";
   contents = title;
@@ -406,10 +407,10 @@ ExecMain.prototype.surveyMaker = function () {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
   //question
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "surveyQuestion";
   contents = "Q. " + question;
@@ -419,14 +420,14 @@ ExecMain.prototype.surveyMaker = function () {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
 }
 
 ExecMain.prototype.pendingMaker = function () {
   const { sub: { etc: { pending: { title: text } } } } = this.text;
   let this_ai, from, to, contents, temp;
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "pending";
   contents = text;
@@ -436,13 +437,13 @@ ExecMain.prototype.pendingMaker = function () {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 }
 
 ExecMain.prototype.certificationMaker = function () {
   const { sub: { etc: { certification: { title: text } } } } = this.text;
   let this_ai, from, to, contents, temp;
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "certification";
   contents = text;
@@ -452,15 +453,16 @@ ExecMain.prototype.certificationMaker = function () {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 }
 
 ExecMain.prototype.arrowMaker = function () {
-  let this_ai = this.createDoc();
+  let this_ai;
+  this_ai = app.activeDocument;
   this.mother.return_arrow();
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, "arrow");
+  this.saveSvg(this_ai, "arrow", true);
 }
 
 ExecMain.prototype.thankyouMain = function (obj) {
@@ -472,7 +474,7 @@ ExecMain.prototype.thankyouMain = function (obj) {
 
   if (flatform === "desktop") {
     to = "thankyouMain_desktop" + String(order);
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     doms = {
       number: {},
       title: {},
@@ -568,13 +570,13 @@ ExecMain.prototype.thankyouMain = function (obj) {
     white.remove();
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "thankyou_desktop_" + String(order));
+    this.saveSvg(this_ai, "thankyou_desktop_" + String(order), true);
 
   //mobile
   } else {
 
     to = "thankyouMain_mobile" + String(order);
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     doms = {
       number: {},
       title: {},
@@ -669,7 +671,7 @@ ExecMain.prototype.thankyouMain = function (obj) {
 
     app.doScript("expandall", "contents_maker");
     this.mother.fit_box();
-    this.saveSvg(this_ai, "thankyou_mobile_" + String(order));
+    this.saveSvg(this_ai, "thankyou_mobile_" + String(order), true);
 
   }
 }
@@ -868,7 +870,7 @@ ExecMain.prototype.thankyouFileSend = function (obj) {
   from = "general";
 
   //factor title
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   to = "thankyouFileSend_title";
   contents = factorTitle.title;
   this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm" } });
@@ -880,11 +882,11 @@ ExecMain.prototype.thankyouFileSend = function (obj) {
   asterisk.left = temp.left - 18.1;
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
   //white
   for (let i = 0; i < white.length; i++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     to = "thankyouFileSend_white_" + String(i);
     contents = white[i].title;
     this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#2fa678" } });
@@ -893,7 +895,7 @@ ExecMain.prototype.thankyouFileSend = function (obj) {
     temp = temp.createOutline();
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, to);
+    this.saveSvg(this_ai, to, true);
   }
 
 }
@@ -901,7 +903,7 @@ ExecMain.prototype.thankyouFileSend = function (obj) {
 ExecMain.prototype.thankyouClickWording = function (obj) {
   let this_ai, from, to, contents, temp;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "thankyouClickWording_desktop";
   contents = obj.desktop;
@@ -914,9 +916,9 @@ ExecMain.prototype.thankyouClickWording = function (obj) {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "thankyouClickWording_mobile";
   contents = obj.mobile;
@@ -929,7 +931,7 @@ ExecMain.prototype.thankyouClickWording = function (obj) {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
 }
 
@@ -938,7 +940,7 @@ ExecMain.prototype.thankyouComplete = function (obj) {
   let contentsArr, doms = [];
 
   //desktop
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "thankyouComplete_desktop";
   contents = obj.title.replace(/,/g, '');
@@ -948,12 +950,12 @@ ExecMain.prototype.thankyouComplete = function (obj) {
   temp = temp.createOutline();
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
   //mobile
   contentsArr = obj.title.split(', ');
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
 
   to = "thankyouComplete_mobile_" + String(0);
@@ -977,7 +979,7 @@ ExecMain.prototype.thankyouComplete = function (obj) {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "thankyouComplete_mobile");
+  this.saveSvg(this_ai, "thankyouComplete_mobile", true);
 }
 
 ExecMain.prototype.thankyouMaker = function () {
@@ -1009,6 +1011,8 @@ ExecMain.prototype.thankyouMaker = function () {
   //thankyou main
   const { desktop, mobile } = tong;
 
+  this.createDoc();
+
   for (let obj of desktop) {
     options = { title: obj.title, contents: obj.contents, order: obj.order, flatform: "desktop", thankyouFixedWidth: thankyouFixedWidth };
     if (obj.subtitles !== undefined) { options.subtitles = obj.subtitles; }
@@ -1021,12 +1025,16 @@ ExecMain.prototype.thankyouMaker = function () {
     this.thankyouMain(options);
   }
 
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+
   //thankyou sub
   const { whiteTitle, etc: { clickWording, fileSend, complete } } = sub;
 
   // white title
   this.thankyouWhiteTitle({ title: whiteTitle.title, contents: whiteTitle.contents.desktop, flatform: "desktop", thankyouFixedWidth: thankyouFixedWidth });
   this.thankyouWhiteTitle({ title: whiteTitle.title, contents: whiteTitle.contents.mobile, flatform: "mobile", thankyouFixedWidth: thankyouFixedWidth });
+
+  this.createDoc();
 
   //fileSend
   this.thankyouFileSend(fileSend);
@@ -1036,6 +1044,8 @@ ExecMain.prototype.thankyouMaker = function () {
 
   //complete
   this.thankyouComplete(complete);
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
 }
 
@@ -1048,7 +1058,7 @@ ExecMain.prototype.generalTitle = function (obj) {
     { color: "#ffffff", font: "SDGothicNeoa-eMd", fontSize: 10.5, },
   ];
   let nameArr = [];
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
 
   if (obj.name === "consulting") {
     obj.text.unshift("Consulting");
@@ -1095,7 +1105,7 @@ ExecMain.prototype.generalTitle = function (obj) {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("gt_" + obj.name + "_" + obj.list));
+  this.saveSvg(this_ai, ("gt_" + obj.name + "_" + obj.list), true);
 }
 
 ExecMain.prototype.whiteTitle = function () {
@@ -1112,6 +1122,8 @@ ExecMain.prototype.start = function (dayString) {
   let list = [ "desktop", "mobile" ];
   this.dayString = dayString;
 
+  this.createDoc();
+
   this.titleMaker();
   this.factorTitleMaker();
   this.subTitleMaker();
@@ -1122,6 +1134,9 @@ ExecMain.prototype.start = function (dayString) {
   this.certificationMaker();
   this.arrowMaker();
   this.whiteTitle();
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+
   this.thankyouMaker();
 
 }

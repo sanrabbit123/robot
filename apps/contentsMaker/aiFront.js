@@ -72,7 +72,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
       data: this.text,
       script: temp_scriptString,
       app: "Illustrator",
-      end: true,
+      end: false,
     });
 
     //make svgTong files and make map with source written
@@ -92,7 +92,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
     resDir = await fileSystem(`readDir`, [ `${home_dir}/result/${sw}` ]);
     for (let i of resDir) {
       if (!/\.png$/.test(i)) {
-        // shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}/${i};`);
+        shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}/${i};`);
       } else {
         shell.exec(`mv ${shellLink(home_dir)}/result/${sw}/${i} ${shellLink(home_dir)}/result/binary/${sw}/${i};`);
       }
@@ -100,7 +100,7 @@ AiFront.prototype.renderSvgPng = async function (sw) {
 
     //end
     shell.exec(`rm -rf ${shellLink(home_dir)}/result/ai`);
-    // shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}`);
+    shell.exec(`rm -rf ${shellLink(home_dir)}/result/${sw}`);
 
   } catch (e) {
     console.log(e);

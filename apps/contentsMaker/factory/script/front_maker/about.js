@@ -2,21 +2,21 @@
 ExecMain.prototype.titleMaker = function (obj) {
   let this_ai;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   this.setCreateSetting({ from: "general", to: ("title" + String(obj.order)) });
   this.setParagraph({ from: obj.text, to: ("title" + String(obj.order)), });
   this.createElements(this_ai, this.createSetting[("title" + String(obj.order))]);
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("title" + String(obj.order)));
+  this.saveSvg(this_ai, ("title" + String(obj.order)), true);
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   this.setCreateSetting({ from: "general", to: ("titleNum" + String(obj.order)), exception: { font: "Graphik-Medium", horizontalScale: 100, }, });
   this.setParagraph({ from: ("0" + String(obj.order + 1)), to: ("titleNum" + String(obj.order)), });
   this.createElements(this_ai, this.createSetting[("titleNum" + String(obj.order))]);
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("titleNum" + String(obj.order)));
+  this.saveSvg(this_ai, ("titleNum" + String(obj.order)), true);
 }
 
 ExecMain.prototype.wordMaker_desktop = function (obj, x, textObj) {
@@ -24,7 +24,7 @@ ExecMain.prototype.wordMaker_desktop = function (obj, x, textObj) {
   let list = [ "main", "sub" ];
   let margin = { main: 35, sub: 35, }
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   dom = { main: [], sub: [], }
   for (let i of list) {
     contents = textObj[i].contents;
@@ -46,7 +46,7 @@ ExecMain.prototype.wordMaker_desktop = function (obj, x, textObj) {
   }
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("words" + String(obj.order) + String(x)));
+  this.saveSvg(this_ai, ("words" + String(obj.order) + String(x)), true);
 }
 
 ExecMain.prototype.wordMaker_mobile = function (obj, x, textObj) {
@@ -55,7 +55,7 @@ ExecMain.prototype.wordMaker_mobile = function (obj, x, textObj) {
   let mobileWidth = 175.6;
   let circleWidth, circle;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   dom = { main: [], sub: [], }
 
   from = "sub";
@@ -95,7 +95,7 @@ ExecMain.prototype.wordMaker_mobile = function (obj, x, textObj) {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, ("mo" + "words" + String(obj.order) + String(x)));
+  this.saveSvg(this_ai, ("mo" + "words" + String(obj.order) + String(x)), true);
 }
 
 ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
@@ -103,7 +103,7 @@ ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
 
   temp_arr = textObj.buttons;
   for (let b = 0; b < temp_arr.length; b++) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     contents = textObj.buttons;
     to = "button" + String(x) + String(b);
@@ -113,9 +113,9 @@ ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
     this.createElements(this_ai, this.createSetting[to]);
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("button" + String(obj.order) + String(x) + String(b)));
+    this.saveSvg(this_ai, ("button" + String(obj.order) + String(x) + String(b)), true);
 
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     from = "general";
     contents = "0" + String(b + 1);
     to = "buttonNum" + String(x) + String(b);
@@ -125,7 +125,7 @@ ExecMain.prototype.wordMaker_button = function (obj, x, textObj) {
     this.createElements(this_ai, this.createSetting[to]);
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("buttonNum" + String(obj.order) + String(x) + String(b)));
+    this.saveSvg(this_ai, ("buttonNum" + String(obj.order) + String(x) + String(b)), true);
   }
 }
 
@@ -139,7 +139,7 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
   let popupNumber = 0;
 
   for (let p of popups) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     dom = { main: [], sub: [], }
     for (let i of list) {
       contents = p[i].contents;
@@ -161,11 +161,11 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
     }
     this.mother.fit_box({ width: { value: 600, direction: p.direction }});
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("popups" + String(obj.order) + String(x) + String(popupNumber)));
+    this.saveSvg(this_ai, ("popups" + String(obj.order) + String(x) + String(popupNumber)), true);
 
 
     //popup
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
 
     contents = String(obj.order + x + 1) + " - " + String(popupNumber + 1);
     from = "main";
@@ -176,11 +176,11 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("popnumber" + String(obj.order) + String(x) + String(popupNumber)));
+    this.saveSvg(this_ai, ("popnumber" + String(obj.order) + String(x) + String(popupNumber)), true);
 
 
     //mobile - popup title
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
     dom = { main: [], sub: [], }
 
     from = "sub";
@@ -204,10 +204,10 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("mopopupstitle" + String(obj.order) + String(x) + String(popupNumber)));
+    this.saveSvg(this_ai, ("mopopupstitle" + String(obj.order) + String(x) + String(popupNumber)), true);
 
     //mobile - popup contents
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
 
     from = "sub";
     to = "mopopup" + "main" + String(x) + String(0) + String(popupNumber);
@@ -242,7 +242,7 @@ ExecMain.prototype.wordMaker_popup = function (obj, x, textObj) {
 
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
-    this.saveSvg(this_ai, ("mopopupscontents" + String(obj.order) + String(x) + String(popupNumber)));
+    this.saveSvg(this_ai, ("mopopupscontents" + String(obj.order) + String(x) + String(popupNumber)), true);
 
     popupNumber++;
   }
@@ -262,13 +262,13 @@ ExecMain.prototype.imageMaker = function (obj) {
   let images = obj.text;
   for (let i of images) {
     if (i.vector) {
-      this_ai = this.createDoc();
+      this_ai = app.activeDocument;
       this.setCreateSetting({ from: "general", to: i.name });
       this.setParagraph({ from: i.vectoroption.content, to: i.name, });
       this.createElements(this_ai, this.createSetting[i.name]);
       this.mother.fit_box();
       app.doScript("expandall", "contents_maker");
-      this.saveSvg(this_ai, i.name);
+      this.saveSvg(this_ai, i.name, true);
     }
   }
 }
@@ -282,7 +282,7 @@ ExecMain.prototype.generalTitle = function (obj) {
     { color: "#ffffff", font: "SDGothicNeoa-eMd", fontSize: 10.5, },
   ];
   let nameArr = [];
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   obj.text.unshift("About");
   for (let i = 0; i < nameList.length; i++) {
     this.setCreateSetting({ from: "general", to: "subtitle" + obj.list + nameList[i], exception: exceptionList[i] });
@@ -304,30 +304,30 @@ ExecMain.prototype.generalTitle = function (obj) {
 
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, (obj.list + "subtitle"));
+  this.saveSvg(this_ai, (obj.list + "subtitle"), true);
 }
 
 ExecMain.prototype.arrowMaker = function () {
   let this_ai;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   this.mother.lineMaker([[120, 100], [200, 100]], { strokeColor: this.mother.colorpick("#ffffff"), strokeWidth: 5 });
   this.mother.lineMaker([[190, 90], [200, 100], [190, 110]], { strokeColor: this.mother.colorpick("#ffffff"), strokeWidth: 5 });
   this.mother.fit_box(true);
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "arrow0");
+  this.saveSvg(this_ai, "arrow0", true);
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   this.mother.lineMaker([[185, 85], [200, 100], [185, 115]], { strokeColor: this.mother.colorpick("#dddddd"), strokeWidth: 2.75 });
   this.mother.fit_box(true);
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "arrow1");
+  this.saveSvg(this_ai, "arrow1", true);
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   this.mother.lineMaker([[185, 85], [200, 100], [185, 115]], { strokeColor: this.mother.colorpick("#ffffff"), strokeWidth: 2.75 });
   this.mother.fit_box(true);
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "arrow2");
+  this.saveSvg(this_ai, "arrow2", true);
 }
 
 ExecMain.prototype.generalBelow = function (obj) {
@@ -335,7 +335,7 @@ ExecMain.prototype.generalBelow = function (obj) {
   let upDom = []
   let downDom = []
   if (obj.text.length > 0) {
-    this_ai = this.createDoc();
+    this_ai = app.activeDocument;
   }
   for (let i = 0; i < obj.text.length; i++) {
     this.setCreateSetting({
@@ -378,7 +378,7 @@ ExecMain.prototype.generalBelow = function (obj) {
     });
     this.mother.fit_box(true);
 
-    this.saveSvg(this_ai, obj.list + "below");
+    this.saveSvg(this_ai, obj.list + "below", true);
   }
 }
 
@@ -614,17 +614,19 @@ ExecMain.prototype.start = function (dayString) {
   ]
   this.dayString = dayString;
 
+  this.createDoc();
+
   // main vector make
   for (let i = 0; i < this.text.main.length; i++) {
-    temp = {}
+    temp = {};
     temp.text = this.text.main[i].title;
     temp.order = i;
     this.titleMaker(temp);
-    temp = {}
+    temp = {};
     temp.text = this.text.main[i].words;
     temp.order = i;
     this.wordMaker(temp);
-    temp = {}
+    temp = {};
     temp.text = this.text.main[i].images;
     temp.order = i;
     this.imageMaker(temp);
@@ -632,19 +634,21 @@ ExecMain.prototype.start = function (dayString) {
 
   // general make
   for (let d of list) {
-    temp = {}
+    temp = {};
     temp.text = this.text.sub.title[d].words.contents;
     temp.list = d;
     this.generalTitle(temp);
-    temp = {}
+    temp = {};
     temp.text = this.text.sub.below[d].words.contents;
     temp.list = d;
     this.generalBelow(temp);
   }
   this.arrowMaker();
 
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+
   //popup make
-  this.aboutpopup = {}
+  this.aboutpopup = {};
   this.aboutpopup.desktop = new AboutPopup(this.etc.targetFile[0]);
   this.aboutpopup.mobile = new AboutPopup(this.etc.targetFile[1]);
   this.svgPopupMake();

@@ -5,7 +5,9 @@ ExecMain.prototype.generalBelow = function (obj) {
   //create doc
   let upDom = [];
   let downDom = [];
-  if (obj.text.length > 0) { this_ai = this.createDoc(); }
+  if (obj.text.length > 0) {
+    this_ai = this.createDoc();
+  }
   from = "general";
 
   //set contents
@@ -61,7 +63,7 @@ ExecMain.prototype.roomMaker = function (obj) {
   let lines, lineOption;
   let maxMinObj, newRec;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = value;
   contents = wording;
@@ -161,7 +163,7 @@ ExecMain.prototype.roomMaker = function (obj) {
   this.mother.fit_box();
 
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "room_" + to);
+  this.saveSvg(this_ai, "room_" + to, true);
 }
 
 ExecMain.prototype.roomsMaker = function () {
@@ -175,7 +177,7 @@ ExecMain.prototype.reviewMaker = function () {
   const { review: { wording } } = this.text.main;
   let this_ai, from, to, contents, temp;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "review";
   contents = wording;
@@ -189,7 +191,7 @@ ExecMain.prototype.reviewMaker = function () {
   this.mother.fit_box();
 
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, "reviewMark");
+  this.saveSvg(this_ai, "reviewMark", true);
 
 }
 
@@ -197,9 +199,13 @@ ExecMain.prototype.start = function (dayString) {
   const list = [ "desktop", "mobile" ];
   let temp;
 
+  this.createDoc();
+
   this.dayString = dayString;
   this.roomsMaker();
   this.reviewMaker();
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
   // general make
   const { sub } = this.text;

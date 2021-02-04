@@ -50,7 +50,9 @@ ExecMain.prototype.generalBelow = function (obj) {
   //create doc
   let upDom = [];
   let downDom = [];
-  if (obj.text.length > 0) { this_ai = this.createDoc(); }
+  if (obj.text.length > 0) {
+    this_ai = this.createDoc();
+  }
   from = "general";
 
   //set contents
@@ -112,7 +114,7 @@ ExecMain.prototype.searchTitle = function (obj) {
   let this_ai, from, to, temp, colon;
 
   //wording
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "searchTitle_" + flatform + "_" + String(xyz[0]) + String(xyz[1]);
   this.setCreateSetting({ from: from, to: to, exception: { font: "Graphik-Medium" } });
@@ -131,7 +133,7 @@ ExecMain.prototype.searchTitle = function (obj) {
 
   app.doScript("expandall", "contents_maker");
   this.mother.fit_box();
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 }
 
 ExecMain.prototype.searchFactor = function (obj) {
@@ -141,24 +143,24 @@ ExecMain.prototype.searchFactor = function (obj) {
   from = "general";
 
   //off
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   to = "searchFactor_" + flatform + "_off_" + String(xyz[0]) + String(xyz[1]);
   this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#505050" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]).createOutline();
   app.doScript("expandall", "contents_maker");
   this.mother.white_box();
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
   //on
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   to = "searchFactor_" + flatform + "_on_" + String(xyz[0]) + String(xyz[1]);
   this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#2fa678" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]).createOutline();
   app.doScript("expandall", "contents_maker");
   this.mother.white_box();
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 }
 
 ExecMain.prototype.searchMaker = function () {
@@ -174,6 +176,8 @@ ExecMain.prototype.searchMaker = function () {
     }
   }
 
+  this.createDoc();
+
   //make words
   for (let i = 0; i < titleTarget.length; i++) {
     this.searchTitle(titleTarget[i]);
@@ -181,6 +185,8 @@ ExecMain.prototype.searchMaker = function () {
   for (let i = 0; i < factorTarget.length; i++) {
     this.searchFactor(factorTarget[i]);
   }
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
 }
 
@@ -226,7 +232,7 @@ ExecMain.prototype.listTitleDetailTitle = function (obj) {
   const { contents, xyz, flatform } = obj;
   let this_ai, from, to, temp;
 
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "listTitleDetailTitle_" + flatform + "_" + String(xyz[0]) + String(xyz[1]) + String(xyz[2]);
   this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm" } });
@@ -238,7 +244,7 @@ ExecMain.prototype.listTitleDetailTitle = function (obj) {
   asterisk.left = temp.left - 18.1;
   this.mother.fit_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 }
 
 ExecMain.prototype.listTitleDetailChild = function (obj) {
@@ -246,7 +252,7 @@ ExecMain.prototype.listTitleDetailChild = function (obj) {
   const { contents: text, xyz: [ x, y, z ], flatform, exception } = obj;
 
   //off
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "listTitleDetailChildren_off_" + flatform + "_" + String(x) + String(y) + String(z);
   contents = text;
@@ -270,10 +276,10 @@ ExecMain.prototype.listTitleDetailChild = function (obj) {
   temp2.fillColor = this.mother.colorpick("#ececec");
   this.mother.white_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
   //on
-  this_ai = this.createDoc();
+  this_ai = app.activeDocument;
   from = "general";
   to = "listTitleDetailChildren_on_" + flatform + "_" + String(x) + String(y) + String(z);
   contents = text;
@@ -298,7 +304,7 @@ ExecMain.prototype.listTitleDetailChild = function (obj) {
   temp2.fillColor = this.mother.colorpick("#2fa678");
   this.mother.white_box();
   app.doScript("expandall", "contents_maker");
-  this.saveSvg(this_ai, to);
+  this.saveSvg(this_ai, to, true);
 
 }
 
@@ -314,6 +320,8 @@ ExecMain.prototype.listTitleMaker = function () {
     this.listTitleIcon({ contents: icons[i].wording.title, xyz: [ 1, i, 9 ], name: icons[i].name, flatform: "desktop" });
   }
 
+  this.createDoc();
+
   //details - title
   for (let i = 0; i < details.length; i++) {
     this.listTitleDetailTitle({ contents: details[i].title, xyz: [ 2, i, 9 ], flatform: "desktop" });
@@ -324,6 +332,8 @@ ExecMain.prototype.listTitleMaker = function () {
       this.listTitleDetailChild({ contents: details[i].children[j].title, xyz: [ 2, i, j ], flatform: "mobile", exception: {} });
     }
   }
+
+  app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
 
 }
 
@@ -347,6 +357,7 @@ ExecMain.prototype.start = function (dayString) {
     temp.list = d;
     this.generalBelow(temp);
   }
+
   this.arrowMaker();
 
 }
