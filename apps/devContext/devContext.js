@@ -910,10 +910,55 @@ class DevContext extends Array {
 
 
 
+      const sheets = new GoogleSheet();
+      const matrix = await sheets.get_value_inPython("141r_Or5EPIjZYMB6PT3S51N3Mska3u3lzflttVH8KSQ", "설문지 응답 시트1!A2:K10");
+      const stringToDate = function (str) {
+        let tempArr, tempArr2, tempArr3, boo;
+        str = str.replace(/ /g, '');
+        if (/오후/gi.test(str)) {
+          boo = true;
+        } else {
+          boo = false;
+        }
+        str = str.replace(/[가-힣]/gi, '/');
+        tempArr = str.split("//");
+        tempArr2 = tempArr[0].split('.');
+        tempArr3 = tempArr[1].split(':');
+        return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]) + (boo ? 12 : 0), Number(tempArr3[1]), Number(tempArr3[2])));
+      }
+
+
+      // {
+      //   date
+      //   designer
+      //   phone
+      //   address
+      //   detailAddress
+      //   email
+      //   classification
+      //   company
+      //   bankName
+      //   bankAccount
+      //   bankTo
+      //   interiorCareer
+      //   businessNumber
+      //   startDate
+      //   representative
+      //   bankEtc
+      //   stylingCareer
+      //   careerDetail
+      // }
 
 
 
 
+
+
+
+      // console.log(matrix);
+      // console.log(stringToDate(matrix[1][0]))
+      //
+      // "designerPartnershipRaw"
 
 
 
