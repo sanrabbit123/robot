@@ -908,6 +908,98 @@ class DevContext extends Array {
       // const app = new NaverBlogParsing();
       // await app.blogToJson();
 
+      // const sheets = new GoogleSheet();
+      // const sheetsId = "1kvA2euZQVdmG_HcAwuj4Kfpdy3OKmNWC-HhS_H2zRow";
+      // let matrix;
+      // let temp;
+      // let clients, projects;
+      // let cliidArr;
+      //
+      // clients = await back.getClientsByQuery({});
+      // projects = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      //
+      // matrix = [];
+      //
+      // matrix.push([ "성함", "연락처", "상태", "문의일" ]);
+      //
+      // for (let client of clients) {
+      //   temp = [];
+      //   temp.push(client.name);
+      //   temp.push(client.phone);
+      //   temp.push(client.requests[0].analytics.response.status.value);
+      //   temp.push(client.requests[0].request.timeline.toString(true));
+      //
+      //   matrix.push(temp);
+      // }
+      //
+      // await sheets.setting_cleanView_inPython(sheetsId);
+      // await sheets.update_value_inPython(sheetsId, "전체고객", matrix, [ 0, 0 ]);
+      //
+      // matrix = [];
+      //
+      // matrix.push([ "성함", "연락처", "상태", "문의일" ]);
+      //
+      // for (let client of clients) {
+      //   if (client.requests[0].analytics.response.status.value === "응대중") {
+      //     temp = [];
+      //     temp.push(client.name);
+      //     temp.push(client.phone);
+      //     temp.push(client.requests[0].analytics.response.status.value);
+      //     temp.push(client.requests[0].request.timeline.toString(true));
+      //
+      //     matrix.push(temp);
+      //   }
+      // }
+      //
+      // await sheets.update_value_inPython(sheetsId, "응대중", matrix, [ 0, 0 ]);
+      //
+      // cliidArr = [];
+      // for (let project of projects) {
+      //   cliidArr.push({ cliid: project.cliid });
+      // }
+      //
+      // clients = await back.getClientsByQuery({});
+      // for (let project of projects) {
+      //   for (let client of clients) {
+      //     if (project.cliid === client.cliid) {
+      //       project.name = client.name;
+      //       project.phone = client.phone;
+      //     }
+      //   }
+      // }
+      //
+      // matrix = [];
+      //
+      // matrix.push([ "성함", "연락처", "상태" ]);
+      //
+      // for (let project of projects) {
+      //   temp = [];
+      //   temp.push(project.name);
+      //   temp.push(project.phone);
+      //   temp.push(project.process.status.value);
+      //   matrix.push(temp);
+      // }
+      //
+      // console.log(matrix);
+      //
+      // await sheets.update_value_inPython(sheetsId, "전체프로젝트", matrix, [ 0, 0 ]);
+      //
+      // matrix = [];
+      //
+      // matrix.push([ "성함", "연락처", "상태" ]);
+      //
+      // for (let project of projects) {
+      //   if (project.process.status.value === "진행중" || project.process.status.value === "대기") {
+      //     temp = [];
+      //     temp.push(project.name);
+      //     temp.push(project.phone);
+      //     temp.push(project.process.status.value);
+      //     matrix.push(temp);
+      //   }
+      // }
+      // await sheets.update_value_inPython(sheetsId, "진행", matrix, [ 0, 0 ]);
+      //
+
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------

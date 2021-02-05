@@ -863,7 +863,7 @@ ResourceMaker.prototype.launching = async function () {
       whereQuery = {};
       updateQuery = {};
 
-      targetRawContentsArr = await this.back.mongoRead("contentsRaw", { proid: proid }, { home: true });
+      targetRawContentsArr = await this.back.mongoRead("contentsRaw", { proid: proid }, { python: true });
       targetRawContents = targetRawContentsArr[0];
       targetContents = await this.back.getContentsById(this.final.conid);
 
@@ -884,7 +884,7 @@ ResourceMaker.prototype.launching = async function () {
         updateQuery["review.exist"] = false;
       }
 
-      await this.back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { home: true });
+      await this.back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { python: true });
 
     }
 
