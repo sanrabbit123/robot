@@ -908,6 +908,25 @@ class DevContext extends Array {
       // const app = new NaverBlogParsing();
       // await app.blogToJson();
 
+      const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`)
+      const app = new BridgeCloud();
+
+      app.bridgeToSheets({
+        id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
+        model: {
+          date: '문의일',
+          designer: '성함',
+          phone: '연락처',
+          address: '주소',
+          email: '이메일',
+          presentationTimes: '신청 시간'
+        },
+        query: null,
+        from: {
+          where: "bridge",
+          collection: "designerPresentationRaw"
+        }
+      });
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------

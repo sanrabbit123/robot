@@ -573,7 +573,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           },
           query: null,
           from: {
-            where: "local",
+            where: "bridge",
             collection: "designerPartnershipRaw"
           }
         });
@@ -604,7 +604,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           },
           query: null,
           from: {
-            where: "local",
+            where: "bridge",
             collection: "designerPresentationRaw"
           }
         });
