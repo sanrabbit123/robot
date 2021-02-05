@@ -453,10 +453,6 @@ GoogleAnalytics.prototype.getUsersByDate = async function (date = "aMonthAgo", e
           }
         }
 
-        console.log(obj.deviceCategory);
-        console.log(obj.operatingSystem);
-        console.log(obj.mobileDeviceModel);
-
         tempObj.device = {};
         tempObj.device.type = obj.deviceCategory !== undefined && obj.deviceCategory !== '' ? obj.deviceCategory : "(not set)";
         tempObj.device.os = obj.operatingSystem !== undefined && obj.operatingSystem !== '' ? obj.operatingSystem : "(not set)";
@@ -730,50 +726,45 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
       console.log(`analyticsExports_${start}_${end} done`);
     }
 
-    // await MONGOCHOME.connect();
-    //
-    // for (let f of fileNameArr) {
-    //   totalTong = [];
-    //   tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${f}` ]));
-    //   for (let j = 0; j < tempArr.length; j++) {
-    //     totalTong.push(tempArr[tempArr.length - 1 - j]);
-    //   }
-    //   console.log(`analyticsExports read`);
-    //
-    //   for (let i of totalTong) {
-    //     i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
-    //     i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
-    //     for (let j = 0; j < i.history.length; j++) {
-    //       i.history[j].time = new Date(...stringToArr(i.history[j].time));
-    //     }
-    //     for (let j in i.referrer.detail.queryString) {
-    //       if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
-    //         delete i.referrer.detail.queryString[j];
-    //       }
-    //     }
-    //     if (i.source !== undefined) {
-    //       delete i.source;
-    //     }
-    //
-    //     i.device.type = i.device.category;
-    //     i.device.mobileDevice = i.device.model;
-    //     delete i.device.category;
-    //     delete i.device.model;
-    //
-    //     already = await this.back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
-    //     if (already.length !== 0) {
-    //       await this.back.mongoDelete(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
-    //     }
-    //     await this.back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
-    //     console.log(i.userid + " success");
-    //   }
-    // }
-    //
-    // MONGOCHOME.close();
+    await MONGOCHOME.connect();
 
-    // for (let i of fileNameArr) {
-    //   shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
-    // }
+    for (let f of fileNameArr) {
+      totalTong = [];
+      tempArr = JSON.parse(await fileSystem(`readString`, [ `${tempDir}/${f}` ]));
+      for (let j = 0; j < tempArr.length; j++) {
+        totalTong.push(tempArr[tempArr.length - 1 - j]);
+      }
+      console.log(`analyticsExports read`);
+
+      for (let i of totalTong) {
+        i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
+        i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
+        for (let j = 0; j < i.history.length; j++) {
+          i.history[j].time = new Date(...stringToArr(i.history[j].time));
+        }
+        for (let j in i.referrer.detail.queryString) {
+          if (/[\.\/\\\<\>\?\:\;\'\"\!\&\=\+]/g.test(j)) {
+            delete i.referrer.detail.queryString[j];
+          }
+        }
+        if (i.source !== undefined) {
+          delete i.source;
+        }
+
+        already = await this.back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
+        if (already.length !== 0) {
+          await this.back.mongoDelete(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+        }
+        await this.back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
+        console.log(i.userid + " success");
+      }
+    }
+
+    MONGOCHOME.close();
+
+    for (let i of fileNameArr) {
+      shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
+    }
 
   } catch (e) {
     console.log(e);
