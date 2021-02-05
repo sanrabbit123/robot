@@ -203,9 +203,6 @@ BridgeCloud.prototype.bridgeToSheets = async function (obj) {
     }
 
     past = await sheets.get_value_inPython(sheetsId, "A2:" + ABC[columns.length]);
-    for (let i = 0; i < past.length; i++) {
-      matrix.unshift(past[past.length - 1 - i])
-    }
 
     temp = [];
     for (let c of columns) {
