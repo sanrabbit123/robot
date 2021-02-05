@@ -142,10 +142,10 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
 
     if (obj.mode !== undefined) {
       if (obj.mode === "designer") {
-        slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#300_designer" });
+        slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing", channel: "#300_designer" });
       }
     } else {
-      slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! : " + name, channel: "#400_customer" });
+      slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing", channel: "#400_customer" });
     }
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
   } catch (e) {
