@@ -153,6 +153,79 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   }
 }
 
+BridgeCloud.prototype.bridgeToSheets = async function (obj) {
+  const instance = this;
+  const { shell, slack_bot, shellLink, googleSystem } = this.mother;
+  const sheets = googleSystem("sheets");
+  const dateToString = function (dateObject) {
+    const zeroAddition = function (number) {
+      if (number < 10) {
+        return `0${String(number)}`;
+      } else {
+        return `${String(number)}`;
+      }
+    }
+    return `${String(dateObject.getFullYear())}-${zeroAddition(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
+  }
+  const ABC = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+  try {
+
+    const sheetsId = obj.id;
+    let rawJson, model, columns, matrix, past;
+    let temp;
+    let spotQuery, whereQuery;
+
+    model = obj.model;
+    columns = Object.keys(model);
+
+    spotQuery = {};
+    spotQuery[obj.from.where] = true;
+
+    whereQuery = {};
+    if (obj.query !== undefined && obj.query !== null) {
+      whereQuery = obj.query;
+    }
+
+    rawJson = await instance.back.mongoRead(obj.from.collection, whereQuery, spotQuery);
+
+    matrix = [];
+
+    for (let rawObj of rawJson) {
+      temp = [];
+      for (let c of columns) {
+        if (rawObj[c] instanceof Date) {
+          temp.push(dateToString(rawObj[c]));
+        } else {
+          temp.push(rawObj[c]);
+        }
+      }
+      matrix.push(temp);
+    }
+
+    past = await sheets.get_value_inPython(sheetsId, "A2:" + ABC[columns.length]);
+    for (let i = 0; i < past.length; i++) {
+      matrix.unshift(past[past.length - 1 - i])
+    }
+
+    temp = [];
+    for (let c of columns) {
+      temp.push(model[c]);
+    }
+    matrix.unshift(temp);
+
+    await sheets.update_value_inPython(sheetsId, '', matrix, [ 0, 0 ]);
+
+    if (past.length === 0) {
+      await sheets.setting_cleanView_inPython(sheetsId);
+    }
+
+    slack_bot.chat.postMessage({ text: "디자이너 신청 관련 정보를 시트에 업데이트하였습니다! link : " + "https://docs.google.com/spreadsheets/d/" + sheetsId + "?usp=sharing", channel: "#300_designer" });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
@@ -476,6 +549,35 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { local: true });
 
+        instance.bridgeToSheets({
+          id: "1gr_Sm_Wdhl2BuRY809gyw_XrlDgL6nErDS4enI-CajU",
+          model: {
+            date: '문의일',
+            designer: '성함',
+            phone: '연락처',
+            address: '주소',
+            email: '이메일',
+            classification: '사업자 분류',
+            company: '회사명',
+            businessNumber: '사업자 등록번호',
+            startDate: '개업일',
+            representative: '대표자 성함',
+            bankName: '은행명',
+            bankAccount: '계좌번호',
+            bankTo: '수신자',
+            bankEtc: '기타 사항',
+            interiorCareer: '인테리어 경력',
+            stylingCareer: '스타일링 경력',
+            careerDetail: '경력 상세',
+            comeFrom: '유입 경로',
+          },
+          query: null,
+          from: {
+            where: "local",
+            collection: "designerPartnershipRaw"
+          }
+        });
+
       } else {
 
         message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
@@ -489,6 +591,23 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         KAKAO.sendTalk("designerPresentation", filteredObj["designer"], filteredObj["phone"]);
         slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { local: true });
+
+        instance.bridgeToSheets({
+          id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
+          model: {
+            date: '문의일',
+            designer: '성함',
+            phone: '연락처',
+            address: '주소',
+            email: '이메일',
+            presentationTimes: '신청 시간'
+          },
+          query: null,
+          from: {
+            where: "local",
+            collection: "designerPresentationRaw"
+          }
+        });
 
       }
 
