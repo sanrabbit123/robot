@@ -123,26 +123,46 @@ class GoogleAnalytics:
 
         return dumps(result)
 
-    def getClientsByDate(self, startDate, endDate, dimensions):
+    def getClientsByDate(self, startDate, endDate, dimensions, submit=False):
         dimensions.insert(0, { "name": "ga:clientId" })
         dimensions.insert(0, { "name": "ga:dateHourMinute" })
-        result = self.app.reports().batchGet(
-            body={
+
+        if submit:
+            bodyDict = {
                 "reportRequests": [
                     {
                         "viewId": self.viewId,
                         "pageSize": 100000,
-                        "dateRanges": [
-                            { "startDate": startDate, "endDate": endDate }
-                        ],
+                        "dateRanges": [ { "startDate": startDate, "endDate": endDate } ],
                         "dimensions": dimensions,
-                        "metrics": [
-                            { "expression": "ga:pageviews" },
-                        ]
+                        "dimensionFilterClauses": [
+                            {
+                                "filters": [
+                                    {
+                                        "dimensionName": "ga:eventAction",
+                                        "expressions": [ "login" ],
+                                    }
+                                ]
+                            }
+                        ],
+                        "metrics": [ { "expression": "ga:pageviews" } ]
                     }
                 ]
-            }).execute()
+            }
+        else:
+            bodyDict = {
+                "reportRequests": [
+                    {
+                        "viewId": self.viewId,
+                        "pageSize": 100000,
+                        "dateRanges": [ { "startDate": startDate, "endDate": endDate } ],
+                        "dimensions": dimensions,
+                        "metrics": [ { "expression": "ga:pageviews" } ]
+                    }
+                ]
+            }
 
+        result = self.app.reports().batchGet(body=bodyDict).execute()
         return dumps(result)
 
 

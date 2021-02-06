@@ -714,6 +714,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
     let totalTong;
     let tempArr;
     let already;
+    let submitClients, submitClientsIds;
 
     tempDir = process.cwd() + "/temp";
     fileNameArr = [];
@@ -736,6 +737,12 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
       }
       console.log(`analyticsExports read`);
 
+      submitClients = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "getSubmitClientsByDate" ], { startDate: f.split("_")[1].replace(/\.js/gi, ''), endDate: f.split("_")[2].replace(/\.js/gi, ''), dimensions: [] });
+      submitClientsIds = [];
+      for (let i of submitClients.reports[0].data.rows) {
+        submitClientsIds.push(i.dimensions[1]);
+      }
+
       for (let i of totalTong) {
         i.firstTimeline = new Date(...stringToArr(i.firstTimeline));
         i.latestTimeline = new Date(...stringToArr(i.latestTimeline));
@@ -751,6 +758,12 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
           delete i.source;
         }
 
+        if (submitClientsIds.includes(i.userid)) {
+          i.submit = "submit";
+        } else {
+          i.submit = "no";
+        }
+
         already = await this.back.mongoRead(`googleAnalytics_total`, { "userid": i.userid }, { selfMongo: MONGOCHOME });
         if (already.length !== 0) {
           await this.back.mongoDelete(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
@@ -758,9 +771,11 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
         await this.back.mongoCreate(`googleAnalytics_total`, i, { selfMongo: MONGOCHOME });
         console.log(i.userid + " success");
       }
+
     }
 
     MONGOCHOME.close();
+
 
     for (let i of fileNameArr) {
       shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);

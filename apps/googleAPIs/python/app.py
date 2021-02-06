@@ -79,6 +79,11 @@ try:
         result = analyticsApp.getClientsByDate(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
+    elif argv[1] == 'analytics' and argv[2] == 'getSubmitClientsByDate':
+        analyticsApp = GoogleAnalytics()
+        result = analyticsApp.getClientsByDate(data["startDate"], data["endDate"], data["dimensions"], True)
+        print(result)
+
     elif argv[1] == 'analytics' and argv[2] == 'getClientById':
         analyticsApp = GoogleAnalytics()
         result = analyticsApp.getClientById(data["clientId"], data["dimensions"])
