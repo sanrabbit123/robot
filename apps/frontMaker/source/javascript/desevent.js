@@ -169,6 +169,7 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
     width: String(whiteWidth) + ea,
     height: String(whiteHeight) + ea,
     left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
+    transition: "all 0s ease",
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
@@ -517,6 +518,13 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             }
           }, value: "", },
           { name: "presentationTimes", alert: "시간을 선택해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "comeFrom", alert: "유입 경로를 선택해주세요!", valid: function (value) {
             if (false) {
               return false;
             } else {
@@ -1144,7 +1152,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
     },
     {
       name: "presentation",
-      height: { desktop: 251, mobile: 73, },
+      height: { desktop: 299, mobile: 82, },
       desktop: [
         //시간
         {
@@ -1234,10 +1242,95 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             return h;
           }
         },
-        //포트폴리오
+        //유입 경로
         {
           titleStyle: {
             top: 101,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons } = needs;
+            let h;
+            let style;
+            let ea;
+            let svg_clone, svg_dom;
+            let top, left, height, width;
+            let margin;
+            let onoffEvent;
+            let totalWidth;
+
+            ea = "px";
+            top = 101;
+            height = 15;
+            left = 162;
+            margin = 30;
+            totalWidth = left;
+
+            h = document.createDocumentFragment();
+            GeneralJs.stacks["radioDoms1_desktop"] = [];
+            instance.values.data.desktop.comeFrom = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top) + ea,
+                left: String(totalWidth) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+
+              totalWidth += width;
+              totalWidth += margin;
+
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              instance.values.data.desktop.comeFrom.input.push(svg_dom);
+              GeneralJs.stacks["radioDoms1_desktop"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms1_desktop"].length; j++) {
+                if (GeneralJs.stacks["radioDoms1_desktop"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms1_desktop"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms1_desktop"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms1_desktop"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms1_desktop"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms1_desktop"].length; j++) {
+              GeneralJs.stacks["radioDoms1_desktop"][j].addEventListener("click", onoffEvent);
+            }
+
+            return h;
+          }
+        },
+        //포트폴리오
+        {
+          titleStyle: {
+            top: 145,
             left: 0,
           },
           callback: function (needs) {
@@ -1255,7 +1348,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let fileWordingSvg;
 
             ea = "px";
-            top = 101 - 7;
+            top = 145 - 0;
             left = 162;
             grayWidth = 717;
             grayHeight = 128;
@@ -1501,10 +1594,92 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             return h;
           }
         },
+        //유입 경로
+        {
+          titleStyle: {
+            top: 29,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons } = needs;
+            let h;
+            let dom, input;
+            let style, ea;
+            let top, left;
+            let width, height;
+            let svg_clone, svg_dom;
+            let margin;
+            let onoffEvent;
+
+            h = document.createDocumentFragment();
+            ea = "vw";
+            top = 29;
+            left = 36;
+            width = 38;
+
+            margin = 10;
+            height = 2.8;
+
+            GeneralJs.stacks["radioDoms1_mobile"] = [];
+            instance.values.data.mobile.comeFrom = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.1;
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top + ((j < 3) ? 0 : 5.1)) + ea,
+                left: String((j % 3 === 0) ? 26 : ((j % 3 === 1) ? 49.5 : 73)) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              instance.values.data.mobile.comeFrom.input.push(svg_dom);
+              GeneralJs.stacks["radioDoms1_mobile"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+                if (GeneralJs.stacks["radioDoms1_mobile"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+              GeneralJs.stacks["radioDoms1_mobile"][j].addEventListener("click", onoffEvent);
+            }
+
+            return h;
+          }
+        },
         //포트폴리오
         {
           titleStyle: {
-            top: 28,
+            top: 38.9,
             left: 0,
           },
           callback: function (needs) {
@@ -1525,7 +1700,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 28 - 1.5;
+            top = 37.9 - 1.5;
             left = 36;
             grayWidth = 87;
             grayHeight = 20;

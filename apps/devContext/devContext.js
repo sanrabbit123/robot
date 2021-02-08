@@ -1001,9 +1001,8 @@ class DevContext extends Array {
       //
 
 
-      const app = new GoogleAnalytics();
-      await app.analyticsToMongo("2019-03-01", "2019-04-01");
-
+      // const app = new GoogleAnalytics();
+      // await app.analyticsToMongo("2019-03-01", "2019-04-01");
 
 
 

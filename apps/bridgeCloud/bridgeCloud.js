@@ -583,7 +583,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "연락처 : " + filteredObj.phone + "\n";
         message += "이메일 : " + filteredObj.email + "\n";
         message += "주소 : " + filteredObj.address + "\n";
-        message += "설명회 신청 시간 : " + filteredObj.presentationTimes;
+        message += "설명회 신청 시간 : " + filteredObj.presentationTimes + "\n";
+        message += "유입 경로 : " + filteredObj.comeFrom;
 
         KAKAO.sendTalk("designerPresentation", filteredObj["designer"], filteredObj["phone"]);
         slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
@@ -597,7 +598,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             phone: '연락처',
             address: '주소',
             email: '이메일',
-            presentationTimes: '신청 시간'
+            presentationTimes: '신청 시간',
+            comeFrom: '유입 경로',
           },
           query: null,
           from: {

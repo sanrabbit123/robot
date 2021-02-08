@@ -1436,4 +1436,53 @@ Mother.prototype.returnRandoms = function () {
   });
 }
 
+Mother.prototype.cryptoString = function (password, string) {
+  const crypto = require('crypto');
+  const algorithm = 'aes-192-cbc';
+  return new Promise(function (resolve, reject) {
+    crypto.scrypt(password, 'salt', 24, function (err, key) {
+      if (err) {
+        reject(err);
+      } else {
+        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
+        let encrypted = '';
+        cipher.setEncoding('hex');
+        cipher.on('data', function (chunk) {
+          encrypted += chunk;
+        });
+        cipher.on('end', function () {
+          resolve(encrypted);
+        });
+        cipher.write(string);
+        cipher.end();
+      }
+    });
+  });
+}
+
+Mother.prototype.decryptoHash = function (password, hash) {
+  const crypto = require('crypto');
+  const algorithm = 'aes-192-cbc';
+  return new Promise(function (resolve, reject) {
+    crypto.scrypt(password, 'salt', 24, function (err, key) {
+      if (err) {
+        reject(err);
+      } else {
+        const decipher = crypto.createDecipheriv(algorithm, key, Buffer.alloc(16, 0));
+        let decrypted = '';
+        decipher.on('readable', function () {
+          while (null !== (chunk = decipher.read())) {
+            decrypted += chunk.toString('utf8');
+          }
+        });
+        decipher.on('end', function () {
+          resolve(decrypted);
+        });
+        decipher.write(hash, 'hex');
+        decipher.end();
+      }
+    });
+  });
+}
+
 module.exports = Mother;
