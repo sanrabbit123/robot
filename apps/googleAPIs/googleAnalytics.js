@@ -745,9 +745,10 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
       submitClients = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "getSubmitClientsByDate" ], { startDate: f.split("_")[1].replace(/\.js/gi, ''), endDate: f.split("_")[2].replace(/\.js/gi, ''), dimensions: [] });
       submitClientsIds = [];
-      console.log(submitClients);
-      for (let i of submitClients.reports[0].data.rows) {
-        submitClientsIds.push(i.dimensions[1]);
+      if (Array.isArray(submitClients.reports[0].data.rows)) {
+        for (let i of submitClients.reports[0].data.rows) {
+          submitClientsIds.push(i.dimensions[1]);
+        }
       }
 
       for (let i of totalTong) {
