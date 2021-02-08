@@ -627,7 +627,7 @@ GoogleAnalytics.prototype.getSearchData = async function (startDay = "2020-01-01
   }
 }
 
-GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "default") {
+GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "default", endDate = "default") {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
@@ -663,6 +663,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
       let tempArr0, tempArr1, tempArr2;
       let today;
+      let endDateTempArr;
       let resultArr;
       let dateRange;
       let temp;
@@ -681,7 +682,12 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
         startDate = startDate;
       }
 
-      today = new Date();
+      if (endDate === "default") {
+        today = new Date();
+      } else {
+        endDateTempArr = endDate.split("-");
+        today = new Date(Number(endDateTempArr[0]), Number(endDateTempArr[1].replace(/^0/, '')) - 1, Number(endDateTempArr[2].replace(/^0/, '')));
+      }
       if (startDate.valueOf() > today.valueOf()) {
         throw new Error("invaild start date value")
       }
@@ -739,6 +745,7 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
       submitClients = await this.mother.pythonExecute(this.pythonApp, [ "analytics", "getSubmitClientsByDate" ], { startDate: f.split("_")[1].replace(/\.js/gi, ''), endDate: f.split("_")[2].replace(/\.js/gi, ''), dimensions: [] });
       submitClientsIds = [];
+      console.log(submitClients);
       for (let i of submitClients.reports[0].data.rows) {
         submitClientsIds.push(i.dimensions[1]);
       }
