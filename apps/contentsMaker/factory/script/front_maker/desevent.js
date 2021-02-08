@@ -152,7 +152,7 @@ ExecMain.prototype.buttonCheck = function (arr) {
       from = "general";
       to = "b_check" + flatform + String(x) + String(y) + String(z) + "_popup";
       contents = exception.popup.join("\n");
-      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", color: "#ffffff", justification: "LEFT", leading: 34 } });
       this.setParagraph({ from: contents, to: to });
       temp = this.createElements(this_ai, this.createSetting[to]);
       temp = temp.createOutline();
@@ -191,7 +191,7 @@ ExecMain.prototype.buttonWhite = function (arr) {
       from = "general";
       to = "b_white" + flatform + String(x) + String(y) + String(z) + "_popup";
       contents = exception.popup.join("\n");
-      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", color: "#ffffff", justification: "LEFT", leading: 34 } });
       this.setParagraph({ from: contents, to: to });
       temp = this.createElements(this_ai, this.createSetting[to]);
       temp = temp.createOutline();
@@ -249,7 +249,7 @@ ExecMain.prototype.buttonArrow = function (arr) {
       from = "general";
       to = "b_arrow" + flatform + String(x) + String(y) + String(z) + "_popup";
       contents = exception.popup.join("\n");
-      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", color: "#ffffff", justification: "LEFT", leading: 34 } });
       this.setParagraph({ from: contents, to: to });
       temp = this.createElements(this_ai, this.createSetting[to]);
       temp = temp.createOutline();
@@ -307,7 +307,7 @@ ExecMain.prototype.buttonGreen = function (arr) {
       from = "general";
       to = "b_green" + flatform + String(x) + String(y) + String(z) + "_popup";
       contents = exception.popup.join("\n");
-      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-dRg", color: "#ffffff", justification: "LEFT", leading: 34 } });
       this.setParagraph({ from: contents, to: to });
       temp = this.createElements(this_ai, this.createSetting[to]);
       temp = temp.createOutline();
