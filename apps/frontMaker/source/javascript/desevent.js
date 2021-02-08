@@ -1840,7 +1840,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
     },
     {
       name: "partnership",
-      height: { desktop: 857, mobile: 254, },
+      height: { desktop: 908, mobile: 254, },
       desktop: [
         //사업자 구분
         {
@@ -2855,10 +2855,229 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             return h;
           }
         },
-        //유입 경로
+        //홍보 채널
         {
           titleStyle: {
             top: 692,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons, notice } = needs;
+            let h;
+            let style;
+            let ea;
+            let svg_clone, svg_dom;
+            let top, left, height, width;
+            let margin;
+            let popupEvent;
+            let totalWidth;
+
+            console.log(notice);
+            console.log(buttons);
+
+            ea = "px";
+            top = 692;
+            height = 15;
+            left = 162;
+            margin = 30;
+            totalWidth = left;
+
+            h = document.createDocumentFragment();
+            GeneralJs.stacks["specialDoms0_desktop"] = [];
+            instance.values.data.desktop.comeFrom = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top) + ea,
+                left: String(totalWidth) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+
+              totalWidth += width;
+              totalWidth += margin;
+
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.desktop.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              instance.values.data.desktop.comeFrom.input.push(svg_dom);
+              GeneralJs.stacks["specialDoms0_desktop"].push(svg_dom);
+            }
+
+            popupEvent = function (e) {
+              const thisIndex = Number(this.getAttribute("index"));
+
+              let div_clone, svg_clone, svg_dom, div_clone2, input_clone;
+              let input_box;
+              let style;
+              let ea = "px";
+              let height, width;
+              let greenBoxWidth;
+              let inputHeight;
+              let marginLeft;
+
+              height = 15;
+              marginLeft = 25;
+
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[thisIndex].popup.src.desktop;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+
+              greenBoxWidth = width + (marginLeft * 2);
+              inputHeight = 30;
+
+              div_clone = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                top: String(top + 28) + ea,
+                left: String(left) + ea,
+                width: String(greenBoxWidth) + ea,
+                background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+                zIndex: String(1),
+                boxShadow: "0px 5px 16px -9px #606060",
+                animation: "fadeup 0.3s ease forwards",
+                borderRadius: String(3) + ea,
+              };
+              for (let i in style) {
+                div_clone.style[i] = style[i];
+              }
+
+              input_box = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "relative",
+                marginTop: String(marginLeft - 4 + height + 12) + ea,
+                marginBottom: String(marginLeft - 4 + height + 12 - 5) + ea,
+                left: String(marginLeft) + ea,
+                width: String(greenBoxWidth - (marginLeft * 2)) + ea,
+              };
+              for (let i in style) {
+                input_box.style[i] = style[i];
+              }
+
+              div_clone.appendChild(input_box);
+
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(marginLeft - 4) + ea,
+                left: String(marginLeft) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              div_clone.appendChild(svg_dom);
+
+              div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "relative",
+                width: String(greenBoxWidth - (marginLeft * 2)) + ea,
+                height: String(inputHeight) + ea,
+                background: "white",
+                borderRadius: String(3) + ea,
+                opacity: String(0.9),
+                marginBottom: String(5) + ea,
+              }
+              for (let i in style) {
+                div_clone2.style[i] = style[i];
+              }
+
+              input_clone = GeneralJs.nodes.input.cloneNode(true);
+              input_clone.setAttribute("type", "text");
+              style = {
+                position: "relative",
+                width: String(greenBoxWidth - (marginLeft * 2)) + ea,
+                height: String(inputHeight - 3) + ea,
+                background: "transparent",
+                fontFamily: "'Noto Sans KR',sans-serif",
+                letterSpacing: String(-0.3) + ea,
+                wordSpacing: String(-0.5) + ea,
+                color: "#404040",
+                textAlign: "center",
+                overflow: "scroll",
+                fontSize: String(13) + ea,
+                outline: String(0),
+                border: String(0),
+                padding: String(0),
+              }
+              for (let i in style) {
+                input_clone.style[i] = style[i];
+              }
+              input_clone.setAttribute("placeholder", "https://home-liaison.com");
+              div_clone2.appendChild(input_clone);
+
+              input_box.appendChild(div_clone2);
+              div_clone.appendChild(input_box);
+
+              svg_clone = SvgTong.stringParsing(instance.mother.returnPlus("#ffffff"));
+              style = {
+                position: "absolute",
+                bottom: String(marginLeft - 8) + ea,
+                left: "calc(50% - " + String(10) + ea + ")",
+                width: String(14) + ea,
+                height: String(14) + ea,
+                opacity: String(0.9),
+                cursor: "pointer",
+              }
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              div_clone.appendChild(svg_clone);
+
+              svg_clone = SvgTong.stringParsing(instance.mother.returnOk("#ffffff"));
+              style = {
+                position: "absolute",
+                bottom: String(marginLeft - 8) + ea,
+                left: "calc(50% + " + String(10) + ea + ")",
+                width: String(14) + ea,
+                height: String(14) + ea,
+                opacity: String(0.9),
+                cursor: "pointer",
+              }
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              div_clone.appendChild(svg_clone);
+
+
+
+
+              this.parentNode.insertBefore(div_clone, this);
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["specialDoms0_desktop"].length; j++) {
+              GeneralJs.stacks["specialDoms0_desktop"][j].addEventListener("click", popupEvent);
+            }
+
+            return h;
+          }
+        },
+        //유입 경로
+        {
+          titleStyle: {
+            top: 736,
             left: 0,
           },
           callback: function (needs) {
@@ -2873,7 +3092,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let totalWidth;
 
             ea = "px";
-            top = 692;
+            top = 736;
             height = 15;
             left = 162;
             margin = 30;
@@ -2943,7 +3162,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
         //포트폴리오
         {
           titleStyle: {
-            top: 736,
+            top: 780,
             left: 0,
           },
           callback: function (needs) {
@@ -2960,7 +3179,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             let fileWordingSvg;
 
             ea = "px";
-            top = 736 - 7;
+            top = 780 - 0;
             left = 162;
             grayWidth = 717;
             grayHeight = 128;
@@ -4269,14 +4488,14 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             return h;
           }
         },
-        //유입 경로
+        //홍보 채널
         {
           titleStyle: {
             top: 203.2,
             left: 0,
           },
           callback: function (needs) {
-            const { buttons } = needs;
+            const { buttons, notice } = needs;
             let h;
             let dom, input;
             let style, ea;
@@ -4365,10 +4584,106 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             return h;
           }
         },
-        //포트폴리오
+        //유입 경로
         {
           titleStyle: {
             top: 213.3,
+            left: 0,
+          },
+          callback: function (needs) {
+            const { buttons } = needs;
+            let h;
+            let dom, input;
+            let style, ea;
+            let top, left;
+            let width, height;
+            let svg_clone, svg_dom;
+            let margin;
+            let onoffEvent;
+            let line;
+
+            h = document.createDocumentFragment();
+            ea = "vw";
+            top = 213.3;
+            left = 36;
+            width = 38;
+
+            margin = 10;
+            height = 2.8;
+
+            line = GeneralJs.nodes.div.cloneNode(true);
+            style = {
+              position: "absolute",
+              borderTop: "1px dashed #dddddd",
+              width: String(87) + ea,
+              left: String(0) + ea,
+              top: String(top - 10.18 + 1.2) + ea,
+            };
+            for (let i in style) {
+              line.style[i] = style[i];
+            }
+            h.appendChild(line);
+
+            GeneralJs.stacks["radioDoms1_mobile"] = [];
+            instance.values.data.mobile.comeFrom = { type: "radio", input: [] };
+
+            for (let j = 0; j < buttons.length; j++) {
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.off;
+              width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + 0.1;
+              style = {
+                position: "absolute",
+                transition: "opacity 0.3s ease",
+                top: String(top + ((j < 3) ? 0 : 5.1)) + ea,
+                left: String((j % 3 === 0) ? 29 : ((j % 3 === 1) ? 51 : 73)) + ea,
+                width: String(width) + ea,
+                height: String(height) + ea,
+                cursor: "pointer",
+              };
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_clone = SvgTong.tongMaker();
+              svg_clone.src = buttons[j].src.mobile.on;
+              for (let i in style) {
+                svg_clone.style[i] = style[i];
+              }
+              svg_clone.style.opacity = String(0);
+              svg_dom = SvgTong.parsing(svg_clone);
+              h.appendChild(svg_dom);
+              svg_dom.setAttribute("value", buttons[j].title);
+              svg_dom.setAttribute("selected", "false");
+              svg_dom.setAttribute("index", j);
+              instance.values.data.mobile.comeFrom.input.push(svg_dom);
+              GeneralJs.stacks["radioDoms1_mobile"].push(svg_dom);
+            }
+
+            onoffEvent = function (e) {
+              const thisIndex = this.getAttribute("index");
+              for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+                if (GeneralJs.stacks["radioDoms1_mobile"][j].getAttribute("index") !== thisIndex) {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(0);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "false");
+                } else {
+                  GeneralJs.stacks["radioDoms1_mobile"][j].style.opacity = String(1);
+                  GeneralJs.stacks["radioDoms1_mobile"][j].setAttribute("selected", "true");
+                }
+              }
+            }
+
+            for (let j = 0; j < GeneralJs.stacks["radioDoms1_mobile"].length; j++) {
+              GeneralJs.stacks["radioDoms1_mobile"][j].addEventListener("click", onoffEvent);
+            }
+
+            return h;
+          }
+        },
+        //포트폴리오
+        {
+          titleStyle: {
+            top: 223.2,
             left: 0,
           },
           callback: function (needs) {
@@ -4388,7 +4703,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
             h = document.createDocumentFragment();
             ea = "vw";
-            top = 213.3 - 1.5;
+            top = 223.2 - 1.5;
             left = 36;
             grayWidth = 87;
             grayHeight = 20;

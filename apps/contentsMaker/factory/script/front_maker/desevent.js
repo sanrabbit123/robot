@@ -146,6 +146,21 @@ ExecMain.prototype.buttonCheck = function (arr) {
     app.doScript("expandall", "contents_maker");
     this.saveSvg(this_ai, to, true);
 
+    //popup
+    if (exception.popup !== undefined) {
+      this_ai = app.activeDocument;
+      from = "general";
+      to = "b_check" + flatform + String(x) + String(y) + String(z) + "_popup";
+      contents = exception.popup.join("\n");
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.fit_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to, true);
+    }
+
   }
 }
 
@@ -169,6 +184,21 @@ ExecMain.prototype.buttonWhite = function (arr) {
     this.mother.fit_box();
     app.doScript("expandall", "contents_maker");
     this.saveSvg(this_ai, to, true);
+
+    //popup
+    if (exception.popup !== undefined) {
+      this_ai = app.activeDocument;
+      from = "general";
+      to = "b_white" + flatform + String(x) + String(y) + String(z) + "_popup";
+      contents = exception.popup.join("\n");
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.fit_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to, true);
+    }
 
   }
 }
@@ -213,6 +243,21 @@ ExecMain.prototype.buttonArrow = function (arr) {
     app.doScript("expandall", "contents_maker");
     this.saveSvg(this_ai, to, true);
 
+    //popup
+    if (exception.popup !== undefined) {
+      this_ai = app.activeDocument;
+      from = "general";
+      to = "b_arrow" + flatform + String(x) + String(y) + String(z) + "_popup";
+      contents = exception.popup.join("\n");
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.fit_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to, true);
+    }
+
   }
 }
 
@@ -256,6 +301,21 @@ ExecMain.prototype.buttonGreen = function (arr) {
     app.doScript("expandall", "contents_maker");
     this.saveSvg(this_ai, to, true);
 
+    //popup
+    if (exception.popup !== undefined) {
+      this_ai = app.activeDocument;
+      from = "general";
+      to = "b_green" + flatform + String(x) + String(y) + String(z) + "_popup";
+      contents = exception.popup.join("\n");
+      this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-cLt", color: "#ffffff", justification: "LEFT", leading: 34 } });
+      this.setParagraph({ from: contents, to: to });
+      temp = this.createElements(this_ai, this.createSetting[to]);
+      temp = temp.createOutline();
+      this.mother.fit_box();
+      app.doScript("expandall", "contents_maker");
+      this.saveSvg(this_ai, to, true);
+    }
+
   }
 }
 
@@ -279,8 +339,13 @@ ExecMain.prototype.buttonMaker = function () {
     for (let j = 0; j < main[i].children.length; j++) {
       if (main[i].children[j].buttons !== undefined) {
         for (let k = 0; k < main[i].children[j].buttons.length; k++) {
-          buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
-          buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
+          if (main[i].children[j].buttons[k].popup !== undefined) {
+            buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: { popup: main[i].children[j].buttons[k].popup.description["desktop"] } });
+            buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: { popup: main[i].children[j].buttons[k].popup.description["mobile"] } });
+          } else {
+            buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
+            buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
+          }
         }
       }
     }

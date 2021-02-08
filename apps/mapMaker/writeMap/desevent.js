@@ -59,8 +59,13 @@ module.exports = function(map, source_rawArr) {
     for (let j = 0; j < main[i].children.length; j++) {
       if (main[i].children[j].buttons !== undefined) {
         for (let k = 0; k < main[i].children[j].buttons.length; k++) {
-          buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
-          buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
+          if (main[i].children[j].buttons[k].popup !== undefined) {
+            buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: { popup: main[i].children[j].buttons[k].popup.description["desktop"] } });
+            buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: { popup: main[i].children[j].buttons[k].popup.description["mobile"] } });
+          } else {
+            buttons.desktop[main[i].children[j].buttons[k].type.desktop].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "desktop", exception: {} });
+            buttons.mobile[main[i].children[j].buttons[k].type.mobile].push({ contents: main[i].children[j].buttons[k].title, xyz: [ i, j, k ], flatform: "mobile", exception: {} });
+          }
         }
       }
     }
@@ -134,6 +139,15 @@ module.exports = function(map, source_rawArr) {
       }
 
     }}
+
+    if (exception.popup !== undefined) {
+      temp_reg = new RegExp("^b_check" + flatform + String(x) + String(y) + String(z) + "_popup");
+      for (let b of source_rawArr) { if (temp_reg.test(b)) {
+        main[x].children[y].buttons[z].popup.src[flatform] = b;
+        svgTong.sync.push(b);
+      }}
+    }
+
   }
 
   //buttonWhite
@@ -160,6 +174,14 @@ module.exports = function(map, source_rawArr) {
         svgTong.sync.push(b);
       }
     }}
+
+    if (exception.popup !== undefined) {
+      temp_reg = new RegExp("^b_white" + flatform + String(x) + String(y) + String(z) + "_popup");
+      for (let b of source_rawArr) { if (temp_reg.test(b)) {
+        main[x].children[y].buttons[z].popup.src[flatform] = b;
+        svgTong.sync.push(b);
+      }}
+    }
   }
 
   //buttonArrow
@@ -208,6 +230,14 @@ module.exports = function(map, source_rawArr) {
         svgTong.sync.push(b);
       }
     }}
+
+    if (exception.popup !== undefined) {
+      temp_reg = new RegExp("^b_arrow" + flatform + String(x) + String(y) + String(z) + "_popup");
+      for (let b of source_rawArr) { if (temp_reg.test(b)) {
+        main[x].children[y].buttons[z].popup.src[flatform] = b;
+        svgTong.sync.push(b);
+      }}
+    }
   }
 
   //buttonGreen
@@ -256,6 +286,14 @@ module.exports = function(map, source_rawArr) {
         svgTong.sync.push(b);
       }
     }}
+
+    if (exception.popup !== undefined) {
+      temp_reg = new RegExp("^b_green" + flatform + String(x) + String(y) + String(z) + "_popup");
+      for (let b of source_rawArr) { if (temp_reg.test(b)) {
+        main[x].children[y].buttons[z].popup.src[flatform] = b;
+        svgTong.sync.push(b);
+      }}
+    }
   }
 
   //notice
