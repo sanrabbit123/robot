@@ -4856,7 +4856,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
               greenBoxWidth = 87.9;
               inputHeight = 8;
-              iconWidth = 2;
+              iconWidth = 4;
 
               //cancel_back
               cancel_back = GeneralJs.nodes.div.cloneNode(true);
@@ -4975,9 +4975,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                     width: String(greenBoxWidth - (marginLeft * 2)) + ea,
                     height: String(inputHeight) + ea,
                     background: "white",
-                    borderRadius: String(3) + ea,
+                    borderRadius: String(3) + "px",
                     opacity: String(0.9),
-                    marginBottom: String(5) + ea,
+                    marginBottom: String(1.5) + ea,
                   }
                   for (let i in style) {
                     div_clone2.style[i] = style[i];
@@ -4987,15 +4987,15 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   style = {
                     position: "relative",
                     width: String(greenBoxWidth - (marginLeft * 2)) + ea,
-                    height: String(inputHeight - 3) + ea,
+                    height: String(7.2) + ea,
                     background: "transparent",
                     fontFamily: "'Noto Sans KR',sans-serif",
-                    letterSpacing: String(-0.3) + ea,
-                    wordSpacing: String(-0.5) + ea,
+                    letterSpacing: String(-0.3) + "px",
+                    wordSpacing: String(-0.5) + "px",
                     color: "#404040",
                     textAlign: "center",
                     overflow: "scroll",
-                    fontSize: String(13) + ea,
+                    fontSize: String(3.2) + ea,
                     outline: String(0),
                     border: String(0),
                     padding: String(0),
@@ -5018,9 +5018,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   width: String(greenBoxWidth - (marginLeft * 2)) + ea,
                   height: String(inputHeight) + ea,
                   background: "white",
-                  borderRadius: String(3) + ea,
+                  borderRadius: String(3) + "px",
                   opacity: String(0.9),
-                  marginBottom: String(5) + ea,
+                  marginBottom: String(1.5) + ea,
                 }
                 for (let i in style) {
                   div_clone2.style[i] = style[i];
@@ -5030,15 +5030,15 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 style = {
                   position: "relative",
                   width: String(greenBoxWidth - (marginLeft * 2)) + ea,
-                  height: String(inputHeight - 3) + ea,
+                  height: String(7.2) + ea,
                   background: "transparent",
                   fontFamily: "'Noto Sans KR',sans-serif",
-                  letterSpacing: String(-0.3) + ea,
-                  wordSpacing: String(-0.5) + ea,
+                  letterSpacing: String(-0.3) + "px",
+                  wordSpacing: String(-0.5) + "px",
                   color: "#404040",
                   textAlign: "center",
                   overflow: "scroll",
-                  fontSize: String(13) + ea,
+                  fontSize: String(3.2) + ea,
                   outline: String(0),
                   border: String(0),
                   padding: String(0),
@@ -5060,7 +5060,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               style = {
                 position: "absolute",
                 bottom: String(marginLeft) + ea,
-                left: "calc(50% - " + String(10 + (iconWidth / 2)) + ea + ")",
+                left: "calc(50% - " + String(3 + (iconWidth / 2)) + ea + ")",
                 width: String(iconWidth) + ea,
                 height: String(iconWidth) + ea,
                 opacity: String(0.9),
@@ -5075,7 +5075,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 let style;
                 let ea;
 
-                ea = "px";
+                ea = "vw";
 
                 div_clone2 = GeneralJs.nodes.div.cloneNode(true);
                 style = {
@@ -5083,9 +5083,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   width: String(greenBoxWidth - (marginLeft * 2)) + ea,
                   height: String(inputHeight) + ea,
                   background: "white",
-                  borderRadius: String(3) + ea,
+                  borderRadius: String(3) + "px",
                   opacity: String(0.9),
-                  marginBottom: String(5) + ea,
+                  marginBottom: String(1.5) + ea,
                 }
                 for (let i in style) {
                   div_clone2.style[i] = style[i];
@@ -5096,15 +5096,15 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 style = {
                   position: "relative",
                   width: String(greenBoxWidth - (marginLeft * 2)) + ea,
-                  height: String(inputHeight - 3) + ea,
+                  height: String(7.2) + ea,
                   background: "transparent",
                   fontFamily: "'Noto Sans KR',sans-serif",
-                  letterSpacing: String(-0.3) + ea,
-                  wordSpacing: String(-0.5) + ea,
+                  letterSpacing: String(-0.3) + "px",
+                  wordSpacing: String(-0.5) + "px",
                   color: "#404040",
                   textAlign: "center",
                   overflow: "scroll",
-                  fontSize: String(13) + ea,
+                  fontSize: String(3.2) + ea,
                   outline: String(0),
                   border: String(0),
                   padding: String(0),
@@ -5125,7 +5125,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               style = {
                 position: "absolute",
                 bottom: String(marginLeft) + ea,
-                left: "calc(50% + " + String(10 - (iconWidth / 2)) + ea + ")",
+                left: "calc(50% + " + String(3 - (iconWidth / 2)) + ea + ")",
                 width: String(iconWidth) + ea,
                 height: String(iconWidth) + ea,
                 opacity: String(0.9),

@@ -1006,6 +1006,13 @@ class DevContext extends Array {
 
 
 
+      const { requestSystem } = this.mother;
+
+      await requestSystem("172.30.1.11:8080/illustrator?type=voice&text=aaaa");
+
+
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
 

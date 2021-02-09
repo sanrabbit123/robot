@@ -176,6 +176,16 @@ Robot.prototype.analyticsParsing = async function () {
   }
 }
 
+Robot.prototype.tellVoice = async function (text) {
+  try {
+    const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
+    const voice = new PlayAudio();
+    await voice.textToVoice(text);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -241,6 +251,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/analyticsParsing/gi.test(process.argv[2])) {
       await this.analyticsParsing();
+
+    } else if (/voice/gi.test(process.argv[2]) && process.argv[3] !== undefined) {
+      await this.tellVoice(process.argv[3]);
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
