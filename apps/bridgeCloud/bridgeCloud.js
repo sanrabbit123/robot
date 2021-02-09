@@ -144,8 +144,8 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
 
     if (obj.mode === "client") {
       message = name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
-      message = "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
-      message = "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
+      message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
     } else if (obj.mode === "designer") {
       message = "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
