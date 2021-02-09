@@ -180,6 +180,9 @@ Robot.prototype.tellVoice = async function (text) {
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
     const voice = new PlayAudio();
+    if (/__split__/gi.test(text)) {
+      text = text.replace(/__split__/gi, "\n");
+    }
     await voice.textToVoice(text);
   } catch (e) {
     console.log(e);

@@ -49,6 +49,9 @@ async def runAi(button):
 async def illustrator(request):
     order = request.rel_url.query
 
+    if order["type"] == "voice":
+        order["id"] = re.sub(pattern="\n", string=order["id"], repl="__split__")
+
     if runProcess[order["type"]] == 1:
         runList[order["type"]].append(order["id"])
         return web.Response(text=order["id"] + " make pass")
