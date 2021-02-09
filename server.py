@@ -48,21 +48,22 @@ async def runAi(button):
 
 async def illustrator(request):
     order = request.rel_url.query
+    targetStr = str(order["id"])
 
     if order["type"] == "voice":
-        order["id"] = re.sub(pattern="\n", string=order["id"], repl="__split__")
+        targetStr = re.sub(pattern="\n", string=targetStr, repl="__split__")
 
     if runProcess[order["type"]] == 1:
-        runList[order["type"]].append(order["id"])
-        return web.Response(text=order["id"] + " make pass")
+        runList[order["type"]].append(targetStr)
+        return web.Response(text=targetStr + " make pass")
 
     elif runProcess[order["type"]] == 2:
-        return web.Response(text=order["id"] + " make fail")
+        return web.Response(text=targetStr + " make fail")
 
     elif runProcess[order["type"]] == 0:
-        runList[order["type"]].append(order["id"])
+        runList[order["type"]].append(targetStr)
         asyncio.create_task(runAi(order["type"]))
-        return web.Response(text=order["id"] + " make pass")
+        return web.Response(text=targetStr + " make pass")
 
 
 async def mongoToJson():
