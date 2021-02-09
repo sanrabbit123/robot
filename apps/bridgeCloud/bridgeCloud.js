@@ -119,13 +119,13 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   const instance = this;
   const { shell, slack_bot, shellLink, googleSystem } = this.mother;
   try {
-    const { tong, name } = obj;
+    const { tong, folder } = obj;
     let tongKeys = Object.keys(tong);
     const targetFolder = '1zB5SdQ1PLoE37870wlSBWk01AJvXwSRo';
     const googleDrive = googleSystem("drive");
 
     //make client folder
-    const folderId = await googleDrive.makeFolder_andMove(name, targetFolder);
+    const folderId = await googleDrive.makeFolder_andMove(folder, targetFolder);
 
     //make detail folders
     let detailFolderId = [];
@@ -143,16 +143,16 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
     let message = "";
 
     if (obj.mode === "client") {
-      message = name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
+      message = obj.name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
       message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
       message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
     } else if (obj.mode === "designer") {
-      message = "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
     }
 
-    shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
+    shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + folder)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
   }
@@ -728,7 +728,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: cilentFolderName, mode: "client", cliid: cliid });
+          instance.bridgeToGoogle({ tong: fileTong, name: name, mode: "client", cliid: cliid, folder: cilentFolderName });
 
           //kakao and slack
           KAKAO.sendTalk("photo", name, phone);
@@ -809,7 +809,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: designerFolderName, mode: "designer" });
+          instance.bridgeToGoogle({ tong: fileTong, folder: designerFolderName, mode: "designer" });
 
           //kakao and slack
           // KAKAO.sendTalk("photo", designer, phone);
