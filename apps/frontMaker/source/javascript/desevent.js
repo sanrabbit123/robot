@@ -566,8 +566,6 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
         }
       }
 
-      console.log(targetValues)
-
       boo = false;
       for (let c of allColumns) {
         if (targetValues[c.name].type === "text") {
@@ -2981,6 +2979,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               let marginLeft;
               let iconWidth;
               let tempArr;
+              let okEvent;
 
               height = 15;
               marginLeft = 25;
@@ -3061,6 +3060,38 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 tempArr = valueTong[thisIndex].value.split("__split__");
               }
 
+              okEvent = function (e) {
+                let totalValue;
+
+                totalValue = '';
+
+                for (let i of GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)]) {
+                  if (i.value !== "") {
+                    if (!/^http/.test(i.value)) {
+                      totalValue += "https://";
+                    }
+                    totalValue += i.value.replace(/=/g, encodeURIComponent('=')).replace(/&/g, encodeURIComponent('&'));
+                    totalValue += "__split__";
+                  }
+                }
+
+                if (totalValue !== '') {
+                  totalValue = totalValue.slice(0, -9);
+                }
+
+                valueTong[thisIndex].value = totalValue;
+
+                GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
+                if (totalValue !== '') {
+                  GeneralJs.stacks["specialDoms0_desktop"][thisIndex].style.opacity = String(1);
+                } else {
+                  GeneralJs.stacks["specialDoms0_desktop"][thisIndex].style.opacity = String(0);
+                }
+
+                div_clone.parentNode.removeChild(cancel_back);
+                div_clone.parentNode.removeChild(div_clone);
+              }
+
               if (tempArr === null) {
                 div_clone2 = GeneralJs.nodes.div.cloneNode(true);
                 style = {
@@ -3097,6 +3128,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   input_clone.style[i] = style[i];
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : "https://blog.naver.com/homeliaison"));
+                input_clone.addEventListener("keypress", function (e) {
+                  if (e.keyCode === 13) {
+                    okEvent.call(this, e);
+                  }
+                });
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)].push(input_clone);
                 div_clone2.appendChild(input_clone);
                 input_box.appendChild(div_clone2);
@@ -3139,6 +3175,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                     input_clone.style[i] = style[i];
                   }
                   input_clone.value = tempArr[z];
+                  input_clone.addEventListener("keypress", function (e) {
+                    if (e.keyCode === 13) {
+                      okEvent.call(this, e);
+                    }
+                  });
                   GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)].push(input_clone);
                   div_clone2.appendChild(input_clone);
                   input_box.appendChild(div_clone2);
@@ -3182,11 +3223,15 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   input_clone.style[i] = style[i];
                 }
                 input_clone.setAttribute("placeholder", "https://www.instagram.com/homeliaison");
+                input_clone.addEventListener("keypress", function (e) {
+                  if (e.keyCode === 13) {
+                    okEvent.call(this, e);
+                  }
+                });
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)].push(input_clone);
                 div_clone2.appendChild(input_clone);
                 input_box.appendChild(div_clone2);
               }
-
 
               div_clone.appendChild(input_box);
 
@@ -3248,6 +3293,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   input_clone.style[i] = style[i];
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : "https://blog.naver.com/homeliaison"));
+                input_clone.addEventListener("keypress", function (e) {
+                  if (e.keyCode === 13) {
+                    okEvent.call(this, e);
+                  }
+                });
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)].push(input_clone);
                 div_clone2.appendChild(input_clone);
 
@@ -3269,39 +3319,8 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               for (let i in style) {
                 svg_clone.style[i] = style[i];
               }
-              svg_clone.addEventListener("click", function (e) {
-                let totalValue;
-
-                totalValue = '';
-
-                for (let i of GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)]) {
-                  if (i.value !== "") {
-                    if (!/^http/.test(i.value)) {
-                      totalValue += "https://";
-                    }
-                    totalValue += i.value.replace(/=/g, encodeURIComponent('=')).replace(/&/g, encodeURIComponent('&'));
-                    totalValue += "__split__";
-                  }
-                }
-
-                if (totalValue !== '') {
-                  totalValue = totalValue.slice(0, -9);
-                }
-
-                valueTong[thisIndex].value = totalValue;
-
-                GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
-                if (totalValue !== '') {
-                  GeneralJs.stacks["specialDoms0_desktop"][thisIndex].style.opacity = String(1);
-                } else {
-                  GeneralJs.stacks["specialDoms0_desktop"][thisIndex].style.opacity = String(0);
-                }
-
-                div_clone.parentNode.removeChild(cancel_back);
-                div_clone.parentNode.removeChild(div_clone);
-              });
+              svg_clone.addEventListener("click", okEvent);
               div_clone.appendChild(svg_clone);
-
               this.parentNode.insertBefore(div_clone, this);
 
               cancel_back.addEventListener("click", function (e) {
