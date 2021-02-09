@@ -1840,7 +1840,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
     },
     {
       name: "partnership",
-      height: { desktop: 908, mobile: 254, },
+      height: { desktop: 908, mobile: 264, },
       desktop: [
         //사업자 구분
         {
@@ -4896,7 +4896,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               style = {
                 position: "relative",
                 marginTop: String(marginLeft - 4 + height + 7.5) + ea,
-                marginBottom: String(marginLeft - 4 + height) + ea,
+                marginBottom: String(marginLeft - 4 + height + 1.5) + ea,
                 left: String(marginLeft) + ea,
                 width: String(greenBoxWidth - (marginLeft * 2)) + ea,
               };

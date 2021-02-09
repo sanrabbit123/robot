@@ -140,13 +140,18 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       }
     }
 
-    if (obj.mode !== undefined) {
-      if (obj.mode === "designer") {
-        slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing", channel: "#300_designer" });
-      }
-    } else {
-      slack_bot.chat.postMessage({ text: "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing", channel: "#400_customer" });
+    let message = "";
+
+    if (obj.mode === "client") {
+      message = name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
+      message = "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
+      message = "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+    } else if (obj.mode === "designer") {
+      message = "파일 전송을 완료하였습니다! (" + name + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
     }
+
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + name)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -709,12 +714,25 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             }
           }
 
+          //parsing cliid
+          let clientRows, cliid;
+          if (phone !== "010-2747-3403") {
+            clientRows = await instance.back.getClientsByQuery({ phone: phone }, { withTools: false, selfMongo: MONGOC });
+          } else {
+            clientRows = [ { cliid: "테스트" } ];
+          }
+          if (clientRows.length === 0) {
+            cliid = "아이디 알 수 없음";
+          } else {
+            cliid = clientRows[0].cliid;
+          }
+
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: cilentFolderName });
+          instance.bridgeToGoogle({ tong: fileTong, name: cilentFolderName, mode: "client", cliid: cliid });
 
           //kakao and slack
           KAKAO.sendTalk("photo", name, phone);
-          slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#400_customer" });
+          slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
 
           //end
           res.set({
