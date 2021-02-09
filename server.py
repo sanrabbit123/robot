@@ -51,7 +51,7 @@ async def illustrator(request):
     targetStr = str(order["id"])
 
     if order["type"] == "voice":
-        targetStr = re.sub(pattern="\n", string=targetStr, repl="__split__")
+        targetStr = re.sub(pattern=" ", string=targetStr, repl="__split__", flags=re.I)
 
     if runProcess[order["type"]] == 1:
         runList[order["type"]].append(targetStr)
