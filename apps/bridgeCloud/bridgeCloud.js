@@ -723,8 +723,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
           if (clientRows.length === 0) {
             cliid = "아이디 알 수 없음";
-          } else {
+          } else if (phone !== "010-2747-3403") {
             cliid = clientRows[0].cliid;
+            if (clientRows[0].requests[0].analytics.response === "드랍") {
+              await instance.back.updateClient([ { cliid: clientRows[0].cliid }, { "requests.0.analytics.response.status": "응대중" } ], { selfMongo: MONGOC });
+            }
+          } else if (phone === "010-2747-3403") {
+            cliid = "테스트";
           }
 
           //upload google drive
