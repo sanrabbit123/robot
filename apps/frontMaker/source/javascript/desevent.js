@@ -338,7 +338,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
       const { mode, data } = instance.values;
       const targetValues = data[flatform];
       let columns, allColumns;
-      let temp, tempValue, boo;
+      let temp, tempValue, tempString, boo;
       let finalObj;
       let formData;
 
@@ -478,6 +478,13 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             } else {
               return true;
             }
+          }, value: "", },
+          { name: "channel", alert: "홍보 채널을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
           }, value: "", }
         ];
       } else {
@@ -559,6 +566,8 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
         }
       }
 
+      console.log(targetValues)
+
       boo = false;
       for (let c of allColumns) {
         if (targetValues[c.name].type === "text") {
@@ -569,6 +578,17 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
           } else {
             targetValues[c.name].value = targetValues[c.name].input.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/\n/g, '__space__').trim().replace(/\=/g, '').replace(/\&/g, '');
           }
+
+        } else if (targetValues[c.name].type === "array") {
+          tempString = '';
+          for (let singleInput of targetValues[c.name].input) {
+            tempString += singleInput.value;
+            tempString += "__input__";
+          }
+          if (tempString.length > 0) {
+            tempString = tempString.slice(0, -9);
+          }
+          targetValues[c.name].value = tempString;
         } else {
           temp = false;
           for (let svg of targetValues[c.name].input) {
@@ -589,7 +609,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
       }
 
       for (let i in targetValues) {
-        finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '');
+        finalObj[i] = targetValues[i].value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\"\'\;\<\>]/gi, '');
       }
 
       instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {

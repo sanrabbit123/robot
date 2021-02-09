@@ -200,6 +200,8 @@ BridgeCloud.prototype.bridgeToSheets = async function (obj) {
       for (let c of columns) {
         if (rawObj[c] instanceof Date) {
           temp.push(dateToString(rawObj[c]));
+        } else if (Array.isArray(rawObj[c])) {
+          temp.push(rawObj[c].join(", "));
         } else {
           temp.push(rawObj[c]);
         }
@@ -511,17 +513,40 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         return `${String(dateObject.getFullYear())}-${zeroAddition(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
       }
       let filteredObj, message;
+      let tempArr;
+      let tempArr0, tempArr1;
       console.log("request get");
 
       filteredObj = {};
       for (let i in resultObj) {
         if (i !== "mode") {
-          filteredObj[i] = resultObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\/\"\'\:\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
+          filteredObj[i] = resultObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\"\'\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
         }
       }
+
+      //date parsing
       filteredObj.date = new Date();
+
+      //address parsing
       filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
       delete filteredObj.detailAddress;
+
+      //channel parsing
+      tempArr = filteredObj.channel.split("__input__");
+      tempArr0 = tempArr[0].split("__split__");
+      tempArr1 = tempArr[1].split("__split__");
+      if (tempArr0.length === 1 && tempArr0[0] === '') {
+        filteredObj.webChannel = [];
+      } else {
+        filteredObj.webChannel = tempArr0;
+      }
+
+      if (tempArr1.length === 1 && tempArr1[0] === '') {
+        filteredObj.snsChannel = [];
+      } else {
+        filteredObj.snsChannel = tempArr1;
+      }
+      delete filteredObj.channel;
 
       console.log(filteredObj);
 
@@ -545,6 +570,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "인테리어 경력 : " + filteredObj.interiorCareer + "\n";
         message += "스타일링 경력 : " + filteredObj.stylingCareer + "\n";
         message += "경력 상세 : " + filteredObj.careerDetail + "\n";
+        message += "홈페이지 : " + (filteredObj.webChannel.length > 1 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
+        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 1 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
         KAKAO.sendTalk("designerPartnership", filteredObj["designer"], filteredObj["phone"]);
@@ -571,6 +598,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             interiorCareer: '인테리어 경력',
             stylingCareer: '스타일링 경력',
             careerDetail: '경력 상세',
+            webChannel: '홈페이지',
+            snsChannel: 'SNS 채널',
             comeFrom: '유입 경로',
           },
           query: null,
