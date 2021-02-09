@@ -725,7 +725,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             cliid = "아이디 알 수 없음";
           } else if (phone !== "010-2747-3403") {
             cliid = clientRows[0].cliid;
-            if (clientRows[0].requests[0].analytics.response === "드랍") {
+            if (clientRows[0].requests[0].analytics.response.status === "드랍") {
               await instance.back.updateClient([ { cliid: clientRows[0].cliid }, { "requests.0.analytics.response.status": "응대중" } ], { selfMongo: MONGOC });
             }
           } else if (phone === "010-2747-3403") {
