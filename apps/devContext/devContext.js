@@ -20,6 +20,7 @@ const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
 const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
+const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
 
 class DevContext extends Array {
 
@@ -1006,9 +1007,9 @@ class DevContext extends Array {
 
 
 
-      const { requestSystem } = this.mother;
+      const app = new SpawnCatfish();
+      await app.spawnLaunching(false);
 
-      await requestSystem("172.30.1.11:8080/illustrator?type=voice&text=aaaa");
 
 
 
