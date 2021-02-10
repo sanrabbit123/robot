@@ -531,26 +531,26 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
       delete filteredObj.detailAddress;
 
-      //channel parsing
-      tempArr = filteredObj.channel.split("__input__");
-      tempArr0 = tempArr[0].split("__split__");
-      tempArr1 = tempArr[1].split("__split__");
-      if (tempArr0.length === 1 && tempArr0[0] === '') {
-        filteredObj.webChannel = [];
-      } else {
-        filteredObj.webChannel = tempArr0;
-      }
-
-      if (tempArr1.length === 1 && tempArr1[0] === '') {
-        filteredObj.snsChannel = [];
-      } else {
-        filteredObj.snsChannel = tempArr1;
-      }
-      delete filteredObj.channel;
-
       console.log(filteredObj);
 
       if (resultObj.mode === "partnership") {
+
+        //channel parsing
+        tempArr = filteredObj.channel.split("__input__");
+        tempArr0 = tempArr[0].split("__split__");
+        tempArr1 = tempArr[1].split("__split__");
+        if (tempArr0.length === 1 && tempArr0[0] === '') {
+          filteredObj.webChannel = [];
+        } else {
+          filteredObj.webChannel = tempArr0;
+        }
+
+        if (tempArr1.length === 1 && tempArr1[0] === '') {
+          filteredObj.snsChannel = [];
+        } else {
+          filteredObj.snsChannel = tempArr1;
+        }
+        delete filteredObj.channel;
 
         message = "새로운 디자이너 파트너십 신청서가 도착했습니다! \n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";

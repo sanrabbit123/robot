@@ -1007,15 +1007,12 @@ class DevContext extends Array {
 
 
 
-      const app = new SpawnCatfish();
-      await app.spawnLaunching(false);
-
-
-
-
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
+      // spawn catfish
+      // const app = new SpawnCatfish();
+      // await app.spawnLaunching(false);
 
       // contents upload
 
@@ -1069,7 +1066,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p80");
+      // await this.spellCheck("p81");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

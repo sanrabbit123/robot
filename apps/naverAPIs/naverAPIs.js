@@ -166,6 +166,7 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "꿀 템", "꿀템" ],
     [ "조합하는 기", "조합하기" ],
     [ "완성해 주는", "완성해주는" ],
+    [ "우아미", "우다미" ],
   ];
   try {
     let resultArr = [];
