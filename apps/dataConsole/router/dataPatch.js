@@ -2976,6 +2976,56 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
   return resultArr;
 }
 
+DataPatch.prototype.designerRawMap = function () {
+  let dbNameMap, columnRelativeMap;
+
+  dbNameMap = {
+    presentation: "designerPresentationRaw",
+    partnership: "designerPartnershipRaw",
+  };
+
+  titleNameMap = {
+    presentation: "설명회 신청",
+    partnership: "파트너십 신청",
+  };
+
+  columnRelativeMap = {
+    presentation: {
+      designer : { name: "성함", relative: 100, type: "string" },
+      phone : { name: "연락처", relative: 100, type: "string" },
+      address : { name: "주소", relative: 380, type: "string" },
+      email : { name: "이메일", relative: 160, type: "string" },
+      presentationTimes : { name: "참석 시간", relative: 160, type: "string" },
+      comeFrom : { name: "유입 경로", relative: 100, type: "string" },
+      date : { name: "문의일", relative: 20, type: "date" },
+    },
+    partnership: {
+      designer : { name: "성함", relative: 100, type: "string" },
+      phone : { name: "연락처", relative: 100, type: "string" },
+      address : { name: "주소", relative: 300, type: "string" },
+      email : { name: "이메일", relative: 120, type: "string" },
+      classification : { name: "사업자 분류", relative: 100, type: "string" },
+      company : { name: "회사명", relative: 100, type: "string" },
+      businessNumber : { name: "사업자 등록 번호", relative: 100, type: "string" },
+      startDate : { name: "개업일", relative: 100, type: "string" },
+      representative : { name: "대표자 성함", relative: 100, type: "string" },
+      bankName : { name: "은행명", relative: 100, type: "string" },
+      bankAccount : { name: "계좌번호", relative: 100, type: "string" },
+      bankTo : { name: "수신자", relative: 100, type: "string" },
+      bankEtc : { name: "기타 사항", relative: 100, type: "string" },
+      interiorCareer : { name: "인테리어 경력", relative: 100, type: "string" },
+      stylingCareer : { name: "스타일링 경력", relative: 100, type: "string" },
+      careerDetail : { name: "경력 상세", relative: 100, type: "string" },
+      webChannel : { name: "홈페이지", relative: 100, type: "array" },
+      snsChannel : { name: "SNS", relative: 100, type: "array" },
+      comeFrom : { name: "유입 경로", relative: 100, type: "string" },
+      date : { name: "문의일", relative: 100, type: "date" },
+    }
+  };
+
+  return { dbNameMap, titleNameMap, columnRelativeMap };
+}
+
 //PROJECT ---------------------------------------------------------------------------------------
 
 DataPatch.prototype.projectDropPoint = function () {

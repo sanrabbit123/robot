@@ -1267,6 +1267,39 @@ DataRouter.prototype.rou_post_getContentsReport = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getDesignerReport = function () {
+  const instance = this;
+  const back = this.back;
+  const patch = this.patch;
+  let obj = {};
+  obj.link = "/getDesignerReport";
+  obj.func = async function (req, res) {
+    try {
+      const { dbNameMap, titleNameMap, columnRelativeMap } = patch.designerRawMap();
+      let row;
+      let realData;
+
+      if (dbNameMap[req.body.mode] === undefined) {
+        throw new Error("invaild mode");
+      }
+
+      row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
+
+      realData = [];
+      for (let i of row) {
+        delete i._id;
+        realData.push(i);
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
