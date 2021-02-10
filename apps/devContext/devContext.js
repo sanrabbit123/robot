@@ -1016,13 +1016,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "서지영";
-      // const pid = "p80";
-      // const rid = "re074";
+      // const client = "마새봄";
+      // const pid = "p81";
+      // const rid = "re075";
       // const links = [
-      //   "https://docs.google.com/document/d/1fTWS6aT1K2ukhfFYaik6bE7Yg30LTh6t65kA2j1JPWY/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1cTTzXzHQBbAf9uN4UCN7MD7ypG0czSSsqv0zTe-cOQk/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1kx_tFYevD-8Tex-3JZLfXYxYQ1sW-jOB?usp=sharing",
+      //   "https://docs.google.com/document/d/1t1ltLGklbz08RP4d87Y5-qvXfs1JmZiyDDUIH1RztNM/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1C9WrV70QjatKdmH-vWkD91sc_sWOU7B6siwPmnPDhqQ/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1T0zFmSMZSDx8gbh_WD17QHH6VNc9pwZo?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,

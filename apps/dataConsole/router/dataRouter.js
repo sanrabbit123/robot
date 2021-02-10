@@ -384,6 +384,49 @@ DataRouter.prototype.rou_get_Root = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_Binary = function () {
+  const instance = this;
+  const brandProjectConstant = "brandProject";
+  let obj = {};
+  obj.link = "/" + brandProjectConstant + "/:id";
+  obj.func = async function (req, res) {
+    try {
+      const adobeAPIkey = "5966fac329324c129cce19b7c1f9005f";
+      let html, mainPdfName, sourceName;
+
+      mainPdfName = "index";
+      sourceName = `${instance.address.s3info.host}/${brandProjectConstant}/${req.params.id}/${mainPdfName}.pdf`;
+      const { statusCode } = await instance.mother.headRequest(sourceName);
+
+      if (statusCode === 200) {
+        html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><title></title><style media="screen">*{margin:0;padding:0}</style></head><body style="position:relative;width:100%;height:100%;background:black"><div id="pdfTong"></div><script src="https://documentcloud.adobe.com/view-sdk/main.js"></script><script type="text/javascript">
+        const tong = document.getElementById("pdfTong");
+        tong.style.position = "absolute";
+        tong.style.width = String(window.innerWidth) + "px";
+        tong.style.height = String(window.innerHeight) + "px";
+        tong.style.top = String(0) + "px";
+        tong.style.left = String(0) + "px";
+        window.addEventListener("resize", function (e) {
+          window.location.reload();
+        });
+        document.addEventListener("adobe_dc_view_sdk.ready", function (e) {
+          const adobeDCView = new AdobeDC.View({ clientId: "${adobeAPIkey}", divId: "pdfTong" });
+          adobeDCView.previewFile({ content: { location: { url: "${sourceName}" } }, metaData: { fileName: "${req.params.id}.pdf" } }, { embedMode: "LIGHT_BOX", defaultViewMode: "FIT_PAGE" });
+        });
+        </script>`;
+        res.set("Content-Type", "text/html");
+        res.send(html);
+      } else {
+        res.redirect("/client");
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};

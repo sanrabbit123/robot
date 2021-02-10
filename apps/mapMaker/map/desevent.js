@@ -78,7 +78,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
-              "limit": false,
+              "limit": true,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop100_off_9rspot345_020900.svg",
