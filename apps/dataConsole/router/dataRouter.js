@@ -1276,8 +1276,31 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   obj.func = async function (req, res) {
     try {
       const { dbNameMap, titleNameMap, columnRelativeMap } = patch.designerRawMap();
+      const dateToString = function (str) {
+        const zeroAddition = function (num) {
+          if (num < 10) {
+            return `0${String(num)}`;
+          } else {
+            return String(num);
+          }
+        }
+        let date;
+        date = new Date(str);
+        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      }
+      const stringToDateValue = function (str) {
+        let tempArr0, tempArr1, tempArr2;
+        let resultDate;
+        tempArr0 = str.split(" ");
+        tempArr1 = tempArr0[0].split("-");
+        tempArr2 = tempArr0[1].split(":");
+        resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+        return resultDate.valueOf();
+      }
       let row;
       let realData;
+      let tempObj;
+      let targetIndex;
 
       if (dbNameMap[req.body.mode] === undefined) {
         throw new Error("invaild mode");
@@ -1288,11 +1311,22 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       realData = [];
       for (let i of row) {
         delete i._id;
-        realData.push(i);
+        tempObj = JSON.parse(JSON.stringify(i));
+        for (let j in tempObj) {
+          if (columnRelativeMap[req.body.mode][j].type === "date") {
+            tempObj[j] = dateToString(tempObj[j]);
+            targetIndex = j;
+          } else if (columnRelativeMap[req.body.mode][j].type === "array") {
+            tempObj[j] = tempObj[j].join(',');
+          }
+        }
+        realData.push(tempObj);
       }
 
+      realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
+
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData }));
+      res.send(JSON.stringify({ mode: req.body.mode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData }));
     } catch (e) {
       console.log(e);
     }

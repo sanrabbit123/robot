@@ -3749,7 +3749,23 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
       return String(number);
     }
   }
+  const stringToDateValue = function (str) {
+    let tempArr0, tempArr1, tempArr2;
+    let resultDate;
+    tempArr0 = str.split(" ");
+    tempArr1 = tempArr0[0].split("-");
+    tempArr2 = tempArr0[1].split(":");
+    resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+    return resultDate.valueOf();
+  }
+  const stringToCareerNumber = function (str) {
+    let tempArr0, tempArr1, tempArr2;
+    tempArr0 = str.split("년 ");
+    return (Number(tempArr0[0].replace(/[^0-9]/g, '').replace(/^0/, '')) * 12) + Number(tempArr0[1].replace(/[^0-9]/g, '').replace(/^0/, ''));
+  }
   const columns = Object.keys(data.columns);
+  const { dbNameMap, titleNameMap, columnRelativeMap } = DataPatch.designerRawMap();
+  const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
   let style;
@@ -3759,19 +3775,28 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let motherWidth;
   let titleArea;
   let titleFontSize, titleHeight;
+  let titleIcon0, titleIcon1, titleIcon2;
   let dataArea;
   let dataScrollBox;
   let dataTitleZone;
   let dataTitleBox;
   let dataTitleFactor;
+  let dataTitleFactors;
   let dataDataZone;
   let dataDataBox;
   let dataDataFactor;
+  let dataDataFactorsTotal, dataDataFactors;
   let reportArea;
   let reportScrollBox;
   let visualSpecific;
   let relativeRatio;
   let totalWidth;
+  let fixedWidth;
+  let factorsMargin;
+  let iconHeight;
+  let moveTargets, moveParsing, moveAmount;
+  let sortTargets;
+  let columnIndex;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -3781,10 +3806,35 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
   titleFontSize = 22;
   titleHeight = 28;
+  iconHeight = 11;
 
   dataAreaRatio = 4 / 5;
   visualSpecific = 2.5
   relativeRatio = 1.2;
+
+  factorsMargin = 10;
+
+  moveTargets = [];
+  moveParsing = function (dom, move) {
+    let number;
+    let ea;
+    let translateX;
+    translateX = dom.style.transform;
+    ea = "px";
+    number = Number(translateX.replace(/[^0-9\-\.]/gi, ''));
+    return { style: "translateX(" + String(number + move) + ea + ")", number: number + move };
+  }
+  moveAmount = (data.mode === "presentation") ? 160 : 360;
+
+  totalWidth = 100;
+  for (let i of columns) {
+    totalWidth += (data.columns[i].relative * relativeRatio) + factorsMargin;
+  }
+
+  dataArea = {};
+  dataDataZone = {};
+  sortTargets = [];
+  dataDataFactorsTotal = [];
 
   //title area
   titleArea = GeneralJs.nodes.div.cloneNode(true);
@@ -3813,7 +3863,85 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   }
   titleArea.appendChild(div_clone);
 
+  titleIcon0 = SvgTong.stringParsing(this.mother.returnInterAction("#e4e4e4"));
+  titleIcon0.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    height: String((titleFontSize - 4)) + ea,
+    width: String((titleFontSize - 4) * SvgTong.getRatio(titleIcon0)) + ea,
+    bottom: String(2) + ea,
+  };
+  for (let i in style) {
+    titleIcon0.style[i] = style[i];
+  }
+  titleIcon0.addEventListener("click", function (e) {
+    while (mother.firstChild !== loadingIcon) {
+      mother.removeChild(mother.firstChild);
+    }
+    while (mother.lastChild !== loadingIcon) {
+      mother.removeChild(mother.lastChild);
+    }
+    loadingIcon.style.opacity = "1";
+    GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getDesignerReport", function (data) {
+      loadingIcon.style.opacity = "0";
+      instance.reportContents(JSON.parse(data), mother, loadingIcon);
+    });
+  });
+  titleArea.appendChild(titleIcon0);
+
+  titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
+  titleIcon1.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
+    height: String(iconHeight) + ea,
+    right: String(mainMargin + 18) + ea,
+    bottom: String(0) + ea,
+  };
+  for (let i in style) {
+    titleIcon1.style[i] = style[i];
+  }
+  titleIcon1.addEventListener("click", function (e) {
+    let tempObj;
+    for (let dom of moveTargets) {
+      tempObj = moveParsing(dom, (moveAmount * 1));
+      if (tempObj.number >= 0) {
+        dom.style.transform = "translateX(0px)";
+      } else {
+        dom.style.transform = tempObj.style;
+      }
+    }
+  });
+  titleArea.appendChild(titleIcon1);
+
+  titleIcon2 = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  titleIcon2.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
+    height: String(iconHeight) + ea,
+    right: String(mainMargin) + ea,
+    bottom: String(0) + ea,
+  };
+  for (let i in style) {
+    titleIcon2.style[i] = style[i];
+  }
+  titleIcon2.addEventListener("click", function (e) {
+    let tempObj;
+    let standard;
+    standard = dataArea.getBoundingClientRect().width - (mainMargin * 2);
+    for (let dom of moveTargets) {
+      tempObj = moveParsing(dom, (moveAmount * -1));
+      if (tempObj.number <= standard - totalWidth) {
+        dom.style.transform = "translateX(" + String(standard - totalWidth) + "px)";
+      } else {
+        dom.style.transform = tempObj.style;
+      }
+    }
+  });
+  titleArea.appendChild(titleIcon2);
   mother.appendChild(titleArea);
+  titleIcon0.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 8) + ea;
 
   //data area
   dataArea = GeneralJs.nodes.div.cloneNode(true);
@@ -3839,7 +3967,6 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     dataScrollBox.style[i] = style[i];
   }
 
-
   dataTitleZone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
@@ -3851,28 +3978,33 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     dataTitleZone.style[i] = style[i];
   }
 
-  totalWidth = 100;
-  for (let i of columns) {
-    totalWidth += (data.columns[i].relative * relativeRatio);
-  }
-
   dataTitleBox = GeneralJs.nodes.div.cloneNode(true);
+  moveTargets.push(dataTitleBox);
   style = {
+    position: "relative",
     height: String(46) + ea,
     width: String(totalWidth) + ea,
+    transform: "translateX(" + String(0) + ea + ")",
   };
   for (let i in style) {
     dataTitleBox.style[i] = style[i];
   }
 
+  dataTitleFactors = [];
+
+  columnIndex = 0;
   for (let z of columns) {
     dataTitleFactor = GeneralJs.nodes.div.cloneNode(true);
+    dataTitleFactor.classList.add("hoverDefault_lite");
     style = {
       display: "inline-block",
       position: "relative",
       height: "100%",
-      color: "#2fa678",
-      width: String(data.columns[z].relative * relativeRatio) + ea
+      width: String(1000) + ea,
+      transition: "all 0s ease",
+      opacity: String(0),
+      overflow: "hidden",
+      marginRight: String(factorsMargin) + ea,
     };
     for (let i in style) {
       dataTitleFactor.style[i] = style[i];
@@ -3885,79 +4017,142 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
       top: String(12) + ea,
       fontSize: String(14) + ea,
       fontWeight: String(600),
-      width: "100%",
+      width: "auto",
       color: "#2fa678",
-      textAlign: "center",
+      transition: "all 0s ease",
     };
     for (let i in style) {
-      dataTitleFactor.style[i] = style[i];
+      text_div.style[i] = style[i];
     }
-
-
-
     dataTitleFactor.appendChild(text_div);
+    dataTitleFactor.setAttribute("index", String(columnIndex));
+    dataTitleFactor.setAttribute("sort_toggle", String(1));
+    dataTitleFactor.addEventListener("click", function (e) {
+      const columnIndex = Number(this.getAttribute("index"));
+      const toggle = Number(this.getAttribute("sort_toggle"));
+      if (map[z].sort === "string") {
+        sortTargets.sort((a, b) => {
+          if (b.children[columnIndex].firstChild.textContent >= a.children[columnIndex].firstChild.textContent) {
+            return -1 * toggle;
+          } else {
+            return 1 * toggle;
+          }
+        });
+      } else if (map[z].sort === "number") {
+        sortTargets.sort((a, b) => {
+          return toggle * (Number(a.children[columnIndex].firstChild.textContent.replace(/[^0-9]/g, '')) - Number(b.children[columnIndex].firstChild.textContent.replace(/[^0-9]/g, '')));
+        });
+      } else if (map[z].sort === "date") {
+        sortTargets.sort((a, b) => {
+          return toggle * (stringToDateValue(a.children[columnIndex].firstChild.textContent) - stringToDateValue(b.children[columnIndex].firstChild.textContent));
+        });
+      } else if (map[z].sort === "career") {
+        sortTargets.sort((a, b) => {
+          return toggle * (stringToCareerNumber(a.children[columnIndex].firstChild.textContent) - stringToCareerNumber(b.children[columnIndex].firstChild.textContent));
+        });
+      }
+      for (let div of sortTargets) {
+        dataDataZone.appendChild(div);
+      }
+      this.setAttribute("sort_toggle", String(-1 * toggle));
+    });
 
+    dataTitleFactors.push({ tong: dataTitleFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
     dataTitleBox.appendChild(dataTitleFactor);
+    columnIndex++;
   }
   dataTitleZone.appendChild(dataTitleBox);
-
   dataScrollBox.appendChild(dataTitleZone);
 
   dataDataZone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    height: "calc(100% - " + String(46) + ea + ")",
-    overflow: "scroll",
-    paddingTop: String(10) + ea,
+    paddingTop: String(6) + ea,
+    paddingBottom: String(200) + ea,
+    height: "calc(100% - " + String(46 + (6 + 200)) + ea + ")",
+    overflowY: "scroll",
+    overflowX: "hidden",
   };
   for (let i in style) {
     dataDataZone.style[i] = style[i];
   }
 
-  console.log(data)
-
   for (let j = 0; j < data.data.length; j++) {
     dataDataBox = GeneralJs.nodes.div.cloneNode(true);
+    moveTargets.push(dataDataBox);
     style = {
       height: String(36) + ea,
       width: String(totalWidth) + ea,
+      transform: "translateX(" + String(0) + ea + ")",
     };
     for (let i in style) {
       dataDataBox.style[i] = style[i];
     }
 
+    dataDataFactors = [];
     for (let z of columns) {
       dataDataFactor = GeneralJs.nodes.div.cloneNode(true);
-      dataDataFactor.textContent = data.data[j][z];
       style = {
         display: "inline-block",
         position: "relative",
-        top: String(12) + ea,
-        fontSize: String(14) + ea,
-        fontWeight: String(200),
-        color: "#606060",
-        textAlign: "center",
-        width: String(data.columns[z].relative * relativeRatio) + ea
+        height: "100%",
+        width: String(1000) + ea,
+        transition: "all 0s ease",
+        opacity: String(0),
+        overflow: "hidden",
+        marginRight: String(factorsMargin) + ea,
       };
       for (let i in style) {
         dataDataFactor.style[i] = style[i];
       }
+
+      text_div = GeneralJs.nodes.div.cloneNode(true);
+      text_div.textContent = data.data[j][z];
+      style = {
+        position: "absolute",
+        top: String(12) + ea,
+        fontSize: String(14) + ea,
+        fontWeight: String(200),
+        width: "auto",
+        color: "#404040",
+        transition: "all 0s ease",
+      };
+      for (let i in style) {
+        text_div.style[i] = style[i];
+      }
+      dataDataFactor.appendChild(text_div);
+
+      dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
       dataDataBox.appendChild(dataDataFactor);
     }
+    sortTargets.push(dataDataBox);
+    dataDataFactorsTotal.push(dataDataFactors);
     dataDataZone.appendChild(dataDataBox);
   }
-
-
-
-
-
-
 
   dataScrollBox.appendChild(dataDataZone);
 
   dataArea.appendChild(dataScrollBox);
   mother.appendChild(dataArea);
 
+  //fix data area factor's width
+  for (let { tong, text, width } of dataTitleFactors) {
+    fixedWidth = text.getBoundingClientRect().width;
+    tong.style.width = String(width) + ea;
+    text.style.width = String(fixedWidth) + ea;
+    text.style.left = "calc(50% - " + String(fixedWidth / 2) + ea + ")";
+    tong.style.opacity = String(1);
+  }
+
+  for (let arr of dataDataFactorsTotal) {
+    for (let { tong, text, width } of arr) {
+      fixedWidth = text.getBoundingClientRect().width;
+      tong.style.width = String(width) + ea;
+      text.style.width = String(fixedWidth) + ea;
+      text.style.left = "calc(50% - " + String(fixedWidth / 2) + ea + ")";
+      tong.style.opacity = String(1);
+    }
+  }
 
   //report area
   reportArea = GeneralJs.nodes.div.cloneNode(true);
@@ -3975,7 +4170,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     position: "relative",
     top: String(subMargin) + ea,
     height: "calc(100% - " + String(subMargin) + ea + ")",
-    border: "1px solid #dddddd",
+    background: "#f4f4f4",
     borderRadius: String(4) + ea,
   };
   for (let i in style) {
