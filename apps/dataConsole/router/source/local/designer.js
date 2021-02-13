@@ -3797,6 +3797,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let moveTargets, moveParsing, moveAmount;
   let sortTargets;
   let columnIndex;
+  let dataAreaToCardEvent;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -3949,10 +3950,26 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     position: "relative",
     paddingLeft: String(mainMargin) + ea,
     paddingRight: String(mainMargin) + ea,
+    width: "calc(100% - " + String(mainMargin * 2) + ea + ")",
     height: "calc(calc(100% - " + String(((mainMargin * 2) + visualSpecific) + titleHeight) + ea + ") * " + String(dataAreaRatio) + ")",
   };
   for (let i in style) {
     dataArea.style[i] = style[i];
+  }
+
+  dataAreaToCardEvent = function (e) {
+    let newArea;
+    newArea = dataArea.cloneNode(true);
+    newArea.style.position = "absolute";
+    newArea.style.top = String(mainTopBottom + titleHeight) + ea;
+
+    while (newArea.firstChild.firstChild) {
+      newArea.firstChild.removeChild(newArea.firstChild.lastChild);
+    }
+    
+    newArea.style.animation = "fadein 0.3s ease forwards";
+    dataArea.style.animation = "fadeout 0.3s ease forwards";
+    dataArea.parentNode.insertBefore(newArea, dataArea.nextElementSibling);
   }
 
   dataScrollBox = GeneralJs.nodes.div.cloneNode(true);
@@ -4121,7 +4138,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
         text_div.style[i] = style[i];
       }
       dataDataFactor.appendChild(text_div);
-
+      dataDataFactor.addEventListener("click", dataAreaToCardEvent);
       dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
       dataDataBox.appendChild(dataDataFactor);
     }
