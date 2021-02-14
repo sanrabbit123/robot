@@ -3764,7 +3764,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     return (Number(tempArr0[0].replace(/[^0-9]/g, '').replace(/^0/, '')) * 12) + Number(tempArr0[1].replace(/[^0-9]/g, '').replace(/^0/, ''));
   }
   const columns = Object.keys(data.columns);
-  const { dbNameMap, titleNameMap, columnRelativeMap, cardViewMap } = DataPatch.designerRawMap();
+  const { dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -3798,6 +3798,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   let sortTargets;
   let columnIndex;
   let dataAreaToCardEvent;
+  let reportHeight;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -3809,7 +3810,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   titleHeight = 28;
   iconHeight = 11;
 
-  dataAreaRatio = 4 / 5;
+  reportHeight = 90;
   visualSpecific = 2.5
   relativeRatio = 1.2;
 
@@ -3951,7 +3952,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     paddingLeft: String(mainMargin) + ea,
     paddingRight: String(mainMargin) + ea,
     width: "calc(100% - " + String(mainMargin * 2) + ea + ")",
-    height: "calc(calc(100% - " + String(((mainMargin * 2) + visualSpecific) + titleHeight) + ea + ") * " + String(dataAreaRatio) + ")",
+    height: "calc(calc(100% - " + String(((mainMargin * 2) + visualSpecific) + titleHeight) + ea + ") - " + String(reportHeight) + ea + ")",
   };
   for (let i in style) {
     dataArea.style[i] = style[i];
@@ -3975,8 +3976,6 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     let cardTitleFontSize, cardDefaultFontSize;
     let buttonsTargets;
     let buttonsWidthAddtion;
-
-
 
     ea = "px";
     cardMargin = 42;
@@ -4422,7 +4421,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     position: "relative",
     paddingLeft: String(mainMargin) + ea,
     paddingRight: String(mainMargin) + ea,
-    height: "calc(calc(100% - " + String(((mainMargin * 2) + visualSpecific) + titleHeight) + ea + ") * " + String(1 - dataAreaRatio) + ")",
+    height: String(reportHeight) + ea,
   };
   for (let i in style) {
     reportArea.style[i] = style[i];
