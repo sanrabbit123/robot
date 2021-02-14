@@ -3958,18 +3958,123 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   }
 
   dataAreaToCardEvent = function (e) {
+    const thisIndex = Number(this.getAttribute("index"));
+    const thisData = data.data[thisIndex];
+    const { designer, phone } = thisData;
     let newArea;
+    let cardArea;
+    let div_clone, text_div;
+    let style;
+    let ea;
+    let cardTitleWidth, cardTitleHeight;
+    let cardMargin;
+    let cardGrayBar;
+
+    ea = "px";
+    cardMargin = 32;
+
     newArea = dataArea.cloneNode(true);
     newArea.style.position = "absolute";
     newArea.style.top = String(mainTopBottom + titleHeight) + ea;
+    cardArea = newArea.firstChild;
 
-    while (newArea.firstChild.firstChild) {
-      newArea.firstChild.removeChild(newArea.firstChild.lastChild);
+    while (cardArea.firstChild) {
+      cardArea.removeChild(cardArea.lastChild);
     }
-    
+
     newArea.style.animation = "fadein 0.3s ease forwards";
     dataArea.style.animation = "fadeout 0.3s ease forwards";
     dataArea.parentNode.insertBefore(newArea, dataArea.nextElementSibling);
+
+    newArea.addEventListener("click", function (e) {
+      dataArea.parentNode.removeChild(this);
+      dataArea.style.animation = "fadein 0.3s ease forwards";
+    });
+
+    //name
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      top: String(21) + ea,
+      left: String(cardMargin) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    text_div = GeneralJs.nodes.div.cloneNode(true);
+    text_div.textContent = designer;
+    style = {
+      position: "absolute",
+      fontSize: String(cardMargin) + ea,
+      fontWeight: String(100),
+      top: String(0) + ea,
+    };
+    for (let i in style) {
+      text_div.style[i] = style[i];
+    }
+    div_clone.appendChild(text_div);
+    cardArea.appendChild(div_clone);
+
+    cardTitleWidth = text_div.getBoundingClientRect().width;
+    cardTitleHeight = text_div.getBoundingClientRect().height;
+
+    div_clone.style.width = String(cardTitleWidth) + ea;
+    div_clone.style.height = String(cardTitleHeight) + ea;
+
+    //phone
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(42) + ea,
+      left: String(cardMargin + cardTitleWidth + 10) + ea,
+      width: String(1000) + ea,
+      transition: "all 0s ease",
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    text_div = GeneralJs.nodes.div.cloneNode(true);
+    text_div.textContent = phone;
+    style = {
+      position: "absolute",
+      fontSize: String(15) + ea,
+      fontWeight: String(500),
+      color: "#2fa678",
+      top: String(0) + ea,
+    };
+    for (let i in style) {
+      text_div.style[i] = style[i];
+    }
+    div_clone.appendChild(text_div);
+    cardArea.appendChild(div_clone);
+
+    cardTitleWidth = text_div.getBoundingClientRect().width;
+    cardTitleHeight = text_div.getBoundingClientRect().height;
+
+    div_clone.style.width = String(cardTitleWidth) + ea;
+    div_clone.style.height = String(cardTitleHeight) + ea;
+
+
+    cardGrayBar = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      height: String(0) + ea,
+      fontWeight: String(500),
+      color: "#2fa678",
+      top: String(0) + ea,
+    };
+    for (let i in style) {
+      text_div.style[i] = style[i];
+    }
+
+
+    cardArea.appendChild(cardGrayBar);
+    console.log(thisData);
+
+    for (let i in thisData) {
+      console.log(map[i].name)
+    }
+
   }
 
   dataScrollBox = GeneralJs.nodes.div.cloneNode(true);
@@ -4096,6 +4201,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
   for (let j = 0; j < data.data.length; j++) {
     dataDataBox = GeneralJs.nodes.div.cloneNode(true);
+    dataDataBox.setAttribute("index", String(j));
     moveTargets.push(dataDataBox);
     style = {
       height: String(36) + ea,
@@ -4109,6 +4215,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     dataDataFactors = [];
     for (let z of columns) {
       dataDataFactor = GeneralJs.nodes.div.cloneNode(true);
+      dataDataFactor.classList.add("hoverDefault_lite");
+      dataDataFactor.setAttribute("index", String(j));
       style = {
         display: "inline-block",
         position: "relative",
@@ -4124,6 +4232,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
       }
 
       text_div = GeneralJs.nodes.div.cloneNode(true);
+      text_div.setAttribute("index", String(j));
       text_div.textContent = data.data[j][z];
       style = {
         position: "absolute",
