@@ -2977,7 +2977,7 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
-  let dbNameMap, columnRelativeMap;
+  let dbNameMap, titleNameMap, columnRelativeMap, cardViewMap;
 
   dbNameMap = {
     presentation: "designerPresentationRaw",
@@ -3023,7 +3023,29 @@ DataPatch.prototype.designerRawMap = function () {
     }
   };
 
-  return { dbNameMap, titleNameMap, columnRelativeMap };
+  cardViewMap = {
+    presentation: [
+      { column: "presentationTimes", },
+      { column: "email", },
+      { column: "address", },
+      { column: "comeFrom", },
+      { column: "date", },
+    ],
+    partnership: [
+      { column: "email", },
+      { column: "classification", },
+      { column: "company", },
+      { column: "interiorCareer", },
+      { column: "stylingCareer", },
+      { column: "careerDetail", },
+      { column: "webChannel", },
+      { column: "snsChannel", },
+      { column: "comeFrom", },
+      { column: "date", },
+    ]
+  };
+
+  return { dbNameMap, titleNameMap, columnRelativeMap, cardViewMap };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------

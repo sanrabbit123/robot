@@ -3764,7 +3764,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     return (Number(tempArr0[0].replace(/[^0-9]/g, '').replace(/^0/, '')) * 12) + Number(tempArr0[1].replace(/[^0-9]/g, '').replace(/^0/, ''));
   }
   const columns = Object.keys(data.columns);
-  const { dbNameMap, titleNameMap, columnRelativeMap } = DataPatch.designerRawMap();
+  const { dbNameMap, titleNameMap, columnRelativeMap, cardViewMap } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -3967,12 +3967,26 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     let style;
     let ea;
     let cardTitleWidth, cardTitleHeight;
+    let cardTitleTop;
     let cardMargin;
     let cardGrayBar;
+    let contentsStartTop;
+    let lineHeight, indexNumber, valueIndent;
+    let cardTitleFontSize, cardDefaultFontSize;
+    let buttonsTargets;
+    let buttonsWidthAddtion;
+
+
 
     ea = "px";
-    cardMargin = 32;
+    cardMargin = 42;
+    cardTitleTop = 30;
+    lineHeight = 30;
+    valueIndent = 120;
+    cardTitleFontSize = 38;
+    cardDefaultFontSize = 15;
 
+    //initial
     newArea = dataArea.cloneNode(true);
     newArea.style.position = "absolute";
     newArea.style.top = String(mainTopBottom + titleHeight) + ea;
@@ -3986,16 +4000,25 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     dataArea.style.animation = "fadeout 0.3s ease forwards";
     dataArea.parentNode.insertBefore(newArea, dataArea.nextElementSibling);
 
-    newArea.addEventListener("click", function (e) {
-      dataArea.parentNode.removeChild(this);
-      dataArea.style.animation = "fadein 0.3s ease forwards";
-    });
+    //button setting
+    buttonsTargets = [
+      { toggle: [ "목록으로", "목록으로" ], click: function (e) {
+        dataArea.parentNode.removeChild(newArea);
+        dataArea.style.animation = "fadein 0.3s ease forwards";
+      } },
+      { toggle: [ ((data.mode !== "partnership") ? "파트너십 신청 안 함" : "설명회 신청 안 함"), ((data.mode !== "partnership") ? "파트너십 신청" : "설명회 신청") ], click: function (e) {
+
+      } },
+      { toggle: [ "포트폴리오 없음", "포트폴리오 보기" ], click: function (e) {
+
+      } },
+    ];
 
     //name
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      top: String(21) + ea,
+      top: String(cardTitleTop) + ea,
       left: String(cardMargin) + ea,
     };
     for (let i in style) {
@@ -4005,8 +4028,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     text_div.textContent = designer;
     style = {
       position: "absolute",
-      fontSize: String(cardMargin) + ea,
-      fontWeight: String(100),
+      fontSize: String(cardTitleFontSize) + ea,
+      fontWeight: String(500),
       top: String(0) + ea,
     };
     for (let i in style) {
@@ -4025,8 +4048,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      top: String(42) + ea,
-      left: String(cardMargin + cardTitleWidth + 10) + ea,
+      top: String((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + ea,
+      left: String(cardMargin + cardTitleWidth + 11) + ea,
       width: String(1000) + ea,
       transition: "all 0s ease",
     };
@@ -4037,8 +4060,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     text_div.textContent = phone;
     style = {
       position: "absolute",
-      fontSize: String(15) + ea,
-      fontWeight: String(500),
+      fontSize: String(cardDefaultFontSize + 1) + ea,
+      fontWeight: String(200),
       color: "#2fa678",
       top: String(0) + ea,
     };
@@ -4054,25 +4077,138 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     div_clone.style.width = String(cardTitleWidth) + ea;
     div_clone.style.height = String(cardTitleHeight) + ea;
 
-
+    //gray bar
+    contentsStartTop = ((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + cardTitleHeight + 12;
     cardGrayBar = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      height: String(0) + ea,
-      fontWeight: String(500),
-      color: "#2fa678",
-      top: String(0) + ea,
+      top: String(contentsStartTop) + ea,
+      borderTop: "1px solid #dddddd",
+      width: "calc(100% - " + String(cardMargin * 2) + ea + ")",
+      left: String(cardMargin) + ea,
     };
     for (let i in style) {
-      text_div.style[i] = style[i];
+      cardGrayBar.style[i] = style[i];
+    }
+    cardArea.appendChild(cardGrayBar);
+
+    //card values
+    contentsStartTop = contentsStartTop + cardTitleTop;
+    indexNumber = 0;
+    for (let { column } of cardViewMap[data.mode]) {
+
+      //column name
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        top: String(contentsStartTop + (lineHeight * indexNumber)) + ea,
+        left: String(cardMargin) + ea,
+        width: String(1000) + ea,
+        transition: "all 0s ease",
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      text_div = GeneralJs.nodes.div.cloneNode(true);
+      text_div.textContent = map[column].name;
+      style = {
+        position: "absolute",
+        fontSize: String(cardDefaultFontSize) + ea,
+        fontWeight: String(600),
+        color: "#404040",
+        top: String(0) + ea,
+      };
+      for (let i in style) {
+        text_div.style[i] = style[i];
+      }
+      div_clone.appendChild(text_div);
+      cardArea.appendChild(div_clone);
+
+      cardTitleWidth = text_div.getBoundingClientRect().width;
+      cardTitleHeight = text_div.getBoundingClientRect().height;
+
+      div_clone.style.width = String(cardTitleWidth) + ea;
+      div_clone.style.height = String(cardTitleHeight) + ea;
+
+      //value
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        top: String(contentsStartTop + (lineHeight * indexNumber)) + ea,
+        left: String(cardMargin + valueIndent) + ea,
+        width: String(1000) + ea,
+        transition: "all 0s ease",
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      text_div = GeneralJs.nodes.div.cloneNode(true);
+      text_div.textContent = thisData[column];
+      style = {
+        position: "absolute",
+        fontSize: String(cardDefaultFontSize) + ea,
+        fontWeight: String(200),
+        color: "#404040",
+        top: String(0) + ea,
+      };
+      for (let i in style) {
+        text_div.style[i] = style[i];
+      }
+      div_clone.appendChild(text_div);
+      cardArea.appendChild(div_clone);
+
+      cardTitleWidth = text_div.getBoundingClientRect().width;
+      cardTitleHeight = text_div.getBoundingClientRect().height;
+
+      div_clone.style.width = String(cardTitleWidth) + ea;
+      div_clone.style.height = String(cardTitleHeight) + ea;
+
+      indexNumber++;
     }
 
+    //buttons
+    buttonsWidthAddtion = 0;
+    for (let obj of buttonsTargets) {
 
-    cardArea.appendChild(cardGrayBar);
-    console.log(thisData);
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        bottom: String(cardMargin - 2) + ea,
+        right: String(cardMargin + buttonsWidthAddtion) + ea,
+        width: String(1000) + ea,
+        border: "1px solid #dddddd",
+        borderRadius: String(3) + ea,
+        transition: "all 0s ease",
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      text_div = GeneralJs.nodes.div.cloneNode(true);
+      text_div.textContent = obj.toggle[0];
+      text_div.classList.add("hoverDefault_lite");
+      style = {
+        position: "absolute",
+        fontSize: String(cardDefaultFontSize - 1) + ea,
+        fontWeight: String(600),
+        color: "#404040",
+        top: String(5) + ea,
+        left: String(13) + ea,
+      };
+      for (let i in style) {
+        text_div.style[i] = style[i];
+      }
+      div_clone.appendChild(text_div);
+      cardArea.appendChild(div_clone);
 
-    for (let i in thisData) {
-      console.log(map[i].name)
+      cardTitleWidth = text_div.getBoundingClientRect().width;
+      cardTitleHeight = text_div.getBoundingClientRect().height;
+
+      div_clone.style.width = String(cardTitleWidth + (13 * 2)) + ea;
+      div_clone.style.height = String(cardTitleHeight + (5 * 2) + 2) + ea;
+
+      div_clone.addEventListener("click", obj.click);
+
+      buttonsWidthAddtion = buttonsWidthAddtion + (cardTitleWidth + (13 * 2)) + 10;
     }
 
   }
