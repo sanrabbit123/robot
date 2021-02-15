@@ -1275,7 +1275,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   obj.link = "/getDesignerReport";
   obj.func = async function (req, res) {
     try {
-      const { dbNameMap, titleNameMap, columnRelativeMap } = patch.designerRawMap();
+      const { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard } = patch.designerRawMap();
       const dateToString = function (str) {
         const zeroAddition = function (num) {
           if (num < 10) {
@@ -1297,7 +1297,9 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
         return resultDate.valueOf();
       }
-      let row;
+      const oppositeMode = (req.body.mode === "presentation") ? "partnership" : "presentation";
+      let row, oppositeRow, binaryRow;
+      let sameStandardColumn;
       let realData;
       let tempObj;
       let targetIndex;
@@ -1306,7 +1308,11 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         throw new Error("invaild mode");
       }
 
+      sameStandardColumn = sameStandard.value;
+
       row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
+      oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
+      binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
 
       realData = [];
       for (let i of row) {
@@ -1318,6 +1324,18 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
             targetIndex = j;
           } else if (columnRelativeMap[req.body.mode][j].type === "array") {
             tempObj[j] = tempObj[j].join(',');
+          }
+        }
+        tempObj[sameStandard.name] = false;
+        for (let j of oppositeRow) {
+          if (i[sameStandardColumn] === j[sameStandardColumn]) {
+            tempObj[sameStandard.name] = true;
+          }
+        }
+        tempObj[binaryStandard.name] = false;
+        for (let j of binaryRow) {
+          if (i[sameStandardColumn] === j[sameStandardColumn]) {
+            tempObj[binaryStandard.name] = true;
           }
         }
         realData.push(tempObj);

@@ -2977,7 +2977,12 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
-  let dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap;
+  let binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard;
+
+  binaryStandard = {
+    dbName: "designerPortfolioRaw",
+    name: "binary"
+  };
 
   dbNameMap = {
     presentation: "designerPresentationRaw",
@@ -3046,11 +3051,22 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   reportTargetMap = {
-    presentation: "presentationTimes",
-    partnership: "classification"
+    presentation: [
+      "presentationTimes",
+      "comeFrom"
+    ],
+    partnership: [
+      "classification",
+      "comeFrom"
+    ]
   };
 
-  return { dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap };
+  sameStandard = {
+    name: "relation",
+    value: "phone"
+  };
+
+  return { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------

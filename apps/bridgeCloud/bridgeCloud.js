@@ -121,7 +121,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   try {
     const { tong, folder } = obj;
     let tongKeys = Object.keys(tong);
-    const targetFolder = '1zB5SdQ1PLoE37870wlSBWk01AJvXwSRo';
+    const targetFolder = (obj.mode === "client") ? "1zB5SdQ1PLoE37870wlSBWk01AJvXwSRo" : "1i5A9i3OXHTyvMHoOr1-QuSuZXukhZBVm";
     const googleDrive = googleSystem("drive");
 
     //make client folder
@@ -147,8 +147,15 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
       message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+
     } else if (obj.mode === "designer") {
       message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      await instance.back.mongoCreate("designerPortfolioRaw", {
+        date: new Date(),
+        name: obj.name,
+        phone: obj.phone,
+        folderId,
+      }, { bridge: true });
       slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
     }
 
@@ -701,7 +708,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
           const { name, phone } = fields;
-          const cilentFolderName = ('mdh' + todayMaker()) + '_' + name + '_' + phone.replace(/\-/g, '');
+          const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
           const uploadMap = {
             upload0: "sitePhoto",
             upload1: "preferredPhoto"
@@ -762,7 +769,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: name, mode: "client", cliid: cliid, folder: cilentFolderName });
+          instance.bridgeToGoogle({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName });
 
           //kakao and slack
           KAKAO.sendTalk("photo", name, phone);
@@ -802,7 +809,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
           const { designer, phone } = fields;
-          const designerFolderName = ('mdh' + todayMaker()) + '_' + designer + '_' + phone.replace(/\-/g, '');
+          const designerFolderName = ("date" + todayMaker("total")) + '_' + designer + '_' + phone.replace(/\-/g, '');
           let list = [];
           for (let i = 0; i < filesKeys.length; i++) {
             list.push(filesKeys[i]);
@@ -843,7 +850,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, folder: designerFolderName, mode: "designer" });
+          instance.bridgeToGoogle({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" });
 
           //kakao and slack
           // KAKAO.sendTalk("photo", designer, phone);

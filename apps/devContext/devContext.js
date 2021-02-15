@@ -1005,6 +1005,67 @@ class DevContext extends Array {
       // const app = new GoogleAnalytics();
       // await app.analyticsToMongo("2019-03-01", "2019-04-01");
 
+      // const binaryJson = [
+      //   {
+      //     date: new Date(2021, 2, 5, 6, 34),
+      //     name: "왕지연",
+      //     phone: "010-9622-3879",
+      //     folderId: "1qc61WVuLUMW2blmM44D33ZP0tR3dn0m0",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 8, 17, 4),
+      //     name: "박세빈",
+      //     phone: "010-6656-5719",
+      //     folderId: "1KV1Rc9I_bvVOYhbDRgOkpchLoZqstaP-",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 8, 18, 13),
+      //     name: "호지희",
+      //     phone: "010-3129-6800",
+      //     folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 9, 15, 59),
+      //     name: "김성은",
+      //     phone: "010-9176-5418",
+      //     folderId: "1rXnJ1TsV_CNev3SZqedRg-IoFlGIOi44",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 9, 16, 9),
+      //     name: "손병준",
+      //     phone: "010-2057-6674",
+      //     folderId: "10cmKLLAN4CI2WqHuEDepNdZpwvtRYNQh",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 9, 16, 11),
+      //     name: "이한솔",
+      //     phone: "010-5601-5952",
+      //     folderId: "1CwKCcHD0um6dRFvzvTHRrk4U7JjONVBY",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 9, 16, 12),
+      //     name: "최문형",
+      //     phone: "010-2744-3338",
+      //     folderId: "1qwYwD9JSlEWlvyXuv48ogJ1--GKUdQIn",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 9, 16, 17),
+      //     name: "류상현",
+      //     phone: "010-6847-7027",
+      //     folderId: "1ASh3l4xuZm9UImB977prQ_4L22Xdn27B",
+      //   },
+      //   {
+      //     date: new Date(2021, 2, 11, 10, 0),
+      //     name: "권미정",
+      //     phone: "010-7126-2427",
+      //     folderId: "15X3lKFWP4Ri7UIEkyv2veXX2lu-GPjQ1",
+      //   },
+      // ];
+      //
+      //
+      // for (let obj of binaryJson) {
+      //   await back.mongoCreate("designerPortfolioRaw", obj, { bridge: true });
+      // }
 
 
 
