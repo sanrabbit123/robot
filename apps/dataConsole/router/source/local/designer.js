@@ -4027,6 +4027,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     let buttonsTargets;
     let buttonsWidthAddtion;
     let titleIcon1, titleIcon2;
+    let cardValueTong;
 
     ea = "px";
     cardMargin = 42;
@@ -4121,7 +4122,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      top: String(cardTitleTop) + ea,
+      marginTop: String(cardTitleTop) + ea,
       left: String(cardMargin) + ea,
     };
     for (let i in style) {
@@ -4239,6 +4240,20 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     cardArea.appendChild(cardGrayBar);
 
     //card values
+    cardValueTong = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      marginTop: String(11) + ea,
+      width: "calc(100% - " + String(cardMargin * 2) + ea + ")",
+      left: String(cardMargin) + ea,
+      height: "calc(100% - " + String(130) + ea + ")",
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      cardValueTong.style[i] = style[i];
+    }
+    cardArea.appendChild(cardValueTong);
+
     contentsStartTop = contentsStartTop + cardTitleTop;
     indexNumber = 0;
     for (let obj of cardViewMap[data.mode]) {
@@ -4247,9 +4262,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "absolute",
-        top: String(contentsStartTop + (lineHeight * indexNumber)) + ea,
-        left: String(cardMargin) + ea,
-        width: String(1000) + ea,
+        top: String(cardTitleTop + (lineHeight * indexNumber)) + ea,
+        left: String(0) + ea,
+        width: String(2000) + ea,
         transition: "all 0s ease",
       };
       for (let i in style) {
@@ -4268,7 +4283,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         text_div.style[i] = style[i];
       }
       div_clone.appendChild(text_div);
-      cardArea.appendChild(div_clone);
+      cardValueTong.appendChild(div_clone);
 
       cardTitleWidth = text_div.getBoundingClientRect().width;
       cardTitleHeight = text_div.getBoundingClientRect().height;
@@ -4280,9 +4295,10 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "absolute",
-        top: String(contentsStartTop + (lineHeight * indexNumber)) + ea,
-        left: String(cardMargin + valueIndent) + ea,
-        width: String(1000) + ea,
+        top: String(cardTitleTop + (lineHeight * indexNumber)) + ea,
+        left: String(valueIndent) + ea,
+        width: String(6000) + ea,
+        overflow: "scroll",
         transition: "all 0s ease",
       };
       for (let i in style) {
@@ -4304,6 +4320,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         position: "absolute",
         fontSize: String(cardDefaultFontSize) + ea,
         fontWeight: String(200),
+        textAlign: "left",
         color: "#404040",
         top: String(0) + ea,
       };
@@ -4311,13 +4328,15 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         text_div.style[i] = style[i];
       }
       div_clone.appendChild(text_div);
-      cardArea.appendChild(div_clone);
+      cardValueTong.appendChild(div_clone);
 
       cardTitleWidth = text_div.getBoundingClientRect().width;
       cardTitleHeight = text_div.getBoundingClientRect().height;
 
       div_clone.style.width = String(cardTitleWidth) + ea;
       div_clone.style.height = String(cardTitleHeight) + ea;
+      text_div.style.width = String(cardTitleWidth) + ea;
+      div_clone.style.width = "calc(100% - " + String(valueIndent) + ea + ")";
 
       indexNumber++;
     }

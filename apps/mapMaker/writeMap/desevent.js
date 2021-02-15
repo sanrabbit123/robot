@@ -472,5 +472,17 @@ module.exports = function(map, source_rawArr) {
     svgTong.sync.push(z);
   }}
 
-  return { map: map, svgTong: svgTong, pngTong: pngTong }
+  temp_reg = new RegExp("^gt_portfolio_desktop");
+  for (let z of source_rawArr) { if (temp_reg.test(z)) {
+    sub.titleThird.desktop.words.src = z
+    svgTong.sync.push(z);
+  }}
+
+  temp_reg = new RegExp("^gt_portfolio_mobile");
+  for (let z of source_rawArr) { if (temp_reg.test(z)) {
+    sub.titleThird.mobile.words.src = z
+    svgTong.sync.push(z);
+  }}
+
+  return { map: map, svgTong: svgTong, pngTong: pngTong };
 }

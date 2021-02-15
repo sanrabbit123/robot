@@ -30,7 +30,7 @@ ExecMain.prototype.makeNaviMenu = function () {
     to = "navi" + String(i);
     contents = menu[i].name;
     this.setCreateSetting({ from: from, to: to, exception: {
-      font: "SDGothicNeoa-gBd",
+      font: "SDGothicNeoa-fSm",
       fontSize: 26.5,
     }});
     this.setParagraph({ from: contents, to: to });
@@ -54,7 +54,7 @@ ExecMain.prototype.makeNaviMenu = function () {
     to = "navi" + String(i);
     contents = menu[i].name;
     this.setCreateSetting({ from: from, to: to, exception: {
-      font: "SDGothicNeoa-gBd",
+      font: "SDGothicNeoa-fSm",
       fontSize: 26.5,
       color: "#2fa678",
     }});
@@ -262,7 +262,7 @@ ExecMain.prototype.makeFooterRight = function () {
     to = "footersupport" + String(i);
     if (i === 0) {
       this.setCreateSetting({ from: from, to: to, exception: {
-        font: "SDGothicNeoa-gBd",
+        font: "SDGothicNeoa-fSm",
         fontSize: 14,
         justification: "RIGHT",
         color: "#ffffff",
@@ -312,7 +312,7 @@ ExecMain.prototype.makeFooterRight = function () {
     to = "footermenu" + String(i);
     if (i === 0) {
       this.setCreateSetting({ from: from, to: to, exception: {
-        font: "SDGothicNeoa-gBd",
+        font: "SDGothicNeoa-fSm",
         fontSize: 14,
         justification: "RIGHT",
         color: "#ffffff",
@@ -376,7 +376,7 @@ ExecMain.prototype.makeFooterRight = function () {
     if (i < sns.length) {
       to = "footersns" + String(i);
       this.setCreateSetting({ from: from, to: to, exception: {
-        font: "SDGothicNeoa-gBd",
+        font: "SDGothicNeoa-fSm",
         fontSize: 14,
         justification: "RIGHT",
         color: "#ffffff",
@@ -461,7 +461,7 @@ ExecMain.prototype.makeFooterUp = function () {
       to = "footermobileCase" + String(i) + String(j);
       contents = mobile[i][j].name;
       this.setCreateSetting({ from: from, to: to, exception: {
-        font: "SDGothicNeoa-gBd",
+        font: "SDGothicNeoa-fSm",
         fontSize: 14.5,
       }});
       this.setParagraph({ from: contents, to: to });
@@ -594,7 +594,7 @@ ExecMain.prototype.makeFooterDown = function () {
       color: "#ffffff",
     }
     if (i >= contentsAll.length - contents2.length) {
-      tempOption.font = "SDGothicNeoa-gBd";
+      tempOption.font = "SDGothicNeoa-fSm";
     }
 
     this.setCreateSetting({ from: from, to: to, exception: tempOption });

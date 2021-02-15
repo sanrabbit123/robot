@@ -501,7 +501,9 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
             totalOrder += `cp -r ${shellLink(this.links.binary)}/binary/${i} ${shellLink(this.links.server)}/list_image;`;
           }
         }
-        shell.exec(totalOrder);
+        if (binaryTargetDir.length > 0) {
+          shell.exec(totalOrder);
+        }
       }
 
       shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);

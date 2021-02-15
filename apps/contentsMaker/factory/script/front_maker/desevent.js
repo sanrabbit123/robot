@@ -604,8 +604,10 @@ ExecMain.prototype.generalTitle = function (obj) {
 
   if (obj.name === "presentation") {
     obj.text.unshift("Presentation");
-  } else {
+  } else if (obj.name === "partnership") {
     obj.text.unshift("Partnership");
+  } else {
+    obj.text.unshift("Portfolio");
   }
 
   for (let i = 0; i < nameList.length; i++) {
@@ -629,7 +631,7 @@ ExecMain.prototype.generalTitle = function (obj) {
     line.fillColor = new NoColor();
     line.strokeColor = this.mother.colorpick("#ffffff");
     line.strokeWidth = 0.5;
-  } else {
+  } else if (obj.name === "partnership") {
     line = this_ai.pathItems.add();
     line.stroked = true;
     line.setEntirePath([[this.mother.return_left(title), (title_bottom - 2.2)], [this.mother.return_left(title) + 46.5, (title_bottom - 2.2)]]);
@@ -643,6 +645,13 @@ ExecMain.prototype.generalTitle = function (obj) {
     line.fillColor = new NoColor();
     line.strokeColor = this.mother.colorpick("#ffffff");
     line.strokeWidth = 0.5;
+  } else {
+    line = this_ai.pathItems.add();
+    line.stroked = true;
+    line.setEntirePath([[this.mother.return_left(title), (title_bottom - 5.4)], [this.mother.return_right(title), (title_bottom - 5.4)]]);
+    line.fillColor = new NoColor();
+    line.strokeColor = this.mother.colorpick("#ffffff");
+    line.strokeWidth = 0.5;
   }
 
   this.mother.fit_box();
@@ -652,11 +661,12 @@ ExecMain.prototype.generalTitle = function (obj) {
 
 ExecMain.prototype.whiteTitle = function () {
   const { sub } = this.text;
-  const { titleFirst, titleSecond } = sub;
+  const { titleFirst, titleSecond, titleThird } = sub;
   const list = [ "desktop", "mobile" ];
   for (let i of list) {
     this.generalTitle({ list: i, text: titleFirst[i].words.contents, name: "presentation" });
     this.generalTitle({ list: i, text: titleSecond[i].words.contents, name: "partnership" });
+    this.generalTitle({ list: i, text: titleThird[i].words.contents, name: "portfolio" });
   }
 }
 
