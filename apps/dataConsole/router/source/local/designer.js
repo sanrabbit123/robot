@@ -3740,7 +3740,7 @@ DesignerJs.prototype.returnValueEventMaker = function () {
   }
 }
 
-DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callback = function () {}) {
+DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callback = function (doms) {}) {
   const instance = this;
   const zeroAddition = function (number) {
     if (number < 10) {
@@ -4072,8 +4072,14 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             loadingIcon.style.opacity = "1";
             GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getDesignerReport", function (data) {
               loadingIcon.style.opacity = "0";
-              instance.reportContents(JSON.parse(data), mother, loadingIcon, function () {
-                console.log("this!");
+              instance.reportContents(JSON.parse(data), mother, loadingIcon, function (doms) {
+                const target = (doms.valueFilter("phone", phone))[0];
+                GeneralJs.timeouts["convertDesignerReportTimeouts"] = setTimeout(function () {
+                  target.firstChild.click();
+                  clearTimeout(GeneralJs.timeouts["convertDesignerReportTimeouts"]);
+                  GeneralJs.timeouts["convertDesignerReportTimeouts"] = null;
+                }, 0);
+
               });
             });
           } else {
@@ -4731,7 +4737,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   reportTargetAllBox.style.width = String(reportScrollBoxTotalWidth) + ea;
   GeneralJs.addScrollXEvent(reportContentsBox);
 
-  callback();
+  callback(dataDoms);
 }
 
 DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
