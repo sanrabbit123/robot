@@ -1333,9 +1333,11 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
           }
         }
         tempObj[binaryStandard.name] = false;
+        tempObj[binaryStandard.target] = null;
         for (let j of binaryRow) {
           if (i[sameStandardColumn] === j[sameStandardColumn]) {
             tempObj[binaryStandard.name] = true;
+            tempObj[binaryStandard.target] = j[binaryStandard.target];
           }
         }
         realData.push(tempObj);

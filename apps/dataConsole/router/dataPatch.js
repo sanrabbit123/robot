@@ -2981,7 +2981,8 @@ DataPatch.prototype.designerRawMap = function () {
 
   binaryStandard = {
     dbName: "designerPortfolioRaw",
-    name: "binary"
+    name: "binary",
+    target: "folderId",
   };
 
   dbNameMap = {

@@ -3740,7 +3740,7 @@ DesignerJs.prototype.returnValueEventMaker = function () {
   }
 }
 
-DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
+DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callback = function () {}) {
   const instance = this;
   const zeroAddition = function (number) {
     if (number < 10) {
@@ -4008,6 +4008,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
     const thisRelationIndex = thisRelation ? 1 : 0;
     const thisBinary = (this.getAttribute(binaryStandard.name) === "true");
     const thisBinaryIndex = thisBinary ? 1 : 0;
+    const thisFolderId = this.getAttribute(binaryStandard.target);
     const thisData = data.data[thisIndex];
     const { designer, phone } = thisData;
     let newArea;
@@ -4049,21 +4050,51 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
     //button setting
     buttonsTargets = [
-      { toggle: [ "목록으로", "목록으로" ], click: function (e) {
+      {
+        toggle: [ "목록으로", "목록으로" ],
+        click: function (e) {
           dataArea.parentNode.removeChild(newArea);
           dataArea.style.animation = "fadein 0.3s ease forwards";
         },
         color: [ "#404040", "#404040" ],
         mode: null,
       },
-      { toggle: [ ((data.mode !== "partnership") ? "파트너십 신청 안 함" : "설명회 신청 안 함"), ((data.mode !== "partnership") ? "파트너십 신청" : "설명회 신청") ], click: function (e) {
-
+      {
+        toggle: [ ((data.mode !== "partnership") ? "파트너십 신청 안 함" : "설명회 신청 안 함"), ((data.mode !== "partnership") ? "파트너십 신청" : "설명회 신청") ],
+        click: function (e) {
+          if (thisRelation) {
+            while (mother.firstChild !== loadingIcon) {
+              mother.removeChild(mother.firstChild);
+            }
+            while (mother.lastChild !== loadingIcon) {
+              mother.removeChild(mother.lastChild);
+            }
+            loadingIcon.style.opacity = "1";
+            GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getDesignerReport", function (data) {
+              loadingIcon.style.opacity = "0";
+              instance.reportContents(JSON.parse(data), mother, loadingIcon, function () {
+                console.log("this!");
+              });
+            });
+          } else {
+            alert("추가 신청이 없습니다!");
+          }
         },
         color: [ "#c1272d", "#2fa678" ],
         mode: "opposite",
       },
-      { toggle: [ "포트폴리오 없음", "포트폴리오 보기" ], click: function (e) {
-
+      {
+        toggle: [ "포트폴리오 없음", "포트폴리오 보기" ],
+        click: function (e) {
+          let str;
+          if (thisFolderId !== null) {
+            str = "https://drive.google.com/drive/folders/";
+            str += thisFolderId;
+            str += "?usp=sharing";
+            window.open(str, "_blank");
+          } else {
+            alert("포트폴리오가 없습니다!");
+          }
         },
         color: [ "#c1272d", "#2fa678" ],
         mode: "binary",
@@ -4415,6 +4446,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
       dataDataFactor.setAttribute("column", z);
       dataDataFactor.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
       dataDataFactor.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
+      if (data.data[j][binaryStandard.target] !== null) {
+        dataDataFactor.setAttribute(binaryStandard.target, String(data.data[j][binaryStandard.target]));
+      }
       style = {
         display: "inline-block",
         position: "relative",
@@ -4697,6 +4731,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon) {
   reportTargetAllBox.style.width = String(reportScrollBoxTotalWidth) + ea;
   GeneralJs.addScrollXEvent(reportContentsBox);
 
+  callback();
 }
 
 DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {

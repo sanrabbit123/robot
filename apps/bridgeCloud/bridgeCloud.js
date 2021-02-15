@@ -141,6 +141,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
     }
 
     let message = "";
+    let already;
 
     if (obj.mode === "client") {
       message = obj.name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
@@ -149,13 +150,27 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
 
     } else if (obj.mode === "designer") {
+      already = await instance.back.mongoRead("designerPortfolioRaw", { phone: obj.phone }, { bridge: true });
+      if (already.length > 0) {
+        await instance.back.mongoUpdate("designerPortfolioRaw", [
+          { phone: obj.phone },
+          {
+            date: new Date(),
+            name: obj.name,
+            phone: obj.phone,
+            folderId,
+          },
+        ],
+        { bridge: true });
+      } else {
+        await instance.back.mongoCreate("designerPortfolioRaw", {
+          date: new Date(),
+          name: obj.name,
+          phone: obj.phone,
+          folderId,
+        }, { bridge: true });
+      }
       message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
-      await instance.back.mongoCreate("designerPortfolioRaw", {
-        date: new Date(),
-        name: obj.name,
-        phone: obj.phone,
-        folderId,
-      }, { bridge: true });
       slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
     }
 
