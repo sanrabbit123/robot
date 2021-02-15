@@ -4003,6 +4003,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   }
 
   dataAreaToCardEvent = function (e) {
+    const thisCase = this.parentNode;
     const thisIndex = Number(this.getAttribute("index"));
     const thisRelation = (this.getAttribute(sameStandard.name) === "true");
     const thisRelationIndex = thisRelation ? 1 : 0;
@@ -4025,6 +4026,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     let cardTitleFontSize, cardDefaultFontSize;
     let buttonsTargets;
     let buttonsWidthAddtion;
+    let titleIcon1, titleIcon2;
 
     ea = "px";
     cardMargin = 42;
@@ -4044,8 +4046,17 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       cardArea.removeChild(cardArea.lastChild);
     }
 
-    newArea.style.animation = "fadein 0.3s ease forwards";
-    dataArea.style.animation = "fadeout 0.3s ease forwards";
+    if (e.noFadeInAnimation !== undefined) {
+      newArea.style.transition = "all 0s ease";
+      dataArea.style.transition = "all 0s ease";
+      newArea.style.animation = "fadein 0s ease forwards";
+      dataArea.style.animation = "fadeout 0s ease forwards";
+    } else {
+      newArea.style.transition = "all 0.3s ease";
+      dataArea.style.transition = "all 0.3s ease";
+      newArea.style.animation = "fadein 0.3s ease forwards";
+      dataArea.style.animation = "fadeout 0.3s ease forwards";
+    }
     dataArea.parentNode.insertBefore(newArea, dataArea.nextElementSibling);
 
     //button setting
@@ -4079,7 +4090,6 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                   clearTimeout(GeneralJs.timeouts["convertDesignerReportTimeouts"]);
                   GeneralJs.timeouts["convertDesignerReportTimeouts"] = null;
                 }, 0);
-
               });
             });
           } else {
@@ -4170,6 +4180,49 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     div_clone.style.width = String(cardTitleWidth) + ea;
     div_clone.style.height = String(cardTitleHeight) + ea;
 
+    //icons
+    titleIcon1 = SvgTong.stringParsing(instance.mother.returnArrow("left", "#2fa678"));
+    titleIcon1.classList.add("hoverDefault_lite");
+    style = {
+      position: "absolute",
+      width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
+      height: String(iconHeight) + ea,
+      right: String(cardMargin + 18) + ea,
+      top: String(64) + ea,
+    };
+    for (let i in style) {
+      titleIcon1.style[i] = style[i];
+    }
+    titleIcon1.addEventListener("click", function (e) {
+      if (thisCase.previousElementSibling !== null) {
+        dataArea.parentNode.removeChild(newArea);
+        e.noFadeInAnimation = true;
+        dataAreaToCardEvent.call(thisCase.previousElementSibling.firstChild, e);
+      }
+    });
+    cardArea.appendChild(titleIcon1);
+
+    titleIcon2 = SvgTong.stringParsing(instance.mother.returnArrow("right", "#2fa678"));
+    titleIcon2.classList.add("hoverDefault_lite");
+    style = {
+      position: "absolute",
+      width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
+      height: String(iconHeight) + ea,
+      right: String(cardMargin) + ea,
+      top: String(64) + ea,
+    };
+    for (let i in style) {
+      titleIcon2.style[i] = style[i];
+    }
+    titleIcon2.addEventListener("click", function (e) {
+      if (thisCase.nextElementSibling !== null) {
+        dataArea.parentNode.removeChild(newArea);
+        e.noFadeInAnimation = true;
+        dataAreaToCardEvent.call(thisCase.nextElementSibling.firstChild, e);
+      }
+    });
+    cardArea.appendChild(titleIcon2);
+
     //gray bar
     contentsStartTop = ((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + cardTitleHeight + 12;
     cardGrayBar = GeneralJs.nodes.div.cloneNode(true);
@@ -4188,7 +4241,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     //card values
     contentsStartTop = contentsStartTop + cardTitleTop;
     indexNumber = 0;
-    for (let { column } of cardViewMap[data.mode]) {
+    for (let obj of cardViewMap[data.mode]) {
 
       //column name
       div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -4203,7 +4256,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         div_clone.style[i] = style[i];
       }
       text_div = GeneralJs.nodes.div.cloneNode(true);
-      text_div.textContent = map[column].name;
+      text_div.textContent = map[obj.column].name;
       style = {
         position: "absolute",
         fontSize: String(cardDefaultFontSize) + ea,
@@ -4236,7 +4289,17 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         div_clone.style[i] = style[i];
       }
       text_div = GeneralJs.nodes.div.cloneNode(true);
-      text_div.textContent = thisData[column];
+      if (obj.complex !== undefined) {
+        text_div.textContent = thisData[obj.column];
+        text_div.textContent = text_div.textContent + " ";
+        for (let c of obj.complex) {
+          text_div.textContent = text_div.textContent + thisData[c];
+          text_div.textContent = text_div.textContent + " ";
+        }
+        text_div.textContent = text_div.textContent.slice(0, -1);
+      } else {
+        text_div.textContent = thisData[obj.column];
+      }
       style = {
         position: "absolute",
         fontSize: String(cardDefaultFontSize) + ea,

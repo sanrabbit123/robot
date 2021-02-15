@@ -3040,7 +3040,8 @@ DataPatch.prototype.designerRawMap = function () {
     partnership: [
       { column: "email", },
       { column: "classification", },
-      { column: "company", },
+      { column: "bankName", complex: [ "bankAccount", "bankTo" ] },
+      { column: "company", complex: [ "businessNumber" ] },
       { column: "interiorCareer", },
       { column: "stylingCareer", },
       { column: "careerDetail", },
