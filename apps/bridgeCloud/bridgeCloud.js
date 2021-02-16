@@ -151,25 +151,29 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
 
     } else if (obj.mode === "designer") {
       already = await instance.back.mongoRead("designerPortfolioRaw", { phone: obj.phone }, { bridge: true });
-      if (already.length > 0) {
-        await instance.back.mongoUpdate("designerPortfolioRaw", [
-          { phone: obj.phone },
-          {
+
+      if (obj.phone !== "010-2747-3403") {
+        if (already.length > 0) {
+          await instance.back.mongoUpdate("designerPortfolioRaw", [
+            { phone: obj.phone },
+            {
+              date: new Date(),
+              name: obj.name,
+              phone: obj.phone,
+              folderId,
+            },
+          ],
+          { bridge: true });
+        } else {
+          await instance.back.mongoCreate("designerPortfolioRaw", {
             date: new Date(),
             name: obj.name,
             phone: obj.phone,
             folderId,
-          },
-        ],
-        { bridge: true });
-      } else {
-        await instance.back.mongoCreate("designerPortfolioRaw", {
-          date: new Date(),
-          name: obj.name,
-          phone: obj.phone,
-          folderId,
-        }, { bridge: true });
+          }, { bridge: true });
+        }
       }
+
       message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
     }
@@ -536,7 +540,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       }
       let filteredObj, message;
       let tempArr;
-      let tempArr0, tempArr1;
+      let tempArr0, tempArr1, tempArr2;
       console.log("request get");
 
       filteredObj = {};
@@ -550,17 +554,18 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       filteredObj.date = new Date();
 
       //address parsing
-      filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
-      delete filteredObj.detailAddress;
+      if (filteredObj.address !== undefined && filteredObj.detailAddress !== undefined) {
+        filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
+        delete filteredObj.detailAddress;
+      }
 
-      console.log(filteredObj);
-
-      if (resultObj.mode === "partnership") {
-
-        //channel parsing
+      //channel parsing
+      if (filteredObj.channel !== undefined) {
         tempArr = filteredObj.channel.split("__input__");
         tempArr0 = tempArr[0].split("__split__");
         tempArr1 = tempArr[1].split("__split__");
+        tempArr2 = tempArr[2].split("__split__");
+
         if (tempArr0.length === 1 && tempArr0[0] === '') {
           filteredObj.webChannel = [];
         } else {
@@ -572,7 +577,19 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         } else {
           filteredObj.snsChannel = tempArr1;
         }
+
+        if (tempArr2.length === 1 && tempArr2[0] === '') {
+          filteredObj.cloudChannel = [];
+        } else {
+          filteredObj.cloudChannel = tempArr2;
+        }
+
         delete filteredObj.channel;
+      }
+
+      console.log(filteredObj);
+
+      if (resultObj.mode === "partnership") {
 
         message = "새로운 디자이너 파트너십 신청서가 도착했습니다! \n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
@@ -592,46 +609,21 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "인테리어 경력 : " + filteredObj.interiorCareer + "\n";
         message += "스타일링 경력 : " + filteredObj.stylingCareer + "\n";
         message += "경력 상세 : " + filteredObj.careerDetail + "\n";
-        message += "홈페이지 : " + (filteredObj.webChannel.length > 1 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
-        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 1 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
+        message += "홈페이지 : " + (filteredObj.webChannel.length > 0 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
+        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 0 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
+        message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
         KAKAO.sendTalk("designerPartnership", filteredObj["designer"], filteredObj["phone"]);
-        slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
-        await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { local: true });
+        if (filteredObj.phone !== "010-2747-3403") {
+          slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+          await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { local: true });
+        } else {
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+          console.log(filteredObj);
+        }
 
-        instance.bridgeToSheets({
-          id: "1gr_Sm_Wdhl2BuRY809gyw_XrlDgL6nErDS4enI-CajU",
-          model: {
-            date: '문의일',
-            designer: '성함',
-            phone: '연락처',
-            address: '주소',
-            email: '이메일',
-            classification: '사업자 분류',
-            company: '회사명',
-            businessNumber: '사업자 등록번호',
-            startDate: '개업일',
-            representative: '대표자 성함',
-            bankName: '은행명',
-            bankAccount: '계좌번호',
-            bankTo: '수신자',
-            bankEtc: '기타 사항',
-            interiorCareer: '인테리어 경력',
-            stylingCareer: '스타일링 경력',
-            careerDetail: '경력 상세',
-            webChannel: '홈페이지',
-            snsChannel: 'SNS 채널',
-            comeFrom: '유입 경로',
-          },
-          query: null,
-          from: {
-            where: "local",
-            collection: "designerPartnershipRaw"
-          }
-        });
-
-      } else {
+      } else if (resultObj.mode === "presentation") {
 
         message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
@@ -640,29 +632,29 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "이메일 : " + filteredObj.email + "\n";
         message += "주소 : " + filteredObj.address + "\n";
         message += "설명회 신청 시간 : " + filteredObj.presentationTimes + "\n";
+        message += "홈페이지 : " + (filteredObj.webChannel.length > 0 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
+        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 0 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
+        message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
         KAKAO.sendTalk("designerPresentation", filteredObj["designer"], filteredObj["phone"]);
-        slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
-        await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { local: true });
+        if (filteredObj.phone !== "010-2747-3403") {
+          slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+          await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { local: true });
+        } else {
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+          console.log(filteredObj);
+        }
 
-        instance.bridgeToSheets({
-          id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
-          model: {
-            date: '문의일',
-            designer: '성함',
-            phone: '연락처',
-            address: '주소',
-            email: '이메일',
-            presentationTimes: '신청 시간',
-            comeFrom: '유입 경로',
-          },
-          query: null,
-          from: {
-            where: "local",
-            collection: "designerPresentationRaw"
-          }
-        });
+      } else if (resultObj.mode === "portfolio") {
+
+        if (filteredObj.phone !== "010-2747-3403") {
+          slack_bot.chat.postMessage({ text: filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!", channel: "#300_designer" });
+          // await instance.back.mongoUpdate("designerPresentationRaw", filteredObj, { local: true });
+        } else {
+          slack_bot.chat.postMessage({ text: filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!", channel: "#error_log" });
+          console.log(filteredObj);
+        }
 
       }
 

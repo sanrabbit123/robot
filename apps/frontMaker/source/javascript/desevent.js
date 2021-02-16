@@ -424,6 +424,13 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
               return true;
             }
           }, value: "", },
+          { name: "channel", alert: "홍보 채널을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
           { name: "comeFrom", alert: "유입 경로를 선택해주세요!", valid: function (value) {
             if (false) {
               return false;
@@ -478,16 +485,9 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             } else {
               return true;
             }
-          }, value: "", },
-          { name: "channel", alert: "홍보 채널을 입력해주세요!", valid: function (value) {
-            if (false) {
-              return false;
-            } else {
-              return true;
-            }
           }, value: "", }
         ];
-      } else {
+      } else if (mode === "presentation") {
         columns.green = [
           { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
             if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
@@ -537,6 +537,45 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             } else {
               return true;
             }
+          }, value: "", },
+          { name: "channel", alert: "홍보 채널을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", }
+        ];
+        columns.gray = [];
+      } else if (mode === "portfolio") {
+        columns.green = [
+          { name: "designer", alert: "성함을 입력해주세요!", valid: function (value) {
+            if (/[ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\\\|\/\?\"\'\:\;\<\>\,\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "phone", alert: "연락처를 입력해주세요!", valid: function (value) {
+            if (/[^0-9\-]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "email", alert: "이메일을 입력해주세요!", valid: function (value) {
+            if (!/[\@]/gi.test(value) || !/[\.]/gi.test(value)) {
+              return false;
+            } else {
+              return true;
+            }
+          }, value: "", },
+          { name: "channel", alert: "홍보 채널을 입력해주세요!", valid: function (value) {
+            if (false) {
+              return false;
+            } else {
+              return true;
+            }
           }, value: "", }
         ];
         columns.gray = [];
@@ -551,10 +590,22 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             GeneralJs.inputBackward(targetValues[c.name].input, c.alert);
             return false;
           }
-        } else {
+        } else if (targetValues[c.name].type === "radio") {
           temp = false;
           for (let svg of targetValues[c.name].input) {
             if (svg.getAttribute("selected") === "true") {
+              temp = true;
+            }
+          }
+          if (!temp) {
+            alert(c.alert);
+            window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);
+            return false;
+          }
+        } else if (targetValues[c.name].type === "array") {
+          temp = false;
+          for (let inputDom of targetValues[c.name].input) {
+            if (inputDom.value !== "") {
               temp = true;
             }
           }
@@ -612,7 +663,6 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
 
       instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {
         try {
-
           if (instance.fileBox[flatform].files.length > 0) {
             formData = new FormData();
             formData.enctype = "multipart/form-data";
@@ -649,12 +699,18 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
               top = (flatform === "desktop") ? 31 : 7;
               whiteWidth = (flatform === "desktop") ? 330 : 74;
               whiteHeight = (flatform === "desktop") ? 86 : 19.4;
-            } else {
+            } else if (finalObj.mode === "presentation") {
               svg_clone.src = instance.map.sub.etc.presentationComplete.src;
               height = (flatform === "desktop") ? 41 : 9;
               top = (flatform === "desktop") ? 31 : 7;
               whiteWidth = (flatform === "desktop") ? 356 : 76;
               whiteHeight = (flatform === "desktop") ? 149 : 34;
+            } else if (finalObj.mode === "portfolio") {
+              svg_clone.src = instance.map.sub.etc.photoComplete.src;
+              height = (flatform === "desktop") ? 19 : 4.5;
+              top = (flatform === "desktop") ? 31 : 7;
+              whiteWidth = (flatform === "desktop") ? 330 : 74;
+              whiteHeight = (flatform === "desktop") ? 86 : 19.4;
             }
             width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" }) + ((flatform === "desktop") ? 0 : -1);
             style = {
@@ -670,7 +726,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             svg_dom = SvgTong.parsing(svg_clone);
             whiteBox.appendChild(svg_dom);
 
-            if (finalObj.mode !== "partnership") {
+            if (finalObj.mode !== "partnership" && finalObj.mode !== "portfolio") {
 
               promptGreenWidth0 = (flatform === "desktop") ? 40 : 8.6;
               promptGreenWidth1 = (flatform === "desktop") ? 62 : 14.4;
@@ -698,7 +754,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
               }
 
               svg_clone = SvgTong.tongMaker();
-              svg_clone.src = instance.map.sub.submit[2].src[flatform];
+              svg_clone.src = instance.map.sub.submit[3].src[flatform];
               width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
               style = {
                 position: "absolute",
@@ -733,7 +789,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
               }
 
               svg_clone = SvgTong.tongMaker();
-              svg_clone.src = instance.map.sub.submit[3].src[flatform];
+              svg_clone.src = instance.map.sub.submit[4].src[flatform];
               width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
               style = {
                 position: "absolute",
@@ -758,7 +814,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             whiteBox.style.height = String(whiteHeight) + ea;
             whiteBox.style.top = "calc(50% - " + String(whiteHeight / 2) + ea + ")";
 
-            if (finalObj.mode === "partnership") {
+            if (finalObj.mode === "partnership" || finalObj.mode === "portfolio") {
               setTimeout(function () {
                 window.location.href = "/index.php";
               }, 3000);
@@ -768,6 +824,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
           window.location.href = "/index.php";
         }
       });
+
     } catch (e) {
       window.location.href = "/index.php";
     }
@@ -884,20 +941,31 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
   targetBlocks = [
     {
       name: "designer",
-      height: { desktop: 170, mobile: 56.2, },
+      height: { desktop: ((pageBoo !== "portfolio") ? 170 : 138), mobile: ((pageBoo !== "portfolio") ? 56.2 : 36.8), },
       desktop: [
         //성함
         {
           titleStyle: {
-            top: 57,
+            top: 56.5,
             left: 0,
           },
           callback: function (needs) {
-            let dom = DeseventJs.inputMaker(true, "blocks_name");
-            dom.style.top = "50px";
-            dom.style.left = "99.5px";
-            dom.style.width = "149px";
-            let input = dom.children[0];
+            let dom, top, left, width;
+            let ea;
+            let input;
+
+            ea = "px";
+
+            top = 56.5 - 6.5;
+            left = 99.5;
+            width = 149;
+
+            dom = DeseventJs.inputMaker(true, "blocks_name");
+            dom.style.top = String(top) + ea;
+            dom.style.left = String(left) + ea;
+            dom.style.width = String(width) + ea;
+
+            input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "성함");
             instance.values.data.desktop.designer = { type: "text", input: input };
@@ -907,21 +975,33 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
         //연락처
         {
           titleStyle: {
-            top: 101,
+            top: 101.5,
             left: 0,
           },
           callback: function (needs) {
-            let dom = DeseventJs.inputMaker(true, "blocks_phone");
-            dom.style.top = "95.5px";
-            dom.style.left = "99.5px";
-            dom.style.width = "149px";
-            let input = dom.children[0];
+            let dom, top, left, width;
+            let ea;
+            let input;
+
+            ea = "px";
+
+            top = 101.5 - 6.5;
+            left = 99.5;
+            width = 149;
+
+            dom = DeseventJs.inputMaker(true, "blocks_phone");
+            dom.style.top = String(top) + ea;
+            dom.style.left = String(left) + ea;
+            dom.style.width = String(width) + ea;
+
+            input = dom.children[0];
             input.style.textAlign = "center";
             input.setAttribute("placeholder", "010-0000-0000");
             input.setAttribute("hypenboo", "yes");
             input.addEventListener("keyup", function (e) {
               this.value = GeneralJs.autoHypenPhone(this.value);
             });
+
             instance.values.data.desktop.phone = { type: "text", input: input };
             return dom;
           }
@@ -929,8 +1009,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
         //주소
         {
           titleStyle: {
-            top: 57,
+            top: 56.5,
             right: 534,
+            display: (pageBoo !== "portfolio" ? "block" : "none"),
           },
           callback: function (needs) {
             const { buttons } = needs;
@@ -979,6 +1060,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             dom.addEventListener("click", DeseventJs.postEvent("desktop"));
             dom.appendChild(SvgTong.parsing(svg_clone));
             h.appendChild(dom);
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            }
 
             //address
             dom = DeseventJs.inputMaker(true, "blocks_address0");
@@ -990,7 +1074,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
-            instance.values.data.desktop.address = { type: "text", input: input };
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            } else {
+              instance.values.data.desktop.address = { type: "text", input: input };
+            }
 
             //detail address
             dom = DeseventJs.inputMaker(true, "blocks_address1");
@@ -1002,7 +1090,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
-            instance.values.data.desktop.detailAddress = { type: "text", input: input };
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            } else {
+              instance.values.data.desktop.detailAddress = { type: "text", input: input };
+            }
 
             return h;
           }
@@ -1010,12 +1102,16 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
         //이메일
         {
           titleStyle: {
-            top: 144,
+            top: (pageBoo !== "portfolio" ? 145 : 101.5),
             right: 518,
           },
           callback: function (needs) {
             let dom = DeseventJs.inputMaker(true, "blocks_email");
-            dom.style.bottom = "0px";
+            if (pageBoo !== "portfolio") {
+              dom.style.bottom = "0px";
+            } else {
+              dom.style.top = "95px";
+            }
             dom.style.right = "0px";
             dom.style.width = "477px";
             let input = dom.children[0];
@@ -1073,6 +1169,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
           titleStyle: {
             top: 31.1,
             left: 0,
+            display: (pageBoo !== "portfolio" ? "block" : "none"),
           },
           callback: function (needs) {
             const { buttons } = needs;
@@ -1120,6 +1217,9 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             dom.addEventListener("click", DeseventJs.postEvent("mobile"));
             dom.appendChild(SvgTong.parsing(svg_clone));
             h.appendChild(dom);
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            }
 
             //address
             dom = DeseventJs.inputMaker(false, "moblocks_address0");
@@ -1131,7 +1231,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
-            instance.values.data.mobile.address = { type: "text", input: input };
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            } else {
+              instance.values.data.mobile.address = { type: "text", input: input };
+            }
 
             //detail address
             dom = DeseventJs.inputMaker(false, "moblocks_address1");
@@ -1143,7 +1247,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
-            instance.values.data.mobile.detailAddress = { type: "text", input: input };
+            if (pageBoo === "portfolio") {
+              dom.style.display = "none";
+            } else {
+              instance.values.data.mobile.detailAddress = { type: "text", input: input };
+            }
 
             return h;
           }
@@ -1151,7 +1259,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
         //이메일
         {
           titleStyle: {
-            top: 50.5,
+            top: ((pageBoo !== "portfolio") ? 50.5 : 31.1),
             left: 0,
           },
           callback: function (needs) {
@@ -8051,7 +8159,7 @@ DeseventJs.prototype.baseMaker = function (pageBoo) {
           svg_clone.style.height = String(height) + ea;
           svg_clone.style.width = String(width) + ea;
           for (let k in blocks[i].desktop[j].titleStyle) {
-            svg_clone.style[k] = String(blocks[i].desktop[j].titleStyle[k]) + ea;
+            svg_clone.style[k] = String(blocks[i].desktop[j].titleStyle[k]) + ((k !== "display") ? ea : '');
           }
           temp.appendChild(SvgTong.parsing(svg_clone));
 
@@ -8089,7 +8197,7 @@ DeseventJs.prototype.baseMaker = function (pageBoo) {
           svg_clone.style.height = String(height) + ea;
           svg_clone.style.width = String(width) + ea;
           for (let k in blocks[i].mobile[j].titleStyle) {
-            svg_clone.style[k] = String(blocks[i].mobile[j].titleStyle[k]) + ea;
+            svg_clone.style[k] = String(blocks[i].mobile[j].titleStyle[k]) + ((k !== "display") ? ea : '');
           }
           temp.appendChild(SvgTong.parsing(svg_clone));
 
@@ -8416,18 +8524,16 @@ DeseventJs.prototype.launching = async function () {
       this.map.main.splice(3, 1);
       this.map.main.splice(1, 1);
       this.map.sub.title = this.map.sub.titleSecond;
-      this.values.mode = "partnership";
     } else if (pageBoo === "presentation") {
       this.map.main.splice(3, 1);
       this.map.main.splice(2, 1);
       this.map.sub.title = this.map.sub.titleFirst;
-      this.values.mode = "presentation";
     } else {
       this.map.main.splice(1, 2);
       this.map.sub.title = this.map.sub.titleThird;
-      this.values.mode = "portfolio";
     }
 
+    this.values.mode = pageBoo;
     this.values.data = {};
     this.values.data.desktop = {};
     this.values.data.mobile = {};
