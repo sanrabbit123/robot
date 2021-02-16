@@ -89,8 +89,8 @@ KakaoTalk.prototype.templateTong = function (target) {
     pastcomplete: "TA_7532",
     complete: "TC_1244",
     photo: "TC_1179",
-    designerPartnership: "TD_4907",
-    designerPresentation: "TD_4908",
+    designerPartnership: "TD_5890",
+    designerPresentation: "TD_5891",
   };
   return tong[target];
 }
