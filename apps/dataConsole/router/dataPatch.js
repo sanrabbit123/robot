@@ -2977,7 +2977,7 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
-  let binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard;
+  let binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables;
 
   binaryStandard = {
     dbName: "designerPortfolioRaw",
@@ -2999,11 +2999,14 @@ DataPatch.prototype.designerRawMap = function () {
     presentation: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
+      presentationTimes : { name: "참석 시간", relative: 160, type: "string", sort: "number" },
       address : { name: "주소", relative: 360, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
       date : { name: "문의일", relative: 180, type: "date", sort: "date" },
-      presentationTimes : { name: "참석 시간", relative: 160, type: "string", sort: "number" },
       comeFrom : { name: "유입 경로", relative: 100, type: "string", sort: "string" },
+      webChannel : { name: "홈페이지", relative: 300, type: "array", sort: "string" },
+      snsChannel : { name: "SNS", relative: 300, type: "array", sort: "string" },
+      cloudChannel : { name: "클라우드", relative: 300, type: "array", sort: "string" },
     },
     partnership: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
@@ -3025,6 +3028,7 @@ DataPatch.prototype.designerRawMap = function () {
       careerDetail : { name: "경력 상세", relative: 540, type: "string", sort: "string" },
       webChannel : { name: "홈페이지", relative: 300, type: "array", sort: "string" },
       snsChannel : { name: "SNS", relative: 300, type: "array", sort: "string" },
+      cloudChannel : { name: "클라우드", relative: 300, type: "array", sort: "string" },
       comeFrom : { name: "유입 경로", relative: 120, type: "string", sort: "string" },
     }
   };
@@ -3036,6 +3040,8 @@ DataPatch.prototype.designerRawMap = function () {
       { column: "address", },
       { column: "comeFrom", },
       { column: "date", },
+      { column: "webChannel", },
+      { column: "snsChannel", },
     ],
     partnership: [
       { column: "email", },
@@ -3068,7 +3074,38 @@ DataPatch.prototype.designerRawMap = function () {
     value: "phone"
   };
 
-  return { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard };
+  editables = {
+    presentationTimes: function () {
+      const dayConvert = [
+        '일요일',
+        '월요일',
+        '화요일',
+        '수요일',
+        '목요일',
+        '금요일',
+        '토요일'
+      ];
+      const dateToString = function (dateObject) {
+        return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]} 14시`;
+      };
+      const stringToDate = function (str) {
+        const today = new Date();
+        let result, tempArr;
+
+        if (str !== "기타" && !/^개별/gi.test(str)) {
+          tempArr = str.split(' ');
+          result = new Date(today.getFullYear(), Number(tempArr[0].replace(/[^0-9]/gi, '')) - 1, Number(tempArr[1].replace(/[^0-9]/gi, '')));
+          return result;
+        } else {
+          return new Date();
+        }
+
+      };
+      return { type: "calendar", inputFunction: stringToDate, outputFunction: dateToString };
+    },
+  };
+
+  return { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------

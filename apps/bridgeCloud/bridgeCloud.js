@@ -683,6 +683,41 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       } else if (resultObj.mode === "portfolio") {
 
         if (!ignorePhone.includes(filteredObj.phone)) {
+
+          whereQuery = { phone: filteredObj["phone"] };
+          already = await instance.back.mongoRead(dictionary["partnership"].db, whereQuery, { local: true });
+          oppositeExist = await instance.back.mongoRead(dictionary["partnership"].oppositeDb, whereQuery, { local: true });
+
+          updateQuery = {};
+          updateQuery.designer = filteredObj.designer;
+          updateQuery.email = filteredObj.email;
+
+          if (already.length > 0) {
+            if (already[0].webChannel.length <= filteredObj.webChannel.length) {
+              updateQuery.webChannel = filteredObj.webChannel;
+            }
+            if (already[0].snsChannel.length <= filteredObj.snsChannel.length) {
+              updateQuery.snsChannel = filteredObj.snsChannel;
+            }
+            if (already[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
+              updateQuery.cloudChannel = filteredObj.cloudChannel;
+            }
+            await instance.back.mongoUpdate(dictionary["partnership"].db, [ whereQuery, updateQuery ], { local: true });
+          }
+
+          if (oppositeExist.length > 0) {
+            if (oppositeExist[0].webChannel.length <= filteredObj.webChannel.length) {
+              updateQuery.webChannel = filteredObj.webChannel;
+            }
+            if (oppositeExist[0].snsChannel.length <= filteredObj.snsChannel.length) {
+              updateQuery.snsChannel = filteredObj.snsChannel;
+            }
+            if (oppositeExist[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
+              updateQuery.cloudChannel = filteredObj.cloudChannel;
+            }
+            await instance.back.mongoUpdate(dictionary["partnership"].db, [ whereQuery, updateQuery ], { local: true });
+          }
+
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });

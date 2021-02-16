@@ -8656,6 +8656,7 @@ DeseventJs.prototype.launching = async function () {
     }
 
   } catch (e) {
+    window.localStorage.clear();
     window.location.href = "https://home-liaison.com";
   }
 }

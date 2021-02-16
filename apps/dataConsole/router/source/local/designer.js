@@ -3796,7 +3796,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     }
   }
   const columns = Object.keys(data.columns);
-  const { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard } = DataPatch.designerRawMap();
+  const { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -3841,6 +3841,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let reportTargetAllBox;
   let reportTargetNumberValue;
   let reportScrollBoxTotalWidth;
+  let editFunction;
+  let tempFunction, tempFunctionOutput;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -3870,7 +3872,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     number = Number(translateX.replace(/[^0-9\-\.]/gi, ''));
     return { style: "translateX(" + String(number + move) + ea + ")", number: number + move };
   }
-  moveAmount = (data.mode === "presentation") ? 160 : 360;
+  moveAmount = (data.mode === "presentation") ? 200 : 360;
 
   totalWidth = 100;
   for (let i of columns) {
@@ -3881,6 +3883,105 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   dataDataZone = {};
   sortTargets = [];
   dataDataFactorsTotal = [];
+
+  editFunction = function (inputFunction, outputFunction) {
+    return {
+      calendar: function (e) {
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        const grandMother = this.parentNode.parentNode;
+        const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
+        const { top, left, height, width } = this.getBoundingClientRect();
+        const targetSpot = this.firstChild;
+        const thisWidth = Number(this.style.width.replace(/[^0-9\.\-]/gi, ''));
+        const thisDate = inputFunction(targetSpot.textContent);
+        const ea = "px";
+        let style, calendarWidth, calendarHeight, cancelBack, calendar, calendarTong;
+        let whiteTop, whiteLeft;
+
+        calendarTong = GeneralJs.nodes.div.cloneNode(true);
+        calendar = instance.mother.makeCalendar(thisDate, function (e) {
+          e.stopPropagation();
+
+          const dateString = this.getAttribute("buttonValue");
+          let tempArr, thisDate;
+
+          tempArr = dateString.split('-');
+          thisDateObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+
+          targetSpot.style.width = "";
+          targetSpot.style.left = "";
+
+          targetSpot.textContent = outputFunction(thisDateObj);
+
+          targetSpot.style.left = String(thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) + ea;
+          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width) + ea;
+
+          grandMother.removeChild(grandMother.lastChild);
+          grandMother.removeChild(grandMother.lastChild);
+        });
+        calendarWidth = Number(calendar.calendarBase.style.width.replace(/[^0-9\.\-]/gi, ''));
+        calendarHeight = Number(calendar.calendarBase.style.height.replace(/[^0-9\.\-]/gi, ''));
+        whiteTop = grandMother.scrollTop + top - grandMotherTop + height + 5;
+        whiteLeft = left - grandMotherLeft + (width / 2) - (calendarWidth / 2);
+
+        style = {
+          position: "absolute",
+          background: "white",
+          top: String(whiteTop) + ea,
+          left: String(whiteLeft) + ea,
+          boxShadow: "0px 4px 14px -8px #808080",
+          paddingTop: String(1) + ea,
+          borderRadius: String(5) + ea,
+          animation: "fadeuplite 0.3s ease forwards",
+          width: String(calendarWidth) + ea,
+          height: String(calendarHeight) + ea,
+          overflow: "hidden",
+        };
+        GeneralJs.timeouts["designerReportEditableCalendar"] = setTimeout(function () {
+          calendarTong.style.animation = "";
+          clearTimeout(GeneralJs.timeouts["designerReportEditableCalendar"]);
+          GeneralJs.timeouts["designerReportEditableCalendar"] = null;
+        }, 301);
+        for (let i in style) {
+          calendarTong.style[i] = style[i];
+        }
+
+        moveTargets.push(calendarTong);
+
+        cancelBack = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          background: "gray",
+          opacity: String(0),
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(100) + '%',
+          height: String(6 + (36 * data.data.length) + 200) + ea,
+          animation: "justfadein 0.3s ease forwards",
+        };
+        for (let i in style) {
+          cancelBack.style[i] = style[i];
+        }
+
+        cancelBack.addEventListener("click", function (e) {
+          cancelBack.parentNode.removeChild(calendarTong);
+          cancelBack.parentNode.removeChild(cancelBack);
+        });
+
+        grandMother.appendChild(cancelBack);
+        calendarTong.appendChild(calendar.calendarBase);
+        grandMother.appendChild(calendarTong);
+      },
+      menu: function (e) {
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        //not yet
+      }
+    };
+  }
 
   //title area
   titleArea = GeneralJs.nodes.div.cloneNode(true);
@@ -3949,9 +4050,16 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   }
   titleIcon1.addEventListener("click", function (e) {
     let tempObj;
+    let minArr;
+    minArr = [];
+    for (let dom of moveTargets) {
+      tempObj = moveParsing(dom, (moveAmount * -1));
+      minArr.push(tempObj.number);
+    }
+    minArr.sort((a, b) => { return a - b; });
     for (let dom of moveTargets) {
       tempObj = moveParsing(dom, (moveAmount * 1));
-      if (tempObj.number >= 0) {
+      if (minArr[0] >= 0) {
         dom.style.transform = "translateX(0px)";
       } else {
         dom.style.transform = tempObj.style;
@@ -3975,10 +4083,17 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   titleIcon2.addEventListener("click", function (e) {
     let tempObj;
     let standard;
+    let maxArr;
     standard = dataArea.getBoundingClientRect().width - (mainMargin * 2);
+    maxArr = [];
     for (let dom of moveTargets) {
       tempObj = moveParsing(dom, (moveAmount * -1));
-      if (tempObj.number <= standard - totalWidth) {
+      maxArr.push(tempObj.number);
+    }
+    maxArr.sort((a, b) => { return b - a; });
+    for (let dom of moveTargets) {
+      tempObj = moveParsing(dom, (moveAmount * -1));
+      if (maxArr[0] <= standard - totalWidth) {
         dom.style.transform = "translateX(" + String(standard - totalWidth) + "px)";
       } else {
         dom.style.transform = tempObj.style;
@@ -4569,6 +4684,11 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       }
       dataDataFactor.appendChild(text_div);
       dataDataFactor.addEventListener("click", dataAreaToCardEvent);
+      if (editables[z] !== undefined) {
+        tempFunction = editables[z];
+        tempFunctionOutput = tempFunction();
+        dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
+      }
       dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
       dataDataBox.appendChild(dataDataFactor);
     }
