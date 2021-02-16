@@ -118,6 +118,37 @@ DeseventJs.postEvent = function (boo) {
   }
 }
 
+DeseventJs.setLocalInfo = function (input, position) {
+  let temp, length;
+  if (Array.isArray(input)) {
+    if (input.length > 0) {
+      if (/input/gi.test(input[0].nodeName)) {
+        length = input.length;
+        if (window.localStorage.getItem(position) === null) {
+          window.localStorage.setItem(position, JSON.stringify(new Array(length)));
+        }
+        for (let i = 0; i < length; i++) {
+          input[i].setAttribute("thisIndex", String(i));
+        }
+      } else if (/svg/gi.test(input[0].nodeName)) {
+        for (let svg of input) {
+          svg.addEventListener("click", function (e) {
+            if (this.getAttribute("selected") === "true") {
+              window.localStorage.setItem(position, this.getAttribute("value"));
+            }
+          });
+        }
+      }
+    }
+  } else {
+    if (input.nodeName === "INPUT") {
+      input.addEventListener("blur", function (e) {
+        window.localStorage.setItem(position, this.value);
+      });
+    }
+  }
+}
+
 DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, callback) {
   const instance = this;
   const { sub: { etc: { pending, certification } } } = this.map;
@@ -1639,6 +1670,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
               okEvent = function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -1657,6 +1689,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("desktop.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("desktop.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("desktop.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -2664,6 +2701,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               }
               svg_clone.addEventListener("click", function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -2682,6 +2720,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("mobile.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("mobile.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("mobile.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -4060,6 +4103,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
               okEvent = function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -4078,6 +4122,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("desktop.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("desktop.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("desktop.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -6163,6 +6212,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               }
               svg_clone.addEventListener("click", function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -6181,6 +6231,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("mobile.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("mobile.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("mobile.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -6621,6 +6676,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
 
               okEvent = function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -6639,6 +6695,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("desktop.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("desktop.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("desktop.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -7476,6 +7537,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
               }
               svg_clone.addEventListener("click", function (e) {
                 let totalValue;
+                let temp;
 
                 totalValue = '';
 
@@ -7494,6 +7556,11 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
 
                 valueTong[thisIndex].value = totalValue;
+                if (window.localStorage.getItem("mobile.channel") !== null) {
+                  temp = JSON.parse(window.localStorage.getItem("mobile.channel"));
+                  temp[thisIndex] = totalValue;
+                  window.localStorage.setItem("mobile.channel", JSON.stringify(temp));
+                }
 
                 GeneralJs.stacks["buttonPopup_inputs" + String(thisIndex)] = [];
                 if (totalValue !== '') {
@@ -8509,7 +8576,9 @@ DeseventJs.prototype.launching = async function () {
 
     //parsing get
     const getObj = GeneralJs.returnGet();
+    const flatform = [ "desktop", "mobile" ];
     let pageBoo;
+    let temp, tempFlatform, tempKey, tempArr, tempValue;
 
     if (getObj.mode === undefined) {
       pageBoo = "partnership";
@@ -8546,6 +8615,45 @@ DeseventJs.prototype.launching = async function () {
     this.initialDom(pageBoo);
     this.baseMaker(pageBoo);
     this.belowSubmit(pageBoo);
+
+    for (let f = 0; f < flatform.length; f++) {
+      for (let i in this.values.data[flatform[f]]) {
+        DeseventJs.setLocalInfo(this.values.data[flatform[f]][i].input, flatform[f] + "." + i);
+      }
+    }
+
+    for (let i = 0; i < window.localStorage.length; i++){
+      tempArr = window.localStorage.key(i).split(".");
+      tempFlatform = tempArr[0];
+      tempKey = tempArr[1];
+      tempValue = window.localStorage.getItem(window.localStorage.key(i));
+      if (this.values.data[tempFlatform][tempKey] !== undefined) {
+        if (this.values.data[tempFlatform][tempKey].type === "text") {
+          this.values.data[tempFlatform][tempKey].input.value = tempValue;
+        } else if (this.values.data[tempFlatform][tempKey].type === "radio") {
+          for (let svg of this.values.data[tempFlatform][tempKey].input) {
+            if (svg.getAttribute("value") === tempValue) {
+              svg.style.opacity = String(1);
+              svg.setAttribute("selected", "true");
+            } else {
+              svg.style.opacity = String(0);
+              svg.setAttribute("selected", "false");
+            }
+          }
+        } else if (this.values.data[tempFlatform][tempKey].type === "array") {
+          temp = JSON.parse(tempValue);
+          for (let z = 0; z < this.values.data[tempFlatform][tempKey].input.length; z++) {
+            if (temp[z] !== undefined && temp[z] !== null && temp[z] !== "") {
+              this.values.data[tempFlatform][tempKey].input[z].value = temp[z];
+              GeneralJs.stacks["specialDoms0_" + tempFlatform][z].style.opacity = String(1);
+            } else {
+              this.values.data[tempFlatform][tempKey].input[z].value = "";
+              GeneralJs.stacks["specialDoms0_" + tempFlatform][z].style.opacity = String(0);
+            }
+          }
+        }
+      }
+    }
 
   } catch (e) {
     window.location.href = "https://home-liaison.com";

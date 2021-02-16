@@ -13,6 +13,8 @@ const BridgeCloud = function () {
   this.bridge = { home: this.address.homeinfo.polling.inner, office: this.address.officeinfo.polling.inner, cloud: this.cloudHost.inner };
 
   this.formidable = require('formidable');
+
+  this.ignorePhone = [ "010-2747-3403" ];
 }
 
 BridgeCloud.clientFilters = {
@@ -261,6 +263,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, KAKAO ] = needs;
+  const ignorePhone = this.ignorePhone;
   let funcObj = {};
 
   //POST - submit
@@ -538,9 +541,16 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
         return `${String(dateObject.getFullYear())}-${zeroAddition(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())} ${zeroAddition(dateObject.getHours())}:${zeroAddition(dateObject.getMinutes())}:${zeroAddition(dateObject.getSeconds())}`;
       }
+      const dictionary = {
+        partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
+        presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
+      };
       let filteredObj, message;
       let tempArr;
       let tempArr0, tempArr1, tempArr2;
+      let already, oppositeExist;
+      let whereQuery, updateQuery;
+
       console.log("request get");
 
       filteredObj = {};
@@ -617,15 +627,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
-        KAKAO.sendTalk("designerPartnership", filteredObj["designer"], filteredObj["phone"]);
-        if (filteredObj.phone !== "010-2747-3403") {
-          slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
-          await instance.back.mongoCreate("designerPartnershipRaw", filteredObj, { local: true });
-        } else {
-          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-          console.log(filteredObj);
-        }
-
       } else if (resultObj.mode === "presentation") {
 
         message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
@@ -640,23 +641,51 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
-        KAKAO.sendTalk("designerPresentation", filteredObj["designer"], filteredObj["phone"]);
-        if (filteredObj.phone !== "010-2747-3403") {
+      } else if (resultObj.mode === "portfolio") {
+
+        message = filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!";
+
+      }
+
+      if (resultObj.mode !== "portfolio") {
+
+        KAKAO.sendTalk(dictionary[resultObj.mode].kakao, filteredObj["designer"], filteredObj["phone"]);
+        if (!ignorePhone.includes(filteredObj.phone)) {
+          whereQuery = { phone: filteredObj["phone"] };
+          already = await instance.back.mongoRead(dictionary[resultObj.mode].db, whereQuery, { local: true });
+          oppositeExist = await instance.back.mongoRead(dictionary[resultObj.mode].oppositeDb, whereQuery, { local: true });
+          if (already.length > 0) {
+            await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, filteredObj ], { local: true });
+          } else {
+            await instance.back.mongoCreate(dictionary[resultObj.mode].db, filteredObj, { local: true });
+          }
+          if (oppositeExist > 0) {
+            updateQuery = {};
+            updateQuery.designer = filteredObj.designer;
+            updateQuery.email = filteredObj.email;
+            updateQuery.address = filteredObj.address;
+            if (oppositeExist[0].webChannel.length <= filteredObj.webChannel.length) {
+              updateQuery.webChannel = filteredObj.webChannel;
+            }
+            if (oppositeExist[0].snsChannel.length <= filteredObj.snsChannel.length) {
+              updateQuery.snsChannel = filteredObj.snsChannel;
+            }
+            if (oppositeExist[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
+              updateQuery.cloudChannel = filteredObj.cloudChannel;
+            }
+            await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, updateQuery ], { local: true });
+          }
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
-          await instance.back.mongoCreate("designerPresentationRaw", filteredObj, { local: true });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-          console.log(filteredObj);
         }
 
       } else if (resultObj.mode === "portfolio") {
 
-        if (filteredObj.phone !== "010-2747-3403") {
-          slack_bot.chat.postMessage({ text: filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!", channel: "#300_designer" });
-          // await instance.back.mongoUpdate("designerPresentationRaw", filteredObj, { local: true });
+        if (!ignorePhone.includes(filteredObj.phone)) {
+          slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         } else {
-          slack_bot.chat.postMessage({ text: filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!", channel: "#error_log" });
-          console.log(filteredObj);
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
 
       }
