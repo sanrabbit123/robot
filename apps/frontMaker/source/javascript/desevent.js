@@ -609,6 +609,9 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
               temp = true;
             }
           }
+          if (instance.fileBox[flatform].files.length > 0) {
+            temp = true;
+          }
           if (!temp) {
             alert(c.alert);
             window.scrollTo(0, targetValues[c.name].input[0].getBoundingClientRect().y);

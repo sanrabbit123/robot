@@ -560,6 +560,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       }
 
       //channel parsing
+      filteredObj.webChannel = [];
+      filteredObj.snsChannel = [];
+      filteredObj.cloudChannel = [];
       if (filteredObj.channel !== undefined) {
         tempArr = filteredObj.channel.split("__input__");
         tempArr0 = tempArr[0].split("__split__");
