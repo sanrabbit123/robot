@@ -3978,6 +3978,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         if (e.cancelable) {
           e.preventDefault();
         }
+        
+
+
         //not yet
       }
     };

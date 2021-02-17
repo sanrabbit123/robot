@@ -1069,8 +1069,19 @@ class DevContext extends Array {
 
 
 
-
-
+      // const designers = await back.mongoRead("designerPartnershipRaw", {}, { bridge: true });
+      // let whereQuery, updateQuery;
+      //
+      // updateQuery = {
+      //   status: "미팅 대기",
+      //   meetingTime: "기타",
+      // };
+      //
+      // for (let d of designers) {
+      //   whereQuery = {};
+      //   whereQuery.phone = d.phone;
+      //   await back.mongoUpdate("designerPartnershipRaw", [ whereQuery, updateQuery ], { bridge: true });
+      // }
 
 
 

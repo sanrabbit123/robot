@@ -2999,6 +2999,7 @@ DataPatch.prototype.designerRawMap = function () {
     presentation: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
+      status : { name: "상태", relative: 100, type: "string", sort: "string" },
       presentationTimes : { name: "참석 시간", relative: 160, type: "string", sort: "number" },
       address : { name: "주소", relative: 360, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
@@ -3011,6 +3012,8 @@ DataPatch.prototype.designerRawMap = function () {
     partnership: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
+      status : { name: "상태", relative: 100, type: "string", sort: "string" },
+      meetingTime : { name: "미팅 시간", relative: 160, type: "string", sort: "number" },
       address : { name: "주소", relative: 360, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
       date : { name: "문의일", relative: 160, type: "date", sort: "date" },
@@ -3075,15 +3078,39 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   editables = {
+    status: function () {
+      const stringToItems = function (str) {
+        if (/정중/gi.test(str)) {
+          return "조정중";
+        } else if (/필요/gi.test(str)) {
+          return "조정 필요";
+        } else if (/대기/gi.test(str)) {
+          return "미팅 대기";
+        } else if (/완료/gi.test(str)) {
+          return "미팅 완료";
+        } else {
+          return "알 수 없음";
+        }
+      };
+      const items = function () {
+        return [
+          "조정중",
+          "조정 필요",
+          "미팅 대기",
+          "미팅 완료",
+        ];
+      };
+      return { type: "menu", inputFunction: stringToItems, outputFunction: items };
+    },
     presentationTimes: function () {
       const dayConvert = [
-        '일요일',
-        '월요일',
-        '화요일',
-        '수요일',
-        '목요일',
-        '금요일',
-        '토요일'
+        "일요일",
+        "월요일",
+        "화요일",
+        "수요일",
+        "목요일",
+        "금요일",
+        "토요일"
       ];
       const dateToString = function (dateObject) {
         return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]} 14시`;
