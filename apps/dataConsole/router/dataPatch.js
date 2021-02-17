@@ -2977,7 +2977,20 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
-  let binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables;
+  let updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables;
+
+  updateStandard = "phone";
+
+  alarmStandard = {
+    presentation: {
+      standard: "status",
+      value: [ "조정중", "조정 필요" ],
+    },
+    partnership: {
+      standard: "status",
+      value: [ "조정중", "조정 필요" ],
+    }
+  };
 
   binaryStandard = {
     dbName: "designerPortfolioRaw",
@@ -3013,7 +3026,7 @@ DataPatch.prototype.designerRawMap = function () {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
       status : { name: "상태", relative: 100, type: "string", sort: "string" },
-      meetingTime : { name: "미팅 시간", relative: 160, type: "string", sort: "number" },
+      meetingTime : { name: "미팅 시간", relative: 100, type: "string", sort: "number" },
       address : { name: "주소", relative: 360, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
       date : { name: "문의일", relative: 160, type: "date", sort: "date" },
@@ -3100,7 +3113,7 @@ DataPatch.prototype.designerRawMap = function () {
           "미팅 완료",
         ];
       };
-      return { type: "menu", inputFunction: stringToItems, outputFunction: items };
+      return { type: "menu", thisColumnName: "status", inputFunction: stringToItems, outputFunction: items };
     },
     presentationTimes: function () {
       const dayConvert = [
@@ -3128,11 +3141,39 @@ DataPatch.prototype.designerRawMap = function () {
         }
 
       };
-      return { type: "calendar", inputFunction: stringToDate, outputFunction: dateToString };
+      return { type: "calendar", thisColumnName: "presentationTimes", inputFunction: stringToDate, outputFunction: dateToString };
+    },
+    meetingTime: function () {
+      const dayConvert = [
+        "일요일",
+        "월요일",
+        "화요일",
+        "수요일",
+        "목요일",
+        "금요일",
+        "토요일"
+      ];
+      const dateToString = function (dateObject) {
+        return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]}`;
+      };
+      const stringToDate = function (str) {
+        const today = new Date();
+        let result, tempArr;
+
+        if (str !== "기타" && !/^개별/gi.test(str)) {
+          tempArr = str.split(' ');
+          result = new Date(today.getFullYear(), Number(tempArr[0].replace(/[^0-9]/gi, '')) - 1, Number(tempArr[1].replace(/[^0-9]/gi, '')));
+          return result;
+        } else {
+          return new Date();
+        }
+
+      };
+      return { type: "calendar", thisColumnName: "meetingTime", inputFunction: stringToDate, outputFunction: dateToString };
     },
   };
 
-  return { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables };
+  return { updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------

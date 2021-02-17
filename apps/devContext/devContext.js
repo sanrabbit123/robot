@@ -1085,6 +1085,18 @@ class DevContext extends Array {
 
 
 
+      const values = JSON.parse(await fileSystem(`readString`, [ `${process.cwd()}/temp/target.txt` ]));
+      const sheets = new GoogleSheet();
+      const drive = new GoogleDrive();
+      let sheetsId, response;
+      sheetsId = await sheets.create_newSheets_inPython("모든 CA 정보", "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c");
+      await sheets.update_value_inPython(sheetsId, '', values, [ 0, 0 ]);
+      await sheets.setting_cleanView_inPython(sheetsId);
+      response = await drive.read_webView_inPython(sheetsId);
+
+      console.log(response);
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
       // spawn catfish

@@ -1272,10 +1272,10 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   const patch = this.patch;
   let obj = {};
-  obj.link = "/getDesignerReport";
+  obj.link = [ "/getDesignerReport", "/updateDesignerReport" ];
   obj.func = async function (req, res) {
     try {
-      const { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard } = patch.designerRawMap();
+      const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard } = patch.designerRawMap();
       const dateToString = function (str) {
         const zeroAddition = function (num) {
           if (num < 10) {
@@ -1303,50 +1303,68 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let realData;
       let tempObj;
       let targetIndex;
+      let whereQuery, updateQuery;
 
       if (dbNameMap[req.body.mode] === undefined) {
         throw new Error("invaild mode");
       }
 
-      sameStandardColumn = sameStandard.value;
+      if (req.url === "/getDesignerReport") {
 
-      row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
-      oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
-      binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+        sameStandardColumn = sameStandard.value;
 
-      realData = [];
-      for (let i of row) {
-        delete i._id;
-        tempObj = JSON.parse(JSON.stringify(i));
-        for (let j in tempObj) {
-          if (columnRelativeMap[req.body.mode][j].type === "date") {
-            tempObj[j] = dateToString(tempObj[j]);
-            targetIndex = j;
-          } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-            tempObj[j] = tempObj[j].join(',');
+        row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
+        oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
+        binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+
+        realData = [];
+        for (let i of row) {
+          delete i._id;
+          tempObj = JSON.parse(JSON.stringify(i));
+          for (let j in tempObj) {
+            if (columnRelativeMap[req.body.mode][j].type === "date") {
+              tempObj[j] = dateToString(tempObj[j]);
+              targetIndex = j;
+            } else if (columnRelativeMap[req.body.mode][j].type === "array") {
+              tempObj[j] = tempObj[j].join(',');
+            }
           }
-        }
-        tempObj[sameStandard.name] = false;
-        for (let j of oppositeRow) {
-          if (i[sameStandardColumn] === j[sameStandardColumn]) {
-            tempObj[sameStandard.name] = true;
+          tempObj[sameStandard.name] = false;
+          for (let j of oppositeRow) {
+            if (i[sameStandardColumn] === j[sameStandardColumn]) {
+              tempObj[sameStandard.name] = true;
+            }
           }
-        }
-        tempObj[binaryStandard.name] = false;
-        tempObj[binaryStandard.target] = null;
-        for (let j of binaryRow) {
-          if (i[sameStandardColumn] === j[sameStandardColumn]) {
-            tempObj[binaryStandard.name] = true;
-            tempObj[binaryStandard.target] = j[binaryStandard.target];
+          tempObj[binaryStandard.name] = false;
+          tempObj[binaryStandard.target] = null;
+          for (let j of binaryRow) {
+            if (i[sameStandardColumn] === j[sameStandardColumn]) {
+              tempObj[binaryStandard.name] = true;
+              tempObj[binaryStandard.target] = j[binaryStandard.target];
+            }
           }
+          realData.push(tempObj);
         }
-        realData.push(tempObj);
+
+        realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
+
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ mode: req.body.mode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
+
+      } else if (req.url === "/updateDesignerReport") {
+
+        whereQuery = {};
+        updateQuery = {};
+
+        whereQuery[updateStandard] = req.body.standard;
+        updateQuery[req.body.column] = req.body.value;
+
+        await back.mongoUpdate(dbNameMap[req.body.mode], [ whereQuery, updateQuery ], { bridge: true });
+
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ message: "success" }));
       }
 
-      realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ mode: req.body.mode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData }));
     } catch (e) {
       console.log(e);
     }

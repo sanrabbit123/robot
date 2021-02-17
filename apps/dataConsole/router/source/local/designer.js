@@ -3796,7 +3796,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     }
   }
   const columns = Object.keys(data.columns);
-  const { binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
+  const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -3884,7 +3884,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   sortTargets = [];
   dataDataFactorsTotal = [];
 
-  editFunction = function (inputFunction, outputFunction) {
+  editFunction = function (thisColumnName, inputFunction, outputFunction) {
     return {
       calendar: function (e) {
         if (e.cancelable) {
@@ -3896,6 +3896,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         const targetSpot = this.firstChild;
         const thisWidth = Number(this.style.width.replace(/[^0-9\.\-]/gi, ''));
         const thisDate = inputFunction(targetSpot.textContent);
+        const thisStandard = this.getAttribute("standard");
         const ea = "px";
         let style, calendarWidth, calendarHeight, cancelBack, calendar, calendarTong;
         let whiteTop, whiteLeft;
@@ -3918,8 +3919,10 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String(thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width) + ea;
 
-          grandMother.removeChild(grandMother.lastChild);
-          grandMother.removeChild(grandMother.lastChild);
+          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + targetSpot.textContent, "/updateDesignerReport", function (res) {
+            grandMother.removeChild(grandMother.lastChild);
+            grandMother.removeChild(grandMother.lastChild);
+          });
         });
         calendarWidth = Number(calendar.calendarBase.style.width.replace(/[^0-9\.\-]/gi, ''));
         calendarHeight = Number(calendar.calendarBase.style.height.replace(/[^0-9\.\-]/gi, ''));
@@ -3978,10 +3981,136 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         if (e.cancelable) {
           e.preventDefault();
         }
-        
+        const grandMother = this.parentNode.parentNode;
+        const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
+        const { top, left, height, width } = this.getBoundingClientRect();
+        const targetSpot = this.firstChild;
+        const thisWidth = Number(this.style.width.replace(/[^0-9\.\-]/gi, ''));
+        const items = outputFunction();
+        const thisItem = inputFunction(targetSpot.textContent);
+        const thisStandard = this.getAttribute("standard");
+        const ea = "px";
+        let style;
+        let itemsTong;
+        let itemFactor;
+        let itemStyle, itemTextStyle;
+        let text_div;
+        let tongWidth, tongHeight;
+        let itemHeight;
+        let cancelBack;
+        let whiteTop, whiteLeft;
+        let itemClickEvent;
 
+        tongWidth = 80;
+        itemHeight = 32;
 
-        //not yet
+        whiteTop = grandMother.scrollTop + top - grandMotherTop + height + 5;
+        whiteLeft = left - grandMotherLeft + (width / 2) - (tongWidth / 2);
+
+        itemClickEvent = function (e) {
+          e.stopPropagation();
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+
+          targetSpot.style.left = "";
+          targetSpot.style.width = "";
+          targetSpot.textContent = this.getAttribute("value");
+          targetSpot.style.left = String(thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) + ea;
+          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width) + ea;
+
+          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + targetSpot.textContent, "/updateDesignerReport", function (res) {
+            grandMother.removeChild(grandMother.lastChild);
+            grandMother.removeChild(grandMother.lastChild);
+          });
+        }
+
+        //item tong
+        itemsTong = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String(whiteTop) + ea,
+          left: String(whiteLeft) + ea,
+          paddingTop: String(1) + ea,
+          animation: "fadeuplite 0.3s ease forwards",
+          width: String(tongWidth) + ea,
+        };
+        for (let i in style) {
+          itemsTong.style[i] = style[i];
+        }
+
+        GeneralJs.timeouts["designerReportEditableMenuBox"] = setTimeout(function () {
+          itemsTong.style.animation = "";
+          clearTimeout(GeneralJs.timeouts["designerReportEditableMenuBox"]);
+          GeneralJs.timeouts["designerReportEditableMenuBox"] = null;
+        }, 301);
+
+        moveTargets.push(itemsTong);
+
+        //set item style
+        itemStyle = {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          height: String(itemHeight) + ea,
+          background: "white",
+          boxShadow: "0px 2px 14px -8px #808080",
+          borderRadius: String(3) + ea,
+          marginBottom: String(5) + ea,
+          cursor: "pointer",
+        };
+        itemTextStyle = {
+          fontSize: String(13) + ea,
+          fontWeight: String(500),
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(6) + ea,
+          textAlign: "center",
+          color: "#2fa678",
+        };
+
+        //append items
+        for (let i = 0; i < items.length; i++) {
+          itemFactor = GeneralJs.nodes.div.cloneNode(true);
+          for (let j in itemStyle) {
+            itemFactor.style[j] = itemStyle[j];
+          }
+          text_div = GeneralJs.nodes.div.cloneNode(true);
+          text_div.classList.add("hoverDefault_lite");
+          text_div.textContent = items[i];
+          for (let j in itemTextStyle) {
+            text_div.style[j] = itemTextStyle[j];
+          }
+          itemFactor.appendChild(text_div);
+          itemFactor.setAttribute("value", items[i]);
+          itemFactor.addEventListener("click", itemClickEvent);
+          itemsTong.appendChild(itemFactor);
+        }
+
+        //cancel back
+        cancelBack = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          background: "gray",
+          opacity: String(0),
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(100) + '%',
+          height: String(6 + (36 * data.data.length) + 200) + ea,
+          animation: "justfadein 0.3s ease forwards",
+        };
+        for (let i in style) {
+          cancelBack.style[i] = style[i];
+        }
+
+        cancelBack.addEventListener("click", function (e) {
+          cancelBack.parentNode.removeChild(itemsTong);
+          cancelBack.parentNode.removeChild(cancelBack);
+        });
+
+        //end
+        grandMother.appendChild(cancelBack);
+        grandMother.appendChild(itemsTong);
       }
     };
   }
@@ -4631,6 +4760,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   for (let j = 0; j < data.data.length; j++) {
     dataDataBox = GeneralJs.nodes.div.cloneNode(true);
     dataDataBox.setAttribute("index", String(j));
+    dataDataBox.setAttribute("standard", data.data[j][data.standard]);
     dataDataBox.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
     dataDataBox.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
     moveTargets.push(dataDataBox);
@@ -4649,6 +4779,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       dataDataFactor = GeneralJs.nodes.div.cloneNode(true);
       dataDataFactor.classList.add("hoverDefault_lite");
       dataDataFactor.setAttribute("index", String(j));
+      dataDataFactor.setAttribute("standard", data.data[j][data.standard]);
       dataDataFactor.setAttribute("column", z);
       dataDataFactor.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
       dataDataFactor.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
@@ -4690,7 +4821,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       if (editables[z] !== undefined) {
         tempFunction = editables[z];
         tempFunctionOutput = tempFunction();
-        dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
+        dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
       }
       dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
       dataDataBox.appendChild(dataDataFactor);

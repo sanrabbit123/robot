@@ -4189,7 +4189,7 @@ ProjectJs.prototype.addExtractEvent = function () {
           clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
           GeneralJs.timeouts["extractPendingBack"] = null;
         }, 401);
-      })
+      });
 
     } catch (e) {
       console.log(e);
