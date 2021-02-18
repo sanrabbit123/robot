@@ -1275,7 +1275,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   obj.link = [ "/getDesignerReport", "/updateDesignerReport" ];
   obj.func = async function (req, res) {
     try {
-      const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard } = patch.designerRawMap();
+      const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
       const dateToString = function (str) {
         const zeroAddition = function (num) {
           if (num < 10) {
@@ -1304,6 +1304,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let tempObj;
       let targetIndex;
       let whereQuery, updateQuery;
+      let tempLink;
 
       if (dbNameMap[req.body.mode] === undefined) {
         throw new Error("invaild mode");
@@ -1321,6 +1322,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         for (let i of row) {
           delete i._id;
           tempObj = JSON.parse(JSON.stringify(i));
+          tempLink = null;
           for (let j in tempObj) {
             if (columnRelativeMap[req.body.mode][j].type === "date") {
               tempObj[j] = dateToString(tempObj[j]);
@@ -1335,6 +1337,13 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
               tempObj[sameStandard.name] = true;
             }
           }
+
+          for (let j of cloudLinkTargets) {
+            if (i[j].length > 0) {
+              tempLink = i[j][0];
+            }
+          }
+
           tempObj[binaryStandard.name] = false;
           tempObj[binaryStandard.target] = null;
           for (let j of binaryRow) {
@@ -1343,6 +1352,12 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
               tempObj[binaryStandard.target] = j[binaryStandard.target];
             }
           }
+
+          if (tempLink !== null) {
+            tempObj[binaryStandard.name] = true;
+            tempObj[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
+          }
+
           realData.push(tempObj);
         }
 

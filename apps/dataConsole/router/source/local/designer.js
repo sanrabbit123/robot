@@ -3796,7 +3796,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     }
   }
   const columns = Object.keys(data.columns);
-  const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
+  const { alarmStandard, updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -3844,6 +3844,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let editFunction;
   let tempFunction, tempFunctionOutput;
   let reportSortTitleTop;
+  let alarmTargets;
+  let alarmCircle;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -3884,6 +3886,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   dataDataZone = {};
   sortTargets = [];
   dataDataFactorsTotal = [];
+  alarmTargets = [];
 
   editFunction = function (thisColumnName, inputFunction, outputFunction) {
     return {
@@ -4353,9 +4356,13 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         click: function (e) {
           let str;
           if (thisFolderId !== null) {
-            str = "https://drive.google.com/drive/folders/";
-            str += thisFolderId;
-            str += "?usp=sharing";
+            if (!/^__link__/.test(thisFolderId)) {
+              str = "https://drive.google.com/drive/folders/";
+              str += thisFolderId;
+              str += "?usp=sharing";
+            } else {
+              str = thisFolderId.replace(/^__link__/, '');
+            }
             window.open(str, "_blank");
           } else {
             alert("포트폴리오가 없습니다!");
@@ -4545,7 +4552,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         position: "absolute",
         top: String(cardTitleTop + (lineHeight * indexNumber)) + ea,
         left: String(valueIndent) + ea,
-        width: String(6000) + ea,
+        width: String(12000) + ea,
         overflow: "scroll",
         transition: "all 0s ease",
       };
@@ -4765,12 +4772,17 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     dataDataBox.setAttribute("standard", data.data[j][data.standard]);
     dataDataBox.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
     dataDataBox.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
+    if (alarmStandard[data.mode].value.includes(data.data[j][alarmStandard[data.mode].standard])) {
+      dataDataBox.setAttribute("alarm", "on");
+    } else {
+      dataDataBox.setAttribute("alarm", "off");
+    }
     moveTargets.push(dataDataBox);
     style = {
       height: String(36) + ea,
       width: String(totalWidth) + ea,
       transform: "translateX(" + String(0) + ea + ")",
-      opacity: data.data[j][binaryStandard.name] ? String(1) : String(0.3),
+      opacity: data.data[j][binaryStandard.name] ? String(1) : String(0.4),
     };
     for (let i in style) {
       dataDataBox.style[i] = style[i];
@@ -4827,6 +4839,14 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
       }
       dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
+      if (alarmStandard[data.mode].target.includes(z)) {
+        if (alarmStandard[data.mode].value.includes(data.data[j][alarmStandard[data.mode].standard])) {
+          dataDataFactor.setAttribute("alarm", "on");
+        } else {
+          dataDataFactor.setAttribute("alarm", "off");
+        }
+        alarmTargets.push(dataDataFactor);
+      }
       dataDataBox.appendChild(dataDataFactor);
     }
     sortTargets.push(dataDataBox);
@@ -4856,6 +4876,13 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       text.style.width = String(fixedWidth + 4) + ea;
       text.style.left = "calc(50% - " + String((fixedWidth / 2) + 2) + ea + ")";
       tong.style.opacity = String(1);
+    }
+  }
+
+  for (let a of alarmTargets) {
+    if (a.getAttribute("alarm") === "on") {
+      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:1.5px;", "#FF5F57"));
+      a.firstChild.appendChild(alarmCircle);
     }
   }
 

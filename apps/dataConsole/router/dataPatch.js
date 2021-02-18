@@ -2977,7 +2977,7 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
-  let updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables;
+  let updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets;
 
   updateStandard = "phone";
 
@@ -2985,10 +2985,12 @@ DataPatch.prototype.designerRawMap = function () {
     presentation: {
       standard: "status",
       value: [ "조정중", "조정 필요" ],
+      target: [ "designer", "status" ],
     },
     partnership: {
       standard: "status",
       value: [ "조정중", "조정 필요" ],
+      target: [ "designer", "status" ],
     }
   };
 
@@ -3111,6 +3113,7 @@ DataPatch.prototype.designerRawMap = function () {
           "조정 필요",
           "미팅 대기",
           "미팅 완료",
+          "계약 완료",
         ];
       };
       return { type: "menu", thisColumnName: "status", inputFunction: stringToItems, outputFunction: items };
@@ -3173,7 +3176,12 @@ DataPatch.prototype.designerRawMap = function () {
     },
   };
 
-  return { updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables };
+  cloudLinkTargets = [
+    "webChannel",
+    "cloudChannel",
+  ];
+
+  return { updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------
