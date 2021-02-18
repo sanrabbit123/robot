@@ -3895,6 +3895,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           e.preventDefault();
         }
         const grandMother = this.parentNode.parentNode;
+        const mother = this.parentNode;
         const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
         const { top, left, height, width } = this.getBoundingClientRect();
         const targetSpot = this.firstChild;
@@ -3920,8 +3921,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
           targetSpot.textContent = outputFunction(thisDateObj);
 
-          targetSpot.style.left = String(thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) + ea;
-          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width) + ea;
+          targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
+          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
           GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + targetSpot.textContent, "/updateDesignerReport", function (res) {
             grandMother.removeChild(grandMother.lastChild);
@@ -3986,6 +3987,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           e.preventDefault();
         }
         const grandMother = this.parentNode.parentNode;
+        const mother = this.parentNode;
         const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
         const { top, left, height, width } = this.getBoundingClientRect();
         const targetSpot = this.firstChild;
@@ -4017,13 +4019,42 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             e.preventDefault();
           }
 
+          let finalValue;
+
+          finalValue = this.getAttribute("value");
+
           targetSpot.style.left = "";
           targetSpot.style.width = "";
-          targetSpot.textContent = this.getAttribute("value");
-          targetSpot.style.left = String(thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) + ea;
-          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width) + ea;
+          targetSpot.firstChild.textContent = finalValue;
+          targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
+          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + targetSpot.textContent, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+            let alarmCircle;
+
+            if (alarmStandard[data.mode].standard === thisColumnName) {
+              if (!alarmStandard[data.mode].value.includes(finalValue)) {
+                mother.setAttribute("alarm", "off");
+                for (let dom of mother.children) {
+                  if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
+                    if (dom.querySelector("svg") !== null) {
+                      dom.querySelector("svg").remove();
+                    }
+                    dom.setAttribute("alarm", "off");
+                  }
+                }
+              } else {
+                mother.setAttribute("alarm", "on");
+                for (let dom of mother.children) {
+                  if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
+                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:1.5px;", "#FF5F57"));
+                    dom.firstChild.appendChild(alarmCircle);
+                    dom.setAttribute("alarm", "on");
+                  }
+                }
+              }
+            }
+
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
           });

@@ -2977,6 +2977,10 @@ DataPatch.prototype.designerNotionMap = function (notionCard) {
 }
 
 DataPatch.prototype.designerRawMap = function () {
+  const dictionary = {
+    partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
+    presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
+  };
   let updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets;
 
   updateStandard = "phone";
@@ -3177,6 +3181,7 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   cloudLinkTargets = [
+    "snsChannel",
     "webChannel",
     "cloudChannel",
   ];

@@ -1100,6 +1100,44 @@ class DevContext extends Array {
 
 
 
+      const dictionary = {
+        partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
+        presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
+      };
+      const mode = "partnership";
+      const syncList = [
+        "designer",
+        "email",
+        "address",
+        "webChannel",
+        "snsChannel",
+        "cloudChannel"
+      ];
+
+      let already, oppositeExist;
+      let oppositeTarget;
+      let whereQuery;
+      let presentationRows;
+
+      presentationRows = await back.mongoRead(dictionary[mode].db, {}, { bridge: true });
+
+
+      for (let p of presentationRows) {
+        whereQuery = { phone: p.phone };
+        // already = await back.mongoRead(dictionary[mode].db, whereQuery, { bridge: true });
+        oppositeExist = await back.mongoRead(dictionary[mode].oppositeDb, whereQuery, { bridge: true });
+        if (oppositeExist.length > 0) {
+          oppositeTarget = oppositeExist[0];
+          for (let s of syncList) {
+            console.log(p[s], oppositeTarget[s]);
+            console.log("===============================================");
+          }
+        }
+      }
+
+
+
+
 
 
       // TOOLS ----------------------------------------------------------------------------------------------------
