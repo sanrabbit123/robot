@@ -2990,11 +2990,15 @@ DataPatch.prototype.designerRawMap = function () {
       standard: "status",
       value: [ "조정중", "조정 필요" ],
       target: [ "designer", "status" ],
+      convertValue: "미팅 대기",
+      trigger: "presentationTimes",
     },
     partnership: {
       standard: "status",
       value: [ "조정중", "조정 필요" ],
       target: [ "designer", "status" ],
+      convertValue: "미팅 대기",
+      trigger: "meetingTime",
     }
   };
 
@@ -3032,7 +3036,7 @@ DataPatch.prototype.designerRawMap = function () {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
       status : { name: "상태", relative: 100, type: "string", sort: "string" },
-      meetingTime : { name: "미팅 시간", relative: 100, type: "string", sort: "number" },
+      meetingTime : { name: "미팅 시간", relative: 160, type: "string", sort: "number" },
       address : { name: "주소", relative: 360, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
       date : { name: "문의일", relative: 160, type: "date", sort: "date" },
@@ -3118,6 +3122,7 @@ DataPatch.prototype.designerRawMap = function () {
           "미팅 대기",
           "미팅 완료",
           "계약 완료",
+          "드랍",
         ];
       };
       return { type: "menu", thisColumnName: "status", inputFunction: stringToItems, outputFunction: items };
@@ -3161,7 +3166,7 @@ DataPatch.prototype.designerRawMap = function () {
         "토요일"
       ];
       const dateToString = function (dateObject) {
-        return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]}`;
+        return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]} 14시`;
       };
       const stringToDate = function (str) {
         const today = new Date();

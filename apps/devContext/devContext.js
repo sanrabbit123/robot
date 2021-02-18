@@ -1098,13 +1098,66 @@ class DevContext extends Array {
       //
       // console.log(response);
 
-
-
-
-
-
-
-
+      // const contents = await back.getContentsArrByQuery({});
+      // let cliid, desid, pid, rid, ptitle, rtitle;
+      // let clientObj, designerObj;
+      // let client, designer;
+      // let matrix, temp;
+      //
+      // sheetsId = "1Vx3tSDJTLFU9qM58k82fQCf5KrWRw1sXwbSX4UdKgeM";
+      //
+      // matrix = [];
+      //
+      // for (let c of contents) {
+      //   cliid = c.cliid;
+      //   desid = c.desid;
+      //   pid = c.contents.portfolio.pid;
+      //   rid = c.contents.review.rid;
+      //   ptitle = c.contents.portfolio.title.main;
+      //   if (rid !== "re999") {
+      //     rtitle = c.contents.review.title.main;
+      //   } else {
+      //     rtitle = "리뷰 없음";
+      //   }
+      //   if (cliid !== "") {
+      //     temp = [];
+      //     clientObj = await back.getClientById(cliid);
+      //     client = clientObj.name;
+      //     designerObj = await back.getDesignerById(desid);
+      //     designer = designerObj.designer;
+      //
+      //     temp.push(pid);
+      //     temp.push(client);
+      //     temp.push(designer);
+      //     temp.push(ptitle);
+      //     temp.push(rtitle);
+      //     temp.push("https://homeliaison-console.xyz/project?proid=" + c.proid);
+      //     temp.push("https://homeliaison-console.xyz/contents?conid=" + c.conid);
+      //     temp.push("https://www.home-liaison.com/portdetail.php?qqq=" + pid);
+      //
+      //     matrix.push(temp);
+      //   }
+      // }
+      //
+      // temp = [
+      //   "아이디",
+      //   "고객",
+      //   "디자이너",
+      //   "제목",
+      //   "리뷰 제목",
+      //   "콘솔 링크(ca)",
+      //   "콘솔 링크(co)",
+      //   "페이지 링크",
+      // ];
+      //
+      //
+      // matrix.unshift(temp);
+      //
+      //
+      // await sheets.update_value_inPython(sheetsId, '', matrix, [ 0, 0 ]);
+      // await sheets.setting_cleanView_inPython(sheetsId);
+      //
+      // console.log(matrix);
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 

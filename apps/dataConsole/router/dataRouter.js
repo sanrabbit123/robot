@@ -1272,7 +1272,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   const patch = this.patch;
   let obj = {};
-  obj.link = [ "/getDesignerReport", "/updateDesignerReport" ];
+  obj.link = [ "/getDesignerReport", "/updateDesignerReport", "/pickDesignerReport" ];
   obj.func = async function (req, res) {
     try {
       const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
@@ -1364,7 +1364,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
 
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ mode: req.body.mode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
+        res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
 
       } else if (req.url === "/updateDesignerReport") {
 
@@ -1378,6 +1378,24 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
+
+      } else if (req.url === "/pickDesignerReport") {
+
+        whereQuery = {};
+        whereQuery[updateStandard] = req.body.standard;
+
+        row = await back.mongoRead(dbNameMap[req.body.mode], whereQuery, { bridge: true });
+
+        res.set("Content-Type", "application/json");
+        if (row.length > 0) {
+          if (row[0][req.body.column] !== undefined) {
+            res.send(JSON.stringify({ value: row[0][req.body.column] }));
+          } else {
+            res.send(JSON.stringify({ value: "throwError" }));
+          }
+        } else {
+          res.send(JSON.stringify({ value: "throwError" }));
+        }
       }
 
     } catch (e) {

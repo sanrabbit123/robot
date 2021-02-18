@@ -3912,19 +3912,50 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
           const dateString = this.getAttribute("buttonValue");
           let tempArr, thisDate;
+          let finalValue;
 
           tempArr = dateString.split('-');
           thisDateObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
 
+          finalValue = outputFunction(thisDateObj);
+
           targetSpot.style.width = "";
           targetSpot.style.left = "";
 
-          targetSpot.textContent = outputFunction(thisDateObj);
+          targetSpot.textContent = finalValue;
 
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + targetSpot.textContent, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+            let statusDom;
+
+            mother.setAttribute("alarm", "off");
+            for (let dom of mother.children) {
+              if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
+                if (dom.querySelector("svg") !== null) {
+                  dom.querySelector("svg").remove();
+                }
+                dom.setAttribute("alarm", "off");
+              }
+              if (dom.getAttribute("column") === alarmStandard[data.mode].standard) {
+                statusDom = dom;
+              }
+            }
+
+            if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
+              statusDom.firstChild.textContent = alarmStandard[data.mode].convertValue;
+              GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (res) {});
+            }
+
+            GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].standard, "/pickDesignerReport", function (res) {
+              const { value } = JSON.parse(res);
+              if (value !== "throwError" && alarmStandard[data.oppositeMode].value.includes(value)) {
+                GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (e) {});
+              }
+              GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].trigger + "&value=" + finalValue, "/updateDesignerReport", function (e) {});
+            });
+
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
           });

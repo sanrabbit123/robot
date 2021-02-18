@@ -648,7 +648,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       } else if (resultObj.mode === "presentation") {
 
-        filteredObj.status = "미팅 대기";
+        if (filteredObj.presentationTimes !== "기타") {
+          filteredObj.status = "미팅 대기";
+        } else {
+          filteredObj.status = "조정 필요";
+        }
 
         message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
         message += "문의일 : " + dateToString(filteredObj.date) + "\n";
@@ -685,6 +689,29 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             updateQuery.designer = filteredObj.designer;
             updateQuery.email = filteredObj.email;
             updateQuery.address = filteredObj.address;
+
+            if (resultObj.mode === "presentation") {
+              if (oppositeExist[0].meetingTime === "기타") {
+                if (filteredObj.presentationTimes !== "기타") {
+                  await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, { status: "미팅 대기", meetingTime: filteredObj.presentationTimes } ], { local: true });
+                }
+              } else {
+                if (filteredObj.presentationTimes === "기타") {
+                  await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, { status: "미팅 대기", presentationTimes: oppositeExist[0].meetingTime } ], { local: true });
+                }
+              }
+            } else {
+              if (oppositeExist[0].presentationTimes === "기타") {
+                if (filteredObj.meetingTime !== "기타") {
+                  await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, { status: "미팅 대기", presentationTimes: filteredObj.meetingTime } ], { local: true });
+                }
+              } else {
+                if (filteredObj.meetingTime === "기타") {
+                  await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, { status: "미팅 대기", meetingTime: oppositeExist[0].presentationTimes } ], { local: true });
+                }
+              }
+            }
+
             if (oppositeExist[0].webChannel.length <= filteredObj.webChannel.length) {
               updateQuery.webChannel = filteredObj.webChannel;
             }
