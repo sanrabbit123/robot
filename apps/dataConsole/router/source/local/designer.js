@@ -3810,6 +3810,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let titleArea;
   let titleFontSize, titleHeight;
   let titleIcon0, titleIcon1, titleIcon2;
+  let titleIcon0_2, titleIcon0_3;
   let dataArea;
   let dataScrollBox;
   let dataTitleZone;
@@ -3844,6 +3845,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let reportScrollBoxTotalWidth;
   let editFunction;
   let tempFunction, tempFunctionOutput;
+  let tempWidth0, tempWidth1, tempWidth2;
   let reportSortTitleTop;
   let alarmTargets;
   let alarmCircle;
@@ -4091,7 +4093,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 mother.setAttribute("alarm", "on");
                 for (let dom of mother.children) {
                   if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(1.5) : String(0.5)) + "px;", "#FF5F57"));
+                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", "#FF5F57"));
                     dom.firstChild.appendChild(alarmCircle);
                     dom.setAttribute("alarm", "on");
                   }
@@ -4221,17 +4223,31 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   }
   titleArea.appendChild(div_clone);
 
-  titleIcon0 = SvgTong.stringParsing(this.mother.returnInterAction("#e4e4e4"));
+
+  titleIcon0 = GeneralJs.nodes.div.cloneNode(true);
   titleIcon0.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    height: String((titleFontSize - 4)) + ea,
-    width: String((titleFontSize - 4) * SvgTong.getRatio(titleIcon0)) + ea,
-    bottom: String(2) + ea,
+    height: String(15) + ea,
+    width: String(300) + ea,
+    bottom: String(0) + ea,
   };
   for (let i in style) {
     titleIcon0.style[i] = style[i];
   }
+  text_div = GeneralJs.nodes.div.cloneNode(true);
+  text_div.textContent = "전체 보기";
+  style = {
+    position: "absolute",
+    fontSize: String(13) + ea,
+    bottom: String(0) + ea,
+    fontWeight: String(500),
+    color: (data.mode === "total" ? "#2fa678" : "#cccccc"),
+  };
+  for (let i in style) {
+    text_div.style[i] = style[i];
+  }
+  titleIcon0.appendChild(text_div);
   titleIcon0.addEventListener("click", function (e) {
     while (mother.firstChild !== loadingIcon) {
       mother.removeChild(mother.firstChild);
@@ -4240,12 +4256,95 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       mother.removeChild(mother.lastChild);
     }
     loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getDesignerReport", function (data) {
+    GeneralJs.ajax("mode=total", "/getDesignerReport", function (data) {
       loadingIcon.style.opacity = "0";
       instance.reportContents(JSON.parse(data), mother, loadingIcon);
     });
   });
   titleArea.appendChild(titleIcon0);
+
+
+  titleIcon0_2 = GeneralJs.nodes.div.cloneNode(true);
+  titleIcon0_2.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    height: String(15) + ea,
+    width: String(300) + ea,
+    bottom: String(0) + ea,
+  };
+  for (let i in style) {
+    titleIcon0_2.style[i] = style[i];
+  }
+  text_div = GeneralJs.nodes.div.cloneNode(true);
+  text_div.textContent = "설명회";
+  style = {
+    position: "absolute",
+    fontSize: String(13) + ea,
+    bottom: String(0) + ea,
+    fontWeight: String(500),
+    color: (data.mode === "presentation" ? "#2fa678" : "#cccccc"),
+  };
+  for (let i in style) {
+    text_div.style[i] = style[i];
+  }
+  titleIcon0_2.appendChild(text_div);
+  titleIcon0_2.addEventListener("click", function (e) {
+    while (mother.firstChild !== loadingIcon) {
+      mother.removeChild(mother.firstChild);
+    }
+    while (mother.lastChild !== loadingIcon) {
+      mother.removeChild(mother.lastChild);
+    }
+    loadingIcon.style.opacity = "1";
+    GeneralJs.ajax("mode=presentation", "/getDesignerReport", function (data) {
+      loadingIcon.style.opacity = "0";
+      instance.reportContents(JSON.parse(data), mother, loadingIcon);
+    });
+  });
+  titleArea.appendChild(titleIcon0_2);
+
+
+  titleIcon0_3 = GeneralJs.nodes.div.cloneNode(true);
+  titleIcon0_3.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    height: String(15) + ea,
+    width: String(300) + ea,
+    bottom: String(0) + ea,
+  };
+  for (let i in style) {
+    titleIcon0_3.style[i] = style[i];
+  }
+  text_div = GeneralJs.nodes.div.cloneNode(true);
+  text_div.textContent = "파트너십";
+  style = {
+    position: "absolute",
+    fontSize: String(13) + ea,
+    bottom: String(0) + ea,
+    fontWeight: String(500),
+    color: (data.mode === "partnership" ? "#2fa678" : "#cccccc"),
+  };
+  for (let i in style) {
+    text_div.style[i] = style[i];
+  }
+  titleIcon0_3.appendChild(text_div);
+  titleIcon0_3.addEventListener("click", function (e) {
+    while (mother.firstChild !== loadingIcon) {
+      mother.removeChild(mother.firstChild);
+    }
+    while (mother.lastChild !== loadingIcon) {
+      mother.removeChild(mother.lastChild);
+    }
+    loadingIcon.style.opacity = "1";
+    GeneralJs.ajax("mode=partnership", "/getDesignerReport", function (data) {
+      loadingIcon.style.opacity = "0";
+      instance.reportContents(JSON.parse(data), mother, loadingIcon);
+    });
+  });
+  titleArea.appendChild(titleIcon0_3);
+
+
+
 
   titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
   titleIcon1.classList.add("hoverDefault_lite");
@@ -4262,15 +4361,19 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   titleIcon1.addEventListener("click", function (e) {
     let tempObj;
     let minArr;
+    let minimumMove;
     minArr = [];
     for (let dom of moveTargets) {
       tempObj = moveParsing(dom, (moveAmount * -1));
       minArr.push(tempObj.number);
     }
     minArr.sort((a, b) => { return a - b; });
+
+    minimumMove = moveAmount * -1;
+
     for (let dom of moveTargets) {
       tempObj = moveParsing(dom, (moveAmount * 1));
-      if (minArr[0] >= 0) {
+      if (minArr[0] >= minimumMove) {
         dom.style.transform = "translateX(0px)";
       } else {
         dom.style.transform = tempObj.style;
@@ -4313,7 +4416,19 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   });
   titleArea.appendChild(titleIcon2);
   mother.appendChild(titleArea);
-  titleIcon0.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 8) + ea;
+
+  titleIcon0.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11) + ea;
+  tempWidth0 = titleIcon0.firstChild.getBoundingClientRect().width;
+  titleIcon0.style.width = String(tempWidth0 + 1) + ea;
+
+  titleIcon0_2.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9) + ea;
+  tempWidth1 = titleIcon0_2.firstChild.getBoundingClientRect().width;
+  titleIcon0_2.style.width = String(tempWidth1 + 1) + ea;
+
+  titleIcon0_3.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9 + tempWidth1 + 9) + ea;
+  tempWidth2 = titleIcon0_2.firstChild.getBoundingClientRect().width;
+  titleIcon0_2.style.width = String(tempWidth2 + 1) + ea;
+
 
   //data area
   dataArea = GeneralJs.nodes.div.cloneNode(true);
@@ -4895,9 +5010,10 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       text_div.textContent = data.data[j][z];
       style = {
         position: "absolute",
-        top: String(12) + ea,
+        top: String(7) + ea,
         fontSize: String(14) + ea,
         width: "auto",
+        lineHeight: String(1.8),
         color: "#202020",
         fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
         transition: "all 0s ease",
@@ -4956,7 +5072,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
   for (let a of alarmTargets) {
     if (a.getAttribute("alarm") === "on") {
-      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(1.5) : String(0.5)) + "px;", "#FF5F57"));
+      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", "#FF5F57"));
       a.firstChild.appendChild(alarmCircle);
     }
   }

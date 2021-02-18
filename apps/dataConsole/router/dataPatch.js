@@ -3032,16 +3032,28 @@ DataPatch.prototype.designerRawMap = function () {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
       status : { name: "상태", relative: 100, type: "string", sort: "string" },
-      meetingTime : { name: "미팅 시간", relative: 160, type: "string", sort: "number" },
-      date : { name: "문의일", relative: 180, type: "date", sort: "date" },
-      presentationBoo: { name: "설명회 신청", relative: 160, type: "string", sort: "string" },
-      partnershipBoo: { name: "파트너십 신청", relative: 160, type: "string", sort: "string" },
-      portfolioBoo: { name: "포트폴리오 제출", relative: 160, type: "string", sort: "string" },
+      meetingTime : { name: "미팅 시간", relative: 120, type: "string", sort: "number" },
+      date : { name: "최초 문의일", relative: 150, type: "date", sort: "date" },
+      presentationBoo: { name: "설명회", relative: 85, type: "string", sort: "string" },
+      partnershipBoo: { name: "파트너십", relative: 85, type: "string", sort: "string" },
+      portfolioBoo: { name: "포트폴리오", relative: 85, type: "string", sort: "string" },
+      comeFrom : { name: "유입 경로", relative: 120, type: "string", sort: "string" },
+      email : { name: "이메일", relative: 160, type: "string", sort: "string" },
       webChannel : { name: "홈페이지", relative: 300, type: "array", sort: "string" },
       snsChannel : { name: "SNS", relative: 300, type: "array", sort: "string" },
       cloudChannel : { name: "클라우드", relative: 300, type: "array", sort: "string" },
-      comeFrom : { name: "유입 경로", relative: 100, type: "string", sort: "string" },
-      email : { name: "이메일", relative: 160, type: "string", sort: "string" },
+      classification : { name: "사업자 분류", relative: 160, type: "string", sort: "string" },
+      company : { name: "회사명", relative: 120, type: "string", sort: "string" },
+      businessNumber : { name: "사업자 등록 번호", relative: 120, type: "string", sort: "number" },
+      startDate : { name: "개업일", relative: 120, type: "string", sort: "date" },
+      representative : { name: "대표자 성함", relative: 100, type: "string", sort: "string" },
+      bankName : { name: "은행명", relative: 100, type: "string", sort: "string" },
+      bankAccount : { name: "계좌번호", relative: 160, type: "string", sort: "number" },
+      bankTo : { name: "수신자", relative: 100, type: "string", sort: "string" },
+      bankEtc : { name: "기타 사항", relative: 120, type: "string", sort: "string" },
+      interiorCareer : { name: "인테리어 경력", relative: 120, type: "string", sort: "career" },
+      stylingCareer : { name: "스타일링 경력", relative: 120, type: "string", sort: "career" },
+      careerDetail : { name: "경력 상세", relative: 540, type: "string", sort: "string" },
     },
     presentation: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
@@ -3109,7 +3121,9 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   reportTargetMap = {
-    total: [],
+    total: [
+      "status",
+    ],
     presentation: [
       "presentationTimes",
       "comeFrom"

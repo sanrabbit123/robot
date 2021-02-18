@@ -1392,6 +1392,20 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
             tempObj.cloudChannel = i.cloudChannel;
             tempObj.comeFrom = i.comeFrom;
             tempObj.email = i.email;
+
+            tempObj.classification = "";
+            tempObj.company = "";
+            tempObj.businessNumber = "";
+            tempObj.startDate = "";
+            tempObj.representative = "";
+            tempObj.bankName = "";
+            tempObj.bankAccount = "";
+            tempObj.bankTo = "";
+            tempObj.bankEtc = "";
+            tempObj.interiorCareer = "";
+            tempObj.stylingCareer = "";
+            tempObj.careerDetail = "";
+
             realData.push(tempObj);
             phoneTong.push(i.phone);
           }
@@ -1404,6 +1418,18 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
                   if (j.date.valueOf() >= i.date.valueOf()) {
                     j.date = i.date;
                   }
+                  j.classification = i.classification;
+                  j.company = i.company;
+                  j.businessNumber = i.businessNumber;
+                  j.startDate = i.startDate;
+                  j.representative = i.representative;
+                  j.bankName = i.bankName;
+                  j.bankAccount = i.bankAccount;
+                  j.bankTo = i.bankTo;
+                  j.bankEtc = i.bankEtc;
+                  j.interiorCareer = i.interiorCareer;
+                  j.stylingCareer = i.stylingCareer;
+                  j.careerDetail = i.careerDetail;
                 }
               }
             } else {
@@ -1421,21 +1447,68 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
               tempObj.cloudChannel = i.cloudChannel;
               tempObj.comeFrom = i.comeFrom;
               tempObj.email = i.email;
+
+              tempObj.classification = i.classification;
+              tempObj.company = i.company;
+              tempObj.businessNumber = i.businessNumber;
+              tempObj.startDate = i.startDate;
+              tempObj.representative = i.representative;
+              tempObj.bankName = i.bankName;
+              tempObj.bankAccount = i.bankAccount;
+              tempObj.bankTo = i.bankTo;
+              tempObj.bankEtc = i.bankEtc;
+              tempObj.interiorCareer = i.interiorCareer;
+              tempObj.stylingCareer = i.stylingCareer;
+              tempObj.careerDetail = i.careerDetail;
+
               realData.push(tempObj);
             }
           }
 
+          targetIndex = 0;
           for (let i of realData) {
             for (let j in i) {
               if (columnRelativeMap[req.body.mode][j].type === "date") {
-                i[j] = dateToString(tempObj[j]);
+                i[j] = dateToString(i[j]);
                 targetIndex = j;
               } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-                i[j] = tempObj[j].join(',');
+                i[j] = i[j].join(',');
               }
             }
-            i[sameStandard.name] = true;
-            i[binaryStandard.name] = true;
+
+            i[binaryStandard.name] = false;
+            i.portfolioBoo = false;
+            for (let j of binaryRow) {
+              if (i["phone"] === j["phone"]) {
+                i[binaryStandard.name] = true;
+                i.portfolioBoo = true;
+                i[binaryStandard.target] = j[binaryStandard.target];
+              }
+            }
+
+            if (i.presentationBoo && i.partnershipBoo) {
+              i[sameStandard.name] = true;
+            } else {
+              i[sameStandard.name] = false;
+            }
+
+            tempLink = null;
+            for (let j of cloudLinkTargets) {
+              if (i[j].length > 0) {
+                tempLink = i[j][0];
+              }
+            }
+
+            if (tempLink !== null) {
+              i[binaryStandard.name] = true;
+              i.portfolioBoo = true;
+              i[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
+            }
+
+            i.presentationBoo = i.presentationBoo ? "신청" : "미신청";
+            i.partnershipBoo = i.partnershipBoo ? "신청" : "미신청";
+            i.portfolioBoo = i.portfolioBoo ? "제출" : "미제출";
+
           }
 
           realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
