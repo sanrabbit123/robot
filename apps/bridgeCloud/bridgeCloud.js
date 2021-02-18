@@ -646,40 +646,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
 
-        instance.bridgeToSheets({
-          id: "1gr_Sm_Wdhl2BuRY809gyw_XrlDgL6nErDS4enI-CajU",
-          model: {
-            date: '문의일',
-            designer: '성함',
-            status: '상태',
-            meetingTime: '미팅 시간',
-            phone: '연락처',
-            address: '주소',
-            email: '이메일',
-            classification: '사업자 분류',
-            company: '회사명',
-            businessNumber: '사업자 등록번호',
-            startDate: '개업일',
-            representative: '대표자 성함',
-            bankName: '은행명',
-            bankAccount: '계좌번호',
-            bankTo: '수신자',
-            bankEtc: '기타 사항',
-            interiorCareer: '인테리어 경력',
-            stylingCareer: '스타일링 경력',
-            careerDetail: '경력 상세',
-            webChannel: '홈페이지',
-            snsChannel: 'SNS 채널',
-            cloudChannel: '클라우드',
-            comeFrom: '유입 경로',
-          },
-          query: null,
-          from: {
-            where: "local",
-            collection: "designerPartnershipRaw"
-          }
-        });
-
       } else if (resultObj.mode === "presentation") {
 
         filteredObj.status = "미팅 대기";
@@ -695,25 +661,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         message += "SNS 채널 : " + (filteredObj.snsChannel.length > 0 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
         message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
         message += "유입 경로 : " + filteredObj.comeFrom;
-
-        instance.bridgeToSheets({
-          id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
-          model: {
-            date: '문의일',
-            designer: '성함',
-            status: '상태',
-            presentationTimes: '신청 시간',
-            phone: '연락처',
-            address: '주소',
-            email: '이메일',
-            comeFrom: '유입 경로',
-          },
-          query: null,
-          from: {
-            where: "local",
-            collection: "designerPresentationRaw"
-          }
-        });
 
       } else if (resultObj.mode === "portfolio") {
 
@@ -752,6 +699,61 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        }
+
+        if (resultObj.mode === "partnership") {
+          instance.bridgeToSheets({
+            id: "1gr_Sm_Wdhl2BuRY809gyw_XrlDgL6nErDS4enI-CajU",
+            model: {
+              date: '문의일',
+              designer: '성함',
+              status: '상태',
+              meetingTime: '미팅 시간',
+              phone: '연락처',
+              address: '주소',
+              email: '이메일',
+              classification: '사업자 분류',
+              company: '회사명',
+              businessNumber: '사업자 등록번호',
+              startDate: '개업일',
+              representative: '대표자 성함',
+              bankName: '은행명',
+              bankAccount: '계좌번호',
+              bankTo: '수신자',
+              bankEtc: '기타 사항',
+              interiorCareer: '인테리어 경력',
+              stylingCareer: '스타일링 경력',
+              careerDetail: '경력 상세',
+              webChannel: '홈페이지',
+              snsChannel: 'SNS 채널',
+              cloudChannel: '클라우드',
+              comeFrom: '유입 경로',
+            },
+            query: null,
+            from: {
+              where: "local",
+              collection: "designerPartnershipRaw"
+            }
+          });
+        } else if (resultObj.mode === "presentation") {
+          instance.bridgeToSheets({
+            id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
+            model: {
+              date: '문의일',
+              designer: '성함',
+              status: '상태',
+              presentationTimes: '신청 시간',
+              phone: '연락처',
+              address: '주소',
+              email: '이메일',
+              comeFrom: '유입 경로',
+            },
+            query: null,
+            from: {
+              where: "local",
+              collection: "designerPresentationRaw"
+            }
+          });
         }
 
       } else if (resultObj.mode === "portfolio") {
