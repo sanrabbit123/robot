@@ -1297,7 +1297,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
         return resultDate.valueOf();
       }
-      const oppositeMode = (req.body.mode === "presentation") ? "partnership" : "presentation";
+      const oppositeMode = req.body.mode !== "total" ? ((req.body.mode === "presentation") ? "partnership" : "presentation") : "total";
       let row, oppositeRow, binaryRow;
       let sameStandardColumn;
       let realData;
@@ -1305,6 +1305,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let targetIndex;
       let whereQuery, updateQuery;
       let tempLink;
+      let phoneTong;
 
       if (dbNameMap[req.body.mode] === undefined) {
         throw new Error("invaild mode");
@@ -1312,59 +1313,137 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       if (req.url === "/getDesignerReport") {
 
-        sameStandardColumn = sameStandard.value;
+        if (req.body.mode !== "total") {
+          sameStandardColumn = sameStandard.value;
 
-        row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
-        oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
-        binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+          row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
+          oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
+          binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
 
-        realData = [];
-        for (let i of row) {
-          delete i._id;
-          tempObj = JSON.parse(JSON.stringify(i));
-          tempLink = null;
-          for (let j in tempObj) {
-            if (columnRelativeMap[req.body.mode][j].type === "date") {
-              tempObj[j] = dateToString(tempObj[j]);
-              targetIndex = j;
-            } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-              tempObj[j] = tempObj[j].join(',');
+          realData = [];
+          for (let i of row) {
+            delete i._id;
+            tempObj = JSON.parse(JSON.stringify(i));
+            tempLink = null;
+            for (let j in tempObj) {
+              if (columnRelativeMap[req.body.mode][j].type === "date") {
+                tempObj[j] = dateToString(tempObj[j]);
+                targetIndex = j;
+              } else if (columnRelativeMap[req.body.mode][j].type === "array") {
+                tempObj[j] = tempObj[j].join(',');
+              }
             }
-          }
-          tempObj[sameStandard.name] = false;
-          for (let j of oppositeRow) {
-            if (i[sameStandardColumn] === j[sameStandardColumn]) {
-              tempObj[sameStandard.name] = true;
+            tempObj[sameStandard.name] = false;
+            for (let j of oppositeRow) {
+              if (i[sameStandardColumn] === j[sameStandardColumn]) {
+                tempObj[sameStandard.name] = true;
+              }
             }
-          }
 
-          for (let j of cloudLinkTargets) {
-            if (i[j].length > 0) {
-              tempLink = i[j][0];
+            for (let j of cloudLinkTargets) {
+              if (i[j].length > 0) {
+                tempLink = i[j][0];
+              }
             }
-          }
 
-          tempObj[binaryStandard.name] = false;
-          tempObj[binaryStandard.target] = null;
-          for (let j of binaryRow) {
-            if (i[sameStandardColumn] === j[sameStandardColumn]) {
+            tempObj[binaryStandard.name] = false;
+            tempObj[binaryStandard.target] = null;
+            for (let j of binaryRow) {
+              if (i[sameStandardColumn] === j[sameStandardColumn]) {
+                tempObj[binaryStandard.name] = true;
+                tempObj[binaryStandard.target] = j[binaryStandard.target];
+              }
+            }
+
+            if (tempLink !== null) {
               tempObj[binaryStandard.name] = true;
-              tempObj[binaryStandard.target] = j[binaryStandard.target];
+              tempObj[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
+            }
+
+            realData.push(tempObj);
+          }
+
+          realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
+
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
+
+        } else {
+
+          row = await back.mongoRead(dbNameMap["presentation"], {}, { bridge: true });
+          oppositeRow = await back.mongoRead(dbNameMap["partnership"], {}, { bridge: true });
+          binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+
+          realData = [];
+          phoneTong = [];
+
+          for (let i of row) {
+            tempObj = {};
+            tempObj.designer = i.designer;
+            tempObj.phone = i.phone;
+            tempObj.status = i.status;
+            tempObj.meetingTime = i.presentationTimes;
+            tempObj.date = i.date;
+            tempObj.presentationBoo = true;
+            tempObj.partnershipBoo = false;
+            tempObj.portfolioBoo = false;
+            tempObj.webChannel = i.webChannel;
+            tempObj.snsChannel = i.snsChannel;
+            tempObj.cloudChannel = i.cloudChannel;
+            tempObj.comeFrom = i.comeFrom;
+            tempObj.email = i.email;
+            realData.push(tempObj);
+            phoneTong.push(i.phone);
+          }
+
+          for (let i of oppositeRow) {
+            if (phoneTong.includes(i.phone)) {
+              for (let j of realData) {
+                if (i.phone === j.phone) {
+                  j.partnershipBoo = true;
+                  if (j.date.valueOf() >= i.date.valueOf()) {
+                    j.date = i.date;
+                  }
+                }
+              }
+            } else {
+              tempObj = {};
+              tempObj.designer = i.designer;
+              tempObj.phone = i.phone;
+              tempObj.status = i.status;
+              tempObj.meetingTime = i.meetingTime;
+              tempObj.date = i.date;
+              tempObj.presentationBoo = false;
+              tempObj.partnershipBoo = true;
+              tempObj.portfolioBoo = false;
+              tempObj.webChannel = i.webChannel;
+              tempObj.snsChannel = i.snsChannel;
+              tempObj.cloudChannel = i.cloudChannel;
+              tempObj.comeFrom = i.comeFrom;
+              tempObj.email = i.email;
+              realData.push(tempObj);
             }
           }
 
-          if (tempLink !== null) {
-            tempObj[binaryStandard.name] = true;
-            tempObj[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
+          for (let i of realData) {
+            for (let j in i) {
+              if (columnRelativeMap[req.body.mode][j].type === "date") {
+                i[j] = dateToString(tempObj[j]);
+                targetIndex = j;
+              } else if (columnRelativeMap[req.body.mode][j].type === "array") {
+                i[j] = tempObj[j].join(',');
+              }
+            }
+            i[sameStandard.name] = true;
+            i[binaryStandard.name] = true;
           }
 
-          realData.push(tempObj);
+          realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
+
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
+
         }
-
-        realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
-
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
 
       } else if (req.url === "/updateDesignerReport") {
 

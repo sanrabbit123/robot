@@ -2986,6 +2986,13 @@ DataPatch.prototype.designerRawMap = function () {
   updateStandard = "phone";
 
   alarmStandard = {
+    total: {
+      standard: "status",
+      value: [ "조정중", "조정 필요" ],
+      target: [ "designer", "status" ],
+      convertValue: "미팅 대기",
+      trigger: "meetingTime",
+    },
     presentation: {
       standard: "status",
       value: [ "조정중", "조정 필요" ],
@@ -3009,16 +3016,33 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   dbNameMap = {
+    total: "custom",
     presentation: "designerPresentationRaw",
     partnership: "designerPartnershipRaw",
   };
 
   titleNameMap = {
+    total: "디자이너 신청",
     presentation: "설명회 신청",
     partnership: "파트너십 신청",
   };
 
   columnRelativeMap = {
+    total: {
+      designer : { name: "성함", relative: 100, type: "string", sort: "string" },
+      phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
+      status : { name: "상태", relative: 100, type: "string", sort: "string" },
+      meetingTime : { name: "미팅 시간", relative: 160, type: "string", sort: "number" },
+      date : { name: "문의일", relative: 180, type: "date", sort: "date" },
+      presentationBoo: { name: "설명회 신청", relative: 160, type: "string", sort: "string" },
+      partnershipBoo: { name: "파트너십 신청", relative: 160, type: "string", sort: "string" },
+      portfolioBoo: { name: "포트폴리오 제출", relative: 160, type: "string", sort: "string" },
+      webChannel : { name: "홈페이지", relative: 300, type: "array", sort: "string" },
+      snsChannel : { name: "SNS", relative: 300, type: "array", sort: "string" },
+      cloudChannel : { name: "클라우드", relative: 300, type: "array", sort: "string" },
+      comeFrom : { name: "유입 경로", relative: 100, type: "string", sort: "string" },
+      email : { name: "이메일", relative: 160, type: "string", sort: "string" },
+    },
     presentation: {
       designer : { name: "성함", relative: 100, type: "string", sort: "string" },
       phone : { name: "연락처", relative: 100, type: "string", sort: "number" },
@@ -3085,6 +3109,7 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   reportTargetMap = {
+    total: [],
     presentation: [
       "presentationTimes",
       "comeFrom"

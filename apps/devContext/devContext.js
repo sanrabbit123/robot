@@ -1159,6 +1159,21 @@ class DevContext extends Array {
       //
       // console.log(matrix);
 
+
+      // const project = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
+      //
+      // for (let p of project) {
+      //   if (p.process.contract.remain.date.valueOf() > (new Date(2001, 1, 1)).valueOf()) {
+      //
+      //     console.log(p.process.calculation);
+      //     console.log(p.proid)
+      //   }
+      // }
+
+
+
+
+
       // TOOLS ----------------------------------------------------------------------------------------------------
 
       // spawn catfish

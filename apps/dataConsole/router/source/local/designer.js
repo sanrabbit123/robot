@@ -1341,9 +1341,10 @@ DesignerJs.prototype.cardViewMaker = function () {
       whereQuery = {};
       whereQuery["$or"] = [];
       for (let i = 1; i < cases.length; i++) {
-        whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "대기" });
-        whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "진행중" });
-        whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "홀딩" });
+        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "대기" });
+        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "진행중" });
+        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "홀딩" });
+        whereQuery["$or"].push({ desid: cases[i].desid });
       }
       tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
 
@@ -3913,11 +3914,23 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           const dateString = this.getAttribute("buttonValue");
           let tempArr, thisDate;
           let finalValue;
+          let promptData;
 
           tempArr = dateString.split('-');
           thisDateObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
 
           finalValue = outputFunction(thisDateObj);
+
+          promptData = window.prompt("시간을 한글 없이, 숫자 형태로만 적어주세요! (예 : 오후 2시 => 14, 오전 9시 => 9, 오후 11시 => 23, 새벽 12시 => 0)");
+          promptData = Number(promptData.replace(/[^0-9]/g, ''));
+          if (Number.isNaN(promptData)) {
+            promptData = 14;
+          }
+          if (!(promptData >= 0 && promptData < 24)) {
+            promptData = 14;
+          }
+
+          finalValue = finalValue.slice(0, -3) + String(promptData) + '시';
 
           targetSpot.style.width = "";
           targetSpot.style.left = "";
@@ -4078,7 +4091,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 mother.setAttribute("alarm", "on");
                 for (let dom of mother.children) {
                   if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:1.5px;", "#FF5F57"));
+                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(1.5) : String(0.5)) + "px;", "#FF5F57"));
                     dom.firstChild.appendChild(alarmCircle);
                     dom.setAttribute("alarm", "on");
                   }
@@ -4943,7 +4956,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
   for (let a of alarmTargets) {
     if (a.getAttribute("alarm") === "on") {
-      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:1.5px;", "#FF5F57"));
+      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(1.5) : String(0.5)) + "px;", "#FF5F57"));
       a.firstChild.appendChild(alarmCircle);
     }
   }
@@ -5248,7 +5261,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("mode=presentation", "/getDesignerReport", function (data) {
+      GeneralJs.ajax("mode=total", "/getDesignerReport", function (data) {
         svg_icon.style.opacity = "0";
         instance.reportContents(JSON.parse(data), div_clone, svg_icon);
       });
