@@ -3843,6 +3843,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let reportScrollBoxTotalWidth;
   let editFunction;
   let tempFunction, tempFunctionOutput;
+  let reportSortTitleTop;
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -4693,12 +4694,13 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     text_div.textContent = data.columns[z].name;
     style = {
       position: "absolute",
-      top: String(12) + ea,
+      top: String(GeneralJs.isMac() ? 12 : 13) + ea,
       fontSize: String(14) + ea,
       fontWeight: String(600),
       width: "auto",
       color: "#2fa678",
       transition: "all 0s ease",
+      textAlign: "center",
     };
     for (let i in style) {
       text_div.style[i] = style[i];
@@ -4812,6 +4814,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         color: "#202020",
         fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
         transition: "all 0s ease",
+        textAlign: "center",
       };
       for (let i in style) {
         text_div.style[i] = style[i];
@@ -4841,8 +4844,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   for (let { tong, text, width } of dataTitleFactors) {
     fixedWidth = text.getBoundingClientRect().width;
     tong.style.width = String(width) + ea;
-    text.style.width = String(fixedWidth) + ea;
-    text.style.left = "calc(50% - " + String(fixedWidth / 2) + ea + ")";
+    text.style.width = String(fixedWidth + 4) + ea;
+    text.style.left = "calc(50% - " + String((fixedWidth / 2) + 2) + ea + ")";
     tong.style.opacity = String(1);
   }
 
@@ -4850,8 +4853,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     for (let { tong, text, width } of arr) {
       fixedWidth = text.getBoundingClientRect().width;
       tong.style.width = String(width) + ea;
-      text.style.width = String(fixedWidth) + ea;
-      text.style.left = "calc(50% - " + String(fixedWidth / 2) + ea + ")";
+      text.style.width = String(fixedWidth + 4) + ea;
+      text.style.left = "calc(50% - " + String((fixedWidth / 2) + 2) + ea + ")";
       tong.style.opacity = String(1);
     }
   }
@@ -4884,10 +4887,12 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   //report sort standards contents
 
   //report sort title
+  reportSortTitleTop = GeneralJs.isMac() ? 20 : 24;
+
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    top: String(20) + ea,
+    top: String(reportSortTitleTop) + ea,
     left: String(28) + ea,
   };
   for (let i in style) {
@@ -4915,7 +4920,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    top: String(20) + ea,
+    top: String(reportSortTitleTop) + ea,
     left: String(28 + reportTextWidth + 12) + ea,
   };
   for (let i in style) {
@@ -4942,10 +4947,10 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   reportContentsBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    top: String(20) + ea,
+    top: String(reportSortTitleTop) + ea,
     left: String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25) + ea,
     width: "calc(100% - " + String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25 + 28) + ea + ")",
-    height: "calc(100% - " + String(20 * 2) + ea + ")",
+    height: "calc(100% - " + String(reportSortTitleTop * 2) + ea + ")",
     overflow: "scroll",
   };
   for (let i in style) {
