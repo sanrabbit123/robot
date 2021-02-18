@@ -4065,7 +4065,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           fontWeight: String(500),
           position: "absolute",
           width: String(100) + '%',
-          top: String(6) + ea,
+          top: String(GeneralJs.isMac() ? 6 : 8) + ea,
           textAlign: "center",
           color: "#2fa678",
         };
@@ -4136,7 +4136,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     width: "auto",
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
-    bottom: String(0) + ea,
+    bottom: String(GeneralJs.isMac() ? 0 : -2) + ea,
   };
   for (let i in style) {
     div_clone.style[i] = style[i];
