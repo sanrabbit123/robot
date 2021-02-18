@@ -3810,7 +3810,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let titleArea;
   let titleFontSize, titleHeight;
   let titleIcon0, titleIcon1, titleIcon2;
-  let titleIcon0_2, titleIcon0_3;
+  let titleIcon0_2, titleIcon0_3, titleIcon0_4;
   let dataArea;
   let dataScrollBox;
   let dataTitleZone;
@@ -4344,6 +4344,35 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   titleArea.appendChild(titleIcon0_3);
 
 
+  titleIcon0_4 = GeneralJs.nodes.div.cloneNode(true);
+  titleIcon0_4.classList.add("hoverDefault_lite");
+  style = {
+    position: "absolute",
+    height: String(15) + ea,
+    width: String(300) + ea,
+    bottom: String(0) + ea,
+  };
+  for (let i in style) {
+    titleIcon0_4.style[i] = style[i];
+  }
+  text_div = GeneralJs.nodes.div.cloneNode(true);
+  text_div.textContent = "추출";
+  style = {
+    position: "absolute",
+    fontSize: String(13) + ea,
+    bottom: String(0) + ea,
+    fontWeight: String(500),
+    color: "#cccccc",
+  };
+  for (let i in style) {
+    text_div.style[i] = style[i];
+  }
+  titleIcon0_4.appendChild(text_div);
+  titleIcon0_4.addEventListener("click", function (e) {
+
+    
+  });
+  titleArea.appendChild(titleIcon0_4);
 
 
   titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
@@ -4426,9 +4455,11 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   titleIcon0_2.style.width = String(tempWidth1 + 1) + ea;
 
   titleIcon0_3.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9 + tempWidth1 + 9) + ea;
-  tempWidth2 = titleIcon0_2.firstChild.getBoundingClientRect().width;
-  titleIcon0_2.style.width = String(tempWidth2 + 1) + ea;
+  tempWidth2 = titleIcon0_3.firstChild.getBoundingClientRect().width;
+  titleIcon0_3.style.width = String(tempWidth2 + 1) + ea;
 
+  titleIcon0_4.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9 + tempWidth1 + 9 + tempWidth2 + 9) + ea;
+  titleIcon0_4.style.width = String(titleIcon0_4.firstChild.getBoundingClientRect().width + 1) + ea;
 
   //data area
   dataArea = GeneralJs.nodes.div.cloneNode(true);
