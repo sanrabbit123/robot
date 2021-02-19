@@ -7,7 +7,7 @@ const AspirantSubmit = require(PROJECT_DIR + "/aspirantSubmit/aspirantSubmit.js"
 const AspirantInformation = require(PROJECT_DIR + "/aspirantInformation/aspirantInformation.js");
 
 const Aspirant = function (json) {
-  this.apsid = json.apsid;
+  this.aspid = json.aspid;
   this.designer = json.designer;
   this.phone = json.phone;
   this.address = json.address;
@@ -21,7 +21,7 @@ const Aspirant = function (json) {
 
 Aspirant.prototype.toNormal = function () {
   let obj = {};
-  obj.apsid = this.apsid;
+  obj.aspid = this.aspid;
   obj.designer = this.designer;
   obj.phone = this.phone;
   obj.address = this.address;

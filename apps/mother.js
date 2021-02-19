@@ -702,14 +702,33 @@ Mother.prototype.sendJandi = function (mode, msg) {
   });
 }
 
-Mother.prototype.ipCheck = function () {
+Mother.prototype.ipCheck = function (force = null) {
   const axios = require(`axios`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const keys = Object.keys(ADDRESS);
   const values = Object.values(ADDRESS);
   return new Promise(function(resolve, reject) {
-    axios.get("https://icanhazip.com").then(function (response) {
-      const ip = response.data.replace(/[^0-9\.]/g, '');
+    if (force === null) {
+      axios.get("https://icanhazip.com").then(function (response) {
+        const ip = response.data.replace(/[^0-9\.]/g, '');
+        let obj = { ip };
+        let target = "unknown", targetNum = 0;
+        let number = 0;
+        for (let { ip: { outer } } of values) {
+          if (outer === ip) {
+            target = keys[number].replace(/info$/, '');
+            targetNum = number;
+          }
+          number++;
+        }
+        obj.name = target;
+        obj.rawObj = values[targetNum];
+        resolve(obj);
+      }).catch(function (error) {
+        reject(error);
+      });
+    } else {
+      const ip = force;
       let obj = { ip };
       let target = "unknown", targetNum = 0;
       let number = 0;
@@ -723,9 +742,7 @@ Mother.prototype.ipCheck = function () {
       obj.name = target;
       obj.rawObj = values[targetNum];
       resolve(obj);
-    }).catch(function (error) {
-      reject(error);
-    });
+    }
   });
 }
 

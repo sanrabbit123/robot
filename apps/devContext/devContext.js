@@ -1232,7 +1232,7 @@ class DevContext extends Array {
       for (let presentation of presentations) {
         tempObj = {};
 
-        tempObj.apsid = "";
+        tempObj.aspid = "";
         tempObj.designer = presentation.designer;
         tempObj.phone = presentation.phone;
         tempObj.address = presentation.address;
@@ -1315,7 +1315,7 @@ class DevContext extends Array {
         } else {
           tempObj = {};
 
-          tempObj.apsid = "";
+          tempObj.aspid = "";
           tempObj.designer = partnership.designer;
           tempObj.phone = partnership.phone;
           tempObj.address = partnership.address;
@@ -1393,27 +1393,27 @@ class DevContext extends Array {
 
       let order, pastMonth, tempString;
 
-      order = 0;
+      order = 1;
 
       for (let a of aspirants) {
+        if (pastMonth === a.firstRequest().getMonth()) {
+          order++;
+        } else {
+          order = 1;
+        }
         tempString = '';
         tempString += 'a';
         tempString += String(a.firstRequest().getFullYear()).slice(2, 4);
         tempString += '0' + String(a.firstRequest().getMonth() + 1);
         tempString += '_';
-        tempString += 'aa0';
+        tempString += 'aa' + (order < 10 ? '0' : '');
         tempString += String(order);
         tempString += 's';
-        if (pastMonth === a.firstRequest().getMonth()) {
-          order++;
-        } else {
-          order = 0;
-        }
         pastMonth = a.firstRequest().getMonth();
-        console.log(tempString);
+        a.aspid = tempString;
       }
 
-
+      console.log(aspirants);
 
 
 

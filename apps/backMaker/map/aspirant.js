@@ -1,6 +1,6 @@
 module.exports = {
   structure: {
-    apsid: "a2011_aa01s",
+    aspid: "a2011_aa01s",
     designer: "이지영",
     phone: "010-8451-6926",
     address: "경기 용인시",
