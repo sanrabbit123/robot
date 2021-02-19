@@ -4078,6 +4078,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
             let alarmCircle;
 
+            GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (e) {});
+
             if (alarmStandard[data.mode].standard === thisColumnName) {
               if (!alarmStandard[data.mode].value.includes(finalValue)) {
                 mother.setAttribute("alarm", "off");
@@ -4369,8 +4371,66 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   }
   titleIcon0_4.appendChild(text_div);
   titleIcon0_4.addEventListener("click", function (e) {
+    const today = new Date();
+    const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+    let ajaxData, matrix, tempArr;
+    let targetWhite, grayBack, style, ea;
 
-    
+    matrix = [];
+
+    tempArr = [];
+    for (let c of columns) {
+      tempArr.push(map[c].name);
+    }
+    matrix.push(tempArr);
+
+    for (let i of data.data) {
+      tempArr = [];
+      for (let c of columns) {
+        tempArr.push(i[c]);
+      }
+      matrix.push(tempArr);
+    }
+
+    ajaxData = '';
+    ajaxData += "values=";
+    ajaxData += JSON.stringify(matrix).replace(/&/g, '').replace(/=/g, '');
+    ajaxData += "&newMake=";
+    ajaxData += "true";
+    ajaxData += "&parentId=";
+    ajaxData += parentId;
+    ajaxData += "&sheetName=";
+    ajaxData += "fromDB_rawDesigner_" + String(today.getFullYear()) + instance.mother.todayMaker();
+
+    ea = "px";
+    targetWhite = loadingIcon.parentNode;
+
+    loadingIcon.style.opacity = String(1);
+    loadingIcon.style.zIndex = String(1);
+
+    grayBack = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(100) + '%',
+      height: String(100) + '%',
+      background: "#cccccc",
+      opacity: String(0.4),
+      top: String(0) + ea,
+      left: String(0) + ea,
+      animation: "justfadein 0.3s ease",
+    };
+    for (let i in style) {
+      grayBack.style[i] = style[i];
+    }
+    targetWhite.appendChild(grayBack);
+
+    GeneralJs.ajax(ajaxData, "/sendSheets", function (res) {
+      const { link } = JSON.parse(res);
+      loadingIcon.style.opacity = String(0);
+      loadingIcon.style.zIndex = String(0);
+      targetWhite.removeChild(targetWhite.lastChild);
+      window.open(link, "_blank");
+    });
   });
   titleArea.appendChild(titleIcon0_4);
 
@@ -4795,7 +4855,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       style = {
         position: "absolute",
         fontSize: String(cardDefaultFontSize) + ea,
-        fontWeight: String(200),
+        fontWeight: String(300),
         textAlign: "left",
         color: "#404040",
         top: String(0) + ea,
@@ -5003,7 +5063,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       height: String(36) + ea,
       width: String(totalWidth) + ea,
       transform: "translateX(" + String(0) + ea + ")",
-      opacity: data.data[j][binaryStandard.name] ? String(1) : String(0.4),
+      opacity: data.data[j][binaryStandard.name] ? String(1) : String(0.5),
     };
     for (let i in style) {
       dataDataBox.style[i] = style[i];
@@ -5046,7 +5106,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         width: "auto",
         lineHeight: String(1.8),
         color: "#202020",
-        fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
+        fontWeight: data.data[j][sameStandard.name] ? String(600) : String(300),
         transition: "all 0s ease",
         textAlign: "center",
       };
@@ -5733,7 +5793,7 @@ DesignerJs.prototype.addExtractEvent = function () {
           clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
           GeneralJs.timeouts["extractPendingBack"] = null;
         }, 401);
-      })
+      });
 
     } catch (e) {
       console.log(e);

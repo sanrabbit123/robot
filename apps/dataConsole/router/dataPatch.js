@@ -3039,6 +3039,7 @@ DataPatch.prototype.designerRawMap = function () {
       portfolioBoo: { name: "포트폴리오", relative: 85, type: "string", sort: "string" },
       comeFrom : { name: "유입 경로", relative: 120, type: "string", sort: "string" },
       email : { name: "이메일", relative: 160, type: "string", sort: "string" },
+      address : { name: "주소", relative: 360, type: "string", sort: "string" },
       webChannel : { name: "홈페이지", relative: 300, type: "array", sort: "string" },
       snsChannel : { name: "SNS", relative: 300, type: "array", sort: "string" },
       cloudChannel : { name: "클라우드", relative: 300, type: "array", sort: "string" },
@@ -3096,6 +3097,21 @@ DataPatch.prototype.designerRawMap = function () {
   };
 
   cardViewMap = {
+    total: [
+      { column: "meetingTime", },
+      { column: "email", },
+      { column: "address", },
+      { column: "classification", },
+      { column: "bankName", complex: [ "bankAccount", "bankTo" ] },
+      { column: "company", complex: [ "businessNumber" ] },
+      { column: "interiorCareer", },
+      { column: "stylingCareer", },
+      { column: "careerDetail", },
+      { column: "webChannel", },
+      { column: "snsChannel", },
+      { column: "comeFrom", },
+      { column: "date", },
+    ],
     presentation: [
       { column: "presentationTimes", },
       { column: "email", },

@@ -1182,13 +1182,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "마새봄";
-      // const pid = "p81";
-      // const rid = "re075";
+      // const client = "임경지";
+      // const pid = "p82";
+      // const rid = "re076";
       // const links = [
-      //   "https://docs.google.com/document/d/1t1ltLGklbz08RP4d87Y5-qvXfs1JmZiyDDUIH1RztNM/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1C9WrV70QjatKdmH-vWkD91sc_sWOU7B6siwPmnPDhqQ/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1T0zFmSMZSDx8gbh_WD17QHH6VNc9pwZo?usp=sharing",
+      //   "https://docs.google.com/document/d/1Mkg2S0u4Wdd0hEutLOZji78e7PL3YyVSCI0KHkaIdUU/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1Rk75pJkZu-Up3tOYP5KTm629zz5znR7VKUL-kVXMInE/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1Jkny-V2nky11rBz9fJy0YQ8fE4PyruFk?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,

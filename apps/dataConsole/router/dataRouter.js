@@ -1297,7 +1297,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
         return resultDate.valueOf();
       }
-      const oppositeMode = req.body.mode !== "total" ? ((req.body.mode === "presentation") ? "partnership" : "presentation") : "total";
+      const oppositeMode = req.body.mode !== "total" ? ((req.body.mode === "presentation") ? "partnership" : "presentation") : "presentation";
       let row, oppositeRow, binaryRow;
       let sameStandardColumn;
       let realData;
@@ -1392,6 +1392,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
             tempObj.cloudChannel = i.cloudChannel;
             tempObj.comeFrom = i.comeFrom;
             tempObj.email = i.email;
+            tempObj.address = i.address;
 
             tempObj.classification = "";
             tempObj.company = "";
@@ -1447,6 +1448,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
               tempObj.cloudChannel = i.cloudChannel;
               tempObj.comeFrom = i.comeFrom;
               tempObj.email = i.email;
+              tempObj.address = i.address;
 
               tempObj.classification = i.classification;
               tempObj.company = i.company;
@@ -1526,7 +1528,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         whereQuery[updateStandard] = req.body.standard;
         updateQuery[req.body.column] = req.body.value;
 
-        await back.mongoUpdate(dbNameMap[req.body.mode], [ whereQuery, updateQuery ], { bridge: true });
+        await back.mongoUpdate(dbNameMap[((req.body.mode === "total") ? "partnership" : req.body.mode)], [ whereQuery, updateQuery ], { bridge: true });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
