@@ -711,6 +711,12 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             await GeneralJs.ajaxPromise(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary");
           }
 
+          if (finalObj.phone !== "010-2747-3403") {
+            window.gtag("event", "designerSubmit", {
+              event_category: "engagement"
+            });
+          }
+
           GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
             let style;
             let ea;

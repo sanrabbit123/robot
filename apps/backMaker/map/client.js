@@ -63,7 +63,10 @@ module.exports = {
           },
           response: {
             status: "응대중",
+            action: "",
             outreason: [],
+            outspot: "",
+            kakao: false,
           },
           date: {
             callHistory: [],
