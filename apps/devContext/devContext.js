@@ -1159,7 +1159,6 @@ class DevContext extends Array {
       //
       // console.log(matrix);
 
-
       // const project = await back.getProjectsByQuery({ desid: { "$regex": "^d" } });
       //
       // for (let p of project) {
@@ -1169,6 +1168,226 @@ class DevContext extends Array {
       //     console.log(p.proid)
       //   }
       // }
+
+
+      const stringToDate = function (str) {
+        const today = new Date();
+        let date, temp;
+        if (str === "기타") {
+          return (new Date(1800, 0, 1));
+        } else {
+          temp = str.split(" ");
+          date = new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
+          return date;
+        }
+      }
+      const startDateToDate = function (str) {
+        let date, temp;
+        temp = str.split("-");
+        if (temp.length === 3) {
+          date = new Date(Number(temp[0].replace(/^0/g, '')), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));
+        } else {
+          date = new Date(1800, 0, 1);
+        }
+        return date;
+      }
+      const careerToObject = function (str) {
+        let obj, temp;
+        temp = str.split(" ");
+        if (temp.length === 2) {
+          obj = {
+            year: Number(temp[0].replace(/[^0-9]/g, '')),
+            month: Number(temp[1].replace(/[^0-9]/g, ''))
+          };
+        } else {
+          obj = {
+            year: 0,
+            month: 0
+          };
+        }
+        return obj;
+      }
+      const presentations = await back.mongoRead("designerPresentationRaw", {}, { bridge: true });
+      const partnerships = await back.mongoRead("designerPartnershipRaw", {}, { bridge: true });
+      const portfolios = await back.mongoRead("designerPortfolioRaw", {}, { bridge: true });
+
+      let allTong, phoneTong;
+      let tempObj, targetObj;
+
+      class Tong extends Array {
+        getByPhone(phone) {
+          let targetObj;
+          for (let i of this) {
+            if (i.phone === phone) {
+              targetObj = i;
+            }
+          }
+          return targetObj;
+        }
+      }
+
+      allTong = new Tong();
+      phoneTong = [];
+
+      for (let presentation of presentations) {
+        tempObj = {};
+
+        tempObj.apsid = "";
+        tempObj.designer = presentation.designer;
+        tempObj.phone = presentation.phone;
+        tempObj.address = presentation.address;
+        tempObj.email = presentation.email;
+        tempObj.meeting = {};
+        tempObj.meeting.date = stringToDate(presentation.presentationTimes);
+        tempObj.meeting.status = presentation.status;
+        tempObj.calendar = {};
+        tempObj.calendar.mother = "designerMeeting";
+        tempObj.calendar.id = "";
+        tempObj.portfolio = [];
+        tempObj.submit = {};
+        tempObj.submit.presentation = {};
+        tempObj.submit.presentation.date = presentation.date;
+        tempObj.submit.presentation.boo = true;
+        tempObj.submit.partnership = {};
+        tempObj.submit.partnership.date = new Date(1800, 0, 1);
+        tempObj.submit.partnership.boo = false;
+
+        tempObj.submit.firstRequest = {};
+        tempObj.submit.firstRequest.date = presentation.date;
+        tempObj.submit.firstRequest.method = "presentation";
+
+        tempObj.submit.comeFrom = presentation.comeFrom;
+        tempObj.information = {};
+        tempObj.information.company = {};
+        tempObj.information.account = {};
+        tempObj.information.career = {};
+        tempObj.information.channel = {};
+
+        tempObj.information.company.name = "";
+        tempObj.information.company.classification = "";
+        tempObj.information.company.businessNumber = "";
+        tempObj.information.company.representative = "";
+        tempObj.information.company.start = new Date(1800, 0, 1);
+
+        tempObj.information.account.bank = "";
+        tempObj.information.account.number = "";
+        tempObj.information.account.to = "";
+        tempObj.information.account.etc = "";
+
+        tempObj.information.career.interior = { year: 0, month: 0 };
+        tempObj.information.career.styling = { year: 0, month: 0 };
+        tempObj.information.career.detail = "";
+
+        tempObj.information.channel.web = presentation.webChannel;
+        tempObj.information.channel.sns = presentation.snsChannel;
+        tempObj.information.channel.cloud = presentation.cloudChannel;
+
+        phoneTong.push(presentation.phone);
+        allTong.push(tempObj);
+      }
+
+      for (let partnership of partnerships) {
+        if (phoneTong.includes(partnership.phone)) {
+          targetObj = allTong.getByPhone(partnership.phone);
+          targetObj.meeting.date = stringToDate(partnership.meetingTime);
+          targetObj.meeting.status = partnership.status;
+          targetObj.submit.partnership.date = partnership.date;
+          targetObj.submit.partnership.boo = true;
+          if (targetObj.submit.firstRequest.date.valueOf() > partnership.date.valueOf()) {
+            targetObj.submit.firstRequest.date = partnership.date;
+            targetObj.submit.firstRequest.method = "partnership";
+          }
+          targetObj.information.company.name = partnership.company;
+          targetObj.information.company.classification = partnership.classification;
+          targetObj.information.company.businessNumber = partnership.businessNumber;
+          targetObj.information.company.representative = partnership.representative;
+          targetObj.information.company.start = startDateToDate(partnership.startDate);
+
+          targetObj.information.account.bank = partnership.bankName;
+          targetObj.information.account.number = partnership.bankAccount;
+          targetObj.information.account.to = partnership.bankTo;
+          targetObj.information.account.etc = partnership.bankEtc;
+
+          targetObj.information.career.interior = careerToObject(partnership.interiorCareer);
+          targetObj.information.career.styling = careerToObject(partnership.stylingCareer);
+          targetObj.information.career.detail = partnership.careerDetail;
+
+        } else {
+          tempObj = {};
+
+          tempObj.apsid = "";
+          tempObj.designer = partnership.designer;
+          tempObj.phone = partnership.phone;
+          tempObj.address = partnership.address;
+          tempObj.email = partnership.email;
+          tempObj.meeting = {};
+          tempObj.meeting.date = stringToDate(partnership.meetingTime);
+          tempObj.meeting.status = partnership.status;
+          tempObj.calendar = {};
+          tempObj.calendar.mother = "designerMeeting";
+          tempObj.calendar.id = "";
+          tempObj.portfolio = [];
+          tempObj.submit = {};
+          tempObj.submit.presentation = {};
+          tempObj.submit.presentation.date = new Date(1800, 0, 1);
+          tempObj.submit.presentation.boo = false;
+          tempObj.submit.partnership = {};
+          tempObj.submit.partnership.date = partnership.date;
+          tempObj.submit.partnership.boo = true;
+
+          tempObj.submit.firstRequest = {};
+          tempObj.submit.firstRequest.date = partnership.date;
+          tempObj.submit.firstRequest.method = "partnership";
+
+          tempObj.submit.comeFrom = partnership.comeFrom;
+          tempObj.information = {};
+          tempObj.information.company = {};
+          tempObj.information.account = {};
+          tempObj.information.career = {};
+          tempObj.information.channel = {};
+
+          tempObj.information.company.name = partnership.company;
+          tempObj.information.company.classification = partnership.classification;
+          tempObj.information.company.businessNumber = partnership.businessNumber;
+          tempObj.information.company.representative = partnership.representative;
+          tempObj.information.company.start = startDateToDate(partnership.startDate);
+
+          tempObj.information.account.bank = partnership.bankName;
+          tempObj.information.account.number = partnership.bankAccount;
+          tempObj.information.account.to = partnership.bankTo;
+          tempObj.information.account.etc = partnership.bankEtc;
+
+          tempObj.information.career.interior = careerToObject(partnership.interiorCareer);
+          tempObj.information.career.styling = careerToObject(partnership.stylingCareer);
+          tempObj.information.career.detail = partnership.careerDetail;
+
+          tempObj.information.channel.web = partnership.webChannel;
+          tempObj.information.channel.sns = partnership.snsChannel;
+          tempObj.information.channel.cloud = partnership.cloudChannel;
+
+          allTong.push(tempObj);
+        }
+      }
+
+      for (let portfolio of portfolios) {
+        targetObj = allTong.getByPhone(portfolio.phone);
+        targetObj.portfolio.push({
+          date: portfolio.date,
+          folderId: portfolio.folderId,
+        });
+      }
+
+      let { Aspirant, Aspirants, Tools } = require(`${process.cwd()}/apps/backMaker/alive/aspirant/addOn/generator.js`);
+      let aspirants;
+
+      aspirants = new Aspirants();
+
+      for (let i of allTong) {
+        aspirants.push(new Aspirant(i));
+      }
+
+
+
 
 
 

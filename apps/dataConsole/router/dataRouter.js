@@ -2215,7 +2215,7 @@ DataRouter.prototype.rou_post_makeSchedule = function () {
   obj.func = async function (req, res) {
     try {
       let { title, description, start } = JSON.parse(req.body.requestObj);
-      let end;
+      let to, end;
 
       start = new Date(start);
       if (JSON.parse(req.body.requestObj).end === undefined) {
@@ -2224,8 +2224,14 @@ DataRouter.prototype.rou_post_makeSchedule = function () {
         end = new Date(JSON.parse(req.body.requestObj).end);
       }
 
+      if (req.body.to === undefined) {
+        to = "photographing";
+      } else {
+        to = req.body.to;
+      }
+
       const calendar = new GoogleCalendar();
-      await calendar.makeSchedule(title, description, start, end);
+      await calendar.makeSchedule(to, title, description, start, end);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "done" }));
