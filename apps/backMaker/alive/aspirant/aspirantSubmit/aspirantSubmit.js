@@ -49,6 +49,7 @@ AspirantSubmit.prototype.toNormal = function () {
   let obj = {};
   obj.presentation = this.presentation.toNormal();
   obj.partnership = this.partnership.toNormal();
+  obj.firstRequest = this.firstRequest.toNormal();
   obj.comeFrom = this.comeFrom;
   return obj;
 }

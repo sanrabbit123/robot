@@ -2262,6 +2262,60 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
   }
 }
 
+// GET Aspirant -------------------------------------------------------------------------------
+
+BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  this.button = "aspirant";
+  let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  try {
+    let tong, aspirantsArr;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "submit.firstRequest.date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(this.button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(this.button).find(query).sort(sortQuery).toArray();
+      }
+      MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(this.button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(this.button).find(query).sort(sortQuery).toArray();
+      }
+    }
+
+    if (!option.withTools) {
+      aspirantsArr = new Aspirants();
+      for (let i of tong) {
+        aspirantsArr.push(new Aspirant(i));
+      }
+    } else {
+      Aspirant = Tools.widthTools(Aspirant);
+      Aspirants = Tools.widthToolsArr(Aspirants);
+      aspirantsArr = new Aspirants();
+      for (let i of tong) {
+        aspirantsArr.push(new Aspirant(i));
+      }
+    }
+
+    return aspirantsArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // GET client history -------------------------------------------------------------------------
 
 BackMaker.prototype.getClientHistoryById = async function (cliid, option = { fromConsole: false }) {

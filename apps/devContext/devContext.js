@@ -1172,7 +1172,7 @@ class DevContext extends Array {
 
 
 
-      /*
+
 
       // NEW Aspirants
 
@@ -1422,9 +1422,12 @@ class DevContext extends Array {
 
       console.log(aspirants);
 
+      // for (let a of aspirants) {
+      //   await back.mongoCreate("aspirant", a);
+      // }
 
 
-      */
+
 
 
 

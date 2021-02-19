@@ -1370,150 +1370,159 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         } else {
 
-          row = await back.mongoRead(dbNameMap["presentation"], {}, { bridge: true });
-          oppositeRow = await back.mongoRead(dbNameMap["partnership"], {}, { bridge: true });
-          binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+          // row = await back.mongoRead(dbNameMap["presentation"], {}, { bridge: true });
+          // oppositeRow = await back.mongoRead(dbNameMap["partnership"], {}, { bridge: true });
+          // binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
+          //
+          // realData = [];
+          // phoneTong = [];
+          //
+          // for (let i of row) {
+          //   tempObj = {};
+          //   tempObj.designer = i.designer;
+          //   tempObj.phone = i.phone;
+          //   tempObj.status = i.status;
+          //   tempObj.meetingTime = i.presentationTimes;
+          //   tempObj.date = i.date;
+          //   tempObj.presentationBoo = true;
+          //   tempObj.partnershipBoo = false;
+          //   tempObj.portfolioBoo = false;
+          //   tempObj.webChannel = i.webChannel;
+          //   tempObj.snsChannel = i.snsChannel;
+          //   tempObj.cloudChannel = i.cloudChannel;
+          //   tempObj.comeFrom = i.comeFrom;
+          //   tempObj.email = i.email;
+          //   tempObj.address = i.address;
+          //
+          //   tempObj.classification = "";
+          //   tempObj.company = "";
+          //   tempObj.businessNumber = "";
+          //   tempObj.startDate = "";
+          //   tempObj.representative = "";
+          //   tempObj.bankName = "";
+          //   tempObj.bankAccount = "";
+          //   tempObj.bankTo = "";
+          //   tempObj.bankEtc = "";
+          //   tempObj.interiorCareer = "";
+          //   tempObj.stylingCareer = "";
+          //   tempObj.careerDetail = "";
+          //
+          //   realData.push(tempObj);
+          //   phoneTong.push(i.phone);
+          // }
+          //
+          // for (let i of oppositeRow) {
+          //   if (phoneTong.includes(i.phone)) {
+          //     for (let j of realData) {
+          //       if (i.phone === j.phone) {
+          //         j.partnershipBoo = true;
+          //         if (j.date.valueOf() >= i.date.valueOf()) {
+          //           j.date = i.date;
+          //         }
+          //         j.classification = i.classification;
+          //         j.company = i.company;
+          //         j.businessNumber = i.businessNumber;
+          //         j.startDate = i.startDate;
+          //         j.representative = i.representative;
+          //         j.bankName = i.bankName;
+          //         j.bankAccount = i.bankAccount;
+          //         j.bankTo = i.bankTo;
+          //         j.bankEtc = i.bankEtc;
+          //         j.interiorCareer = i.interiorCareer;
+          //         j.stylingCareer = i.stylingCareer;
+          //         j.careerDetail = i.careerDetail;
+          //       }
+          //     }
+          //   } else {
+          //     tempObj = {};
+          //     tempObj.designer = i.designer;
+          //     tempObj.phone = i.phone;
+          //     tempObj.status = i.status;
+          //     tempObj.meetingTime = i.meetingTime;
+          //     tempObj.date = i.date;
+          //     tempObj.presentationBoo = false;
+          //     tempObj.partnershipBoo = true;
+          //     tempObj.portfolioBoo = false;
+          //     tempObj.webChannel = i.webChannel;
+          //     tempObj.snsChannel = i.snsChannel;
+          //     tempObj.cloudChannel = i.cloudChannel;
+          //     tempObj.comeFrom = i.comeFrom;
+          //     tempObj.email = i.email;
+          //     tempObj.address = i.address;
+          //
+          //     tempObj.classification = i.classification;
+          //     tempObj.company = i.company;
+          //     tempObj.businessNumber = i.businessNumber;
+          //     tempObj.startDate = i.startDate;
+          //     tempObj.representative = i.representative;
+          //     tempObj.bankName = i.bankName;
+          //     tempObj.bankAccount = i.bankAccount;
+          //     tempObj.bankTo = i.bankTo;
+          //     tempObj.bankEtc = i.bankEtc;
+          //     tempObj.interiorCareer = i.interiorCareer;
+          //     tempObj.stylingCareer = i.stylingCareer;
+          //     tempObj.careerDetail = i.careerDetail;
+          //
+          //     realData.push(tempObj);
+          //   }
+          // }
+          //
+          // targetIndex = 0;
+          // for (let i of realData) {
+          //   for (let j in i) {
+          //     if (columnRelativeMap[req.body.mode][j].type === "date") {
+          //       i[j] = dateToString(i[j]);
+          //       targetIndex = j;
+          //     } else if (columnRelativeMap[req.body.mode][j].type === "array") {
+          //       i[j] = i[j].join(',');
+          //     }
+          //   }
+          //
+          //   i[binaryStandard.name] = false;
+          //   i.portfolioBoo = false;
+          //   for (let j of binaryRow) {
+          //     if (i["phone"] === j["phone"]) {
+          //       i[binaryStandard.name] = true;
+          //       i.portfolioBoo = true;
+          //       i[binaryStandard.target] = j[binaryStandard.target];
+          //     }
+          //   }
+          //
+          //   if (i.presentationBoo && i.partnershipBoo) {
+          //     i[sameStandard.name] = true;
+          //   } else {
+          //     i[sameStandard.name] = false;
+          //   }
+          //
+          //   tempLink = null;
+          //   for (let j of cloudLinkTargets) {
+          //     if (i[j].length > 0) {
+          //       tempLink = i[j].split(",")[0];
+          //     }
+          //   }
+          //
+          //   if (tempLink !== null) {
+          //     i[binaryStandard.name] = true;
+          //     i.portfolioBoo = true;
+          //     i[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
+          //   }
+          //
+          //   i.presentationBoo = i.presentationBoo ? "신청" : "미신청";
+          //   i.partnershipBoo = i.partnershipBoo ? "신청" : "미신청";
+          //   i.portfolioBoo = i.portfolioBoo ? "제출" : "미제출";
+          //
+          // }
+          //
+          // realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
 
+          row = await back.getAspirantsByQuery({}, { withTools: true });
+          console.log(row);
           realData = [];
-          phoneTong = [];
-
           for (let i of row) {
-            tempObj = {};
-            tempObj.designer = i.designer;
-            tempObj.phone = i.phone;
-            tempObj.status = i.status;
-            tempObj.meetingTime = i.presentationTimes;
-            tempObj.date = i.date;
-            tempObj.presentationBoo = true;
-            tempObj.partnershipBoo = false;
-            tempObj.portfolioBoo = false;
-            tempObj.webChannel = i.webChannel;
-            tempObj.snsChannel = i.snsChannel;
-            tempObj.cloudChannel = i.cloudChannel;
-            tempObj.comeFrom = i.comeFrom;
-            tempObj.email = i.email;
-            tempObj.address = i.address;
-
-            tempObj.classification = "";
-            tempObj.company = "";
-            tempObj.businessNumber = "";
-            tempObj.startDate = "";
-            tempObj.representative = "";
-            tempObj.bankName = "";
-            tempObj.bankAccount = "";
-            tempObj.bankTo = "";
-            tempObj.bankEtc = "";
-            tempObj.interiorCareer = "";
-            tempObj.stylingCareer = "";
-            tempObj.careerDetail = "";
-
-            realData.push(tempObj);
-            phoneTong.push(i.phone);
+            realData.push(i.flatDeath("total"));
           }
 
-          for (let i of oppositeRow) {
-            if (phoneTong.includes(i.phone)) {
-              for (let j of realData) {
-                if (i.phone === j.phone) {
-                  j.partnershipBoo = true;
-                  if (j.date.valueOf() >= i.date.valueOf()) {
-                    j.date = i.date;
-                  }
-                  j.classification = i.classification;
-                  j.company = i.company;
-                  j.businessNumber = i.businessNumber;
-                  j.startDate = i.startDate;
-                  j.representative = i.representative;
-                  j.bankName = i.bankName;
-                  j.bankAccount = i.bankAccount;
-                  j.bankTo = i.bankTo;
-                  j.bankEtc = i.bankEtc;
-                  j.interiorCareer = i.interiorCareer;
-                  j.stylingCareer = i.stylingCareer;
-                  j.careerDetail = i.careerDetail;
-                }
-              }
-            } else {
-              tempObj = {};
-              tempObj.designer = i.designer;
-              tempObj.phone = i.phone;
-              tempObj.status = i.status;
-              tempObj.meetingTime = i.meetingTime;
-              tempObj.date = i.date;
-              tempObj.presentationBoo = false;
-              tempObj.partnershipBoo = true;
-              tempObj.portfolioBoo = false;
-              tempObj.webChannel = i.webChannel;
-              tempObj.snsChannel = i.snsChannel;
-              tempObj.cloudChannel = i.cloudChannel;
-              tempObj.comeFrom = i.comeFrom;
-              tempObj.email = i.email;
-              tempObj.address = i.address;
-
-              tempObj.classification = i.classification;
-              tempObj.company = i.company;
-              tempObj.businessNumber = i.businessNumber;
-              tempObj.startDate = i.startDate;
-              tempObj.representative = i.representative;
-              tempObj.bankName = i.bankName;
-              tempObj.bankAccount = i.bankAccount;
-              tempObj.bankTo = i.bankTo;
-              tempObj.bankEtc = i.bankEtc;
-              tempObj.interiorCareer = i.interiorCareer;
-              tempObj.stylingCareer = i.stylingCareer;
-              tempObj.careerDetail = i.careerDetail;
-
-              realData.push(tempObj);
-            }
-          }
-
-          targetIndex = 0;
-          for (let i of realData) {
-            for (let j in i) {
-              if (columnRelativeMap[req.body.mode][j].type === "date") {
-                i[j] = dateToString(i[j]);
-                targetIndex = j;
-              } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-                i[j] = i[j].join(',');
-              }
-            }
-
-            i[binaryStandard.name] = false;
-            i.portfolioBoo = false;
-            for (let j of binaryRow) {
-              if (i["phone"] === j["phone"]) {
-                i[binaryStandard.name] = true;
-                i.portfolioBoo = true;
-                i[binaryStandard.target] = j[binaryStandard.target];
-              }
-            }
-
-            if (i.presentationBoo && i.partnershipBoo) {
-              i[sameStandard.name] = true;
-            } else {
-              i[sameStandard.name] = false;
-            }
-
-            tempLink = null;
-            for (let j of cloudLinkTargets) {
-              if (i[j].length > 0) {
-                tempLink = i[j].split(",")[0];
-              }
-            }
-
-            if (tempLink !== null) {
-              i[binaryStandard.name] = true;
-              i.portfolioBoo = true;
-              i[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
-            }
-
-            i.presentationBoo = i.presentationBoo ? "신청" : "미신청";
-            i.partnershipBoo = i.partnershipBoo ? "신청" : "미신청";
-            i.portfolioBoo = i.portfolioBoo ? "제출" : "미제출";
-
-          }
-
-          realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
+          console.log(realData);
 
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
