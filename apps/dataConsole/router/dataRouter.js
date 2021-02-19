@@ -1497,7 +1497,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
             tempLink = null;
             for (let j of cloudLinkTargets) {
               if (i[j].length > 0) {
-                tempLink = i[j][0];
+                tempLink = i[j].split(",")[0];
               }
             }
 

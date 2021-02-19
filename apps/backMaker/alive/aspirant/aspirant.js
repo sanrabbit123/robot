@@ -34,4 +34,8 @@ Aspirant.prototype.toNormal = function () {
   return obj;
 }
 
+Aspirant.prototype.firstRequest = function () {
+  return this.submit.firstRequest.date;
+}
+
 module.exports = Aspirant;

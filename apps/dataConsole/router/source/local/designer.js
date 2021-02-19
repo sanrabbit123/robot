@@ -4644,6 +4644,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             } else {
               str = thisFolderId.replace(/^__link__/, '');
             }
+            console.log(str);
             window.open(str, "_blank");
           } else {
             alert("포트폴리오가 없습니다!");

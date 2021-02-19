@@ -1386,8 +1386,32 @@ class DevContext extends Array {
         aspirants.push(new Aspirant(i));
       }
 
+      aspirants.sort((a, b) => {
+        return a.firstRequest().valueOf() - b.firstRequest().valueOf();
+      });
 
 
+      let order, pastMonth, tempString;
+
+      order = 0;
+
+      for (let a of aspirants) {
+        tempString = '';
+        tempString += 'a';
+        tempString += String(a.firstRequest().getFullYear()).slice(2, 4);
+        tempString += '0' + String(a.firstRequest().getMonth() + 1);
+        tempString += '_';
+        tempString += 'aa0';
+        tempString += String(order);
+        tempString += 's';
+        if (pastMonth === a.firstRequest().getMonth()) {
+          order++;
+        } else {
+          order = 0;
+        }
+        pastMonth = a.firstRequest().getMonth();
+        console.log(tempString);
+      }
 
 
 
