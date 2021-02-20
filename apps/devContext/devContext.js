@@ -1171,27 +1171,23 @@ class DevContext extends Array {
 
 
 
-      const MONGOC = this.MONGOC;
-      let tong;
-      let num;
-
-
-      tong = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
-
-      num = 0;
-      for (let i of tong) {
-        await MONGOC.db(`miro81`).collection("project").updateOne({ proid: i.proid }, { $set: { "process.action": "응대 종료", "process.detail": [], "process.outreason": [], "process.outspot": "해당 없음" } });
-        // if (i.requests.length > 1) {
-        //   console.log(i);
-        //   num++;
-        // }
-        console.log(`${i.proid} update`);
-      }
-      // console.log(num);
-
-
-
-
+      // const MONGOC = this.MONGOC;
+      // let tong;
+      // let num;
+      //
+      //
+      // tong = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
+      //
+      // num = 0;
+      // for (let i of tong) {
+      //   await MONGOC.db(`miro81`).collection("project").updateOne({ proid: i.proid }, { $set: { "process.action": "응대 종료", "process.detail": [], "process.outreason": [], "process.outspot": "해당 없음" } });
+      //   // if (i.requests.length > 1) {
+      //   //   console.log(i);
+      //   //   num++;
+      //   // }
+      //   console.log(`${i.proid} update`);
+      // }
+      // // console.log(num);
 
 
 
