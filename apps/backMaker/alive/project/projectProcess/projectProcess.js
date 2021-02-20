@@ -518,10 +518,71 @@ Contract.prototype.toNormal = function () {
   return obj;
 }
 
+const Calendar = function (json) {
+  this.mother = json.mother;
+  this.id = json.id;
+}
+
+Calendar.prototype.toNormal = function () {
+  let obj = {};
+  obj.mother = this.mother;
+  obj.id = this.id;
+  return obj;
+}
+
+const ProcessDetail = function (json) {
+  this.name = json.name;
+  this.date = new DateParse(json.date);
+  this.calendar = new Calendar(json.calendar);
+}
+
+ProcessDetail.prototype.toNormal = function () {
+  let obj = {};
+  obj.name = this.name;
+  obj.date = this.date.toNormal();
+  obj.calendar = this.calendar.toNormal();
+  return obj;
+}
+
+class ProcessDetails extends Array {
+  constructor(json) {
+    super();
+    for (let i of json) {
+      this.push(new ProcessDetail(i));
+    }
+  }
+
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
 // main ----------------------------------------------------------------------------------
 
 const ProjectProcess = function (json) {
+  const actionList = [
+    "현장 미팅",
+    "1차 제안",
+    "수정 제안",
+    "시공 진행",
+    "제품 구매",
+    "배송중",
+    "촬영 컨택",
+    "촬영 대기",
+    "사진 대기",
+    "사진 공유",
+    "컨텐츠 공유",
+    "응대 종료"
+  ];
   this.status = new Menu(json.status, [ '대기', '진행중', '완료', '홀딩', '드랍' ], false);
+  this.action = new Menu(json.action, actionList, false);
+  this.outreason = new Menu(json.outreason, [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], true);
+  this.outspot = new Menu(json.outspot, actionList, false);
+  this.detail = new ProcessDetails(json.detail);
   this.contract = new Contract(json.contract);
   this.design = new Design(json.design);
   this.calculation = new Calculation(json.calculation);
@@ -530,6 +591,10 @@ const ProjectProcess = function (json) {
 ProjectProcess.prototype.toNormal = function () {
   let obj = {};
   obj.status = this.status.toNormal();
+  obj.action = this.action.toNormal();
+  obj.outreason = this.outreason.toNormal();
+  obj.outspot = this.outspot.toNormal();
+  obj.detail = this.detail.toNormal();
   obj.contract = this.contract.toNormal();
   obj.design = this.design.toNormal();
   obj.calculation = this.calculation.toNormal();

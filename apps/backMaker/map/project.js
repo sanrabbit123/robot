@@ -40,6 +40,19 @@ module.exports = {
     },
     process: {
       status: "드랍", // [ '드랍', '진행', '응대중', '완료' ]
+      action: "",
+      detail: [
+        {
+          name: "",
+          date: new Date(1800, 0, 1),
+          calendar: {
+            mother: "designerMeeting",
+            id: "",
+          },
+        }
+      ],
+      outreason: [],
+      outspot: "",
       contract: {
         first: {
           guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
