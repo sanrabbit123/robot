@@ -12,7 +12,8 @@ const Response = function (response) {
     "계약금 입금",
     "계약서 서명",
     "잔금 입금",
-    "응대 종료"
+    "응대 종료",
+    "해당 없음",
   ];
   this.status = new Menu(response.status, [ '드랍', '진행', '응대중', '완료', '장기' ], false);
   this.action = new Menu(response.action, actionList, false);
