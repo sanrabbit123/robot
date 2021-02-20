@@ -4,12 +4,14 @@ const DataRouter = function (MONGOC) {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.patch = new DataPatch();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
+  this.calendar = new GoogleCalendar();
   if (MONGOC !== undefined && MONGOC !== null) {
     this.mongo = MONGOC;
   }
@@ -1312,6 +1314,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let whereQuery, updateQuery;
       let tempLink;
       let phoneTong;
+      let tempAspirants, tempAspirant;
 
       if (req.url === "/getDesignerReport") {
 
@@ -1338,6 +1341,20 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         }
 
         await back.updateAspirant([ whereQuery, updateQuery ]);
+
+        if (req.body.calendar !== undefined) {
+          tempAspirants = await back.getAspirantsByQuery(whereQuery);
+          tempAspirant = tempAspirants[0];
+          if (tempAspirant.calendar.id !== "") {
+            instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
+          } else {
+            instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
+              back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ]);
+            }).catch(function (e) {
+              console.log(e);
+            });
+          }
+        }
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));

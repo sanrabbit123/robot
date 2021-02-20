@@ -3942,7 +3942,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue + "&calendar=true", "/updateDesignerReport", function (res) {
             let statusDom;
 
             mother.setAttribute("alarm", "off");

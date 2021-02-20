@@ -1169,8 +1169,6 @@ class DevContext extends Array {
       //   }
       // }
 
-
-
       // const MONGOC = this.MONGOC;
       // let tong;
       // let num;
@@ -1188,6 +1186,23 @@ class DevContext extends Array {
       //   console.log(`${i.proid} update`);
       // }
       // // console.log(num);
+
+      // const calendar = new GoogleCalendar();
+      // const aspirants = await back.getAspirantsByQuery({});
+      // let tempResponse;
+      // let whereQuery, updateQuery;
+      //
+      // await calendar.ready();
+      //
+      // for (let i of aspirants) {
+      //   if (i.meeting.date.getFullYear() > 2000) {
+      //     tempResponse = await calendar.makeSchedule("designerMeeting", i.designer + " 디자이너 사전 미팅", "", i.meeting.date);
+      //     whereQuery = { aspid: i.aspid };
+      //     updateQuery = { "calendar.id": tempResponse.eventId };
+      //     await back.updateAspirant([ whereQuery, updateQuery ]);
+      //   }
+      // }
+
 
 
 
