@@ -556,12 +556,20 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       const stringToDate = function (str) {
         let temp;
         temp = str.split("-");
-        return new Date(Number(temp[0]), Number(temp[1].replace(/^0/, '')) - 1, Number(temp[2].replace(/^0/, '')));
+        if (temp.length === 3) {
+          return new Date(Number(temp[0]), Number(temp[1].replace(/^0/, '')) - 1, Number(temp[2].replace(/^0/, '')));
+        } else {
+          return new Date(1800, 0, 1);
+        }
       }
       const stringToCareer = function (str) {
         let temp;
         temp = str.split(" ");
-        return { year: Number(temp[0].replace(/[^0-9]/g, '')), month: Number(temp[1].replace(/[^0-9]/g, '')) };
+        if (temp.length === 2) {
+          return { year: Number(temp[0].replace(/[^0-9]/g, '')), month: Number(temp[1].replace(/[^0-9]/g, '')) };
+        } else {
+          return { year: 0, month: 0 };
+        }
       }
       const wordingToDate = function (str) {
         if (str === "기타") {
@@ -570,7 +578,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           const today = new Date();
           let temp;
           temp = str.split(" ");
-          return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
+          if (temp.length >= 4) {
+            return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
+          } else {
+            return new Date(1800, 0, 1);
+          }
         }
       }
       let filteredObj, message;
