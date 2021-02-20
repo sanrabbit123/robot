@@ -44,8 +44,9 @@ const widthTools = function (Aspirant) {
     }
     let tempObj;
 
+    tempObj = {};
+
     if (mode === "total") {
-      tempObj = {};
       tempObj.designer = aspirant.designer;
       tempObj.phone = aspirant.phone;
       tempObj.status = aspirant.meeting.status;
@@ -72,6 +73,7 @@ const widthTools = function (Aspirant) {
       tempObj.interiorCareer = String(aspirant.information.career.interior.year) + '년 ' + String(aspirant.information.career.interior.month) + '개월';
       tempObj.stylingCareer = String(aspirant.information.career.styling.year) + '년 ' + String(aspirant.information.career.styling.month) + '개월';
       tempObj.careerDetail = aspirant.information.career.detail;
+
       tempObj.binary = (aspirant.portfolio.length > 0);
       tempObj.folderId = null;
       if (aspirant.portfolio.length > 0) {
@@ -102,9 +104,100 @@ const widthTools = function (Aspirant) {
       return tempObj;
     } else if (mode === "presentation") {
 
+      if (!aspirant.submit.presentation.boo) {
+        return null;
+      }
+
+      tempObj.date = dateToString(aspirant.submit.presentation.date);
+      tempObj.designer = aspirant.designer;
+      tempObj.phone = aspirant.phone;
+      tempObj.email = aspirant.email;
+      tempObj.address = aspirant.address;
+      tempObj.status = aspirant.meeting.status;
+      tempObj.presentationTimes = (!/^조정/.test(aspirant.meeting.status)) ? dateToStringDay(aspirant.meeting.date) : "기타";
+      tempObj.comeFrom = aspirant.submit.comeFrom;
+      tempObj.webChannel = aspirant.information.channel.web.join(',');;
+      tempObj.snsChannel = aspirant.information.channel.sns.join(',');;
+      tempObj.cloudChannel = aspirant.information.channel.cloud.join(',');;
+
+      tempObj.binary = (aspirant.portfolio.length > 0);
+      tempObj.folderId = null;
+      if (aspirant.portfolio.length > 0) {
+        tempObj.folderId = aspirant.portfolio[0].folderId;
+      }
+      tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
+      if (!tempObj.binary) {
+        for (let i of aspirant.information.channel.web) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+        for (let i of aspirant.information.channel.sns) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+        for (let i of aspirant.information.channel.cloud) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+      }
+
     } else if (mode === "partnership") {
 
+      if (!aspirant.submit.partnership.boo) {
+        return null;
+      }
+
+      tempObj.date = dateToString(aspirant.submit.partnership.date);
+      tempObj.designer = aspirant.designer;
+      tempObj.phone = aspirant.phone;
+      tempObj.email = aspirant.email;
+      tempObj.address = aspirant.address;
+
+      tempObj.status = aspirant.meeting.status;
+      tempObj.meetingTime = (!/^조정/.test(aspirant.meeting.status)) ? dateToStringDay(aspirant.meeting.date) : "기타";
+
+      tempObj.classification = aspirant.information.company.classification;
+      tempObj.company = aspirant.information.company.name;
+      tempObj.businessNumber = aspirant.information.company.businessNumber;
+      tempObj.startDate = dateToString(aspirant.information.company.start).slice(0, 10);
+      tempObj.representative = aspirant.information.company.representative;
+      tempObj.bankName = aspirant.information.account.bank;
+      tempObj.bankAccount = aspirant.information.account.number;
+      tempObj.bankTo = aspirant.information.account.to;
+      tempObj.bankEtc = aspirant.information.account.etc;
+      tempObj.interiorCareer = String(aspirant.information.career.interior.year) + '년 ' + String(aspirant.information.career.interior.month) + '개월';
+      tempObj.stylingCareer = String(aspirant.information.career.styling.year) + '년 ' + String(aspirant.information.career.styling.month) + '개월';
+      tempObj.careerDetail = aspirant.information.career.detail;
+
+      tempObj.comeFrom = aspirant.submit.comeFrom;
+      tempObj.webChannel = aspirant.information.channel.web.join(',');;
+      tempObj.snsChannel = aspirant.information.channel.sns.join(',');;
+      tempObj.cloudChannel = aspirant.information.channel.cloud.join(',');;
+
+      tempObj.binary = (aspirant.portfolio.length > 0);
+      tempObj.folderId = null;
+      if (aspirant.portfolio.length > 0) {
+        tempObj.folderId = aspirant.portfolio[0].folderId;
+      }
+      tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
+      if (!tempObj.binary) {
+        for (let i of aspirant.information.channel.web) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+        for (let i of aspirant.information.channel.sns) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+        for (let i of aspirant.information.channel.cloud) {
+          tempObj.binary = true;
+          tempObj.folderId = "__link__" + i.replace(/[\&\=]/g, '');
+        }
+      }
+
     }
+
+    return tempObj;
   }
 
   return Aspirant;

@@ -697,26 +697,6 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
 
       instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {
         try {
-          if (instance.fileBox[flatform].files.length > 0) {
-            formData = new FormData();
-            formData.enctype = "multipart/form-data";
-
-            formData.append("designer", finalObj.designer);
-            formData.append("phone", finalObj.phone);
-
-            for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
-              formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
-            }
-
-            await GeneralJs.ajaxPromise(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary");
-          }
-
-          if (finalObj.phone !== "010-2747-3403") {
-            window.gtag("event", "designerSubmit", {
-              event_category: "engagement"
-            });
-          }
-
           GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
             let style;
             let ea;
@@ -726,6 +706,27 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
             let promptBox;
             let promptGreenWidth0, promptGreenWidth1, promptGreenHeight, promptGreenBottom, promptGreenLeft0, promptGreenLeft1;
             let promptWordingTop, promptWordingLeft;
+            let formData;
+
+            if (instance.fileBox[flatform].files.length > 0) {
+              formData = new FormData();
+              formData.enctype = "multipart/form-data";
+
+              formData.append("designer", finalObj.designer);
+              formData.append("phone", finalObj.phone);
+
+              for (let j = 0; j < instance.fileBox[flatform].files.length; j++) {
+                formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
+              }
+
+              GeneralJs.ajax(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary", function (d) {});
+            }
+
+            if (finalObj.phone !== "010-2747-3403") {
+              window.gtag("event", "designerSubmit", {
+                event_category: "engagement"
+              });
+            }
 
             wording.style.display = "none";
             loader.style.display = "none";

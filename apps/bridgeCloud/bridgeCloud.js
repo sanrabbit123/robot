@@ -143,7 +143,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
     }
 
     let message = "";
-    let already;
+    let already, updatePortfolio;
 
     if (obj.mode === "client") {
       message = obj.name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
@@ -152,28 +152,20 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
 
     } else if (obj.mode === "designer") {
-      already = await instance.back.mongoRead("designerPortfolioRaw", { phone: obj.phone }, { bridge: true });
+      already = await instance.back.getAspirantsByQuery({ phone: obj.phone });
 
-      if (obj.phone !== "010-2747-3403") {
-        if (already.length > 0) {
-          await instance.back.mongoUpdate("designerPortfolioRaw", [
-            { phone: obj.phone },
-            {
-              date: new Date(),
-              name: obj.name,
-              phone: obj.phone,
-              folderId,
-            },
-          ],
-          { bridge: true });
-        } else {
-          await instance.back.mongoCreate("designerPortfolioRaw", {
-            date: new Date(),
-            name: obj.name,
-            phone: obj.phone,
-            folderId,
-          }, { bridge: true });
-        }
+      if (already.length > 0) {
+        updatePortfolio = already[0].portfolio;
+        updatePortfolio.unshift({
+          date: new Date(),
+          folderId: folderId
+        });
+        await instance.back.updateAspirant([
+          { phone: obj.phone },
+          { portfolio: updatePortfolio }
+        ]);
+      } else {
+        console.log(obj, folderId);
       }
 
       message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
@@ -561,6 +553,26 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
         presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
       };
+      const stringToDate = function (str) {
+        let temp;
+        temp = str.split("-");
+        return new Date(Number(temp[0]), Number(temp[1].replace(/^0/, '')) - 1, Number(temp[2].replace(/^0/, '')));
+      }
+      const stringToCareer = function (str) {
+        let temp;
+        temp = str.split(" ");
+        return { year: Number(temp[0].replace(/[^0-9]/g, '')), month: Number(temp[1].replace(/[^0-9]/g, '')) };
+      }
+      const wordingToDate = function (str) {
+        if (str === "기타") {
+          return new Date(1800, 0, 1);
+        } else {
+          const today = new Date();
+          let temp;
+          temp = str.split(" ");
+          return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
+        }
+      }
       let filteredObj, message;
       let tempArr;
       let tempArr0, tempArr1, tempArr2;
@@ -675,152 +687,146 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       if (resultObj.mode !== "portfolio") {
 
         KAKAO.sendTalk(dictionary[resultObj.mode].kakao, filteredObj["designer"], filteredObj["phone"]);
-        if (!ignorePhone.includes(filteredObj.phone)) {
-          whereQuery = { phone: filteredObj["phone"] };
-          already = await instance.back.mongoRead(dictionary[resultObj.mode].db, whereQuery, { local: true });
-          oppositeExist = await instance.back.mongoRead(dictionary[resultObj.mode].oppositeDb, whereQuery, { local: true });
-          if (already.length > 0) {
-            await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, filteredObj ], { local: true });
-          } else {
-            await instance.back.mongoCreate(dictionary[resultObj.mode].db, filteredObj, { local: true });
-          }
-          if (oppositeExist > 0) {
-            updateQuery = {};
-            updateQuery.designer = filteredObj.designer;
-            updateQuery.email = filteredObj.email;
-            updateQuery.address = filteredObj.address;
 
-            if (resultObj.mode === "presentation") {
-              if (oppositeExist[0].meetingTime === "기타") {
-                if (filteredObj.presentationTimes !== "기타") {
-                  await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, { status: "미팅 대기", meetingTime: filteredObj.presentationTimes } ], { local: true });
-                }
-              } else {
-                if (filteredObj.presentationTimes === "기타") {
-                  await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, { status: "미팅 대기", presentationTimes: oppositeExist[0].meetingTime } ], { local: true });
-                }
-              }
+        whereQuery = { phone: filteredObj["phone"] };
+        already = await instance.back.getAspirantsByQuery(whereQuery);
+
+        updateQuery = {};
+        if (resultObj.mode === "partnership") {
+
+          updateQuery["designer"] = filteredObj.designer;
+          updateQuery["phone"] = filteredObj.phone;
+          updateQuery["email"] = filteredObj.email;
+          updateQuery["address"] = filteredObj.address;
+
+          updateQuery["submit.partnership.date"] = new Date();
+          updateQuery["submit.partnership.boo"] = true;
+          updateQuery["submit.comeFrom"] = filteredObj.comeFrom;
+
+          updateQuery["information.company.classification"] = filteredObj.classification;
+          updateQuery["information.company.name"] = filteredObj.company;
+          updateQuery["information.company.businessNumber"] = filteredObj.businessNumber;
+          updateQuery["information.company.start"] = stringToDate(filteredObj.startDate);
+          updateQuery["information.company.representative"] = filteredObj.representative;
+
+          updateQuery["information.account.bank"] = filteredObj.bankName;
+          updateQuery["information.account.number"] = filteredObj.bankAccount;
+          updateQuery["information.account.to"] = filteredObj.bankTo;
+          updateQuery["information.account.etc"] = filteredObj.bankEtc;
+
+          updateQuery["information.career.interior"] = stringToCareer(filteredObj.interiorCareer);
+          updateQuery["information.career.styling"] = stringToCareer(filteredObj.stylingCareer);
+          updateQuery["information.career.detail"] = filteredObj.careerDetail;
+
+          if (already.length === 0) {
+            updateQuery["information.channel.web"] = filteredObj.webChannel;
+            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
+            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
+
+            updateQuery["meeting.status"] = filteredObj.status;
+            updateQuery["meeting.date"] = new Date(1800, 0, 1);
+            updateQuery["submit.firstRequest.date"] = new Date();
+            updateQuery["submit.firstRequest.method"] = "partnership";
+            if (!ignorePhone.includes(filteredObj.phone)) {
+              await instance.back.createAspirant(updateQuery);
             } else {
-              if (oppositeExist[0].presentationTimes === "기타") {
-                if (filteredObj.meetingTime !== "기타") {
-                  await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, { status: "미팅 대기", presentationTimes: filteredObj.meetingTime } ], { local: true });
-                }
-              } else {
-                if (filteredObj.meetingTime === "기타") {
-                  await instance.back.mongoUpdate(dictionary[resultObj.mode].db, [ whereQuery, { status: "미팅 대기", meetingTime: oppositeExist[0].presentationTimes } ], { local: true });
-                }
-              }
+              console.log(updateQuery);
             }
-
-            if (oppositeExist[0].webChannel.length <= filteredObj.webChannel.length) {
-              updateQuery.webChannel = filteredObj.webChannel;
+          } else {
+            if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
+              updateQuery["information.channel.web"] = filteredObj.webChannel;
             }
-            if (oppositeExist[0].snsChannel.length <= filteredObj.snsChannel.length) {
-              updateQuery.snsChannel = filteredObj.snsChannel;
+            if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
+              updateQuery["information.channel.sns"] = filteredObj.snsChannel;
             }
-            if (oppositeExist[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
-              updateQuery.cloudChannel = filteredObj.cloudChannel;
+            if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
+              updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
             }
-            await instance.back.mongoUpdate(dictionary[resultObj.mode].oppositeDb, [ whereQuery, updateQuery ], { local: true });
+            if (!ignorePhone.includes(filteredObj.phone)) {
+              await instance.back.updateAspirant([ whereQuery, updateQuery ]);
+            } else {
+              console.log([ whereQuery, updateQuery ]);
+            }
           }
+
+        } else {
+
+          updateQuery["designer"] = filteredObj.designer;
+          updateQuery["phone"] = filteredObj.phone;
+          updateQuery["email"] = filteredObj.email;
+          updateQuery["address"] = filteredObj.address;
+
+          updateQuery["submit.presentation.date"] = new Date();
+          updateQuery["submit.presentation.boo"] = true;
+          updateQuery["submit.comeFrom"] = filteredObj.comeFrom;
+
+          if (already.length === 0) {
+            updateQuery["information.channel.web"] = filteredObj.webChannel;
+            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
+            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
+
+            updateQuery["meeting.status"] = filteredObj.status;
+            updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
+            updateQuery["submit.firstRequest.date"] = new Date();
+            updateQuery["submit.firstRequest.method"] = "presentation";
+            if (!ignorePhone.includes(filteredObj.phone)) {
+              await instance.back.createAspirant(updateQuery);
+            } else {
+              console.log(updateQuery);
+            }
+          } else {
+            if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
+              updateQuery["information.channel.web"] = filteredObj.webChannel;
+            }
+            if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
+              updateQuery["information.channel.sns"] = filteredObj.snsChannel;
+            }
+            if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
+              updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
+            }
+            if (filteredObj.presentationTimes !== "기타") {
+              updateQuery["meeting.status"] = filteredObj.status;
+              updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
+            }
+            if (!ignorePhone.includes(filteredObj.phone)) {
+              await instance.back.updateAspirant([ whereQuery, updateQuery ]);
+            } else {
+              console.log([ whereQuery, updateQuery ]);
+            }
+          }
+        }
+
+        if (!ignorePhone.includes(filteredObj.phone)) {
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
 
-        if (resultObj.mode === "partnership") {
-          instance.bridgeToSheets({
-            id: "1gr_Sm_Wdhl2BuRY809gyw_XrlDgL6nErDS4enI-CajU",
-            model: {
-              date: '문의일',
-              designer: '성함',
-              status: '상태',
-              meetingTime: '미팅 시간',
-              phone: '연락처',
-              address: '주소',
-              email: '이메일',
-              classification: '사업자 분류',
-              company: '회사명',
-              businessNumber: '사업자 등록번호',
-              startDate: '개업일',
-              representative: '대표자 성함',
-              bankName: '은행명',
-              bankAccount: '계좌번호',
-              bankTo: '수신자',
-              bankEtc: '기타 사항',
-              interiorCareer: '인테리어 경력',
-              stylingCareer: '스타일링 경력',
-              careerDetail: '경력 상세',
-              webChannel: '홈페이지',
-              snsChannel: 'SNS 채널',
-              cloudChannel: '클라우드',
-              comeFrom: '유입 경로',
-            },
-            query: null,
-            from: {
-              where: "local",
-              collection: "designerPartnershipRaw"
-            }
-          });
-        } else if (resultObj.mode === "presentation") {
-          instance.bridgeToSheets({
-            id: "1TAHieFFOJRnOoZL4tN-Y9eXHtpPa8f3foPtlC3SY-nU",
-            model: {
-              date: '문의일',
-              designer: '성함',
-              status: '상태',
-              presentationTimes: '신청 시간',
-              phone: '연락처',
-              address: '주소',
-              email: '이메일',
-              comeFrom: '유입 경로',
-            },
-            query: null,
-            from: {
-              where: "local",
-              collection: "designerPresentationRaw"
-            }
-          });
-        }
-
       } else if (resultObj.mode === "portfolio") {
 
+        whereQuery = { phone: filteredObj["phone"] };
+        already = await instance.back.getAspirantsByQuery(whereQuery);
+
+        updateQuery = {};
+
+        if (already.length > 0) {
+          if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
+            updateQuery["information.channel.web"] = filteredObj.webChannel;
+          }
+          if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
+            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
+          }
+          if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
+            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
+          }
+          if (!ignorePhone.includes(filteredObj.phone)) {
+            await instance.back.updateAspirant([ whereQuery, updateQuery ]);
+          } else {
+            console.log([ whereQuery, updateQuery ]);
+          }
+        }
+
         if (!ignorePhone.includes(filteredObj.phone)) {
-
-          whereQuery = { phone: filteredObj["phone"] };
-          already = await instance.back.mongoRead(dictionary["partnership"].db, whereQuery, { local: true });
-          oppositeExist = await instance.back.mongoRead(dictionary["partnership"].oppositeDb, whereQuery, { local: true });
-
-          updateQuery = {};
-          updateQuery.designer = filteredObj.designer;
-          updateQuery.email = filteredObj.email;
-
-          if (already.length > 0) {
-            if (already[0].webChannel.length <= filteredObj.webChannel.length) {
-              updateQuery.webChannel = filteredObj.webChannel;
-            }
-            if (already[0].snsChannel.length <= filteredObj.snsChannel.length) {
-              updateQuery.snsChannel = filteredObj.snsChannel;
-            }
-            if (already[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
-              updateQuery.cloudChannel = filteredObj.cloudChannel;
-            }
-            await instance.back.mongoUpdate(dictionary["partnership"].db, [ whereQuery, updateQuery ], { local: true });
-          }
-
-          if (oppositeExist.length > 0) {
-            if (oppositeExist[0].webChannel.length <= filteredObj.webChannel.length) {
-              updateQuery.webChannel = filteredObj.webChannel;
-            }
-            if (oppositeExist[0].snsChannel.length <= filteredObj.snsChannel.length) {
-              updateQuery.snsChannel = filteredObj.snsChannel;
-            }
-            if (oppositeExist[0].cloudChannel.length <= filteredObj.cloudChannel.length) {
-              updateQuery.cloudChannel = filteredObj.cloudChannel;
-            }
-            await instance.back.mongoUpdate(dictionary["partnership"].db, [ whereQuery, updateQuery ], { local: true });
-          }
-
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });

@@ -3942,7 +3942,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
             let statusDom;
 
             mother.setAttribute("alarm", "off");
@@ -3960,16 +3960,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
             if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
               statusDom.firstChild.textContent = alarmStandard[data.mode].convertValue;
-              GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (res) {});
+              GeneralJs.ajax("standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (res) {});
             }
-
-            GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].standard, "/pickDesignerReport", function (res) {
-              const { value } = JSON.parse(res);
-              if (value !== "throwError" && alarmStandard[data.oppositeMode].value.includes(value)) {
-                GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (e) {});
-              }
-              GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + alarmStandard[data.oppositeMode].trigger + "&value=" + finalValue, "/updateDesignerReport", function (e) {});
-            });
 
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
@@ -4075,10 +4067,8 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("mode=" + data.mode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
             let alarmCircle;
-
-            GeneralJs.ajax("mode=" + data.oppositeMode + "&standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (e) {});
 
             if (alarmStandard[data.mode].standard === thisColumnName) {
               if (!alarmStandard[data.mode].value.includes(finalValue)) {

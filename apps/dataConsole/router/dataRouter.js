@@ -1272,7 +1272,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   const patch = this.patch;
   let obj = {};
-  obj.link = [ "/getDesignerReport", "/updateDesignerReport", "/pickDesignerReport" ];
+  obj.link = [ "/getDesignerReport", "/updateDesignerReport" ];
   obj.func = async function (req, res) {
     try {
       const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
@@ -1297,6 +1297,12 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
         return resultDate.valueOf();
       }
+      const stringToDateWording = function (str) {
+        const today = new Date();
+        let temp;
+        temp = str.split(" ");
+        return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
+      }
       const oppositeMode = req.body.mode !== "total" ? ((req.body.mode === "presentation") ? "partnership" : "presentation") : "presentation";
       let row, oppositeRow, binaryRow;
       let sameStandardColumn;
@@ -1307,227 +1313,17 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let tempLink;
       let phoneTong;
 
-      if (dbNameMap[req.body.mode] === undefined) {
-        throw new Error("invaild mode");
-      }
-
       if (req.url === "/getDesignerReport") {
 
-        if (req.body.mode !== "total") {
-          sameStandardColumn = sameStandard.value;
-
-          row = await back.mongoRead(dbNameMap[req.body.mode], {}, { bridge: true });
-          oppositeRow = await back.mongoRead(dbNameMap[oppositeMode], {}, { bridge: true });
-          binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
-
-          realData = [];
-          for (let i of row) {
-            delete i._id;
-            tempObj = JSON.parse(JSON.stringify(i));
-            tempLink = null;
-            for (let j in tempObj) {
-              if (columnRelativeMap[req.body.mode][j].type === "date") {
-                tempObj[j] = dateToString(tempObj[j]);
-                targetIndex = j;
-              } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-                tempObj[j] = tempObj[j].join(',');
-              }
-            }
-            tempObj[sameStandard.name] = false;
-            for (let j of oppositeRow) {
-              if (i[sameStandardColumn] === j[sameStandardColumn]) {
-                tempObj[sameStandard.name] = true;
-              }
-            }
-
-            for (let j of cloudLinkTargets) {
-              if (i[j].length > 0) {
-                tempLink = i[j][0];
-              }
-            }
-
-            tempObj[binaryStandard.name] = false;
-            tempObj[binaryStandard.target] = null;
-            for (let j of binaryRow) {
-              if (i[sameStandardColumn] === j[sameStandardColumn]) {
-                tempObj[binaryStandard.name] = true;
-                tempObj[binaryStandard.target] = j[binaryStandard.target];
-              }
-            }
-
-            if (tempLink !== null) {
-              tempObj[binaryStandard.name] = true;
-              tempObj[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
-            }
-
-            realData.push(tempObj);
+        row = await back.getAspirantsByQuery({}, { withTools: true });
+        realData = [];
+        for (let i of row) {
+          if (i.flatDeath(req.body.mode) !== null) {
+            realData.push(i.flatDeath(req.body.mode));
           }
-
-          realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
-
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
-
-        } else {
-
-          // row = await back.mongoRead(dbNameMap["presentation"], {}, { bridge: true });
-          // oppositeRow = await back.mongoRead(dbNameMap["partnership"], {}, { bridge: true });
-          // binaryRow = await back.mongoRead(binaryStandard.dbName, {}, { bridge: true });
-          //
-          // realData = [];
-          // phoneTong = [];
-          //
-          // for (let i of row) {
-          //   tempObj = {};
-          //   tempObj.designer = i.designer;
-          //   tempObj.phone = i.phone;
-          //   tempObj.status = i.status;
-          //   tempObj.meetingTime = i.presentationTimes;
-          //   tempObj.date = i.date;
-          //   tempObj.presentationBoo = true;
-          //   tempObj.partnershipBoo = false;
-          //   tempObj.portfolioBoo = false;
-          //   tempObj.webChannel = i.webChannel;
-          //   tempObj.snsChannel = i.snsChannel;
-          //   tempObj.cloudChannel = i.cloudChannel;
-          //   tempObj.comeFrom = i.comeFrom;
-          //   tempObj.email = i.email;
-          //   tempObj.address = i.address;
-          //
-          //   tempObj.classification = "";
-          //   tempObj.company = "";
-          //   tempObj.businessNumber = "";
-          //   tempObj.startDate = "";
-          //   tempObj.representative = "";
-          //   tempObj.bankName = "";
-          //   tempObj.bankAccount = "";
-          //   tempObj.bankTo = "";
-          //   tempObj.bankEtc = "";
-          //   tempObj.interiorCareer = "";
-          //   tempObj.stylingCareer = "";
-          //   tempObj.careerDetail = "";
-          //
-          //   realData.push(tempObj);
-          //   phoneTong.push(i.phone);
-          // }
-          //
-          // for (let i of oppositeRow) {
-          //   if (phoneTong.includes(i.phone)) {
-          //     for (let j of realData) {
-          //       if (i.phone === j.phone) {
-          //         j.partnershipBoo = true;
-          //         if (j.date.valueOf() >= i.date.valueOf()) {
-          //           j.date = i.date;
-          //         }
-          //         j.classification = i.classification;
-          //         j.company = i.company;
-          //         j.businessNumber = i.businessNumber;
-          //         j.startDate = i.startDate;
-          //         j.representative = i.representative;
-          //         j.bankName = i.bankName;
-          //         j.bankAccount = i.bankAccount;
-          //         j.bankTo = i.bankTo;
-          //         j.bankEtc = i.bankEtc;
-          //         j.interiorCareer = i.interiorCareer;
-          //         j.stylingCareer = i.stylingCareer;
-          //         j.careerDetail = i.careerDetail;
-          //       }
-          //     }
-          //   } else {
-          //     tempObj = {};
-          //     tempObj.designer = i.designer;
-          //     tempObj.phone = i.phone;
-          //     tempObj.status = i.status;
-          //     tempObj.meetingTime = i.meetingTime;
-          //     tempObj.date = i.date;
-          //     tempObj.presentationBoo = false;
-          //     tempObj.partnershipBoo = true;
-          //     tempObj.portfolioBoo = false;
-          //     tempObj.webChannel = i.webChannel;
-          //     tempObj.snsChannel = i.snsChannel;
-          //     tempObj.cloudChannel = i.cloudChannel;
-          //     tempObj.comeFrom = i.comeFrom;
-          //     tempObj.email = i.email;
-          //     tempObj.address = i.address;
-          //
-          //     tempObj.classification = i.classification;
-          //     tempObj.company = i.company;
-          //     tempObj.businessNumber = i.businessNumber;
-          //     tempObj.startDate = i.startDate;
-          //     tempObj.representative = i.representative;
-          //     tempObj.bankName = i.bankName;
-          //     tempObj.bankAccount = i.bankAccount;
-          //     tempObj.bankTo = i.bankTo;
-          //     tempObj.bankEtc = i.bankEtc;
-          //     tempObj.interiorCareer = i.interiorCareer;
-          //     tempObj.stylingCareer = i.stylingCareer;
-          //     tempObj.careerDetail = i.careerDetail;
-          //
-          //     realData.push(tempObj);
-          //   }
-          // }
-          //
-          // targetIndex = 0;
-          // for (let i of realData) {
-          //   for (let j in i) {
-          //     if (columnRelativeMap[req.body.mode][j].type === "date") {
-          //       i[j] = dateToString(i[j]);
-          //       targetIndex = j;
-          //     } else if (columnRelativeMap[req.body.mode][j].type === "array") {
-          //       i[j] = i[j].join(',');
-          //     }
-          //   }
-          //
-          //   i[binaryStandard.name] = false;
-          //   i.portfolioBoo = false;
-          //   for (let j of binaryRow) {
-          //     if (i["phone"] === j["phone"]) {
-          //       i[binaryStandard.name] = true;
-          //       i.portfolioBoo = true;
-          //       i[binaryStandard.target] = j[binaryStandard.target];
-          //     }
-          //   }
-          //
-          //   if (i.presentationBoo && i.partnershipBoo) {
-          //     i[sameStandard.name] = true;
-          //   } else {
-          //     i[sameStandard.name] = false;
-          //   }
-          //
-          //   tempLink = null;
-          //   for (let j of cloudLinkTargets) {
-          //     if (i[j].length > 0) {
-          //       tempLink = i[j].split(",")[0];
-          //     }
-          //   }
-          //
-          //   if (tempLink !== null) {
-          //     i[binaryStandard.name] = true;
-          //     i.portfolioBoo = true;
-          //     i[binaryStandard.target] = "__link__" + tempLink.replace(/[\&\=]/g, '');
-          //   }
-          //
-          //   i.presentationBoo = i.presentationBoo ? "신청" : "미신청";
-          //   i.partnershipBoo = i.partnershipBoo ? "신청" : "미신청";
-          //   i.portfolioBoo = i.portfolioBoo ? "제출" : "미제출";
-          //
-          // }
-          //
-          // realData.sort((a, b) => { return stringToDateValue(b[targetIndex]) - stringToDateValue(a[targetIndex]); });
-
-          row = await back.getAspirantsByQuery({}, { withTools: true });
-          console.log(row);
-          realData = [];
-          for (let i of row) {
-            realData.push(i.flatDeath("total"));
-          }
-
-          console.log(realData);
-
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
-
         }
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
 
       } else if (req.url === "/updateDesignerReport") {
 
@@ -1535,30 +1331,16 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         updateQuery = {};
 
         whereQuery[updateStandard] = req.body.standard;
-        updateQuery[req.body.column] = req.body.value;
+        if (req.body.column === "status") {
+          updateQuery["meeting.status"] = req.body.value;
+        } else if (req.body.column === "presentationTimes" || req.body.column === "meetingTime") {
+          updateQuery["meeting.date"] = stringToDateWording(req.body.value);
+        }
 
-        await back.mongoUpdate(dbNameMap[((req.body.mode === "total") ? "partnership" : req.body.mode)], [ whereQuery, updateQuery ], { bridge: true });
+        await back.updateAspirant([ whereQuery, updateQuery ]);
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
-
-      } else if (req.url === "/pickDesignerReport") {
-
-        whereQuery = {};
-        whereQuery[updateStandard] = req.body.standard;
-
-        row = await back.mongoRead(dbNameMap[req.body.mode], whereQuery, { bridge: true });
-
-        res.set("Content-Type", "application/json");
-        if (row.length > 0) {
-          if (row[0][req.body.column] !== undefined) {
-            res.send(JSON.stringify({ value: row[0][req.body.column] }));
-          } else {
-            res.send(JSON.stringify({ value: "throwError" }));
-          }
-        } else {
-          res.send(JSON.stringify({ value: "throwError" }));
-        }
       }
 
     } catch (e) {
