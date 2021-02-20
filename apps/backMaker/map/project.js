@@ -40,14 +40,14 @@ module.exports = {
     },
     process: {
       status: "드랍", // [ '드랍', '진행', '응대중', '완료' ]
-      action: "",
+      action: "응대 대기",
       detail: [
         {
           name: "",
           date: new Date(1800, 0, 1),
           calendar: {
             mother: "designerMeeting",
-            id: "",
+            id: "응대 대기",
           },
         }
       ],

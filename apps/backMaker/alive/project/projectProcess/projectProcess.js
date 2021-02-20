@@ -565,6 +565,7 @@ class ProcessDetails extends Array {
 
 const ProjectProcess = function (json) {
   const actionList = [
+    "응대 대기",
     "현장 미팅",
     "1차 제안",
     "수정 제안",
@@ -576,7 +577,8 @@ const ProjectProcess = function (json) {
     "사진 대기",
     "사진 공유",
     "컨텐츠 공유",
-    "응대 종료"
+    "응대 종료",
+    "해당 없음"
   ];
   this.status = new Menu(json.status, [ '대기', '진행중', '완료', '홀딩', '드랍' ], false);
   this.action = new Menu(json.action, actionList, false);

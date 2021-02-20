@@ -420,7 +420,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
               },
               response: {
                 status: "응대중",
-                action: "해당 없음",
+                action: "1차 응대 예정",
                 outreason: [],
                 outspot: "해당 없음",
                 kakao: false,

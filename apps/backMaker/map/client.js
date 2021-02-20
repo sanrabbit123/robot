@@ -63,9 +63,9 @@ module.exports = {
           },
           response: {
             status: "응대중",
-            action: "",
+            action: "해당 없음",
             outreason: [],
-            outspot: "",
+            outspot: "해당 없음",
             kakao: false,
           },
           date: {

@@ -976,7 +976,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
               },
               response: {
                 status: "응대중",
-                action: "해당 없음",
+                action: "1차 응대 예정",
                 outreason: [],
                 outspot: "해당 없음",
                 kakao: false,
@@ -2148,19 +2148,10 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         },
         process: {
           status: "드랍",
-          action: "",
-          detail: [
-            {
-              name: "",
-              date: new Date(1800, 0, 1),
-              calendar: {
-                mother: "designerMeeting",
-                id: "",
-              },
-            }
-          ],
+          action: "응대 대기",
+          detail: [],
           outreason: [],
-          outspot: "",
+          outspot: "해당 없음",
           contract: {
             first: {
               guide: new Date(1800, 0, 1),
