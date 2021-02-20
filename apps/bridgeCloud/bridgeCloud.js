@@ -727,11 +727,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             updateQuery["meeting.date"] = new Date(1800, 0, 1);
             updateQuery["submit.firstRequest.date"] = new Date();
             updateQuery["submit.firstRequest.method"] = "partnership";
-            // if (!ignorePhone.includes(filteredObj.phone)) {
+            if (!ignorePhone.includes(filteredObj.phone)) {
               await instance.back.createAspirant(updateQuery);
-            // } else {
+            } else {
               console.log(updateQuery);
-            // }
+            }
           } else {
             if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
               updateQuery["information.channel.web"] = filteredObj.webChannel;
@@ -742,11 +742,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
               updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
             }
-            // if (!ignorePhone.includes(filteredObj.phone)) {
+            if (!ignorePhone.includes(filteredObj.phone)) {
               await instance.back.updateAspirant([ whereQuery, updateQuery ]);
-            // } else {
+            } else {
               console.log([ whereQuery, updateQuery ]);
-            // }
+            }
           }
 
         } else {
@@ -769,11 +769,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
             updateQuery["submit.firstRequest.date"] = new Date();
             updateQuery["submit.firstRequest.method"] = "presentation";
-            // if (!ignorePhone.includes(filteredObj.phone)) {
+            if (!ignorePhone.includes(filteredObj.phone)) {
               await instance.back.createAspirant(updateQuery);
-            // } else {
+            } else {
               console.log(updateQuery);
-            // }
+            }
           } else {
             if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
               updateQuery["information.channel.web"] = filteredObj.webChannel;
@@ -788,11 +788,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
               updateQuery["meeting.status"] = filteredObj.status;
               updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
             }
-            // if (!ignorePhone.includes(filteredObj.phone)) {
+            if (!ignorePhone.includes(filteredObj.phone)) {
               await instance.back.updateAspirant([ whereQuery, updateQuery ]);
-            // } else {
+            } else {
               console.log([ whereQuery, updateQuery ]);
-            // }
+            }
           }
         }
 
@@ -819,11 +819,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
             updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
           }
-          // if (!ignorePhone.includes(filteredObj.phone)) {
+          if (!ignorePhone.includes(filteredObj.phone)) {
             await instance.back.updateAspirant([ whereQuery, updateQuery ]);
-          // } else {
+          } else {
             console.log([ whereQuery, updateQuery ]);
-          // }
+          }
         }
 
         if (!ignorePhone.includes(filteredObj.phone)) {
