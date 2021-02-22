@@ -22,6 +22,7 @@ const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
 const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
 const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
+const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 
 class DevContext extends Array {
 
@@ -1281,6 +1282,9 @@ class DevContext extends Array {
       //   }
       // }
 
+
+      const reflection = new MongoReflection();
+      await reflection.mongoToJson();
 
 
 

@@ -135,17 +135,21 @@ const widthTools = function (Client) {
       return dayString;
     }
 
+    const callHistoryToString = function (historyArr) {
+      let totalString = '';
+      for (let { date, who } of historyArr) {
+        totalString += dateToString(date) + ", ";
+      }
+      if (totalString !== '') {
+        totalString = totalString.slice(0, -2);
+      }
+      return totalString;
+    }
+
     let tong = [];
     let temp;
-    let callHistoryString;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, outreason }, date: { callHistory, space: { precheck, empty, movein } }, picture }, proposal: { proid } } of client.requests) {
-
-      callHistoryString = '';
-      for (let h of callHistory) {
-        callHistoryString += dateToString(h) + ", ";
-      }
-      callHistoryString = callHistoryString.slice(0, -2);
+    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, outspot, kakao }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -154,9 +158,15 @@ const widthTools = function (Client) {
       };
       temp.info = {
         status,
+        action,
         outreason: outreason.join(", "),
-        callHistory: callHistoryString,
+        outspot,
+        kakao,
+        next: dateToString(next),
+        callHistory: callHistoryToString(callHistory),
         timeline: dateToString(timeline, true),
+        spacePicture: (spacePicture.length > 0 ? "제출" : "미제출"),
+        preferPicture: (preferPicture.length > 0 ? "제출" : "미제출"),
         phone,
         email,
         budget,
@@ -173,7 +183,6 @@ const widthTools = function (Client) {
         family,
         comment,
         channel,
-        proid,
       }
       tong.push(temp);
     }

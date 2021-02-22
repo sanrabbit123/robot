@@ -76,8 +76,10 @@ const widthTools = function (Aspirant) {
 
       tempObj.binary = (aspirant.portfolio.length > 0);
       tempObj.folderId = null;
+      tempObj.portfolioConfirms = JSON.stringify([]);
       if (aspirant.portfolio.length > 0) {
         tempObj.folderId = aspirant.portfolio[0].folderId;
+        tempObj.portfolioConfirms = JSON.stringify(aspirant.portfolio[0].confirm);
       }
       tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
       if (!tempObj.binary) {

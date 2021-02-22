@@ -2,7 +2,6 @@ const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const CLIENT_DIR = process.cwd() + "/apps/backMaker/alive/client";
 const WebRequest = require(CLIENT_DIR + "/webRequest/webRequest.js");
 const HomeLiaisonAnalytics = require(CLIENT_DIR + "/homeLiaisonAnalytics/homeLiaisonAnalytics.js");
-const DesignerProposal = require(CLIENT_DIR + "/designerProposal/designerProposal.js");
 
 class Request extends Array {
 
@@ -11,10 +10,8 @@ class Request extends Array {
     const { request, analytics, proposal } = _request;
     this.request = new WebRequest(request);
     this.analytics = new HomeLiaisonAnalytics(analytics);
-    this.proposal = new DesignerProposal(proposal);
     this.push(this.request);
     this.push(this.analytics);
-    this.push(this.proposal);
   }
 
   get space() {
@@ -29,7 +26,6 @@ class Request extends Array {
     let obj = {};
     obj.request = this.request.toNormal();
     obj.analytics = this.analytics.toNormal();
-    obj.proposal = this.proposal.toNormal();
     return obj;
   }
 

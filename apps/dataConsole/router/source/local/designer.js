@@ -3797,7 +3797,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     }
   }
   const columns = Object.keys(data.columns);
-  const { alarmStandard, updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
+  const { portfolioBooArr, alarmStandard, updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
   const map = columnRelativeMap[data.mode];
   let div_clone, gray_line;
   let text_div;
@@ -4550,6 +4550,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     let buttonsWidthAddtion;
     let titleIcon1, titleIcon2;
     let cardValueTong;
+    let tempBoo;
 
     ea = "px";
     cardMargin = 42;
@@ -4627,16 +4628,19 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         click: function (e) {
           let str;
           if (thisFolderId !== null) {
-
             if (!/^__link__/.test(thisFolderId)) {
-              GeneralJs.ajax("standard=" + phone + "&user=" + GeneralJs.getUser().email, "/viewDesignerRawPortfolio", function (data) {});
               str = "https://drive.google.com/drive/folders/";
               str += thisFolderId;
               str += "?usp=sharing";
             } else {
               str = thisFolderId.replace(/^__link__/, '');
             }
-            console.log(str);
+            for (let doms of thisCase.children) {
+              if (portfolioBooArr.includes(doms.getAttribute("column"))) {
+                doms.firstChild.querySelector("svg").remove();
+              }
+            }
+            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
             window.open(str, "_blank");
           } else {
             alert("포트폴리오가 없습니다!");
@@ -5122,6 +5126,55 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         }
         alarmTargets.push(dataDataFactor);
       }
+
+      if (portfolioBooArr.includes(z)) {
+
+        dataDataFactor.addEventListener("click", function (e) {
+          const thisCase = this.parentNode;
+          const thisFolderId = this.getAttribute(binaryStandard.target);
+          const thisIndex = Number(this.getAttribute("index"));
+          const thisData = data.data[thisIndex];
+          const { designer, phone } = thisData;
+          let str;
+          if (thisFolderId !== null) {
+            if (!/^__link__/.test(thisFolderId)) {
+              str = "https://drive.google.com/drive/folders/";
+              str += thisFolderId;
+              str += "?usp=sharing";
+            } else {
+              str = thisFolderId.replace(/^__link__/, '');
+            }
+            for (let doms of thisCase.children) {
+              if (portfolioBooArr.includes(doms.getAttribute("column"))) {
+                doms.firstChild.querySelector("svg").remove();
+              }
+            }
+            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
+            window.open(str, "_blank");
+          } else {
+            alert("포트폴리오가 없습니다!");
+          }
+        });
+
+        if (data.data[j][portfolioBooArr.standardColumnName] === portfolioBooArr.standardColumnValue) {
+          if (JSON.parse(data.data[j][portfolioBooArr.flatColumnName]).length > 0) {
+            tempBoo = false;
+            for (let p of JSON.parse(data.data[j][portfolioBooArr.flatColumnName])) {
+              if (p.who === instance.user.email) {
+                tempBoo = true;
+              }
+            }
+            if (!tempBoo) {
+              dataDataFactor.setAttribute("alarm", "on");
+              alarmTargets.push(dataDataFactor);
+            }
+          } else {
+            dataDataFactor.setAttribute("alarm", "on");
+            alarmTargets.push(dataDataFactor);
+          }
+        }
+      }
+
       dataDataBox.appendChild(dataDataFactor);
     }
     sortTargets.push(dataDataBox);
@@ -5860,6 +5913,8 @@ DesignerJs.prototype.launching = async function () {
     this.addSearchEvent();
     this.addExtractEvent();
     this.whiteResize();
+
+    this.user = GeneralJs.getUser();
 
     const getObj = GeneralJs.returnGet();
     let getTarget;

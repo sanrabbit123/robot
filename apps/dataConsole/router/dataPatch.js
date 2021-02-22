@@ -2981,7 +2981,13 @@ DataPatch.prototype.designerRawMap = function () {
     partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
     presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
   };
-  let updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets;
+  let portfolioBooArr, updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets;
+
+  portfolioBooArr = new Array();
+  portfolioBooArr.push("portfolioBoo");
+  portfolioBooArr.flatColumnName = "portfolioConfirms";
+  portfolioBooArr.standardColumnName = "portfolioBoo";
+  portfolioBooArr.standardColumnValue = "제출";
 
   updateStandard = "phone";
 
@@ -3241,7 +3247,7 @@ DataPatch.prototype.designerRawMap = function () {
     "cloudChannel",
   ];
 
-  return { updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets };
+  return { portfolioBooArr, updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets };
 }
 
 //PROJECT ---------------------------------------------------------------------------------------

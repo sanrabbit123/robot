@@ -895,6 +895,169 @@ BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: 
   }
 }
 
+BackMaker.prototype.returnClientDummies = function (subject) {
+  let dummy;
+  switch (subject) {
+    case "analytics.date.history":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        who: "",
+      };
+      break;
+    case "analytics.picture.space":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        confirm: [],
+        folderId: ""
+      };
+      break;
+    case "analytics.picture.prefer":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        confirm: [],
+        folderId: ""
+      };
+      break;
+    case "analytics.picture.space.confirm":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        who: "",
+      };
+      break;
+    case "analytics.picture.prefer.confirm":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        who: "",
+      };
+      break;
+    case "analytics.proposal":
+      dummy = {
+        proid: "",
+        generate: {
+          date: new Date(1800, 0, 1),
+          who: "",
+        },
+        complete: {
+          date: new Date(1800, 0, 1),
+          who: "",
+        },
+        send: {
+          date: new Date(1800, 0, 1),
+          who: "",
+        },
+        feedback: {
+          date: new Date(1800, 0, 1),
+          who: "",
+        },
+      };
+      break;
+  }
+
+  return dummy;
+}
+
+BackMaker.prototype.returnClientRequest = function () {
+  let request;
+  request = {
+    request: {
+      timeline: new Date(1800, 0, 1),
+      notionId: "",
+      budget: "알 수 없음",
+      family: "",
+      space: {
+        address: "",
+        contract: "알 수 없음",
+        pyeong: 0,
+        spec: {
+          room: 0,
+          bathroom: 0,
+          valcony: false
+        },
+        resident: {
+          living: false,
+          expected: new Date(1800, 0, 1),
+        },
+      },
+      etc: {
+        comment: "",
+        channel: "",
+      },
+    },
+    analytics: {
+      googleAnalytics: {
+        timeline: new Date(1800, 0, 1),
+        userType: "",
+        referrer: {
+          name: "",
+          detail: {
+            host: null,
+            queryString: {},
+          },
+        },
+        device: {
+          type: "",
+          os: "",
+          mobileDevice: "",
+        },
+        region: {
+          country: "",
+          city: "",
+          latitude: 0,
+          longitude: 0,
+        },
+        personalInfo: {
+          age: null,
+          gender: null
+        },
+        campaign: "",
+        history: [],
+      },
+      response: {
+        status: "응대중",
+        action: "1차 응대 예정",
+        outreason: [],
+        outspot: "해당 없음",
+        kakao: false,
+      },
+      date: {
+        call: {
+          next: new Date(1800, 0, 1),
+          history: [],
+        },
+        space: {
+          precheck: new Date(1800, 0, 1),
+          empty: new Date(1800, 0, 1),
+          movein: new Date(1800, 0, 1),
+        },
+        calendar: {
+          call: {
+            mother: "clientCalendar",
+            id: "",
+          },
+          precheck: {
+            mother: "clientCalendar",
+            id: "",
+          },
+          empty: {
+            mother: "clientCalendar",
+            id: "",
+          },
+          movein: {
+            mother: "clientCalendar",
+            id: "",
+          }
+        },
+      },
+      picture: {
+        space: [],
+        prefer: [],
+      },
+      proposal: [],
+    },
+  };
+  return request;
+}
+
 BackMaker.prototype.createClient = async function (updateQuery, option = { selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
@@ -903,6 +1066,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
   try {
     let dummy, latestClient, latestClientArr;
     let newOption = {};
+    let requestDummy;
 
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
@@ -919,88 +1083,11 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
         phone: "",
         email: "",
         cliid: "",
-        requests: [
-          {
-            request: {
-              timeline: new Date(1800, 0, 1),
-              notionId: "",
-              budget: "알 수 없음",
-              family: "",
-              space: {
-                address: "",
-                contract: "알 수 없음",
-                pyeong: 0,
-                spec: {
-                  room: 0,
-                  bathroom: 0,
-                  valcony: false
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(1800, 0, 1),
-                },
-              },
-              etc: {
-                comment: "",
-                channel: "",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "응대중",
-                action: "1차 응대 예정",
-                outreason: [],
-                outspot: "해당 없음",
-                kakao: false,
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "",
-            },
-          },
-        ],
+        requests: [],
       },
     };
+    requestDummy = this.returnClientRequest();
+    dummy.structure.requests.unshift(requestDummy);
     dummy.structure.cliid = this.idMaker(latestClient.cliid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -2111,6 +2198,26 @@ BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo:
   }
 }
 
+BackMaker.prototype.returnProjectDummies = function (subject) {
+  let dummy;
+  switch (subject) {
+    case "process.call.history":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        who: "",
+      };
+      break;
+    case "process.contract.meeting.pastDesigners":
+      dummy = {
+        date: new Date(1800, 0, 1),
+        desid: "",
+      };
+      break;
+  }
+
+  return dummy;
+}
+
 BackMaker.prototype.createProject = async function (updateQuery, option = { selfMongo: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
@@ -2152,6 +2259,10 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
           detail: [],
           outreason: [],
           outspot: "해당 없음",
+          call: {
+            next: new Date(1800, 0, 1),
+            history: [],
+          },
           contract: {
             first: {
               guide: new Date(1800, 0, 1),
@@ -2240,14 +2351,40 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
           },
         },
         contents: {
+          conid: "",
           photo: {
+            boo: false,
+            status: "해당 없음",
             date: new Date(1800, 0, 1),
             info: {
               photographer: "",
               interviewer: "",
             }
           },
-          conid: "",
+          raw: {
+            portfolio: {
+              status: "해당 없음",
+              link: "",
+            },
+            interview: {
+              status: "해당 없음",
+              link: "",
+            },
+            photo: {
+              status: "해당 없음",
+              link: "",
+            },
+          },
+          share: {
+            client: {
+              photo: new Date(1800, 0, 1),
+              contents: new Date(1800, 0, 1),
+            },
+            designer: {
+              photo: new Date(1800, 0, 1),
+              contents: new Date(1800, 0, 1),
+            }
+          }
         },
       }
     };
@@ -2271,7 +2408,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
 // GET Aspirant -------------------------------------------------------------------------------
 
-BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2304,7 +2441,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
   }
 }
 
-BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2313,6 +2450,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
   try {
     let tong, aspirantsArr;
     let sortQuery;
+    let updateQuery;
 
     if (option.sort === undefined) {
       sortQuery = { "submit.firstRequest.date": -1 };
@@ -2333,6 +2471,35 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
         tong = await option.selfMongo.db(`miro81`).collection(this.button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(this.button).find(query).sort(sortQuery).toArray();
+      }
+    }
+
+    if (option.portfolioReset !== null && option.portfolioReset !== undefined) {
+      if (option.selfMongo === undefined || option.selfMongo === null) {
+        await MONGOC.connect();
+      }
+      for (let a of tong) {
+        if (a.portfolio.length === 0) {
+          for (let i of a.information.channel.web) {
+            a.portfolio.unshift({ date: a.submit.firstRequest.date, confirm: [], folderId: "__link__" + i.replace(/[\&\=]/g, '') });
+          }
+          for (let i of a.information.channel.sns) {
+            a.portfolio.unshift({ date: a.submit.firstRequest.date, confirm: [], folderId: "__link__" + i.replace(/[\&\=]/g, '') });
+          }
+          for (let i of a.information.channel.cloud) {
+            a.portfolio.unshift({ date: a.submit.firstRequest.date, confirm: [], folderId: "__link__" + i.replace(/[\&\=]/g, '') });
+          }
+          updateQuery = {};
+          updateQuery["portfolio"] = a.portfolio;
+          if (option.selfMongo === undefined || option.selfMongo === null) {
+            await MONGOC.db(`miro81`).collection(this.button).updateOne({ aspid: a.aspid }, { "$set": updateQuery });
+          } else {
+            await option.selfMongo.db(`miro81`).collection(this.button).updateOne({ aspid: a.aspid }, { "$set": updateQuery });
+          }
+        }
+      }
+      if (option.selfMongo === undefined || option.selfMongo === null) {
+        MONGOC.close();
       }
     }
 
@@ -2497,6 +2664,41 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
     await this.updateAspirant([ { aspid: dummy.structure.aspid }, updateQuery ], option);
 
     return dummy.structure.aspid;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery, position, date, who, option = { selfMongo: null }) {
+  const instance = this;
+  try {
+    if (whereQuery === undefined) {
+      throw new Error("invaild where query : arguments must be { whereQuery: Object, position: number, date: Date, who: string ");
+    }
+    if (typeof position !== "number") {
+      throw new Error("invaild position : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
+    }
+    if (!(date instanceof Date)) {
+      throw new Error("invaild date : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
+    }
+    if (typeof who !== "string") {
+      throw new Error("invaild who : arguments must be { whereQuery: Object, position: number, date: Date, who: string }");
+    }
+
+    let tempAspirants, tempAspirant;
+    let updateQuery;
+
+    tempAspirants = await this.getAspirantsByQuery(whereQuery, option);
+    updateQuery = {};
+
+    if (tempAspirants.length === 1) {
+      tempAspirant = tempAspirants[0];
+      if (tempAspirant.portfolio.length > 0) {
+        tempAspirant.portfolio[position].confirm.unshift({ date, who });
+        updateQuery["portfolio." + String(position) + ".confirm"] = tempAspirant.portfolio[position].confirm;
+        await this.updateAspirant([ whereQuery, updateQuery ], option);
+      }
+    }
   } catch (e) {
     console.log(e);
   }

@@ -1318,7 +1318,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       if (req.url === "/getDesignerReport") {
 
-        row = await back.getAspirantsByQuery({}, { withTools: true });
+        row = await back.getAspirantsByQuery({}, { withTools: true, selfMongo: instance.mongo, portfolioReset: true });
         realData = [];
         for (let i of row) {
           if (i.flatDeath(req.body.mode) !== null) {
@@ -1340,16 +1340,16 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
           updateQuery["meeting.date"] = stringToDateWording(req.body.value);
         }
 
-        await back.updateAspirant([ whereQuery, updateQuery ]);
+        await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
         if (req.body.calendar !== undefined) {
-          tempAspirants = await back.getAspirantsByQuery(whereQuery);
+          tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
           tempAspirant = tempAspirants[0];
           if (tempAspirant.calendar.id !== "") {
             instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
           } else {
             instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
-              back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ]);
+              back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
             }).catch(function (e) {
               console.log(e);
             });
@@ -1362,17 +1362,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         whereQuery = {};
         whereQuery[updateStandard] = req.body.standard;
-
-        tempAspirants = await back.getAspirantsByQuery(whereQuery);
-        tempAspirant = tempAspirants[0];
-
-        if (tempAspirant.portfolio.length > 0) {
-          tempAspirant.portfolio[0].confirm.unshift({
-            date: new Date(),
-            who: req.body.user,
-          });
-          await back.updateAspirant([ whereQuery, { "portfolio.0.confirm": tempAspirant.portfolio[0].confirm } ]);
-        }
+        await back.unshiftAspirantPortfolioConfirm(whereQuery, 0, (new Date()), req.body.user, { selfMongo: instance.mongo });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));

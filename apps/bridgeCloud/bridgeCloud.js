@@ -12,7 +12,7 @@ const BridgeCloud = function () {
   this.cloudHost = { inner: this.address.bridgeinfo.ip.inner, outer: this.mother.bridgeinfoObj.host, port: 3000 };
   this.bridge = { home: this.address.homeinfo.polling.inner, office: this.address.officeinfo.polling.inner, cloud: this.cloudHost.inner };
 
-  this.formidable = require('formidable');
+  this.formidable = require("formidable");
 
   this.ignorePhone = [ "010-2747-3403" ];
 }
@@ -381,84 +381,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           for (let z = 0; z < pastRequests.length; z++) {
             requestArr.push(pastRequests[z]);
           }
-          requestArr.unshift({
-            request: {
-              timeline: new Date(1800, 0, 1),
-              notionId: "",
-              budget: "알 수 없음",
-              family: "",
-              space: {
-                address: "",
-                contract: "알 수 없음",
-                pyeong: 0,
-                spec: {
-                  room: 0,
-                  bathroom: 0,
-                  valcony: false
-                },
-                resident: {
-                  living: false,
-                  expected: new Date(1800, 0, 1),
-                },
-              },
-              etc: {
-                comment: "",
-                channel: "",
-              },
-            },
-            analytics: {
-              googleAnalytics: {
-                timeline: new Date(1800, 0, 1),
-                userType: "",
-                referrer: {
-                  name: "",
-                  detail: {
-                    host: null,
-                    queryString: {},
-                  },
-                },
-                device: {
-                  type: "",
-                  os: "",
-                  mobileDevice: "",
-                },
-                region: {
-                  country: "",
-                  city: "",
-                  latitude: 0,
-                  longitude: 0,
-                },
-                personalInfo: {
-                  age: null,
-                  gender: null
-                },
-                campaign: "",
-                history: [],
-              },
-              response: {
-                status: "응대중",
-                action: "1차 응대 예정",
-                outreason: [],
-                outspot: "해당 없음",
-                kakao: false,
-              },
-              date: {
-                callHistory: [],
-                space: {
-                  precheck: new Date(1800, 0, 1),
-                  empty: new Date(1800, 0, 1),
-                  movein: new Date(1800, 0, 1),
-                },
-              },
-              picture: {
-                space: false,
-                prefer: false,
-              },
-            },
-            proposal: {
-              proid: "",
-            },
-          });
+          requestArr.unshift(instance.back.returnClientRequest());
           pastInfo_boo = true;
 
           await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, { "requests": requestArr } ], { selfMongo: MONGOC });

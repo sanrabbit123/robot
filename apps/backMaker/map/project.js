@@ -107,7 +107,7 @@ module.exports = {
         meeting: {
           date: new Date(1800, 0, 1), // alimtalk api (to client + to designer) in button in notion (to mongo / to notion)
           pastDesigners: [
-            { desid: "" },
+            { desid: "", date: (new Date()) },
           ]
         },
       },

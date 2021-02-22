@@ -78,13 +78,23 @@ const widthTools = function (Project) {
       result = wording + ' ' + target + " / " + "수신자" + ' ' + to + " / " + "증빙" + ' ' + proof;
       return result;
     }
+    const callHistoryToString = function (historyArr) {
+      let totalString = '';
+      for (let { date, who } of historyArr) {
+        totalString += dateToString(date) + ", ";
+      }
+      if (totalString !== '') {
+        totalString = totalString.slice(0, -2);
+      }
+      return totalString;
+    }
 
     let tong = [];
     let temp;
 
     const { proid, cliid, desid, service: { serid, xValue, online } } = project;
-    const { status, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
-    const { photo: { date: contentsPhotoDate, info: { photographer, interviewer } } } = project.contents;
+    const { status, action, outreason, outspot, call: { next, history: callHistory }, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
+    const { photo: { boo: photoBoo, status: photoStatus, date: contentsPhotoDate, info: { photographer, interviewer } }, raw: { portfolio: { status: rawPortfolioStatus }, interview: { status: rawInterviewStatus }, photo: { status: rawPhotoStatus } }, share: { client: { photo: shareClientPhoto, contents: shareClientContents }, designer: { photo: shareDesignerPhoto, contents: shareDesignerContents } } } = project.contents;
 
     temp = {};
 
@@ -102,6 +112,11 @@ const widthTools = function (Project) {
 
     temp.info = {
       status,
+      action,
+      outreason: outreason.join(", "),
+      outspot,
+      next: dateToString(next),
+      callHistory: callHistoryToString(callHistory),
       firstGuide: dateToString(firstGuide),
       firstDate: dateToString(firstDate),
       firstCancel: dateToString(firstCancel),
@@ -134,9 +149,18 @@ const widthTools = function (Project) {
       paymentsRemainDate: dateToString(paymentsRemainDate),
       paymentsRemainCancel: dateToString(paymentsRemainCancel),
       paymentsRemainRefund: String(paymentsRemainRefund),
+      photoBoo,
+      photoStatus,
       contentsPhotoDate: dateToString(contentsPhotoDate),
       photographer,
-      interviewer
+      interviewer,
+      rawPortfolioStatus,
+      rawInterviewStatus,
+      rawPhotoStatus,
+      shareClientPhoto: dateToString(shareClientPhoto),
+      shareClientContents: dateToString(shareClientContents),
+      shareDesignerPhoto: dateToString(shareDesignerPhoto),
+      shareDesignerContents: dateToString(shareDesignerContents),
     };
 
     tong.push(temp);

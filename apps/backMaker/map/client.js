@@ -138,9 +138,6 @@ module.exports = {
               complete: {
                 date: new Date(),
                 who: "",
-                designers: [
-                  { desid: "", amount: 0 }
-                ],
               },
               send: {
                 date: new Date(),
@@ -148,7 +145,7 @@ module.exports = {
               },
               feedback: {
                 date: new Date(),
-                choice: "",
+                who: "",
               },
             }
           ],
