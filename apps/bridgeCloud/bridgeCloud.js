@@ -158,6 +158,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
         updatePortfolio = already[0].portfolio;
         updatePortfolio.unshift({
           date: new Date(),
+          confirm: [],
           folderId: folderId
         });
         await instance.back.updateAspirant([

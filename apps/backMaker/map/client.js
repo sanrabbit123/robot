@@ -69,20 +69,89 @@ module.exports = {
             kakao: false,
           },
           date: {
-            callHistory: [],
+            call: {
+              next: new Date(),
+              history: [
+                {
+                  date: new Date(),
+                  who: "",
+                }
+              ],
+            },
             space: {
               precheck: new Date(1800, 0, 1),
               empty: new Date(1800, 0, 1),
               movein: new Date(1800, 0, 1),
             },
+            calendar: {
+              call: {
+                mother: "clientCalendar",
+                id: "",
+              },
+              precheck: {
+                mother: "clientCalendar",
+                id: "",
+              },
+              empty: {
+                mother: "clientCalendar",
+                id: "",
+              },
+              movein: {
+                mother: "clientCalendar",
+                id: "",
+              }
+            },
           },
           picture: {
-            space: false,
-            prefer: false,
+            space: [
+              {
+                date: new Date(),
+                confirm: [
+                  {
+                    date: new Date(),
+                    who: "",
+                  }
+                ],
+                folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
+              }
+            ],
+            prefer: [
+              {
+                date: new Date(),
+                confirm: [
+                  {
+                    date: new Date(),
+                    who: "",
+                  }
+                ],
+                folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
+              }
+            ],
           },
-        },
-        proposal: {
-          proid: "",
+          proposal: [
+            {
+              proid: "",
+              generate: {
+                date: new Date(),
+                who: "",
+              },
+              complete: {
+                date: new Date(),
+                who: "",
+                designers: [
+                  { desid: "", amount: 0 }
+                ],
+              },
+              send: {
+                date: new Date(),
+                who: "",
+              },
+              feedback: {
+                date: new Date(),
+                choice: "",
+              },
+            }
+          ],
         },
       },
     ],

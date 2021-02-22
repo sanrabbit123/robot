@@ -1169,6 +1169,12 @@ class DevContext extends Array {
       //   }
       // }
 
+
+
+
+
+
+
       // const MONGOC = this.MONGOC;
       // let tong;
       // let num;
@@ -1205,7 +1211,78 @@ class DevContext extends Array {
 
 
 
-      
+
+
+
+      // const sheets = new GoogleSheet();
+      // const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
+      // const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      // const ABC = [];
+      // for (let i of alphabet) { ABC.push(i); }
+      // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      // const targetInfo = {
+      //   client: {
+      //     name: "응대중 고객 현황",
+      //     startPoint: [ 0, 6 ],
+      //     endPoint: [ 11, 77 ],
+      //     columns: [
+      //       "cliid",
+      //       "important",
+      //       "name",
+      //       "status",
+      //       "action",
+      //       "latest",
+      //       "kakao",
+      //
+      //
+      //     ]
+      //   },
+      //   project: {
+      //     name: "프로젝트케어",
+      //     startPoint: [],
+      //   },
+      //   drop: {
+      //     name: "드랍 고객 관리",
+      //     startPoint: [],
+      //   }
+      // };
+      // const rangeMaker = function (key) {
+      //   let str = '';
+      //   str += targetInfo[key].name + '!';
+      //   str += ABC[targetInfo[key].startPoint[0]] + String(targetInfo[key].startPoint[1] + 1);
+      //   str += ':';
+      //   str += ABC[targetInfo[key].endPoint[0]] + String(targetInfo[key].endPoint[1] + 1);
+      //   return str;
+      // }
+      // let temp, tong;
+      //
+      // tong = await sheets.get_value_inPython(sheetsId, rangeMaker("client"));
+      // console.log(tong);
+
+
+
+
+
+
+
+
+
+
+      // let whereQuery, updateQuery;
+      //
+      // for (let d of designers) {
+      //   if (d.portfolio.length > 0) {
+      //     whereQuery = { aspid: d.aspid };
+      //     for (let i = 0; i < d.portfolio.length; i++) {
+      //       updateQuery = {};
+      //       updateQuery["portfolio." + String(i) + ".confirm"] = [];
+      //       await this.MONGOC.db(`miro81`).collection(`aspirant`).updateOne(whereQuery, { "$set": updateQuery });
+      //     }
+      //   }
+      // }
+
+
+
 
 
 

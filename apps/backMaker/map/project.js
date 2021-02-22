@@ -53,6 +53,15 @@ module.exports = {
       ],
       outreason: [],
       outspot: "",
+      call: {
+        next: new Date(),
+        history: [
+          {
+            date: new Date(),
+            who: "",
+          }
+        ],
+      },
       contract: {
         first: {
           guide: new Date(1800, 0, 1), // alimtalk api in button in notion (to mongo / to notion)
@@ -185,14 +194,40 @@ module.exports = {
       },
     },
     contents: {
+      conid: "",
       photo: {
+        boo: false,
+        status: "",
         date: new Date(1800, 0, 1),
         info: {
           photographer: "",
           interviewer: "",
         }
       },
-      conid: "",
+      raw: {
+        portfolio: {
+          status: "",
+          link: "",
+        },
+        interview: {
+          status: "",
+          link: "",
+        },
+        photo: {
+          status: "",
+          link: "",
+        },
+      },
+      share: {
+        client: {
+          photo: new Date(),
+          contents: new Date(),
+        },
+        designer: {
+          photo: new Date(),
+          contents: new Date(),
+        }
+      }
     },
   }
 }

@@ -1274,7 +1274,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   const patch = this.patch;
   let obj = {};
-  obj.link = [ "/getDesignerReport", "/updateDesignerReport" ];
+  obj.link = [ "/getDesignerReport", "/updateDesignerReport", "/viewDesignerRawPortfolio" ];
   obj.func = async function (req, res) {
     try {
       const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
@@ -1354,6 +1354,24 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
               console.log(e);
             });
           }
+        }
+
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ message: "success" }));
+      } else if (req.url === "/viewDesignerRawPortfolio") {
+
+        whereQuery = {};
+        whereQuery[updateStandard] = req.body.standard;
+
+        tempAspirants = await back.getAspirantsByQuery(whereQuery);
+        tempAspirant = tempAspirants[0];
+
+        if (tempAspirant.portfolio.length > 0) {
+          tempAspirant.portfolio[0].confirm.unshift({
+            date: new Date(),
+            who: req.body.user,
+          });
+          await back.updateAspirant([ whereQuery, { "portfolio.0.confirm": tempAspirant.portfolio[0].confirm } ]);
         }
 
         res.set("Content-Type", "application/json");

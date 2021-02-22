@@ -4627,7 +4627,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         click: function (e) {
           let str;
           if (thisFolderId !== null) {
+
             if (!/^__link__/.test(thisFolderId)) {
+              GeneralJs.ajax("standard=" + phone + "&user=" + GeneralJs.getUser().email, "/viewDesignerRawPortfolio", function (data) {});
               str = "https://drive.google.com/drive/folders/";
               str += thisFolderId;
               str += "?usp=sharing";

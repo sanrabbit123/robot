@@ -408,6 +408,14 @@ GeneralJs.moneyBoo = function (column) {
   }
 }
 
+GeneralJs.getUser = function () {
+  const cookies = GeneralJs.getCookiesAll();
+  return {
+    name: cookies["homeliaisonConsoleLoginedName"],
+    email: cookies["homeliaisonConsoleLoginedEmail"],
+  };
+}
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,

@@ -16,6 +16,12 @@ module.exports = {
     portfolio: [
       {
         date: new Date(),
+        confirm: [
+          {
+            date: new Date(),
+            who: "",
+          }
+        ],
         folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
       }
     ],
