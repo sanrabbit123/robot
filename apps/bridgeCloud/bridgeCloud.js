@@ -834,15 +834,20 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
 
           tempAspirants = await instance.back.getAspirantsByQuery(whereQuery);
-          tempAspirant = tempAspirants[0];
-          if (tempAspirant.calendar.id !== "") {
-            calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
-          } else {
-            calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
-              instance.back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ]);
-            }).catch(function (e) {
-              console.log(e);
-            });
+
+          if (tempAspirants.length > 0) {
+            tempAspirant = tempAspirants[0];
+            if (tempAspirant.meeting.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+              if (tempAspirant.calendar.id !== "") {
+                calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
+              } else {
+                calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
+                  instance.back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ]);
+                }).catch(function (e) {
+                  console.log(e);
+                });
+              }
+            }
           }
 
         } else {
