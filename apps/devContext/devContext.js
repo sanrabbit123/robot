@@ -1283,8 +1283,124 @@ class DevContext extends Array {
       // }
 
 
-      const reflection = new MongoReflection();
-      await reflection.mongoToJson();
+
+
+
+
+
+
+
+
+      // const reflection = new MongoReflection();
+      // await reflection.mongoMigration();
+
+
+
+      let row;
+      let whereQuery, updateQuery;
+      let historyArr;
+
+      /*
+
+      row = await this.MONGOC.db("miro81").collection("client").find({}).toArray();
+
+      for (let i of row) {
+
+        for (let k = 0; k < i.requests.length; k++) {
+          whereQuery = { cliid: i.cliid };
+          updateQuery = {};
+
+          historyArr = [];
+          for (let j of i.requests[k].analytics.date.callHistory) {
+            historyArr.unshift({
+              date: j,
+              who: ""
+            });
+          }
+
+          updateQuery["requests." + String(k) + ".analytics.date.call"] = {
+            next: new Date(1800, 0, 1),
+            history: historyArr
+          };
+
+          updateQuery["requests." + String(k) + ".analytics.date.calendar"] = {
+            call: {
+              mother: "clientCalendar",
+              id: "",
+            },
+            precheck: {
+              mother: "clientCalendar",
+              id: "",
+            },
+            empty: {
+              mother: "clientCalendar",
+              id: "",
+            },
+            movein: {
+              mother: "clientCalendar",
+              id: "",
+            }
+          };
+
+          updateQuery["requests." + String(k) + ".analytics.picture.space"] = [];
+          updateQuery["requests." + String(k) + ".analytics.picture.prefer"] = [];
+          updateQuery["requests." + String(k) + ".analytics.proposal"] = [];
+
+          await this.MONGOC.db("miro81").collection("client").updateOne(whereQuery, { "$set": updateQuery });
+
+          updateQuery = {};
+          updateQuery["requests." + String(k) + ".proposal"] = "";
+          updateQuery["requests." + String(k) + ".analytics.date.callHistory"] = "";
+
+          await this.MONGOC.db("miro81").collection("client").updateOne(whereQuery, { "$unset": updateQuery });
+        }
+
+      }
+
+      row = await this.MONGOC.db("miro81").collection("project").find({}).toArray();
+
+      for (let i of row) {
+        whereQuery = { proid: i.proid };
+        updateQuery = {};
+
+        updateQuery["process.call"] = {
+          next: new Date(1800, 0, 1),
+          history: []
+        };
+        updateQuery["contents.photo.boo"] = false;
+        updateQuery["contents.photo.status"] = "해당 없음";
+        updateQuery["contents.raw"] = {
+          portfolio: {
+            status: "해당 없음",
+            link: "",
+          },
+          interview: {
+            status: "해당 없음",
+            link: "",
+          },
+          photo: {
+            status: "해당 없음",
+            link: "",
+          },
+        };
+        updateQuery["contents.share"] = {
+          client: {
+            photo: new Date(1800, 0, 1),
+            contents: new Date(1800, 0, 1),
+          },
+          designer: {
+            photo: new Date(1800, 0, 1),
+            contents: new Date(1800, 0, 1),
+          }
+        };
+        await this.MONGOC.db("miro81").collection("project").updateOne(whereQuery, { "$set": updateQuery });
+
+      }
+
+      */
+
+
+
 
 
 

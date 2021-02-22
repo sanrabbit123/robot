@@ -53,11 +53,48 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
 }
 
 
-MongoReflection.prototype.mongoMigration = async function () {
+MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo") {
+  const instance = this;
+  const { mongo, shell, shellLink } = this.mother;
   try {
+    const dbName = "miro81";
+    let fromString, toString;
+    let fromDB, toDB;
+    let rows;
 
+    fromDB = from;
+    toDB = to;
 
+    fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + this.address[fromDB].host + ':' + String(this.address[fromDB].port) + "/admin";
+    if (toDB === "local") {
+      toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + "127.0.0.1" + ':' + String(this.address[fromDB].port) + "/admin";
+    } else {
+      toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
+    }
 
+    const MONGOC = new mongo(fromString, { useUnifiedTopology: true });
+    const MONGOCLOCAL = new mongo(toString, { useUnifiedTopology: true });
+
+    await MONGOC.connect();
+    await MONGOCLOCAL.connect();
+
+    const collections = await MONGOC.db(dbName).listCollections().toArray();
+    const collections_local = await MONGOCLOCAL.db(dbName).listCollections().toArray();
+
+    for (let i of collections_local) {
+      await MONGOCLOCAL.db(dbName).collection(i.name).drop();
+    }
+
+    for (let i of collections) {
+      rows = await MONGOC.db(dbName).collection(i.name).find({}).toArray();
+      for (let j of rows) {
+        await MONGOCLOCAL.db(dbName).collection(i.name).insertOne(j);
+      }
+      console.log(`migration ${i.name} success`);
+    }
+
+    MONGOC.close();
+    MONGOCLOCAL.close();
 
   } catch (e) {
     console.log(e);
