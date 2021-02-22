@@ -833,7 +833,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         if (!ignorePhone.includes(filteredObj.phone)) {
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
 
-          tempAspirants = await back.getAspirantsByQuery(whereQuery);
+          tempAspirants = await instance.back.getAspirantsByQuery(whereQuery);
           tempAspirant = tempAspirants[0];
           if (tempAspirant.calendar.id !== "") {
             calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
