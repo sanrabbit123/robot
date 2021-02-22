@@ -231,6 +231,11 @@ Mother.prototype.googleSystem = function (sw) {
       app = new GoogleMail();
       return app;
       break;
+    case "calendar":
+      const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
+      app = new GoogleCalendar();
+      return app;
+      break;
   }
 }
 

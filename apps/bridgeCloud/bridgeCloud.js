@@ -268,7 +268,7 @@ BridgeCloud.prototype.bridgeToSheets = async function (obj) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, KAKAO ] = needs;
   const ignorePhone = this.ignorePhone;
@@ -604,11 +604,14 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
         }
       }
+      const calendar = googleSystem("calendar");
+
       let filteredObj, message;
       let tempArr;
       let tempArr0, tempArr1, tempArr2;
       let already, oppositeExist;
       let whereQuery, updateQuery;
+      let tempAspirants, tempAspirant;
 
       console.log("request get");
 
@@ -829,6 +832,19 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         if (!ignorePhone.includes(filteredObj.phone)) {
           slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+
+          tempAspirants = await back.getAspirantsByQuery(whereQuery);
+          tempAspirant = tempAspirants[0];
+          if (tempAspirant.calendar.id !== "") {
+            calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
+          } else {
+            calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
+              instance.back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ]);
+            }).catch(function (e) {
+              console.log(e);
+            });
+          }
+
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
