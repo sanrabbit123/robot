@@ -222,9 +222,8 @@ KakaoTalk.prototype.sendAspirantPresentation = async function () {
           fsubject_1: this.templates[targetId].templtName,
           fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString)
         };
-        console.log(options);
-        // response = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
-        // console.log(response.data);
+        response = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
+        console.log(response.data);
       }
     }
 

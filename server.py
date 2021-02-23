@@ -206,6 +206,10 @@ async def analyticsParsing():
     await run([ 'node', ROBOT, 'analyticsParsing' ])
 
 
+async def sendAspirantPresentation():
+    await run([ 'node', ROBOT, 'sendAspirantPresentation' ])
+
+
 if sys.argv.__len__() > 1:
 
     if sys.argv[1] == "ai":
@@ -245,6 +249,15 @@ if sys.argv.__len__() > 1:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(analyticsParsing())
         loop.close()
+
+    elif sys.argv[1] == "sendAspirantPresentation":
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(analyticsParsing, 'cron', hour='14', minute='30', second='30')
+        scheduler.start()
+        try:
+            asyncio.get_event_loop().run_forever()
+        except (KeyboardInterrupt, SystemExit):
+            pass
 
 else:
     print("argument must be 'ai' or 'backup' or 'mysql'")
