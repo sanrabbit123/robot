@@ -1283,8 +1283,10 @@ class DevContext extends Array {
 
 
 
-      // const reflection = new MongoReflection();
+      const reflection = new MongoReflection();
       // await reflection.mongoMigration();
+
+      console.log(await reflection.mysqlQuery(`SELECT * FROM test;`));
 
       let row;
       let whereQuery, updateQuery;

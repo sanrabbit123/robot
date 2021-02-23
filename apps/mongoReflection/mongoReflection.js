@@ -11,6 +11,29 @@ const MongoReflection = function () {
   this.servers = mongoTargets;
 }
 
+MongoReflection.prototype.mysqlQuery = function (query) {
+  const mysql = require('mysql2');
+  const mysqlStandard = this.address["frontinfo"];
+  const host = "localhost";
+  const { user, password, database } = mysqlStandard;
+  const connection = mysql.createConnection({ host, user, password, database });
+  let tong = {};
+  return new Promise(function (resolve, reject) {
+    connection.promise().query(query).then(function (response) {
+      tong = response;
+    }).then(function () {
+      connection.end();
+      if (/^select/gi.test(query)) {
+        resolve(tong[0]);
+      } else {
+        resolve(tong);
+      }
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
 MongoReflection.prototype.mongoToJson = async function (dir = "default", target = "default") {
   const instance = this;
   const { mongo, shell, shellLink } = this.mother;
@@ -51,7 +74,6 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
     console.log(e);
   }
 }
-
 
 MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo", option = { drop: true }) {
   const instance = this;
@@ -109,6 +131,7 @@ MongoReflection.prototype.totalReflection = async function (to = "local") {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   try {
 
+
     //all mongoDB reflection
     const allDB = BackMaker.allDatabaseNames;
     for (let i = 0; i < allDB.length; i++) {
@@ -118,16 +141,80 @@ MongoReflection.prototype.totalReflection = async function (to = "local") {
       console.log(``);
     }
 
+
     //flat death to 1:1 json
+    console.log(`mariaDB flat reflection start ==================================================`);
+
+    const clients = await back.getClientsByQuery({}, { withTools: true });
+    const { model: clientsModel, data: clientsData } = clients.dimensionSqueeze();
+
+    const designers = await back.getDesignersByQuery({}, { withTools: true });
+    const { model: designersModel, data: designersData } = designers.dimensionSqueeze();
+
+    const projects = await back.getProjectsByQuery({}, { withTools: true });
+    const { model: projectsModel, data: projectsData } = projects.dimensionSqueeze();
+
+    const aspirants = await back.getAspirantsByQuery({}, { withTools: true });
+    const { model: aspirantsModel, data: aspirantsData } = aspirants.dimensionSqueeze();
+
+    const contentsArr = await back.getContentsArrByQuery({}, { withTools: true });
+    const { model: contentsArrModel, data: contentsArrData } = contentsArr.dimensionSqueeze();
 
 
     //total delete in mysql
 
+    clientsModel.toDeleteQuery();
+    //execute
+    console.log(`client table in mysql delete`);
 
-    //extract cloumns end create table query
+    designersModel.toDeleteQuery();
+    //execute
+    console.log(`designer table in mysql delete`);
+
+    projectsModel.toDeleteQuery();
+    //execute
+    console.log(`project table in mysql delete`);
+
+    aspirantsModel.toDeleteQuery();
+    //execute
+    console.log(`aspirant table in mysql delete`);
+
+    contentsArrModel.toDeleteQuery();
+    //execute
+    console.log(`contents table in mysql delete`);
+
+
+    //create table query
+    clientsModel.toCreateQuery();
+    designersModel.toCreateQuery();
+    projectsModel.toCreateQuery();
+    aspirantsModel.toCreateQuery();
+    contentsArrModel.toCreateQuery();
 
 
     //insert query
+    let tempArr;
+
+    tempArr = clientsData.convertInsertQueries();
+    for (let insertQuery of tempArr) {
+      //execute
+    }
+    tempArr = designersData.convertInsertQueries();
+    for (let insertQuery of tempArr) {
+      //execute
+    }
+    tempArr = projectsData.convertInsertQueries();
+    for (let insertQuery of tempArr) {
+      //execute
+    }
+    tempArr = aspirantsData.convertInsertQueries();
+    for (let insertQuery of tempArr) {
+      //execute
+    }
+    tempArr = contentsArrData.convertInsertQueries();
+    for (let insertQuery of tempArr) {
+      //execute
+    }
 
 
     //insert front DB
