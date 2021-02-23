@@ -189,6 +189,25 @@ const widthTools = function (Client) {
     return tong;
   }
 
+  Client.prototype.dimensionSqueeze = function () {
+    const tong = this.flatDeath();
+    let result, tempObj;
+
+    result = [];
+    for (let { standard, info } of tong) {
+      tempObj = {};
+      for (let i in standard) {
+        tempObj[i] = standard[i];
+      }
+      for (let i in info) {
+        tempObj[i] = info[i];
+      }
+      result.push(tempObj);
+    }
+
+    return result;
+  }
+
   return Client;
 }
 
@@ -215,6 +234,18 @@ const widthToolsArr = function (Clients) {
     tong = [];
     for (let i of this) {
       tempArr = i.flatDeath();
+      for (let j of tempArr) {
+        tong.push(j);
+      }
+    }
+    return tong;
+  }
+
+  Clients.prototype.dimensionSqueeze = function () {
+    let tong, tempArr;
+    tong = [];
+    for (let i of this) {
+      tempArr = i.dimensionSqueeze();
       for (let j of tempArr) {
         tong.push(j);
       }
