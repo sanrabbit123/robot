@@ -3302,6 +3302,10 @@ DataPatch.prototype.projectStandard = function () {
       width: 50,
       left: 30,
     },
+    action: {
+      name: "응대",
+      width: 100,
+    },
     designer: {
       name: "디자이너",
       width: 80,
@@ -3309,6 +3313,22 @@ DataPatch.prototype.projectStandard = function () {
     service: {
       name: "서비스",
       width: 180,
+    },
+    outreason: {
+      name: "유출 이유",
+      width: 100,
+    },
+    outspot: {
+      name: "유출 시점",
+      width: 100,
+    },
+    next: {
+      name: "전화 예정",
+      width: 100,
+    },
+    callHistory: {
+      name: "전화 기록",
+      width: 100,
     },
     firstGuide: {
       name: "계약금 안내",
@@ -3438,6 +3458,14 @@ DataPatch.prototype.projectStandard = function () {
       name: "잔금 환수액",
       width: 100,
     },
+    photoBoo: {
+      name: "촬영 여부",
+      width: 100,
+    },
+    photoStatus: {
+      name: "촬영 상태",
+      width: 100,
+    },
     contentsPhotoDate: {
       name: "촬영일",
       width: 100,
@@ -3449,6 +3477,34 @@ DataPatch.prototype.projectStandard = function () {
     interviewer: {
       name: "인터뷰어",
       width: 80,
+    },
+    rawPortfolioStatus: {
+      name: "포트폴리오",
+      width: 100,
+    },
+    rawInterviewStatus: {
+      name: "고객 후기",
+      width: 100,
+    },
+    rawPhotoStatus: {
+      name: "원본 사진",
+      width: 100,
+    },
+    shareClientPhoto: {
+      name: "고객 사진 공유",
+      width: 120,
+    },
+    shareClientContents: {
+      name: "고객 컨텐츠 공유",
+      width: 120,
+    },
+    shareDesignerPhoto: {
+      name: "디자이너 사진 공유",
+      width: 160,
+    },
+    shareDesignerContents: {
+      name: "디자이너 컨텐츠 공유",
+      width: 160,
     },
   };
 
@@ -4974,6 +5030,11 @@ DataPatch.prototype.projectMap = function () {
     designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+
+
+    action: { name: "응대", position: "process.action", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
+
+
     firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     firstCancel: { name: "계약금 취소", position: "process.contract.first.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },

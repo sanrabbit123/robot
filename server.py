@@ -252,7 +252,7 @@ if sys.argv.__len__() > 1:
 
     elif sys.argv[1] == "sendAspirantPresentation":
         scheduler = AsyncIOScheduler()
-        scheduler.add_job(analyticsParsing, 'cron', hour='14', minute='30', second='30')
+        scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
         scheduler.start()
         try:
             asyncio.get_event_loop().run_forever()
