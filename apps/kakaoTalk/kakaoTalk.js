@@ -150,7 +150,7 @@ KakaoTalk.prototype.setCertification = async function (name, phone, certificatio
       button_1: { button: this.templates[targetId].buttons },
       failover: "Y",
       fsubject_1: this.templates[targetId].templtName,
-      fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, client.name)
+      fmessage_1: this.templates[targetId].templtContent.replace(/#\{회사명\}/g, "홈리에종").replace(/#\{고객명\}/g, client.name).replace(/#\{인증번호\}/g, client.certification)
     };
 
     this.message = options;
@@ -194,31 +194,39 @@ KakaoTalk.prototype.getTemplate = function (target) {
 
 KakaoTalk.prototype.sendAspirantPresentation = async function () {
   const instance = this;
+  const back = this.back;
   try {
     await this.ready();
+    const targetId = "TD_6666";
+    let allAspirants, targetArr;
+    let options, response;
 
-    let aspirant = { name: "배창규", phone: "010-2747-3403", date: "2월 25일 목요일" };
-    let targetId = "TD_6666";
-    let options = {
-      apikey: this.authObj.apikey,
-      userid: this.authObj.userid,
-      token: this.authObj.token,
-      senderkey: this.authObj.senderkey,
-      tpl_code: targetId,
-      sender: "0220392252",
-      receiver_1: aspirant.phone.replace(/-/g, ''),
-      recvname_1: aspirant.name,
-      subject_1: this.templates[targetId].templtName,
-      message_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, aspirant.name).replace(/#\{날짜\}/g, aspirant.date),
-      button_1: { button: this.templates[targetId].buttons },
-      failover: "Y",
-      fsubject_1: this.templates[targetId].templtName,
-      fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, aspirant.name)
-    };
+    allAspirants = await back.getAspirantsByQuery({});
+    targetArr = allAspirants.meetingAlarm();
 
-    this.message = options;
-    const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
-    console.log(data);
+    for (let { name, phone, dateString, alarm } of targetArr) {
+      if (alarm) {
+        options = {
+          apikey: this.authObj.apikey,
+          userid: this.authObj.userid,
+          token: this.authObj.token,
+          senderkey: this.authObj.senderkey,
+          tpl_code: targetId,
+          sender: "0220392252",
+          receiver_1: phone.replace(/-/g, ''),
+          recvname_1: name,
+          subject_1: this.templates[targetId].templtName,
+          message_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString),
+          button_1: { button: this.templates[targetId].buttons },
+          failover: "Y",
+          fsubject_1: this.templates[targetId].templtName,
+          fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString)
+        };
+        console.log(options);
+        // response = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
+        // console.log(response.data);
+      }
+    }
 
   } catch (e) {
     console.log(e);

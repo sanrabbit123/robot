@@ -12,6 +12,20 @@ class Aspirants extends Array {
     return tong;
   }
 
+  meetingAlarm() {
+    let arr;
+    arr = [];
+    for (let i of this) {
+      if (i.meetingAlarm() !== null) {
+        arr.push(i.meetingAlarm());
+      }
+    }
+    arr.sort((a, b) => {
+      return a.date.valueOf() - b.date.valueOf();
+    });
+    return arr;
+  }
+
 }
 
 const widthTools = function (Aspirant) {
