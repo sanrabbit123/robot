@@ -3302,10 +3302,6 @@ DataPatch.prototype.projectStandard = function () {
       width: 50,
       left: 30,
     },
-    action: {
-      name: "응대",
-      width: 100,
-    },
     designer: {
       name: "디자이너",
       width: 80,
@@ -3314,13 +3310,9 @@ DataPatch.prototype.projectStandard = function () {
       name: "서비스",
       width: 180,
     },
-    outreason: {
-      name: "유출 이유",
-      width: 100,
-    },
-    outspot: {
-      name: "유출 시점",
-      width: 100,
+    action: {
+      name: "응대",
+      width: 80,
     },
     next: {
       name: "전화 예정",
@@ -3328,10 +3320,6 @@ DataPatch.prototype.projectStandard = function () {
     },
     callHistory: {
       name: "전화 기록",
-      width: 100,
-    },
-    firstGuide: {
-      name: "계약금 안내",
       width: 100,
     },
     firstDate: {
@@ -3357,10 +3345,6 @@ DataPatch.prototype.projectStandard = function () {
     meetingDate: {
       name: "1차 미팅",
       width: 170,
-    },
-    remainGuide: {
-      name: "잔금 안내",
-      width: 100,
     },
     remainDate: {
       name: "잔금 입금",
@@ -3392,10 +3376,6 @@ DataPatch.prototype.projectStandard = function () {
     },
     remainRefund: {
       name: "잔금 환불액",
-      width: 100,
-    },
-    formGuide: {
-      name: "계약 안내",
       width: 100,
     },
     formDateFrom: {
@@ -3458,10 +3438,6 @@ DataPatch.prototype.projectStandard = function () {
       name: "잔금 환수액",
       width: 100,
     },
-    photoBoo: {
-      name: "촬영 여부",
-      width: 100,
-    },
     photoStatus: {
       name: "촬영 상태",
       width: 100,
@@ -3469,42 +3445,6 @@ DataPatch.prototype.projectStandard = function () {
     contentsPhotoDate: {
       name: "촬영일",
       width: 100,
-    },
-    photographer: {
-      name: "촬영 작가",
-      width: 80,
-    },
-    interviewer: {
-      name: "인터뷰어",
-      width: 80,
-    },
-    rawPortfolioStatus: {
-      name: "포트폴리오",
-      width: 100,
-    },
-    rawInterviewStatus: {
-      name: "고객 후기",
-      width: 100,
-    },
-    rawPhotoStatus: {
-      name: "원본 사진",
-      width: 100,
-    },
-    shareClientPhoto: {
-      name: "고객 사진 공유",
-      width: 120,
-    },
-    shareClientContents: {
-      name: "고객 컨텐츠 공유",
-      width: 120,
-    },
-    shareDesignerPhoto: {
-      name: "디자이너 사진 공유",
-      width: 160,
-    },
-    shareDesignerContents: {
-      name: "디자이너 컨텐츠 공유",
-      width: 160,
     },
   };
 
@@ -5023,6 +4963,411 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const callHistoryToObject = function (value, pastValue, vaildMode) {
+    const filter = function (value) {
+      let filteredValue, temp, tempArr, today;
+
+      if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
+        filteredValue = "20" + value;
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]\-[0-9]$/.test(value)) {
+        tempArr = value.split("-");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]/g.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(value)) {
+        tempArr = value.split(".");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]/g.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(value)) {
+        tempArr = value.split("/");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = "20" + tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]/g.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(value)) {
+        tempArr = value.split(" ");
+        filteredValue = tempArr[0] + '-' + '0' + tempArr[1] + '-' + '0' + tempArr[2];
+      } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\-[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\-[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("-");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\.[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\.[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(".");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9]\/[0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9]\/[0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split("/");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9] [0-9][0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + tempArr[1];
+      } else if (/^[0-9][0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[0-9] [0-9]$/.test(value)) {
+        today = new Date();
+        temp = String(today.getFullYear());
+        tempArr = value.split(" ");
+        filteredValue = temp + '-' + '0' + tempArr[0] + '-' + '0' + tempArr[1];
+      } else if (/^[ \/\.a-zA-Z]$/.test(value)) {
+        today = new Date();
+        filteredValue = String(today.getFullYear()) + '-' + ((today.getMonth() + 1 < 10) ? '0' + String(today.getMonth() + 1) : String(today.getMonth() + 1)) + '-' + ((today.getDate() < 10) ? '0' + String(today.getDate()) : String(today.getDate()));
+      } else {
+        filteredValue = value;
+      }
+
+      return filteredValue;
+    };
+
+    let arr = [];
+    let filteredValue;
+    let filteredArr = [];
+    let obj;
+    let temp, temp2;
+    let boo = false;
+
+    temp = value.split(", ");
+    for (let i of temp) {
+      filteredValue = filter(i);
+      filteredArr.push(filteredValue);
+      if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(filteredValue)) {
+        boo = true;
+      }
+    }
+
+    if (!boo) {
+      temp = filteredArr;
+    } else {
+      temp = pastValue.split(", ");
+    }
+
+    if (vaildMode) {
+      return { boo: !boo, value: filteredArr.join(", ") };
+    }
+
+    if (temp[0] === '') {
+      return [];
+    }
+
+    for (let i of temp) {
+      temp2 = i.split("-");
+      obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
+      arr.push({ date: obj, who: "" });
+    }
+
+    return arr;
+  };
+  const callHistoryInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+
+    endEvent = function (e) {
+      let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
+      let totalString = '';
+      for (let i = 0; i < inputs.length; i++) {
+        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
+          totalString += DataPatch.toolsDateFilter(inputs[i].value);
+          totalString += ", ";
+        }
+      }
+      if (totalString.length > 0) {
+        totalString = totalString.slice(0, -2);
+      }
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = input.value.split(", ");
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), ''));
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "#2fa678",
+      width: String(width) + ea,
+      height: (GeneralJs.isMac() ? "89%" : "100%"),
+      left: String(0) + ea,
+      top: String(0) + ea,
+      borderRadius: String(3) + ea,
+      outline: String(0),
+      border: String(0),
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.value = inputArr[i];
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth + 3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% + " + String(3) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", function (e) {
+      let button_clone, input_clone;
+
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.input.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        this.parentElement.parentElement.removeChild(this.parentElement);
+      });
+      input_clone.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+          endEvent.call(this, e);
+        }
+      });
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    });
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
   const map = {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
@@ -5030,19 +5375,15 @@ DataPatch.prototype.projectMap = function () {
     designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-
-
-    action: { name: "응대", position: "process.action", type: "string", items: [ "500만원 이하", "1,000만원", "1,500만원", "2,000만원", "2,500만원", "3,000만원", "3,500만원", "4,000만원", "4,500만원", "5,000만원 이상" ], searchBoo: true, },
-
-
-    firstGuide: { name: "계약금 안내", position: "process.contract.first.guide", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    action: { name: "응대", position: "process.action", type: "string", items: [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ], searchBoo: true, },
+    next: { name: "전화 예정일", position: "process.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    callHistory: { name: "전화 기록", position: "process.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     firstCancel: { name: "계약금 취소", position: "process.contract.first.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
     firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     firstRefund: { name: "계약금 환불액", position: "process.contract.first.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
     meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
-    remainGuide: { name: "잔금 안내", position: "process.contract.remain.guide", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainCancel: { name: "잔금 취소", position: "process.contract.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
@@ -5051,7 +5392,6 @@ DataPatch.prototype.projectMap = function () {
     remainPure: { name: "잔금", position: "process.contract.remain.calculation.amount.consumer", type: "object", objectFunction: remainPureToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
-    formGuide: { name: "계약 안내", position: "process.contract.form.guide", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateCancel: { name: "계약 취소", position: "process.contract.form.date.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
@@ -5067,9 +5407,8 @@ DataPatch.prototype.projectMap = function () {
     paymentsRemainDate: { name: "잔금 지급일", position: "process.calculation.payments.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     paymentsRemainCancel: { name: "잔금 환수일", position: "process.calculation.payments.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     paymentsRemainRefund: { name: "잔금 환수액", position: "process.calculation.payments.remain.refund", type: "number", searchBoo: true, moneyBoo: true },
+    photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "object", inputFunction: contentsPhotoDateInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: contentsPhotoDateToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    photographer: { name: "촬영 작가", position: "contents.photo.info.photographer", type: "string", searchBoo: true, },
-    interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", searchBoo: true, },
   };
   return map;
 }

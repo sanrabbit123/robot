@@ -53,7 +53,7 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
 }
 
 
-MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo", option = { total: true }) {
+MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo", option = { drop: true }) {
   const instance = this;
   const { mongo, shell, shellLink } = this.mother;
   try {
@@ -73,29 +73,66 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
       toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
     }
 
-    const MONGOC = new mongo(fromString, { useUnifiedTopology: true });
-    const MONGOCLOCAL = new mongo(toString, { useUnifiedTopology: true });
+    MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
+    MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
 
-    await MONGOC.connect();
-    await MONGOCLOCAL.connect();
+    await MONGOC_FROM.connect();
+    await MONGOC_TO.connect();
 
-    const collections = await MONGOC.db(dbName).listCollections().toArray();
-    const collections_local = await MONGOCLOCAL.db(dbName).listCollections().toArray();
+    const collections = await MONGOC_FROM.db(dbName).listCollections().toArray();
+    const collections_local = await MONGOC_TO.db(dbName).listCollections().toArray();
 
-    for (let i of collections_local) {
-      await MONGOCLOCAL.db(dbName).collection(i.name).drop();
+    if (option.drop === true || option.drop === undefined) {
+      for (let i of collections_local) {
+        await MONGOC_TO.db(dbName).collection(i.name).drop();
+      }
     }
 
     for (let i of collections) {
-      rows = await MONGOC.db(dbName).collection(i.name).find({}).toArray();
+      rows = await MONGOC_FROM.db(dbName).collection(i.name).find({}).toArray();
       for (let j of rows) {
-        await MONGOCLOCAL.db(dbName).collection(i.name).insertOne(j);
+        await MONGOC_TO.db(dbName).collection(i.name).insertOne(j);
       }
       console.log(`migration ${i.name} success`);
     }
 
-    MONGOC.close();
-    MONGOCLOCAL.close();
+    MONGOC_FROM.close();
+    MONGOC_TO.close();
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.totalReflection = async function (to = "local") {
+  const instance = this;
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  try {
+
+    //all mongoDB reflection
+    const allDB = BackMaker.allDatabaseNames;
+    for (let i = 0; i < allDB.length; i++) {
+      console.log(`${allDB[i]} reflection start ==================================================`);
+      await this.mongoMigration(to, allDB[i], { drop: (i === 0) });
+      console.log(`from: ${allDB[i]} => to: ${to} reflection success`);
+      console.log(``);
+    }
+
+    //flat death to 1:1 json
+
+
+    //total delete in mysql
+
+
+    //extract cloumns end create table query
+
+
+    //insert query
+
+
+    //insert front DB
+
+
 
   } catch (e) {
     console.log(e);

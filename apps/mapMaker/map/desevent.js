@@ -78,7 +78,7 @@ module.exports = {
                 "desktop": "check",
                 "mobile": "check"
               },
-              "limit": false,
+              "limit": true,
               "src": {
                 "desktop": {
                   "off": "b_checkdesktop100_off_9rspot311_021612.svg",
@@ -109,7 +109,7 @@ module.exports = {
               }
             },
             {
-              "title": "3월 19일 금요일 14시",
+              "title": "3월 25일 목요일 14시",
               "type": {
                 "desktop": "check",
                 "mobile": "check"
@@ -127,7 +127,7 @@ module.exports = {
               }
             },
             {
-              "title": "3월 25일 목요일 14시",
+              "title": "4월 22일 목요일 14시",
               "type": {
                 "desktop": "check",
                 "mobile": "check"

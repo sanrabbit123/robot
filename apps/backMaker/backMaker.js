@@ -12,7 +12,13 @@ const BackMaker = function () {
 
 // STATIC ------------------------------------------------------------------------------------
 
-BackMaker.flatDeath_targets = [
+BackMaker.allDatabaseNames = [
+  "mongoinfo",
+  "backinfo",
+  "pythoninfo",
+];
+
+BackMaker.flatDeathCollections = [
   "aspirant",
   "client",
   "contents",
