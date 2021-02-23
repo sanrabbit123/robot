@@ -1265,10 +1265,6 @@ class DevContext extends Array {
 
 
 
-
-
-
-
       // let whereQuery, updateQuery;
       //
       // for (let d of designers) {
@@ -1287,14 +1283,8 @@ class DevContext extends Array {
 
 
 
-
-
-
-
       // const reflection = new MongoReflection();
       // await reflection.mongoMigration();
-
-
 
       let row;
       let whereQuery, updateQuery;
@@ -1408,7 +1398,16 @@ class DevContext extends Array {
 
       // TOOLS ----------------------------------------------------------------------------------------------------
 
+      // parsingHangul
+
+      // const hangul = new ParsingHangul();
+      // hangul.fixDir("/home/homeliaison/samba/photo");
+      // hangul.fixDir("/home/homeliaison/samba/drive");
+      // hangul.fixDir("/home/homeliaison/samba/drive/HomeLiaisonServer");
+      // hangul.fixDir("/home/homeliaison/samba/drive/HomeLiaisonServer/영상");
+
       // spawn catfish
+
       // const app = new SpawnCatfish();
       // await app.spawnLaunching(false);
 
