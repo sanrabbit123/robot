@@ -141,6 +141,8 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
         finalValue = pastValue;
       }
       break;
+    case "null":
+      finalValue = pastValue;
     default:
       throw new Error("invaild type");
   }

@@ -401,8 +401,24 @@ DataPatch.prototype.clientStandard = function () {
       width: 50,
       left: 30,
     },
+    action: {
+      name: "응대",
+      width: 115,
+    },
     outreason: {
       name: "유출 이유",
+      width: 100,
+    },
+    outspot: {
+      name: "유출 시점",
+      width: 100,
+    },
+    kakao: {
+      name: "채널 등록",
+      width: 100,
+    },
+    next: {
+      name: "전화 예정",
       width: 100,
     },
     callHistory: {
@@ -411,6 +427,14 @@ DataPatch.prototype.clientStandard = function () {
     },
     timeline: {
       name: "문의일",
+      width: 100,
+    },
+    spacePicture: {
+      name: "현장 사진",
+      width: 100,
+    },
+    preferPicture: {
+      name: "선호 사진",
       width: 100,
     },
     phone: {
@@ -476,11 +500,7 @@ DataPatch.prototype.clientStandard = function () {
     channel: {
       name: "유입 채널",
       width: 100,
-    },
-    proid: {
-      name: "제안서",
-      width: 100,
-    },
+    }
   };
 
   targetArr = Object.keys(model.info);
@@ -526,8 +546,12 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
     ],
     info: [
       { name: "상태", target: "status" },
-      { name: "유출 이유", target: "outreason" },
+      { name: "응대", target: "action" },
+      { name: "전화 예정", target: "next" },
       { name: "전화 기록", target: "callHistory" },
+      { name: "채널 등록", target: "kakao" },
+      { name: "현장 사진", target: "spacePicture" },
+      { name: "선호 사진", target: "preferPicture" },
       { name: "문의일", target: "timeline" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
@@ -539,13 +563,9 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "사전 점검일", target: "precheck" },
       { name: "집 비는 날", target: "empty" },
       { name: "입주 예정일", target: "movein" },
-      { name: "방", target: "room" },
-      { name: "화장실", target: "bathroom" },
-      { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
       { name: "요청 사항", target: "comment" },
       { name: "유입 채널", target: "channel" },
-      { name: "제안서", target: "proid" },
     ],
   };
 
@@ -562,7 +582,7 @@ DataPatch.prototype.clientMap = function () {
       return { boo: !boo, value: null };
     }
 
-    targetArr = [ "응대중", "진행", "드랍", "완료" ];
+    targetArr = [ '드랍', '진행', '응대중', '완료', '장기' ];
 
     if (targetArr.includes(value)) {
       finalValue = value;
@@ -592,7 +612,7 @@ DataPatch.prototype.clientMap = function () {
       let finalValue;
       let items;
 
-      items = [ "응대중", "진행", "드랍", "완료" ];
+      items = [ '드랍', '진행', '응대중', '완료', '장기' ];
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
@@ -617,7 +637,7 @@ DataPatch.prototype.clientMap = function () {
       }
     };
 
-    inputArr = [ "응대중", "진행", "드랍", "완료" ];
+    inputArr = [ '드랍', '진행', '응대중', '완료', '장기' ];
     length = inputArr.length;
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
@@ -927,7 +947,7 @@ DataPatch.prototype.clientMap = function () {
     for (let i of temp) {
       temp2 = i.split("-");
       obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
-      arr.push(obj);
+      arr.push({ date: obj, who: "" });
     }
 
     return arr;
@@ -1130,13 +1150,18 @@ DataPatch.prototype.clientMap = function () {
     living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
-    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "응대중", "진행", "드랍", "완료" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "드랍", "진행", "응대중", "완료", "장기" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    action: { name: "응대", position: "requests.0.analytics.response.action", type: "string", items: [ "1차 응대 예정", "1차 응대후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
-    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.callHistory", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
+    outspot: { name: "유출 시점", position: "requests.0.analytics.response.action", type: "string", items: [ "1차 응대 예정", "1차 응대후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
+    kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    next: { name: "전화 예정일", position: "requests.0.analytics.date.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    callHistory: { name: "전화 기록", position: "requests.0.analytics.date.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    proid: { name: "제안서", position: "requests.0.proposal.proid", type: "string", searchBoo: true, },
+    spacePicture: { name: "현장 사진", position: "requests.0.analytics.picture.space", type: "null", searchBoo: false },
+    preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer", type: "null", searchBoo: false },
   };
   return map;
 }

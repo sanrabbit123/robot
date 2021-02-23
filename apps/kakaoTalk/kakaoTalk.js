@@ -1,8 +1,9 @@
 const KakaoTalk = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
-
+  this.back = new BackMaker();
   this.userid = "hliaison";
   this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
   this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
@@ -21,7 +22,7 @@ const KakaoTalk = function () {
     front: new RegExp(this.ip.front + "\n", 'g'),
   };
   this.token = {
-    office: '717dee27a1c36fa03609ea5decb1262a4eee5fd4acb413efb25005c7303e7cf159832a278f72563d8f85179c8d743fc68dc268d0755579ca2250f929b1b878b31HpLNZ4PHSOLw/YjhGTq+sdhRCwumNg2GigT/bNqD8FB+gVWF/w+sv3pR9bisbG7pDOUT7uL/4xGXknWFGnS0w==',
+    office: 'f05cb48bb2b2397b0a00673f9d042cb11e617e2f474adb80aa21def198e93defb9772db0decfdceb11711fe00220d7353e22750dfa4a033787d2b65baa74c0edRpWklMHb+gajmvp0DWz3EOkwdpHCjhFmkliDkyfGD20Rw/GTrgkATGf016jQH2sPQym/QCo7cxJnGmM4do74ZA==',
     home: '9dc4aa330c3c0529cf34d99f0af15bc604e94eac3f60b9318a2832dd2e2b3215a7bcb8d7590db241f62e291cbf54ba028beebc20aa4b4df6018dc4b2e1c67036NM/jS90vphEelYX1MmcGrWaQho8VzcjLtgNPOKs6PYBPhdrhWkCldWjqZW48SpHhilOQNDRvImw8k76D6Gk6ww==',
     bridge: 'ad71db7b43a31011c2cad920198f0820c3ee1984db28fea5770ea728b8b1bc0fbc231da21c02113119568762aec1588c0a7c29b05c354d07493a8b9341436d3fZaVjZRr90NmU9J/cDxAMHR3tjA9/k6mK22IkZFPVHMGbuqY3erFhtZAq6/L4B4JCcG5cmfbRJAGE4OTK71Udwg==',
     front: 'c14a594407ce851449e11aa060556b54faf1e4de714adc353e49f645c9720880a1149ed617ad5ef19de94fed1da6094bdeb4f1a8756bed3b3fe74c8120490fe4hX3mInjDzik6Yz05qMUnpOJkL6ix9DcJRLVAZpofdBoZA89GFnHTtZJ5BUx\/iFFVdRVHW2vD4cA0dmbL8Qkf0A==',
@@ -91,6 +92,7 @@ KakaoTalk.prototype.templateTong = function (target) {
     photo: "TC_1179",
     designerPartnership: "TD_5890",
     designerPresentation: "TD_5891",
+    designerPresentationAlarm: "TD_6666",
   };
   return tong[target];
 }
@@ -190,5 +192,37 @@ KakaoTalk.prototype.getTemplate = function (target) {
   return this.templates[this.templateTong(target)];
 }
 
+KakaoTalk.prototype.sendAspirantPresentation = async function () {
+  const instance = this;
+  try {
+    await this.ready();
+
+    let aspirant = { name: "배창규", phone: "010-2747-3403", date: "2월 25일 목요일" };
+    let targetId = "TD_6666";
+    let options = {
+      apikey: this.authObj.apikey,
+      userid: this.authObj.userid,
+      token: this.authObj.token,
+      senderkey: this.authObj.senderkey,
+      tpl_code: targetId,
+      sender: "0220392252",
+      receiver_1: aspirant.phone.replace(/-/g, ''),
+      recvname_1: aspirant.name,
+      subject_1: this.templates[targetId].templtName,
+      message_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, aspirant.name).replace(/#\{날짜\}/g, aspirant.date),
+      button_1: { button: this.templates[targetId].buttons },
+      failover: "Y",
+      fsubject_1: this.templates[targetId].templtName,
+      fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, aspirant.name)
+    };
+
+    this.message = options;
+    const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
+    console.log(data);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = KakaoTalk;

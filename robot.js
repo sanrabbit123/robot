@@ -189,6 +189,16 @@ Robot.prototype.tellVoice = async function (text) {
   }
 }
 
+Robot.prototype.sendAspirantPresentation = async function () {
+  try {
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakao = new KakaoTalk();
+    await kakao.sendAspirantPresentation();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -257,6 +267,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/voice/gi.test(process.argv[2]) && process.argv[3] !== undefined) {
       await this.tellVoice(process.argv[3]);
+
+    } else if (/sendAspirantPresentation/gi.test(process.argv[2])) {
+      await this.sendAspirantPresentation();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

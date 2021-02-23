@@ -53,11 +53,12 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
 }
 
 
-MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo") {
+MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo", option = { total: true }) {
   const instance = this;
   const { mongo, shell, shellLink } = this.mother;
   try {
     const dbName = "miro81";
+    let MONGOC_FROM, MONGOC_TO;
     let fromString, toString;
     let fromDB, toDB;
     let rows;

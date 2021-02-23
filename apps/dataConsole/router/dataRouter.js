@@ -714,6 +714,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       let position;
       let userArr;
       let today;
+      let noUpdate;
 
       if (req.url === "/updateClient") {
         map = instance.patch.clientMap();
@@ -724,6 +725,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       } else if (req.url === "/updateContents") {
         map = instance.patch.contentsMap();
       }
+
+      noUpdate = false;
 
       switch (map[column].type) {
         case "string":
@@ -786,51 +789,57 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           finalValue = tempFunction(value, pastValue, false);
           pastFinalValue = tempFunction(pastValue, pastValue, false);
           break;
+        case "null":
+          noUpdate = true;
+          finalValue = null;
+          pastFinalValue = null;
         default:
           throw new Error("invaild type");
       }
 
-      updateQuery = {};
-      position = map[column].position.replace(/\.0\./, ("." + requestIndex + "."));
-      updateQuery[position] = finalValue;
+      if (!noUpdate) {
+        updateQuery = {};
+        position = map[column].position.replace(/\.0\./, ("." + requestIndex + "."));
+        updateQuery[position] = finalValue;
 
-      whereQuery = {};
-      if (req.url === "/updateClient") {
-        whereQuery[map.cliid.position] = thisId;
-      } else if (req.url === "/updateDesigner") {
-        whereQuery[map.desid.position] = thisId;
-      } else if (req.url === "/updateProject") {
-        whereQuery[map.proid.position] = thisId;
-      } else if (req.url === "/updateContents") {
-        whereQuery[map.conid.position] = thisId;
+        whereQuery = {};
+        if (req.url === "/updateClient") {
+          whereQuery[map.cliid.position] = thisId;
+        } else if (req.url === "/updateDesigner") {
+          whereQuery[map.desid.position] = thisId;
+        } else if (req.url === "/updateProject") {
+          whereQuery[map.proid.position] = thisId;
+        } else if (req.url === "/updateContents") {
+          whereQuery[map.conid.position] = thisId;
+        }
+
+        if (req.url === "/updateClient") {
+          message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        } else if (req.url === "/updateDesigner") {
+          message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        } else if (req.url === "/updateProject") {
+          message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        } else if (req.url === "/updateContents") {
+          message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        }
+
+        //update log
+        userArr = user.split("__split__");
+        today = new Date();
+        await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
+          user: {
+            name: userArr[0],
+            email: userArr[1]
+          },
+          where: thisId,
+          update: {
+            target: position,
+            value: finalValue,
+            pastValue: pastFinalValue
+          },
+          date: today
+        }, { local: null, console: true, selfMongo: null });
       }
-
-      if (req.url === "/updateClient") {
-        message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      } else if (req.url === "/updateDesigner") {
-        message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      } else if (req.url === "/updateProject") {
-        message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      } else if (req.url === "/updateContents") {
-        message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      }
-
-      //update log
-      userArr = user.split("__split__");
-      today = new Date();
-      await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
-        user: {
-          name: userArr[0],
-          email: userArr[1]
-        },
-        where: thisId,
-        update: {
-          target: position,
-          value: finalValue,
-          pastValue: pastFinalValue
-        },
-        date: today
-      }, { local: null, console: true, selfMongo: null });
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));

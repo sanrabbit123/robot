@@ -12,6 +12,14 @@ const BackMaker = function () {
 
 // STATIC ------------------------------------------------------------------------------------
 
+BackMaker.flatDeath_targets = [
+  "aspirant",
+  "client",
+  "contents",
+  "designer",
+  "project",
+];
+
 BackMaker.filters = {
   emailFilter: function (str) {
     let strArr, email;
