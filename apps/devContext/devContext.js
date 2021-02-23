@@ -1286,7 +1286,7 @@ class DevContext extends Array {
       const reflection = new MongoReflection();
       // await reflection.mongoMigration();
 
-      console.log(await reflection.mysqlQuery(`SELECT * FROM test;`));
+      // console.log(await reflection.mysqlQuery(`SELECT * FROM test;`));
 
       let row;
       let whereQuery, updateQuery;
@@ -1392,6 +1392,37 @@ class DevContext extends Array {
       */
 
 
+
+      // let client0, client1, client2;
+      // let searchQuery, num0, num1;
+      //
+      // let matrix = [
+      //   [ new Date(2020, 7, 1), new Date(2020, 8, 1) ],
+      //   [ new Date(2020, 8, 1), new Date(2020, 9, 1) ],
+      //   [ new Date(2020, 9, 1), new Date(2020, 10, 1) ],
+      //   [ new Date(2020, 10, 1), new Date(2020, 11, 1) ],
+      //   [ new Date(2020, 11, 1), new Date(2021, 0, 1) ],
+      //   [ new Date(2021, 0, 1), new Date(2021, 1, 1) ],
+      // ]
+      //
+      // for (let arr of matrix) {
+      //   searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[1] } } } };
+      //   client0 = await back.getClientsByQuery(searchQuery);
+      //   // num0 = 0;
+      //   // num1 = 0;
+      //   // for (let i of client0) {
+      //   //   num0 += i.requests[0].request.space.pyeong.value;
+      //   //   num1 += Number(i.requests[0].request.budget.value.replace(/[^0-9]/gi, ''));
+      //   // }
+      //   // console.log(num0 / client0.length);
+      //   // console.log(num1 / client0.length);
+      //   for (let i of client0) {
+      //     console.log(i.requests[0].request.space.address.value);
+      //     console.log(i.requests[0].request.space.contract.value);
+      //   }
+      //   console.log(`================================================================================================================================`)
+      //   console.log(`================================================================================================================================`)
+      // }
 
 
 

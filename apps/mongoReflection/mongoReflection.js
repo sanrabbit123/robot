@@ -23,15 +23,33 @@ MongoReflection.prototype.mysqlQuery = function (query) {
       tong = response;
     }).then(function () {
       connection.end();
-      if (/^select/gi.test(query)) {
-        resolve(tong[0]);
+      if (Array.isArray(tong)) {
+        if (tong.length > 0) {
+          resolve(tong[0]);
+        } else {
+          resolve("done");
+        }
       } else {
-        resolve(tong);
+        resolve("done");
       }
     }).catch(function (err) {
       reject(err);
     });
   });
+}
+
+MongoReflection.prototype.showTables = async function () {
+  const instance = this;
+  try {
+    let tableArr = [];
+    const raw = await back.mysqlQuery("SHOW TABLES;");
+    for (let i of raw) {
+      tableArr.push(i["Tables_in_miro81"]);
+    }
+    return tableArr;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 MongoReflection.prototype.mongoToJson = async function (dir = "default", target = "default") {
