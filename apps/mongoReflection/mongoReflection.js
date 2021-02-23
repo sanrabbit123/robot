@@ -42,7 +42,7 @@ MongoReflection.prototype.showTables = async function () {
   const instance = this;
   try {
     let tableArr = [];
-    const raw = await back.mysqlQuery("SHOW TABLES;");
+    const raw = await this.mysqlQuery("SHOW TABLES;");
     for (let i of raw) {
       tableArr.push(i["Tables_in_miro81"]);
     }
