@@ -28,7 +28,7 @@ class Aspirants extends Array {
 
 }
 
-const widthTools = function (Aspirant) {
+const withTools = function (Aspirant) {
 
   Aspirant.prototype.flatDeath = function (mode = "total") {
     const aspirant = this.toNormal();
@@ -219,7 +219,7 @@ const widthTools = function (Aspirant) {
   return Aspirant;
 }
 
-const widthToolsArr = function (Aspirants) {
+const withToolsArr = function (Aspirants) {
 
   Aspirants.prototype.flatDeath = function () {
     let tong, tempArr;
@@ -237,7 +237,7 @@ const widthToolsArr = function (Aspirants) {
 }
 
 const Tools = function () {}
-Tools.widthTools = widthTools;
-Tools.widthToolsArr = widthToolsArr;
+Tools.withTools = withTools;
+Tools.withToolsArr = withToolsArr;
 
 module.exports = { Aspirant, Aspirants, Tools };

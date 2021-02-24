@@ -14,7 +14,7 @@ class ContentsArr extends Array {
 
 }
 
-const widthTools = function (Contents) {
+const withTools = function (Contents) {
 
   Contents.prototype.flatDeath = function () {
     const contents = this.toNormal();
@@ -111,7 +111,7 @@ const widthTools = function (Contents) {
   return Contents;
 }
 
-const widthToolsArr = function (ContentsArr) {
+const withToolsArr = function (ContentsArr) {
 
   ContentsArr.prototype.flatDeath = function () {
     let tong, tempArr;
@@ -129,7 +129,7 @@ const widthToolsArr = function (ContentsArr) {
 }
 
 const Tools = function () {}
-Tools.widthTools = widthTools;
-Tools.widthToolsArr = widthToolsArr;
+Tools.withTools = withTools;
+Tools.withToolsArr = withToolsArr;
 
 module.exports = { Contents, ContentsArr, Tools };

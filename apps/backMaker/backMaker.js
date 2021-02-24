@@ -668,7 +668,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -681,7 +681,8 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
     }
 
     if (option.withTools) {
-      Client = Tools.widthTools(Client);
+      const { Tools } = require(`${this.aliveDir}/${this.button}/addOn/tools.js`);
+      Client = Tools.withTools(Client);
     }
 
     if (arr.length > 0) {
@@ -701,7 +702,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
     let sortQuery;
@@ -734,8 +735,9 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
         clientsArr.push(new Client(i));
       }
     } else {
-      Client = Tools.widthTools(Client);
-      Clients = Tools.widthToolsArr(Clients);
+      const { Tools } = require(`${this.aliveDir}/${this.button}/addOn/tools.js`);
+      Client = Tools.withTools(Client);
+      Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
       for (let i of tong) {
         clientsArr.push(new Client(i));
@@ -753,7 +755,7 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 
@@ -771,8 +773,9 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
         clientsArr.push(new Client(i));
       }
     } else {
-      Client = Tools.widthTools(Client);
-      Clients = Tools.widthToolsArr(Clients);
+      const { Tools } = require(`${this.aliveDir}/${this.button}/addOn/tools.js`);
+      Client = Tools.withTools(Client);
+      Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
       for (let i of tong) {
         clientsArr.push(new Client(i));
@@ -790,7 +793,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -803,7 +806,8 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
     }
 
     if (option.withTools) {
-      Client = Tools.widthTools(Client);
+      const { Tools } = require(`${this.aliveDir}/${this.button}/addOn/tools.js`);
+      Client = Tools.withTools(Client);
     }
 
     if (arr.length > 0) {
@@ -823,7 +827,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.button = "client";
-  let { Client, Clients, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 
@@ -851,8 +855,9 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
         clientsArr.push(new Client(i));
       }
     } else {
-      Client = Tools.widthTools(Client);
-      Clients = Tools.widthToolsArr(Clients);
+      const { Tools } = require(`${this.aliveDir}/${this.button}/addOn/tools.js`);
+      Client = Tools.withTools(Client);
+      Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
       for (let i of tong) {
         clientsArr.push(new Client(i));
@@ -1120,6 +1125,191 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
   }
 }
 
+BackMaker.prototype.getClientReport = async function () {
+  const instance = this;
+  try {
+    const ratioParsing = (num) => { return `${String(Math.round(num * 100 * 10) / 10)}%`; }
+    const clients = await this.getClientsByQuery({}, { withTools: true });
+    const projects = await this.getProjectsByQuery({}, { withTools: true });
+    const clientsReport = clients.getRequestsTongsMonthly().reportAll();
+
+    let tempObj;
+    let proposalNum, contractNum;
+
+    for (let report of clientsReport) {
+      for (let key in report) {
+        if (typeof report[key] === "object") {
+          if (!(report[key] instanceof Date) && report[key].detail !== undefined) {
+
+            proposalNum = 0;
+            contractNum = 0;
+
+            for (let obj of report[key].detail) {
+              tempObj = this.getProjectsByCliidArr(obj.cliidArr, { withTools: true, recycle: projects }).returnAverage().averageReport();
+              obj.proidArr = tempObj.proidArr;
+              obj.proposal = tempObj.proposal;
+              proposalNum += tempObj.proposal;
+              if (obj.value !== 0) {
+                obj.proposalRatio = ratioParsing(tempObj.proposal / obj.value);
+              } else {
+                obj.proposalRatio = ratioParsing(0);
+              }
+              obj.contract = tempObj.contract;
+              contractNum += tempObj.contract;
+              if (obj.value !== 0) {
+                obj.contractRatio = ratioParsing(tempObj.contract / obj.value);
+              } else {
+                obj.contractRatio = ratioParsing(0);
+              }
+              obj.average = tempObj.average;
+              obj.ratioObject = {};
+            }
+
+            report.proposalTotal = proposalNum;
+            report.contactTotal = contractNum;
+
+            for (let obj of report[key].detail) {
+              obj.ratioObject.value = obj.ratio;
+              obj.ratioObject.proposal = ratioParsing(obj.proposal / proposalNum);
+              obj.ratioObject.contract = ratioParsing(obj.contract / contractNum);
+              obj.ratioObject.proposal_inValue = obj.proposalRatio;
+              obj.ratioObject.contract_inValue = obj.contractRatio;
+              delete obj.ratio;
+              delete obj.proposalRatio;
+              delete obj.contractRatio;
+              obj.ratio = JSON.parse(JSON.stringify(obj.ratioObject));
+              delete obj.ratioObject;
+            }
+
+          }
+        }
+      }
+    }
+
+    clientsReport.constructor.prototype.getMatrix = function () {
+      const targetArr = [
+        { name: "금액별", target: "budget" },
+        { name: "지역별", target: "address" },
+        { name: "평수별", target: "pyeong" },
+        { name: "거주중", target: "living" },
+        { name: "계약별", target: "contract" },
+        { name: "이사일", target: "movingDay" },
+      ];
+      const constColumns = [
+        { name: "문의", target: "value" },
+        { name: "제안", target: "proposal" },
+        { name: "진행", target: "contract" },
+        { name: "제안 금액 평균", target: "average.proposal" },
+        { name: "진행 제안 금액 평균", target: "average.contract" },
+        { name: "문의율", target: "ratio.value" },
+        { name: "제안율", target: "ratio.proposal" },
+        { name: "진행률", target: "ratio.contract" },
+        { name: "문의중 제안율", target: "ratio.proposal_inValue" },
+        { name: "문의중 진행율", target: "ratio.contract_inValue" },
+      ];
+      let result = [];
+      let tempArr;
+      let tempColumnArr, finalObj;
+
+      if (this.length > 0) {
+        for (let t = 0; t < targetArr.length; t++) {
+
+          tempArr = [ targetArr[t].name ];
+          for (let i = 0; i < this.length; i++) {
+            for (let j = 0; j < constColumns.length; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+          tempArr = [ "기간" ];
+          for (let i = 0; i < this.length; i++) {
+            tempArr.push(this[i].name);
+            for (let j = 0; j < constColumns.length - 1; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+          tempArr = [ "항목" ];
+          for (let i = 0; i < this.length; i++) {
+            for (let j = 0; j < constColumns.length; j++) {
+              tempArr.push(constColumns[j].name);
+            }
+          }
+          result.push(tempArr);
+
+          for (let i = 0; i < this[0][targetArr[t].target].detail.length; i++) {
+            tempArr = [ this[0][targetArr[t].target].detail[i].name ];
+            for (let j = 0; j < this.length; j++) {
+              for (let k = 0; k < constColumns.length; k++) {
+                tempColumnArr = constColumns[k].target.split('.');
+                finalObj = this[j][targetArr[t].target].detail[i];
+                for (let z of tempColumnArr) {
+                  finalObj = finalObj[z];
+                }
+                tempArr.push(String(finalObj));
+              }
+            }
+            result.push(tempArr);
+          }
+
+
+          tempArr = [ "평균값" ];
+          for (let i = 0; i < this.length; i++) {
+            tempArr.push(this[i][targetArr[t].target].average === null ? "" : this[i][targetArr[t].target].average);
+            for (let j = 0; j < constColumns.length - 1; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+
+          tempArr = [ "문의" ];
+          for (let i = 0; i < this.length; i++) {
+            tempArr.push(String(this[i].total));
+            for (let j = 0; j < constColumns.length - 1; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+          tempArr = [ "제안" ];
+          for (let i = 0; i < this.length; i++) {
+            tempArr.push(String(this[i].proposalTotal));
+            for (let j = 0; j < constColumns.length - 1; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+
+          tempArr = [ "진행" ];
+          for (let i = 0; i < this.length; i++) {
+            tempArr.push(String(this[i].contactTotal));
+            for (let j = 0; j < constColumns.length - 1; j++) {
+              tempArr.push("");
+            }
+          }
+          result.push(tempArr);
+
+          result.push([ "" ]);
+          result.push([ "" ]);
+
+        }
+      } else {
+        result = null;
+      }
+
+      return result
+    }
+
+    return clientsReport;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // GET Contents --------------------------------------------------------------------------------
 
 BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null }) {
@@ -1140,7 +1330,7 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
     }
 
     if (option.withTools) {
-      Contents = Tools.widthTools(Contents);
+      Contents = Tools.withTools(Contents);
     }
 
     if (arr.length > 0) {
@@ -1173,7 +1363,7 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
     }
 
     if (option.withTools) {
-      Contents = Tools.widthTools(Contents);
+      Contents = Tools.withTools(Contents);
     }
 
     if (arr.length > 0) {
@@ -1226,8 +1416,8 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
         contentsArr.push(new Contents(i));
       }
     } else {
-      Contents = Tools.widthTools(Contents);
-      ContentsArr = Tools.widthToolsArr(ContentsArr);
+      Contents = Tools.withTools(Contents);
+      ContentsArr = Tools.withToolsArr(ContentsArr);
       contentsArr = new ContentsArr();
       for (let i of tong) {
         contentsArr.push(new Contents(i));
@@ -1263,8 +1453,8 @@ BackMaker.prototype.getContentsArrAll = async function (option = { withTools: fa
         projectsArr.push(new Contents(i));
       }
     } else {
-      Contents = Tools.widthTools(Contents);
-      ContentsArr = Tools.widthToolsArr(ContentsArr);
+      Contents = Tools.withTools(Contents);
+      ContentsArr = Tools.withToolsArr(ContentsArr);
       projectsArr = new ContentsArr();
       for (let i of tong) {
         projectsArr.push(new Contents(i));
@@ -1295,7 +1485,7 @@ BackMaker.prototype.getLatestContents = async function (option = { withTools: fa
     }
 
     if (option.withTools) {
-      Contents = Tools.widthTools(Contents);
+      Contents = Tools.withTools(Contents);
     }
 
     if (arr.length > 0) {
@@ -1343,8 +1533,8 @@ BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = 
         projectsArr.push(new Contents(i));
       }
     } else {
-      Contents = Tools.widthTools(Contents);
-      ContentsArr = Tools.widthToolsArr(ContentsArr);
+      Contents = Tools.withTools(Contents);
+      ContentsArr = Tools.withToolsArr(ContentsArr);
       projectsArr = new ContentsArr();
       for (let i of tong) {
         projectsArr.push(new Contents(i));
@@ -1555,7 +1745,7 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
     }
 
     if (option.withTools) {
-      Designer = Tools.widthTools(Designer);
+      Designer = Tools.withTools(Designer);
     }
 
     if (arr.length > 0) {
@@ -1608,8 +1798,8 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
         designersArr.push(new Designer(i));
       }
     } else {
-      Designer = Tools.widthTools(Designer);
-      Designers = Tools.widthToolsArr(Designers);
+      Designer = Tools.withTools(Designer);
+      Designers = Tools.withToolsArr(Designers);
       designersArr = new Designers();
       for (let i of tong) {
         designersArr.push(new Designer(i));
@@ -1645,8 +1835,8 @@ BackMaker.prototype.getDesignersAll = async function (option = { withTools: fals
         designersArr.push(new Designer(i));
       }
     } else {
-      Designer = Tools.widthTools(Designer);
-      Designers = Tools.widthToolsArr(Designers);
+      Designer = Tools.withTools(Designer);
+      Designers = Tools.withToolsArr(Designers);
       designersArr = new Designers();
       for (let i of tong) {
         designersArr.push(new Designer(i));
@@ -1677,7 +1867,7 @@ BackMaker.prototype.getLatestDesigner = async function (option = { withTools: fa
     }
 
     if (option.withTools) {
-      Designer = Tools.widthTools(Designer);
+      Designer = Tools.withTools(Designer);
     }
 
     if (arr.length > 0) {
@@ -1725,8 +1915,8 @@ BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { 
         designersArr.push(new Designer(i));
       }
     } else {
-      Designer = Tools.widthTools(Designer);
-      Designers = Tools.widthToolsArr(Designers);
+      Designer = Tools.withTools(Designer);
+      Designers = Tools.withToolsArr(Designers);
       designersArr = new Designers();
       for (let i of tong) {
         designersArr.push(new Designer(i));
@@ -1984,7 +2174,7 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
     }
 
     if (option.withTools) {
-      Project = Tools.widthTools(Project);
+      Project = Tools.withTools(Project);
     }
 
     if (arr.length > 0) {
@@ -2037,8 +2227,8 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
         projectsArr.push(new Project(i));
       }
     } else {
-      Project = Tools.widthTools(Project);
-      Projects = Tools.widthToolsArr(Projects);
+      Project = Tools.withTools(Project);
+      Projects = Tools.withToolsArr(Projects);
       projectsArr = new Projects();
       for (let i of tong) {
         projectsArr.push(new Project(i));
@@ -2074,8 +2264,8 @@ BackMaker.prototype.getProjectsAll = async function (option = { withTools: false
         projectsArr.push(new Project(i));
       }
     } else {
-      Project = Tools.widthTools(Project);
-      Projects = Tools.widthToolsArr(Projects);
+      Project = Tools.withTools(Project);
+      Projects = Tools.withToolsArr(Projects);
       projectsArr = new Projects();
       for (let i of tong) {
         projectsArr.push(new Project(i));
@@ -2106,7 +2296,7 @@ BackMaker.prototype.getLatestProject = async function (option = { withTools: fal
     }
 
     if (option.withTools) {
-      Project = Tools.widthTools(Project);
+      Project = Tools.withTools(Project);
     }
 
     if (arr.length > 0) {
@@ -2154,8 +2344,8 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
         projectsArr.push(new Project(i));
       }
     } else {
-      Project = Tools.widthTools(Project);
-      Projects = Tools.widthToolsArr(Projects);
+      Project = Tools.withTools(Project);
+      Projects = Tools.withToolsArr(Projects);
       projectsArr = new Projects();
       for (let i of tong) {
         projectsArr.push(new Project(i));
@@ -2166,6 +2356,48 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
   } catch (e) {
     console.log(e);
   }
+}
+
+BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null }) {
+  const instance = this;
+  this.button = "project";
+  let { Project, Projects, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
+  let projects;
+
+  if (option.recycle !== undefined && option.recycle !== null) {
+    projects = option.recycle;
+    if (option.withTools === true) {
+      Projects = Tools.withToolsArr(Projects);
+    }
+    let result = new Projects();
+    for (let p of projects) {
+      if (cliidArr.includes(p.cliid)) {
+        result.push(p);
+      }
+    }
+    return result;
+
+  } else {
+    const { mongo, mongoinfo } = this.mother;
+    const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    return new Promise(function (resolve, reject) {
+      instance.getProjectsByQuery({}, option).then(function (projects) {
+        if (option.withTools === true) {
+          Projects = Tools.withToolsArr(Projects);
+        }
+        let result = new Projects();
+        for (let p of projects) {
+          if (cliidArr.includes(p.cliid)) {
+            result.push(p);
+          }
+        }
+        resolve(result);
+      }).catch(function (e) {
+        reject(e);
+      });
+    });
+  }
+
 }
 
 BackMaker.prototype.updateProject = async function (queryArr, option = { selfMongo: null }) {
@@ -2440,7 +2672,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
     }
 
     if (option.withTools) {
-      Aspirant = Tools.widthTools(Aspirant);
+      Aspirant = Tools.withTools(Aspirant);
     }
 
     if (arr.length > 0) {
@@ -2523,8 +2755,8 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
         aspirantsArr.push(new Aspirant(i));
       }
     } else {
-      Aspirant = Tools.widthTools(Aspirant);
-      Aspirants = Tools.widthToolsArr(Aspirants);
+      Aspirant = Tools.withTools(Aspirant);
+      Aspirants = Tools.withToolsArr(Aspirants);
       aspirantsArr = new Aspirants();
       for (let i of tong) {
         aspirantsArr.push(new Aspirant(i));

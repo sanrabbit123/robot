@@ -1283,8 +1283,7 @@ class DevContext extends Array {
 
 
 
-      const reflection = new MongoReflection();
-      console.log(await reflection.showTables());
+      // const reflection = new MongoReflection();
       // await reflection.mongoMigration();
 
       // console.log(await reflection.mysqlQuery(`SELECT * FROM test;`));
@@ -1392,20 +1391,52 @@ class DevContext extends Array {
 
       */
 
+      let clients, tong, tongChild;
+      let num0, num1;
 
 
-      // let client0, client1, client2;
-      // let searchQuery, num0, num1;
+      // const searchTargets = [];
+      // for (let i = 3; i < 13; i++) {
+      //   searchTargets.push({
+      //     name: "19년 " + String(i) + "월",
+      //     range: [ new Date(2019, i - 1, 1), new Date(((i !== 12) ? 2019 : 2020), ((i !== 12) ? i : 0), 1) ]
+      //   })
+      // }
+      // for (let i = 1; i < 13; i++) {
+      //   searchTargets.push({
+      //     name: "20년 " + String(i) + "월",
+      //     range: [ new Date(2020, i - 1, 1), new Date(((i !== 12) ? 2020 : 2021), ((i !== 12) ? i : 0), 1) ]
+      //   })
+      // }
+      // for (let i = 1; i < 2; i++) {
+      //   searchTargets.push({
+      //     name: "21년 " + String(i) + "월",
+      //     range: [ new Date(2021, i - 1, 1), new Date(((i !== 12) ? 2021 : 2022), ((i !== 12) ? i : 0), 1) ]
+      //   })
+      // }
+
+      // const projects = await back.getProjectsByQuery({}, { withTools: true });
       //
-      // let matrix = [
-      //   [ new Date(2020, 7, 1), new Date(2020, 8, 1) ],
-      //   [ new Date(2020, 8, 1), new Date(2020, 9, 1) ],
-      //   [ new Date(2020, 9, 1), new Date(2020, 10, 1) ],
-      //   [ new Date(2020, 10, 1), new Date(2020, 11, 1) ],
-      //   [ new Date(2020, 11, 1), new Date(2021, 0, 1) ],
-      //   [ new Date(2021, 0, 1), new Date(2021, 1, 1) ],
-      // ]
       //
+      // console.log(back.getProjectsByCliidArr([ "c1904_aa07s", "c2011_aa36s", "c2011_aa41s", "c2011_aa42s" ], { withTools: true, recycle: projects }).returnAverage().averageReport());
+
+
+      // const sheets = new GoogleSheet();
+      // const report = await back.getClientReport();
+      // console.log(report[0].budget.detail);
+      // await sheets.update_value_inPython("14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM", "", report.getMatrix(), [ 0, 0 ]);
+
+
+
+      // for (let { name, range } of searchTargets) {
+      //   tongChild = tong.search([ range[0], range[1] ]);
+      //   console.log(tongChild.getAddress());
+      //   console.log(`================================================================================================================================`)
+      //   console.log(`================================================================================================================================`)
+      // }
+
+
+
       // for (let arr of matrix) {
       //   searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[1] } } } };
       //   client0 = await back.getClientsByQuery(searchQuery);

@@ -14,7 +14,7 @@ class Designers extends Array {
 
 }
 
-const widthTools = function (Designer) {
+const withTools = function (Designer) {
 
   Designer.prototype.flatDeath = function () {
     const designer_raw = this.toNormal();
@@ -122,7 +122,7 @@ const widthTools = function (Designer) {
   return Designer;
 }
 
-const widthToolsArr = function (Designers) {
+const withToolsArr = function (Designers) {
 
   Designers.prototype.flatDeath = function () {
     let tong, tempArr;
@@ -140,7 +140,7 @@ const widthToolsArr = function (Designers) {
 }
 
 const Tools = function () {}
-Tools.widthTools = widthTools;
-Tools.widthToolsArr = widthToolsArr;
+Tools.withTools = withTools;
+Tools.withToolsArr = withToolsArr;
 
 module.exports = { Designer, Designers, Tools };
