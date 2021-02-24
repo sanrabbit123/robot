@@ -119,6 +119,25 @@ const withTools = function (Designer) {
     return tong;
   }
 
+  Designer.prototype.dimensionSqueeze = function () {
+    const tong = this.flatDeath();
+    let result, tempObj;
+
+    result = [];
+    for (let { standard, info } of tong) {
+      tempObj = {};
+      for (let i in standard) {
+        tempObj[i] = standard[i];
+      }
+      for (let i in info) {
+        tempObj[i] = info[i];
+      }
+      result.push(tempObj);
+    }
+
+    return result;
+  }
+
   return Designer;
 }
 
@@ -134,6 +153,137 @@ const withToolsArr = function (Designers) {
       }
     }
     return tong;
+  }
+
+  Designers.prototype.dimensionSqueeze = function () {
+    const TABLE_NAME = "designer";
+    const LONG_TARGETS = [];
+    class SqlModel {
+      constructor(sample) {
+        for (let i in sample) {
+          if (typeof sample[i] === "string") {
+            this[i] = "VARCHAR(255)";
+          } else if (typeof sample[i] === "number") {
+            this[i] = "INT(11)";
+          } else if (typeof sample[i] === "boolean") {
+            this[i] = "INT(11)";
+          } else {
+            this[i] = "VARCHAR(255)";
+          }
+          if (LONG_TARGETS.includes(i)) {
+            this[i] = "TEXT";
+          }
+        }
+      }
+
+      getName() {
+        return TABLE_NAME;
+      }
+
+      getCreateSql() {
+        let sql = "CREATE TABLE " + this.getName() + " (";
+        sql += "id INT(11) NOT NULL AUTO_INCREMENT,";
+        sql += " ";
+        for (let i in this) {
+          sql += i;
+          sql += " ";
+          sql += this[i];
+          sql += ", ";
+        }
+        sql += "PRIMARY KEY (id));";
+        return sql;
+      }
+
+      getDropSql() {
+        let sql = "DROP TABLE " + this.getName() + ";";
+        return sql;
+      }
+
+    }
+    class SqlTong extends Array {
+      getName() {
+        return TABLE_NAME;
+      }
+
+      getInsertSql() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.getInsertSql());
+        }
+        return arr;
+      }
+
+    }
+    class SqlTongFactor {
+      constructor(sample) {
+        for (let i in sample) {
+          if (typeof sample[i] === "string") {
+            this[i] = sample[i];
+          } else if (typeof sample[i] === "number") {
+            this[i] = sample[i];
+          } else if (typeof sample[i] === "boolean") {
+            if (sample[i]) {
+              this[i] = 1;
+            } else {
+              this[i] = 0;
+            }
+          } else {
+            this[i] = JSON.stringify(sample[i]);
+          }
+        }
+      }
+
+      getName() {
+        return TABLE_NAME;
+      }
+
+      getInsertSql() {
+        let sql = "INSERT INTO " + this.getName() + " (";
+        for (let i in this) {
+          sql += i;
+          sql += ",";
+        }
+
+        sql = sql.slice(0, -1);
+        sql += ") VALUES (";
+
+        for (let i in this) {
+          if (typeof this[i] === "number") {
+            sql += this[i];
+          } else {
+            sql += "'";
+            sql += this[i].replace(/'/g, '"');
+            sql += "'";
+          }
+          sql += ",";
+        }
+
+        sql = sql.slice(0, -1);
+        sql += ");";
+
+        return sql;
+      }
+    }
+
+    let tong, tempArr;
+    let sample, model;
+
+    tong = new SqlTong();
+
+    for (let i of this) {
+      tempArr = i.dimensionSqueeze();
+      for (let j of tempArr) {
+        tong.push(new SqlTongFactor(j));
+      }
+    }
+
+    if (tong.length > 0) {
+      sample = tong[0];
+      model = new SqlModel(sample);
+      return { model, data: tong };
+    } else {
+      return null;
+    }
   }
 
   return Designers;

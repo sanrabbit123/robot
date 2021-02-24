@@ -1391,9 +1391,6 @@ class DevContext extends Array {
 
       */
 
-      let clients, tong, tongChild;
-      let num0, num1;
-
 
       // const searchTargets = [];
       // for (let i = 3; i < 13; i++) {
@@ -1425,6 +1422,13 @@ class DevContext extends Array {
       // const report = await back.getClientReport();
       // console.log(report[0].budget.detail);
       // await sheets.update_value_inPython("14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM", "", report.getMatrix(), [ 0, 0 ]);
+
+
+      const contents = await back.getAspirantsByQuery({}, { withTools: true });
+      const { model, data } = contents.dimensionSqueeze();
+
+      console.log(data.getInsertSql());
+      console.log(model.getCreateSql());
 
 
 
