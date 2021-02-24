@@ -144,13 +144,10 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
   }
 }
 
-MongoReflection.prototype.totalReflection = async function (to = "local") {
+MongoReflection.prototype.mongoReflection = async function (to = "local") {
   const instance = this;
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   try {
-
-
-    //all mongoDB reflection
     const allDB = BackMaker.allDatabaseNames;
     for (let i = 0; i < allDB.length; i++) {
       console.log(`${allDB[i]} reflection start ==================================================`);
@@ -158,7 +155,14 @@ MongoReflection.prototype.totalReflection = async function (to = "local") {
       console.log(`from: ${allDB[i]} => to: ${to} reflection success`);
       console.log(``);
     }
+  } catch (e) {
+    console.log(e);
+  }
+}
 
+MongoReflection.prototype.mysqlReflection = async function (to = "local") {
+  const instance = this;
+  try {
 
     //flat death to 1:1 json
     console.log(`mariaDB flat reflection start ==================================================`);
@@ -177,6 +181,12 @@ MongoReflection.prototype.totalReflection = async function (to = "local") {
 
     const contentsArr = await back.getContentsArrByQuery({}, { withTools: true });
     const { model: contentsArrModel, data: contentsArrData } = contentsArr.dimensionSqueeze();
+
+    const tables = await this.showTables();
+
+    if (tables.includes("client")) {
+      clientsModel.getDropSql();
+    }
 
 
     //total delete in mysql
