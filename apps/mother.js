@@ -1504,4 +1504,49 @@ Mother.prototype.decryptoHash = function (password, hash) {
   });
 }
 
+Mother.prototype.mysqlQuery = function (query, option = { local: true }) {
+  const mysql = require('mysql2');
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const mysqlStandard = ADDRESS["frontinfo"];
+  const host = (option.local === true) ? "localhost" : ADDRESS["frontinfo"]["host"];
+  const { user, password, database } = mysqlStandard;
+  const connection = mysql.createConnection({ host, user, password, database });
+  let tong = {};
+  if (Array.isArray(query)) {
+    let promiseList;
+    promiseList = [];
+    for (let i of query) {
+      promiseList.push(connection.promise().query(i));
+    }
+    return new Promise(function (resolve, reject) {
+      Promise.all(promiseList).then((values) => {
+        tong = values;
+        connection.end();
+        resolve(tong);
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  } else {
+    return new Promise(function (resolve, reject) {
+      connection.promise().query(query).then(function (response) {
+        tong = response;
+      }).then(function () {
+        connection.end();
+        if (Array.isArray(tong)) {
+          if (tong.length > 0) {
+            resolve(tong[0]);
+          } else {
+            resolve("done");
+          }
+        } else {
+          resolve("done");
+        }
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  }
+}
+
 module.exports = Mother;

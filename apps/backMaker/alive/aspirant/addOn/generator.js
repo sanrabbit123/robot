@@ -226,6 +226,9 @@ const withTools = function (Aspirant) {
     if (/^__link__/.test(tong.folderId)) {
       tong.folderId = tong.folderId.slice(8);
     }
+    tong.aspirantBinary = tong.binary;
+    delete tong.binary;
+    
     result.push(tong);
 
     return result;

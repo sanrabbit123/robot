@@ -121,6 +121,8 @@ const withTools = function (Contents) {
       for (let i in info) {
         tempObj[i] = info[i];
       }
+      tempObj.reviewOrder = tempObj.order;
+      delete tempObj.order;
       result.push(tempObj);
     }
 

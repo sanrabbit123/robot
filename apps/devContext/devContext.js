@@ -1426,7 +1426,7 @@ class DevContext extends Array {
       // await sheets.update_value_inPython("14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM", "", report.getMatrix(), [ 0, 0 ]);
 
 
-      const contents = await back.getAspirantsByQuery({}, { withTools: true });
+      const contents = await back.getContentsArrByQuery({}, { withTools: true, fromLocal: true });
       const { model, data } = contents.dimensionSqueeze();
 
       console.log(data.getInsertSql());

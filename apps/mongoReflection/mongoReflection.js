@@ -12,53 +12,12 @@ const MongoReflection = function () {
   this.dropExceptionList = [ "googleAnalytics_total" ];
 }
 
-MongoReflection.prototype.mysqlQuery = function (query) {
-  const mysql = require('mysql2');
-  const mysqlStandard = this.address["frontinfo"];
-  const host = "localhost";
-  const { user, password, database } = mysqlStandard;
-  const connection = mysql.createConnection({ host, user, password, database });
-  let tong = {};
-  if (Array.isArray(query)) {
-    let promiseList;
-    promiseList = [];
-    for (let i of query) {
-      promiseList.push(connection.promise().query(i));
-    }
-    return new Promise(function (resolve, reject) {
-      Promise.all(promiseList).then((values) => {
-        resolve("done");
-      }).catch(function (err) {
-        reject(err);
-      });
-    });
-  } else {
-    return new Promise(function (resolve, reject) {
-      connection.promise().query(query).then(function (response) {
-        tong = response;
-      }).then(function () {
-        connection.end();
-        if (Array.isArray(tong)) {
-          if (tong.length > 0) {
-            resolve(tong[0]);
-          } else {
-            resolve("done");
-          }
-        } else {
-          resolve("done");
-        }
-      }).catch(function (err) {
-        reject(err);
-      });
-    });
-  }
-}
-
 MongoReflection.prototype.showTables = async function () {
   const instance = this;
+  const { mysqlQuery } = this.mother;
   try {
     let tableArr = [];
-    const raw = await this.mysqlQuery("SHOW TABLES;");
+    const raw = await mysqlQuery("SHOW TABLES;");
     for (let i of raw) {
       tableArr.push(Object.values(i)[0]);
     }
@@ -180,6 +139,8 @@ MongoReflection.prototype.mongoReflection = async function (to = "local") {
 
 MongoReflection.prototype.mysqlReflection = async function (to = "local") {
   const instance = this;
+  const { mysqlQuery } = this.mother;
+  const back = this.back;
   try {
 
     let sqlList, alreadyTables;
@@ -221,7 +182,7 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
       console.log(`contents table in mysql delete`);
     }
 
-    sqlList.push(contentsArrModel.getCreateSql());
+    sqlList.push(clientsModel.getCreateSql());
     sqlList.push(designersModel.getCreateSql());
     sqlList.push(projectsModel.getCreateSql());
     sqlList.push(aspirantsModel.getCreateSql());
@@ -258,7 +219,7 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
     console.log(`insert contents query`);
 
     //execute
-    await this.mysqlQuery(sqlList);
+    await mysqlQuery(sqlList);
 
   } catch (e) {
     console.log(e);
