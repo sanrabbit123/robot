@@ -23,6 +23,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
     if (!thisDirList.includes("log")) {
       shell.exec(`mkdir ${shellLink(this.dir)}/log`);
     }
+    const thisLogDirList = await fileSystem(`readDir`, [ this.dir + "/log" ]);
+    if (!thisDirList.includes("latest.json")) {
+      shell.exec(`touch ${shellLink(this.dir)}/log/latest.json`);
+    }
     console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString;
@@ -123,6 +127,7 @@ DataConsole.prototype.connect = async function () {
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
     const router = new DataRouter(MONGOC);
+    await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);
@@ -146,6 +151,7 @@ DataConsole.prototype.connect = async function () {
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      console.log(``);
     });
 
   } catch (e) {

@@ -1,5 +1,6 @@
 const DataRouter = function (MONGOC) {
   this.dir = process.cwd() + "/apps/dataConsole";
+  this.module = this.dir + "/module";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -17,6 +18,7 @@ const DataRouter = function (MONGOC) {
   }
   this.pythonApp = this.dir + "/python/app.py";
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.members = {};
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
@@ -480,6 +482,45 @@ DataRouter.prototype.rou_get_Address = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_ServerSent = function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const SseStream = require(`${this.module}/sseStream.js`);
+  let obj = {};
+  obj.link = "/sse/get";
+  obj.func = async function (req, res) {
+    try {
+      console.log(`\x1b[36m%s\x1b[0m`, `new connection`);
+
+      const sseStream = new SseStream(req);
+      let log_past, log_new;
+
+      sseStream.pipe(res);
+
+      const pusher = setInterval(async function () {
+        try {
+          log_new = await fileSystem(`readString`, [ instance.dir + "/log/latest.json" ]);
+          if (log_new !== log_past) {
+            sseStream.write({ event: 'updateTong', data: log_new });
+          }
+          log_past = log_new;
+        } catch (e) {
+          console.log(e);
+        }
+      }, 1000);
+
+      res.on('close', function () {
+        clearInterval(pusher);
+        sseStream.unpipe(res);
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //POST ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_post_getDocuments = function () {
@@ -706,6 +747,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   obj.func = async function (req, res) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user } = req.body;
+      let thisPath;
       let map;
       let whereQuery, updateQuery;
       let message;
@@ -716,14 +758,19 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       let userArr;
       let today;
       let noUpdate;
+      let updateTong;
 
       if (req.url === "/updateClient") {
+        thisPath = "client";
         map = instance.patch.clientMap();
       } else if (req.url === "/updateDesigner") {
+        thisPath = "designer";
         map = instance.patch.designerMap();
       } else if (req.url === "/updateProject") {
+        thisPath = "project";
         map = instance.patch.projectMap();
       } else if (req.url === "/updateContents") {
+        thisPath = "contents";
         map = instance.patch.contentsMap();
       }
 
@@ -824,11 +871,23 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         }
 
         //update log
+        const members = instance.members;
+        const logDir = `${instance.dir}/log`;
+        let thisPerson, fileTarget;
+
         userArr = user.split("__split__");
         today = new Date();
-        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
+
+        for (let { name, email } of members) {
+          if (email.includes(userArr[1])) {
+            thisPerson = name;
+            break;
+          }
+        }
+
+        updateTong = {
           user: {
-            name: userArr[0],
+            name: thisPerson,
             email: userArr[1]
           },
           where: thisId,
@@ -838,39 +897,27 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             pastValue: pastFinalValue
           },
           date: today
-        }, { local: null, console: true, selfMongo: null }).then(function () {
-          pythonExecute(instance.pythonApp, [ "getMembers" ], {}).then(function (membersArrRaw) {
-            const { members } = JSON.parse(membersArrRaw);
-            const logDir = `${instance.dir}/log`;
-            let thisPerson;
-            for (let { name, email } of members) {
-              if (email.includes(userArr[1])) {
-                thisPerson = name;
-                break;
-              }
-            }
-            fileSystem(`readDir`, [ logDir ]).then(function (dir) {
-              let target = null;
-              for (let fileName of dir) {
-                if ((new RegExp("^" + thisId)).test(fileName)) {
-                  target = fileName;
-                }
-              }
-              if (target !== null) {
-                shell.exec(`rm -rf ${shellLink(logDir)}/${target}`);
-              }
-              fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]).catch(function (err) {
-                throw new Error(err);
-              });
-            }).catch(function (err) {
-              throw new Error(err);
-            });
-          }).catch(function (err) {
-            throw new Error(err);
-          });
-        }).catch(function (err) {
-          throw new Error(err);
+        };
+
+        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { local: null, console: true, selfMongo: null }).catch(function (e) {
+          throw new Error(e);
         });
+
+        await fileSystem(`write`, [ logDir + "/latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
+
+        const dir = await fileSystem(`readDir`, [ logDir ]);
+        fileTarget = null;
+
+        for (let fileName of dir) {
+          if ((new RegExp("^" + thisId)).test(fileName)) {
+            fileTarget = fileName;
+          }
+        }
+        if (fileTarget !== null) {
+          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+        }
+
+        await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
       }
 
       res.set("Content-Type", "application/json");
@@ -2556,6 +2603,17 @@ DataRouter.prototype.rou_post_pasingLatestLog = function () {
 }
 
 //ROUTING ----------------------------------------------------------------------
+
+DataRouter.prototype.setMembers = async function () {
+  const instance = this;
+  const { pythonExecute } = this.mother;
+  try {
+    const { members } = JSON.parse(await pythonExecute(this.pythonApp, [ "getMembers" ], {}));
+    this.members = members;
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 DataRouter.prototype.getAll = function () {
   let result, result_arr;
