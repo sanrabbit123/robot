@@ -9,6 +9,7 @@ const MongoReflection = function () {
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/mongoReflection";
   this.servers = mongoTargets;
+  this.dropExceptionList = [ "googleAnalytics_total" ];
 }
 
 MongoReflection.prototype.mysqlQuery = function (query) {
@@ -18,24 +19,39 @@ MongoReflection.prototype.mysqlQuery = function (query) {
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });
   let tong = {};
-  return new Promise(function (resolve, reject) {
-    connection.promise().query(query).then(function (response) {
-      tong = response;
-    }).then(function () {
-      connection.end();
-      if (Array.isArray(tong)) {
-        if (tong.length > 0) {
-          resolve(tong[0]);
+  if (Array.isArray(query)) {
+    let promiseList;
+    promiseList = [];
+    for (let i of query) {
+      promiseList.push(connection.promise().query(i));
+    }
+    return new Promise(function (resolve, reject) {
+      Promise.all(promiseList).then((values) => {
+        resolve("done");
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  } else {
+    return new Promise(function (resolve, reject) {
+      connection.promise().query(query).then(function (response) {
+        tong = response;
+      }).then(function () {
+        connection.end();
+        if (Array.isArray(tong)) {
+          if (tong.length > 0) {
+            resolve(tong[0]);
+          } else {
+            resolve("done");
+          }
         } else {
           resolve("done");
         }
-      } else {
-        resolve("done");
-      }
-    }).catch(function (err) {
-      reject(err);
+      }).catch(function (err) {
+        reject(err);
+      });
     });
-  });
+  }
 }
 
 MongoReflection.prototype.showTables = async function () {
@@ -124,7 +140,9 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
 
     if (option.drop === true || option.drop === undefined) {
       for (let i of collections_local) {
-        await MONGOC_TO.db(dbName).collection(i.name).drop();
+        if (!this.dropExceptionList.includes(i.name)) {
+          await MONGOC_TO.db(dbName).collection(i.name).drop();
+        }
       }
     }
 
@@ -164,90 +182,83 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
   const instance = this;
   try {
 
-    //flat death to 1:1 json
+    let sqlList, alreadyTables;
+
     console.log(`mariaDB flat reflection start ==================================================`);
 
-    const clients = await back.getClientsByQuery({}, { withTools: true });
+    const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
     const { model: clientsModel, data: clientsData } = clients.dimensionSqueeze();
-
-    const designers = await back.getDesignersByQuery({}, { withTools: true });
+    const designers = await back.getDesignersByQuery({}, { withTools: true, fromLocal: true });
     const { model: designersModel, data: designersData } = designers.dimensionSqueeze();
-
-    const projects = await back.getProjectsByQuery({}, { withTools: true });
+    const projects = await back.getProjectsByQuery({}, { withTools: true, fromLocal: true });
     const { model: projectsModel, data: projectsData } = projects.dimensionSqueeze();
-
-    const aspirants = await back.getAspirantsByQuery({}, { withTools: true });
+    const aspirants = await back.getAspirantsByQuery({}, { withTools: true, fromLocal: true });
     const { model: aspirantsModel, data: aspirantsData } = aspirants.dimensionSqueeze();
-
-    const contentsArr = await back.getContentsArrByQuery({}, { withTools: true });
+    const contentsArr = await back.getContentsArrByQuery({}, { withTools: true, fromLocal: true });
     const { model: contentsArrModel, data: contentsArrData } = contentsArr.dimensionSqueeze();
 
-    const tables = await this.showTables();
+    alreadyTables = await this.showTables();
+    sqlList = [];
 
-    if (tables.includes("client")) {
-      clientsModel.getDropSql();
+    if (alreadyTables.includes("client")) {
+      sqlList.push(clientsModel.getDropSql());
+      console.log(`client table in mysql delete`);
+    }
+    if (alreadyTables.includes("designer")) {
+      sqlList.push(designersModel.getDropSql());
+      console.log(`designer table in mysql delete`);
+    }
+    if (alreadyTables.includes("project")) {
+      sqlList.push(projectsModel.getDropSql());
+      console.log(`project table in mysql delete`);
+    }
+    if (alreadyTables.includes("aspirant")) {
+      sqlList.push(aspirantsModel.getDropSql());
+      console.log(`aspirant table in mysql delete`);
+    }
+    if (alreadyTables.includes("contents")) {
+      sqlList.push(contentsArrModel.getDropSql());
+      console.log(`contents table in mysql delete`);
     }
 
-
-    //total delete in mysql
-
-    clientsModel.toDeleteQuery();
-    //execute
-    console.log(`client table in mysql delete`);
-
-    designersModel.toDeleteQuery();
-    //execute
-    console.log(`designer table in mysql delete`);
-
-    projectsModel.toDeleteQuery();
-    //execute
-    console.log(`project table in mysql delete`);
-
-    aspirantsModel.toDeleteQuery();
-    //execute
-    console.log(`aspirant table in mysql delete`);
-
-    contentsArrModel.toDeleteQuery();
-    //execute
-    console.log(`contents table in mysql delete`);
-
-
-    //create table query
-    clientsModel.toCreateQuery();
-    designersModel.toCreateQuery();
-    projectsModel.toCreateQuery();
-    aspirantsModel.toCreateQuery();
-    contentsArrModel.toCreateQuery();
-
+    sqlList.push(contentsArrModel.getCreateSql());
+    sqlList.push(designersModel.getCreateSql());
+    sqlList.push(projectsModel.getCreateSql());
+    sqlList.push(aspirantsModel.getCreateSql());
+    sqlList.push(contentsArrModel.getCreateSql());
+    console.log(`create tables`);
 
     //insert query
     let tempArr;
 
-    tempArr = clientsData.convertInsertQueries();
+    tempArr = clientsData.getInsertSql();
     for (let insertQuery of tempArr) {
-      //execute
+      sqlList.push(insertQuery);
     }
-    tempArr = designersData.convertInsertQueries();
+    console.log(`insert client query`);
+    tempArr = designersData.getInsertSql();
     for (let insertQuery of tempArr) {
-      //execute
+      sqlList.push(insertQuery);
     }
-    tempArr = projectsData.convertInsertQueries();
+    console.log(`insert designer query`);
+    tempArr = projectsData.getInsertSql();
     for (let insertQuery of tempArr) {
-      //execute
+      sqlList.push(insertQuery);
     }
-    tempArr = aspirantsData.convertInsertQueries();
+    console.log(`insert project query`);
+    tempArr = aspirantsData.getInsertSql();
     for (let insertQuery of tempArr) {
-      //execute
+      sqlList.push(insertQuery);
     }
-    tempArr = contentsArrData.convertInsertQueries();
+    console.log(`insert aspirant query`);
+    tempArr = contentsArrData.getInsertSql();
     for (let insertQuery of tempArr) {
-      //execute
+      sqlList.push(insertQuery);
     }
+    console.log(`insert contents query`);
 
-
-    //insert front DB
-
-
+    //execute
+    await this.mysqlQuery(sqlList);
 
   } catch (e) {
     console.log(e);

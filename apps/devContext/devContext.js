@@ -1285,6 +1285,8 @@ class DevContext extends Array {
 
       // const reflection = new MongoReflection();
       // await reflection.mongoMigration();
+      // await reflection.mongoReflection();
+      // await reflection.mysqlReflection();
 
       // console.log(await reflection.mysqlQuery(`SELECT * FROM test;`));
 

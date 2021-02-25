@@ -697,10 +697,15 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
   }
 }
 
-BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
   this.button = "client";
   let { Client, Clients } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
@@ -1378,10 +1383,15 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
   }
 }
 
-BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
   this.button = "contents";
   let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
   try {
@@ -1760,10 +1770,15 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
   }
 }
 
-BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
   this.button = "designer";
   let { Designer, Designers, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
@@ -2189,10 +2204,15 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
   }
 }
 
-BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
   this.button = "project";
   let { Project, Projects, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
@@ -2687,10 +2707,15 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
   }
 }
 
-BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null }) {
+BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null }) {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
   this.button = "aspirant";
   let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${this.button}/addOn/generator.js`);
   try {
