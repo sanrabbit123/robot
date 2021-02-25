@@ -417,6 +417,10 @@ DataPatch.prototype.clientStandard = function () {
       name: "채널 등록",
       width: 100,
     },
+    service: {
+      name: "예상 서비스",
+      width: 180,
+    },
     next: {
       name: "전화 예정",
       width: 100,
@@ -552,6 +556,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "채널 등록", target: "kakao" },
       { name: "현장 사진", target: "spacePicture" },
       { name: "선호 사진", target: "preferPicture" },
+      { name: "예상 서비스", target: "service" },
       { name: "문의일", target: "timeline" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
@@ -565,7 +570,6 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "입주 예정일", target: "movein" },
       { name: "가족 구성원", target: "family" },
       { name: "요청 사항", target: "comment" },
-      { name: "유입 채널", target: "channel" },
     ],
   };
 
@@ -1133,6 +1137,323 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const serviceToObject = function (value, pastValue, vaildMode) {
+    let obj;
+    let temp;
+    let boo = false;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    obj = {};
+
+    if (/홈퍼/g.test(value)) {
+      obj.serid = "s2011_aa01s";
+    } else if (/홈스/g.test(value)) {
+      obj.serid = "s2011_aa02s";
+    } else if (/토탈/g.test(value)) {
+      obj.serid = "s2011_aa03s";
+    }
+
+    if (/mini/gi.test(value)) {
+      obj.xValue = 'M';
+    } else if (/basic/gi.test(value)) {
+      obj.xValue = 'B';
+    } else if (/premium/gi.test(value)) {
+      obj.xValue = 'P';
+    }
+
+    if (/온라인/gi.test(value)) {
+      obj.online = true;
+    } else {
+      obj.online = false;
+    }
+
+    return obj;
+  };
+  const serviceInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let valuesTong;
+    let originalValue;
+    let online;
+
+    originalValue = input.value;
+    if (/온라인/gi.test(originalValue)) {
+      online = "온라인";
+    } else {
+      online = "오프라인";
+    }
+    valuesTong = [
+      [ online, "홈퍼니싱", "mini" ],
+      [ online, "홈스타일링", "basic" ],
+      [ online, "토탈 스타일링", "premium" ],
+    ];
+
+    endEvent = function (e) {
+      let onoffLine;
+      let inputs0 = document.querySelectorAll(".inputTargetOne");
+      let inputs1 = document.querySelectorAll(".inputTargetTwo");
+      let totalString = '';
+
+      if (document.querySelector(".inputTargetZero").textContent === "온라인") {
+        onoffLine = "온라인";
+      } else {
+        onoffLine = "오프라인";
+      }
+
+      for (let i = 0; i < inputs0.length; i++) {
+        if (inputs0[i].getAttribute("switch") === "on") {
+          totalString += inputs0[i].getAttribute("target");
+          totalString += ' ';
+        }
+      }
+      for (let i = 0; i < inputs1.length; i++) {
+        if (inputs1[i].getAttribute("switch") === "on") {
+          totalString += inputs1[i].getAttribute("target");
+        }
+      }
+
+      totalString = onoffLine + " " + totalString;
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = totalString;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
+    if (width === '' || Number.isNaN(width)) {
+      width = "300";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      animation: "fadeuplite 0.3s ease forwards",
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [
+      {
+        position: "absolute",
+        left: String(0) + ea,
+        top: String(0) + ea,
+        width: "28%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        left: "calc(28% + " + String(Math.round((height) / 4) * 1) + ea + ")",
+        top: String(0) + ea,
+        width: "40%",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+      {
+        position: "absolute",
+        right: String(0) + ea,
+        top: String(0) + ea,
+        width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      },
+    ];
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(100) + ea,
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: GeneralJs.isMac() ? "15%" : "22%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < 3; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget" + ([ "Zero", "One", "Two" ])[z]);
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget" + ([ "Zero", "One", "Two" ])[z]);
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.setAttribute("target", valuesTong[i][z]);
+        input_clone.textContent = valuesTong[i][z];
+
+        if (z !== 0) {
+          if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
+            input_clone.setAttribute("switch", "on");
+            button_clone2.style.background = "#ececec";
+            input_clone.style.color = "#2fa678";
+          } else {
+            input_clone.setAttribute("switch", "off");
+          }
+          input_clone.addEventListener("click", function (e) {
+            const zeroClass = "inputTargetZero";
+            const zIndex = z;
+            const thisClass = this.className;
+            const divTargets = document.querySelectorAll("." + thisClass.replace(/^input/, "div"));
+            const inputTargets = document.querySelectorAll("." + thisClass);
+            const zeroDivTargets = document.querySelectorAll("." + zeroClass.replace(/^input/, "div"));
+            const zeroInputTargets = document.querySelectorAll("." + zeroClass);
+
+            for (let dom of divTargets) {
+              dom.style.background = "#2fa678";
+            }
+
+            for (let dom of inputTargets) {
+              dom.style.color = "#ffffff";
+              dom.setAttribute("switch", "off");
+            }
+
+            if (zIndex === 1) {
+              for (let dom of zeroDivTargets) {
+                dom.style.background = "#2fa678";
+              }
+
+              for (let dom of zeroInputTargets) {
+                dom.style.color = "#ffffff";
+                dom.setAttribute("switch", "off");
+              }
+            }
+
+            this.parentElement.style.background = "#ececec";
+            this.style.color = "#2fa678";
+
+            if (zIndex === 1) {
+              this.parentElement.previousElementSibling.style.background = "#ececec";
+              this.parentElement.previousElementSibling.children[0].style.color = "#2fa678";
+            }
+
+            this.setAttribute("switch", "on");
+          });
+        } else {
+          if ((new RegExp(valuesTong[i][1], "gi")).test(originalValue)) {
+            input_clone.setAttribute("switch", "on");
+            button_clone2.style.background = "#ececec";
+            input_clone.style.color = "#2fa678";
+          } else {
+            input_clone.setAttribute("switch", "off");
+          }
+          input_clone.addEventListener("click", function (e) {
+            const thisClass = this.className;
+            const inputTargets = document.querySelectorAll("." + thisClass);
+            for (let dom of inputTargets) {
+              if (dom.textContent === "오프라인") {
+                dom.textContent = "온라인";
+              } else {
+                dom.textContent = "오프라인";
+              }
+            }
+          });
+        }
+
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone.classList.add("removeTarget");
+    style = {
+      position: "absolute",
+      bottom: String(0),
+      width: String(iconWidth) + ea,
+      left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+    };
+    for (let i in style) {
+      svg_clone.style[i] = style[i];
+    }
+    svg_clone.addEventListener("click", endEvent);
+    div_clone.appendChild(svg_clone);
+
+    mother.appendChild(div_clone);
+  };
+
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
     cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
@@ -1154,14 +1475,15 @@ DataPatch.prototype.clientMap = function () {
     action: { name: "응대", position: "requests.0.analytics.response.action", type: "string", items: [ "1차 응대 예정", "1차 응대후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], searchBoo: true, },
     outspot: { name: "유출 시점", position: "requests.0.analytics.response.action", type: "string", items: [ "1차 응대 예정", "1차 응대후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
-    kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
+    kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
+    service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     next: { name: "전화 예정일", position: "requests.0.analytics.date.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     callHistory: { name: "전화 기록", position: "requests.0.analytics.date.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    spacePicture: { name: "현장 사진", position: "requests.0.analytics.picture.space", type: "null", searchBoo: false },
-    preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer", type: "null", searchBoo: false },
+    spacePicture: { name: "현장 사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
+    preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
   };
   return map;
 }
@@ -3485,15 +3807,15 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
     info: [
       { name: "진행 상태", target: "status" },
       { name: "서비스", target: "service" },
-      { name: "계약금 입금", target: "firstDate", subTargets: [ "firstGuide" ], subTitles: [ "계약금 안내" ] },
+      { name: "계약금 입금", target: "firstDate" },
       { name: "계약금 정보", target: "firstInfo" },
       { name: "1차 미팅", target: "meetingDate" },
-      { name: "잔금 입금", target: "remainDate", subTargets: [ "remainGuide" ], subTitles: [ "잔금 안내" ] },
+      { name: "잔금 입금", target: "remainDate" },
       { name: "공급가", target: "remainSupply" },
       { name: "소비자가", target: "remainConsumer" },
       { name: "잔금", target: "remainPure" },
       { name: "잔금 정보", target: "remainInfo" },
-      { name: "계약", target: "formGuide",  subTargets: [ "formDateFrom", "formDateTo" ], subTitles: [ "안내", "시작일", "종료일" ] },
+      { name: "계약", target: "formDateFrom",  subTargets: [ "formDateTo" ], subTitles: [ "시작일", "종료일" ] },
       { name: "정산 방식", target: "method" },
       { name: "수수료", target: "percentage" },
       { name: "정산 정보", target: "calculationInfo" },

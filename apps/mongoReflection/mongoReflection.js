@@ -126,16 +126,23 @@ MongoReflection.prototype.mongoReflection = async function (to = "local") {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   try {
     const allDB = BackMaker.allDatabaseNames;
+    let consoleWording, equalNum;
     for (let i = 0; i < allDB.length; i++) {
-      console.log(`${allDB[i]} reflection start ==================================================`);
+      consoleWording = `${allDB[i]} reflection start `;
+      equalNum = 78 - consoleWording.length;
+      for (let j = 0; j < equalNum; j++) {
+        consoleWording += '=';
+      }
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, consoleWording);
       await this.mongoMigration(to, allDB[i], { drop: (i === 0) });
-      console.log(`from: ${allDB[i]} => to: ${to} reflection success`);
+      console.log(`\x1b[33m%s\x1b[0m`, `from: ${allDB[i]} => to: ${to} reflection success`);
       console.log(``);
     }
   } catch (e) {
     console.log(e);
   }
 }
+
 
 MongoReflection.prototype.mysqlReflection = async function (to = "local") {
   const instance = this;
@@ -145,7 +152,7 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
 
     let sqlList, alreadyTables;
 
-    console.log(`mariaDB flat reflection start ==================================================`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `mariaDB flat reflection start ==================================================`);
 
     const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
     const { model: clientsModel, data: clientsData } = clients.dimensionSqueeze();
@@ -220,7 +227,22 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
 
     //execute
     await mysqlQuery(sqlList);
+    console.log(`\x1b[33m%s\x1b[0m`, `mariaDB flat reflection success`);
+    console.log(``);
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.ultimateReflection = async function (to = "local") {
+  const instance = this;
+  const os = require("os");
+  try {
+    await this.mongoReflection(to);
+    if (os.type() !== 'Darwin') {
+      await this.mysqlReflection(to);
+    }
   } catch (e) {
     console.log(e);
   }

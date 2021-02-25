@@ -19,6 +19,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
     }
+    const thisDirList = await fileSystem(`readDir`, [ this.dir ]);
+    if (!thisDirList.includes("log")) {
+      shell.exec(`mkdir ${shellLink(this.dir)}/log`);
+    }
+    console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString;
     let code0, code1;
@@ -31,6 +36,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
 
+    console.log(`set target : `, staticDirList);
     for (let i of staticDirList) {
       svgTongItemsString = null;
       if (i !== `.DS_Store`) {
@@ -50,6 +56,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
         } else {
           result = (await babelSystem(code0)) + "\n\n" + svgTongItemsString + "\n\n" + (await babelSystem(code1));
         }
+        console.log(`${i} babel compile success`);
         await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, (polyfillString + "\n\n" + result) ]);
       }
     }
@@ -83,6 +90,8 @@ DataConsole.prototype.connect = async function () {
     if (name === "unknown") {
       throw new Error("invalid address");
     }
+    console.log(``);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
 
     //set pem key
     let pems = {};
@@ -121,6 +130,9 @@ DataConsole.prototype.connect = async function () {
     for (let obj of rouObj.post) {
       app.post(obj.link, obj.func);
     }
+    console.log(``);
+    console.log(`set DB server => ${this.address.mongoinfo.host}`);
+    console.log(`set router`);
 
     //set static
     await this.renderStatic(staticFolder);
@@ -132,7 +144,8 @@ DataConsole.prototype.connect = async function () {
 
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {
-      console.log(`Server running`);
+      console.log(``);
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });
 
   } catch (e) {

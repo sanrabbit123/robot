@@ -1,6 +1,20 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const { Menu } = require(GENERAL_DIR + "/generator.js");
 
+const ProjectService = function (json) {
+  this.serid = json.serid;
+  this.xValue = json.xValue;
+  this.online = Boolean(json.online);
+}
+
+ProjectService.prototype.toNormal = function () {
+  let obj = {};
+  obj.serid = this.serid;
+  obj.xValue = this.xValue;
+  obj.online = this.online;
+  return obj;
+}
+
 const Response = function (response) {
   const actionList = [
     "1차 응대 예정",
@@ -20,6 +34,7 @@ const Response = function (response) {
   this.outreason = new Menu(response.outreason, [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], true);
   this.outspot = new Menu(response.outspot, actionList, false);
   this.kakao = response.kakao;
+  this.service = new ProjectService(response.service);
 }
 
 Response.prototype.toNormal = function () {
@@ -29,6 +44,7 @@ Response.prototype.toNormal = function () {
   obj.outreason = this.outreason.toNormal();
   obj.outspot = this.outspot.toNormal();
   obj.kakao = this.kakao;
+  obj.service = this.service.toNormal();
   return obj;
 }
 

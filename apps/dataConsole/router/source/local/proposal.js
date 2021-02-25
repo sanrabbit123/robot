@@ -4495,6 +4495,7 @@ ProposalJs.prototype.launching = async function () {
             for (let dom of buttons) {
               if (dom.getAttribute("cliid") === cliid) {
                 target = dom;
+                break;
               }
             }
             if (target !== null) {

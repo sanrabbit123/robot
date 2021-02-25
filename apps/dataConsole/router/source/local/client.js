@@ -117,7 +117,7 @@ ClientJs.prototype.standardBar = function (standard) {
         h.appendChild(caseDom);
       }
       instance.totalMother.firstChild.appendChild(s);
-      instance.totalMother.lastChild.appendChild(h);
+      instance.totalMother.children[2].appendChild(h);
       instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
     }
   }
@@ -378,7 +378,7 @@ ClientJs.prototype.infoArea = function (info) {
 
       const removeAllEvent = function () {
         GeneralJs.timeouts.whiteCardRemoveTargets = setTimeout(function () {
-          const standardArea = instance.totalMother.lastChild;
+          const standardArea = instance.totalMother.children[2];
           const infoArea = instance.totalMother.children[0];
           const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
           let finalColor;
@@ -515,7 +515,7 @@ ClientJs.prototype.infoArea = function (info) {
           top: String(0) + ea,
           left: String(0) + ea,
           width: String(100) + "%",
-          height: String(document.querySelector('.totalMother').lastChild.getBoundingClientRect().height) + ea,
+          height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
           opacity: String(0.7),
           zIndex: String(3),
         };
@@ -796,7 +796,7 @@ ClientJs.prototype.infoArea = function (info) {
             h.appendChild(caseDom);
           }
           instance.totalMother.firstChild.appendChild(s);
-          instance.totalMother.lastChild.appendChild(h);
+          instance.totalMother.children[2].appendChild(h);
           cancel_event.call(this, e);
         }
       }
@@ -808,7 +808,7 @@ ClientJs.prototype.infoArea = function (info) {
         top: String(0) + ea,
         left: String(0) + ea,
         width: String(100) + "%",
-        height: String(document.querySelector('.totalMother').lastChild.getBoundingClientRect().height) + ea,
+        height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
         opacity: String(0.7),
         zIndex: String(3),
         background: "white",
@@ -1085,7 +1085,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
-      clients = JSON.parse(await GeneralJs.ajaxPromise("limit=200", "/getClients"));
+      clients = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getClients"));
     } else {
       clients = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
     }

@@ -700,6 +700,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
+  const { fileSystem, pythonExecute, shell, shellLink } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
@@ -763,14 +764,13 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           pastFinalValue = new Date(pastValue);
           break;
         case "boolean":
-          if (value === "true") {
-            finalValue = true;
-          } else if (value === "false") {
+          if (/^미/.test(value) || /^비/.test(value) || /^안/.test(value) || /no/gi.test(value) || value === "false" || value === "null") {
+            pastFinalValue = false;
             finalValue = false;
           } else {
-            finalValue = Boolean(value);
+            pastFinalValue = true;
+            finalValue = true;
           }
-          pastFinalValue = Boolean(pastValue);
           break;
         case "array":
           finalValue = [];
@@ -826,7 +826,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         //update log
         userArr = user.split("__split__");
         today = new Date();
-        await instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
+        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), {
           user: {
             name: userArr[0],
             email: userArr[1]
@@ -838,7 +838,39 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             pastValue: pastFinalValue
           },
           date: today
-        }, { local: null, console: true, selfMongo: null });
+        }, { local: null, console: true, selfMongo: null }).then(function () {
+          pythonExecute(instance.pythonApp, [ "getMembers" ], {}).then(function (membersArrRaw) {
+            const { members } = JSON.parse(membersArrRaw);
+            const logDir = `${instance.dir}/log`;
+            let thisPerson;
+            for (let { name, email } of members) {
+              if (email.includes(userArr[1])) {
+                thisPerson = name;
+                break;
+              }
+            }
+            fileSystem(`readDir`, [ logDir ]).then(function (dir) {
+              let target = null;
+              for (let fileName of dir) {
+                if ((new RegExp("^" + thisId)).test(fileName)) {
+                  target = fileName;
+                }
+              }
+              if (target !== null) {
+                shell.exec(`rm -rf ${shellLink(logDir)}/${target}`);
+              }
+              fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]).catch(function (err) {
+                throw new Error(err);
+              });
+            }).catch(function (err) {
+              throw new Error(err);
+            });
+          }).catch(function (err) {
+            throw new Error(err);
+          });
+        }).catch(function (err) {
+          throw new Error(err);
+        });
       }
 
       res.set("Content-Type", "application/json");
@@ -2468,6 +2500,54 @@ DataRouter.prototype.rou_post_analyticsReport = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ link: {} }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_pasingLatestLog = function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  let obj = {};
+  obj.link = "/pasingLatestLog";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.idArr === undefined) {
+        throw new Error("must be id arr: Array");
+      }
+      const logDir = `${instance.dir}/log`;
+      const idArr = JSON.parse(req.body.idArr);
+      const logAll = await fileSystem(`readDir`, [ logDir ]);
+
+      let logParsing, logIdArr;
+      let result;
+      let tempArr;
+      let index;
+
+      logParsing = [];
+      logIdArr = [];
+      for (let log of logAll) {
+        if (log !== `.DS_Store`) {
+          tempArr = log.split("__name__");
+          logParsing.push({ id: tempArr[0], name: tempArr[1] });
+          logIdArr.push(tempArr[0]);
+        }
+      }
+
+      result = [];
+      for (let id of idArr) {
+        index = logIdArr.indexOf(id);
+        if (index === -1) {
+          result.push("-");
+        } else {
+          result.push(logParsing[index].name);
+        }
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(result));
     } catch (e) {
       console.log(e);
     }

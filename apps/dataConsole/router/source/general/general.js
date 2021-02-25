@@ -123,7 +123,7 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       }
       break;
     case "boolean":
-      finalValue = Boolean(value);
+      finalValue = value;
       break;
     case "array":
       finalValue = value;
@@ -1169,6 +1169,170 @@ GeneralJs.prototype.greenBar = function () {
   })
   this.belowButtons.moveArea.left = div_clone2;
   this.below.appendChild(div_clone2);
+
+  // =============================================================================================================================================================
+
+  //sub pannel button
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.classList.add("hoverdefault_lite_reverse");
+  style = {
+    position: "fixed",
+    background: "#2fa678",
+    right: String(0) + ea,
+    width: String(19) + ea,
+    height: String(60) + ea,
+    top: "calc(calc(calc(100vh - " + String(this.belowHeight) + ea + ") / 2) - " + String(60 / 2) + ea + ")",
+    borderTopLeftRadius: String(5) + ea,
+    borderBottomLeftRadius: String(5) + ea,
+    transition: "all 0.3s ease",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone2.setAttribute("progress", "done");
+  div_clone2.setAttribute("set", "off");
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 0)) + ea, "#ffffff"));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 1)) + ea, "#ffffff"));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 2)) + ea, "#ffffff"));
+  div_clone2.addEventListener("click", function (e) {
+    const targetIndex = 1;
+    let grayData, grayTitle, grayTong;
+    let style;
+    let ea;
+    let barWidth, barLeft;
+    let target;
+    let dataLength;
+    let idArr;
+
+    ea = "px";
+    barWidth = 234;
+    barLeft = 4;
+
+    if (document.querySelector(".totalMother") !== null) {
+
+      const [ standardBar, infoAreaTitle, infoAreaData ] = document.querySelector(".totalMother").children;
+      dataLength = infoAreaData.children.length - 1;
+
+      if (this.getAttribute("progress") !== "doing") {
+        if (this.getAttribute("set") === "off") {
+
+          idArr = [];
+          for (let i = 2; i < standardBar.children.length; i++) {
+            idArr.push(standardBar.children[i].firstChild.textContent);
+          }
+
+          div_clone2.setAttribute("progress", "doing");
+
+          grayTitle = GeneralJs.nodes.div.cloneNode(true);
+          grayTitle.id = "rightGrayPannel_title";
+          style = {
+            display: "block",
+            position: "fixed",
+            height: String(32) + ea,
+            paddingTop: String(38) + ea,
+            top: String(0) + ea,
+            right: String(0) + ea,
+            zIndex: String(2),
+            width: String(barWidth) + ea,
+            transition: "all 0.3s ease",
+            transform: "translateX(" + String(barWidth) + ea + ")",
+            cursor: "pointer",
+            background: "rgb(247, 247, 247)",
+            borderBottom: "1px dashed rgb(221, 221, 221)",
+          };
+          for (let i in style) {
+            grayTitle.style[i] = style[i];
+          }
+          document.querySelector(".totalMother").appendChild(grayTitle);
+
+          grayData = GeneralJs.nodes.div.cloneNode(true);
+          grayData.id = "rightGrayPannel_data";
+          style = {
+            position: "absolute",
+            background: "rgb(247, 247, 247)",
+            top: String(0) + ea,
+            right: String(0) + ea,
+            width: String(barWidth) + ea,
+            transform: "translateX(" + String(barWidth) + ea + ")",
+            opacity: String(0.92),
+            backdropFilter: "blur(4px)",
+            transition: "all 0.3s ease",
+            zIndex: String(1),
+          };
+          for (let i in style) {
+            grayData.style[i] = style[i];
+          }
+          document.querySelector(".totalMother").appendChild(grayData);
+
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/pasingLatestLog").then(function (data) {
+            const personArr = JSON.parse(data);
+            let temp_clone, indent;
+
+            personArr.unshift("");
+            indent = 92;
+
+            temp_clone = infoAreaTitle.children[targetIndex].cloneNode(false);
+            temp_clone.textContent = "최종";
+            temp_clone.style.left = String(barLeft) + ea;
+            grayTitle.appendChild(temp_clone);
+
+            temp_clone = infoAreaTitle.children[targetIndex].cloneNode(true);
+            temp_clone.style.left = String(barLeft + indent) + ea;
+            grayTitle.appendChild(temp_clone);
+
+            for (let i = 0; i < dataLength + 1; i++) {
+              grayTong = infoAreaData.children[i].cloneNode(false);
+              grayTong.style.width = String(100) + '%';
+              if (i !== 0) {
+                temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(false);
+                temp_clone.textContent = personArr[i];
+                temp_clone.style.left = String(barLeft) + ea;
+                grayTong.appendChild(temp_clone);
+
+                temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(true);
+                temp_clone.style.left = String(barLeft + indent) + ea;
+                grayTong.appendChild(temp_clone);
+              }
+              grayData.appendChild(grayTong);
+            }
+
+            GeneralJs.timeouts["grayRightBarOn"] = setTimeout(function () {
+              div_clone2.setAttribute("progress", "done");
+              div_clone2.setAttribute("set", "on");
+              grayTitle.style.transform = "translateX(0" + ea + ")";
+              grayData.style.transform = "translateX(0" + ea + ")";
+              div_clone2.style.transform = "translateX(-" + String(barWidth) + ea + ")";
+              div_clone2.style.background = "#dddddd";
+              clearTimeout(GeneralJs.timeouts["grayRightBarOn"]);
+              GeneralJs.timeouts["grayRightBarOn"] = null;
+            }, 0);
+
+          }).catch(function (e) {
+            console.log(e);
+          });
+
+        } else {
+          div_clone2.setAttribute("progress", "doing");
+          document.getElementById("rightGrayPannel_title").style.transform = "translateX(" + String(barWidth) + ea + ")";
+          document.getElementById("rightGrayPannel_data").style.transform = "translateX(" + String(barWidth) + ea + ")";
+          div_clone2.style.transform = "translateX(0" + ea + ")";
+          div_clone2.style.background = "#2fa678";
+          GeneralJs.timeouts["grayRightBarOff"] = setTimeout(function () {
+            div_clone2.setAttribute("progress", "done");
+            div_clone2.setAttribute("set", "off");
+            document.querySelector(".totalMother").removeChild(document.getElementById("rightGrayPannel_title"));
+            document.querySelector(".totalMother").removeChild(document.getElementById("rightGrayPannel_data"));
+            clearTimeout(GeneralJs.timeouts["grayRightBarOff"]);
+            GeneralJs.timeouts["grayRightBarOff"] = null;
+          }, 301);
+        }
+      }
+    }
+
+  });
+  this.below.appendChild(div_clone2);
+
+  // =============================================================================================================================================================
 
 }
 

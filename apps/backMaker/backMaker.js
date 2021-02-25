@@ -928,27 +928,27 @@ BackMaker.prototype.returnClientDummies = function (subject) {
         who: "",
       };
       break;
-    case "analytics.picture.space":
+    case "analytics.picture.space.file":
       dummy = {
         date: new Date(1800, 0, 1),
         confirm: [],
         folderId: ""
       };
       break;
-    case "analytics.picture.prefer":
+    case "analytics.picture.prefer.file":
       dummy = {
         date: new Date(1800, 0, 1),
         confirm: [],
         folderId: ""
       };
       break;
-    case "analytics.picture.space.confirm":
+    case "analytics.picture.space.file.confirm":
       dummy = {
         date: new Date(1800, 0, 1),
         who: "",
       };
       break;
-    case "analytics.picture.prefer.confirm":
+    case "analytics.picture.prefer.file.confirm":
       dummy = {
         date: new Date(1800, 0, 1),
         who: "",
@@ -1042,6 +1042,11 @@ BackMaker.prototype.returnClientRequest = function () {
         outreason: [],
         outspot: "해당 없음",
         kakao: false,
+        service: {
+          serid: "s2011_aa02s",
+          xValue: "B",
+          online: false,
+        },
       },
       date: {
         call: {
@@ -1073,8 +1078,14 @@ BackMaker.prototype.returnClientRequest = function () {
         },
       },
       picture: {
-        space: [],
-        prefer: [],
+        space: {
+          boo: false,
+          file: [],
+        },
+        prefer: {
+          boo: false,
+          file: [],
+        },
       },
       proposal: [],
     },

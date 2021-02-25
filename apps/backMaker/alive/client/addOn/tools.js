@@ -117,10 +117,38 @@ const withTools = function (Client) {
       return totalString;
     }
 
+    const serviceParsing = function (serviceObj) {
+      let serviceWording = '';
+
+      if (serviceObj.serid === "s2011_aa01s") {
+        serviceWording = "홈퍼니싱";
+      } else if (serviceObj.serid === "s2011_aa02s") {
+        serviceWording = "홈스타일링";
+      } else if (serviceObj.serid === "s2011_aa03s") {
+        serviceWording = "토탈 스타일링";
+      }
+
+      if (serviceObj.xValue === 'M') {
+        serviceWording += " mini";
+      } else if (serviceObj.xValue === 'B') {
+        serviceWording += " basic";
+      } else if (serviceObj.xValue === 'P') {
+        serviceWording += " premium";
+      }
+
+      if (serviceObj.online) {
+        serviceWording = "온라인 " + serviceWording;
+      } else {
+        serviceWording = "오프라인 " + serviceWording;
+      }
+
+      return serviceWording;
+    }
+
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, outspot, kakao }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, outspot, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -132,12 +160,13 @@ const withTools = function (Client) {
         action,
         outreason: outreason.join(", "),
         outspot,
-        kakao,
+        kakao: (kakao ? "등록" : "미등록"),
+        service: serviceParsing(service),
         next: dateToString(next),
         callHistory: callHistoryToString(callHistory),
         timeline: dateToString(timeline, true),
-        spacePicture: (spacePicture.length > 0 ? "제출" : "미제출"),
-        preferPicture: (preferPicture.length > 0 ? "제출" : "미제출"),
+        spacePicture: (spacePicture.boo ? "제출" : "미제출"),
+        preferPicture: (preferPicture.boo ? "제출" : "미제출"),
         phone,
         email,
         budget,

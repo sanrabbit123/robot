@@ -67,6 +67,11 @@ module.exports = {
             outreason: [],
             outspot: "해당 없음",
             kakao: false,
+            service: {
+              serid: "s2011_aa02s",
+              xValue: "B",
+              online: false,
+            },
           },
           date: {
             call: {
@@ -103,30 +108,36 @@ module.exports = {
             },
           },
           picture: {
-            space: [
-              {
-                date: new Date(),
-                confirm: [
-                  {
-                    date: new Date(),
-                    who: "",
-                  }
-                ],
-                folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
-              }
-            ],
-            prefer: [
-              {
-                date: new Date(),
-                confirm: [
-                  {
-                    date: new Date(),
-                    who: "",
-                  }
-                ],
-                folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
-              }
-            ],
+            space: {
+              boo: false,
+              file: [
+                {
+                  date: new Date(),
+                  confirm: [
+                    {
+                      date: new Date(),
+                      who: "",
+                    }
+                  ],
+                  folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
+                }
+              ],
+            },
+            prefer: {
+              boo: false,
+              file: [
+                {
+                  date: new Date(),
+                  confirm: [
+                    {
+                      date: new Date(),
+                      who: "",
+                    }
+                  ],
+                  folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
+                }
+              ],
+            }
           },
           proposal: [
             {

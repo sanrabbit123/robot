@@ -93,9 +93,33 @@ class SpacePicture extends Array {
   }
 }
 
+const Prefer = function (json) {
+  this.boo = Boolean(json.boo);
+  this.file = new PreferPicture(json.file);
+}
+
+Prefer.prototype.toNormal = function () {
+  let obj = {};
+  obj.boo = this.boo;
+  obj.file = this.file.toNormal();
+  return obj;
+}
+
+const Space = function (json) {
+  this.boo = Boolean(json.boo);
+  this.file = new SpacePicture(json.file);
+}
+
+Space.prototype.toNormal = function () {
+  let obj = {};
+  obj.boo = this.boo;
+  obj.file = this.file.toNormal();
+  return obj;
+}
+
 const Picture = function (picture) {
-  this.space = new SpacePicture(picture.space);
-  this.prefer = new PreferPicture(picture.prefer);
+  this.space = new Space(picture.space);
+  this.prefer = new Prefer(picture.prefer);
 }
 
 Picture.prototype.toNormal = function () {
