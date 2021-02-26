@@ -210,6 +210,10 @@ async def sendAspirantPresentation():
     await run([ 'node', ROBOT, 'sendAspirantPresentation' ])
 
 
+async def mysqlReflection():
+    await run([ 'node', ROBOT, 'reflect' ])
+
+
 if sys.argv.__len__() > 1:
 
     if sys.argv[1] == "ai":
@@ -253,6 +257,20 @@ if sys.argv.__len__() > 1:
     elif sys.argv[1] == "sendAspirantPresentation":
         scheduler = AsyncIOScheduler()
         scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
+        scheduler.start()
+        try:
+            asyncio.get_event_loop().run_forever()
+        except (KeyboardInterrupt, SystemExit):
+            pass
+
+    elif sys.argv[1] == "mysqlReflectionNow":
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(mysqlReflection())
+        loop.close()
+
+    elif sys.argv[1] == "mysqlReflection":
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(mysqlReflection, 'cron', hour='21', minute='50', second='30')
         scheduler.start()
         try:
             asyncio.get_event_loop().run_forever()
