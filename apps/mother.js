@@ -707,15 +707,14 @@ Mother.prototype.sendJandi = function (mode, msg) {
   });
 }
 
-Mother.prototype.ipCheck = function (force = null) {
-  const digCommand = `dig +short myip.opendns.com @resolver1.opendns.com`;
-  const shell = require(`shelljs`);
+Mother.prototype.ipCheck = function () {
+  const axios = require(`axios`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const keys = Object.keys(ADDRESS);
   const values = Object.values(ADDRESS);
   return new Promise(function(resolve, reject) {
-    if (force === null) {
-      const ip = shell.exec(digCommand, { silent: true }).stdout.replace(/[^0-9\.]/g, '');
+    axios.get("https://icanhazip.com").then(function (response) {
+      const ip = response.data.replace(/[^0-9\.]/g, '');
       let obj = { ip };
       let target = "unknown", targetNum = 0;
       let number = 0;
@@ -729,22 +728,9 @@ Mother.prototype.ipCheck = function (force = null) {
       obj.name = target;
       obj.rawObj = values[targetNum];
       resolve(obj);
-    } else {
-      const ip = force;
-      let obj = { ip };
-      let target = "unknown", targetNum = 0;
-      let number = 0;
-      for (let { ip: { outer } } of values) {
-        if (outer === ip) {
-          target = keys[number].replace(/info$/, '');
-          targetNum = number;
-        }
-        number++;
-      }
-      obj.name = target;
-      obj.rawObj = values[targetNum];
-      resolve(obj);
-    }
+    }).catch(function (error) {
+      reject(error);
+    });
   });
 }
 

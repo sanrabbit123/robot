@@ -494,6 +494,12 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       const sseStream = new SseStream(req);
       let log_past, log_new;
 
+      res.set({
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
       sseStream.pipe(res);
 
       const pusher = setInterval(async function () {

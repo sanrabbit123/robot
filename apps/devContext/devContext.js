@@ -460,7 +460,7 @@ class DevContext extends Array {
       }
 
 
-      /*
+      // /*
 
       const reflection = new MongoReflection();
       await reflection.ultimateReflection();
@@ -471,7 +471,7 @@ class DevContext extends Array {
 
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `client converting start ======================================================`);
 
-      row = await this.MONGOLOCALC.db("miro81").collection("client").find({}).toArray();
+      row = await this.MONGOC.db("miro81").collection("client").find({}).toArray();
       for (let i of row) {
         for (let k = 0; k < i.requests.length; k++) {
           whereQuery = { cliid: i.cliid };
@@ -531,13 +531,13 @@ class DevContext extends Array {
           };
           updateQuery["requests." + String(k) + ".analytics.proposal"] = [];
 
-          await this.MONGOLOCALC.db("miro81").collection("client").updateOne(whereQuery, { "$set": updateQuery });
+          await this.MONGOC.db("miro81").collection("client").updateOne(whereQuery, { "$set": updateQuery });
 
           updateQuery = {};
           updateQuery["requests." + String(k) + ".proposal"] = "";
           updateQuery["requests." + String(k) + ".analytics.date.callHistory"] = "";
 
-          await this.MONGOLOCALC.db("miro81").collection("client").updateOne(whereQuery, { "$unset": updateQuery });
+          await this.MONGOC.db("miro81").collection("client").updateOne(whereQuery, { "$unset": updateQuery });
         }
       }
       console.log(`client converting success`);
@@ -545,7 +545,7 @@ class DevContext extends Array {
 
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `project converting start =====================================================`);
 
-      row = await this.MONGOLOCALC.db("miro81").collection("project").find({}).toArray();
+      row = await this.MONGOC.db("miro81").collection("project").find({}).toArray();
 
       for (let i of row) {
         whereQuery = { proid: i.proid };
@@ -581,13 +581,13 @@ class DevContext extends Array {
             contents: new Date(1800, 0, 1),
           }
         };
-        await this.MONGOLOCALC.db("miro81").collection("project").updateOne(whereQuery, { "$set": updateQuery });
+        await this.MONGOC.db("miro81").collection("project").updateOne(whereQuery, { "$set": updateQuery });
 
       }
       console.log(`project converting success`);
       console.log(``);
 
-      */
+      // */
 
 
 

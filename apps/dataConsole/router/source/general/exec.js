@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
     if (sseTarget.includes(thisPath)) {
-      const es = new EventSource("/sse/get_" + thisPath);
+      const es = new EventSource("https://homeliaison-console.xyz:3000/sse/get_" + thisPath);
       es.addEventListener("updateTong", function (e) {
         let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;
         if (/^{/.test(e.data)) {
