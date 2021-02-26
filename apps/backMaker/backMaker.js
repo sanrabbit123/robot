@@ -1145,14 +1145,19 @@ BackMaker.prototype.getClientReport = async function () {
   const instance = this;
   try {
     const ratioParsing = (num) => { return `${String(Math.round(num * 100 * 10) / 10)}%`; }
+
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `client report start ==================================================`);
     const clients = await this.getClientsByQuery({}, { withTools: true });
+    console.log(`load client success`);
     const projects = await this.getProjectsByQuery({}, { withTools: true });
+    console.log(`load project success`);
     const clientsReport = clients.getRequestsTongsMonthly().reportAll();
 
     let tempObj;
     let proposalNum, contractNum;
 
     for (let report of clientsReport) {
+      console.log(`\x1b[33m%s\x1b[0m`, `parsing report : ${report.date}`);
       for (let key in report) {
         if (typeof report[key] === "object") {
           if (!(report[key] instanceof Date) && report[key].detail !== undefined) {
@@ -1319,6 +1324,8 @@ BackMaker.prototype.getClientReport = async function () {
 
       return result
     }
+
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `client report end ====================================================`);
 
     return clientsReport;
   } catch (e) {

@@ -1,6 +1,10 @@
 const Robot = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
+  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
   this.mother = new Mother();
+  this.back = new BackMaker();
+  this.sheets = new GoogleSheet();
 }
 
 Robot.prototype.consoleQ = function (question) {
@@ -209,6 +213,18 @@ Robot.prototype.ultimateReflection = async function () {
   }
 }
 
+Robot.prototype.clientReportToSheets = async function () {
+  try {
+    const sheetId = "14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM";
+    const startPoint = [ 0, 0 ];
+    const report = await this.back.getClientReport();
+    await this.sheets.update_value_inPython(sheetId, "", report.getMatrix(), startPoint);
+    console.log(`\x1b[33m%s\x1b[0m`, `sheets upload done`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -283,6 +299,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/reflect/gi.test(process.argv[2])) {
       await this.ultimateReflection();
+
+    } else if (/clientReportToSheets/gi.test(process.argv[2])) {
+      await this.clientReportToSheets();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

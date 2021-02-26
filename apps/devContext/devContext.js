@@ -368,103 +368,100 @@ class DevContext extends Array {
       await this.MONGOLOCALC.connect();
       const back = new BackMaker();
 
-      const sheets = new GoogleSheet();
-      const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
-      const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-      const ABC = [];
-      for (let i of alphabet) { ABC.push(i); }
-      for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
-      const targetInfo = {
-        client: {
-          name: "응대중 고객 현황",
-          startPoint: [ 0, 9 ],
-          endPoint: [ 11, 1000 ],
-          columns: [
-            "cliid",
-            "important",
-            "name",
-            "status",
-            "action",
-            "latest",
-            "kakao",
-            "prefer",
-            "issue",
-            "latest",
-            "timeline",
-            "movein"
-          ]
-        },
-        project: {
-          name: "프로젝트케어",
-          startPoint: [],
-        },
-        drop: {
-          name: "드랍 고객 관리",
-          startPoint: [],
-        }
-      };
-      const rangeMaker = function (key) {
-        let str = '';
-        str += targetInfo[key].name + '!';
-        str += ABC[targetInfo[key].startPoint[0]] + String(targetInfo[key].startPoint[1] + 1);
-        str += ':';
-        str += ABC[targetInfo[key].endPoint[0]] + String(targetInfo[key].endPoint[1] + 1);
-        return str;
-      }
-      let temp, tong, tempObj, totalTong, tempClient, tongtong;
-
-      const key = "client";
-
-      tong = await sheets.get_value_inPython(sheetsId, rangeMaker(key));
-      totalTong = [];
-
-      for (let arr of tong) {
-        tempObj = {};
-        for (let i = 0; i < targetInfo[key].columns.length; i++) {
-          tempObj[targetInfo[key].columns[i]] = arr[i];
-        }
-        totalTong.push(tempObj);
-      }
-
-
-      tongtong = {};
-      for (let { cliid, action } of totalTong) {
-        tongtong[cliid] = "응대 종료";
-        if (/1차/g.test(action) && /예정/g.test(action)) {
-          tongtong[cliid] = "1차 응대 예정";
-        }
-        if (/1차/g.test(action) && /대기/g.test(action)) {
-          tongtong[cliid] = "1차 응대 후 대기";
-        }
-        if (/제안/g.test(action) && /발송/g.test(action)) {
-          tongtong[cliid] = "제안 발송 예정";
-        }
-        if (/제안/g.test(action) && /피드백/g.test(action) && /예정/g.test(action)) {
-          tongtong[cliid] = "제안 피드백 대기";
-        }
-        if (/제안/g.test(action) && /피드백/g.test(action) && /완/g.test(action)) {
-          tongtong[cliid] = "제안 피드백 완료";
-        }
-        if (/제안/g.test(action) && /후/g.test(action) && /반응/g.test(action)) {
-          tongtong[cliid] = "제안 후 대기";
-        }
-        if (/연결/g.test(action) && /안/g.test(action)) {
-          tongtong[cliid] = "연결 안 됨";
-        }
-        if (/계약/g.test(action) && /입금/g.test(action)) {
-          tongtong[cliid] = "계약금 입금";
-        }
-        if (/계약/g.test(action) && /서명/g.test(action)) {
-          tongtong[cliid] = "계약서 서명";
-        }
-      }
-
-
-
-
       // const sheets = new GoogleSheet();
-      // const report = await back.getClientReport();
-      // await sheets.update_value_inPython("14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM", "", report.getMatrix(), [ 0, 0 ]);
+      // const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
+      // const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      // const ABC = [];
+      // for (let i of alphabet) { ABC.push(i); }
+      // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      // const targetInfo = {
+      //   client: {
+      //     name: "응대중 고객 현황",
+      //     startPoint: [ 0, 9 ],
+      //     endPoint: [ 11, 1000 ],
+      //     columns: [
+      //       "cliid",
+      //       "important",
+      //       "name",
+      //       "status",
+      //       "action",
+      //       "latest",
+      //       "kakao",
+      //       "prefer",
+      //       "issue",
+      //       "latest",
+      //       "timeline",
+      //       "movein"
+      //     ]
+      //   },
+      //   project: {
+      //     name: "프로젝트케어",
+      //     startPoint: [],
+      //   },
+      //   drop: {
+      //     name: "드랍 고객 관리",
+      //     startPoint: [],
+      //   }
+      // };
+      // const rangeMaker = function (key) {
+      //   let str = '';
+      //   str += targetInfo[key].name + '!';
+      //   str += ABC[targetInfo[key].startPoint[0]] + String(targetInfo[key].startPoint[1] + 1);
+      //   str += ':';
+      //   str += ABC[targetInfo[key].endPoint[0]] + String(targetInfo[key].endPoint[1] + 1);
+      //   return str;
+      // }
+      // let temp, tong, tempObj, totalTong, tempClient, tongtong;
+      //
+      // const key = "client";
+      //
+      // tong = await sheets.get_value_inPython(sheetsId, rangeMaker(key));
+      // totalTong = [];
+      //
+      // for (let arr of tong) {
+      //   tempObj = {};
+      //   for (let i = 0; i < targetInfo[key].columns.length; i++) {
+      //     tempObj[targetInfo[key].columns[i]] = arr[i];
+      //   }
+      //   totalTong.push(tempObj);
+      // }
+      //
+      //
+      // tongtong = {};
+      // for (let { cliid, action } of totalTong) {
+      //   tongtong[cliid] = "응대 종료";
+      //   if (/1차/g.test(action) && /예정/g.test(action)) {
+      //     tongtong[cliid] = "1차 응대 예정";
+      //   }
+      //   if (/1차/g.test(action) && /대기/g.test(action)) {
+      //     tongtong[cliid] = "1차 응대 후 대기";
+      //   }
+      //   if (/제안/g.test(action) && /발송/g.test(action)) {
+      //     tongtong[cliid] = "제안 발송 예정";
+      //   }
+      //   if (/제안/g.test(action) && /피드백/g.test(action) && /예정/g.test(action)) {
+      //     tongtong[cliid] = "제안 피드백 대기";
+      //   }
+      //   if (/제안/g.test(action) && /피드백/g.test(action) && /완/g.test(action)) {
+      //     tongtong[cliid] = "제안 피드백 완료";
+      //   }
+      //   if (/제안/g.test(action) && /후/g.test(action) && /반응/g.test(action)) {
+      //     tongtong[cliid] = "제안 후 대기";
+      //   }
+      //   if (/연결/g.test(action) && /안/g.test(action)) {
+      //     tongtong[cliid] = "연결 안 됨";
+      //   }
+      //   if (/계약/g.test(action) && /입금/g.test(action)) {
+      //     tongtong[cliid] = "계약금 입금";
+      //   }
+      //   if (/계약/g.test(action) && /서명/g.test(action)) {
+      //     tongtong[cliid] = "계약서 서명";
+      //   }
+      // }
+
+
+
+
 
 
 
@@ -486,13 +483,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "임경지";
-      // const pid = "p82";
-      // const rid = "re076";
+      // const client = "정승희";
+      // const pid = "p85";
+      // const rid = "re079";
       // const links = [
-      //   "https://docs.google.com/document/d/1Mkg2S0u4Wdd0hEutLOZji78e7PL3YyVSCI0KHkaIdUU/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1Rk75pJkZu-Up3tOYP5KTm629zz5znR7VKUL-kVXMInE/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1Jkny-V2nky11rBz9fJy0YQ8fE4PyruFk?usp=sharing",
+      //   "https://docs.google.com/document/d/1b6YMA4UgSc-UFnabxByvft_24tJhZH5-VDcb7iuU8cQ/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1bVxvMqfiCyD__Ux2-w0L04SQG4kUm-6LEtd4atFx5lY/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1X_bX-JPySUZ1Ri2rd4EKa6ezW-jp3_Pc?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -536,7 +533,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p81");
+      // await this.spellCheck("p85");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

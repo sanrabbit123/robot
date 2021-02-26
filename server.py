@@ -214,6 +214,10 @@ async def mysqlReflection():
     await run([ 'node', ROBOT, 'reflect' ])
 
 
+async def clientReport():
+    await run([ 'node', ROBOT, 'clientReportToSheets' ])
+
+
 if sys.argv.__len__() > 1:
 
     if sys.argv[1] == "ai":
@@ -271,6 +275,15 @@ if sys.argv.__len__() > 1:
     elif sys.argv[1] == "mysqlReflection":
         scheduler = AsyncIOScheduler()
         scheduler.add_job(mysqlReflection, 'cron', hour='21', minute='50', second='30')
+        scheduler.start()
+        try:
+            asyncio.get_event_loop().run_forever()
+        except (KeyboardInterrupt, SystemExit):
+            pass
+
+    elif sys.argv[1] == "clientReport":
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(clientReport, 'cron', hour='09', minute='10', second='30')
         scheduler.start()
         try:
             asyncio.get_event_loop().run_forever()
