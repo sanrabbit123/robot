@@ -728,27 +728,34 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 }
 
 GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null, grayDataAlready = null) {
+  let pathArr = window.location.pathname.split("?");
+  const thisPathName = pathArr[0].replace(/\//g, '');
+  const { targetColumn, barWidth, barLeft, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
+  const UPDATE_WORD = "최종 수정";
+  GeneralJs.stacks["grayTitle"] = null;
+  GeneralJs.stacks["grayData"] = null;
   return function (e) {
     const thisButton = this;
     let targetIndex;
     let grayData, grayTitle, grayTong;
     let style;
     let ea;
-    let barWidth, barLeft;
     let target;
     let dataLength;
     let idArr;
-
-    ea = "px";
-
-    if (/client/gi.test(window.location.pathname)) {
-      targetIndex = 1;
-      barWidth = 231;
-    }
-    barLeft = 2;
+    let infoAreaTitleChildren;
 
     if (document.querySelector(".totalMother") !== null) {
       const [ standardBar, infoAreaTitle, infoAreaData ] = document.querySelector(".totalMother").children;
+
+      ea = "px";
+      infoAreaTitleChildren = infoAreaTitle.children;
+      targetIndex = 0;
+      for (let i = 0; i < infoAreaTitleChildren.length; i++) {
+        if (infoAreaTitleChildren[i].getAttribute("column") === targetColumn) {
+          targetIndex = i;
+        }
+      }
       dataLength = infoAreaData.children.length - 1;
 
       if (reload) {
@@ -824,7 +831,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
           GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/pasingLatestLog").then(function (data) {
             const personArr = JSON.parse(data);
-            let temp_clone, indent, pastClassName;
+            let temp_clone, pastClassName;
 
             if (reload) {
               while (grayTitle.firstChild) {
@@ -836,15 +843,15 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             }
 
             personArr.unshift("");
-            indent = 92;
 
             temp_clone = infoAreaTitle.children[targetIndex].cloneNode(false);
-            temp_clone.textContent = "최종";
+            temp_clone.textContent = UPDATE_WORD;
+            temp_clone.style.width = String(updateWidth) + ea;
             temp_clone.style.left = String(barLeft) + ea;
             grayTitle.appendChild(temp_clone);
 
             temp_clone = infoAreaTitle.children[targetIndex].cloneNode(true);
-            temp_clone.style.left = String(barLeft + indent) + ea;
+            temp_clone.style.left = String(barLeft + columnIndent) + ea;
             grayTitle.appendChild(temp_clone);
 
             for (let i = 0; i < dataLength + 1; i++) {
@@ -856,14 +863,19 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(false);
                 temp_clone.setAttribute("column", "who");
                 temp_clone.textContent = personArr[i];
+                temp_clone.style.width = String(updateWidth) + ea;
                 temp_clone.style.left = String(barLeft) + ea;
                 grayTong.appendChild(temp_clone);
 
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(true);
-                temp_clone.style.left = String(barLeft + indent) + ea;
+                temp_clone.style.left = String(barLeft + columnIndent) + ea;
                 grayTong.appendChild(temp_clone);
               }
               grayData.appendChild(grayTong);
+            }
+
+            if (grayData.getBoundingClientRect().height < window.innerHeight) {
+              grayData.style.height = String(window.innerHeight) + ea;
             }
 
             GeneralJs.timeouts["grayRightBarOn"] = setTimeout(function () {
@@ -1356,8 +1368,6 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.moveArea.left = div_clone2;
   this.below.appendChild(div_clone2);
 
-  // =============================================================================================================================================================
-
   //sub pannel button
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.classList.add("hoverdefault_lite_reverse");
@@ -1383,8 +1393,6 @@ GeneralJs.prototype.greenBar = function () {
   div_clone2.addEventListener("click", GeneralJs.grayLeftLaunching());
   GeneralJs.stacks["grayLeftButton"] = div_clone2;
   this.below.appendChild(div_clone2);
-
-  // =============================================================================================================================================================
 
 }
 

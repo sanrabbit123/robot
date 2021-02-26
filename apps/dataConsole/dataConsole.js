@@ -24,8 +24,17 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
       shell.exec(`mkdir ${shellLink(this.dir)}/log`);
     }
     const thisLogDirList = await fileSystem(`readDir`, [ this.dir + "/log" ]);
-    if (!thisDirList.includes("latest.json")) {
-      shell.exec(`touch ${shellLink(this.dir)}/log/latest.json`);
+    if (!thisDirList.includes("client_latest.json")) {
+      shell.exec(`touch ${shellLink(this.dir)}/log/client_latest.json`);
+    }
+    if (!thisDirList.includes("designer_latest.json")) {
+      shell.exec(`touch ${shellLink(this.dir)}/log/designer_latest.json`);
+    }
+    if (!thisDirList.includes("project_latest.json")) {
+      shell.exec(`touch ${shellLink(this.dir)}/log/project_latest.json`);
+    }
+    if (!thisDirList.includes("contents_latest.json")) {
+      shell.exec(`touch ${shellLink(this.dir)}/log/contents_latest.json`);
     }
     console.log(`set static`);
 

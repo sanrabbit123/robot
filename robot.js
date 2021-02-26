@@ -199,6 +199,16 @@ Robot.prototype.sendAspirantPresentation = async function () {
   }
 }
 
+Robot.prototype.ultimateReflection = async function () {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    await reflection.ultimateReflection();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -270,6 +280,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/sendAspirantPresentation/gi.test(process.argv[2])) {
       await this.sendAspirantPresentation();
+
+    } else if (/reflect/gi.test(process.argv[2])) {
+      await this.ultimateReflection();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

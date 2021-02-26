@@ -72,32 +72,6 @@ BridgeCloud.clientFilters = {
   },
 };
 
-BridgeCloud.makeId = function (past_id) {
-  let this_id;
-  let today = new Date();
-  let to_year = today.getFullYear();
-  let to_month = today.getMonth();
-  let st_year = String(to_year).slice(2);
-  let st_month;
-  if (to_month + 1 < 10) {
-    st_month = '0' + String(to_month + 1);
-  } else {
-    st_month = String(to_month + 1);
-  }
-  let new_id = '';
-  if (past_id.slice(3, 5) === st_month) {
-    if (Number(past_id.slice(8, 10)) + 1 < 10) {
-      new_id = '0' + String(Number(past_id.slice(8, 10)) + 1);
-    } else {
-      new_id = String(Number(past_id.slice(8, 10)) + 1);
-    }
-  } else {
-    new_id = '01';
-  }
-  this_id = 'c' + st_year + st_month + '_' + "aa" + new_id + 's';
-  return this_id;
-}
-
 BridgeCloud.returnTimeline = function () {
   const today = new Date();
   const zeroAddition = function (number) {

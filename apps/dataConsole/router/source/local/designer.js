@@ -1077,6 +1077,10 @@ DesignerJs.prototype.infoArea = function (info) {
     this.totalMother.appendChild(div_clone);
   }
 
+  if (div_clone.getBoundingClientRect().height < window.innerHeight) {
+    div_clone.style.height = String(window.innerHeight) + ea;
+  }
+
 }
 
 DesignerJs.prototype.spreadData = async function (search = null) {
@@ -2717,7 +2721,6 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   mother.appendChild(div_clone);
 }
 
-
 DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, contentsArea, leftMargin, thisCase) {
   const instance = this;
   const { designer, desid } = thisCase;
@@ -3488,7 +3491,6 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
     }
   }
 }
-
 
 DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
   const instance = this;
@@ -5578,6 +5580,12 @@ DesignerJs.prototype.makeSearchEvent = function (search = null) {
         }, 401);
       }
 
+      let grayOn = false;
+      if (GeneralJs.stacks["grayTitle"] !== null) {
+        GeneralJs.grayLeftLaunching().call(GeneralJs.stacks["grayLeftButton"], {});
+        grayOn = true;
+      }
+
       instance.whiteBox = null;
       instance.onView = "mother";
 
@@ -5585,6 +5593,14 @@ DesignerJs.prototype.makeSearchEvent = function (search = null) {
         await instance.spreadData(this.value);
       } else {
         await instance.spreadData(search);
+      }
+
+      if (grayOn) {
+        GeneralJs.timeouts.grayLeftOnOffTimeout = setTimeout(function () {
+          GeneralJs.grayLeftLaunching().call(GeneralJs.stacks["grayLeftButton"], {});
+          clearTimeout(GeneralJs.timeouts.grayLeftOnOffTimeout);
+          GeneralJs.timeouts.grayLeftOnOffTimeout = null;
+        }, 501);
       }
 
     }

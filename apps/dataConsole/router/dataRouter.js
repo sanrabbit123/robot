@@ -487,11 +487,10 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   let obj = {};
-  obj.link = "/sse/get";
+  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
   obj.func = async function (req, res) {
     try {
-      console.log(`\x1b[36m%s\x1b[0m`, `new connection`);
-
+      const thisPath = req.url.split('_')[1];
       const sseStream = new SseStream(req);
       let log_past, log_new;
 
@@ -499,7 +498,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 
       const pusher = setInterval(async function () {
         try {
-          log_new = await fileSystem(`readString`, [ instance.dir + "/log/latest.json" ]);
+          log_new = await fileSystem(`readString`, [ instance.dir + "/log/" + thisPath + "_latest.json" ]);
           if (log_new !== log_past) {
             sseStream.write({ event: 'updateTong', data: log_new });
           }
@@ -507,7 +506,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 1000);
+      }, 1200);
 
       res.on('close', function () {
         clearInterval(pusher);
@@ -903,7 +902,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           throw new Error(e);
         });
 
-        await fileSystem(`write`, [ logDir + "/latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
+        await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
 
         const dir = await fileSystem(`readDir`, [ logDir ]);
         fileTarget = null;

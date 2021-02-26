@@ -18,10 +18,11 @@ ProjectService.prototype.toNormal = function () {
 const Response = function (response) {
   const actionList = [
     "1차 응대 예정",
-    "1차 응대후 대기",
+    "1차 응대 후 대기",
     "제안 발송 예정",
     "제안 피드백 대기",
     "제안 피드백 완료",
+    "제안 후 대기",
     "연결 안 됨",
     "계약금 입금",
     "계약서 서명",

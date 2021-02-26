@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     await local_funcs.launching();
     await local_funcs.mother.loginBox();
 
+    //SSE
     const sseTarget = [
       "client",
       "contents",
@@ -14,9 +15,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       "project"
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
-
     if (sseTarget.includes(thisPath)) {
-      const es = new EventSource("/sse/get");
+      const es = new EventSource("/sse/get_" + thisPath);
       es.addEventListener("updateTong", function (e) {
         let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;
         if (/^{/.test(e.data)) {
