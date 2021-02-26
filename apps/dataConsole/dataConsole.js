@@ -5,11 +5,11 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder) {
+DataConsole.prototype.renderStatic = async function (staticFolder, address) {
   const instance = this;
   const { fileSystem, babelSystem, shell, shellLink } = this.mother;
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const S3HOST = ADDRESS.s3info.host;
+  const S3HOST = this.address.s3info.host;
+  const SSEHOST = address.host;
   try {
 
     //set static
@@ -38,11 +38,12 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
     }
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, polyfillString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, polyfillString;
     let code0, code1;
     let result;
 
     s3String = "const S3HOST = \"" + S3HOST + "\";";
+    sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
@@ -62,7 +63,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
           });
           svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
         }
-        code0 = s3String + "\n\n" + svgTongString;
+        code0 = s3String + "\n\n" + sseString + "\n\n" + svgTongString;
         code1 = generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString;
         if (svgTongItemsString === null) {
           result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
@@ -81,12 +82,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder) {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const https = require("https");
   const express = require("express");
   const app = express();
   const bodyParser = require("body-parser");
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
@@ -94,10 +94,6 @@ DataConsole.prototype.connect = async function () {
   app.use(bodyParser.json());
   app.use(express.static(staticFolder));
   try {
-
-    //set mongo connetion
-    await MONGOC.connect();
-
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
     if (name === "unknown") {
@@ -105,6 +101,19 @@ DataConsole.prototype.connect = async function () {
     }
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
+    console.log(``);
+
+    //set mongo connetion
+    let MONGOC;
+    if (address.host === "localhost") {
+      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      console.log(`set DB server => 127.0.0.1`);
+    } else {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      console.log(`set DB server => ${this.address.mongoinfo.host}`);
+    }
+
+    await MONGOC.connect();
 
     //set pem key
     let pems = {};
@@ -144,12 +153,10 @@ DataConsole.prototype.connect = async function () {
     for (let obj of rouObj.post) {
       app.post(obj.link, obj.func);
     }
-    console.log(``);
-    console.log(`set DB server => ${this.address.mongoinfo.host}`);
     console.log(`set router`);
 
     //set static
-    await this.renderStatic(staticFolder);
+    await this.renderStatic(staticFolder, address);
 
     // app.use(function (req, res, next) {
     //   res.status(404);

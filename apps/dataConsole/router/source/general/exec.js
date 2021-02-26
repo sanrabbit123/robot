@@ -18,13 +18,16 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
     if (sseTarget.includes(thisPath)) {
-      const es = new EventSource("https://homeliaison-console.xyz:3000/sse/get_" + thisPath);
+      const es = new EventSource("https://" + SSEHOST + ":3000/sse/get_" + thisPath);
       es.addEventListener("updateTong", function (e) {
         let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;
         if (/^{/.test(e.data)) {
           const obj = JSON.parse(e.data);
           if (obj.path !== undefined && obj.who !== undefined && obj.where !== undefined && obj.column !== undefined && obj.value !== undefined && obj.date !== undefined) {
+
+            //start
             const { path, who, where, column, value, date } = obj;
+            let white, whiteChildren, whiteTarget;
             if (path === thisPath) {
               if (document.querySelector("." + where) !== null) {
                 domTarget = document.querySelector("." + where);
@@ -52,6 +55,28 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                 }
               }
             }
+
+            if (document.querySelector(".totalWhite") !== null) {
+              white = document.querySelector(".totalWhite");
+              if (white.hasAttribute("index")) {
+                if (white.getAttribute("index") === where) {
+                  //white update start
+                  whiteChildren = white.firstChild.children[1].firstChild.children;
+                  whiteTarget = null;
+                  for (let dom of whiteChildren) {
+                    if (dom.getAttribute("index") === column) {
+                      whiteTarget = dom.children[1];
+                    }
+                  }
+                  if (whiteTarget !== null) {
+                    whiteTarget.textContent = value;
+                  }
+                  //white update end
+                }
+              }
+            }
+
+            //end
           }
         }
       });

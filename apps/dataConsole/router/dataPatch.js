@@ -402,8 +402,6 @@ DataPatch.prototype.toolsGrayLeftStandard = function (button) {
     resultObj.barLeft = 8;
     resultObj.updateWidth = 115;
     resultObj.columnIndent = 96;
-  } else {
-    throw new Error("invalid path name");
   }
   return resultObj;
 }
