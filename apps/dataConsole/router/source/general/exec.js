@@ -1,5 +1,7 @@
 const local_funcs = new /<%name%>/Js();
 
+window.localStorage.clear();
+
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
     local_funcs.mother.generalCss();
