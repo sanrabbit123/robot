@@ -460,9 +460,18 @@ class DevContext extends Array {
       // }
 
 
+      const toNumber = function (str) {
+        return Number(str.replace(/[^0-9\.\-]/g, ''));
+      }
+      const report = await back.getClientReport();
+      let tong;
 
+      tong = [];
 
-
+      for (let { total, budget: { average }, proposalTotal, contactTotal } of report) {
+        tong.push([ toNumber(average), total, proposalTotal, contactTotal ])
+      }
+      console.log(tong);
 
 
 
