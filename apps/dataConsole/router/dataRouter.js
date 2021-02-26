@@ -1552,14 +1552,26 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
 DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
+  const { fileSystem } = this.mother;
   const back = this.back;
+  const members = this.members;
   let obj = {};
   obj.link = [ "/updateClientHistory", "/updateProjectHistory" ];
   obj.func = async function (req, res) {
     try {
-      const { id, column, value } = req.body;
+      const today = new Date();
+      const { id, column, value, email } = req.body;
+      const logDir = `${instance.dir}/log`;
       let historyObj;
       let whereQuery, updateQuery;
+      let thisPerson;
+
+      for (let member of members) {
+        if (member.email.includes(email)) {
+          thisPerson = member.name;
+          break;
+        }
+      }
 
       whereQuery = {};
       updateQuery = {};
@@ -1577,6 +1589,8 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           await back.updateClientHistory([ whereQuery, updateQuery ]);
         }
 
+        await fileSystem(`write`, [ logDir + "/" + "client" + "_" + "latest.json", JSON.stringify({ path: "client", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+
       } else if (req.url === "/updateProjectHistory") {
 
         historyObj = await back.getProjectHistoryById(id);
@@ -1589,6 +1603,8 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           updateQuery[column] = value;
           await back.updateProjectHistory([ whereQuery, updateQuery ]);
         }
+
+        await fileSystem(`write`, [ logDir + "/" + "project" + "_" + "latest.json", JSON.stringify({ path: "project", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
 
       }
 

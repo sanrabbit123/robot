@@ -1979,6 +1979,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
   const map = DataPatch.projectMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   let { standard, info } = DataPatch.projectWhiteViewStandard();
@@ -2922,7 +2923,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
       }
       this.style.color = "#cccccc";
-      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateProjectHistory", function (res) {});
+      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
     }
 
     //margin box

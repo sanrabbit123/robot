@@ -865,9 +865,11 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 temp_clone.textContent = personArr[i];
                 temp_clone.style.width = String(updateWidth) + ea;
                 temp_clone.style.left = String(barLeft) + ea;
+                temp_clone.style.color = "#404040";
                 grayTong.appendChild(temp_clone);
 
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(true);
+                temp_clone.style.color = "#404040";
                 temp_clone.style.left = String(barLeft + columnIndent) + ea;
                 grayTong.appendChild(temp_clone);
               }

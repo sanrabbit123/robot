@@ -1720,6 +1720,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
 ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
   let { standard, info } = DataPatch.clientWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -2543,7 +2544,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       target.value = target.value.replace(/\&/g, ",");
 
       if (thisIndex !== 2 && thisIndex !== 3) {
-        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
       } else if (thisIndex === 2) {
         vaildTong = target.value.split("\n");
         if (!/^\<\%item\%\>/.test(vaildTong[0])) {
@@ -2558,7 +2559,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             e.preventDefault();
             this.focus();
           } else {
-            GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+            GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
           }
         }
       } else if (thisIndex === 3) {
@@ -2569,7 +2570,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           e.preventDefault();
           this.focus();
         } else {
-          GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, ''), "/updateClientHistory", function (res) {});
+          GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
         }
       }
     }
@@ -2975,7 +2976,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let t = 0; t < matrix.length; t++) {
 
             if (t !== 2 && t !== 3) {
-              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+              await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory");
             } else if (t === 2) {
               vaildTong = matrix[t];
               if (!/^\<\%item\%\>/.test(vaildTong[0])) {
@@ -2988,7 +2989,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   rInitialBox.click();
                   return;
                 } else {
-                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+                  await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory");
                 }
               }
             } else if (t === 3) {
@@ -2998,7 +2999,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 rInitialBox.click();
                 return;
               } else {
-                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, ''), "/updateClientHistory");
+                await GeneralJs.ajaxPromise("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[t].column + "&value=" + matrix[t].join("\n").replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory");
               }
             }
           }
