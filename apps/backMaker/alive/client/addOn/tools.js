@@ -1,7 +1,159 @@
 const CLIENT_DIR = process.cwd() + "/apps/backMaker/alive/client";
 const { Client, Clients } = require(CLIENT_DIR + "/addOn/generator.js");
 
+class ClientTypes extends Array {
+
+  getCompositionWords() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(`${i.budget.type}_${i.address.type}_${i.pyeong.type}_${i.contract.type}_${i.living.type}`);
+    }
+    return arr;
+  }
+
+  getTypeCases(projects = null) {
+    const typeSet = Array.from(new Set(this.getCompositionWords()));
+    typeSet.sort((a, b) => {
+      return Number(a.split("_")[0]) - Number(b.split("_")[0]);
+    });
+    let resultArr = [];
+    let cliidArr, tempObj, tempArr, proidArr, contractArr;
+
+    for (let i of typeSet) {
+      tempObj = { name: i, case: {} };
+      tempArr = i.split('_');
+      tempObj.case.budget = Number(tempArr[0]);
+      tempObj.case.address = tempArr[1];
+      tempObj.case.pyeong = { from: Number(tempArr[2].split(" ~ ")[0]), to: Number(tempArr[2].split(" ~ ")[1]) };
+      tempObj.case.contract = tempArr[3];
+      tempObj.case.living = tempArr[4] === "거주중";
+      cliidArr = [];
+      for (let j of this) {
+        if (i === (`${j.budget.type}_${j.address.type}_${j.pyeong.type}_${j.contract.type}_${j.living.type}`)) {
+          cliidArr.push(j.cliid);
+        }
+      }
+      tempObj.cliidArr = cliidArr;
+      if (projects !== null) {
+        proidArr = [];
+        contractArr = [];
+        for (let p of projects) {
+          if (cliidArr.includes(p.cliid)) {
+            proidArr.push(p.proid);
+            if (/^d/.test(p.desid)) {
+              contractArr.push(p.proid);
+            }
+          }
+        }
+        tempObj.proidArr = proidArr;
+        tempObj.contractArr = contractArr;
+      }
+      resultArr.push(tempObj);
+    }
+
+    return resultArr;
+  }
+}
+
+const ClientType = function (obj) {
+  const budgetTypes = function (number) {
+    if (number <= 500) {
+      return 500;
+    } else if (number > 500 && number < 1500) {
+      return 1000;
+    } else if (number >= 1500 && number < 2000) {
+      return 1500;
+    } else if (number >= 2000 && number < 3000) {
+      return 2000;
+    } else if (number >= 3000 && number < 4000) {
+      return 3000;
+    } else if (number >= 4000 && number < 5000) {
+      return 4000;
+    } else {
+      return 5000;
+    }
+  }
+
+  const addressTypes = function (arr) {
+    if ((new RegExp("^서울")).test(arr[0])) {
+      return "서울";
+    } else if ((new RegExp("^서울")).test(arr[0])) {
+      return "수도권";
+    } else if ((new RegExp("^서울")).test(arr[0])) {
+      return "수도권";
+    } else {
+      return "지방";
+    }
+  }
+
+  const pyeongTypes = function (number) {
+    if (number <= 10) {
+      return "0 ~ 9";
+    } else if (number >= 10 && number < 25) {
+      return "10 ~ 24";
+    } else if (number >= 25 && number < 30) {
+      return "25 ~ 29";
+    } else if (number >= 30 && number < 35) {
+      return "30 ~ 34";
+    } else if (number >= 35 && number < 40) {
+      return "35 ~ 39";
+    } else if (number >= 40 && number < 45) {
+      return "40 ~ 44";
+    } else if (number >= 45 && number < 50) {
+      return "45 ~ 49";
+    } else {
+      return "50 ~ ";
+    }
+  }
+
+  this.cliid = obj.cliid;
+  this.timeline = obj.timeline;
+
+  this.budget = {
+    value: Number(obj.budget.replace(/[^0-9\.\-]/g, '')),
+    type: budgetTypes(Number(obj.budget.replace(/[^0-9\.\-]/g, ''))),
+  };
+
+  this.address = {
+    value: obj.address.split(" "),
+    type: addressTypes(obj.address.split(" ")),
+  };
+
+  this.pyeong = {
+    value: obj.pyeong,
+    type: pyeongTypes(obj.pyeong),
+  };
+
+  this.contract = {
+    value: obj.contract,
+    type: obj.contract,
+  };
+
+  this.living = {
+    value: obj.living,
+    type: (obj.living ? "거주중" : "이사"),
+  };
+
+}
+
 const withTools = function (Client) {
+
+  Client.prototype.getType = function () {
+    let arr = new ClientTypes();
+    let tempObj;
+    for (let { request } of this.requests) {
+      tempObj = {};
+      tempObj.cliid = this.cliid;
+      tempObj.timeline = request.timeline;
+      tempObj.budget = request.budget.value;
+      tempObj.address = request.space.address.value;
+      tempObj.pyeong = request.space.pyeong.value;
+      tempObj.contract = request.space.contract.value;
+      tempObj.living = request.space.resident.living;
+      arr.push(new ClientType(tempObj));
+    }
+    return arr;
+  }
 
   Client.prototype.toMessage = function () {
     const { request } = this.requests[0];
@@ -615,6 +767,18 @@ const withToolsArr = function (Clients) {
       return result;
     }
 
+  }
+
+  Clients.prototype.getType = function () {
+    let arr = new ClientTypes();
+    let tempArr;
+    for (let i of this) {
+      tempArr = i.getType();
+      for (let j of tempArr) {
+        arr.push(j);
+      }
+    }
+    return arr;
   }
 
   Clients.prototype.toMessage = function () {

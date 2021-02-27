@@ -368,110 +368,251 @@ class DevContext extends Array {
       await this.MONGOLOCALC.connect();
       const back = new BackMaker();
 
-      // const sheets = new GoogleSheet();
-      // const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
-      // const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-      // const ABC = [];
-      // for (let i of alphabet) { ABC.push(i); }
-      // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
-      // const targetInfo = {
-      //   client: {
-      //     name: "응대중 고객 현황",
-      //     startPoint: [ 0, 9 ],
-      //     endPoint: [ 11, 1000 ],
-      //     columns: [
-      //       "cliid",
-      //       "important",
-      //       "name",
-      //       "status",
-      //       "action",
-      //       "latest",
-      //       "kakao",
-      //       "prefer",
-      //       "issue",
-      //       "latest",
-      //       "timeline",
-      //       "movein"
-      //     ]
-      //   },
-      //   project: {
-      //     name: "프로젝트케어",
-      //     startPoint: [],
-      //   },
-      //   drop: {
-      //     name: "드랍 고객 관리",
-      //     startPoint: [],
-      //   }
-      // };
-      // const rangeMaker = function (key) {
-      //   let str = '';
-      //   str += targetInfo[key].name + '!';
-      //   str += ABC[targetInfo[key].startPoint[0]] + String(targetInfo[key].startPoint[1] + 1);
-      //   str += ':';
-      //   str += ABC[targetInfo[key].endPoint[0]] + String(targetInfo[key].endPoint[1] + 1);
-      //   return str;
-      // }
-      // let temp, tong, tempObj, totalTong, tempClient, tongtong;
-      //
-      // const key = "client";
-      //
-      // tong = await sheets.get_value_inPython(sheetsId, rangeMaker(key));
-      // totalTong = [];
-      //
-      // for (let arr of tong) {
-      //   tempObj = {};
-      //   for (let i = 0; i < targetInfo[key].columns.length; i++) {
-      //     tempObj[targetInfo[key].columns[i]] = arr[i];
-      //   }
-      //   totalTong.push(tempObj);
-      // }
-      //
-      //
-      // tongtong = {};
-      // for (let { cliid, action } of totalTong) {
-      //   tongtong[cliid] = "응대 종료";
-      //   if (/1차/g.test(action) && /예정/g.test(action)) {
-      //     tongtong[cliid] = "1차 응대 예정";
-      //   }
-      //   if (/1차/g.test(action) && /대기/g.test(action)) {
-      //     tongtong[cliid] = "1차 응대 후 대기";
-      //   }
-      //   if (/제안/g.test(action) && /발송/g.test(action)) {
-      //     tongtong[cliid] = "제안 발송 예정";
-      //   }
-      //   if (/제안/g.test(action) && /피드백/g.test(action) && /예정/g.test(action)) {
-      //     tongtong[cliid] = "제안 피드백 대기";
-      //   }
-      //   if (/제안/g.test(action) && /피드백/g.test(action) && /완/g.test(action)) {
-      //     tongtong[cliid] = "제안 피드백 완료";
-      //   }
-      //   if (/제안/g.test(action) && /후/g.test(action) && /반응/g.test(action)) {
-      //     tongtong[cliid] = "제안 후 대기";
-      //   }
-      //   if (/연결/g.test(action) && /안/g.test(action)) {
-      //     tongtong[cliid] = "연결 안 됨";
-      //   }
-      //   if (/계약/g.test(action) && /입금/g.test(action)) {
-      //     tongtong[cliid] = "계약금 입금";
-      //   }
-      //   if (/계약/g.test(action) && /서명/g.test(action)) {
-      //     tongtong[cliid] = "계약서 서명";
-      //   }
-      // }
 
+      /*
 
-      const toNumber = function (str) {
-        return Number(str.replace(/[^0-9\.\-]/g, ''));
+      const sheets = new GoogleSheet();
+      const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
+      const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      const ABC = [];
+      for (let i of alphabet) { ABC.push(i); }
+      for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      const targetInfo = {
+        client: {
+          name: "응대중 고객 현황",
+          startPoint: [ 0, 9 ],
+          endPoint: [ 11, 1000 ],
+          columns: [
+            "cliid",
+            "important",
+            "name",
+            "status",
+            "action",
+            "latest",
+            "kakao",
+            "prefer",
+            "issue",
+            "latest",
+            "timeline",
+            "movein"
+          ]
+        },
+        project: {
+          name: "프로젝트케어",
+          startPoint: [ 0, 9 ],
+          endPoint: [ 9, 1000 ],
+          columns: [
+            "proid",
+            "name",
+            "status",
+            "contract",
+            "designer",
+            "service",
+            "action",
+            "latest",
+            "first",
+            "issue",
+          ]
+        },
+        drop: {
+          name: "드랍 고객 관리",
+          startPoint: [],
+        }
+      };
+      const rangeMaker = function (key) {
+        let str = '';
+        str += targetInfo[key].name + '!';
+        str += ABC[targetInfo[key].startPoint[0]] + String(targetInfo[key].startPoint[1] + 1);
+        str += ':';
+        str += ABC[targetInfo[key].endPoint[0]] + String(targetInfo[key].endPoint[1] + 1);
+        return str;
       }
-      const report = await back.getClientReport();
-      let tong;
+      let temp, tong, tempObj, totalTong, tempClient, tongtong;
+      let cliidArr, projects;
+      let whereQuery, updateQuery;
+      let proidArr;
 
-      tong = [];
+      const key = "client";
 
-      for (let { total, budget: { average }, proposalTotal, contactTotal } of report) {
-        tong.push([ toNumber(average), total, proposalTotal, contactTotal ])
+      tong = await sheets.get_value_inPython(sheetsId, rangeMaker(key));
+      totalTong = [];
+
+      for (let arr of tong) {
+        tempObj = {};
+        for (let i = 0; i < targetInfo[key].columns.length; i++) {
+          tempObj[targetInfo[key].columns[i]] = arr[i];
+        }
+        totalTong.push(tempObj);
       }
-      console.log(tong);
+
+
+      tongtong = {};
+      for (let { cliid, action, kakao, prefer } of totalTong) {
+        tongtong[cliid] = {
+          "requests.0.analytics.response.action": "응대 종료",
+        };
+        if (/1차/g.test(action) && /예정/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "1차 응대 예정",
+          };
+        }
+        if (/1차/g.test(action) && /대기/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "1차 응대 후 대기",
+          };
+        }
+        if (/제안/g.test(action) && /발송/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "제안 발송 예정",
+          };
+        }
+        if (/제안/g.test(action) && /피드백/g.test(action) && /예정/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "제안 피드백 대기",
+          };
+        }
+        if (/제안/g.test(action) && /피드백/g.test(action) && /완/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "제안 피드백 완료",
+          };
+        }
+        if (/제안/g.test(action) && /후/g.test(action) && /반응/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "제안 후 대기",
+          };
+        }
+        if (/연결/g.test(action) && /안/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "연결 안 됨",
+          };
+        }
+        if (/계약/g.test(action) && /입금/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "계약금 입금",
+          };
+        }
+        if (/계약/g.test(action) && /서명/g.test(action)) {
+          tongtong[cliid] = {
+            "requests.0.analytics.response.action": "계약서 서명",
+          };
+        }
+
+        if (/X/gi.test(kakao)) {
+          tongtong[cliid]["requests.0.analytics.response.kakao"] = false;
+        } else {
+          tongtong[cliid]["requests.0.analytics.response.kakao"] = true;
+        }
+
+        if (/X/gi.test(prefer)) {
+          tongtong[cliid]["requests.0.analytics.picture.prefer.boo"] = false;
+        } else {
+          tongtong[cliid]["requests.0.analytics.picture.prefer.boo"] = true;
+        }
+
+      }
+
+      cliidArr = Object.keys(tongtong);
+
+      for (let c of cliidArr) {
+        whereQuery = { cliid: c };
+        updateQuery = tongtong[c];
+        // await back.updateClient([ whereQuery, updateQuery ]);
+        // console.log(`update ${c} success`);
+      }
+
+      projects = await back.getProjectsByQuery({});
+      for (let p of projects) {
+        whereQuery = { cliid: p.cliid };
+        updateQuery = {};
+        updateQuery["requests.0.analytics.response.service"] = p.service.toNormal();
+        // await back.updateClient([ whereQuery, updateQuery ]);
+        // console.log(`update ${p.cliid} success`);
+      }
+
+
+
+      tong = await sheets.get_value_inPython(sheetsId, rangeMaker("project"));
+      totalTong = [];
+
+      for (let arr of tong) {
+        tempObj = {};
+        for (let i = 0; i < targetInfo["project"].columns.length; i++) {
+          tempObj[targetInfo["project"].columns[i]] = arr[i];
+        }
+        totalTong.push(tempObj);
+      }
+
+      console.log(totalTong);
+
+
+      tongtong = {};
+      for (let { proid, action } of totalTong) {
+        tongtong[proid] = {
+          "process.action": "해당 없음",
+        };
+
+        if (/현장/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "현장 미팅",
+          };
+        }
+        if (/1차/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "1차 제안",
+          };
+        }
+        if (/수정/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "수정 제안",
+          };
+        }
+        if (/시공/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "시공 진행",
+          };
+        }
+        if (/제품/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "제품 구매",
+          };
+        }
+        if (/배송/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "배송중",
+          };
+        }
+        if (/촬영/g.test(action)) {
+          tongtong[proid] = {
+            "process.action": "촬영 컨택",
+          };
+        }
+
+      }
+
+      proidArr = Object.keys(tongtong);
+
+      for (let p of proidArr) {
+        whereQuery = { proid: p };
+        updateQuery = tongtong[p];
+        // await back.updateProject([ whereQuery, updateQuery ]);
+        // console.log(`update ${p} success`);
+      }
+
+
+      */
+
+
+
+      const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
+      const projects = await back.getProjectsByQuery({}, { fromLocal: true });
+      const cases = clients.getType().getTypeCases(projects);
+      for (let c of cases) {
+        console.log(c);
+      }
+
+
+
+
 
 
 
