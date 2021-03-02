@@ -619,7 +619,7 @@ class DevContext extends Array {
 
       str = `const text = ${JSON.stringify(total.split(""), null, 2)};`;
       str += "\n\n";
-      str += `let this_ai, from, to, contents, temp, items, count, testWording, tempNum, finalHeight;
+      str += `let this_ai, from, to, contents, temp, items, count, testWording, tempNum, finalHeight, pastArtBoard;
 
       const fontTargetList = [
         "SDGothicNeoa-aTh",
@@ -633,59 +633,74 @@ class DevContext extends Array {
         "SDGothicNeoa-iHv",
       ];
 
-      this.createDoc();
+      for (let targetIndex = 0; targetIndex < fontTargetList.length; targetIndex++) {
+        this.createDoc();
+        tempNum = Math.floor(text.length / 20) + 1;
+        finalHeight = 0;
 
-      tempNum = Math.floor(text.length / 20) + 1;
+        for (let i = 0; i < tempNum; i++) {
+          testWording = text.slice((20 * i), (20 * (i + 1)));
+          this_ai = app.activeDocument;
+          from = "general";
+          to = "wordTest";
+          contents = testWording.join("");
+          this.setCreateSetting({ from: from, to: to, exception: {
+            font: fontTargetList[targetIndex]
+          }});
+          this.setParagraph({ from: contents, to: to });
+          temp = this.createElements(this_ai, this.createSetting[to]);
+          temp = temp.createOutline();
 
-      finalHeight = 0;
-
-      for (let i = 0; i < tempNum; i++) {
-        testWording = text.slice((20 * i), (20 * (i + 1)));
-        this_ai = app.activeDocument;
-        from = "general";
-        to = "wordTest";
-        contents = testWording.join("");
-        this.setCreateSetting({ from: from, to: to, exception: {
-          font: fontTargetList[0]
-        }});
-        this.setParagraph({ from: contents, to: to });
-        temp = this.createElements(this_ai, this.createSetting[to]);
-        temp = temp.createOutline();
-
-        if (temp.height > finalHeight) {
-          finalHeight = temp.height;
-        }
-        temp.remove();
-      }
-
-      for (let i = 0; i < text.length; i++) {
-        this_ai = app.activeDocument;
-        from = "general";
-        to = "word" + String(i);
-        contents = text[i];
-        this.setCreateSetting({ from: from, to: to, exception: {
-          font: fontTargetList[0]
-        }});
-        this.setParagraph({ from: contents, to: to });
-        temp = this.createElements(this_ai, this.createSetting[to]);
-        temp = temp.createOutline();
-        if (temp.height > 0) {
-          this.mother.fit_box({ height: { value: finalHeight } });
-          app.doScript("expandall", "contents_maker");
-          this.saveSvg(this_ai, to, true);
-        } else {
-          items = [];
-          for (let j = 0; j < this_ai.pageItems.length; j++) {
-            items.push(this_ai.pageItems[j]);
+          if (temp.height > finalHeight) {
+            finalHeight = temp.height;
           }
-          count = this_ai.length;
-          for (let j = 0; j < count; j++) {
-            items[j].remove();
+          temp.remove();
+        }
+
+        for (let i = 0; i < 1; i++) {
+          this_ai = app.activeDocument;
+          from = "general";
+          to = "method" + String(targetIndex) + "_word" + String(i);
+          contents = text[i];
+          this.setCreateSetting({ from: from, to: to, exception: {
+            font: fontTargetList[targetIndex]
+          }});
+          this.setParagraph({ from: contents, to: to });
+          temp = this.createElements(this_ai, this.createSetting[to]);
+          temp = temp.createOutline();
+          if (temp.height > 0) {
+            temp.remove();
+            contents = "궜흖" + text[i];
+            this.setCreateSetting({ from: from, to: to, exception: {
+              font: fontTargetList[targetIndex]
+            }});
+            this.setParagraph({ from: contents, to: to });
+            temp = this.createElements(this_ai, this.createSetting[to]);
+            temp = temp.createOutline();
+            this.mother.fit_box({ height: { value: finalHeight } });
+            temp.pageItems[temp.pageItems.length - 1].remove();
+            temp.pageItems[temp.pageItems.length - 1].remove();
+
+            pastArtBoard = app.activeDocument.artboards[0];
+            app.activeDocument.artboards.add([ temp.pageItems[0].left, pastArtBoard.artboardRect[1], pastArtBoard.artboardRect[2], pastArtBoard.artboardRect[3] ]);
+            pastArtBoard.remove();
+
+            app.doScript("expandall", "contents_maker");
+            this.saveSvg(this_ai, to, true);
+          } else {
+            items = [];
+            for (let j = 0; j < this_ai.pageItems.length; j++) {
+              items.push(this_ai.pageItems[j]);
+            }
+            count = this_ai.length;
+            for (let j = 0; j < count; j++) {
+              items[j].remove();
+            }
           }
         }
-      }
 
-      app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);`
+        app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+      }`
 
       await fileSystem(`write`, [ fileName, str ]);
       await contents.tempLaunching(fileName);
