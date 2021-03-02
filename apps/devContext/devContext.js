@@ -657,7 +657,7 @@ class DevContext extends Array {
           temp.remove();
         }
 
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < text.length; i++) {
           this_ai = app.activeDocument;
           from = "general";
           to = "method" + String(targetIndex) + "_word" + String(i);
