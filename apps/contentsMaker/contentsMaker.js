@@ -14,6 +14,7 @@ const ContentsMaker = function () {
     photo_dir: `${process.env.HOME}/contentsMaker/resource/photo`,
     fileSystem: this.mother.fileSystem,
     dayString: (this.mother.todayMaker()),
+    etc: {},
   };
 
   this.links = {
@@ -245,5 +246,23 @@ ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
   }
 }
 
+ContentsMaker.prototype.tempLaunching = async function (file) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const fileString = await fileSystem(`readString`, [ file ]);
+    const scriptString = await this.generator.general_maker.exec(this.options, fileString);
+    await this.startAdobe({
+      name: `tempAi_launching`,
+      data: {},
+      script: scriptString,
+      app: "Illustrator",
+      end: false,
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = ContentsMaker;

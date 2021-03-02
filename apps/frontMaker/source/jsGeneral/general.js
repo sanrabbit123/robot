@@ -722,6 +722,7 @@ GeneralJs.sleep = function (time) {
     timeoutId = setTimeout(function () {
       resolve('awake');
       clearTimeout(timeoutId);
+      timeoutId = null;
     }, time);
   });
 }

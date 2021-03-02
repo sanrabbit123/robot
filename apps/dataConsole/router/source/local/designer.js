@@ -618,7 +618,7 @@ DesignerJs.prototype.infoArea = function (info) {
               left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
               width: String(width) + ea,
               paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.3)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
@@ -840,7 +840,7 @@ DesignerJs.prototype.infoArea = function (info) {
           left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
           width: String(width) + ea,
           paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
-          height: String(height * (GeneralJs.isMac() ? 1.5 : 1.3)) + ea,
+          height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
           background: "#2fa678",
           textAlign: "center",
           fontSize: "inherit",
@@ -1897,7 +1897,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               left: String(0) + ea,
               width: String(width) + ea,
               paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.3)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
@@ -3965,6 +3965,17 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
               GeneralJs.ajax("standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (res) {});
             }
 
+            for (let obj of data.data) {
+              if (obj.phone === thisStandard) {
+                obj[thisColumnName] = finalValue;
+                if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
+                  obj[alarmStandard[data.mode].standard] = alarmStandard[data.mode].convertValue;
+                }
+              }
+            }
+
+            GeneralJs.stacks.reportSortTitleFunction();
+
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
           });
@@ -4094,6 +4105,14 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 }
               }
             }
+
+            for (let obj of data.data) {
+              if (obj.phone === thisStandard) {
+                obj[thisColumnName] = finalValue;
+              }
+            }
+
+            GeneralJs.stacks.reportSortTitleFunction();
 
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
@@ -5244,196 +5263,213 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   //report sort standards contents
 
   //report sort title
-  reportSortTitleTop = GeneralJs.isMac() ? 20 : 24;
+  GeneralJs.stacks["reportSortTitleFunction"] = function () {
+    let div_clone, text_div;
+    let style;
+    let ea;
+    let tempArr;
 
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    top: String(reportSortTitleTop) + ea,
-    left: String(28) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "분류 기준";
-  style = {
-    position: "absolute",
-    fontSize: String(reportFontSize) + ea,
-    fontWeight: String(500),
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  div_clone.appendChild(text_div);
-
-  reportScrollBox.appendChild(div_clone);
-  reportTextWidth = text_div.getBoundingClientRect().width;
-  reportTextHeight = text_div.getBoundingClientRect().height;
-  div_clone.style.width = String(reportTextWidth) + ea;
-  div_clone.style.height = String(reportTextHeight) + ea;
-
-  //report sort bar
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(reportSortTitleTop) + ea,
-    left: String(28 + reportTextWidth + 12) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "|";
-  style = {
-    position: "absolute",
-    fontSize: String(reportFontSize) + ea,
-    fontWeight: String(200),
-    color: "#cccccc",
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  div_clone.appendChild(text_div);
-
-  reportScrollBox.appendChild(div_clone);
-  div_clone.style.width = String(text_div.getBoundingClientRect().width) + ea;
-  div_clone.style.height = String(text_div.getBoundingClientRect().height) + ea;
-
-  //report contents
-  reportContentsBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(reportSortTitleTop) + ea,
-    left: String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25) + ea,
-    width: "calc(100% - " + String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25 + 28) + ea + ")",
-    height: "calc(100% - " + String(reportSortTitleTop * 2) + ea + ")",
-    overflow: "scroll",
-  };
-  for (let i in style) {
-    reportContentsBox.style[i] = style[i];
-  }
-
-  reportTargetColumn = reportTargetMap[data.mode][0];
-  reportTargetColumnTong = [];
-  for (let i = 0; i < data.data.length; i++) {
-    reportTargetColumnTong.push(data.data[i][reportTargetColumn]);
-  }
-
-  reportTargetColumnTong = Array.from(new Set(reportTargetColumnTong));
-  reportTargetColumnTong.sort((a, b) => {
-    if (a >= b) {
-      return -1;
-    } else {
-      return 1;
+    //reset
+    while (reportScrollBox.firstChild) {
+      reportScrollBox.removeChild(reportScrollBox.lastChild);
     }
-  });
 
-  tempArr = [];
-  reportTargetNumberValue = 0;
-  for (let c of reportTargetColumnTong) {
-    tempObj = {};
-    reportTargetNumberValue = 0;
-    for (let i = 0; i < data.data.length; i++) {
-      if (data.data[i][reportTargetColumn] === c) {
-        reportTargetNumberValue = reportTargetNumberValue + 1;
-      }
-    }
-    tempObj.name = c;
-    tempObj.value = reportTargetNumberValue;
-    tempObj.eventFunction = function (e) {
-      const displayNoneTarget = dataDoms.valueFilter(reportTargetColumn, c, true);
-      const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, c, false);
-      for (let z of displayNoneTarget) {
-        z.style.display = "none";
-      }
-      for (let z of displayBlockTarget) {
-        z.style.display = "block";
-      }
-    }
-    tempArr.push(tempObj);
-  }
+    ea = "px";
 
-  if (reportTargetColumn === "presentationTimes") {
-    tempArr.sort((a, b) => {
-      return ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(b.name.slice(0, 1) + '0' + b.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(b.name.slice(0, 5).replace(/[^0-9]/g, '')))) - ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(a.name.slice(0, 1) + '0' + a.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(a.name.slice(0, 5).replace(/[^0-9]/g, ''))));
-    });
-  } else {
-    tempArr.sort((a, b) => {
-      if (a.name >= b.name) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
-  }
+    reportSortTitleTop = GeneralJs.isMac() ? 20 : 24;
 
-  reportTargetColumnTong = tempArr;
-  reportTargetColumnTong.unshift({
-    name: "전체 보기",
-    value: null,
-    eventFunction: function (e) {
-      const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, "all", false);
-      for (let z of displayBlockTarget) {
-        z.style.display = "block";
-      }
-    }
-  });
-
-  reportTargetAllBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    width: String(8000) + ea,
-    height: String(100) + '%',
-    left: String(0) + ea,
-    top: String(0) + ea,
-    transition: "all 0s ease",
-  };
-  for (let i in style) {
-    reportTargetAllBox.style[i] = style[i];
-  }
-  reportContentsBox.appendChild(reportTargetAllBox);
-  reportScrollBox.appendChild(reportContentsBox);
-
-  reportScrollBoxTotalWidth = 0;
-  for (let i = 0; i < reportTargetColumnTong.length; i++) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("hoverDefault");
     style = {
-      display: "inline-block",
       position: "relative",
-      height: String(100) + '%',
-      width: String(500) + ea,
-      marginRight: String(28) + ea,
+      top: String(reportSortTitleTop) + ea,
+      left: String(28) + ea,
     };
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
     text_div = GeneralJs.nodes.div.cloneNode(true);
-    if (reportTargetColumnTong[i].value !== null) {
-      text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name + ' : <b style="font-size:' + String(reportFontSize - 2) + ea + ';color:#2fa678;font-weight:500">' + String(reportTargetColumnTong[i].value) + '</b>');
-    } else {
-      text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name);
-    }
+    text_div.textContent = "분류 기준";
     style = {
       position: "absolute",
-      fontSize: String(reportFontSize - 2) + ea,
-      fontWeight: String(100),
-      color: "#202020",
+      fontSize: String(reportFontSize) + ea,
+      fontWeight: String(500),
     };
     for (let i in style) {
       text_div.style[i] = style[i];
     }
     div_clone.appendChild(text_div);
-    reportTargetAllBox.appendChild(div_clone);
 
-    reportScrollBoxTotalWidth += text_div.getBoundingClientRect().width + 28 + 2;
+    reportScrollBox.appendChild(div_clone);
+    reportTextWidth = text_div.getBoundingClientRect().width;
+    reportTextHeight = text_div.getBoundingClientRect().height;
+    div_clone.style.width = String(reportTextWidth) + ea;
+    div_clone.style.height = String(reportTextHeight) + ea;
+
+    //report sort bar
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(reportSortTitleTop - 1) + ea,
+      left: String(28 + reportTextWidth + 12) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+    text_div = GeneralJs.nodes.div.cloneNode(true);
+    text_div.textContent = "|";
+    style = {
+      position: "absolute",
+      fontSize: String(reportFontSize) + ea,
+      fontWeight: String(200),
+      color: "#cccccc",
+    };
+    for (let i in style) {
+      text_div.style[i] = style[i];
+    }
+    div_clone.appendChild(text_div);
+
+    reportScrollBox.appendChild(div_clone);
     div_clone.style.width = String(text_div.getBoundingClientRect().width) + ea;
-    div_clone.addEventListener("click", reportTargetColumnTong[i].eventFunction);
+    div_clone.style.height = String(text_div.getBoundingClientRect().height) + ea;
+
+    //report contents
+    reportContentsBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(reportSortTitleTop) + ea,
+      left: String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25) + ea,
+      width: "calc(100% - " + String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25 + 28) + ea + ")",
+      height: "calc(100% - " + String(reportSortTitleTop * 2) + ea + ")",
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      reportContentsBox.style[i] = style[i];
+    }
+
+    reportTargetColumn = reportTargetMap[data.mode][0];
+    reportTargetColumnTong = [];
+    for (let i = 0; i < data.data.length; i++) {
+      reportTargetColumnTong.push(data.data[i][reportTargetColumn]);
+    }
+
+    reportTargetColumnTong = Array.from(new Set(reportTargetColumnTong));
+    reportTargetColumnTong.sort((a, b) => {
+      if (a >= b) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
+    tempArr = [];
+    reportTargetNumberValue = 0;
+    for (let c of reportTargetColumnTong) {
+      tempObj = {};
+      reportTargetNumberValue = 0;
+      for (let i = 0; i < data.data.length; i++) {
+        if (data.data[i][reportTargetColumn] === c) {
+          reportTargetNumberValue = reportTargetNumberValue + 1;
+        }
+      }
+      tempObj.name = c;
+      tempObj.value = reportTargetNumberValue;
+      tempObj.eventFunction = function (e) {
+        const displayNoneTarget = dataDoms.valueFilter(reportTargetColumn, c, true);
+        const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, c, false);
+        for (let z of displayNoneTarget) {
+          z.style.display = "none";
+        }
+        for (let z of displayBlockTarget) {
+          z.style.display = "block";
+        }
+      }
+      tempArr.push(tempObj);
+    }
+
+    if (reportTargetColumn === "presentationTimes" || reportTargetColumn === "meetingTime") {
+      tempArr.sort((a, b) => {
+        return ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(b.name.slice(0, 1) + '0' + b.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(b.name.slice(0, 5).replace(/[^0-9]/g, '')))) - ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(a.name.slice(0, 1) + '0' + a.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(a.name.slice(0, 5).replace(/[^0-9]/g, ''))));
+      });
+    } else {
+      tempArr.sort((a, b) => {
+        if (a.name >= b.name) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+    }
+
+    reportTargetColumnTong = tempArr;
+    reportTargetColumnTong.unshift({
+      name: "전체 보기",
+      value: null,
+      eventFunction: function (e) {
+        const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, "all", false);
+        for (let z of displayBlockTarget) {
+          z.style.display = "block";
+        }
+      }
+    });
+
+    reportTargetAllBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(8000) + ea,
+      height: String(100) + '%',
+      left: String(0) + ea,
+      top: String(0) + ea,
+      transition: "all 0s ease",
+    };
+    for (let i in style) {
+      reportTargetAllBox.style[i] = style[i];
+    }
+    reportContentsBox.appendChild(reportTargetAllBox);
+    reportScrollBox.appendChild(reportContentsBox);
+
+    reportScrollBoxTotalWidth = 0;
+    for (let i = 0; i < reportTargetColumnTong.length; i++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("hoverDefault");
+      style = {
+        display: "inline-block",
+        position: "relative",
+        height: String(100) + '%',
+        width: String(500) + ea,
+        marginRight: String(28) + ea,
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      text_div = GeneralJs.nodes.div.cloneNode(true);
+      if (reportTargetColumnTong[i].value !== null) {
+        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name + ' : <b style="font-size:' + String(reportFontSize - 2) + ea + ';color:#2fa678;font-weight:500">' + String(reportTargetColumnTong[i].value) + '</b>');
+      } else {
+        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name);
+      }
+      style = {
+        position: "absolute",
+        fontSize: String(reportFontSize - 2) + ea,
+        fontWeight: String(200),
+        color: "#202020",
+      };
+      for (let i in style) {
+        text_div.style[i] = style[i];
+      }
+      div_clone.appendChild(text_div);
+      reportTargetAllBox.appendChild(div_clone);
+
+      reportScrollBoxTotalWidth += text_div.getBoundingClientRect().width + 28 + 2;
+      div_clone.style.width = String(text_div.getBoundingClientRect().width) + ea;
+      div_clone.addEventListener("click", reportTargetColumnTong[i].eventFunction);
+    }
+
+    reportTargetAllBox.style.width = String(reportScrollBoxTotalWidth) + ea;
+    GeneralJs.addScrollXEvent(reportContentsBox);
+
   }
 
-  reportTargetAllBox.style.width = String(reportScrollBoxTotalWidth) + ea;
-  GeneralJs.addScrollXEvent(reportContentsBox);
+  GeneralJs.stacks.reportSortTitleFunction();
 
   callback(dataDoms);
 }

@@ -4854,7 +4854,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               left: String(0) + ea,
               width: String(width) + ea,
               paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.4)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.5 : 1.3)) + ea,
+              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",

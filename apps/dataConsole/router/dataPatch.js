@@ -712,8 +712,8 @@ DataPatch.prototype.clientMap = function () {
       position: "relative",
       left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
       width: String(width) + ea,
-      paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
+      paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+      height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
       background: "#2fa678",
       fontSize: "inherit",
       color: "#ffffff",
@@ -3517,7 +3517,7 @@ DataPatch.prototype.designerRawMap = function () {
 
   reportTargetMap = {
     total: [
-      "status",
+      "meetingTime",
     ],
     presentation: [
       "presentationTimes",

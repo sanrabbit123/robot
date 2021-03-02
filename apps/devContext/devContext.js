@@ -603,17 +603,20 @@ class DevContext extends Array {
 
 
 
-      const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
-      const projects = await back.getProjectsByQuery({}, { fromLocal: true });
-      const cases = clients.getType().getTypeCases(projects);
-      for (let c of cases) {
-        console.log(c);
-      }
+      // const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
+      // const projects = await back.getProjectsByQuery({}, { fromLocal: true });
+      // const cases = clients.getType().getTypeCases(projects);
+      // for (let c of cases) {
+      //   console.log(c);
+      // }
 
+      const hangul = new ParsingHangul();
+      const total = require(`${process.cwd()}/apps/parsingHangul/library/total.js`);
+      let str = `var text = ${JSON.stringify(total.split(""), null, 2)};`;
 
+      str = str + "\n\n";
 
-
-
+      console.log(str);
 
 
       // TOOLS =========================================================================================================================================

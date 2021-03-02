@@ -80,6 +80,12 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       });
     }
 
+    //on green left
+    if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
+      await GeneralJs.sleep(300);
+      GeneralJs.stacks["grayLeftButton"].click();
+    }
+
   } catch (e) {
     console.log(e);
   }

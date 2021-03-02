@@ -1679,70 +1679,86 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
   callback(div_clone, cancelBox);
 }
 
-GeneralJs.prototype.greenAlert = function (message) {
+GeneralJs.prototype.greenAlert = async function (message) {
   const instance = this;
-  let div_clone, div_clone2;
-  let style;
-  let ea;
-  let margin;
-  let wordWidth, width;
+  try {
+    let div_clone, div_clone2;
+    let style;
+    let ea;
+    let margin;
+    let wordWidth, width;
 
-  ea = "px";
-  margin = 21;
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    borderRadius: String(5) + ea,
-    height: String(42) + ea,
-    top: String(-83) + ea,
-    boxShadow: "0px 5px 12px -8px #2fa678",
-    opacity: String(0),
-    width: String(2000) + ea,
-    transition: "all 0s ease"
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    textAlign: "center",
-    color: "white",
-    height: String(28) + ea,
-    fontSize: String(19) + ea,
-    fontWeight: String(200),
-    top: String(6) + ea,
-  };
-  for (let i in style) {
-    div_clone2.style[i] = style[i];
-  }
-  div_clone2.textContent = message;
-
-  div_clone.appendChild(div_clone2);
-  this.below.appendChild(div_clone);
-
-  wordWidth = div_clone2.getBoundingClientRect().width;
-  width = wordWidth + (margin * 2);
-
-  div_clone.style.width = String(width) + ea;
-  div_clone.style.left = "calc(50% - " + String(width / 2) + ea + ")";
-  div_clone2.style.width = String(100) + '%';
-  div_clone.style.animation = "fadeupdelay 0.5s ease forwards";
-
-  GeneralJs.timeouts["greenAlertLevel0_TimeOut"] = setTimeout(function () {
-    div_clone.style.animation = "fadedowndelay 0.5s ease forwards";
-    GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = setTimeout(function () {
-      div_clone.removeChild(div_clone2);
-      instance.below.removeChild(div_clone);
-      clearTimeout(GeneralJs.timeouts["greenAlertLevel0_TimeOut"]);
-      GeneralJs.timeouts["greenAlertLevel0_TimeOut"] = null;
+    if (GeneralJs.timeouts["greenAlertLevel0_TimeOut"] !== undefined && GeneralJs.timeouts["greenAlertLevel0_TimeOut"] !== null) {
+      GeneralJs.stacks["greenAlert_greenBox"].style.animation = "fadedowndelay 0.4s ease forwards";
+      await GeneralJs.sleep(401);
+      this.below.removeChild(GeneralJs.stacks["greenAlert_greenBox"]);
       clearTimeout(GeneralJs.timeouts["greenAlertLevel1_TimeOut"]);
+      clearTimeout(GeneralJs.timeouts["greenAlertLevel0_TimeOut"]);
       GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = null;
-    }, 600);
-  }, 3000);
+      GeneralJs.timeouts["greenAlertLevel0_TimeOut"] = null;
+    }
+
+    ea = "px";
+    margin = 21;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    GeneralJs.stacks["greenAlert_greenBox"] = div_clone;
+    style = {
+      position: "absolute",
+      background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+      borderRadius: String(5) + ea,
+      height: String(42) + ea,
+      top: String(-83) + ea,
+      boxShadow: "0px 5px 12px -8px #2fa678",
+      opacity: String(0),
+      width: String(2000) + ea,
+      transition: "all 0s ease"
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      textAlign: "center",
+      color: "white",
+      height: String(28) + ea,
+      fontSize: String(19) + ea,
+      fontWeight: String(200),
+      top: String(6) + ea,
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone2.textContent = message;
+
+    div_clone.appendChild(div_clone2);
+    this.below.appendChild(div_clone);
+
+    wordWidth = div_clone2.getBoundingClientRect().width;
+    width = wordWidth + (margin * 2);
+
+    div_clone.style.width = String(width) + ea;
+    div_clone.style.left = "calc(50% - " + String(width / 2) + ea + ")";
+    div_clone2.style.width = String(100) + '%';
+    div_clone.style.animation = "fadeupdelay 0.5s ease forwards";
+
+    GeneralJs.timeouts["greenAlertLevel0_TimeOut"] = setTimeout(function () {
+      div_clone.style.animation = "fadedowndelay 0.4s ease forwards";
+      GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = setTimeout(function () {
+        div_clone.removeChild(div_clone2);
+        instance.below.removeChild(div_clone);
+        clearTimeout(GeneralJs.timeouts["greenAlertLevel1_TimeOut"]);
+        GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = null;
+        clearTimeout(GeneralJs.timeouts["greenAlertLevel0_TimeOut"]);
+        GeneralJs.timeouts["greenAlertLevel0_TimeOut"] = null;
+      }, 410);
+    }, 2400);
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 
