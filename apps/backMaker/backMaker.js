@@ -3085,6 +3085,64 @@ BackMaker.prototype.getClientHistoriesAll = async function (option = { fromConso
   }
 }
 
+BackMaker.prototype.getClientsProperty = async function (property, cliidArr = null, option = { fromConsole: false }) {
+  const instance = this;
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
+
+    let tong, sortQuery;
+    let finalTong;
+    let findQuery, projectQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "cliid": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    projectQuery = { cliid: 1 };
+    projectQuery[property] = 1;
+
+    findQuery = { "$or": [] };
+    if (cliidArr === null) {
+      findQuery = {};
+    } else if (Array.isArray(cliidArr)) {
+      for (let c of cliidArr) {
+        findQuery["$or"].push({ cliid: c });
+      }
+    } else {
+      throw new Error("invaild cliid arr");
+    }
+
+    await MONGOLOCALC.connect();
+    if (option.limit !== undefined) {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find(findQuery).project(projectQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find(findQuery).project(projectQuery).sort(sortQuery).toArray();
+    }
+    MONGOLOCALC.close();
+
+    if (tong.length > 0) {
+      finalTong = {};
+      for (let obj of tong) {
+        finalTong[obj.cliid] = obj[property];
+      }
+      return finalTong;
+    } else {
+      return null;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackMaker.prototype.updateClientHistory = async function (queryArr, option = { fromConsole: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
@@ -3150,6 +3208,8 @@ BackMaker.prototype.createClientHistory = async function (updateQuery, option = 
       styling: "",
       budget: "",
       progress: "",
+      important: false,
+      issue: ""
     };
 
     await MONGOLOCALC.connect();
@@ -3254,6 +3314,64 @@ BackMaker.prototype.getProjectHistoriesAll = async function (option = { fromCons
   }
 }
 
+BackMaker.prototype.getProjectsProperty = async function (property, proidArr = null, option = { fromConsole: false }) {
+  const instance = this;
+  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  try {
+    let MONGOLOCALC;
+    if (option.fromConsole) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    }
+
+    let tong, sortQuery;
+    let finalTong;
+    let findQuery, projectQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "proid": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    projectQuery = { proid: 1 };
+    projectQuery[property] = 1;
+
+    findQuery = { "$or": [] };
+    if (proidArr === null) {
+      findQuery = {};
+    } else if (Array.isArray(proidArr)) {
+      for (let p of proidArr) {
+        findQuery["$or"].push({ proid: p });
+      }
+    } else {
+      throw new Error("invaild proid arr");
+    }
+
+    await MONGOLOCALC.connect();
+    if (option.limit !== undefined) {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find(findQuery).project(projectQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find(findQuery).project(projectQuery).sort(sortQuery).toArray();
+    }
+    MONGOLOCALC.close();
+
+    if (tong.length > 0) {
+      finalTong = {};
+      for (let obj of tong) {
+        finalTong[obj.proid] = obj[property];
+      }
+      return finalTong;
+    } else {
+      return null;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackMaker.prototype.updateProjectHistory = async function (queryArr, option = { fromConsole: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
@@ -3316,6 +3434,8 @@ BackMaker.prototype.createProjectHistory = async function (updateQuery, option =
       designer: "",
       client: "",
       photo: "",
+      important: false,
+      issue: "",
     };
 
     await MONGOLOCALC.connect();

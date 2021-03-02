@@ -28,6 +28,7 @@ ClientJs.prototype.standardBar = function (standard) {
   let temp, target;
   let num, leftPosition;
   let sortEventFunction;
+  let cliidDom, cliidArr;
 
   temp = {
     cliid: standard.standard.cliid.name,
@@ -122,6 +123,8 @@ ClientJs.prototype.standardBar = function (standard) {
     }
   }
 
+  cliidDom = [];
+  cliidArr = [];
   num = (standard.search === null ? 0 : 1);
   for (let { cliid, name } of target) {
     if (num === 1) {
@@ -167,7 +170,8 @@ ClientJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(cliid));
+      cliidDom.push({ cliid, dom: div_clone2 });
+      cliidArr.push(cliid);
     }
 
     if (num !== 0) {
@@ -190,6 +194,28 @@ ClientJs.prototype.standardBar = function (standard) {
   if (standard.search === null) {
     this.totalMother.appendChild(div_clone);
   }
+
+  GeneralJs.ajax("cliidArr=" + JSON.stringify(cliidArr), "/getClientsImportant", function (obj) {
+    const cliidObj = JSON.parse(obj);
+    let boo, tempFunction;
+    for (let { cliid, dom } of cliidDom) {
+      if (cliidObj[cliid] === undefined) {
+        boo = false;
+      } else {
+        if (cliidObj[cliid]) {
+          boo = true;
+        } else {
+          boo = false;
+        }
+      }
+      dom.setAttribute("important", "false");
+      dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid));
+      if (boo) {
+        tempFunction = instance.makeImportantEvent(cliid, !boo);
+        tempFunction.call(dom, { type: "click" });
+      }
+    }
+  });
 
 }
 
@@ -2652,7 +2678,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   //dev ===================================================================================
   //dev ===================================================================================
-  
+
   //get textAreaTong
   GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
     const dataArr = JSON.parse(res);
@@ -3786,15 +3812,74 @@ ClientJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-ClientJs.prototype.makeClipBoardEvent = function (id) {
+ClientJs.prototype.makeClipBoardEvent = function (text) {
   const instance = this;
   return async function (e) {
     if (e.cancelable) {
       e.preventDefault();
     }
     try {
-      await window.navigator.clipboard.writeText(id);
+      await window.navigator.clipboard.writeText(text);
       instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+ClientJs.prototype.makeImportantEvent = function (id, update = true) {
+  const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    try {
+      let alarmCircle, alarmStyle;
+      let children, length;
+      let ea;
+      let value;
+
+      ea = "px";
+      children = this.children;
+      length = children.length;
+
+      if (this.getAttribute("important") === "false") {
+
+        value = 1;
+        this.setAttribute("important", "true");
+
+        alarmStyle = {
+          position: "absolute",
+          transform: "scale(0.4)",
+          transformOrigin: "100% 0%",
+          right: String(-8.5) + ea,
+          top: (GeneralJs.isMac() ? String(3) : String(1)) + ea,
+          zIndex: String(0),
+        };
+
+        for (let i = 0; i < length; i++) {
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          for (let j in alarmStyle) {
+            alarmCircle.style[j] = alarmStyle[j];
+          }
+          children[i].appendChild(alarmCircle);
+        }
+
+      } else {
+
+        value = 0;
+        this.setAttribute("important", "false");
+        for (let i = 0; i < length; i++) {
+          children[i].removeChild(children[i].querySelector("svg"));
+        }
+
+      }
+
+      if (update) {
+        await GeneralJs.ajaxPromise("id=" + id + "&column=important&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory");
+      }
+
     } catch (e) {
       console.log(e);
     }

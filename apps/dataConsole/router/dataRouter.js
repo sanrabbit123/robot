@@ -909,7 +909,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         });
 
         await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
-
         const dir = await fileSystem(`readDir`, [ logDir ]);
         fileTarget = null;
 
@@ -921,7 +920,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         if (fileTarget !== null) {
           shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
         }
-
         await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
       }
 
@@ -1498,10 +1496,11 @@ DataRouter.prototype.rou_post_getHistory = function () {
     return str.replace(/\&/g, ",");
   }
   let obj = {};
-  obj.link = [ "/getClientHistory", "/getProjectHistory" ];
+  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getClientsImportant", "/getProjectsImportant" ];
   obj.func = async function (req, res) {
     try {
       let historyObj, responseArr;
+      let resultObj;
 
       responseArr = [];
 
@@ -1539,6 +1538,14 @@ DataRouter.prototype.rou_post_getHistory = function () {
           responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
         }
 
+      } else if (req.url === "/getClientsImportant") {
+
+        responseArr = await back.getClientsProperty("important", JSON.parse(req.body.cliidArr));
+
+      } else if (req.url === "/getProjectsImportant") {
+
+        responseArr = await back.getProjectsProperty("important", JSON.parse(req.body.proidArr));
+
       }
 
       res.set("Content-Type", "application/json");
@@ -1552,7 +1559,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
 DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   const back = this.back;
   const members = this.members;
   let obj = {};
@@ -1565,6 +1572,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       let historyObj;
       let whereQuery, updateQuery;
       let thisPerson;
+      let fileTarget;
 
       for (let member of members) {
         if (member.email.includes(email)) {
@@ -1581,30 +1589,68 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         historyObj = await back.getClientHistoryById(id);
         if (historyObj === null) {
           updateQuery.cliid = id;
-          updateQuery[column] = value;
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            updateQuery[column] = value;
+          }
           await back.createClientHistory(updateQuery);
         } else {
           whereQuery.cliid = id;
-          updateQuery[column] = value;
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            updateQuery[column] = value;
+          }
           await back.updateClientHistory([ whereQuery, updateQuery ]);
         }
 
         await fileSystem(`write`, [ logDir + "/" + "client" + "_" + "latest.json", JSON.stringify({ path: "client", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+        const dir = await fileSystem(`readDir`, [ logDir ]);
+        fileTarget = null;
+        for (let fileName of dir) {
+          if ((new RegExp("^" + id)).test(fileName)) {
+            fileTarget = fileName;
+          }
+        }
+        if (fileTarget !== null) {
+          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+        }
+        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
 
       } else if (req.url === "/updateProjectHistory") {
 
         historyObj = await back.getProjectHistoryById(id);
         if (historyObj === null) {
           updateQuery.proid = id;
-          updateQuery[column] = value;
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            updateQuery[column] = value;
+          }
           await back.createProjectHistory(updateQuery);
         } else {
           whereQuery.proid = id;
-          updateQuery[column] = value;
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            updateQuery[column] = value;
+          }
           await back.updateProjectHistory([ whereQuery, updateQuery ]);
         }
 
         await fileSystem(`write`, [ logDir + "/" + "project" + "_" + "latest.json", JSON.stringify({ path: "project", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+        const dir = await fileSystem(`readDir`, [ logDir ]);
+        fileTarget = null;
+        for (let fileName of dir) {
+          if ((new RegExp("^" + id)).test(fileName)) {
+            fileTarget = fileName;
+          }
+        }
+        if (fileTarget !== null) {
+          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+        }
+        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
 
       }
 

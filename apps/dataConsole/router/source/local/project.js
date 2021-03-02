@@ -28,6 +28,7 @@ ProjectJs.prototype.standardBar = function (standard) {
   let temp, target;
   let num, leftPosition;
   let sortEventFunction;
+  let proidDom, proidArr;
 
   temp = {
     proid: standard.standard.proid.name,
@@ -121,6 +122,8 @@ ProjectJs.prototype.standardBar = function (standard) {
     }
   }
 
+  proidDom = [];
+  proidArr = [];
   num = (standard.search === null ? 0 : 1);
   for (let { proid, name } of target) {
     if (num === 1) {
@@ -166,7 +169,8 @@ ProjectJs.prototype.standardBar = function (standard) {
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
       div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(proid));
+      proidDom.push({ proid, dom: div_clone2 });
+      proidArr.push(proid);
     }
 
     if (num !== 0) {
@@ -189,6 +193,28 @@ ProjectJs.prototype.standardBar = function (standard) {
   if (standard.search === null) {
     this.totalMother.appendChild(div_clone);
   }
+
+  GeneralJs.ajax("proidArr=" + JSON.stringify(proidArr), "/getProjectsImportant", function (obj) {
+    const proidObj = JSON.parse(obj);
+    let boo, tempFunction;
+    for (let { proid, dom } of proidDom) {
+      if (proidObj[proid] === undefined) {
+        boo = false;
+      } else {
+        if (proidObj[proid]) {
+          boo = true;
+        } else {
+          boo = false;
+        }
+      }
+      dom.setAttribute("important", "false");
+      dom.addEventListener("contextmenu", instance.makeImportantEvent(proid));
+      if (boo) {
+        tempFunction = instance.makeImportantEvent(proid, !boo);
+        tempFunction.call(dom, { type: "click" });
+      }
+    }
+  });
 
 }
 
@@ -4227,6 +4253,65 @@ ProjectJs.prototype.makeClipBoardEvent = function (id) {
     try {
       await window.navigator.clipboard.writeText(id);
       instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+ProjectJs.prototype.makeImportantEvent = function (id, update = true) {
+  const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    try {
+      let alarmCircle, alarmStyle;
+      let children, length;
+      let ea;
+      let value;
+
+      ea = "px";
+      children = this.children;
+      length = children.length;
+
+      if (this.getAttribute("important") === "false") {
+
+        value = 1;
+        this.setAttribute("important", "true");
+
+        alarmStyle = {
+          position: "absolute",
+          transform: "scale(0.4)",
+          transformOrigin: "100% 0%",
+          right: String(-8.5) + ea,
+          top: (GeneralJs.isMac() ? String(3) : String(1)) + ea,
+          zIndex: String(0),
+        };
+
+        for (let i = 0; i < length; i++) {
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          for (let j in alarmStyle) {
+            alarmCircle.style[j] = alarmStyle[j];
+          }
+          children[i].appendChild(alarmCircle);
+        }
+
+      } else {
+
+        value = 0;
+        this.setAttribute("important", "false");
+        for (let i = 0; i < length; i++) {
+          children[i].removeChild(children[i].querySelector("svg"));
+        }
+
+      }
+
+      if (update) {
+        await GeneralJs.ajaxPromise("id=" + id + "&column=important&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory");
+      }
+
     } catch (e) {
       console.log(e);
     }
