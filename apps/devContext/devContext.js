@@ -635,8 +635,11 @@ class DevContext extends Array {
         "SDGothicNeoa-fSm",
         "SDGothicNeoa-gBd",
         "SDGothicNeoa-hExBd",
-        "SDGothicNeoa-iHv",
+        // "SDGothicNeoa-iHv",
       ];
+
+
+      const subTargets = [ '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '[', ']', '{', '}', '<', '>', ',', '.', '?', '/', ':', ';', '~', '“', '”', '‘', '’' ];
 
       for (let targetIndex = 0; targetIndex < fontTargetList.length; targetIndex++) {
         this.createDoc();
@@ -662,11 +665,11 @@ class DevContext extends Array {
           temp.remove();
         }
 
-        for (let i = 0; i < text.length; i++) {
+        for (let i = 0; i < subTargets.length; i++) {
           this_ai = app.activeDocument;
           from = "general";
           to = "method" + String(targetIndex) + "_word" + String(i);
-          contents = text[i];
+          contents = subTargets[i];
           this.setCreateSetting({ from: from, to: to, exception: {
             font: fontTargetList[targetIndex]
           }});
@@ -675,7 +678,7 @@ class DevContext extends Array {
           temp = temp.createOutline();
           if (temp.height > 0) {
             temp.remove();
-            contents = "궜흖" + text[i];
+            contents = "궜흖" + subTargets[i];
             this.setCreateSetting({ from: from, to: to, exception: {
               font: fontTargetList[targetIndex]
             }});
@@ -713,56 +716,56 @@ class DevContext extends Array {
       */
 
 
+      const subTargets = [ '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '[', ']', '{', '}', '<', '>', ',', '.', '?', '/', ':', ';', '~', '“', '”', '‘', '’' ];
+      const hangul = new ParsingHangul();
+      const total = require(`${process.cwd()}/apps/parsingHangul/library/total.js`);
+      const target = `${process.env.HOME}/tempTarget`;
+      const targetDir_raw = await fileSystem(`readDir`, [ `${target}` ]);
+      let targetDir, targetIndex;
+      let optimizer;
+      let finalObj;
+      let totalArr, svgWordingObj, targetKeys;
+      let indexKeys, meanings, tempArr, resultObj;
+      let wordingsFileName;
 
-      // const hangul = new ParsingHangul();
-      // const total = require(`${process.cwd()}/apps/parsingHangul/library/total.js`);
-      // const target = `${process.env.HOME}/tempTarget`;
-      // const targetDir_raw = await fileSystem(`readDir`, [ `${target}` ]);
-      // let targetDir, targetIndex;
-      // let optimizer;
-      // let finalObj;
-      // let totalArr, svgWordingObj, targetKeys;
-      // let indexKeys, meanings, tempArr, resultObj;
-      // let wordingsFileName;
-      //
-      // for (let targetIndex = 0; targetIndex < 7; targetIndex++) {
-      //   targetDir = [];
-      //   for (let i of targetDir_raw) {
-      //     if (i !== `.DS_Store`) {
-      //       if ((new RegExp("^method" + String(targetIndex))).test(i)) {
-      //         targetDir.push(target + "/" + i);
-      //       }
-      //     }
-      //   }
-      //
-      //   optimizer = new SvgOptimizer(targetDir);
-      //   optimizer.setDcimal(3);
-      //   finalObj = await optimizer.launching();
-      //   wordingsFileName = `${target}/result/method${String(targetIndex)}_wordings.js`;
-      //
-      //   await fileSystem(`write`, [ wordingsFileName, JSON.stringify(finalObj, null, 2) ]);
-      //
-      //   totalArr = total.split('');
-      //   svgWordingObj = JSON.parse(await fileSystem(`readString`, [ wordingsFileName ]));
-      //   targetKeys = Object.keys(svgWordingObj);
-      //
-      //   indexKeys = [];
-      //   meanings = [];
-      //   for (let i of targetKeys) {
-      //     tempArr = i.split("_");
-      //     indexKeys.push(Number(tempArr[1].replace(/[^0-9]/gi, '')))
-      //     meanings.push('c' + String(totalArr[Number(tempArr[1].replace(/[^0-9]/gi, ''))].charCodeAt()))
-      //   }
-      //
-      //   resultObj = {};
-      //   for (let i = 0; i < meanings.length; i++) {
-      //     resultObj[meanings[i]] = svgWordingObj[targetKeys[i]];
-      //   }
-      //
-      //   wordingsFileName = `${target}/result/method${String(targetIndex)}_final.js`;
-      //   await fileSystem(`write`, [ wordingsFileName, JSON.stringify(resultObj, null, 2) ]);
-      //   console.log(resultObj);
-      // }
+      for (let targetIndex = 0; targetIndex < 7; targetIndex++) {
+        targetDir = [];
+        for (let i of targetDir_raw) {
+          if (i !== `.DS_Store`) {
+            if ((new RegExp("^method" + String(targetIndex))).test(i)) {
+              targetDir.push(target + "/" + i);
+            }
+          }
+        }
+
+        optimizer = new SvgOptimizer(targetDir);
+        optimizer.setDcimal(3);
+        finalObj = await optimizer.launching();
+        wordingsFileName = `${target}/result/method${String(targetIndex)}_wordings.js`;
+
+        await fileSystem(`write`, [ wordingsFileName, JSON.stringify(finalObj, null, 2) ]);
+
+        totalArr = total.split('');
+        svgWordingObj = JSON.parse(await fileSystem(`readString`, [ wordingsFileName ]));
+        targetKeys = Object.keys(svgWordingObj);
+
+        indexKeys = [];
+        meanings = [];
+        for (let i of targetKeys) {
+          tempArr = i.split("_");
+          indexKeys.push(Number(tempArr[1].replace(/[^0-9]/gi, '')))
+          meanings.push('c' + String(totalArr[Number(tempArr[1].replace(/[^0-9]/gi, ''))].charCodeAt()))
+        }
+
+        resultObj = {};
+        for (let i = 0; i < meanings.length; i++) {
+          resultObj[meanings[i]] = svgWordingObj[targetKeys[i]];
+        }
+
+        wordingsFileName = `${target}/result/method${String(targetIndex)}_final.js`;
+        await fileSystem(`write`, [ wordingsFileName, JSON.stringify(resultObj, null, 2) ]);
+        console.log(resultObj);
+      }
 
       // TOOLS =========================================================================================================================================
 
