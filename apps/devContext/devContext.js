@@ -619,9 +619,44 @@ class DevContext extends Array {
 
       str = `const text = ${JSON.stringify(total.split(""), null, 2)};`;
       str += "\n\n";
-      str += `let this_ai, from, to, contents, temp, items, count;
+      str += `let this_ai, from, to, contents, temp, items, count, testWording, tempNum, finalHeight;
+
+      const fontTargetList = [
+        "SDGothicNeoa-aTh",
+        "SDGothicNeoa-bUltLt",
+        "SDGothicNeoa-cLt",
+        "SDGothicNeoa-dRg",
+        "SDGothicNeoa-eMd",
+        "SDGothicNeoa-fSm",
+        "SDGothicNeoa-gBd",
+        "SDGothicNeoa-hExBd",
+        "SDGothicNeoa-iHv",
+      ];
 
       this.createDoc();
+
+      tempNum = Math.floor(text.length / 20) + 1;
+
+      finalHeight = 0;
+
+      for (let i = 0; i < tempNum; i++) {
+        testWording = text.slice((20 * i), (20 * (i + 1)));
+        this_ai = app.activeDocument;
+        from = "general";
+        to = "wordTest";
+        contents = testWording.join("");
+        this.setCreateSetting({ from: from, to: to, exception: {
+          font: fontTargetList[0]
+        }});
+        this.setParagraph({ from: contents, to: to });
+        temp = this.createElements(this_ai, this.createSetting[to]);
+        temp = temp.createOutline();
+
+        if (temp.height > finalHeight) {
+          finalHeight = temp.height;
+        }
+        temp.remove();
+      }
 
       for (let i = 0; i < text.length; i++) {
         this_ai = app.activeDocument;
@@ -629,13 +664,13 @@ class DevContext extends Array {
         to = "word" + String(i);
         contents = text[i];
         this.setCreateSetting({ from: from, to: to, exception: {
-          font: "SDGothicNeoa-fSm"
+          font: fontTargetList[0]
         }});
         this.setParagraph({ from: contents, to: to });
         temp = this.createElements(this_ai, this.createSetting[to]);
         temp = temp.createOutline();
         if (temp.height > 0) {
-          this.mother.fit_box();
+          this.mother.fit_box({ height: { value: finalHeight } });
           app.doScript("expandall", "contents_maker");
           this.saveSvg(this_ai, to, true);
         } else {
@@ -651,9 +686,6 @@ class DevContext extends Array {
       }
 
       app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);`
-
-
-
 
       await fileSystem(`write`, [ fileName, str ]);
       await contents.tempLaunching(fileName);
