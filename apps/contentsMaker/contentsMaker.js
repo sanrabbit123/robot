@@ -251,7 +251,7 @@ ContentsMaker.prototype.tempLaunching = async function (file) {
   const { fileSystem } = this.mother;
   try {
     const fileString = await fileSystem(`readString`, [ file ]);
-    const scriptString = await this.generator.general_maker.exec(this.options, fileString);
+    const scriptString = await this.generator.general_maker.exec(this.options, `ExecMain.prototype.start = function (dayString) { \nthis.dayString = dayString;\n ${fileString} \n };`);
     await this.startAdobe({
       name: `tempAi_launching`,
       data: {},

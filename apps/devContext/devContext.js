@@ -611,13 +611,52 @@ class DevContext extends Array {
       // }
 
       const hangul = new ParsingHangul();
+      const contents = new ContentsMaker();
       const total = require(`${process.cwd()}/apps/parsingHangul/library/total.js`);
-      let str = `var text = ${JSON.stringify(total.split(""), null, 2)};`;
+      let str, fileName;
 
-      str = str + "\n\n";
+      fileName = `${process.cwd()}/temp/aiscripting.js`;
 
-      console.log(str);
+      str = `const text = ${JSON.stringify(total.split(""), null, 2)};`;
+      str += "\n\n";
+      str += `let this_ai, from, to, contents, temp, items, count;
 
+      this.createDoc();
+
+      for (let i = 0; i < text.length; i++) {
+        this_ai = app.activeDocument;
+        from = "general";
+        to = "word" + String(i);
+        contents = text[i];
+        this.setCreateSetting({ from: from, to: to, exception: {
+          font: "SDGothicNeoa-fSm"
+        }});
+        this.setParagraph({ from: contents, to: to });
+        temp = this.createElements(this_ai, this.createSetting[to]);
+        temp = temp.createOutline();
+        if (temp.height > 0) {
+          this.mother.fit_box();
+          app.doScript("expandall", "contents_maker");
+          this.saveSvg(this_ai, to, true);
+        } else {
+          items = [];
+          for (let j = 0; j < this_ai.pageItems.length; j++) {
+            items.push(this_ai.pageItems[j]);
+          }
+          count = this_ai.length;
+          for (let j = 0; j < count; j++) {
+            items[j].remove();
+          }
+        }
+      }
+
+      app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);`
+
+
+
+
+      await fileSystem(`write`, [ fileName, str ]);
+      await contents.tempLaunching(fileName);
 
       // TOOLS =========================================================================================================================================
 
