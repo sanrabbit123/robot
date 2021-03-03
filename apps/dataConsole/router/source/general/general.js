@@ -1331,9 +1331,142 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   }
 }
 
+GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHeight) {
+  let pathArr = window.location.pathname.split("?");
+  const thisPathName = pathArr[0].replace(/\//g, '');
+  let mainWording;
+  let div_clone, div_clone2;
+  let style;
+  let ea;
+  let top, left, height;
+  let buttons;
+  let lineHeight;
+
+  ea = "px";
+  left = 24;
+  height = 36;
+  top = 15;
+  buttons = [
+    "1차 응대 예정",
+    "1차 응대 후 대기",
+    "제안 발송 예정",
+    "제안 피드백 대기",
+    "제안 피드백 완료",
+    "제안 후 대기",
+    "연결 안 됨",
+    "계약금 입금",
+    "계약서 서명",
+    "잔금 입금",
+    "응대 종료",
+    "해당 없음"
+  ];
+  lineHeight = 26;
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(motherWidth - (left * 2)) + ea,
+    height: String(height) + ea,
+    left: String(left) + ea,
+    top: String(top) + ea,
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  mainWording = GeneralJs.nodes.div.cloneNode(true);
+  mainWording.textContent = "응대중";
+  style = {
+    position: "absolute",
+    fontSize: String(21) + ea,
+    fontWeight: String(200),
+    height: String(height) + ea,
+    left: String(0) + ea,
+    top: String(0) + ea,
+  };
+  for (let i in style) {
+    mainWording.style[i] = style[i];
+  }
+  div_clone.appendChild(mainWording);
+
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.textContent = String(80);
+  style = {
+    position: "absolute",
+    fontSize: String(21) + ea,
+    fontWeight: String(200),
+    height: String(height) + ea,
+    top: String(0) + ea,
+    color: "#2fa678",
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+  div_clone.appendChild(div_clone2);
+
+  dashboardBox.appendChild(div_clone);
+
+  div_clone2.style.left = String(mainWording.getBoundingClientRect().width + 8) + ea;
+
+  for (let z = 0; z < buttons.length; z++) {
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(((motherWidth - (left * 2)) / 2) - 8) + ea,
+      height: String(height) + ea,
+      left: String(left + ((z < (buttons.length / 2)) ? 0 : 154)) + ea,
+      top: String(top + 15 + (z < (buttons.length / 2) ? (lineHeight * (z + 1)) : (lineHeight * (z + 1 - Math.floor(buttons.length / 2))))) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.textContent = buttons[z];
+    style = {
+      position: "absolute",
+      fontSize: String(14) + ea,
+      fontWeight: String(500),
+      height: String(height) + ea,
+      left: String(0) + ea,
+      top: String(0) + ea,
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone.appendChild(div_clone2);
+
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.textContent = String(80);
+    style = {
+      position: "absolute",
+      fontSize: String(14) + ea,
+      fontWeight: String(300),
+      height: String(height) + ea,
+      right: String(0) + ea,
+      top: String(0) + ea,
+      color: "#2fa678"
+    };
+    for (let i in style) {
+      div_clone2.style[i] = style[i];
+    }
+    div_clone.appendChild(div_clone2);
+
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone2.textContent = String(42);
+    div_clone.appendChild(div_clone2);
+    dashboardBox.appendChild(div_clone);
+  }
+
+
+
+}
+
 GeneralJs.prototype.greenBar = function () {
   const instance = this;
-  let div_clone, div_clone2, svg_icon;
+  let div_clone, div_clone2, div_clone3, svg_icon;
   let input_clone;
   let style = {};
   let additionalStyle = {};
@@ -1342,6 +1475,8 @@ GeneralJs.prototype.greenBar = function () {
   let move;
   let moveEventLeft, moveEventRight;
   let top, belowTop, right, iconRight;
+  let width, height;
+  let dashboardBox;
 
   this.belowHeight = 123;
 
@@ -1789,6 +1924,7 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.moveArea.left = div_clone2;
   this.below.appendChild(div_clone2);
 
+
   //sub pannel button
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.id = "grayLeftOpenButton";
@@ -1816,6 +1952,131 @@ GeneralJs.prototype.greenBar = function () {
   GeneralJs.stacks["grayLeftButton"] = div_clone2;
   this.below.appendChild(div_clone2);
 
+
+  //dashboard
+  width = 340;
+  height = 244;
+  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "fixed",
+    background: "white",
+    right: String(20) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+    borderRadius: String(5) + ea,
+    bottom: String(158) + ea,
+    overflow: "hidden",
+    opacity: String(0.9),
+    boxShadow: "-1px 4px 15px -9px #aaaaaa",
+    backdropFilter: "blur(" + String(4) + ea + ")",
+    transition: "all 0s ease",
+    zIndex: String(102),
+  };
+  for (let i in style) {
+    div_clone2.style[i] = style[i];
+  }
+
+  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(100) + "%",
+    height: String(14) + ea,
+    top: String(0),
+    left: String(0),
+    background: "#ececec",
+    cursor: "move",
+    transition: "all 0s ease",
+  };
+  for (let i in style) {
+    div_clone3.style[i] = style[i];
+  }
+  div_clone2.appendChild(div_clone3);
+
+  div_clone3.setAttribute("draggable", "true");
+
+  div_clone3.addEventListener("dragstart", function (e) {
+    const that = this.parentNode;
+    let div;
+    let style, ea;
+
+    GeneralJs.stacks["windowDragStartPoint"] = 0;
+    GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
+    ea = "px";
+
+    div = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      background: "transparent",
+      width: String(100) + '%',
+      height: String(100) + '%',
+      top: String(0),
+      left: String(0)
+    };
+    for (let i in style) {
+      div.style[i] = style[i];
+    }
+    div.addEventListener("dragover", function (e) {
+      that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
+      that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+      e.preventDefault();
+    });
+    GeneralJs.stacks["windowDragBack"] = div;
+    that.parentNode.insertBefore(div, that);
+
+    e.dataTransfer.setData("dragData", that);
+    const img = new Image();
+    e.dataTransfer.setDragImage(img, 1, 1);
+  });
+
+  div_clone3.addEventListener("dragend", function (e) {
+    GeneralJs.stacks["windowDragBack"].parentElement.removeChild(GeneralJs.stacks["windowDragBack"]);
+    GeneralJs.stacks["windowDragBack"] = null;
+    e.preventDefault();
+  });
+
+  div_clone3.addEventListener("dragenter", function (e) {
+    e.preventDefault();
+  });
+
+  div_clone3.addEventListener("dragleave", function (e) {
+    e.preventDefault();
+  });
+
+  div_clone3.addEventListener("dragover", function (e) {
+    const that = this.parentNode;
+    that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
+    that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+    e.preventDefault();
+  });
+
+  div_clone2.addEventListener("dragover", function (e) {
+    const that = this;
+    that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
+    that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+    e.preventDefault();
+  });
+
+  div_clone3.addEventListener("drop", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  dashboardBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    width: String(100) + "%",
+    height: "calc(100% - " + String(14) + ea + ")",
+    marginTop: String(14) + ea,
+    background: "white",
+    transition: "all 0s ease",
+  };
+  for (let i in style) {
+    dashboardBox.style[i] = style[i];
+  }
+  div_clone2.appendChild(dashboardBox);
+  this.below.appendChild(div_clone2);
+
+  GeneralJs.dashboardBoxLaunching(dashboardBox, width, height);
 }
 
 GeneralJs.prototype.memberView = function () {
