@@ -810,8 +810,8 @@ class DevContext extends Array {
 
       // spawn catfish
 
-      // const app = new SpawnCatfish();
-      // await app.spawnLaunching(false);
+      const app = new SpawnCatfish();
+      await app.spawnLaunching(false);
 
       // contents upload
 
