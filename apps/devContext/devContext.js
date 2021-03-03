@@ -718,6 +718,48 @@ class DevContext extends Array {
 
 
 
+
+      // const sheets = new GoogleSheet();
+      // const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
+      // const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      // const ABC = [];
+      // for (let i of alphabet) { ABC.push(i); }
+      // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      // let tong;
+      //
+      // tong = await sheets.get_value_inPython(sheetsId, "응대중 고객 현황!A10:I70");
+      //
+      // console.log(tong);
+      //
+      // const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+      // let MONGOLOCALC, arr, arr2;
+      // let whereQuery, updateQuery;
+      // MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      // await MONGOLOCALC.connect();
+      // arr = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({}).toArray();
+      // arr2 = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
+      // for (let { cliid } of arr) {
+      //   whereQuery = { cliid };
+      //   updateQuery = { "manager": "-" };
+      //   await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).updateOne(whereQuery, { "$set": updateQuery });
+      // }
+      // for (let [ cliid, nothing, name, status, action, manager, kakao, prefer, issue ] of tong) {
+      //   whereQuery = { cliid };
+      //   updateQuery = { manager, issue };
+      //   await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).updateOne(whereQuery, { "$set": updateQuery });
+      // }
+      //
+      // for (let { proid } of arr2) {
+      //   whereQuery = { proid };
+      //   updateQuery = { "manager": "-" };
+      //   await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { "$set": updateQuery });
+      // }
+      // MONGOLOCALC.close();
+
+
+
+
+
       // TOOLS =========================================================================================================================================
 
       // parsingHangul

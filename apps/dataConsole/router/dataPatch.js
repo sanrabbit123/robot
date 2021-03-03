@@ -384,24 +384,36 @@ DataPatch.prototype.toolsGrayLeftStandard = function (button) {
     resultObj.barLeft = 8;
     resultObj.updateWidth = 115;
     resultObj.columnIndent = 93;
+    resultObj.secondWidth = 900;
+    resultObj.secondLeft = 200;
+    resultObj.secondUpdateWidth = 660;
   } else if (button === "designer") {
     resultObj.targetColumn = "status";
     resultObj.barWidth = 214;
     resultObj.barLeft = 8;
     resultObj.updateWidth = 115;
     resultObj.columnIndent = 96;
+    resultObj.secondWidth = 900;
+    resultObj.secondLeft = 200;
+    resultObj.secondUpdateWidth = 660;
   } else if (button === "project") {
     resultObj.targetColumn = "designer";
     resultObj.barWidth = 211;
     resultObj.barLeft = 8;
     resultObj.updateWidth = 115;
     resultObj.columnIndent = 96;
+    resultObj.secondWidth = 900;
+    resultObj.secondLeft = 200;
+    resultObj.secondUpdateWidth = 660;
   } else if (button === "contents") {
     resultObj.targetColumn = "rid";
     resultObj.barWidth = 211;
     resultObj.barLeft = 8;
     resultObj.updateWidth = 115;
     resultObj.columnIndent = 96;
+    resultObj.secondWidth = 900;
+    resultObj.secondLeft = 200;
+    resultObj.secondUpdateWidth = 660;
   }
   return resultObj;
 }

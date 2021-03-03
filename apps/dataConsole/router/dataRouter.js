@@ -1496,7 +1496,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
     return str.replace(/\&/g, ",");
   }
   let obj = {};
-  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getClientsImportant", "/getProjectsImportant" ];
+  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
   obj.func = async function (req, res) {
     try {
       let historyObj, responseArr;
@@ -1545,6 +1545,22 @@ DataRouter.prototype.rou_post_getHistory = function () {
       } else if (req.url === "/getProjectsImportant") {
 
         responseArr = await back.getProjectsProperty("important", JSON.parse(req.body.proidArr));
+
+      } else if (req.url === "/getClientsManager") {
+
+        responseArr = await back.getClientsProperty("manager", JSON.parse(req.body.idArr));
+
+      } else if (req.url === "/getProjectsManager") {
+
+        responseArr = await back.getProjectsProperty("manager", JSON.parse(req.body.idArr));
+
+      } else if (req.url === "/getClientsIssue") {
+
+        responseArr = await back.getClientsProperty("issue", JSON.parse(req.body.idArr));
+
+      } else if (req.url === "/getProjectsIssue") {
+
+        responseArr = await back.getProjectsProperty("issue", JSON.parse(req.body.idArr));
 
       }
 
@@ -2064,7 +2080,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
   obj.link = "/getMembers";
   obj.func = async function (req, res) {
     try {
-      const membersArr = JSON.parse(await instance.mother.pythonExecute(instance.pythonApp, [ "getMembers" ], {}));
+      const membersArr = instance.members;
       let emailArr = [];
       let targetMember = null;
 
@@ -2074,7 +2090,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
         res.send(JSON.stringify(membersArr));
 
       } else if (req.body.type === "boo") {
-        for (let { id, email } of membersArr.members) {
+        for (let { id, email } of membersArr) {
           for (let e of email) {
             emailArr.push({ email: e, id });
           }
@@ -2082,9 +2098,9 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
         for (let i = 0; i < emailArr.length; i++) {
           if (req.body.value === emailArr[i].email) {
-            for (let j = 0; j < membersArr.members.length; j++) {
-              if (emailArr[i].id === membersArr.members[j].id) {
-                targetMember = membersArr.members[j];
+            for (let j = 0; j < membersArr.length; j++) {
+              if (emailArr[i].id === membersArr[j].id) {
+                targetMember = membersArr[j];
               }
             }
           }
@@ -2092,7 +2108,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
         //dev------------------------------------------------------
         if (req.body.value === "homeliaisonphoto@gmail.com") {
-          targetMember = membersArr.members[7];
+          targetMember = membersArr[7];
         }
         //---------------------------------------------------------
 
@@ -2621,11 +2637,11 @@ DataRouter.prototype.rou_post_analyticsReport = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_pasingLatestLog = function () {
+DataRouter.prototype.rou_post_parsingLatestLog = function () {
   const instance = this;
   const { fileSystem } = this.mother;
   let obj = {};
-  obj.link = "/pasingLatestLog";
+  obj.link = "/parsingLatestLog";
   obj.func = async function (req, res) {
     try {
       if (req.body.idArr === undefined) {

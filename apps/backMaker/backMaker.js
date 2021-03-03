@@ -3209,7 +3209,8 @@ BackMaker.prototype.createClientHistory = async function (updateQuery, option = 
       budget: "",
       progress: "",
       important: false,
-      issue: ""
+      issue: "",
+      manager: "-"
     };
 
     await MONGOLOCALC.connect();
@@ -3436,6 +3437,7 @@ BackMaker.prototype.createProjectHistory = async function (updateQuery, option =
       photo: "",
       important: false,
       issue: "",
+      manager: "-"
     };
 
     await MONGOLOCALC.connect();

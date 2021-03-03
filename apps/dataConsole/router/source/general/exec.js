@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                 }
                 if (document.querySelector("." + where + "_gray") !== null) {
                   domTargetGray = document.querySelector("." + where + "_gray");
-                  domTargetGray.firstChild.textContent = who;
                   domTargetGrayChild = null;
                   for (let i of domTargetGray.children) {
                     if (i.getAttribute("column") === column) {
@@ -82,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 
     //on green left
     if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
-      await GeneralJs.sleep(300);
+      await GeneralJs.sleep(200);
       GeneralJs.stacks["grayLeftButton"].click();
     }
 

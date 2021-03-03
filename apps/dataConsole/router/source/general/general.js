@@ -730,11 +730,14 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null, grayDataAlready = null) {
   let pathArr = window.location.pathname.split("?");
   const thisPathName = pathArr[0].replace(/\//g, '');
-  const { targetColumn, barWidth, barLeft, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
-  const UPDATE_WORD = "최종 수정";
+  const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
+  const UPDATE_WORD = "담당자";
+  const cookies = GeneralJs.getCookiesAll();
   GeneralJs.stacks["grayTitle"] = null;
   GeneralJs.stacks["grayData"] = null;
+  GeneralJs.stacks["grayDataDoms"] = null;
   return function (e) {
+    const grayButton = document.getElementById("grayLeftOpenButton");
     const thisButton = this;
     let targetIndex;
     let grayData, grayTitle, grayTong;
@@ -826,12 +829,27 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
           }
 
+          GeneralJs.stacks["grayDataDoms"] = [];
           GeneralJs.stacks["grayTitle"] = grayTitle;
           GeneralJs.stacks["grayData"] = grayData;
 
-          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/pasingLatestLog").then(function (data) {
-            const personArr = JSON.parse(data);
-            let temp_clone, pastClassName;
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/getClientsManager").then(function (data) {
+            let rawObj = JSON.parse(data);
+            if (rawObj === null) {
+              rawObj = {};
+            }
+            let personArr, temp_clone, pastClassName;
+            let text_div;
+            let sortEvent, memberEvent;
+
+            personArr = [];
+            for (let id of idArr) {
+              if (rawObj[id] === undefined) {
+                personArr.push('-');
+              } else {
+                personArr.push(rawObj[id]);
+              }
+            }
 
             if (reload) {
               while (grayTitle.firstChild) {
@@ -844,10 +862,225 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
             personArr.unshift("");
 
+            sortEvent = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const button = this;
+              const id = this.parentNode.className.replace(/\_gray$/, '');
+              let cancel_event, cancel_inputBack;
+              let style;
+              let ea = "px";
+
+              cancel_event = function (e) {
+                const removeTargets = document.querySelectorAll(".removeTarget");
+                for (let i = 0; i < removeTargets.length; i++) {
+                  removeTargets[i].parentNode.removeChild(removeTargets[i]);
+                }
+              }
+
+              cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
+              cancel_inputBack.classList.add("removeTarget");
+              style = {
+                position: "fixed",
+                top: String(0) + ea,
+                left: String(-1 * (window.innerWidth - barWidth - 210 - ((grayButton.getAttribute("set") === "first") ? 0 : secondUpdateWidth))) + ea,
+                width: String(window.innerWidth - 210) + ea,
+                height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
+                opacity: String(0.7),
+                zIndex: String(3),
+                background: "transparent",
+              };
+              for (let i in style) {
+                cancel_inputBack.style[i] = style[i];
+              }
+              cancel_inputBack.addEventListener("click", cancel_event);
+              this.parentNode.appendChild(cancel_inputBack);
+
+              GeneralJs.ajax("type=get", "/getMembers", function (arr) {
+                const members = JSON.parse(arr);
+                let items = [];
+                for (let { name } of members) {
+                  items.push(name);
+                }
+                items.unshift("전체");
+                let button_clone, buttonStyle;
+                let width, height, top;
+                let margin;
+
+                margin = 20;
+                width = updateWidth - (margin * 2);
+                height = 17.6;
+                top = (height * 0.5) - 37;
+
+                buttonStyle = {
+                  position: "absolute",
+                  left: String(barLeft + margin) + ea,
+                  width: String(width) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                  background: "#2fa678",
+                  textAlign: "center",
+                  fontSize: String(14) + ea,
+                  color: "#ffffff",
+                  borderRadius: String(3) + ea,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  boxShadow: "0px 2px 11px -6px #2fa678",
+                  zIndex: String(3),
+                  cursor: "pointer",
+                };
+
+                for (let i = 0; i < items.length; i++) {
+                  button_clone = GeneralJs.nodes.div.cloneNode(true);
+                  button_clone.classList.add("removeTarget");
+                  button_clone.textContent = items[i];
+                  button_clone.setAttribute("buttonValue", items[i]);
+                  for (let j in buttonStyle) {
+                    button_clone.style[j] = buttonStyle[j];
+                  }
+                  button_clone.style.top = String(((height * 2) * (i + 1)) - top) + ea;
+                  button_clone.addEventListener("click", function (e) {
+                    const [ standardDoms_raw, caseDomsTitle_raw, caseDoms_raw ] = document.querySelector(".totalMother").children;
+                    let standardDoms, caseDoms;
+                    let ea = "px";
+                    standardDoms = [];
+                    for (let i = 1; i < standardDoms_raw.children.length; i++) {
+                      standardDoms.push(standardDoms_raw.children[i]);
+                    }
+                    caseDoms = caseDoms_raw.children;
+                    if (/^전체/.test(this.textContent)) {
+                      for (let j = 1; j < caseDoms.length; j++) {
+                        standardDoms[j].style.display = "block";
+                        caseDoms[j].style.display = "block";
+                        GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                        GeneralJs.stacks["grayData"].style.height = '';
+                        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                        }
+                      }
+                    } else {
+                      for (let j = 1; j < caseDoms.length; j++) {
+                        if (GeneralJs.stacks["grayDataDoms"][j].children[0].textContent !== this.textContent) {
+                          standardDoms[j].style.display = "none";
+                          caseDoms[j].style.display = "none";
+                          GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
+                          GeneralJs.stacks["grayData"].style.height = '';
+                          if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                            GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                          }
+                        } else {
+                          if (caseDoms[j].style.display !== "none") {
+                            standardDoms[j].style.display = "block";
+                            caseDoms[j].style.display = "block";
+                            GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                            GeneralJs.stacks["grayData"].style.height = '';
+                            if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                              GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                            }
+                          }
+                        }
+                      }
+                    }
+                    cancel_event.call(cancel_inputBack, e);
+                  });
+                  button.parentNode.appendChild(button_clone);
+                }
+              });
+            }
+
+            memberEvent = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const button = this;
+              const id = this.parentNode.className.replace(/\_gray$/, '');
+              let cancel_inputBack;
+              let style;
+              let ea = "px";
+
+              cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
+              cancel_inputBack.classList.add("removeTarget");
+              style = {
+                position: "fixed",
+                top: String(0) + ea,
+                left: String(-1 * (window.innerWidth - barWidth - 210 - ((grayButton.getAttribute("set") === "first") ? 0 : secondUpdateWidth))) + ea,
+                width: String(window.innerWidth - 210) + ea,
+                height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
+                opacity: String(0.7),
+                zIndex: String(3),
+              };
+              for (let i in style) {
+                cancel_inputBack.style[i] = style[i];
+              }
+              cancel_inputBack.addEventListener("click", function (e) {
+                const removeTargets = document.querySelectorAll(".removeTarget");
+                for (let i = 0; i < removeTargets.length; i++) {
+                  removeTargets[i].parentNode.removeChild(removeTargets[i]);
+                }
+              });
+              this.parentNode.appendChild(cancel_inputBack);
+
+              GeneralJs.ajax("type=get", "/getMembers", function (arr) {
+                const members = JSON.parse(arr);
+                let items = [];
+                for (let { name } of members) {
+                  items.push(name);
+                }
+                let button_clone, buttonStyle;
+                let width, height, top;
+                let margin;
+
+                margin = 20;
+                width = updateWidth - (margin * 2);
+                height = 17.6;
+                top = height * 0.5;
+
+                buttonStyle = {
+                  position: "absolute",
+                  left: String(barLeft + margin) + ea,
+                  width: String(width) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                  background: "#2fa678",
+                  textAlign: "center",
+                  fontSize: String(14) + ea,
+                  color: "#ffffff",
+                  borderRadius: String(3) + ea,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  boxShadow: "0px 2px 11px -6px #2fa678",
+                  zIndex: String(3),
+                  cursor: "pointer",
+                };
+
+                for (let i = 0; i < items.length; i++) {
+                  button_clone = GeneralJs.nodes.div.cloneNode(true);
+                  button_clone.classList.add("removeTarget");
+                  button_clone.textContent = items[i];
+                  button_clone.setAttribute("buttonValue", items[i]);
+                  for (let j in buttonStyle) {
+                    button_clone.style[j] = buttonStyle[j];
+                  }
+                  button_clone.style.top = String(((height * 2) * (i + 1)) - top) + ea;
+                  button_clone.addEventListener("click", function (e) {
+                    const value = this.textContent;
+                    GeneralJs.ajax("id=" + id + "&column=manager&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function () {
+                      button.textContent = value;
+                      const removeTargets = document.querySelectorAll(".removeTarget");
+                      for (let i = 0; i < removeTargets.length; i++) {
+                        removeTargets[i].parentNode.removeChild(removeTargets[i]);
+                      }
+                    });
+                  });
+                  button.parentNode.appendChild(button_clone);
+                }
+              });
+
+            }
+
             temp_clone = infoAreaTitle.children[targetIndex].cloneNode(false);
             temp_clone.textContent = UPDATE_WORD;
             temp_clone.style.width = String(updateWidth) + ea;
             temp_clone.style.left = String(barLeft) + ea;
+            temp_clone.addEventListener("click", sortEvent);
+            temp_clone.addEventListener("contextmenu", sortEvent);
             grayTitle.appendChild(temp_clone);
 
             temp_clone = infoAreaTitle.children[targetIndex].cloneNode(true);
@@ -866,6 +1099,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 temp_clone.style.width = String(updateWidth) + ea;
                 temp_clone.style.left = String(barLeft) + ea;
                 temp_clone.style.color = "#404040";
+                temp_clone.addEventListener("click", memberEvent);
+                temp_clone.addEventListener("contextmenu", memberEvent);
                 grayTong.appendChild(temp_clone);
 
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(true);
@@ -874,6 +1109,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 grayTong.appendChild(temp_clone);
               }
               grayData.appendChild(grayTong);
+              GeneralJs.stacks["grayDataDoms"].push(grayTong);
             }
 
             if (grayData.getBoundingClientRect().height < window.innerHeight) {
@@ -882,7 +1118,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
             GeneralJs.timeouts["grayRightBarOn"] = setTimeout(function () {
               thisButton.setAttribute("progress", "done");
-              thisButton.setAttribute("set", "on");
+              thisButton.setAttribute("set", "first");
               grayTitle.style.transform = "translateX(0" + ea + ")";
               grayData.style.transform = "translateX(0" + ea + ")";
               thisButton.style.transform = "translateX(-" + String(barWidth) + ea + ")";
@@ -895,10 +1131,83 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             console.log(e);
           });
 
-        } else {
+        } else if (this.getAttribute("set") === "first") {
           thisButton.setAttribute("progress", "doing");
-          document.getElementById("rightGrayPannel_title").style.transform = "translateX(" + String(barWidth) + ea + ")";
-          document.getElementById("rightGrayPannel_data").style.transform = "translateX(" + String(barWidth) + ea + ")";
+
+          idArr = [];
+          for (let i = 2; i < standardBar.children.length; i++) {
+            idArr.push(standardBar.children[i].firstChild.textContent);
+          }
+
+          thisButton.setAttribute("progress", "doing");
+
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/getClientsIssue").then(function (data) {
+            const rawObj = JSON.parse(data);
+            let personArr, temp_clone, pastClassName;
+
+            personArr = [];
+            for (let id of idArr) {
+              if (rawObj[id] === undefined) {
+                personArr.push('');
+              } else {
+                personArr.push(rawObj[id]);
+              }
+            }
+
+            personArr.unshift("");
+
+            temp_clone = infoAreaTitle.children[targetIndex].cloneNode(false);
+            temp_clone.textContent = "이슈 사항";
+            temp_clone.style.width = String(secondUpdateWidth) + ea;
+            temp_clone.style.left = String(secondLeft + 18) + ea;
+            GeneralJs.stacks["grayTitle"].appendChild(temp_clone);
+
+            for (let i = 0; i < dataLength + 1; i++) {
+              grayTong = infoAreaData.children[i].cloneNode(false);
+              pastClassName = grayTong.className;
+              if (i !== 0) {
+
+                temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(false);
+                temp_clone.setAttribute("column", "issue");
+                temp_clone.style.width = String(secondUpdateWidth) + ea;
+                temp_clone.style.left = String(secondLeft) + ea;
+
+                text_div = GeneralJs.nodes.div.cloneNode(true);
+                text_div.textContent = personArr[i];
+                text_div.style.fontSize = String(14) + ea;
+                text_div.style.color = "#404040";
+                text_div.style.position = "absolute";
+                text_div.style.top = String(0) + ea;
+                text_div.style.left = String(34) + ea;
+                text_div.style.width = "calc(100% - " + String(34) + ea + ")";
+                temp_clone.appendChild(text_div);
+
+                GeneralJs.stacks["grayData"].children[i].appendChild(temp_clone);
+              }
+            }
+
+            if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+              GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+            }
+
+            document.getElementById("rightGrayPannel_title").style.width = String(secondWidth) + ea;
+            document.getElementById("rightGrayPannel_data").style.width = String(secondWidth) + ea;
+            thisButton.style.transform = "translateX(-" + String(secondWidth) + ea + ")";
+            GeneralJs.timeouts["grayRightBarSecond"] = setTimeout(function () {
+              thisButton.setAttribute("progress", "done");
+              thisButton.setAttribute("set", "second");
+              clearTimeout(GeneralJs.timeouts["grayRightBarSecond"]);
+              GeneralJs.timeouts["grayRightBarSecond"] = null;
+            }, 301);
+
+          }).catch(function (e) {
+            console.log(e);
+          });
+
+        } else if (this.getAttribute("set") === "second") {
+          thisButton.setAttribute("progress", "doing");
+          document.getElementById("rightGrayPannel_title").style.transform = "translateX(" + String(secondWidth) + ea + ")";
+          document.getElementById("rightGrayPannel_data").style.transform = "translateX(" + String(secondWidth) + ea + ")";
           thisButton.style.transform = "translateX(0" + ea + ")";
           thisButton.style.background = "#2fa678";
           GeneralJs.timeouts["grayRightBarOff"] = setTimeout(function () {
@@ -908,10 +1217,12 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             document.querySelector(".totalMother").removeChild(document.getElementById("rightGrayPannel_data"));
             GeneralJs.stacks["grayTitle"] = null;
             GeneralJs.stacks["grayData"] = null;
+            GeneralJs.stacks["grayDataDoms"] = null;
             clearTimeout(GeneralJs.timeouts["grayRightBarOff"]);
             GeneralJs.timeouts["grayRightBarOff"] = null;
           }, 301);
         }
+
       }
     }
 
@@ -1081,6 +1392,12 @@ GeneralJs.prototype.greenBar = function () {
     svg_icon.style[i] = additionalStyle[i];
   }
   this.belowButtons.square.returnIcon = svg_icon;
+  svg_icon.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.localStorage.clear();
+    window.location.reload();
+  });
   div_clone.appendChild(svg_icon);
 
   //button C
@@ -1372,6 +1689,7 @@ GeneralJs.prototype.greenBar = function () {
 
   //sub pannel button
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.id = "grayLeftOpenButton";
   div_clone2.classList.add("hoverdefault_lite_reverse");
   style = {
     position: "fixed",

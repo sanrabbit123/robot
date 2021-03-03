@@ -4504,7 +4504,7 @@ ProposalJs.prototype.launching = async function () {
                 document.querySelector(".listpp_menuEvent_selected").click();
                 clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut3"]);
                 GeneralJs.timeouts["belowLaunchingTimeOut3"] = null;
-              }, 401);
+              }, 601);
             } else {
               client = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"))[0];
               instance.mother.searchInput.nextElementSibling.value = client.name;
@@ -4524,13 +4524,13 @@ ProposalJs.prototype.launching = async function () {
                       document.querySelector(".listpp_menuEvent_selected").click();
                       clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut5"]);
                       GeneralJs.timeouts["belowLaunchingTimeOut5"] = null;
-                    }, 401);
+                    }, 601);
                   } else {
                     alert("제안서를 만들어 주세요.");
                   }
                   clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut4"]);
                   GeneralJs.timeouts["belowLaunchingTimeOut4"] = null;
-                }, 401);
+                }, 601);
               }
             }
             clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut2"]);
@@ -4538,7 +4538,7 @@ ProposalJs.prototype.launching = async function () {
           } catch (e) {
             console.log(e);
           }
-        }, 401);
+        }, 601);
         clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut"]);
         GeneralJs.timeouts["belowLaunchingTimeOut"] = null;
       }, 0);

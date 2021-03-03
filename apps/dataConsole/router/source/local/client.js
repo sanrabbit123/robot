@@ -88,13 +88,23 @@ ClientJs.prototype.standardBar = function (standard) {
 
   sortEventFunction = function (index) {
     return function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       let s, h, arr, toggle;
+      let g, tempObj;
       s = document.createDocumentFragment();
       h = document.createDocumentFragment();
+      g = document.createDocumentFragment();
       arr = [];
       toggle = Number(instance.standardDoms[0].getAttribute("sort"));
       for (let i = 1; i < instance.standardDoms.length; i++) {
-        arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
+        tempObj = {};
+        tempObj.standard = instance.standardDoms[i];
+        tempObj.caseDom = instance.caseDoms[i];
+        if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+          tempObj.grayDom = GeneralJs.stacks["grayDataDoms"][i];
+        }
+        arr.push(tempObj);
       }
       arr.sort((a, b) => {
         if (/^[0-9]/.test(a.standard.children[index].textContent) && !/\-/g.test(a.standard.children[index].textContent)) {
@@ -113,12 +123,22 @@ ClientJs.prototype.standardBar = function (standard) {
           return 0;
         }
       });
-      for (let { standard, caseDom } of arr) {
-        s.appendChild(standard);
-        h.appendChild(caseDom);
+      for (let obj of arr) {
+        s.appendChild(obj.standard);
+        h.appendChild(obj.caseDom);
+        if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+          g.appendChild(obj.grayDom);
+        }
       }
       instance.totalMother.firstChild.appendChild(s);
       instance.totalMother.children[2].appendChild(h);
+      if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+        GeneralJs.stacks["grayData"].appendChild(g);
+        GeneralJs.stacks["grayData"].style.height = '';
+        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+        }
+      }
       instance.standardDoms[0].setAttribute("sort", String(toggle ? 0 : 1));
     }
   }
@@ -152,7 +172,7 @@ ClientJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[0]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("click", sortEventFunction(0));
+      div_clone3.addEventListener("contextmenu", sortEventFunction(0));
     }
     div_clone2.appendChild(div_clone3);
 
@@ -163,7 +183,7 @@ ClientJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[1]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("click", sortEventFunction(1));
+      div_clone3.addEventListener("contextmenu", sortEventFunction(1));
     }
     div_clone2.appendChild(div_clone3);
 
@@ -198,21 +218,24 @@ ClientJs.prototype.standardBar = function (standard) {
   GeneralJs.ajax("cliidArr=" + JSON.stringify(cliidArr), "/getClientsImportant", function (obj) {
     const cliidObj = JSON.parse(obj);
     let boo, tempFunction;
-    for (let { cliid, dom } of cliidDom) {
-      if (cliidObj[cliid] === undefined) {
-        boo = false;
-      } else {
-        if (cliidObj[cliid]) {
-          boo = true;
-        } else {
+
+    if (cliidObj !== null) {
+      for (let { cliid, dom } of cliidDom) {
+        if (cliidObj[cliid] === undefined) {
           boo = false;
+        } else {
+          if (cliidObj[cliid]) {
+            boo = true;
+          } else {
+            boo = false;
+          }
         }
-      }
-      dom.setAttribute("important", "false");
-      dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid));
-      if (boo) {
-        tempFunction = instance.makeImportantEvent(cliid, !boo);
-        tempFunction.call(dom, { type: "click" });
+        dom.setAttribute("important", "false");
+        dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid));
+        if (boo) {
+          tempFunction = instance.makeImportantEvent(cliid, !boo);
+          tempFunction.call(dom, { type: "click" });
+        }
       }
     }
   });
@@ -791,12 +814,21 @@ ClientJs.prototype.infoArea = function (info) {
 
       sort_event = function (toggle = true) {
         return function (e) {
-          let s, h, arr;
+          let s, h, g, arr;
+          let tempObj;
           s = document.createDocumentFragment();
           h = document.createDocumentFragment();
+          g = document.createDocumentFragment();
           arr = [];
+
           for (let i = 1; i < instance.caseDoms.length; i++) {
-            arr.push({ standard: instance.standardDoms[i], caseDom: instance.caseDoms[i] });
+            tempObj = {};
+            tempObj.standard = instance.standardDoms[i];
+            tempObj.caseDom = instance.caseDoms[i];
+            if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+              tempObj.grayDom = GeneralJs.stacks["grayDataDoms"][i];
+            }
+            arr.push(tempObj);
           }
 
           arr.sort((a, b) => {
@@ -817,12 +849,22 @@ ClientJs.prototype.infoArea = function (info) {
             }
           });
 
-          for (let { standard, caseDom } of arr) {
-            s.appendChild(standard);
-            h.appendChild(caseDom);
+          for (let obj of arr) {
+            s.appendChild(obj.standard);
+            h.appendChild(obj.caseDom);
+            if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+              g.appendChild(obj.grayDom);
+            }
           }
           instance.totalMother.firstChild.appendChild(s);
           instance.totalMother.children[2].appendChild(h);
+          if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+            GeneralJs.stacks["grayData"].appendChild(g);
+            GeneralJs.stacks["grayData"].style.height = '';
+            if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+              GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+            }
+          }
           cancel_event.call(this, e);
         }
       }
@@ -843,6 +885,11 @@ ClientJs.prototype.infoArea = function (info) {
       for (let i in style) {
         cancel_inputBack.style[i] = style[i];
       }
+      cancel_inputBack.addEventListener("dragstart", (e) => { e.stopPropagation(); e.preventDefault(); });
+      cancel_inputBack.addEventListener("dragenter", (e) => { e.stopPropagation(); e.preventDefault(); });
+      cancel_inputBack.addEventListener("dragleave", (e) => { e.stopPropagation(); e.preventDefault(); });
+      cancel_inputBack.addEventListener("dragover", (e) => { e.stopPropagation(); e.preventDefault(); });
+      cancel_inputBack.addEventListener("drop", (e) => { e.stopPropagation(); e.preventDefault(); });
       this.appendChild(cancel_inputBack);
 
       cancel_inputBack.addEventListener("click", cancel_event);
@@ -870,6 +917,7 @@ ClientJs.prototype.infoArea = function (info) {
           background: "#2fa678",
           textAlign: "center",
           fontSize: "inherit",
+          fontWeight: String(500),
           color: "#ffffff",
           zIndex: String(3),
           borderRadius: String(3) + ea,
@@ -886,6 +934,13 @@ ClientJs.prototype.infoArea = function (info) {
             for (let j = 1; j < instance.caseDoms.length; j++) {
               instance.standardDoms[j].style.display = "block";
               instance.caseDoms[j].style.display = "block";
+              if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                GeneralJs.stacks["grayData"].style.height = '';
+                if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                  GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                }
+              }
             }
             cancel_event.call(this, e);
           });
@@ -897,23 +952,57 @@ ClientJs.prototype.infoArea = function (info) {
                 if (instance.caseDoms[j].children[z].textContent !== this.textContent) {
                   instance.standardDoms[j].style.display = "none";
                   instance.caseDoms[j].style.display = "none";
+                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                    GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
+                    GeneralJs.stacks["grayData"].style.height = '';
+                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                    }
+                  }
                 } else {
                   instance.standardDoms[j].style.display = "block";
                   instance.caseDoms[j].style.display = "block";
+                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                    GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                    GeneralJs.stacks["grayData"].style.height = '';
+                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                    }
+                  }
                 }
               } else {
                 if (/^1[6789]/.test(instance.caseDoms[j].children[z].textContent) || instance.caseDoms[j].children[z].textContent === '' || instance.caseDoms[j].children[z].textContent === '-') {
                   instance.standardDoms[j].style.display = this.textContent === "Y" ? "none": "block";
                   instance.caseDoms[j].style.display = this.textContent === "Y" ? "none": "block";
+                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                    GeneralJs.stacks["grayDataDoms"][j].style.display = this.textContent === "Y" ? "none": "block";
+                    GeneralJs.stacks["grayData"].style.height = '';
+                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                    }
+                  }
                 } else {
                   instance.standardDoms[j].style.display = this.textContent === "Y" ? "block": "none";
                   instance.caseDoms[j].style.display = this.textContent === "Y" ? "block": "none";
+                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                    GeneralJs.stacks["grayDataDoms"][j].style.display = this.textContent === "Y" ? "block": "none";
+                    GeneralJs.stacks["grayData"].style.height = '';
+                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                    }
+                  }
                 }
               }
             }
             cancel_event.call(this, e);
           });
         }
+        button_clone.addEventListener("contextmenu", (e) => { e.stopPropagation(); e.preventDefault(); });
+        button_clone.addEventListener("dragstart", (e) => { e.stopPropagation(); e.preventDefault(); });
+        button_clone.addEventListener("dragenter", (e) => { e.stopPropagation(); e.preventDefault(); });
+        button_clone.addEventListener("dragleave", (e) => { e.stopPropagation(); e.preventDefault(); });
+        button_clone.addEventListener("dragover", (e) => { e.stopPropagation(); e.preventDefault(); });
+        button_clone.addEventListener("drop", (e) => { e.stopPropagation(); e.preventDefault(); });
         this.appendChild(button_clone);
       }
     }
@@ -2538,7 +2627,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       let target;
       for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }
@@ -3532,6 +3621,7 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
 
       let grayOn = false;
       if (GeneralJs.stacks["grayTitle"] !== null) {
+        GeneralJs.stacks["grayLeftButton"].setAttribute("set", "second");
         GeneralJs.grayLeftLaunching().call(GeneralJs.stacks["grayLeftButton"], {});
         grayOn = true;
       }
