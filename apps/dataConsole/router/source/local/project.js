@@ -214,7 +214,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
-  GeneralJs.ajax("proidArr=" + JSON.stringify(proidArr), "/getProjectsImportant", function (obj) {
+  GeneralJs.ajax("idArr=" + JSON.stringify(proidArr) + "&method=project&property=important", "/getHistoryProperty", function (obj) {
     const proidObj = JSON.parse(obj);
     let boo, tempFunction;
     if (proidObj !== null) {

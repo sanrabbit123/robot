@@ -242,9 +242,19 @@ const withToolsArr = function (ContentsArr) {
           if (typeof this[i] === "number") {
             sql += this[i];
           } else {
-            sql += "'";
-            sql += this[i].replace(/'/g, '"');
-            sql += "'";
+            if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/gi.test(this[i])) {
+              sql += "STR_TO_DATE('";
+              sql += this[i].replace(/'/g, '"');
+              sql += "', '%Y-%m-%d')";
+            } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/gi.test(this[i])) {
+              sql += "STR_TO_DATE('";
+              sql += this[i].replace(/'/g, '"');
+              sql += "', '%Y-%m-%d %H:%i:%s')";
+            } else {
+              sql += "'";
+              sql += this[i].replace(/'/g, '"');
+              sql += "'";
+            }
           }
           sql += ",";
         }

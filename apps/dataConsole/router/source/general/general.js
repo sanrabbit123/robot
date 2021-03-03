@@ -462,7 +462,7 @@ GeneralJs.prototype.generalCss = function () {
   const styleTag = document.querySelector("style");
   const css = `
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
-  *{margin:0;padding:0;transition:all 0.4s ease;font-family:'sandoll'}
+  *{margin:0;padding:0;transition:all 0.3s ease;font-family:'sandoll'}
   *::-webkit-scrollbar{display:none;}
   input::placeholder {color:white;opacity:0.5;}
   body,div{font-size:0;color:#404040;margin:0;}
@@ -833,7 +833,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
           GeneralJs.stacks["grayTitle"] = grayTitle;
           GeneralJs.stacks["grayData"] = grayData;
 
-          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/getClientsManager").then(function (data) {
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr) + "&method=" + thisPathName + "&property=manager", "/getHistoryProperty").then(function (data) {
             let rawObj = JSON.parse(data);
             if (rawObj === null) {
               rawObj = {};
@@ -902,6 +902,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 for (let { name } of members) {
                   items.push(name);
                 }
+                items.unshift("홀딩");
+                items.unshift("미지정");
                 items.unshift("전체");
                 let button_clone, buttonStyle;
                 let width, height, top;
@@ -916,8 +918,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   left: String(barLeft + margin) + ea,
                   width: String(width) + ea,
-                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
-                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.3)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.4)) + ea,
                   background: "#2fa678",
                   textAlign: "center",
                   fontSize: String(14) + ea,
@@ -952,33 +954,42 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                         standardDoms[j].style.display = "block";
                         caseDoms[j].style.display = "block";
                         GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
-                        GeneralJs.stacks["grayData"].style.height = '';
-                        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                      }
+
+                    } else if (/^미지정/.test(this.textContent)) {
+
+                      for (let j = 1; j < caseDoms.length; j++) {
+                        if (GeneralJs.stacks["grayDataDoms"][j].children[0].textContent === '-' || GeneralJs.stacks["grayDataDoms"][j].children[0].textContent === '') {
+                          standardDoms[j].style.display = "block";
+                          caseDoms[j].style.display = "block";
+                          GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                        } else {
+                          standardDoms[j].style.display = "none";
+                          caseDoms[j].style.display = "none";
+                          GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
                         }
                       }
+
                     } else {
+
                       for (let j = 1; j < caseDoms.length; j++) {
                         if (GeneralJs.stacks["grayDataDoms"][j].children[0].textContent !== this.textContent) {
                           standardDoms[j].style.display = "none";
                           caseDoms[j].style.display = "none";
                           GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
-                          GeneralJs.stacks["grayData"].style.height = '';
-                          if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                            GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
-                          }
                         } else {
                           if (caseDoms[j].style.display !== "none") {
                             standardDoms[j].style.display = "block";
                             caseDoms[j].style.display = "block";
                             GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
-                            GeneralJs.stacks["grayData"].style.height = '';
-                            if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                              GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
-                            }
                           }
                         }
                       }
+
+                    }
+                    GeneralJs.stacks["grayData"].style.height = '';
+                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
                     }
                     cancel_event.call(cancel_inputBack, e);
                   });
@@ -1024,6 +1035,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 for (let { name } of members) {
                   items.push(name);
                 }
+                items.unshift("홀딩");
                 let button_clone, buttonStyle;
                 let width, height, top;
                 let margin;
@@ -1037,8 +1049,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   left: String(barLeft + margin) + ea,
                   width: String(width) + ea,
-                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
-                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.3)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.4)) + ea,
                   background: "#2fa678",
                   textAlign: "center",
                   fontSize: String(14) + ea,
@@ -1061,7 +1073,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   button_clone.style.top = String(((height * 2) * (i + 1)) - top) + ea;
                   button_clone.addEventListener("click", function (e) {
                     const value = this.textContent;
-                    GeneralJs.ajax("id=" + id + "&column=manager&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function () {
+                    GeneralJs.ajax("id=" + id + "&column=manager&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail + "&method=" + thisPathName, "/updateHistory", function () {
                       button.textContent = value;
                       const removeTargets = document.querySelectorAll(".removeTarget");
                       for (let i = 0; i < removeTargets.length; i++) {
@@ -1141,9 +1153,10 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
           thisButton.setAttribute("progress", "doing");
 
-          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr), "/getClientsIssue").then(function (data) {
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr) + "&method=" + thisPathName + "&property=issue", "/getHistoryProperty").then(function (data) {
             const rawObj = JSON.parse(data);
             let personArr, temp_clone, pastClassName;
+            let longUpdateEvent;
 
             personArr = [];
             for (let id of idArr) {
@@ -1157,21 +1170,109 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             personArr.unshift("");
 
             temp_clone = infoAreaTitle.children[targetIndex].cloneNode(false);
-            temp_clone.textContent = "이슈 사항";
+            temp_clone.textContent = "메모";
             temp_clone.style.width = String(secondUpdateWidth) + ea;
             temp_clone.style.left = String(secondLeft + 18) + ea;
             GeneralJs.stacks["grayTitle"].appendChild(temp_clone);
 
+            longUpdateEvent = function (e) {
+              e.stopPropagation();
+              e.preventDefault();
+
+              if (this.querySelector("input") !== null) {
+                return;
+              }
+
+              const id = this.parentNode.className.replace(/\_gray$/, '');
+              const text_div = this.firstChild;
+              let input_clone;
+              let ea;
+              let style;
+              let cancel_event, cancel_inputBack;
+
+              ea = "px";
+
+              cancel_event = function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                const removeTargets = document.querySelectorAll(".removeTarget");
+                for (let i = 0; i < removeTargets.length; i++) {
+                  removeTargets[i].parentNode.removeChild(removeTargets[i]);
+                }
+                text_div.style.opacity = String(1);
+              }
+
+              cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
+              cancel_inputBack.classList.add("removeTarget");
+              style = {
+                position: "fixed",
+                top: String(0) + ea,
+                left: String(-1 * (window.innerWidth - barWidth - 210 - ((grayButton.getAttribute("set") === "first") ? 0 : secondUpdateWidth))) + ea,
+                width: String(window.innerWidth - 210) + ea,
+                height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
+                opacity: String(0.7),
+                zIndex: String(3),
+                background: "transparent",
+              };
+              for (let i in style) {
+                cancel_inputBack.style[i] = style[i];
+              }
+              cancel_inputBack.addEventListener("click", cancel_event);
+              this.appendChild(cancel_inputBack);
+
+              input_clone = GeneralJs.nodes.input.cloneNode(true);
+              input_clone.classList.add("removeTarget");
+              input_clone.value = text_div.textContent;
+              style = {
+                position: "absolute",
+                color: "#2fa678",
+                fontSize: text_div.style.fontSize,
+                fontWeight: text_div.style.fontWeight,
+                top: text_div.style.top,
+                left: text_div.style.left,
+                width: text_div.style.width,
+                height: text_div.style.height,
+                outline: String(0),
+                border: String(0),
+                background: "transparent",
+                textAlign: "center",
+                zIndex: String(3),
+              };
+              for (let i in style) {
+                input_clone.style[i] = style[i];
+              }
+              input_clone.addEventListener("click", (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              });
+              input_clone.addEventListener("keypress", async function (e) {
+                try {
+                  if (e.keyCode === 13) {
+                    text_div.textContent = this.value;
+                    await GeneralJs.ajaxPromise("id=" + id + "&column=issue&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail + "&method=" + thisPathName, "/updateHistory");
+                    cancel_event.call(this, e);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+              input_clone.addEventListener("contextmenu", cancel_event);
+
+              text_div.style.transition = "all 0s ease";
+              text_div.style.opacity = String(0);
+
+              this.appendChild(input_clone);
+            }
+
             for (let i = 0; i < dataLength + 1; i++) {
               grayTong = infoAreaData.children[i].cloneNode(false);
               pastClassName = grayTong.className;
-              if (i !== 0) {
 
+              if (i !== 0) {
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(false);
                 temp_clone.setAttribute("column", "issue");
                 temp_clone.style.width = String(secondUpdateWidth) + ea;
                 temp_clone.style.left = String(secondLeft) + ea;
-
                 text_div = GeneralJs.nodes.div.cloneNode(true);
                 text_div.textContent = personArr[i];
                 text_div.style.fontSize = String(14) + ea;
@@ -1181,7 +1282,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 text_div.style.left = String(34) + ea;
                 text_div.style.width = "calc(100% - " + String(34) + ea + ")";
                 temp_clone.appendChild(text_div);
-
+                temp_clone.addEventListener("click", longUpdateEvent);
+                temp_clone.addEventListener("contextmenu", longUpdateEvent);
                 GeneralJs.stacks["grayData"].children[i].appendChild(temp_clone);
               }
             }

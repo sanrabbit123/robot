@@ -1496,38 +1496,39 @@ DataRouter.prototype.rou_post_getHistory = function () {
     return str.replace(/\&/g, ",");
   }
   let obj = {};
-  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
+  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
   obj.func = async function (req, res) {
     try {
       let historyObj, responseArr;
       let resultObj;
+      let method;
 
       responseArr = [];
 
       if (req.url === "/getClientHistory") {
 
-        historyObj = await back.getClientHistoryById(req.body.id);
+        historyObj = await back.getHistoryById("client", req.body.id);
 
         if (historyObj === null) {
-          await back.createClientHistory({ cliid: req.body.id });
+          await back.createHistory("client", { cliid: req.body.id });
           for (let i = 0; i < 6; i++) {
             responseArr.push('');
           }
         } else {
-          responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
-          responseArr.push((historyObj.space === undefined ? '' : stringFilter(historyObj.space)));
-          responseArr.push((historyObj.styling === undefined ? '' : stringFilter(historyObj.styling)));
-          responseArr.push((historyObj.construct === undefined ? '' : stringFilter(historyObj.construct)));
-          responseArr.push((historyObj.budget === undefined ? '' : stringFilter(historyObj.budget)));
-          responseArr.push((historyObj.progress === undefined ? '' : stringFilter(historyObj.progress)));
+          responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+          responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
+          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
+          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
+          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
+          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
         }
 
       } else if (req.url === "/getProjectHistory") {
 
-        historyObj = await back.getProjectHistoryById(req.body.id);
+        historyObj = await back.getHistoryById("project", req.body.id);
 
         if (historyObj === null) {
-          await back.createProjectHistory({ proid: req.body.id });
+          await back.createHistory("project", { proid: req.body.id });
           for (let i = 0; i < 4; i++) {
             responseArr.push('');
           }
@@ -1538,30 +1539,8 @@ DataRouter.prototype.rou_post_getHistory = function () {
           responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
         }
 
-      } else if (req.url === "/getClientsImportant") {
-
-        responseArr = await back.getClientsProperty("important", JSON.parse(req.body.cliidArr));
-
-      } else if (req.url === "/getProjectsImportant") {
-
-        responseArr = await back.getProjectsProperty("important", JSON.parse(req.body.proidArr));
-
-      } else if (req.url === "/getClientsManager") {
-
-        responseArr = await back.getClientsProperty("manager", JSON.parse(req.body.idArr));
-
-      } else if (req.url === "/getProjectsManager") {
-
-        responseArr = await back.getProjectsProperty("manager", JSON.parse(req.body.idArr));
-
-      } else if (req.url === "/getClientsIssue") {
-
-        responseArr = await back.getClientsProperty("issue", JSON.parse(req.body.idArr));
-
-      } else if (req.url === "/getProjectsIssue") {
-
-        responseArr = await back.getProjectsProperty("issue", JSON.parse(req.body.idArr));
-
+      } else if (req.url === "/getHistoryProperty") {
+        responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr));
       }
 
       res.set("Content-Type", "application/json");
@@ -1579,7 +1558,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   const back = this.back;
   const members = this.members;
   let obj = {};
-  obj.link = [ "/updateClientHistory", "/updateProjectHistory" ];
+  obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory" ];
   obj.func = async function (req, res) {
     try {
       const today = new Date();
@@ -1589,6 +1568,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       let whereQuery, updateQuery;
       let thisPerson;
       let fileTarget;
+      let method, standard;
 
       for (let member of members) {
         if (member.email.includes(email)) {
@@ -1600,75 +1580,69 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       whereQuery = {};
       updateQuery = {};
 
-      if (req.url === "/updateClientHistory") {
-
-        historyObj = await back.getClientHistoryById(id);
-        if (historyObj === null) {
-          updateQuery.cliid = id;
-          if (column === "important") {
-            updateQuery[column] = (Number(value) === 1);
-          } else {
-            updateQuery[column] = value;
-          }
-          await back.createClientHistory(updateQuery);
+      if (/Client/gi.test(req.url)) {
+        method = "client";
+      } else if (/Project/gi.test(req.url)) {
+        method = "project";
+      } else if (/Designer/gi.test(req.url)) {
+        method = "designer";
+      } else if (/Contents/gi.test(req.url)) {
+        method = "contents";
+      } else {
+        if (req.body.method === undefined) {
+          throw new Error("invaild method");
         } else {
-          whereQuery.cliid = id;
-          if (column === "important") {
-            updateQuery[column] = (Number(value) === 1);
-          } else {
-            updateQuery[column] = value;
-          }
-          await back.updateClientHistory([ whereQuery, updateQuery ]);
+          method = req.body.method;
         }
-
-        await fileSystem(`write`, [ logDir + "/" + "client" + "_" + "latest.json", JSON.stringify({ path: "client", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
-        const dir = await fileSystem(`readDir`, [ logDir ]);
-        fileTarget = null;
-        for (let fileName of dir) {
-          if ((new RegExp("^" + id)).test(fileName)) {
-            fileTarget = fileName;
-          }
-        }
-        if (fileTarget !== null) {
-          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-        }
-        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
-
-      } else if (req.url === "/updateProjectHistory") {
-
-        historyObj = await back.getProjectHistoryById(id);
-        if (historyObj === null) {
-          updateQuery.proid = id;
-          if (column === "important") {
-            updateQuery[column] = (Number(value) === 1);
-          } else {
-            updateQuery[column] = value;
-          }
-          await back.createProjectHistory(updateQuery);
-        } else {
-          whereQuery.proid = id;
-          if (column === "important") {
-            updateQuery[column] = (Number(value) === 1);
-          } else {
-            updateQuery[column] = value;
-          }
-          await back.updateProjectHistory([ whereQuery, updateQuery ]);
-        }
-
-        await fileSystem(`write`, [ logDir + "/" + "project" + "_" + "latest.json", JSON.stringify({ path: "project", who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
-        const dir = await fileSystem(`readDir`, [ logDir ]);
-        fileTarget = null;
-        for (let fileName of dir) {
-          if ((new RegExp("^" + id)).test(fileName)) {
-            fileTarget = fileName;
-          }
-        }
-        if (fileTarget !== null) {
-          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-        }
-        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
-
       }
+
+      if (/client/gi.test(method)) {
+        standard = "cliid";
+      } else if (/project/gi.test(method)) {
+        standard = "proid";
+      } else if (/designer/gi.test(method)) {
+        standard = "desid";
+      } else if (/contents/gi.test(method)) {
+        standard = "conid";
+      } else {
+        throw new Error("invaild method");
+      }
+
+      historyObj = await back.getHistoryById(method, id);
+      if (historyObj === null) {
+        updateQuery = {};
+        updateQuery[standard] = id;
+        if (column === "important") {
+          updateQuery[column] = (Number(value) === 1);
+        } else {
+          updateQuery[column] = value;
+        }
+        console.log(updateQuery);
+        await back.createHistory(method, updateQuery);
+      } else {
+        whereQuery = {};
+        whereQuery[standard] = id;
+        if (column === "important") {
+          updateQuery[column] = (Number(value) === 1);
+        } else {
+          updateQuery[column] = value;
+        }
+        console.log(updateQuery);
+        await back.updateHistory(method, [ whereQuery, updateQuery ]);
+      }
+
+      await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+      const dir = await fileSystem(`readDir`, [ logDir ]);
+      fileTarget = null;
+      for (let fileName of dir) {
+        if ((new RegExp("^" + id)).test(fileName)) {
+          fileTarget = fileName;
+        }
+      }
+      if (fileTarget !== null) {
+        shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+      }
+      await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
@@ -2002,7 +1976,7 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
         historyObj.budget = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.budget === undefined ? [] : notionCard.detailStory.budget))));
         historyObj.progress = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.progress === undefined ? [] : notionCard.detailStory.progress))));
 
-        await instance.back.updateClientHistory([ whereQuery, historyObj ]);
+        await instance.back.updateHistory("client", [ whereQuery, historyObj ]);
 
       } else if (req.body.desid !== undefined) {
         whereQuery.desid = req.body.desid;

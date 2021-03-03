@@ -215,7 +215,7 @@ ClientJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
-  GeneralJs.ajax("cliidArr=" + JSON.stringify(cliidArr), "/getClientsImportant", function (obj) {
+  GeneralJs.ajax("idArr=" + JSON.stringify(cliidArr) + "&method=client&property=important", "/getHistoryProperty", function (obj) {
     const cliidObj = JSON.parse(obj);
     let boo, tempFunction;
 

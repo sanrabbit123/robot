@@ -725,19 +725,32 @@ class DevContext extends Array {
       // const ABC = [];
       // for (let i of alphabet) { ABC.push(i); }
       // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
-      // let tong;
+      // let tong, tong2;
       //
       // tong = await sheets.get_value_inPython(sheetsId, "응대중 고객 현황!A10:I70");
       //
       // console.log(tong);
       //
+      //
+      // tong2 = await sheets.get_value_inPython(sheetsId, "프로젝트케어!A9:J");
+      //
+      // console.log(tong2);
+      //
+      //
       // const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
       // let MONGOLOCALC, arr, arr2;
       // let whereQuery, updateQuery;
+      // let designers, contentsArr;
+      //
+      // designers = await back.getDesignersByQuery({});
+      // contentsArr = await back.getContentsArrByQuery({});
+      //
       // MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
       // await MONGOLOCALC.connect();
+      //
       // arr = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({}).toArray();
       // arr2 = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
+      //
       // for (let { cliid } of arr) {
       //   whereQuery = { cliid };
       //   updateQuery = { "manager": "-" };
@@ -754,6 +767,31 @@ class DevContext extends Array {
       //   updateQuery = { "manager": "-" };
       //   await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { "$set": updateQuery });
       // }
+      // for (let [ proid, name, status, contract, designer, service, action, manager, nothing, issue ] of tong2) {
+      //   whereQuery = { proid };
+      //   updateQuery = { manager, issue };
+      //   await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { "$set": updateQuery });
+      // }
+      //
+      // for (let { desid } of designers) {
+      //   await MONGOLOCALC.db(`miro81`).collection(`designerHistory`).insertOne({
+      //     desid,
+      //     manager: "-",
+      //     issuse: "",
+      //     important: false,
+      //   });
+      // }
+      //
+      // for (let { conid } of contentsArr) {
+      //   await MONGOLOCALC.db(`miro81`).collection(`contentsHistory`).insertOne({
+      //     conid,
+      //     manager: "-",
+      //     issuse: "",
+      //     important: false,
+      //   });
+      // }
+      //
+      //
       // MONGOLOCALC.close();
 
 
