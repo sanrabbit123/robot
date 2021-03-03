@@ -1,4 +1,10 @@
 {
-  "password": "homeliaison",
-  "hash": ""
+  "mongo": {
+    "password": "homeliaison",
+    "hash": ""
+  },
+  "mysql": {
+    "password": "homeliaison",
+    "hash": ""
+  }
 }

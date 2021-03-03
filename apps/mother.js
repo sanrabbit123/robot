@@ -22,6 +22,13 @@ const Mother = function () {
     port: infoObj.frontinfo.port,
     database: infoObj.frontinfo.database
   };
+  this.mysqlofficeinfo = {
+    host: infoObj.officeinfo.mysql.outer,
+    user: infoObj.officeinfo.mysql.user,
+    password: infoObj.officeinfo.mysql.password,
+    port: infoObj.officeinfo.mysql.port,
+    database: infoObj.officeinfo.mysql.database
+  };
   this.mysql = require("mysql2");
 
   //shell

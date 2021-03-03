@@ -70,41 +70,6 @@ const fileSystem = function (sw, arr) {
       break;
   }
 }
-const getData = async function () {
-  try {
-    const currentNode = process.cwd();
-    const currentNodeArr = currentNode.split("/");
-    let targetDir, targetDirList, targetDirList_filtered;
-    let jsonString;
-
-    if (currentNodeArr[currentNodeArr.length - 1] === "node") {
-      currentNodeArr.pop();
-      currentNodeArr.push("jsondata");
-    } else {
-      currentNodeArr.push("jsondata");
-    }
-
-    targetDir = currentNodeArr.join("/");
-
-    targetDirList = await fileSystem(`readDir`, [ targetDir ]);
-    targetDirList_filtered = [];
-    for (let i of targetDirList) {
-      if (i !== `.DS_Store`) {
-        targetDirList_filtered.push(i);
-      }
-    }
-
-    targetDirList_filtered.sort((a, b) => {
-      return Number(b.replace(/[^0-9]/g, '')) - Number(a.replace(/[^0-9]/g, ''));
-    });
-
-    jsonString = JSON.parse(await fileSystem(`readString`, [ targetDir + "/" + targetDirList_filtered[0] ]));
-
-    return { json: jsonString, name: targetDir + "/" + targetDirList_filtered[0] };
-  } catch (e) {
-    console.log(e);
-  }
-}
 const cryptoString = function (password, string) {
   const crypto = require('crypto');
   const algorithm = 'aes-192-cbc';
@@ -152,25 +117,52 @@ const decryptoHash = function (password, hash) {
     });
   });
 }
+const mysqlQuery = function (query, mysqlStandard) {
+  const mysql = require('mysql2');
+  const { host, user, password, database } = mysqlStandard;
+  const connection = mysql.createConnection({ host, user, password, database });
+  let tong = {};
+  if (Array.isArray(query)) {
+    let promiseList;
+    promiseList = [];
+    for (let i of query) {
+      promiseList.push(connection.promise().query(i));
+    }
+    return new Promise(function (resolve, reject) {
+      Promise.all(promiseList).then((values) => {
+        tong = values;
+        connection.end();
+        resolve(tong);
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  } else {
+    return new Promise(function (resolve, reject) {
+      connection.promise().query(query).then(function (response) {
+        tong = response;
+      }).then(function () {
+        connection.end();
+        if (Array.isArray(tong)) {
+          if (tong.length > 0) {
+            resolve(tong[0]);
+          } else {
+            resolve("done");
+          }
+        } else {
+          resolve("done");
+        }
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  }
+}
 
 async function main() {
   try {
-    const dateToNumber = function (rawStr) {
-      let tempDate;
-      let tempArr;
-      tempDate = new Date(rawStr);
-      tempArr = [ String(tempDate.getFullYear()), String(tempDate.getMonth() + 1), String(tempDate.getDate()), String(tempDate.getHours()), String(tempDate.getMinutes()), String(tempDate.getSeconds()) ];
-      return tempArr.join("_");
-    }
-    const stringToArr = function (dateString) {
-      let tempArr0;
-      tempArr0 = dateString.split('-');
-      return [ Number(tempArr0[0]), Number(tempArr0[1].replace(/^0/, '')) - 1, Number(tempArr0[2].replace(/^0/, '')) ];
-    }
-
     const current = process.cwd();
     const currentDir = current.split("/");
-
     if (currentDir[currentDir.length - 1] === "node") {
       currentDir.pop();
       currentDir.push("jsondata");
@@ -179,55 +171,13 @@ async function main() {
     } else {
       throw new Error("invalid cwd");
     }
-
     const targetDir = currentDir.join("/");
     const targetDirArr = await fileSystem("readDir", [ targetDir ]);
-    const { password, hash } = JSON.parse(await fileSystem("readString", [ `${targetDir}/mongoKey.json` ]));
-    const { MongoClient } = require("mongodb");
-    const MONGOC = new MongoClient((await decryptoHash(password, hash)), { useUnifiedTopology: true });
+    const { mysql: { password, hash } } = JSON.parse(await fileSystem("readString", [ `${targetDir}/mongoKey.json` ]));
+    const mysqlInfoObj = JSON.parse(await decryptoHash(password, hash));
 
-    let startDate, endDate, row, targetJson;
-    let tong, boo;
-
-    if (targetDirArr.length > 12) {
-      for (let i of targetDirArr) {
-        if (i !== `mongoKey.json`) {
-          shell.exec(`rm -rf ${targetDir}/${i}`);
-        }
-      }
-    }
-
-    startDate = new Date(...stringToArr(process.argv[2]));
-    endDate = new Date(...stringToArr(process.argv[3]));
-    tong = [];
-    boo = false;
-
-    if (targetDirArr.includes(`analyticsExtract_${process.argv[2]}_${process.argv[3]}.json`)) {
-      targetJson = JSON.parse(await fileSystem("readString", [ `${targetDir}/analyticsExtract_${process.argv[2]}_${process.argv[3]}.json` ]));
-    } else {
-      await MONGOC.connect();
-      row = await MONGOC.db(`miro81`).collection("googleAnalytics_total").find({ "latestTimeline": { "$gte": startDate, "$lte": endDate } }).toArray();
-      MONGOC.close();
-      targetJson = JSON.parse(JSON.stringify(row));
-    }
-
-    for (let obj of targetJson) {
-      if (/\_/g.test(obj.firstTimeline)) {
-        boo = true;
-        break;
-      }
-      obj.firstTimeline = dateToNumber(obj.firstTimeline);
-      obj.latestTimeline = dateToNumber(obj.latestTimeline);
-      for (let arr of obj.history) {
-        arr.time = dateToNumber(arr.time);
-      }
-      tong.push(obj);
-    }
-
-    if (!boo) {
-      await fileSystem(`write`, [ `${targetDir}/analyticsExtract_${process.argv[2]}_${process.argv[3]}.json`, JSON.stringify(tong, null, 2) ]);
-    }
-
+    const response = await mysqlQuery(process.argv[2], mysqlInfoObj);
+    await fileSystem(`write`, [ `${targetDir}/mysqlQueryResult.json`, JSON.stringify(response, null, 2) ]);
   } catch (e) {
     console.log(e);
   }

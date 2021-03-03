@@ -60,7 +60,7 @@ def readData(startDay, endDay):
             endDate = str(endDay[2])
         endDateFull = f'{endYear}-{endMonth}-{endDate}'
 
-    commandList = [ "node", currentDirRoot + "/node/index.js", startDateFull, endDateFull ]
+    commandList = [ "node", currentDirRoot + "/node/fromMongo.js", startDateFull, endDateFull ]
     subprocess.run(commandList, shell=False, encoding='utf8')
     with open(f"{currentDirRoot}/jsondata/analyticsExtract_{startDateFull}_{endDateFull}.json", "rt", encoding="utf8") as file:
         resultText = file.read()
@@ -69,6 +69,14 @@ def readData(startDay, endDay):
     final.setData(json.loads(resultText))
 
     return final
+
+def query(q):
+    commandList = [ "node", currentDirRoot + "/node/fromMysql.js", q ]
+    subprocess.run(commandList, shell=False, encoding='utf8')
+    with open(f"{currentDirRoot}/jsondata/mysqlQueryResult.json", "rt", encoding="utf8") as file:
+        resultText = file.read()
+
+    return json.loads(resultText)
 
 def view(dic, indent=4):
     if isinstance(dic, DataObject):

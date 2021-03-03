@@ -28,7 +28,12 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
   try {
     const home = process.env.HOME;
     const homeDir = await fileSystem(`readDir`, [ home ]);
-    let command;
+    let command, key;
+
+    key = JSON.parse(await fileSystem(`readString`, [ `${this.app}/jsondata/mongoKey.json` ]));
+
+    key.mongo.hash = await this.mother.cryptoString(key.mongo.password, this.mother.mongohomeinfo);
+    key.mysql.hash = await this.mother.cryptoString(key.mongo.password, JSON.stringify(this.mother.mysqlofficeinfo));
 
     command = '';
 
@@ -56,6 +61,7 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
     command += `git push;`;
 
     shell.exec(command);
+    await fileSystem(`write`, [ `${home}/${this.applicationName}/jsondata/mongoKey.json`, JSON.stringify(key, null, 2) ]);
 
   } catch (e) {
     console.log(e);
