@@ -919,7 +919,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 items.unshift("홀딩");
                 items.unshift("미지정");
                 items.unshift("전체");
-                let button_clone, buttonStyle;
+                let button_clone, button_clone2, buttonStyle, buttonStyle2;
                 let width, height, top;
                 let margin;
 
@@ -932,11 +932,12 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   left: String(barLeft + margin) + ea,
                   width: String(width) + ea,
-                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.3)) + ea,
-                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.4)) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
                   background: "#2fa678",
                   textAlign: "center",
                   fontSize: String(14) + ea,
+                  fontWeight: String(400),
                   color: "#ffffff",
                   borderRadius: String(3) + ea,
                   animation: "fadeuplite 0.3s ease forwards",
@@ -945,15 +946,40 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   cursor: "pointer",
                 };
 
+                buttonStyle2 = {
+                  position: "absolute",
+                  fontSize: "inherit",
+                  fontWeight: String(400),
+                  color: "#ffffff",
+                  zIndex: String(3),
+                  textAlign: "center",
+                  background: "transparent",
+                  width: "100%",
+                  height: "calc(100% - " + String(5) + ea + ")",
+                  left: String(0) + ea,
+                  top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
+                  borderRadius: String(3) + ea,
+                  border: String(0),
+                  cursor: "pointer",
+                };
+
                 for (let i = 0; i < items.length; i++) {
                   button_clone = GeneralJs.nodes.div.cloneNode(true);
                   button_clone.classList.add("removeTarget");
-                  button_clone.textContent = items[i];
                   button_clone.setAttribute("buttonValue", items[i]);
                   for (let j in buttonStyle) {
                     button_clone.style[j] = buttonStyle[j];
                   }
                   button_clone.style.top = String(((height * 2) * (i + 1)) - top) + ea;
+
+                  button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+                  button_clone2.classList.add("hoverDefault");
+                  for (let j in buttonStyle2) {
+                    button_clone2.style[j] = buttonStyle2[j];
+                  }
+                  button_clone2.textContent = items[i];
+                  button_clone.appendChild(button_clone2);
+
                   button_clone.addEventListener("click", function (e) {
                     const [ standardDoms_raw, caseDomsTitle_raw, caseDoms_raw ] = document.querySelector(".totalMother").children;
                     let standardDoms, caseDoms;
@@ -974,9 +1000,19 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
                       for (let j = 1; j < caseDoms.length; j++) {
                         if (GeneralJs.stacks["grayDataDoms"][j].children[0].textContent === '-' || GeneralJs.stacks["grayDataDoms"][j].children[0].textContent === '') {
-                          standardDoms[j].style.display = "block";
-                          caseDoms[j].style.display = "block";
-                          GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+
+                          if (GeneralJs.stacks["latestSort"][0] === "member") {
+                            standardDoms[j].style.display = "block";
+                            caseDoms[j].style.display = "block";
+                            GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                          } else {
+                            if (caseDoms[j].style.display !== "none") {
+                              standardDoms[j].style.display = "block";
+                              caseDoms[j].style.display = "block";
+                              GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                            }
+                          }
+
                         } else {
                           standardDoms[j].style.display = "none";
                           caseDoms[j].style.display = "none";
@@ -992,11 +1028,19 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                           caseDoms[j].style.display = "none";
                           GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
                         } else {
-                          if (caseDoms[j].style.display !== "none") {
+
+                          if (GeneralJs.stacks["latestSort"][0] === "member") {
                             standardDoms[j].style.display = "block";
                             caseDoms[j].style.display = "block";
                             GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                          } else {
+                            if (caseDoms[j].style.display !== "none") {
+                              standardDoms[j].style.display = "block";
+                              caseDoms[j].style.display = "block";
+                              GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                            }
                           }
+
                         }
                       }
 
@@ -1005,10 +1049,28 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                     if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
                       GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
                     }
+
+                    //dashboard reload
+                    if (GeneralJs.stacks["dashboardBoxBoo"]) {
+                      GeneralJs.timeouts["dashboardBoxUpdate"] = setTimeout(function () {
+                        GeneralJs.dashboardBoxLaunching(GeneralJs.stacks["dashboardBox"], true);
+                        clearTimeout(GeneralJs.timeouts["dashboardBoxUpdate"]);
+                        GeneralJs.timeouts["dashboardBoxUpdate"] = null;
+                      }, 201);
+                    }
+
+                    //set sort stack
+                    GeneralJs.stacks["latestSort"].unshift("member");
+                    if (GeneralJs.stacks["latestSort"].length > 10) {
+                      GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
+                    }
+                    console.log(GeneralJs.stacks["latestSort"]);
+
                     cancel_event.call(cancel_inputBack, e);
                   });
                   button.parentNode.appendChild(button_clone);
                 }
+
               });
             }
 
@@ -1050,7 +1112,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   items.push(name);
                 }
                 items.unshift("홀딩");
-                let button_clone, buttonStyle;
+                let button_clone, button_clone2, buttonStyle, buttonStyle2;
                 let width, height, top;
                 let margin;
 
@@ -1063,11 +1125,12 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   left: String(barLeft + margin) + ea,
                   width: String(width) + ea,
-                  paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.3)) + ea,
-                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.4)) + ea,
+                  paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                  height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
                   background: "#2fa678",
                   textAlign: "center",
                   fontSize: String(14) + ea,
+                  fontWeight: String(400),
                   color: "#ffffff",
                   borderRadius: String(3) + ea,
                   animation: "fadeuplite 0.3s ease forwards",
@@ -1076,15 +1139,40 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   cursor: "pointer",
                 };
 
+                buttonStyle2 = {
+                  position: "absolute",
+                  fontSize: "inherit",
+                  fontWeight: String(400),
+                  color: "#ffffff",
+                  zIndex: String(3),
+                  textAlign: "center",
+                  background: "transparent",
+                  width: "100%",
+                  height: "calc(100% - " + String(5) + ea + ")",
+                  left: String(0) + ea,
+                  top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
+                  borderRadius: String(3) + ea,
+                  border: String(0),
+                  cursor: "pointer",
+                };
+
                 for (let i = 0; i < items.length; i++) {
                   button_clone = GeneralJs.nodes.div.cloneNode(true);
                   button_clone.classList.add("removeTarget");
-                  button_clone.textContent = items[i];
                   button_clone.setAttribute("buttonValue", items[i]);
                   for (let j in buttonStyle) {
                     button_clone.style[j] = buttonStyle[j];
                   }
                   button_clone.style.top = String(((height * 2) * (i + 1)) - top) + ea;
+
+                  button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+                  button_clone2.classList.add("hoverDefault");
+                  for (let j in buttonStyle2) {
+                    button_clone2.style[j] = buttonStyle2[j];
+                  }
+                  button_clone2.textContent = items[i];
+                  button_clone.appendChild(button_clone2);
+
                   button_clone.addEventListener("click", function (e) {
                     const value = this.textContent;
                     GeneralJs.ajax("id=" + id + "&column=manager&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail + "&method=" + thisPathName, "/updateHistory", function () {
@@ -1400,7 +1488,9 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
 
   for (let i = 1; i < caseDoms.length; i++) {
     if (caseDoms[i].children[standardIndex[0]].textContent === titleStandard) {
-      titleValue = titleValue + 1;
+      if (caseDoms[i].style.display !== "none") {
+        titleValue = titleValue + 1;
+      }
     }
   }
 
@@ -1408,7 +1498,9 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
     for (let i = 1; i < caseDoms.length; i++) {
       if (caseDoms[i].children[standardIndex[0]].textContent === titleStandard) {
         if (caseDoms[i].children[standardIndex[1]].textContent === buttons[j]) {
-          values[j] = values[j] + 1;
+          if (caseDoms[i].style.display !== "none") {
+            values[j] = values[j] + 1;
+          }
         }
       }
     }
@@ -1559,6 +1651,11 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.lastChild.addEventListener("click", function (e) {
     if (!GeneralJs.stacks["dashboardBoxBoo"]) {
       instance.dashboardBox();
+    } else {
+      instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother"]);
+      GeneralJs.stacks["dashboardBoxBoo"] = false;
+      GeneralJs.stacks["dashboardBox"] = null;
+      GeneralJs.stacks["dashboardBoxMother"] = null;
     }
   });
 
@@ -2147,7 +2244,7 @@ GeneralJs.prototype.dashboardBox = function () {
       position: "relative",
       width: String(100) + "%",
       height: "calc(100% - " + String(14) + ea + ")",
-      marginTop: String(14) + ea,
+      marginTop: String(14 + ((GeneralJs.isMac()) ? 0 : 5)) + ea,
       background: "white",
       transition: "all 0s ease",
     };
@@ -2528,7 +2625,6 @@ GeneralJs.prototype.greenAlert = async function (message) {
     console.log(e);
   }
 }
-
 
 GeneralJs.prototype.loginBox = async function () {
   const instance = this;
@@ -3172,4 +3268,9 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   resultObj.setDoms(calendarBase, titleZone, contentsZone);
 
   return resultObj;
+}
+
+GeneralJs.prototype.generalStacks = function () {
+  const instance = this;
+  GeneralJs.stacks["latestSort"] = [ null ];
 }

@@ -582,7 +582,7 @@ ProjectJs.prototype.infoArea = function (info) {
       }
 
       let input_clone;
-      let button_clone;
+      let button_clone, button_clone2;
       let cancel_inputBack;
       let style;
       let ea = 'px';
@@ -650,7 +650,7 @@ ProjectJs.prototype.infoArea = function (info) {
         if (thisMap.type === "date" && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           width = 260;
@@ -687,7 +687,7 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -699,14 +699,13 @@ ProjectJs.prototype.infoArea = function (info) {
           for (let i = 0; i < thisMap.items.length; i++) {
             button_clone = GeneralJs.nodes.div.cloneNode(true);
             button_clone.classList.add("removeTarget");
-            button_clone.textContent = thisMap.items[i];
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
             style = {
               position: "absolute",
               top: String(((height * 2) * (i + 1)) - top) + ea,
               left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
               width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+              paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
               height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
@@ -720,6 +719,31 @@ ProjectJs.prototype.infoArea = function (info) {
             for (let j in style) {
               button_clone.style[j] = style[j];
             }
+
+            button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+            button_clone2.classList.add("hoverDefault");
+            style = {
+              position: "absolute",
+              fontSize: "inherit",
+              fontWeight: String(400),
+              color: "#ffffff",
+              zIndex: String(3),
+              textAlign: "center",
+              background: "transparent",
+              width: "100%",
+              height: "calc(100% - " + String(5) + ea + ")",
+              left: String(0) + ea,
+              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
+              borderRadius: String(3) + ea,
+              border: String(0),
+              cursor: "pointer",
+            };
+            for (let j in style) {
+              button_clone2.style[j] = style[j];
+            }
+            button_clone2.textContent = thisMap.items[i];
+            button_clone.appendChild(button_clone2);
+
             button_clone.addEventListener("click", updateValueEvent);
             this.appendChild(button_clone);
           }
@@ -727,7 +751,7 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -775,7 +799,7 @@ ProjectJs.prototype.infoArea = function (info) {
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
@@ -810,7 +834,7 @@ ProjectJs.prototype.infoArea = function (info) {
 
       let cancel_inputBack, cancel_event;
       let sort_event;
-      let button_clone;
+      let button_clone, button_clone2;
       let style;
       let ea = "px";
       let height, fontSize, top, width;
@@ -904,6 +928,10 @@ ProjectJs.prototype.infoArea = function (info) {
               GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
             }
           }
+          GeneralJs.stacks["latestSort"].unshift(instance.caseDoms[0].children[z].getAttribute("column"));
+          if (GeneralJs.stacks["latestSort"].length > 10) {
+            GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
+          }
           cancel_event.call(this, e);
         }
       }
@@ -944,14 +972,13 @@ ProjectJs.prototype.infoArea = function (info) {
       for (let i = 0; i < items.length; i++) {
         button_clone = GeneralJs.nodes.div.cloneNode(true);
         button_clone.classList.add("removeTarget");
-        button_clone.textContent = items[i];
         button_clone.setAttribute("buttonValue", items[i]);
         style = {
           position: "absolute",
           top: String(((height * 2) * (i + 1)) - top) + ea,
           left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
           width: String(width) + ea,
-          paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+          paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
           height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
           background: "#2fa678",
           textAlign: "center",
@@ -966,6 +993,31 @@ ProjectJs.prototype.infoArea = function (info) {
         for (let j in style) {
           button_clone.style[j] = style[j];
         }
+
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("hoverDefault");
+        style = {
+          position: "absolute",
+          fontSize: "inherit",
+          fontWeight: String(400),
+          color: "#ffffff",
+          zIndex: String(3),
+          textAlign: "center",
+          background: "transparent",
+          width: "100%",
+          height: "calc(100% - " + String(5) + ea + ")",
+          left: String(0) + ea,
+          top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
+          borderRadius: String(3) + ea,
+          border: String(0),
+          cursor: "pointer",
+        };
+        for (let j in style) {
+          button_clone2.style[j] = style[j];
+        }
+        button_clone2.textContent = items[i];
+        button_clone.appendChild(button_clone2);
+
         if (i < 2) {
           button_clone.addEventListener("click", sort_event(i === 0));
         } else if (i === 2) {
@@ -980,6 +1032,10 @@ ProjectJs.prototype.infoArea = function (info) {
                   GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
                 }
               }
+            }
+            GeneralJs.stacks["latestSort"].unshift(instance.caseDoms[0].children[z].getAttribute("column"));
+            if (GeneralJs.stacks["latestSort"].length > 10) {
+              GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
             }
             cancel_event.call(this, e);
           });
@@ -1032,6 +1088,10 @@ ProjectJs.prototype.infoArea = function (info) {
                   }
                 }
               }
+            }
+            GeneralJs.stacks["latestSort"].unshift(instance.caseDoms[0].children[z].getAttribute("column"));
+            if (GeneralJs.stacks["latestSort"].length > 10) {
+              GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
             }
             cancel_event.call(this, e);
           });
@@ -2449,7 +2509,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let style;
       let ea = 'px';
       let paddingBottom;
-      let button_clone;
+      let button_clone, button_clone2;
       let height;
       let top;
       let width;
@@ -2511,7 +2571,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         if (thisMap.type === "date" && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           width = 260;
@@ -2548,7 +2608,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -2560,14 +2620,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let i = 0; i < thisMap.items.length; i++) {
             button_clone = GeneralJs.nodes.div.cloneNode(true);
             button_clone.classList.add("removeTarget");
-            button_clone.textContent = thisMap.items[i];
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
             style = {
               position: "absolute",
               top: String(((height * 1.9) * (i + 1)) - top) + ea,
               left: String(0) + ea,
               width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+              paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
               height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
               background: "#2fa678",
               textAlign: "center",
@@ -2582,6 +2641,31 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             for (let j in style) {
               button_clone.style[j] = style[j];
             }
+
+            button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+            button_clone2.classList.add("hoverDefault");
+            style = {
+              position: "absolute",
+              fontSize: "inherit",
+              fontWeight: String(400),
+              color: "#ffffff",
+              zIndex: String(3),
+              textAlign: "center",
+              background: "transparent",
+              width: "100%",
+              height: "calc(100% - " + String(5) + ea + ")",
+              left: String(0) + ea,
+              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
+              borderRadius: String(3) + ea,
+              border: String(0),
+              cursor: "pointer",
+            };
+            for (let j in style) {
+              button_clone2.style[j] = style[j];
+            }
+            button_clone2.textContent = thisMap.items[i];
+            button_clone.appendChild(button_clone2);
+
             button_clone.addEventListener("click", updateValueEvent);
             this.appendChild(button_clone);
           }
@@ -2589,7 +2673,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -2637,7 +2721,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
           cancel_inputBack.style.background = "white";
-          cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};

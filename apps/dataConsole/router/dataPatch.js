@@ -738,7 +738,6 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -749,7 +748,7 @@ DataPatch.prototype.clientMap = function () {
       position: "relative",
       left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
       width: String(width) + ea,
-      paddingTop: String(height * (GeneralJs.isMac() ? 0.3 : 0.5)) + ea,
+      paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
       height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
       background: "#2fa678",
       fontSize: "inherit",
@@ -764,7 +763,7 @@ DataPatch.prototype.clientMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -772,7 +771,7 @@ DataPatch.prototype.clientMap = function () {
       width: "100%",
       height: "calc(100% - " + String(5) + ea + ")",
       left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -1085,7 +1084,6 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -1111,7 +1109,7 @@ DataPatch.prototype.clientMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -1329,7 +1327,6 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -1392,7 +1389,7 @@ DataPatch.prototype.clientMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -2116,7 +2113,6 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -2166,7 +2162,7 @@ DataPatch.prototype.designerMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -2433,7 +2429,6 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -2483,7 +2478,7 @@ DataPatch.prototype.designerMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -2685,7 +2680,6 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -2748,7 +2742,7 @@ DataPatch.prototype.designerMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -2977,7 +2971,6 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -3028,7 +3021,7 @@ DataPatch.prototype.designerMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -3187,7 +3180,6 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -3213,7 +3205,7 @@ DataPatch.prototype.designerMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -3221,7 +3213,7 @@ DataPatch.prototype.designerMap = function () {
       width: "100%",
       height: "calc(100% - " + String(5) + ea + ")",
       left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -4180,7 +4172,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -4231,7 +4222,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -4402,7 +4393,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -4453,7 +4443,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -4646,7 +4636,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -4709,7 +4698,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -4936,7 +4925,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -4976,7 +4964,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -5115,7 +5103,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -5141,7 +5128,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -5149,7 +5136,7 @@ DataPatch.prototype.projectMap = function () {
       width: "100%",
       height: "calc(100% - " + String(5) + ea + ")",
       left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -5263,7 +5250,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -5289,7 +5275,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -5297,7 +5283,7 @@ DataPatch.prototype.projectMap = function () {
       width: "100%",
       height: "calc(100% - " + String(5) + ea + ")",
       left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 3.6) : (height / 2.3)) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.3)) + ea,
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -5638,7 +5624,6 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -5664,7 +5649,7 @@ DataPatch.prototype.projectMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -6071,7 +6056,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -6111,7 +6095,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -6281,7 +6265,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -6331,7 +6314,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -6528,7 +6511,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -6578,7 +6560,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -6777,7 +6759,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -6827,7 +6808,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -7009,7 +6990,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -7046,7 +7026,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
@@ -7197,7 +7177,6 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       fontSize: "inherit",
       zIndex: String(3),
-      animation: "fadeuplite 0.3s ease forwards",
       paddingBottom: String(iconWidth + 3) + ea,
     };
     for (let i in style) {
@@ -7232,7 +7211,7 @@ DataPatch.prototype.contentsMap = function () {
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
-      fontWeight: String(100) + ea,
+      fontWeight: String(400),
       color: "#ffffff",
       zIndex: String(3),
       textAlign: "center",
