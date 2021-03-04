@@ -1023,22 +1023,29 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                     } else {
 
                       for (let j = 1; j < caseDoms.length; j++) {
+
                         if (GeneralJs.stacks["grayDataDoms"][j].children[0].textContent !== this.textContent) {
+
                           standardDoms[j].style.display = "none";
                           caseDoms[j].style.display = "none";
                           GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
+
                         } else {
 
                           if (GeneralJs.stacks["latestSort"][0] === "member") {
+
                             standardDoms[j].style.display = "block";
                             caseDoms[j].style.display = "block";
                             GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+
                           } else {
+
                             if (caseDoms[j].style.display !== "none") {
                               standardDoms[j].style.display = "block";
                               caseDoms[j].style.display = "block";
                               GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
                             }
+
                           }
 
                         }

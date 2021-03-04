@@ -133,8 +133,20 @@ DesignerJs.prototype.standardBar = function (standard) {
       }
       instance.totalMother.firstChild.appendChild(s);
       instance.totalMother.children[2].appendChild(h);
+      instance.standardDoms = [];
+      for (let i = 1; i < instance.totalMother.children[0].children.length; i++) {
+        instance.standardDoms.push(instance.totalMother.children[0].children[i]);
+      }
+      instance.caseDoms = [ instance.totalMother.children[1] ];
+      for (let i = 1; i < instance.totalMother.children[2].children.length; i++) {
+        instance.caseDoms.push(instance.totalMother.children[2].children[i]);
+      }
       if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
         GeneralJs.stacks["grayData"].appendChild(g);
+        GeneralJs.stacks["grayDataDoms"] = [];
+        for (let i = 0; i < GeneralJs.stacks["grayData"].children.length; i++) {
+          GeneralJs.stacks["grayDataDoms"].push(GeneralJs.stacks["grayData"].children[i]);
+        }
         GeneralJs.stacks["grayData"].style.height = '';
         if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
           GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
@@ -815,6 +827,7 @@ DesignerJs.prototype.infoArea = function (info) {
           h = document.createDocumentFragment();
           g = document.createDocumentFragment();
           arr = [];
+
           for (let i = 1; i < instance.caseDoms.length; i++) {
             tempObj = {};
             tempObj.standard = instance.standardDoms[i];
@@ -852,8 +865,20 @@ DesignerJs.prototype.infoArea = function (info) {
           }
           instance.totalMother.firstChild.appendChild(s);
           instance.totalMother.children[2].appendChild(h);
+          instance.standardDoms = [];
+          for (let i = 1; i < instance.totalMother.children[0].children.length; i++) {
+            instance.standardDoms.push(instance.totalMother.children[0].children[i]);
+          }
+          instance.caseDoms = [ instance.totalMother.children[1] ];
+          for (let i = 1; i < instance.totalMother.children[2].children.length; i++) {
+            instance.caseDoms.push(instance.totalMother.children[2].children[i]);
+          }
           if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
             GeneralJs.stacks["grayData"].appendChild(g);
+            GeneralJs.stacks["grayDataDoms"] = [];
+            for (let i = 0; i < GeneralJs.stacks["grayData"].children.length; i++) {
+              GeneralJs.stacks["grayDataDoms"].push(GeneralJs.stacks["grayData"].children[i]);
+            }
             GeneralJs.stacks["grayData"].style.height = '';
             if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
               GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
@@ -964,7 +989,7 @@ DesignerJs.prototype.infoArea = function (info) {
                 }
               }
             }
-            GeneralJs.stacks["latestSort"].unshift(instance.caseDoms[0].children[z].getAttribute("column"));
+            GeneralJs.stacks["latestSort"].unshift(null);
             if (GeneralJs.stacks["latestSort"].length > 10) {
               GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
             }
@@ -986,37 +1011,107 @@ DesignerJs.prototype.infoArea = function (info) {
                     }
                   }
                 } else {
-                  instance.standardDoms[j].style.display = "block";
-                  instance.caseDoms[j].style.display = "block";
-                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
-                    GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
-                    GeneralJs.stacks["grayData"].style.height = '';
-                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                  if (GeneralJs.stacks["latestSort"][0] === instance.caseDoms[0].children[z].getAttribute("column")) {
+                    instance.standardDoms[j].style.display = "block";
+                    instance.caseDoms[j].style.display = "block";
+                    if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                      GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                      GeneralJs.stacks["grayData"].style.height = '';
+                      if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                        GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                      }
+                    }
+                  } else {
+                    if (instance.caseDoms[j].style.display !== "none") {
+                      instance.standardDoms[j].style.display = "block";
+                      instance.caseDoms[j].style.display = "block";
+                      if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                        GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                        GeneralJs.stacks["grayData"].style.height = '';
+                        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                        }
+                      }
                     }
                   }
                 }
               } else {
                 if (/^1[6789]/.test(instance.caseDoms[j].children[z].textContent) || instance.caseDoms[j].children[z].textContent === '' || instance.caseDoms[j].children[z].textContent === '-') {
-                  instance.standardDoms[j].style.display = this.textContent === "Y" ? "none": "block";
-                  instance.caseDoms[j].style.display = this.textContent === "Y" ? "none": "block";
-                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
-                    GeneralJs.stacks["grayDataDoms"][j].style.display = this.textContent === "Y" ? "none": "block";
-                    GeneralJs.stacks["grayData"].style.height = '';
-                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+
+                  if (this.textContent === "Y") {
+                    instance.standardDoms[j].style.display = "none";
+                    instance.caseDoms[j].style.display = "none";
+                    if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                      GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
+                      GeneralJs.stacks["grayData"].style.height = '';
+                      if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                        GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                      }
+                    }
+                  } else {
+                    if (GeneralJs.stacks["latestSort"][0] === instance.caseDoms[0].children[z].getAttribute("column")) {
+                      instance.standardDoms[j].style.display = "block";
+                      instance.caseDoms[j].style.display = "block";
+                      if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                        GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                        GeneralJs.stacks["grayData"].style.height = '';
+                        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                        }
+                      }
+                    } else {
+                      if (instance.caseDoms[j].style.display !== "none") {
+                        instance.standardDoms[j].style.display = "block";
+                        instance.caseDoms[j].style.display = "block";
+                        if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                          GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                          GeneralJs.stacks["grayData"].style.height = '';
+                          if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                            GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                          }
+                        }
+                      }
                     }
                   }
+
                 } else {
-                  instance.standardDoms[j].style.display = this.textContent === "Y" ? "block": "none";
-                  instance.caseDoms[j].style.display = this.textContent === "Y" ? "block": "none";
-                  if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
-                    GeneralJs.stacks["grayDataDoms"][j].style.display = this.textContent === "Y" ? "block": "none";
-                    GeneralJs.stacks["grayData"].style.height = '';
-                    if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
-                      GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+
+                  if (this.textContent !== "Y") {
+                    instance.standardDoms[j].style.display = "none";
+                    instance.caseDoms[j].style.display = "none";
+                    if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                      GeneralJs.stacks["grayDataDoms"][j].style.display = "none";
+                      GeneralJs.stacks["grayData"].style.height = '';
+                      if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                        GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                      }
+                    }
+                  } else {
+                    if (GeneralJs.stacks["latestSort"][0] === instance.caseDoms[0].children[z].getAttribute("column")) {
+                      instance.standardDoms[j].style.display = "block";
+                      instance.caseDoms[j].style.display = "block";
+                      if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                        GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                        GeneralJs.stacks["grayData"].style.height = '';
+                        if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                          GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                        }
+                      }
+                    } else {
+                      if (instance.caseDoms[j].style.display !== "none") {
+                        instance.standardDoms[j].style.display = "block";
+                        instance.caseDoms[j].style.display = "block";
+                        if (GeneralJs.stacks["grayDataDoms"] !== null && GeneralJs.stacks["grayDataDoms"] !== undefined) {
+                          GeneralJs.stacks["grayDataDoms"][j].style.display = "block";
+                          GeneralJs.stacks["grayData"].style.height = '';
+                          if (GeneralJs.stacks["grayData"].getBoundingClientRect().height < window.innerHeight) {
+                            GeneralJs.stacks["grayData"].style.height = String(window.innerHeight) + ea;
+                          }
+                        }
+                      }
                     }
                   }
+
                 }
               }
             }
