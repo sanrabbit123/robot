@@ -1465,29 +1465,29 @@ PhotoJs.prototype.spreadData = async function (search = null) {
         }
       }
 
-      if (p.middle.serid === "s2011_aa01s") {
-        serviceWording = "홈퍼니싱";
-      } else if (p.middle.serid === "s2011_aa02s") {
-        serviceWording = "홈스타일링";
-      } else if (p.middle.serid === "s2011_aa03s") {
-        serviceWording = "토탈 스타일링";
-      }
-
-      if (p.middle.xValue === 'M') {
-        serviceWording += " mini";
-      } else if (p.middle.xValue === 'B') {
-        serviceWording += " basic";
-      } else if (p.middle.xValue === 'P') {
-        serviceWording += " premium";
-      }
-
-      if (p.middle.online) {
-        serviceWording = "온라인 " + serviceWording;
-      } else {
-        serviceWording = "오프라인 " + serviceWording;
-      }
-
-      p.info.service = serviceWording;
+      // if (p.middle.serid === "s2011_aa01s") {
+      //   serviceWording = "홈퍼니싱";
+      // } else if (p.middle.serid === "s2011_aa02s") {
+      //   serviceWording = "홈스타일링";
+      // } else if (p.middle.serid === "s2011_aa03s") {
+      //   serviceWording = "토탈 스타일링";
+      // }
+      //
+      // if (p.middle.xValue === 'M') {
+      //   serviceWording += " mini";
+      // } else if (p.middle.xValue === 'B') {
+      //   serviceWording += " basic";
+      // } else if (p.middle.xValue === 'P') {
+      //   serviceWording += " premium";
+      // }
+      //
+      // if (p.middle.online) {
+      //   serviceWording = "온라인 " + serviceWording;
+      // } else {
+      //   serviceWording = "오프라인 " + serviceWording;
+      // }
+      //
+      // p.info.service = serviceWording;
     }
 
     const { standard, data } = projects;
