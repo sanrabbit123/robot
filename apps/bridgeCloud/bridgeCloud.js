@@ -940,8 +940,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
+        const { designer, phone } = fields;
         if (!err && filesKeys.length > 0) {
-          const { designer, phone } = fields;
           const designerFolderName = ("date" + todayMaker("total")) + '_' + designer + '_' + phone.replace(/\-/g, '');
           let list = [];
           for (let i = 0; i < filesKeys.length; i++) {
@@ -999,6 +999,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           res.send('success');
 
         } else {
+          if (designer !== undefined && designer !== null && phone !== undefined && phone !== null) {
+            KAKAO.sendTalk("portfolioFail", designer, phone);
+          }
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",

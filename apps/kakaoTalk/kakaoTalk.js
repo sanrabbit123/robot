@@ -93,6 +93,7 @@ KakaoTalk.prototype.templateTong = function (target) {
     designerPartnership: "TD_5890",
     designerPresentation: "TD_5891",
     designerPresentationAlarm: "TD_6666",
+    portfolioFail: "TD_7334",
   };
   return tong[target];
 }
