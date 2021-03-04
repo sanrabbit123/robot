@@ -1071,7 +1071,6 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                     if (GeneralJs.stacks["latestSort"].length > 10) {
                       GeneralJs.stacks["latestSort"] = GeneralJs.stacks["latestSort"].slice(0, 3);
                     }
-                    console.log(GeneralJs.stacks["latestSort"]);
 
                     cancel_event.call(cancel_inputBack, e);
                   });
@@ -2251,7 +2250,7 @@ GeneralJs.prototype.dashboardBox = function () {
       position: "relative",
       width: String(100) + "%",
       height: "calc(100% - " + String(14) + ea + ")",
-      marginTop: String(14 + ((GeneralJs.isMac()) ? 0 : 5)) + ea,
+      marginTop: String(14 + ((GeneralJs.isMac()) ? 0 : 3)) + ea,
       background: "white",
       transition: "all 0s ease",
     };
