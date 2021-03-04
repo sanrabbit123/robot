@@ -705,7 +705,7 @@ ClientJs.prototype.infoArea = function (info) {
               width: "100%",
               height: "calc(100% - " + String(5) + ea + ")",
               left: String(0) + ea,
-              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.9)) + ea,
+              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
               borderRadius: String(3) + ea,
               border: String(0),
               cursor: "pointer",
@@ -992,7 +992,7 @@ ClientJs.prototype.infoArea = function (info) {
           width: "100%",
           height: "calc(100% - " + String(5) + ea + ")",
           left: String(0) + ea,
-          top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.9)) + ea,
+          top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
           borderRadius: String(3) + ea,
           border: String(0),
           cursor: "pointer",
@@ -2453,7 +2453,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               width: "100%",
               height: "calc(100% - " + String(5) + ea + ")",
               left: String(0) + ea,
-              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.9)) + ea,
+              top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
               borderRadius: String(3) + ea,
               border: String(0),
               cursor: "pointer",
@@ -3819,6 +3819,10 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
           clearTimeout(GeneralJs.timeouts.grayLeftOnOffTimeout);
           GeneralJs.timeouts.grayLeftOnOffTimeout = null;
         }, 501);
+      }
+
+      if (GeneralJs.stacks["dashboardBoxBoo"]) {
+        GeneralJs.dashboardBoxLaunching(GeneralJs.stacks["dashboardBox"], true);
       }
 
     }
