@@ -155,8 +155,8 @@ GeneralJs.updateValue = async function (dataObj) {
     throw new Error("invaild arguments");
   }
   const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
   try {
-    const cookies = GeneralJs.getCookiesAll();
     let dataString, response;
 
     if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
@@ -200,6 +200,20 @@ GeneralJs.updateValue = async function (dataObj) {
         if (GeneralJs.stacks["grayTitle"] !== null && GeneralJs.stacks["grayData"] !== null) {
           GeneralJs.grayLeftLaunching(true, GeneralJs.stacks["grayTitle"], GeneralJs.stacks["grayData"]).call(GeneralJs.stacks["grayLeftButton"], {});
         }
+      }
+    }
+
+    //dashboard reload
+    if (GeneralJs.stacks["dashboardBoxBoo"]) {
+      let pathArr = window.location.pathname.split("?");
+      const thisPathName = pathArr[0].replace(/\//g, '');
+      const { standardColumn } = DataPatch.toolsDashboard(thisPathName);
+      if (standardColumn.includes(dataObj.column)) {
+        GeneralJs.timeouts["dashboardBoxUpdate"] = setTimeout(function () {
+          GeneralJs.dashboardBoxLaunching(GeneralJs.stacks["dashboardBox"], true);
+          clearTimeout(GeneralJs.timeouts["dashboardBoxUpdate"]);
+          GeneralJs.timeouts["dashboardBoxUpdate"] = null;
+        }, 301);
       }
     }
 
@@ -1331,36 +1345,74 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   }
 }
 
-GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHeight) {
+GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
+  if (reload) {
+    while (dashboardBox.firstChild) {
+      dashboardBox.removeChild(dashboardBox.lastChild);
+    }
+  }
+  const [ standardDoms_raw, caseDomsTitle_raw, caseDoms_raw ] = document.querySelector(".totalMother").children;
   let pathArr = window.location.pathname.split("?");
   const thisPathName = pathArr[0].replace(/\//g, '');
+  const { standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
   let mainWording;
   let div_clone, div_clone2;
   let style;
   let ea;
   let top, left, height;
-  let buttons;
   let lineHeight;
+  let standardDoms, caseDoms;
+  let standardIndex;
+  let titleValue, values;
+
+  const motherWidth = Number(GeneralJs.stacks["dashboardBoxMother"].style.width.replace(/[^0-9\.\-]/gi, ''));
+  const motherHeight = Number(GeneralJs.stacks["dashboardBoxMother"].style.height.replace(/[^0-9\.\-]/gi, ''));
+
+  standardDoms = [];
+  for (let i = 1; i < standardDoms_raw.children.length; i++) {
+    standardDoms.push(standardDoms_raw.children[i]);
+  }
+  caseDoms = caseDoms_raw.children;
+
+  standardIndex = new Array(standardColumn.length);
+
+  if (caseDoms.length > 1) {
+    for (let z = 0; z < standardColumn.length; z++) {
+      for (let i = 0; i < caseDoms[1].children.length; i++) {
+        if (caseDoms[1].children[i].getAttribute("column") === standardColumn[z]) {
+          standardIndex[z] = i;
+          break;
+        }
+      }
+    }
+  }
 
   ea = "px";
   left = 24;
   height = 36;
   top = 15;
-  buttons = [
-    "1차 응대 예정",
-    "1차 응대 후 대기",
-    "제안 발송 예정",
-    "제안 피드백 대기",
-    "제안 피드백 완료",
-    "제안 후 대기",
-    "연결 안 됨",
-    "계약금 입금",
-    "계약서 서명",
-    "잔금 입금",
-    "응대 종료",
-    "해당 없음"
-  ];
+  values = [];
+  for (let b of buttons) {
+    values.push(0);
+  }
   lineHeight = 26;
+  titleValue = 0;
+
+  for (let i = 1; i < caseDoms.length; i++) {
+    if (caseDoms[i].children[standardIndex[0]].textContent === titleStandard) {
+      titleValue = titleValue + 1;
+    }
+  }
+
+  for (let j = 0; j < buttons.length; j++) {
+    for (let i = 1; i < caseDoms.length; i++) {
+      if (caseDoms[i].children[standardIndex[0]].textContent === titleStandard) {
+        if (caseDoms[i].children[standardIndex[1]].textContent === buttons[j]) {
+          values[j] = values[j] + 1;
+        }
+      }
+    }
+  }
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1375,7 +1427,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHei
   }
 
   mainWording = GeneralJs.nodes.div.cloneNode(true);
-  mainWording.textContent = "응대중";
+  mainWording.textContent = titleStandard;
   style = {
     position: "absolute",
     fontSize: String(21) + ea,
@@ -1390,7 +1442,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHei
   div_clone.appendChild(mainWording);
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.textContent = String(80);
+  div_clone2.textContent = String(titleValue);
   style = {
     position: "absolute",
     fontSize: String(21) + ea,
@@ -1437,9 +1489,8 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHei
     }
     div_clone.appendChild(div_clone2);
 
-
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.textContent = String(80);
+    div_clone2.textContent = String(values[z]);
     style = {
       position: "absolute",
       fontSize: String(14) + ea,
@@ -1460,8 +1511,6 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, motherWidth, motherHei
     dashboardBox.appendChild(div_clone);
   }
 
-
-
 }
 
 GeneralJs.prototype.greenBar = function () {
@@ -1475,8 +1524,6 @@ GeneralJs.prototype.greenBar = function () {
   let move;
   let moveEventLeft, moveEventRight;
   let top, belowTop, right, iconRight;
-  let width, height;
-  let dashboardBox;
 
   this.belowHeight = 123;
 
@@ -1508,6 +1555,12 @@ GeneralJs.prototype.greenBar = function () {
   for (let i = 0; i < colors.length; i++) {
     div_clone.insertAdjacentHTML(`beforeend`, this.returnCircle("right:" + String(start + (margin * i)) + ea, colors[i]));
   }
+
+  div_clone.lastChild.addEventListener("click", function (e) {
+    if (!GeneralJs.stacks["dashboardBoxBoo"]) {
+      instance.dashboardBox();
+    }
+  });
 
   //arrow - left
   move = 300;
@@ -1952,131 +2005,165 @@ GeneralJs.prototype.greenBar = function () {
   GeneralJs.stacks["grayLeftButton"] = div_clone2;
   this.below.appendChild(div_clone2);
 
+}
 
-  //dashboard
-  width = 340;
-  height = 244;
-  div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "fixed",
-    background: "white",
-    right: String(20) + ea,
-    width: String(width) + ea,
-    height: String(height) + ea,
-    borderRadius: String(5) + ea,
-    bottom: String(158) + ea,
-    overflow: "hidden",
-    opacity: String(0.9),
-    boxShadow: "-1px 4px 15px -9px #aaaaaa",
-    backdropFilter: "blur(" + String(4) + ea + ")",
-    transition: "all 0s ease",
-    zIndex: String(102),
-  };
-  for (let i in style) {
-    div_clone2.style[i] = style[i];
-  }
+GeneralJs.prototype.dashboardBox = function () {
+  const instance = this;
+  let pathArr = window.location.pathname.split("?");
+  const thisPathName = pathArr[0].replace(/\//g, '');
+  const { vaildTargets, standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
+  let div_clone, div_clone2, div_clone3;
+  let style = {};
+  let ea = "px";
+  let width, height;
+  let dashboardBox;
 
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    width: String(100) + "%",
-    height: String(14) + ea,
-    top: String(0),
-    left: String(0),
-    background: "#ececec",
-    cursor: "move",
-    transition: "all 0s ease",
-  };
-  for (let i in style) {
-    div_clone3.style[i] = style[i];
-  }
-  div_clone2.appendChild(div_clone3);
+  GeneralJs.stacks["dashboardBoxBoo"] = false;
+  GeneralJs.stacks["dashboardBox"] = null;
+  GeneralJs.stacks["dashboardBoxMother"] = null;
 
-  div_clone3.setAttribute("draggable", "true");
-
-  div_clone3.addEventListener("dragstart", function (e) {
-    const that = this.parentNode;
-    let div;
-    let style, ea;
-
-    GeneralJs.stacks["windowDragStartPoint"] = 0;
-    GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
-    ea = "px";
-
-    div = GeneralJs.nodes.div.cloneNode(true);
+  if (vaildTargets.includes(thisPathName)) {
+    width = 340;
+    height = (25 * (buttons.length / 2)) + 94;
+    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "fixed",
-      background: "transparent",
-      width: String(100) + '%',
-      height: String(100) + '%',
-      top: String(0),
-      left: String(0)
+      background: "white",
+      right: String(20) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+      borderRadius: String(5) + ea,
+      bottom: String(158) + ea,
+      overflow: "hidden",
+      opacity: String(0.9),
+      boxShadow: "-1px 4px 15px -9px #aaaaaa",
+      backdropFilter: "blur(" + String(4) + ea + ")",
+      transition: "all 0s ease",
+      zIndex: String(102),
+      animation: "fadeuplite 0.3s ease forwards",
     };
     for (let i in style) {
-      div.style[i] = style[i];
+      div_clone2.style[i] = style[i];
     }
-    div.addEventListener("dragover", function (e) {
+
+    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(100) + "%",
+      height: String(14) + ea,
+      top: String(0),
+      left: String(0),
+      background: "#ececec",
+      cursor: "move",
+      transition: "all 0s ease",
+    };
+    for (let i in style) {
+      div_clone3.style[i] = style[i];
+    }
+    div_clone2.appendChild(div_clone3);
+
+    div_clone3.setAttribute("draggable", "true");
+
+    div_clone3.addEventListener("dragstart", function (e) {
+      const that = this.parentNode;
+      let div;
+      let style, ea;
+
+      GeneralJs.stacks["windowDragStartPoint"] = 0;
+      GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
+      ea = "px";
+
+      div = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "fixed",
+        background: "transparent",
+        width: String(100) + '%',
+        height: String(100) + '%',
+        top: String(0),
+        left: String(0)
+      };
+      for (let i in style) {
+        div.style[i] = style[i];
+      }
+      div.addEventListener("dragover", function (e) {
+        that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
+        that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+        e.preventDefault();
+      });
+      GeneralJs.stacks["windowDragBack"] = div;
+      that.parentNode.insertBefore(div, that);
+
+      e.dataTransfer.setData("dragData", that);
+      const img = new Image();
+      e.dataTransfer.setDragImage(img, 1, 1);
+    });
+
+    div_clone3.addEventListener("dragend", function (e) {
+      GeneralJs.stacks["windowDragBack"].parentElement.removeChild(GeneralJs.stacks["windowDragBack"]);
+      GeneralJs.stacks["windowDragBack"] = null;
+      e.preventDefault();
+    });
+
+    div_clone3.addEventListener("dragenter", function (e) {
+      e.preventDefault();
+    });
+
+    div_clone3.addEventListener("dragleave", function (e) {
+      e.preventDefault();
+    });
+
+    div_clone3.addEventListener("dragover", function (e) {
+      const that = this.parentNode;
       that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
       that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
       e.preventDefault();
     });
-    GeneralJs.stacks["windowDragBack"] = div;
-    that.parentNode.insertBefore(div, that);
 
-    e.dataTransfer.setData("dragData", that);
-    const img = new Image();
-    e.dataTransfer.setDragImage(img, 1, 1);
-  });
+    div_clone2.addEventListener("dragover", function (e) {
+      const that = this;
+      that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
+      that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+      e.preventDefault();
+    });
 
-  div_clone3.addEventListener("dragend", function (e) {
-    GeneralJs.stacks["windowDragBack"].parentElement.removeChild(GeneralJs.stacks["windowDragBack"]);
-    GeneralJs.stacks["windowDragBack"] = null;
-    e.preventDefault();
-  });
+    div_clone3.addEventListener("drop", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
 
-  div_clone3.addEventListener("dragenter", function (e) {
-    e.preventDefault();
-  });
+    div_clone3.addEventListener("contextmenu", function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (GeneralJs.stacks["dashboardBoxMother"] !== null) {
+        instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother"]);
+        GeneralJs.stacks["dashboardBoxBoo"] = false;
+        GeneralJs.stacks["dashboardBox"] = null;
+        GeneralJs.stacks["dashboardBoxMother"] = null;
+      }
+    });
 
-  div_clone3.addEventListener("dragleave", function (e) {
-    e.preventDefault();
-  });
+    dashboardBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      width: String(100) + "%",
+      height: "calc(100% - " + String(14) + ea + ")",
+      marginTop: String(14) + ea,
+      background: "white",
+      transition: "all 0s ease",
+    };
+    for (let i in style) {
+      dashboardBox.style[i] = style[i];
+    }
+    div_clone2.appendChild(dashboardBox);
+    this.below.appendChild(div_clone2);
 
-  div_clone3.addEventListener("dragover", function (e) {
-    const that = this.parentNode;
-    that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
-    that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
-    e.preventDefault();
-  });
+    GeneralJs.stacks["dashboardBoxBoo"] = true;
+    GeneralJs.stacks["dashboardBox"] = dashboardBox;
+    GeneralJs.stacks["dashboardBoxMother"] = div_clone2;
 
-  div_clone2.addEventListener("dragover", function (e) {
-    const that = this;
-    that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
-    that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
-    e.preventDefault();
-  });
+    GeneralJs.dashboardBoxLaunching(dashboardBox);
 
-  div_clone3.addEventListener("drop", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  });
-
-  dashboardBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: String(100) + "%",
-    height: "calc(100% - " + String(14) + ea + ")",
-    marginTop: String(14) + ea,
-    background: "white",
-    transition: "all 0s ease",
-  };
-  for (let i in style) {
-    dashboardBox.style[i] = style[i];
   }
-  div_clone2.appendChild(dashboardBox);
-  this.below.appendChild(div_clone2);
-
-  GeneralJs.dashboardBoxLaunching(dashboardBox, width, height);
 }
 
 GeneralJs.prototype.memberView = function () {

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "googleapis": "^67.1.1",
     "jsdom": "^16.4.0",
     "mongodb": "^3.6.3",
     "mysql2": "^2.2.5",

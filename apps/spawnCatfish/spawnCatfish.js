@@ -8,6 +8,7 @@ const SpawnCatfish = function () {
   this.sheets = new GoogleSheet();
   this.applicationName = "catfish";
   this.app = this.dir + "/" + this.applicationName;
+  this.nodeAppName = "apps";
 }
 
 SpawnCatfish.prototype.viewTree = async function () {
@@ -28,6 +29,13 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
   try {
     const home = process.env.HOME;
     const homeDir = await fileSystem(`readDir`, [ home ]);
+    const googleList = [
+      "googleAnalytics.js",
+      "googleCalendar.js",
+      "googleDocs.js",
+      "googleDrive.js",
+      "googleSheet.js",
+    ];
     let command, key;
 
     key = JSON.parse(await fileSystem(`readString`, [ `${this.app}/jsondata/mongoKey.json` ]));
@@ -55,6 +63,9 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
     }
 
     command += `cp -r ${shellLink(this.app)} ${shellLink(home)};`;
+    for (let g of googleList) {
+      command += `cp ${shellLink(process.cwd())}/apps/googleAPIs/${g} ${shellLink(home)}/${this.applicationName}/${this.nodeAppName}/googleAPIs;`;
+    }
     command += `cd ${shellLink(home)}/${this.applicationName};`;
     command += `git add -A;`;
     command += `git commit -m "CatfishAutoUpdate_${todayMaker("total")}";`;

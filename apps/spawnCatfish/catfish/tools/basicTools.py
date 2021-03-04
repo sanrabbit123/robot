@@ -60,7 +60,7 @@ def readData(startDay, endDay):
             endDate = str(endDay[2])
         endDateFull = f'{endYear}-{endMonth}-{endDate}'
 
-    commandList = [ "node", currentDirRoot + "/node/fromMongo.js", startDateFull, endDateFull ]
+    commandList = [ "node", currentDirRoot + "/apps/fromMongo.js", startDateFull, endDateFull ]
     subprocess.run(commandList, shell=False, encoding='utf8')
     with open(f"{currentDirRoot}/jsondata/analyticsExtract_{startDateFull}_{endDateFull}.json", "rt", encoding="utf8") as file:
         resultText = file.read()
@@ -70,13 +70,32 @@ def readData(startDay, endDay):
 
     return final
 
+def read(startDay, endDay):
+    return readData(startDay, endDay)
+
 def query(q):
-    commandList = [ "node", currentDirRoot + "/node/fromMysql.js", q ]
+    commandList = [ "node", currentDirRoot + "/apps/fromMysql.js", q ]
     subprocess.run(commandList, shell=False, encoding='utf8')
     with open(f"{currentDirRoot}/jsondata/mysqlQueryResult.json", "rt", encoding="utf8") as file:
         resultText = file.read()
 
     return json.loads(resultText)
+
+def sheets(q):
+    if isinstance(q, dict) or isinstance(q, list):
+        with open(f"{currentDirRoot}/jsondata/mysqlQueryResultPython.json", "wt", encoding="utf8") as file:
+            file.write(json.dumps(q))
+        commandList = [ "node", currentDirRoot + "/apps/toSheets.js", "fileRead" ]
+    else:
+        commandList = [ "node", currentDirRoot + "/apps/toSheets.js", q ]
+    subprocess.run(commandList, shell=False, encoding='utf8')
+    with open(f"{currentDirRoot}/jsondata/mysqlQuerySheetsResult.json", "rt", encoding="utf8") as file:
+        resultText = file.read()
+    view(resultText)
+    return resultText
+
+def sheet(q):
+    return sheets(q)
 
 def view(dic, indent=4):
     if isinstance(dic, DataObject):

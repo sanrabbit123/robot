@@ -55,7 +55,6 @@ GoogleSheet.prototype.get_value = async function (id, range) {
   }
 }
 
-
 GoogleSheet.prototype.update_value = async function (id, sheetName, values, startPoint) {
   const instance = this;
   try {
@@ -249,6 +248,5 @@ GoogleSheet.prototype.total_make = async function () {
     console.log(e);
   }
 }
-
 
 module.exports = GoogleSheet;

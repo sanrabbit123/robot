@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.greenBar();
     await local_funcs.launching();
     await local_funcs.mother.loginBox();
+    local_funcs.mother.dashboardBox();
 
     //SSE
     const sseTarget = [

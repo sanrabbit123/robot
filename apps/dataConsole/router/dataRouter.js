@@ -1540,7 +1540,11 @@ DataRouter.prototype.rou_post_getHistory = function () {
         }
 
       } else if (req.url === "/getHistoryProperty") {
-        responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr));
+        if (JSON.parse(req.body.idArr).length > 0) {
+          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr));
+        } else {
+          responseArr = [];
+        }
       }
 
       res.set("Content-Type", "application/json");

@@ -418,6 +418,31 @@ DataPatch.prototype.toolsGrayLeftStandard = function (button) {
   return resultObj;
 }
 
+DataPatch.prototype.toolsDashboard = function (button) {
+  let resultObj;
+
+  resultObj = {};
+  resultObj.vaildTargets = [
+    "client",
+    "project"
+  ];
+
+  switch (button) {
+    case "client":
+      resultObj.standardColumn = [ "status", "action" ];
+      resultObj.titleStandard = "응대중";
+      resultObj.buttons = [ "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ];
+      break;
+    case "project":
+      resultObj.standardColumn = [ "status", "action" ];
+      resultObj.titleStandard = "진행중";
+      resultObj.buttons = [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ];
+      break;
+  }
+
+  return resultObj;
+}
+
 //CLIENT ----------------------------------------------------------------------------------------
 
 DataPatch.prototype.clientDropPoint = function () {
