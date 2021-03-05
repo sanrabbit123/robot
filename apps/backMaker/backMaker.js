@@ -1143,6 +1143,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
 
 BackMaker.prototype.getClientReport = async function () {
   const instance = this;
+  const { slack_bot } = this.mother;
   try {
     const ratioParsing = (num) => { return `${String(Math.round(num * 100 * 10) / 10)}%`; }
 
@@ -1275,7 +1276,6 @@ BackMaker.prototype.getClientReport = async function () {
             result.push(tempArr);
           }
 
-
           tempArr = [ "평균값" ];
           for (let i = 0; i < this.length; i++) {
             tempArr.push(this[i][targetArr[t].target].average === null ? "" : this[i][targetArr[t].target].average);
@@ -1329,6 +1329,7 @@ BackMaker.prototype.getClientReport = async function () {
 
     return clientsReport;
   } catch (e) {
+    slack_bot.chat.postMessage({ text: "리포트 서버 문제 생김 : " + e, channel: "#error_log" });
     console.log(e);
   }
 }

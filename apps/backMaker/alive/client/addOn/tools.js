@@ -496,6 +496,7 @@ const withToolsArr = function (Clients) {
           ratio: RequestsTongFactor.ratioParsing((tong.length - num) / tong.length),
           cliidArr: cliidArrLeft
         });
+        throw new Error("problem in address : " + JSON.stringify(cliidArrLeft));
       }
       return { total: tong.length, average: null, detail: reports };
     }
@@ -596,6 +597,7 @@ const withToolsArr = function (Clients) {
           ratio: RequestsTongFactor.ratioParsing((tong.length - num) / tong.length),
           cliidArr: cliidArrLeft
         });
+        throw new Error("problem in contract : " + JSON.stringify(cliidArrLeft));
       }
       return { total: tong.length, average: null, detail: reports };
     }
