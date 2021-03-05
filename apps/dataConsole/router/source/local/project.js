@@ -531,7 +531,7 @@ ProjectJs.prototype.infoArea = function (info) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
@@ -2505,7 +2505,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
@@ -3209,7 +3209,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       let target;
       for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }

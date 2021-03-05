@@ -42,7 +42,7 @@ const withTools = function (Aspirant) {
         "금요일",
         "토요일"
       ];
-      return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]} 14시`;
+      return `${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일 ${dayConvert[dateObject.getDay()]} ${String(dateObject.getHours())}시`;
     };
     const dateToString = function (str) {
       const zeroAddition = function (num) {
@@ -228,7 +228,7 @@ const withTools = function (Aspirant) {
     }
     tong.aspirantBinary = tong.binary;
     delete tong.binary;
-    
+
     result.push(tong);
 
     return result;

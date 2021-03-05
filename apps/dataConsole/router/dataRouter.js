@@ -32,9 +32,17 @@ DataRouter.baseMaker = function (target) {
   prototypes = Object.keys(DataPatch.prototype);
 
   dataPatchScript = `const DataPatch = new Function();\n`;
-  for (let i of prototypes) {
-    if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
-      dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+  if (target !== "photo") {
+    for (let i of prototypes) {
+      if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
+        dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+      }
+    }
+  } else {
+    for (let i of prototypes) {
+      if ((new RegExp("^photo")).test(i) || (new RegExp("^project")).test(i) || /^tools/.test(i)) {
+        dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+      }
     }
   }
   html = `<!DOCTYPE html>
@@ -438,6 +446,8 @@ DataRouter.prototype.rou_get_First = function () {
         target = "analytics";
       } else if (/^con/i.test(req.params.id)) {
         target = "contents";
+      } else if (/^pho/i.test(req.params.id)) {
+        target = "photo";
       } else {
         target = "client";
       }
@@ -531,7 +541,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents" ];
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getPhotos" ];
   obj.func = async function (req, res) {
     try {
       let standard, raw_data, data;
@@ -566,7 +576,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
           }
         }
-      } else if (req.url === "/getProjects") {
+      } else if (req.url === "/getProjects" || req.url === "/getPhotos") {
         standard = instance.patch.projectStandard();
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
@@ -599,7 +609,12 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       }
 
       if (req.body.noFlat === undefined) {
-        data = raw_data.flatDeath();
+        if (req.url !== "/getPhotos") {
+          data = raw_data.flatDeath();
+        } else {
+          standard = instance.patch.photoStandard();
+          data = raw_data.planeDeath();
+        }
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
       } else {
@@ -616,7 +631,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
+  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents", "/searchPhotos" ];
   obj.func = async function (req, res) {
     try {
       let standard;
@@ -639,6 +654,9 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       } else if (req.url === "/searchContents") {
         standard = instance.patch.contentsStandard();
         map = instance.patch.contentsMap();
+      } else if (req.url === "/searchPhotos") {
+        standard = instance.patch.photoStandard();
+        map = instance.patch.photoMap();
       }
 
       mapArr = Object.values(map);
@@ -662,7 +680,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
       if (req.url === "/searchClients") {
         rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-      } else if (req.url === "/searchProjects") {
+      } else if (req.url === "/searchProjects" || req.url === "/searchPhotos") {
         rawJson = await instance.back.getProjectsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
         if (/\/project/g.test(req.headers.referer)) {
           if (rawJson.length === 0) {
@@ -730,7 +748,11 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       }
 
       if (req.body.noFlat === undefined) {
-        data = rawJson.flatDeath();
+        if (req.url !== "/searchPhotos") {
+          data = raw_data.flatDeath();
+        } else {
+          data = raw_data.planeDeath();
+        }
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
       } else {
@@ -748,7 +770,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const { fileSystem, pythonExecute, shell, shellLink } = this.mother;
   let obj = {};
-  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updatePhoto" ];
   obj.func = async function (req, res) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user } = req.body;
@@ -777,6 +799,9 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       } else if (req.url === "/updateContents") {
         thisPath = "contents";
         map = instance.patch.contentsMap();
+      } else if (req.url === "/updatePhoto") {
+        thisPath = "photo";
+        map = instance.patch.photoMap();
       }
 
       noUpdate = false;
@@ -845,6 +870,9 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           noUpdate = true;
           finalValue = null;
           pastFinalValue = null;
+        case "link":
+          finalValue = String(value);
+          break;
         default:
           throw new Error("invaild type");
       }
@@ -863,6 +891,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           whereQuery[map.proid.position] = thisId;
         } else if (req.url === "/updateContents") {
           whereQuery[map.conid.position] = thisId;
+        } else if (req.url === "/updatePhoto") {
+          whereQuery[map.proid.position] = thisId;
         }
 
         if (req.url === "/updateClient") {
@@ -873,6 +903,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         } else if (req.url === "/updateContents") {
           message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        } else if (req.url === "/updatePhoto") {
+          message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         }
 
         //update log
@@ -1449,6 +1481,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
+
       } else if (req.url === "/viewDesignerRawPortfolio") {
 
         whereQuery = {};

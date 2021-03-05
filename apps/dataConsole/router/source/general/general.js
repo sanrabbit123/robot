@@ -92,11 +92,13 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
     map = DataPatch.projectMap();
   } else if (window.location.pathname === "/contents") {
     map = DataPatch.contentsMap();
+  } else if (window.location.pathname === "/photo") {
+    map = DataPatch.photoMap();
   }
 
   switch (map[column].type) {
     case "string":
-      finalValue = String(value);
+      finalValue = String(value).replace(/[\&\=]/g, '');
       break;
     case "number":
       if (typeof value !== "number") {
@@ -143,6 +145,13 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       break;
     case "null":
       finalValue = pastValue;
+    case "link":
+      if (/[\=\&]/g.test(value)) {
+        finalValue = window.encodeURIComponent(value);
+      } else {
+        finalValue = value;
+      }
+      break;
     default:
       throw new Error("invaild type");
   }
@@ -188,6 +197,8 @@ GeneralJs.updateValue = async function (dataObj) {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
     } else if (window.location.pathname === "/contents") {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
+    } else if (window.location.pathname === "/photo") {
+      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updatePhoto"));
     }
 
     if (response.message !== "success") {
@@ -206,7 +217,10 @@ GeneralJs.updateValue = async function (dataObj) {
     //dashboard reload
     if (GeneralJs.stacks["dashboardBoxBoo"]) {
       let pathArr = window.location.pathname.split("?");
-      const thisPathName = pathArr[0].replace(/\//g, '');
+      let thisPathName = pathArr[0].replace(/\//g, '');
+      if (thisPathName === "photo") {
+        thisPathName = "project";
+      }
       const { standardColumn } = DataPatch.toolsDashboard(thisPathName);
       if (standardColumn.includes(dataObj.column)) {
         GeneralJs.timeouts["dashboardBoxUpdate"] = setTimeout(function () {
@@ -247,6 +261,8 @@ GeneralJs.returnValue = async function () {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
       } else if (window.location.pathname === "/contents") {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
+      } else if (window.location.pathname === "/photo") {
+        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updatePhoto"));
       }
 
       if (response.message !== "success") {
@@ -423,6 +439,10 @@ GeneralJs.moneyBoo = function (column) {
     map = DataPatch.designerMap();
   } else if (window.location.pathname === "/project") {
     map = DataPatch.projectMap();
+  } else if (window.location.pathname === "/contents") {
+    map = DataPatch.contentsMap();
+  } else if (window.location.pathname === "/photo") {
+    map = DataPatch.photoMap();
   }
   if (map[column] === undefined || map[column].moneyBoo === undefined) {
     return false;
@@ -743,7 +763,10 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 
 GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null, grayDataAlready = null) {
   let pathArr = window.location.pathname.split("?");
-  const thisPathName = pathArr[0].replace(/\//g, '');
+  let thisPathName = pathArr[0].replace(/\//g, '');
+  if (thisPathName === "photo") {
+    thisPathName = "project";
+  }
   const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
   const UPDATE_WORD = "담당자";
   const cookies = GeneralJs.getCookiesAll();
@@ -1447,7 +1470,10 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   }
   const [ standardDoms_raw, caseDomsTitle_raw, caseDoms_raw ] = document.querySelector(".totalMother").children;
   let pathArr = window.location.pathname.split("?");
-  const thisPathName = pathArr[0].replace(/\//g, '');
+  let thisPathName = pathArr[0].replace(/\//g, '');
+  if (thisPathName === "photo") {
+    thisPathName = "project";
+  }
   const { standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
   let mainWording;
   let div_clone, div_clone2;
@@ -1701,8 +1727,8 @@ GeneralJs.prototype.greenBar = function () {
       }
       if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
+        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
       }
     }
   }
@@ -1737,8 +1763,8 @@ GeneralJs.prototype.greenBar = function () {
       }
       if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
+        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
       }
     }
   }
@@ -1846,7 +1872,7 @@ GeneralJs.prototype.greenBar = function () {
   naviIconsContextLinks = [
     "/analytics",
     "/proposal",
-    "/project",
+    "/photo",
     "/designer",
     "/contents",
     "/service",
@@ -2006,8 +2032,8 @@ GeneralJs.prototype.greenBar = function () {
               target.style.transform = "translateX(0px)";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
               GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
+              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
               GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
             }
@@ -2061,8 +2087,8 @@ GeneralJs.prototype.greenBar = function () {
               target.style.transform = "translateX(0px)";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
               GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
+              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
               GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
             }
@@ -2113,7 +2139,10 @@ GeneralJs.prototype.greenBar = function () {
 GeneralJs.prototype.dashboardBox = function () {
   const instance = this;
   let pathArr = window.location.pathname.split("?");
-  const thisPathName = pathArr[0].replace(/\//g, '');
+  let thisPathName = pathArr[0].replace(/\//g, '');
+  if (thisPathName === "photo") {
+    thisPathName = "project";
+  }
   const { vaildTargets, standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
   let div_clone, div_clone2, div_clone3;
   let style = {};

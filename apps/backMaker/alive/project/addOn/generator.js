@@ -16,6 +16,8 @@ class Projects extends Array {
 
 const withTools = function (Project) {
 
+  const QueryString = require("querystring");
+
   Project.prototype.flatDeath = function () {
     const project = this.toNormal();
     const dateToString = function (dateObject, detail = false) {
@@ -153,15 +155,111 @@ const withTools = function (Project) {
     return tong;
   }
 
+  Project.prototype.planeDeath = function () {
+    const project = this.toNormal();
+    const dateToString = function (dateObject, detail = false) {
+      let dayString = '';
+
+      dayString += String(dateObject.getFullYear()).slice(0, 4);
+      dayString += '-';
+
+      if (dateObject.getMonth() + 1 < 10) {
+        dayString += '0' + String(dateObject.getMonth() + 1);
+      } else {
+        dayString += String(dateObject.getMonth() + 1);
+      }
+
+      dayString += '-';
+
+      if (dateObject.getDate() < 10) {
+        dayString += '0' + String(dateObject.getDate());
+      } else {
+        dayString += String(dateObject.getDate());
+      }
+
+      if (detail) {
+        dayString += ' ';
+        if (dateObject.getHours() < 10) {
+          dayString += '0' + String(dateObject.getHours());
+        } else {
+          dayString += String(dateObject.getHours());
+        }
+        dayString += ':';
+        if (dateObject.getMinutes() < 10) {
+          dayString += '0' + String(dateObject.getMinutes());
+        } else {
+          dayString += String(dateObject.getMinutes());
+        }
+        dayString += ':';
+        if (dateObject.getSeconds() < 10) {
+          dayString += '0' + String(dateObject.getSeconds());
+        } else {
+          dayString += String(dateObject.getSeconds());
+        }
+      }
+
+      if (/^1[678]/.test(dayString)) {
+        dayString = '-';
+      }
+
+      return dayString;
+    }
+
+    let tong = [];
+    let temp;
+
+    const { proid, cliid, desid } = project;
+    const { status, action } = project.process;
+    const { photo: { boo: photoBoo, status: photoStatus, date: contentsPhotoDate, info: { photographer, interviewer } }, raw: { portfolio: { status: rawPortfolioStatus, link: rawPortfolioLink }, interview: { status: rawInterviewStatus, link: rawInterviewLink }, photo: { status: rawPhotoStatus, link: rawPhotoLink } }, share: { client: { photo: shareClientPhoto, contents: shareClientContents }, designer: { photo: shareDesignerPhoto, contents: shareDesignerContents } } } = project.contents;
+
+    temp = {};
+
+    temp.standard = {
+      proid
+    };
+
+    temp.middle = {
+      cliid,
+      desid,
+    };
+
+    temp.info = {
+      status,
+      action,
+      photoBoo,
+      photoStatus,
+      contentsPhotoDate: dateToString(contentsPhotoDate),
+      photographer,
+      interviewer,
+      rawPortfolioStatus,
+      rawPortfolioLink: QueryString.escape(rawPortfolioLink),
+      rawInterviewStatus,
+      rawInterviewLink: QueryString.escape(rawInterviewLink),
+      rawPhotoStatus,
+      rawPhotoLink: QueryString.escape(rawPhotoLink),
+      shareClientPhoto: dateToString(shareClientPhoto),
+      shareClientContents: dateToString(shareClientContents),
+      shareDesignerPhoto: dateToString(shareDesignerPhoto),
+      shareDesignerContents: dateToString(shareDesignerContents),
+    };
+
+    tong.push(temp);
+
+    return tong;
+  }
+
   Project.prototype.dimensionSqueeze = function () {
     const tong = this.flatDeath();
     let result, tempObj;
 
     result = [];
-    for (let { standard, info } of tong) {
+    for (let { standard, middle, info } of tong) {
       tempObj = {};
       for (let i in standard) {
         tempObj[i] = standard[i];
+      }
+      for (let i in middle) {
+        tempObj[i] = middle[i];
       }
       for (let i in info) {
         tempObj[i] = info[i];
@@ -269,6 +367,18 @@ const withToolsArr = function (Projects) {
     tong = [];
     for (let i of this) {
       tempArr = i.flatDeath();
+      for (let j of tempArr) {
+        tong.push(j);
+      }
+    }
+    return tong;
+  }
+
+  Projects.prototype.planeDeath = function () {
+    let tong, tempArr;
+    tong = [];
+    for (let i of this) {
+      tempArr = i.planeDeath();
       for (let j of tempArr) {
         tong.push(j);
       }

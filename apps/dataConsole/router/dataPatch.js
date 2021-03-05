@@ -1553,293 +1553,6 @@ DataPatch.prototype.clientMap = function () {
   return map;
 }
 
-DataPatch.prototype.clientNotionMap = function (notionCard) {
-  let notionModel, requestNum;
-  let targetFunction;
-  let resultArr;
-
-  if (notionCard.request === null || notionCard.request === undefined) {
-    requestNum = 0;
-  } else {
-    requestNum = notionCard.request;
-  }
-
-  notionModel = {
-    address: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.space.address";
-
-      if (typeof notionValue === "string") {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    pyeong: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.space.pyeong";
-
-      if (typeof notionValue === "number") {
-        finalValue = notionValue;
-      } else if (!Number.isNaN(Number(notionValue.replace(/[^0-9\.]/g, '')))) {
-        finalValue = Number(notionValue.replace(/[^0-9\.]/g, ''));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    movein: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let tempArr;
-
-      target = "requests." + String(requestNum) + ".request.space.resident.expected";
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
-        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    realmove: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let tempArr;
-
-      target = "requests." + String(requestNum) + ".analytics.date.space.movein";
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
-        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    email: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "email";
-      if (typeof notionValue === "string" && /@/g.test(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    family: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.family";
-      if (typeof notionValue === "string") {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    channel: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.etc.channel";
-      if (typeof notionValue === "string") {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    precheck: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let tempArr;
-
-      target = "requests." + String(requestNum) + ".analytics.date.space.precheck";
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
-        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    empty: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let tempArr;
-
-      target = "requests." + String(requestNum) + ".analytics.date.space.empty";
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
-        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    contract: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let items;
-
-      target = "requests." + String(requestNum) + ".request.space.contract";
-      items = [ '전월세', '자가' ];
-      if (items.includes(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    room: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.space.spec.room";
-      if (typeof notionValue === "string") {
-        if (/4/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 4) {
-          finalValue = 4;
-        } else if (/3/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 3) {
-          finalValue = 3;
-        } else if (/2/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 2) {
-          finalValue = 2;
-        } else if (/1/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 1) {
-          finalValue = 1;
-        } else {
-          finalValue = pastValue;
-        }
-      } else if (typeof notionValue === "number") {
-        if (notionValue === 4) {
-          finalValue = 4;
-        } else if (notionValue === 3) {
-          finalValue = 3;
-        } else if (notionValue === 2) {
-          finalValue = 2;
-        } else if (notionValue === 1) {
-          finalValue = 1;
-        } else {
-          finalValue = pastValue;
-        }
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    bathroom: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.space.spec.bathroom";
-      if (typeof notionValue === "string") {
-        if (/3/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 3) {
-          finalValue = 3;
-        } else if (/2/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 2) {
-          finalValue = 2;
-        } else if (/1/g.test(notionValue) && Number(notionValue.replace(/[^0-9]/g, '')) === 1) {
-          finalValue = 1;
-        } else {
-          finalValue = pastValue;
-        }
-      } else if (typeof notionValue === "number") {
-        if (notionValue === 3) {
-          finalValue = 3;
-        } else if (notionValue === 2) {
-          finalValue = 2;
-        } else if (notionValue === 1) {
-          finalValue = 1;
-        } else {
-          finalValue = pastValue;
-        }
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    valcony: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.space.spec.valcony";
-      if (typeof notionValue === "string") {
-        if (notionValue === "발코니 확장") {
-          finalValue = true;
-        } else if (notionValue === "발코니 확장 없음") {
-          finalValue = false;
-        } else {
-          finalValue = pastValue;
-        }
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    phone: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "phone";
-      if (typeof notionValue === "string" && /-/g.test(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    budget: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "requests." + String(requestNum) + ".request.budget";
-      if (typeof notionValue === "string") {
-        if (notionValue.replace(/[^0-9]/g, '') === "5000") {
-          finalValue = '5,000만원 이상';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "4500") {
-          finalValue = '4,500만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "4000") {
-          finalValue = '4,000만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "3500") {
-          finalValue = '3,500만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "3000") {
-          finalValue = '3,000만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "2500") {
-          finalValue = '2,500만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "2000") {
-          finalValue = '2,000만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "1500") {
-          finalValue = '1,500만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "1000") {
-          finalValue = '1,000만원';
-        } else if (notionValue.replace(/[^0-9]/g, '') === "500") {
-          finalValue = '500만원 이하';
-        } else {
-          finalValue = pastValue;
-        }
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-  };
-
-  resultArr = [];
-  for (let i in notionCard) {
-    if (notionModel[i] !== undefined) {
-      targetFunction = notionModel[i];
-      resultArr.push(targetFunction(notionCard[i], null, requestNum));
-    }
-  }
-
-  return resultArr;
-}
-
 //DESIGNER --------------------------------------------------------------------------------------
 
 DataPatch.prototype.designerDropPoint = function () {
@@ -3263,124 +2976,6 @@ DataPatch.prototype.designerMap = function () {
     method: { name: "시공 방식", position: "information.business.service.construct.method", type: "string", searchBoo: true, },
   };
   return map;
-}
-
-DataPatch.prototype.designerNotionMap = function (notionCard) {
-  let notionModel, requestNum;
-  let targetFunction;
-  let resultArr;
-
-  if (notionCard.request === null || notionCard.request === undefined) {
-    requestNum = 0;
-  } else {
-    requestNum = notionCard.request;
-  }
-
-  notionModel = {
-    address: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "information.address";
-
-      if (typeof notionValue === "string" && notionValue !== "") {
-        finalValue = [ notionValue ];
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    contractday: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let tempArr;
-
-      target = "information.contract.date";
-      if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(notionValue))) {
-        tempArr = DataPatch.toolsDateFilter(notionValue).split('-');
-        finalValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    email: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "information.email";
-      if (typeof notionValue === "string" && /@/g.test(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    phone: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "information.phone";
-      if (typeof notionValue === "string" && /-/g.test(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    classification: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-      let items;
-
-      target = "information.business.businessInfo.classification";
-      items = [ "법인사업자(일반)", "법인사업자(간이)", "개인사업자(일반)", "개인사업자(간이)", "프리랜서" ];
-      if (items.includes(notionValue)) {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    percentage: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "information.business.service.cost.percentage";
-
-      if (typeof notionValue === "number") {
-        finalValue = notionValue;
-      } else if (!Number.isNaN(Number(notionValue.replace(/[^0-9\.]/g, '')))) {
-        finalValue = Number(notionValue.replace(/[^0-9\.]/g, ''));
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    },
-    businessnumber: function (notionValue, pastValue, requestNum) {
-      let target, finalValue;
-
-      target = "information.business.businessInfo.businessNumber";
-
-      if (typeof notionValue === "string") {
-        finalValue = notionValue;
-      } else {
-        finalValue = pastValue;
-      }
-
-      return { target, finalValue };
-    }
-  };
-
-  resultArr = [];
-  for (let i in notionCard) {
-    if (notionModel[i] !== undefined) {
-      targetFunction = notionModel[i];
-      resultArr.push(targetFunction(notionCard[i], null, requestNum));
-    }
-  }
-
-  return resultArr;
 }
 
 DataPatch.prototype.designerRawMap = function () {
@@ -5198,147 +4793,6 @@ DataPatch.prototype.projectMap = function () {
     return Number(result + 330000);
   };
 
-  const contentsPhotoDateToObject = function (value, pastValue, vaildMode) {
-    let boo = false;
-    let finalValue;
-    if (vaildMode) {
-      return { boo: !boo, value: null };
-    }
-    finalValue = pastValue;
-    return finalValue;
-  };
-  const contentsPhotoDateInputFunction = function (mother, input, callback) {
-    const grandMother = mother.parentElement;
-    let buttonStyle, inputStyle, style;
-    let ea = "px";
-    let height, fontSize, top, width;
-    let div_clone, svg_clone;
-    let button_clone;
-    let input_clone;
-    let iconWidth;
-    let inputArr, length;
-    let originalValue;
-
-    originalValue = input.value;
-
-    inputArr = [ "촬영 일자 기입", "촬영 일자 요청" ];
-    length = inputArr.length;
-    input.value = "입력중";
-    if (input.parentElement.childNodes[0].nodeType === 3) {
-      input.parentElement.style.transition = "0s all ease";
-      input.parentElement.style.color = "transparent";
-    }
-
-    mother.style.overflow = "";
-    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
-    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
-    if (width === '' || Number.isNaN(width)) {
-      width = "120";
-    }
-    top = height * 0.5;
-    iconWidth = 18;
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("removeTarget");
-    div_clone.classList.add("divTong");
-    style = {
-      position: "absolute",
-      top: String((height * 2) - top) + ea,
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      textAlign: "center",
-      fontSize: "inherit",
-      zIndex: String(3),
-      paddingBottom: String(iconWidth + 3) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
-    buttonStyle = {
-      position: "relative",
-      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
-      width: String(width) + ea,
-      paddingTop: String(height * 0.3) + ea,
-      height: String(height * 1.5) + ea,
-      background: "#2fa678",
-      fontSize: "inherit",
-      color: "#ffffff",
-      zIndex: String(3),
-      borderRadius: String(3) + ea,
-      animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
-      marginBottom: String(height / 4) + ea,
-    };
-
-    inputStyle = {
-      position: "absolute",
-      fontSize: "inherit",
-      fontWeight: String(400),
-      color: "#ffffff",
-      zIndex: String(3),
-      textAlign: "center",
-      background: "transparent",
-      width: "100%",
-      height: "calc(100% - " + String(5) + ea + ")",
-      left: String(0) + ea,
-      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
-      borderRadius: String(3) + ea,
-      border: String(0),
-      cursor: "pointer",
-    };
-
-    for (let i = 0; i < length; i++) {
-      button_clone = GeneralJs.nodes.div.cloneNode(true);
-      button_clone.classList.add("removeTarget");
-      for (let j in buttonStyle) {
-        button_clone.style[j] = buttonStyle[j];
-      }
-      input_clone = GeneralJs.nodes.div.cloneNode(true);
-      input_clone.classList.add("inputTarget");
-      input_clone.classList.add("hoverDefault");
-      for (let j in inputStyle) {
-        input_clone.style[j] = inputStyle[j];
-      }
-      input_clone.textContent = inputArr[i];
-      input_clone.setAttribute("target", inputArr[i]);
-      if (i === 0) {
-        input_clone.addEventListener("click", function (e) {
-          let thisId;
-          if (mother.hasAttribute("column")) {
-            thisId = (/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(grandMother.className))[0];
-          } else {
-            thisId = grandMother.parentNode.parentNode.parentNode.parentNode.getAttribute("index");
-          }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/contents?proid=" + thisId + "&view=create";
-        });
-      } else {
-        input_clone.addEventListener("click", async function (e) {
-          try {
-            let thisId, message;
-            let projects, clients;
-            if (mother.hasAttribute("column")) {
-              thisId = (/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(grandMother.className))[0];
-            } else {
-              thisId = grandMother.parentNode.parentNode.parentNode.parentNode.getAttribute("index");
-            }
-            projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: thisId }), "/getProjects"));
-            clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: projects[0].cliid }), "/getClients"));
-            message = clients[0].name + " 고객님의 촬영 일자 조정을 부탁드립니다! | 촬영 일자 기입 link: ";
-            await GeneralJs.ajaxPromise("linkmake=true&link=/contents&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: thisId }, { standard: "view", value: "create", force: "true" } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#400_customer", "/sendSlack");
-          } catch (e) {
-            console.log(e);
-          }
-        });
-      }
-      button_clone.appendChild(input_clone);
-      div_clone.appendChild(button_clone);
-    }
-
-    mother.appendChild(div_clone);
-  };
-
   const callHistoryToObject = function (value, pastValue, vaildMode) {
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
@@ -5783,7 +5237,7 @@ DataPatch.prototype.projectMap = function () {
     paymentsRemainCancel: { name: "잔금 환수일", position: "process.calculation.payments.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     paymentsRemainRefund: { name: "잔금 환수액", position: "process.calculation.payments.remain.refund", type: "number", searchBoo: true, moneyBoo: true },
     photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
-    contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "object", inputFunction: contentsPhotoDateInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: contentsPhotoDateToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
   };
   return map;
 }
@@ -7341,6 +6795,501 @@ DataPatch.prototype.contentsMap = function () {
     order: { name: "리뷰 순서 지수", position: "contents.review.detailInfo.order", type: "number", searchBoo: true, },
   };
 
+  return map;
+}
+
+//PROJECT ---------------------------------------------------------------------------------------
+
+DataPatch.prototype.photoStandard = function () {
+  let model = {};
+  let targetArr, margin;
+
+  model.standard = {
+    proid: {
+      name: "아이디",
+      left: 35,
+    },
+    name: {
+      name: "성함",
+      left: 128,
+    }
+  };
+
+  model.info = {
+    status: {
+      name: "상태",
+      width: 50,
+      left: 30,
+    },
+    designer: {
+      name: "디자이너",
+      width: 80,
+    },
+    action: {
+      name: "응대",
+      width: 80,
+    },
+    photoBoo: {
+      name: "촬영 여부",
+      width: 100,
+    },
+    photoStatus: {
+      name: "촬영 상태",
+      width: 100,
+    },
+    contentsPhotoDate: {
+      name: "촬영일",
+      width: 160,
+    },
+    photographer: {
+      name: "포토",
+      width: 120,
+    },
+    interviewer: {
+      name: "인터뷰어",
+      width: 120,
+    },
+    rawPortfolioStatus: {
+      name: "포트폴리오 상태",
+      width: 160,
+    },
+    rawPortfolioLink: {
+      name: "포트폴리오 링크",
+      width: 160,
+    },
+    rawInterviewStatus: {
+      name: "고객 후기 상태",
+      width: 160,
+    },
+    rawInterviewLink: {
+      name: "고객 후기 링크",
+      width: 160,
+    },
+    rawPhotoStatus: {
+      name: "원본 사진 상태",
+      width: 160,
+    },
+    rawPhotoLink: {
+      name: "원본 사진 링크",
+      width: 160,
+    },
+    shareClientPhoto: {
+      name: "사진 공유 C",
+      width: 160,
+    },
+    shareDesignerPhoto: {
+      name: "사진 공유 D",
+      width: 160,
+    },
+    shareClientContents: {
+      name: "컨텐츠 공유 C",
+      width: 160,
+    },
+    shareDesignerContents: {
+      name: "컨텐츠 공유 D",
+      width: 160,
+    },
+  };
+
+  targetArr = Object.keys(model.info);
+  margin = 20;
+  for (let i = 1; i < targetArr.length; i++) {
+    model.info[targetArr[i]].left = model.info[targetArr[i - 1]].width + model.info[targetArr[i - 1]].left + margin;
+  }
+
+  return model;
+}
+
+DataPatch.prototype.photoWhiteViewStandard = function () {
+  const targetColumns = {
+    standard: [
+      "name",
+      "proid",
+    ],
+    info: [
+      { name: "진행 상태", target: "status" },
+      { name: "서비스", target: "service" },
+      { name: "계약금 입금", target: "firstDate" },
+      { name: "계약금 정보", target: "firstInfo" },
+      { name: "1차 미팅", target: "meetingDate" },
+      { name: "잔금 입금", target: "remainDate" },
+      { name: "공급가", target: "remainSupply" },
+      { name: "소비자가", target: "remainConsumer" },
+      { name: "잔금", target: "remainPure" },
+      { name: "잔금 정보", target: "remainInfo" },
+      { name: "계약", target: "formDateFrom",  subTargets: [ "formDateTo" ], subTitles: [ "시작일", "종료일" ] },
+      { name: "정산 방식", target: "method" },
+      { name: "수수료", target: "percentage" },
+      { name: "정산 정보", target: "calculationInfo" },
+      { name: "정산 총금액", target: "paymentsTotalAmount" },
+      { name: "디자이너 선금", target: "paymentsFirstAmount" },
+      { name: "선금 지급일", target: "paymentsFirstDate" },
+      { name: "디자이너 잔금", target: "paymentsRemainAmount" },
+      { name: "잔금 지급일", target: "paymentsRemainDate" },
+      { name: "촬영", target: "contentsPhotoDate", subTargets: [ "photographer", "interviewer" ], subTitles: [ "촬영일", "작가", "인터뷰어" ] },
+    ],
+  };
+  return targetColumns;
+}
+
+DataPatch.prototype.photoMap = function () {
+  const statusToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = [ '대기', '진행중', '완료', '홀딩', '드랍' ];
+
+    if (targetArr.includes(value)) {
+      finalValue = value;
+    } else {
+      finalValue = pastValue;
+    }
+
+    return finalValue;
+  };
+  const statusInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+
+      items = [ '대기', '진행중', '완료', '홀딩', '드랍' ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "홀딩" || finalValue === "드랍") {
+        grandMother.setAttribute("drop", "true");
+      } else {
+        grandMother.setAttribute("drop", "false");
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = finalValue;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = [ '대기', '진행중', '완료', '홀딩', '드랍' ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(400),
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+  const designerToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValueObj, finalValue;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    finalValueObj = /d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(value);
+    if (finalValueObj === null) {
+      finalValue = "";
+    } else {
+      finalValue = finalValueObj[0];
+    }
+
+    return finalValue;
+  };
+  const designerInputFunction = function (mother, input, callback) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let count;
+    let valuesTong;
+    let toHtml;
+    let originalValue;
+
+    valuesTong = [];
+    count = 4;
+    tempArr = null;
+    toHtml = function (designer, desid) {
+      return designer + ' <b style="font-weight:200;font-size:11px;color:white">' + desid + '</b>';
+    };
+    for (let { designer, desid } of GeneralJs.stacks.allDesignerTong) {
+      if (count < 4) {
+        tempArr.push(toHtml(designer, desid));
+        count++;
+      } else {
+        if (tempArr !== null) {
+          valuesTong.push(tempArr);
+        }
+        tempArr = [];
+        tempArr.push(toHtml(designer, desid));
+        count = 0;
+      }
+    }
+    if (Array.isArray(tempArr)) {
+      if (tempArr.length > 0) {
+        valuesTong.push(tempArr);
+      }
+    }
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = this.getAttribute("target");
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 590;
+    if (width === '' || Number.isNaN(width)) {
+      width = "600";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: String(0) + ea,
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: String(0) + ea,
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [];
+    for (let z = 0; z < 5; z++) {
+      buttonDetailStyles.push({
+        position: "absolute",
+        left: String(20 * z) + '%',
+        top: String(0) + ea,
+        width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: "#2fa678",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: "inherit",
+        boxShadow: "0px 2px 11px -6px #2fa678",
+      });
+    }
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(400),
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "89%",
+      left: String(0) + ea,
+      top: GeneralJs.isMac() ? "16%" : "22%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < valuesTong[i].length; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget");
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.setAttribute("switch", "off");
+        input_clone.setAttribute("target", valuesTong[i][z].replace(/\<[^\<\>]+\>/g, ''));
+        input_clone.insertAdjacentHTML("beforeend", valuesTong[i][z]);
+        input_clone.addEventListener("click", endEvent);
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+  const map = {
+    proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
+    cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
+    desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
+    designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    action: { name: "응대", position: "process.action", type: "string", items: [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ], searchBoo: true, },
+    photoBoo: { name: "촬영 여부", position: "contents.photo.boo", type: "boolean", items: [ "true", "false" ], searchBoo: true, },
+    photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
+    contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    photographer: { name: "포토", position: "contents.photo.info.photographer", type: "string", searchBoo: true, },
+    interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", searchBoo: true, },
+    rawPortfolioStatus: { name: "포트폴리오 상태", position: "contents.raw.portfolio.status", type: "string", items: [ '원본 요청 요망', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], searchBoo: true, },
+    rawPortfolioLink: { name: "포트폴리오 링크", position: "contents.raw.portfolio.link", type: "link", searchBoo: true, },
+    rawInterviewStatus: { name: "고객 후기 상태", position: "contents.raw.interview.status", type: "string", items: [ '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], searchBoo: true, },
+    rawInterviewLink: { name: "고객 후기 링크", position: "contents.raw.interview.link", type: "link", searchBoo: true, },
+    rawPhotoStatus: { name: "원본 사진 상태", position: "contents.raw.photo.status", type: "string", items: [ '원본 요청 요망', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ], searchBoo: true, },
+    rawPhotoLink: { name: "원본 사진 링크", position: "contents.raw.photo.link", type: "link", searchBoo: true, },
+    shareClientPhoto: { name: "사진 고객 공유", position: "contents.share.client.photo", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    shareClientContents: { name: "컨텐츠 고객 공유", position: "contents.share.client.contents", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    shareDesignerPhoto: { name: "사진 디자이너 공유", position: "contents.share.designer.photo", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    shareDesignerContents: { name: "컨텐츠 디자이너 공유", position: "contents.share.designer.contents", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+  };
   return map;
 }
 

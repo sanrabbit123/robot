@@ -528,7 +528,7 @@ ClientJs.prototype.infoArea = function (info) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
@@ -2266,7 +2266,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {

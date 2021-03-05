@@ -254,7 +254,7 @@ PhotoJs.prototype.standardBar = function (standard) {
 
 PhotoJs.prototype.infoArea = function (info) {
   const instance = this;
-  const map = DataPatch.projectMap();
+  const map = DataPatch.photoMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
@@ -531,7 +531,7 @@ PhotoJs.prototype.infoArea = function (info) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
@@ -581,6 +581,11 @@ PhotoJs.prototype.infoArea = function (info) {
           });
 
           thisCase[column] = finalValue;
+
+          if (e.linkBoo) {
+            finalValue = (finalValue !== '' && finalValue !== '-') ? "링크 존재" : "-";
+          }
+
           if (GeneralJs.moneyBoo(column)) {
             originalDiv.textContent = GeneralJs.autoComma(finalValue);
           } else {
@@ -656,7 +661,7 @@ PhotoJs.prototype.infoArea = function (info) {
         this.appendChild(input_clone);
 
         //items
-        const map = DataPatch.projectMap();
+        const map = DataPatch.photoMap();
         const thisMap = map[this.getAttribute("column")];
 
         if (thisMap.type === "date" && e.type === "click") {
@@ -695,6 +700,79 @@ PhotoJs.prototype.infoArea = function (info) {
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
+
+        } else if (thisMap.type === "link") {
+
+          cancel_inputBack.style.background = "white";
+          this.style.color = "white";
+          input_clone.value = "클릭하여 링크 이동";
+          input_clone.style.color = "#2fa678";
+          input_clone.classList.add("hoverDefault");
+          input_clone.addEventListener("click", (e) => {
+            window.open(window.decodeURIComponent(this.getAttribute("link")), "_blank");
+          });
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+          width = 600;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String((height * 2) - top) + ea,
+            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+            width: String(width) + ea,
+            paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+            height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+            background: "#2fa678",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#ffffff",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #2fa678",
+            overflow: "scroll",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+
+          button_clone2 = GeneralJs.nodes.input.cloneNode(true);
+          style = {
+            position: "absolute",
+            fontSize: String(14) + ea,
+            fontWeight: String(400),
+            color: "#ffffff",
+            zIndex: String(3),
+            textAlign: "center",
+            background: "transparent",
+            width: "100%",
+            height: "calc(100% - " + String(5) + ea + ")",
+            left: String(0) + ea,
+            top: String(1) + ea,
+            border: String(0),
+            outline: String(0),
+            border: String(0),
+          };
+          for (let j in style) {
+            button_clone2.style[j] = style[j];
+          }
+          button_clone2.addEventListener("keypress", function (e) {
+            if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+              input_clone.value = window.encodeURIComponent(button_clone2.value);
+              e.linkBoo = true;
+              updateValueEvent.call(input_clone, e);
+            }
+          });
+          button_clone.appendChild(button_clone2);
+          this.appendChild(button_clone);
+
+          button_clone2.value = window.decodeURIComponent(this.getAttribute("link"));
+          button_clone2.focus();
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
@@ -840,7 +918,7 @@ PhotoJs.prototype.infoArea = function (info) {
       if (e.cancelable) {
         e.preventDefault();
       }
-      const map = DataPatch.projectMap();
+      const map = DataPatch.photoMap();
       const clickEventFunction = eventFunction(left);
       clickEventFunction.call(this, e);
 
@@ -1292,6 +1370,7 @@ PhotoJs.prototype.infoArea = function (info) {
   dropPoint = DataPatch.projectDropPoint();
 
   for (let obj of target) {
+
     if (num === 1) {
       style3.fontWeight = "500";
       style3.color = "inherit";
@@ -1339,6 +1418,15 @@ PhotoJs.prototype.infoArea = function (info) {
           div_clone3.textContent = GeneralJs.autoComma(obj[columns[z]]);
         } else {
           div_clone3.textContent = obj[columns[z]];
+        }
+        if (map[columns[z]].type === "link") {
+          if (obj[columns[z]] === '') {
+            div_clone3.textContent = "-";
+            div_clone3.setAttribute("link", "null");
+          } else {
+            div_clone3.textContent = "링크 존재";
+            div_clone3.setAttribute("link", obj[columns[z]]);
+          }
         }
       }
 
@@ -1400,6 +1488,8 @@ PhotoJs.prototype.infoArea = function (info) {
     div_clone.style.height = String(window.innerHeight) + ea;
   }
 
+  console.log(this.cases);
+
 }
 
 PhotoJs.prototype.spreadData = async function (search = null) {
@@ -1418,9 +1508,9 @@ PhotoJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null) {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
+      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getPhotos"));
     } else {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchProjects"));
+      projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchPhotos"));
     }
 
     cliidArr = [];
@@ -2248,9 +2338,9 @@ PhotoJs.prototype.cardViewMaker = function () {
 PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const cookies = GeneralJs.getCookiesAll();
-  const map = DataPatch.projectMap();
+  const map = DataPatch.photoMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
-  let { standard, info } = DataPatch.projectWhiteViewStandard();
+  let { standard, info } = DataPatch.photoWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
   let style;
@@ -2505,7 +2595,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           if (e.type === "keypress") {
-            finalValue = GeneralJs.vaildValue(column, this.value, pastRawData);
+            finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
           } else if (e.type === "message") {
@@ -2868,7 +2958,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   dropEventFunction = function (e) {
     e.preventDefault();
     this.style.opacity = String(1);
-    const { info } = DataPatch.projectWhiteViewStandard();
+    const { info } = DataPatch.photoWhiteViewStandard();
     const movingColumn = e.dataTransfer.getData("dragData");
     const thisColumn = this.parentNode.getAttribute("index");
     let originalColumns, originalColumns_filtered, originalTops;
@@ -3209,7 +3299,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       let target;
       for (let { dom } of historyTongTarget) {
-        dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
+        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }
@@ -3394,7 +3484,7 @@ PhotoJs.prototype.whiteCancelMaker = function (callback = null, recycle = false)
 
 PhotoJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
-  const { standard, info } = DataPatch.projectWhiteViewStandard();
+  const { standard, info } = DataPatch.photoWhiteViewStandard();
   return function () {
     const thisCase = { ...instance.cases[index], index };
     let div_clone;
@@ -4421,7 +4511,7 @@ PhotoJs.prototype.addExtractEvent = function () {
       const caseCopied = JSON.parse(JSON.stringify(instance.cases));
       caseCopied.shift();
       const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-      const map = DataPatch.projectMap();
+      const map = DataPatch.photoMap();
 
       let data;
       let valuesArr;

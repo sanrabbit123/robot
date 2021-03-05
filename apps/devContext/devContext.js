@@ -814,13 +814,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "정승희";
-      // const pid = "p85";
-      // const rid = "re079";
+      // const client = "황세화";
+      // const pid = "p83";
+      // const rid = "re077";
       // const links = [
-      //   "https://docs.google.com/document/d/1b6YMA4UgSc-UFnabxByvft_24tJhZH5-VDcb7iuU8cQ/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1bVxvMqfiCyD__Ux2-w0L04SQG4kUm-6LEtd4atFx5lY/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1X_bX-JPySUZ1Ri2rd4EKa6ezW-jp3_Pc?usp=sharing",
+      //   "https://docs.google.com/document/d/1XabSzOaZ8HdwTOqusiHhHLFWHa5Q4NR4D9JEeKtnkIs/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1nOKdXKJbG_ALStyB4aFb3tx2EnjERcNSG5KdnpDD9oI/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1kULSIWckEo2Rlqw8uiVk-2rte6i0-MgH?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -864,7 +864,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p85");
+      // await this.spellCheck("p83");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");
