@@ -761,9 +761,11 @@ PhotoJs.prototype.infoArea = function (info) {
           for (let j in style) {
             button_clone2.style[j] = style[j];
           }
-          button_clone2.addEventListener("keypress", function (e) {
+          button_clone2.addEventListener("keypress", (e) => {
             if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
               input_clone.value = window.encodeURIComponent(button_clone2.value);
+              this.setAttribute("link", input_clone.value);
+              this.style.color = "#404040";
               e.linkBoo = true;
               updateValueEvent.call(input_clone, e);
             }
@@ -771,8 +773,16 @@ PhotoJs.prototype.infoArea = function (info) {
           button_clone.appendChild(button_clone2);
           this.appendChild(button_clone);
 
-          button_clone2.value = window.decodeURIComponent(this.getAttribute("link"));
-          button_clone2.focus();
+          if (this.getAttribute("link") !== "null") {
+            button_clone2.value = window.decodeURIComponent(this.getAttribute("link"));
+          } else {
+            button_clone2.value = "";
+          }
+          GeneralJs.timeouts["linkInputFocusTimeoutsRow"] = setTimeout(function () {
+            button_clone2.focus();
+            clearTimeout(GeneralJs.timeouts["linkInputFocusTimeoutsRow"]);
+            GeneralJs.timeouts["linkInputFocusTimeoutsRow"] = null;
+          }, 300);
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
@@ -1487,8 +1497,6 @@ PhotoJs.prototype.infoArea = function (info) {
   if (div_clone.getBoundingClientRect().height < window.innerHeight) {
     div_clone.style.height = String(window.innerHeight) + ea;
   }
-
-  console.log(this.cases);
 
 }
 
@@ -2661,6 +2669,12 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             index: thisCase["index"],
           });
 
+          thisCaseOriginal[column] = finalValue;
+          if (e.linkBoo) {
+            targetDom.setAttribute("link", finalValue);
+            finalValue = (finalValue !== '' && finalValue !== '-') ? "링크 존재" : "-";
+          }
+
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
               if (Number(father.getAttribute("index")) === thisCase["index"]) {
@@ -2677,7 +2691,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               }
             }
           }
-          thisCaseOriginal[column] = finalValue;
+
           if (map[column].moneyBoo === true) {
             originalDiv.textContent = GeneralJs.autoComma(finalValue);
             targetDom.textContent = GeneralJs.autoComma(finalValue);
@@ -2789,6 +2803,92 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
+
+
+        } else if (thisMap.type === "link") {
+
+          cancel_inputBack.style.background = "white";
+          this.style.color = "white";
+          input_clone.value = "클릭하여 링크 이동";
+          input_clone.style.color = "#2fa678";
+          input_clone.classList.add("hoverDefault");
+          input_clone.addEventListener("click", (e) => {
+            window.open(window.decodeURIComponent(this.getAttribute("link")), "_blank");
+          });
+
+          this.style.overflow = "";
+          height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
+          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+          top = height * 0.5;
+          width = 600;
+
+          button_clone = GeneralJs.nodes.div.cloneNode(true);
+          button_clone.classList.add("removeTarget");
+          style = {
+            position: "absolute",
+            top: String((height * 2) - top) + ea,
+            left: String(0) + ea,
+            width: String(width) + ea,
+            paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+            height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+            background: "#2fa678",
+            textAlign: "center",
+            fontSize: "inherit",
+            color: "#ffffff",
+            zIndex: String(3),
+            borderRadius: String(3) + ea,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0px 2px 11px -6px #2fa678",
+            overflow: "scroll",
+          };
+          for (let j in style) {
+            button_clone.style[j] = style[j];
+          }
+
+          button_clone2 = GeneralJs.nodes.input.cloneNode(true);
+          style = {
+            position: "absolute",
+            fontSize: String(15) + ea,
+            fontWeight: String(400),
+            color: "#ffffff",
+            zIndex: String(3),
+            textAlign: "left",
+            textIndent: String(12) + ea,
+            background: "transparent",
+            width: "100%",
+            height: "calc(100% - " + String(5) + ea + ")",
+            left: String(0) + ea,
+            top: String(1.5) + ea,
+            border: String(0),
+            outline: String(0),
+            border: String(0),
+          };
+          for (let j in style) {
+            button_clone2.style[j] = style[j];
+          }
+          button_clone2.addEventListener("keypress", (e) => {
+            if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+              input_clone.value = window.encodeURIComponent(button_clone2.value);
+              this.setAttribute("link", input_clone.value);
+              this.style.color = "#404040";
+              e.linkBoo = true;
+              updateValueEvent.call(input_clone, e);
+            }
+          });
+          button_clone.appendChild(button_clone2);
+          this.appendChild(button_clone);
+
+          if (this.getAttribute("link") !== "null") {
+            button_clone2.value = window.decodeURIComponent(this.getAttribute("link"));
+          } else {
+            button_clone2.value = "";
+          }
+          GeneralJs.timeouts["linkInputFocusTimeoutsWhite"] = setTimeout(function () {
+            button_clone2.focus();
+            clearTimeout(GeneralJs.timeouts["linkInputFocusTimeoutsWhite"]);
+            GeneralJs.timeouts["linkInputFocusTimeoutsWhite"] = null;
+          }, 300);
+
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
@@ -3096,6 +3196,15 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     } else {
       div_clone4.textContent = thisCase[info[i].target];
     }
+    if (map[info[i].target].type === "link") {
+      if (thisCase[info[i].target] === '') {
+        div_clone4.textContent = "-";
+        div_clone4.setAttribute("link", "null");
+      } else {
+        div_clone4.textContent = "링크 존재";
+        div_clone4.setAttribute("link", thisCase[info[i].target]);
+      }
+    }
     style = {
       display: "inline-block",
       position: "absolute",
@@ -3239,175 +3348,6 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     historyBox.style[i] = style[i];
   }
 
-  //histoty title box
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = "HISTORY";
-  style = {
-    position: "absolute",
-    width: String(fontSize * 6) + ea,
-    height: "100%",
-    fontSize: String(fontSize) + ea,
-    fontWeight: String(700),
-  };
-  for (let i in style) {
-    div_clone3.style[i] = style[i];
-  }
-  historyBox.appendChild(div_clone3);
-
-  //history text box tong
-  historyTongTarget = [
-    { column: "history", name: "진행 상황", dom: null },
-    { column: "designer", name: "디자이너 관련", dom: null },
-    { column: "client", name: "고객 관련", dom: null },
-    { column: "photo", name: "촬영 관련", dom: null },
-  ];
-  visualSpecificMarginTop = fontSize * (1 / 5);
-  historyTargetHeightConst = (fontSize * 0.92) + visualSpecificMarginTop;
-  textAreas = [];
-
-  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    left: String(fontSize * 6) + ea,
-    width: "calc(100% - " + String((fontSize * 6) + 1) + ea + ")",
-    height: "100%",
-    fontSize: String(fontSize) + ea,
-    fontWeight: String(300),
-  };
-  for (let i in style) {
-    div_clone3.style[i] = style[i];
-  }
-
-  for (let i = 0; i < historyTongTarget.length; i++) {
-
-    //focus event
-    historyFocusEvent = function (e) {
-      const thisIndex = i;
-      for (let { dom } of historyTongTarget) {
-        if (Number(dom.getAttribute("index")) !== thisIndex) {
-          dom.style.height = "calc(" + String(5) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        } else {
-          this.parentElement.scroll(0, 0);
-          dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        }
-      }
-      this.style.color = "#202020";
-    }
-
-    //blur event
-    historyBlurEvent = function (e) {
-      const thisIndex = i;
-      let target;
-      for (let { dom } of historyTongTarget) {
-        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
-        if (Number(dom.getAttribute("index")) === thisIndex) {
-          target = dom.querySelector("textarea");
-        }
-      }
-      this.style.color = "#cccccc";
-      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
-    }
-
-    //margin box
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      width: "100%",
-      height: String(i === 0 ? fontSize * (1 / 5) : fontSize) + ea,
-    };
-    for (let j in style) {
-      div_clone4.style[j] = style[j];
-    }
-    div_clone3.appendChild(div_clone4);
-
-    //contents box
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      width: "100%",
-      marginTop: String(visualSpecificMarginTop) + ea,
-      height: "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(300),
-      border: "solid 1px #dddddd",
-      borderRadius: String(5) + ea,
-    };
-    for (let j in style) {
-      div_clone4.style[j] = style[j];
-    }
-
-    //title
-    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone5.textContent = historyTongTarget[i].name;
-    style = {
-      position: "absolute",
-      top: String(((fontSize * (GeneralJs.isMac() ? (5 / 15.3027) : (4 / 15.3027))) + visualSpecificMarginTop) * -1) + ea,
-      left: String(fontSize * (2 / 15.3027) * -1) + ea,
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(600),
-      color: "#404040",
-      background: "white",
-      paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
-      paddingRight: String(fontSize * (12 / 15.3027)) + ea,
-      cursor: "pointer",
-    };
-    for (let j in style) {
-      div_clone5.style[j] = style[j];
-    }
-    div_clone5.addEventListener("click", historyFocusEvent);
-    div_clone4.appendChild(div_clone5);
-
-    //textarea tong
-    div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone5.classList.add("noScrollBar");
-    style = {
-      position: "absolute",
-      bottom: String(0) + ea,
-      left: String(fontSize * (15 / 15.3027)) + ea,
-      width: "calc(100% - " + String(fontSize * (30 / 15.3027)) + ea + ")",
-      height: "calc(100% - " + String(fontSize * (21 / 15.3027)) + ea + ")",
-      overflow: "scroll",
-    };
-    for (let j in style) {
-      div_clone5.style[j] = style[j];
-    }
-
-    textArea_clone = GeneralJs.nodes.textarea.cloneNode(true);
-    style = {
-      width: "100%",
-      height: String(5000) + ea,
-      fontSize: String(fontSize * 0.9) + ea,
-      fontWeight: String(200),
-      color: "#aaaaaa",
-      border: String(0),
-      outline: String(0),
-      lineHeight: String(1.6),
-    };
-    for (let j in style) {
-      textArea_clone.style[j] = style[j];
-    }
-    textArea_clone.addEventListener("focus", historyFocusEvent);
-    textArea_clone.addEventListener("blur", historyBlurEvent);
-    if (i === historyTongTarget.length - 1) {
-      textArea_clone.addEventListener("keydown", function (e) {
-        if (e.keyCode === 9) {
-          e.preventDefault();
-          this.blur();
-        }
-      });
-    }
-
-    div_clone5.appendChild(textArea_clone);
-    textAreas.push(textArea_clone);
-
-    div_clone4.appendChild(div_clone5);
-    div_clone4.setAttribute("index", String(i));
-    historyTongTarget[i].dom = div_clone4;
-
-    div_clone3.appendChild(div_clone4);
-  }
-
-  historyBox.appendChild(div_clone3);
   div_clone2.appendChild(historyBox);
   this.whiteBox.historyBox = historyBox;
 
@@ -3422,14 +3362,6 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       propertyBox.style.opacity = String(1);
       historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-    }
-  });
-
-  //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {
-    const dataArr = JSON.parse(res);
-    for (let i = 0; i < textAreas.length; i++) {
-      textAreas[i].value = dataArr[i];
     }
   });
 
