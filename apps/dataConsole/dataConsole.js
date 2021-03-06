@@ -104,7 +104,7 @@ DataConsole.prototype.connect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC;
+    let MONGOC, MONGOLOCALC;
     if (address.host === "localhost") {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`set DB server => 127.0.0.1`);
@@ -112,8 +112,10 @@ DataConsole.prototype.connect = async function () {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       console.log(`set DB server => ${this.address.mongoinfo.host}`);
     }
+    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
 
     await MONGOC.connect();
+    await MONGOLOCALC.connect();
 
     //set pem key
     let pems = {};
@@ -144,7 +146,7 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC);
+    const router = new DataRouter(MONGOC, MONGOLOCALC);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

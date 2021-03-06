@@ -1,4 +1,7 @@
-const DataRouter = function (MONGOC) {
+const DataRouter = function (MONGOC, MONGOLOCALC) {
+  if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
+    throw new Error("must be mongo, mongo_local connection");
+  }
   this.dir = process.cwd() + "/apps/dataConsole";
   this.module = this.dir + "/module";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
@@ -13,9 +16,8 @@ const DataRouter = function (MONGOC) {
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.calendar = new GoogleCalendar();
-  if (MONGOC !== undefined && MONGOC !== null) {
-    this.mongo = MONGOC;
-  }
+  this.mongo = MONGOC;
+  this.mongolocal = MONGOLOCALC;
   this.pythonApp = this.dir + "/python/app.py";
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.members = {};
@@ -895,16 +897,30 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           whereQuery[map.proid.position] = thisId;
         }
 
-        if (req.url === "/updateClient") {
-          message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        } else if (req.url === "/updateDesigner") {
-          message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        } else if (req.url === "/updateProject") {
-          message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        } else if (req.url === "/updateContents") {
-          message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        } else if (req.url === "/updatePhoto") {
-          message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
+          if (req.url === "/updateClient") {
+            message = await instance.back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          } else if (req.url === "/updateDesigner") {
+            message = await instance.back.updateHistory("designer", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          } else if (req.url === "/updateProject") {
+            message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          } else if (req.url === "/updateContents") {
+            message = await instance.back.updateHistory("contents", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          } else if (req.url === "/updatePhoto") {
+            message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          }
+        } else {
+          if (req.url === "/updateClient") {
+            message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+          } else if (req.url === "/updateDesigner") {
+            message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+          } else if (req.url === "/updateProject") {
+            message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+          } else if (req.url === "/updateContents") {
+            message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+          } else if (req.url === "/updatePhoto") {
+            message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+          }
         }
 
         //update log
@@ -1540,10 +1556,10 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
       if (req.url === "/getClientHistory") {
 
-        historyObj = await back.getHistoryById("client", req.body.id);
+        historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
 
         if (historyObj === null) {
-          await back.createHistory("client", { cliid: req.body.id });
+          await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal });
           for (let i = 0; i < 6; i++) {
             responseArr.push('');
           }
@@ -1558,10 +1574,10 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
       } else if (req.url === "/getProjectHistory") {
 
-        historyObj = await back.getHistoryById("project", req.body.id);
+        historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
 
         if (historyObj === null) {
-          await back.createHistory("project", { proid: req.body.id });
+          await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal });
           for (let i = 0; i < 4; i++) {
             responseArr.push('');
           }
@@ -1574,7 +1590,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
       } else if (req.url === "/getHistoryProperty") {
         if (JSON.parse(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr));
+          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr), { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
@@ -1645,7 +1661,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         throw new Error("invaild method");
       }
 
-      historyObj = await back.getHistoryById(method, id);
+      historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
       if (historyObj === null) {
         updateQuery = {};
         updateQuery[standard] = id;
@@ -1654,8 +1670,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         } else {
           updateQuery[column] = value;
         }
-        console.log(updateQuery);
-        await back.createHistory(method, updateQuery);
+        await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal });
       } else {
         whereQuery = {};
         whereQuery[standard] = id;
@@ -1664,8 +1679,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         } else {
           updateQuery[column] = value;
         }
-        console.log(updateQuery);
-        await back.updateHistory(method, [ whereQuery, updateQuery ]);
+        await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
       }
 
       await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
@@ -2013,7 +2027,7 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
         historyObj.budget = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.budget === undefined ? [] : notionCard.detailStory.budget))));
         historyObj.progress = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.progress === undefined ? [] : notionCard.detailStory.progress))));
 
-        await instance.back.updateHistory("client", [ whereQuery, historyObj ]);
+        await instance.back.updateHistory("client", [ whereQuery, historyObj ], { selfMongo: instance.mongolocal });
 
       } else if (req.body.desid !== undefined) {
         whereQuery.desid = req.body.desid;

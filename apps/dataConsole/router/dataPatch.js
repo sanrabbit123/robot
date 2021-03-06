@@ -6873,6 +6873,22 @@ DataPatch.prototype.photoStandard = function () {
       name: "원본 사진 링크",
       width: 160,
     },
+    blogPortfolio: {
+      name: "포트폴리오 B",
+      width: 160,
+    },
+    blogReview: {
+      name: "고객 후기 B",
+      width: 160,
+    },
+    instagramPortfolio: {
+      name: "포트폴리오 I",
+      width: 160,
+    },
+    instagramReview: {
+      name: "고객 후기 I",
+      width: 160,
+    },
     shareClientPhoto: {
       name: "사진 공유 C",
       width: 160,
@@ -7289,6 +7305,10 @@ DataPatch.prototype.photoMap = function () {
     shareClientContents: { name: "컨텐츠 고객 공유", position: "contents.share.client.contents", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     shareDesignerPhoto: { name: "사진 디자이너 공유", position: "contents.share.designer.photo", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     shareDesignerContents: { name: "컨텐츠 디자이너 공유", position: "contents.share.designer.contents", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    blogPortfolio: { name: "포트폴리오 블로그", position: "contents.blog.portfolio.date", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], isHistory: true },
+    blogReview: { name: "고객 후기 블로그", position: "contents.blog.review.date", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], isHistory: true },
+    instagramPortfolio: { name: "포트폴리오 인스타", position: "contents.instagram.portfolio.date", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], isHistory: true },
+    instagramReview: { name: "고객 후기 인스타", position: "contents.instagram.review.date", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], isHistory: true },
   };
   return map;
 }

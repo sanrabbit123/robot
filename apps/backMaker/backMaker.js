@@ -2996,16 +2996,23 @@ BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery
 
 // GET history -------------------------------------------------------------------------
 
-BackMaker.prototype.getHistoryById = async function (method, id, option = { fromConsole: false }) {
+BackMaker.prototype.getHistoryById = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
+
     let arr, target;
     let collection, whereQuery;
 
@@ -3025,9 +3032,13 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
       throw new Error("invalid method");
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     arr = await MONGOLOCALC.db(`miro81`).collection(collection).find(whereQuery).toArray();
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
     if (arr.length > 0) {
       return arr[0];
     } else {
@@ -3038,16 +3049,23 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
   }
 }
 
-BackMaker.prototype.getHistoriesByQuery = async function (method, query, option = { fromConsole: false }) {
+BackMaker.prototype.getHistoriesByQuery = async function (method, query, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
+
     let tong, sortQuery;
     let sortStandard, collection;
 
@@ -3074,13 +3092,17 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
       sortQuery = option.sort;
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
     }
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
 
     return tong;
   } catch (e) {
@@ -3088,16 +3110,23 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
   }
 }
 
-BackMaker.prototype.getHistoriesAll = async function (method, option = { fromConsole: false }) {
+BackMaker.prototype.getHistoriesAll = async function (method, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
+
     let tong, sortQuery;
     let sortStandard, collection;
 
@@ -3124,13 +3153,17 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
       sortQuery = option.sort;
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find({}).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find({}).sort(sortQuery).toArray();
     }
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
 
     return tong;
   } catch (e) {
@@ -3138,15 +3171,21 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
   }
 }
 
-BackMaker.prototype.getHistoryProperty = async function (method, property, idArr = null, option = { fromConsole: false }) {
+BackMaker.prototype.getHistoryProperty = async function (method, property, idArr = null, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
 
     let tong, sortQuery;
@@ -3154,6 +3193,9 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     let findQuery, projectQuery;
     let sortStandard, collection;
     let tempObj;
+    let tongLeft;
+    let tongIds;
+    let createQuery;
 
     if (/client/gi.test(method)) {
       collection = "clientHistory";
@@ -3195,13 +3237,38 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       throw new Error("invaild id arr");
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     if (option.limit !== undefined) {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(findQuery).project(projectQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(findQuery).project(projectQuery).sort(sortQuery).toArray();
     }
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
+
+    if (idArr !== null) {
+      if (idArr.length !== tong.length) {
+        tongIds = [];
+        for (let obj of tong) {
+          tongIds.push(obj[sortStandard]);
+        }
+        tongLeft = [];
+        for (let id of idArr) {
+          if (!tongIds.includes(id)) {
+            tongLeft.push(id);
+          }
+        }
+        for (let id of tongLeft) {
+          createQuery = {};
+          createQuery[sortStandard] = id;
+          await this.createHistory(method, createQuery, option);
+          tong.push(await this.getHistoryById(method, id, option));
+        }
+      }
+    }
 
     if (tong.length > 0) {
       finalTong = {};
@@ -3218,18 +3285,24 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
   }
 }
 
-BackMaker.prototype.updateHistory = async function (method, queryArr, option = { fromConsole: false }) {
+BackMaker.prototype.updateHistory = async function (method, queryArr, option = { fromConsole: false, selfMongo: null }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
 
     const [ whereQuery, updateQuery ] = queryArr;
@@ -3247,9 +3320,13 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
       throw new Error("invalid method");
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     await MONGOLOCALC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
 
     return "success";
   } catch (e) {
@@ -3257,15 +3334,21 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
   }
 }
 
-BackMaker.prototype.deleteHistory = async function (method, id, option = { fromConsole: false }) {
+BackMaker.prototype.deleteHistory = async function (method, id, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
 
     let sortStandard, collection, deleteQuery;
@@ -3289,25 +3372,36 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
     deleteQuery = {};
     deleteQuery[sortStandard] = id;
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     await MONGOLOCALC.db(`miro81`).collection(collection).deleteOne(deleteQuery);
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
     return "success";
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false }) {
+BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false, selfMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
-    let MONGOLOCALC;
-    if (option.fromConsole) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    let MONGOLOCALC, SELFMONGOBOO;
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      SELFMONGOBOO = true;
+      MONGOLOCALC = option.selfMongo;
     } else {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      SELFMONGOBOO = false;
+      if (option.fromConsole) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
     }
+
     let dummy;
     let sortStandard, collection, whereQuery;
 
@@ -3387,9 +3481,13 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
       throw new Error("invalid method");
     }
 
-    await MONGOLOCALC.connect();
+    if (!SELFMONGOBOO) {
+      await MONGOLOCALC.connect();
+    }
     await MONGOLOCALC.db(`miro81`).collection(collection).insertOne(dummy);
-    MONGOLOCALC.close();
+    if (!SELFMONGOBOO) {
+      MONGOLOCALC.close();
+    }
 
     whereQuery = {};
     whereQuery[sortStandard] = updateQuery[sortStandard];

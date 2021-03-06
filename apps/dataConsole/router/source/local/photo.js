@@ -1502,11 +1502,37 @@ PhotoJs.prototype.infoArea = function (info) {
 
 PhotoJs.prototype.spreadData = async function (search = null) {
   const instance = this;
+  const dateToString = function (dateObject) {
+    let dayString = '';
+
+    dayString += String(dateObject.getFullYear()).slice(0, 4);
+    dayString += '-';
+
+    if (dateObject.getMonth() + 1 < 10) {
+      dayString += '0' + String(dateObject.getMonth() + 1);
+    } else {
+      dayString += String(dateObject.getMonth() + 1);
+    }
+
+    dayString += '-';
+
+    if (dateObject.getDate() < 10) {
+      dayString += '0' + String(dateObject.getDate());
+    } else {
+      dayString += String(dateObject.getDate());
+    }
+
+    if (/^1[678]/.test(dayString)) {
+      dayString = '-';
+    }
+
+    return dayString;
+  }
   try {
     let projects;
     let whereQuery;
-    let cliidArr, desidArr;
-    let cliidSet, desidSet;
+    let cliidArr, desidArr, proidArr;
+    let cliidSet, desidSet, proidSet;
     let clients, designers;
     let serviceWording;
 
@@ -1514,6 +1540,7 @@ PhotoJs.prototype.spreadData = async function (search = null) {
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
+    let histories_obj, histories_tempObj;
 
     if (search === null) {
       projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getPhotos"));
@@ -1523,16 +1550,20 @@ PhotoJs.prototype.spreadData = async function (search = null) {
 
     cliidArr = [];
     desidArr = [];
+    proidArr = [];
     for (let i = 0; i < projects.data.length; i++) {
       cliidArr.push(projects.data[i].middle.cliid);
       desidArr.push(projects.data[i].middle.desid);
+      proidArr.push(projects.data[i].standard.proid);
     }
 
     cliidSet = new Set(cliidArr);
     desidSet = new Set(desidArr);
+    proidSet = new Set(proidArr);
 
     cliidArr = Array.from(cliidSet);
     desidArr = Array.from(desidSet);
+    proidArr = Array.from(proidSet);
 
     whereQuery = {};
     whereQuery["$or"] = [];
@@ -1549,6 +1580,15 @@ PhotoJs.prototype.spreadData = async function (search = null) {
     designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
     GeneralJs.stacks.allDesignerTong = designers;
 
+    histories_obj = JSON.parse(await GeneralJs.ajaxPromise("method=project&property=contents&idArr=" + JSON.stringify(proidArr), "/getHistoryProperty"));
+    histories = [];
+    for (let k in histories_obj) {
+      histories_tempObj = {};
+      histories_tempObj["proid"] = k;
+      histories_tempObj["contents"] = histories_obj[k];
+      histories.push(histories_tempObj);
+    }
+
     for (let p of projects.data) {
 
       for (let c of clients) {
@@ -1563,29 +1603,15 @@ PhotoJs.prototype.spreadData = async function (search = null) {
         }
       }
 
-      // if (p.middle.serid === "s2011_aa01s") {
-      //   serviceWording = "홈퍼니싱";
-      // } else if (p.middle.serid === "s2011_aa02s") {
-      //   serviceWording = "홈스타일링";
-      // } else if (p.middle.serid === "s2011_aa03s") {
-      //   serviceWording = "토탈 스타일링";
-      // }
-      //
-      // if (p.middle.xValue === 'M') {
-      //   serviceWording += " mini";
-      // } else if (p.middle.xValue === 'B') {
-      //   serviceWording += " basic";
-      // } else if (p.middle.xValue === 'P') {
-      //   serviceWording += " premium";
-      // }
-      //
-      // if (p.middle.online) {
-      //   serviceWording = "온라인 " + serviceWording;
-      // } else {
-      //   serviceWording = "오프라인 " + serviceWording;
-      // }
-      //
-      // p.info.service = serviceWording;
+      for (let h of histories) {
+        if (p.standard.proid === h.proid) {
+          p.info.blogPortfolio = dateToString(new Date(h.contents.blog.portfolio.date));
+          p.info.blogReview = dateToString(new Date(h.contents.blog.review.date));
+          p.info.instagramPortfolio = dateToString(new Date(h.contents.instagram.portfolio.date));
+          p.info.instagramReview = dateToString(new Date(h.contents.instagram.review.date));
+        }
+      }
+
     }
 
     const { standard, data } = projects;
