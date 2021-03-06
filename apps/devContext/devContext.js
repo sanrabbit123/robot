@@ -24,6 +24,7 @@ const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
 const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
 const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
+const NaverBlogParsing = require(APP_PATH + "/naverAPIs/NaverBlogParsing.js");
 
 class DevContext extends Array {
 
@@ -797,7 +798,17 @@ class DevContext extends Array {
 
 
 
+
+
+
+
+
       // TOOLS =========================================================================================================================================
+
+      // naver blog to json
+      // const blog = new NaverBlogParsing();
+      // await blog.blogToJson();
+
 
       // parsingHangul
 

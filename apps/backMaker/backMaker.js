@@ -3344,6 +3344,32 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         designer: "",
         client: "",
         photo: "",
+        contents: {
+          blog: {
+            portfolio: {
+              boo: false,
+              date: new Date(1800, 0, 1),
+              link: "",
+            },
+            review: {
+              boo: false,
+              date: new Date(1800, 0, 1),
+              link: "",
+            }
+          },
+          instagram: {
+            portfolio: {
+              boo: false,
+              date: new Date(1800, 0, 1),
+              link: "",
+            },
+            review: {
+              boo: false,
+              date: new Date(1800, 0, 1),
+              link: "",
+            }
+          }
+        },
         important: false,
         issue: "",
         manager: "-"

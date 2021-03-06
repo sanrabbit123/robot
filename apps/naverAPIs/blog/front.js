@@ -57,7 +57,17 @@ let titleToObject = function () {
 
     return (new Date(year, month, date));
   };
-
+  const today = new Date();
+  const dateToString = function (dateObject) {
+    let result = '';
+    result += String(dateObject.getFullYear());
+    result += '. ';
+    result += String(dateObject.getMonth() + 1);
+    result += '. ';
+    result += String(dateObject.getDate());
+    result += '.';
+    return result;
+  };
   let tbodies, titles, filteredTitle, filteredDate, filteredClick, final;
 
   tbodies = document.querySelectorAll('tbody');
@@ -69,7 +79,18 @@ let titleToObject = function () {
   for (let t of titles) {
     if (t.nodeName === 'TD') {
       filteredTitle.push(t.querySelector('a'));
-      filteredDate.push(arrayDate(t.parentNode.querySelector('.date').textContent.split('.')));
+      if (!/[가-힣]/g.test(t.parentNode.querySelector('.date').textContent)) {
+        filteredDate.push(arrayDate(t.parentNode.querySelector('.date').textContent.split('.')));
+      } else if (/시간/g.test(t.parentNode.querySelector('.date').textContent)) {
+        today.setHours(today.getHours() - Number(t.parentNode.querySelector('.date').textContent.replace(/[^0-9]/g, '')));
+        filteredDate.push(arrayDate(dateToString(today).split('.')));
+      } else if (/분/g.test(t.parentNode.querySelector('.date').textContent)) {
+        today.setMinutes(today.getMinutes() - Number(t.parentNode.querySelector('.date').textContent.replace(/[^0-9]/g, '')));
+        filteredDate.push(arrayDate(dateToString(today).split('.')));
+      } else if (/초/g.test(t.parentNode.querySelector('.date').textContent)) {
+        today.setSeconds(today.getSeconds() - Number(t.parentNode.querySelector('.date').textContent.replace(/[^0-9]/g, '')));
+        filteredDate.push(arrayDate(dateToString(today).split('.')));
+      }
       if (t.parentNode.querySelector('.read') !== null) {
         filteredClick.push(Number(t.parentNode.querySelector('.read').textContent.replace(/[^0-9]/g, '')));
       } else {
