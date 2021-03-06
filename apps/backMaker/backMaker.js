@@ -2456,9 +2456,6 @@ BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { wit
     throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
   }
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const button = "project";
   try {
     const [ name, designer ] = nameArr;
     let clients, designers, projects;

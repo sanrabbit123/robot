@@ -725,18 +725,23 @@ class DevContext extends Array {
       for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
       let tong, tong2;
       let projects;
+      let fixedMatrix, fixedTempArr;
 
-      tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A1:X");
+      tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A2:X");
 
+      fixedMatrix = [ [ "ID" ] ];
       for (let [ proid, client, null0, null1, null2, designer ] of tong) {
-        projects = await back.getProjectsByNames([ client, designer ], { selfMongo: this.MONGOC });
-        if (projects.length !== 1) {
+        projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: this.MONGOC });
+        if (proid !== projects[0].proid) {
           console.log(proid, client, designer);
         }
+        fixedMatrix.push([ projects[0].proid ]);
       }
 
+      // console.log(fixedMatrix)
+      // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
 
-      // console.log(await back.getProjectsByNames([ "박미진", "홍민영" ]));
+
 
 
 
