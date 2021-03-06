@@ -234,6 +234,7 @@ GeneralJs.updateValue = async function (dataObj) {
     return response.message;
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -273,6 +274,7 @@ GeneralJs.returnValue = async function () {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -1271,6 +1273,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             }, 0);
 
           }).catch(function (e) {
+            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
             console.log(e);
           });
 
@@ -1384,6 +1387,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                     cancel_event.call(this, e);
                   }
                 } catch (e) {
+                  GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
                   console.log(e);
                 }
               });
@@ -1434,6 +1438,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             }, 301);
 
           }).catch(function (e) {
+            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
             console.log(e);
           });
 
@@ -2657,6 +2662,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
     }, 2400);
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

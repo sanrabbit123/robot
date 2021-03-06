@@ -898,6 +898,7 @@ AnalyticsJs.prototype.spreadData = async function (search = null) {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -1143,6 +1144,7 @@ AnalyticsJs.prototype.cardViewMaker = function () {
           originalDiv.textContent = finalValue;
 
         } catch (e) {
+          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
           console.log(e);
         }
       }
@@ -2740,6 +2742,7 @@ AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           });
 
         } catch (e) {
+          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
           console.log(e);
         }
       }
@@ -3512,6 +3515,7 @@ AnalyticsJs.prototype.whitePromptEvent = function (callback = null) {
         }, 400);
 
       } catch (e) {
+        GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
         console.log(e);
       }
     });
@@ -3651,6 +3655,7 @@ AnalyticsJs.prototype.launching = async function () {
     const getObj = GeneralJs.returnGet();
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

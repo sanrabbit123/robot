@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 });
@@ -95,5 +96,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 document.addEventListener("error", function (e) {
   window.localStorage.clear();
   window.location.reload();
+  GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
   console.log(e);
 });

@@ -392,6 +392,7 @@ DataRouter.prototype.rou_get_Root = function () {
     try {
       res.redirect("/client");
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -420,6 +421,7 @@ DataRouter.prototype.rou_get_Binary = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -458,6 +460,7 @@ DataRouter.prototype.rou_get_First = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -488,6 +491,7 @@ DataRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -532,6 +536,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       });
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -624,6 +629,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         res.send(JSON.stringify(raw_data.toNormal()));
       }
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -762,6 +768,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         res.send(JSON.stringify(rawJson.toNormal()));
       }
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -974,6 +981,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1030,6 +1038,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       res.send(JSON.stringify({ message: raw_data }));
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1056,6 +1065,7 @@ DataRouter.prototype.rou_post_deleteDocument = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1085,6 +1095,7 @@ DataRouter.prototype.rou_post_createDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ id: id }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1193,6 +1204,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1377,6 +1389,7 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultObj));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1402,6 +1415,7 @@ DataRouter.prototype.rou_post_getContentsReport = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1509,6 +1523,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1599,6 +1614,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseArr));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1698,6 +1714,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1723,6 +1740,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
         res.send(JSON.stringify([ contents.getPortfolioDetail(), contents.getReviewDetail(), contents.getGsArr() ]));
       }
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1777,6 +1795,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1803,6 +1822,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ link: response }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1897,6 +1917,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1957,6 +1978,7 @@ DataRouter.prototype.rou_post_calculateService = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ result }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1973,6 +1995,7 @@ DataRouter.prototype.rou_post_calendarArr = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2037,6 +2060,7 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "success" }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2092,6 +2116,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2146,6 +2171,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
       }
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2212,6 +2238,7 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2248,6 +2275,7 @@ DataRouter.prototype.rou_post_makeSchedule = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ "message": "done" }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2454,6 +2482,7 @@ DataRouter.prototype.rou_post_getRawContents = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseObj));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2579,6 +2608,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseObj));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2633,6 +2663,7 @@ DataRouter.prototype.async_analyticsReport = async function (startDate, endDate,
 
     return response;
   } catch (e) {
+    instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
     console.log(e);
   }
 }
@@ -2656,6 +2687,7 @@ DataRouter.prototype.rou_post_analyticsReport = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ link: {} }));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2704,6 +2736,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(result));
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2719,6 +2752,7 @@ DataRouter.prototype.setMembers = async function () {
     const { members } = JSON.parse(await pythonExecute(this.pythonApp, [ "getMembers" ], {}));
     this.members = members;
   } catch (e) {
+    instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
     console.log(e);
   }
 }

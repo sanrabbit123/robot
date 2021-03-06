@@ -1374,6 +1374,7 @@ ContentsJs.prototype.spreadData = async function (search = null) {
     this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -2830,6 +2831,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
             alert("모든 값을 포맷에 맞춰 정확히 입력해주세요! (촬영 시간 포맷 : yyyy-mm-dd hh:mm:ss)");
           }
         } catch (e) {
+          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
           console.log(e);
         }
       });
@@ -2912,6 +2914,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
     });
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -3171,6 +3174,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             await instance.mother.greenAlert("고객을 선택해주세요!");
           }
         } catch (e) {
+          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
           console.log(e);
         }
       }
@@ -4012,6 +4016,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                     cancelBox.click();
                   }
                 } catch (e) {
+                  GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
                   console.log(e);
                 }
               });
@@ -4054,6 +4059,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                   await window.navigator.clipboard.writeText(input_clone.value);
                   instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
                 } catch (e) {
+                  GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
                   console.log(e);
                 }
               });
@@ -4084,6 +4090,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           }
 
         } catch (e) {
+          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
           console.log(e);
         }
       }
@@ -4647,6 +4654,7 @@ ContentsJs.prototype.viewDetail = async function (mother, leftMargin, fontSize, 
 
     mother.appendChild(div_clone);
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -5600,6 +5608,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
       }
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   });
@@ -5618,6 +5627,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       clearTimeout(GeneralJs.timeouts["convertChaining"]);
       GeneralJs.timeouts["convertChaining"] = null;
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }, 400);
@@ -6127,6 +6137,7 @@ ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
       }
 
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
@@ -6972,6 +6983,7 @@ ContentsJs.prototype.reportViewMakerDetail = function (recycle = false) {
       GeneralJs.stacks.whiteBox = 0;
     }
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -7198,6 +7210,7 @@ ContentsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
       GeneralJs.stacks.whiteBox = 0;
     }
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -7312,6 +7325,7 @@ ContentsJs.prototype.addExtractEvent = function () {
       })
 
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
@@ -7425,6 +7439,7 @@ ContentsJs.prototype.launching = async function () {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

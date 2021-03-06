@@ -282,6 +282,7 @@ ProposalJs.below_events = {
             mother.addEventListener("click", fifth_click_button2, { once: true });
 
           } catch (e) {
+            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
             console.log(e);
           }
         }
@@ -355,6 +356,7 @@ ProposalJs.below_events = {
             mother.addEventListener("click", fifth_click_button2, { once: true });
 
           } catch (e) {
+            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
             console.log(e);
           }
         }
@@ -376,6 +378,7 @@ ProposalJs.below_events = {
         }
 
       } catch (e) {
+        GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
         console.log(e);
       }
     },
@@ -1724,6 +1727,7 @@ ProposalJs.prototype.fourthProcess = async function (num) {
     setTimeout_func = await this.fourthsetTimeout(num);
     ProposalJs.toggleTimeout.fourth = setTimeout(setTimeout_func, 550);
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -2384,6 +2388,7 @@ ProposalJs.prototype.list_searchBar = async function () {
     this.listSearchInput.focus();
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -2435,6 +2440,7 @@ ProposalJs.prototype.list_leftBar = function (obj) {
 
     parent.appendChild(div_clone);
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -2527,6 +2533,7 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -2853,6 +2860,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 
               } catch (e) {
+                GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
                 console.log(e);
               }
             });
@@ -3328,6 +3336,7 @@ ProposalJs.save_init = async function (update = false) {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
@@ -4536,6 +4545,7 @@ ProposalJs.prototype.launching = async function () {
             clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut2"]);
             GeneralJs.timeouts["belowLaunchingTimeOut2"] = null;
           } catch (e) {
+            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
             console.log(e);
           }
         }, 601);
@@ -4546,6 +4556,7 @@ ProposalJs.prototype.launching = async function () {
     }
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

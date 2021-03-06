@@ -216,6 +216,7 @@ DashboardJs.prototype.projectStatus = async function (on = true) {
       }
 
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
@@ -500,6 +501,7 @@ DashboardJs.prototype.memberBoard = async function (on = true) {
       */
 
     } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
@@ -1180,6 +1182,7 @@ DashboardJs.prototype.launching = async function () {
     this.spreadMatrix();
 
   } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
