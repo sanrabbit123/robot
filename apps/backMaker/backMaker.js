@@ -3650,4 +3650,42 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
   }
 }
 
+BackMaker.prototype.mongoListCollections = async function (option = { local: null, console: null, home: null, bridge: null, python: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo, bridgeinfo } = this.mother;
+  try {
+    let MONGOC, allCollections_raw, allCollections;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.home !== undefined && option.home !== null) {
+        MONGOC = new mongo(mongohomeinfo, { useUnifiedTopology: true });
+      } else if (option.bridge !== undefined && option.bridge !== null) {
+        MONGOC = new mongo(bridgeinfo, { useUnifiedTopology: true });
+      } else if (option.python !== undefined && option.python !== null) {
+        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
+      await MONGOC.connect();
+      allCollections_raw = await MONGOC.db(`miro81`).listCollections().toArray();
+      MONGOC.close();
+    } else {
+      allCollections_raw = await option.selfMongo.db(`miro81`).listCollections().toArray();
+    }
+
+    allCollections = [];
+    for (let { name } of allCollections_raw) {
+      allCollections.push(name);
+    }
+
+    return allCollections;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackMaker;
