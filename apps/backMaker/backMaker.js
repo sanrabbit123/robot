@@ -2698,12 +2698,12 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
         contents: {
           conid: "",
           photo: {
-            boo: false,
+            boo: true,
             status: "해당 없음",
             date: new Date(1800, 0, 1),
             info: {
-              photographer: "",
-              interviewer: "",
+              photographer: "미정",
+              interviewer: "미정",
             }
           },
           raw: {

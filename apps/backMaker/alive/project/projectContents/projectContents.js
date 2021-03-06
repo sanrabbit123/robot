@@ -39,7 +39,7 @@ ContentsShare.prototype.toNormal = function () {
 }
 
 const ContentsRawPhoto = function (json) {
-  this.status = new Menu(json.status, [ '원본 요청 요망', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ], false);
+  this.status = new Menu(json.status, [ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ], false);
   this.link = json.link;
 }
 
@@ -51,7 +51,7 @@ ContentsRawPhoto.prototype.toNormal = function () {
 }
 
 const ContentsRawInterview = function (json) {
-  this.status = new Menu(json.status, [ '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], false);
+  this.status = new Menu(json.status, [ '세팅 대기', '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], false);
   this.link = json.link;
 }
 
@@ -63,7 +63,7 @@ ContentsRawInterview.prototype.toNormal = function () {
 }
 
 const ContentsRawPortfolio = function (json) {
-  this.status = new Menu(json.status, [ '원본 요청 요망', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], false);
+  this.status = new Menu(json.status, [ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], false);
   this.link = json.link;
 }
 
@@ -102,7 +102,7 @@ ContentsPhotoInfo.prototype.toNormal = function () {
 
 const ContentsPhoto = function (json) {
   this.boo = json.boo;
-  this.status = new Menu(json.status, [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], false);
+  this.status = new Menu(json.status, [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], false);
   this.date = new DateParse(json.date);
   this.info = new ContentsPhotoInfo(json.info);
 }

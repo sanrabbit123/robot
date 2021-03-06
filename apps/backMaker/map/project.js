@@ -196,7 +196,7 @@ module.exports = {
     contents: {
       conid: "",
       photo: {
-        boo: false,
+        boo: true,
         status: "",
         date: new Date(1800, 0, 1),
         info: {

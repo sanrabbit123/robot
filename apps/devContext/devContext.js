@@ -717,6 +717,8 @@ class DevContext extends Array {
       */
 
 
+
+
       const sheets = new GoogleSheet();
       const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
       const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -729,18 +731,19 @@ class DevContext extends Array {
 
       tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A2:X");
 
-      fixedMatrix = [ [ "ID" ] ];
-      for (let [ proid, client, null0, null1, null2, designer ] of tong) {
+      fixedMatrix = [ [ "ID", "고객명", "종료", "촬영 진행 여부", "촬영 진행 상태", "D", "P", "I", "촬영일", "촬영 시간", "주소 및 세부내용", "인터뷰 원고", "디자이너 글", "사진", "BI", "BP", "II", "IP", "발행(W)", "사진공유(D)", "사진공유(C)", "콘텐츠 공유" ] ];
+      for (let [ proid, client, null0, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, issue, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, web, shareDesignerPhoto, shareClientPhoto, shareClientContents ] of tong) {
         projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: this.MONGOC });
         if (proid !== projects[0].proid) {
-          console.log(proid, client, designer);
+          throw new Error("invaild proid : " + proid);
         }
-        fixedMatrix.push([ projects[0].proid ]);
+
+        console.log(proid, photoBoo, photoStatus, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents);
       }
 
-      // console.log(fixedMatrix)
+      // console.log(fixedMatrix);
+      //
       // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
-
 
 
 
