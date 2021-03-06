@@ -751,9 +751,9 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
       if (req.body.noFlat === undefined) {
         if (req.url !== "/searchPhotos") {
-          data = raw_data.flatDeath();
+          data = rawJson.flatDeath();
         } else {
-          data = raw_data.planeDeath();
+          data = rawJson.planeDeath();
         }
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));

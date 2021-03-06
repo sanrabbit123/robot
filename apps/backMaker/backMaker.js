@@ -2439,6 +2439,69 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
 
 }
 
+BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null }) {
+  if (Array.isArray(nameArr)) {
+    if (nameArr.length !== 2) {
+      throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
+    }
+  } else if (typeof nameArr === "object") {
+    if (nameArr.client !== undefined && nameArr.designer !== undefined) {
+      nameArr = [ nameArr.client, nameArr.designer ];
+    } else if (nameArr.clientName !== undefined && nameArr.designerName !== undefined) {
+      nameArr = [ nameArr.clientName, nameArr.designerName ];
+    } else {
+      throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
+    }
+  } else {
+    throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
+  }
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "project";
+  try {
+    const [ name, designer ] = nameArr;
+    let clients, designers, projects;
+    let allCases, tempArr;
+    let whereQuery;
+
+    clients = await this.getClientsByQuery({ name }, option);
+    designers = await this.getDesignersByQuery({ designer }, option);
+
+    if (clients.length === 0 || designers.length === 0) {
+      return [];
+    }
+
+    allCases = [];
+    for (let { cliid } of clients) {
+      for (let { desid } of designers) {
+        tempArr = [ cliid, desid ];
+        allCases.push(tempArr);
+      }
+    }
+
+    if (allCases.length === 0) {
+      return [];
+    }
+
+    whereQuery = {};
+    whereQuery["$or"] = [];
+    for (let [ cliid, desid ] of allCases) {
+      whereQuery["$or"].push({ cliid, desid });
+    }
+
+    projects = await this.getProjectsByQuery(whereQuery, option);
+
+    if (projects.length === 0) {
+      return [];
+    } else {
+      return projects;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackMaker.prototype.updateProject = async function (queryArr, option = { selfMongo: null }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");

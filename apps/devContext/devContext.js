@@ -717,6 +717,27 @@ class DevContext extends Array {
       */
 
 
+      const sheets = new GoogleSheet();
+      const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
+      const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      const ABC = [];
+      for (let i of alphabet) { ABC.push(i); }
+      for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      let tong, tong2;
+      let projects;
+
+      tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A1:X");
+
+      for (let [ proid, client, null0, null1, null2, designer ] of tong) {
+        projects = await back.getProjectsByNames([ client, designer ], { selfMongo: this.MONGOC });
+        if (projects.length !== 1) {
+          console.log(proid, client, designer);
+        }
+      }
+
+
+      // console.log(await back.getProjectsByNames([ "박미진", "홍민영" ]));
+
 
 
 
