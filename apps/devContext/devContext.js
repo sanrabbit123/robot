@@ -728,20 +728,23 @@ class DevContext extends Array {
       let tong, tong2;
       let projects;
       let fixedMatrix, fixedTempArr;
+      let tempObj;
+      let objArr;
 
       tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A2:X");
 
-      fixedMatrix = [ [ "ID", "고객명", "종료", "촬영 진행 여부", "촬영 진행 상태", "D", "P", "I", "촬영일", "촬영 시간", "주소 및 세부내용", "인터뷰 원고", "디자이너 글", "사진", "BI", "BP", "II", "IP", "발행(W)", "사진공유(D)", "사진공유(C)", "콘텐츠 공유" ] ];
+      objArr = [];
+      // fixedMatrix = [ [ "ID", "고객명", "종료", "촬영 진행 여부", "촬영 진행 상태", "D", "P", "I", "촬영일", "촬영 시간", "주소 및 세부내용", "인터뷰 원고", "디자이너 글", "사진", "BI", "BP", "II", "IP", "발행(W)", "사진공유(D)", "사진공유(C)", "콘텐츠 공유" ] ];
       for (let [ proid, client, null0, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, issue, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, web, shareDesignerPhoto, shareClientPhoto, shareClientContents ] of tong) {
         projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: this.MONGOC });
         if (proid !== projects[0].proid) {
           throw new Error("invaild proid : " + proid);
         }
-
-        console.log(proid, photoBoo, photoStatus, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents);
+        tempObj = { proid, photoBoo, photoStatus, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents };
+        objArr.push(tempObj);
       }
 
-      // console.log(fixedMatrix);
+      console.log(objArr);
       //
       // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
 
