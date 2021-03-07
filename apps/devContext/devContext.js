@@ -725,26 +725,112 @@ class DevContext extends Array {
       const ABC = [];
       for (let i of alphabet) { ABC.push(i); }
       for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
+      const dateToString = function (str, hours = null) {
+        let tempArr, hoursParsing;
+        tempArr = str.split("-");
+        if (tempArr.length !== 3) {
+          throw new Error("invaild date string");
+        }
+
+        if (hours === null) {
+          return new Date(Number(tempArr[0].replace(/^0/, '')), Number(tempArr[1].replace(/^0/, '')), Number(tempArr[2].replace(/^0/, '')));
+        } else {
+          if (/^오후/.test(hours)) {
+            hoursParsing = 12;
+          } else {
+            hoursParsing = 0;
+          }
+          hoursParsing += Number(hours.replace(/[^0-9]/g, ''));
+          if (Number.isNaN(hoursParsing)) {
+            throw new Error("invaild date hour string");
+          }
+          return new Date(Number(tempArr[0].replace(/^0/, '')), Number(tempArr[1].replace(/^0/, '')), Number(tempArr[2].replace(/^0/, '')), hoursParsing);
+        }
+      }
       let tong, tong2;
       let projects;
       let fixedMatrix, fixedTempArr;
       let tempObj;
       let objArr;
+      let photoStatusCases;
+      let portfolioContentsCases, interviewContentsCases, photoFixCases;
+      let finalArr;
+      let tempArr;
+      let whereQuery, updateQuery;
 
       tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A2:X");
 
       objArr = [];
       // fixedMatrix = [ [ "ID", "고객명", "종료", "촬영 진행 여부", "촬영 진행 상태", "D", "P", "I", "촬영일", "촬영 시간", "주소 및 세부내용", "인터뷰 원고", "디자이너 글", "사진", "BI", "BP", "II", "IP", "발행(W)", "사진공유(D)", "사진공유(C)", "콘텐츠 공유" ] ];
       for (let [ proid, client, null0, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, issue, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, web, shareDesignerPhoto, shareClientPhoto, shareClientContents ] of tong) {
+        tempObj = {
+          proid: proid.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          client: client.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoBoo: photoBoo.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoStatus: photoStatus.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          designer: designer.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photographer: photographer.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          interviewer: interviewer.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoDate: photoDate.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoDateHours: photoDateHours.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          interviewContents: interviewContents.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          portfolioContents: portfolioContents.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoFix: photoFix.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          blogInterview: blogInterview.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          blogPortfolio: blogPortfolio.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          instaInterview: instaInterview.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          instaPortfolio: instaPortfolio.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          shareDesignerPhoto: shareDesignerPhoto.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          shareClientPhoto: shareClientPhoto.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          shareClientContents: shareClientContents.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+        };
+        objArr.push(tempObj);
+      }
+
+      photoStatusCases = [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ];
+      portfolioContentsCases = [ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ];
+      interviewContentsCases = [ '세팅 대기', '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ];
+      photoFixCases = [ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ];
+
+      finalArr = [];
+      for (let { proid, client, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents } of objArr) {
         projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: this.MONGOC });
         if (proid !== projects[0].proid) {
           throw new Error("invaild proid : " + proid);
         }
-        tempObj = { proid, photoBoo, photoStatus, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents };
-        objArr.push(tempObj);
+        if (!photoStatusCases.includes(photoStatus)) {
+          throw new Error("invaild photoStatus : " + proid);
+        }
+        if (!portfolioContentsCases.includes(portfolioContents)) {
+          throw new Error("invaild photoStatus : " + proid);
+        }
+        if (!interviewContentsCases.includes(interviewContents)) {
+          throw new Error("invaild photoStatus : " + proid);
+        }
+        if (!photoFixCases.includes(photoFix)) {
+          throw new Error("invaild photoStatus : " + proid);
+        }
+        tempArr = [];
+        whereQuery = {};
+        updateQuery = {};
+        whereQuery["proid"] = proid;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+        updateQuery[""] = ;
+
+        tempArr.push(whereQuery);
+        tempArr.push(updateQuery);
+
+        finalArr.push(tempArr);
       }
 
-      console.log(objArr);
+
+
       //
       // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
 
