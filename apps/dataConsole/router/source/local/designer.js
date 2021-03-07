@@ -4930,7 +4930,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             }
             for (let doms of thisCase.children) {
               if (portfolioBooArr.includes(doms.getAttribute("column"))) {
-                doms.firstChild.querySelector("svg").remove();
+                if (doms.firstChild.querySelector("svg") !== null) {
+                  doms.firstChild.querySelector("svg").remove();
+                }
               }
             }
             GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
@@ -5439,7 +5441,9 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             }
             for (let doms of thisCase.children) {
               if (portfolioBooArr.includes(doms.getAttribute("column"))) {
-                doms.firstChild.querySelector("svg").remove();
+                if (doms.firstChild.querySelector("svg") !== null) {
+                  doms.firstChild.querySelector("svg").remove();
+                }
               }
             }
             GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
