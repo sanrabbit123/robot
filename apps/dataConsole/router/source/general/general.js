@@ -1279,6 +1279,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             console.log(e);
           });
 
+
         } else if (this.getAttribute("set") === "first") {
           thisButton.setAttribute("progress", "doing");
 
@@ -1444,6 +1445,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             console.log(e);
           });
 
+
         } else if (this.getAttribute("set") === "second") {
           thisButton.setAttribute("progress", "doing");
           document.getElementById("rightGrayPannel_title").style.transform = "translateX(" + String(secondWidth) + ea + ")";
@@ -1461,6 +1463,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             clearTimeout(GeneralJs.timeouts["grayRightBarOff"]);
             GeneralJs.timeouts["grayRightBarOff"] = null;
           }, 301);
+
         }
 
       }
@@ -2017,6 +2020,7 @@ GeneralJs.prototype.greenBar = function () {
 
   //move right area
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.id = "moveRightArea";
   style = {
     display: "block",
     position: "fixed",
@@ -2072,6 +2076,7 @@ GeneralJs.prototype.greenBar = function () {
 
   //move left area
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone2.id = "moveLeftArea";
   style = {
     display: "block",
     position: "fixed",

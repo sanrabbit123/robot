@@ -263,7 +263,7 @@ PhotoJs.prototype.standardBar = function (standard) {
 PhotoJs.prototype.infoArea = function (info) {
   const instance = this;
   const map = DataPatch.photoMap();
-  const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
+  const { chainingTargets, chainingMethods } = DataPatch.photoChainingTarget();
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -437,8 +437,8 @@ PhotoJs.prototype.infoArea = function (info) {
       if (e.cancelable) {
         e.preventDefault();
       }
-      const clickEventFunction = eventFunction(left);
-      clickEventFunction.call(this, e);
+      // const clickEventFunction = eventFunction(left);
+      // clickEventFunction.call(this, e);
 
       const thisIndex = this.parentElement.getAttribute("index");
       const thisId = /p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];
@@ -2415,7 +2415,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const cookies = GeneralJs.getCookiesAll();
   const map = DataPatch.photoMap();
-  const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
+  const { chainingTargets, chainingMethods } = DataPatch.photoChainingTarget();
   let { standard, info } = DataPatch.photoWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;

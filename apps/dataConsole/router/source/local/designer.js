@@ -410,8 +410,8 @@ DesignerJs.prototype.infoArea = function (info) {
       if (e.cancelable) {
         e.preventDefault();
       }
-      const clickEventFunction = eventFunction(left);
-      clickEventFunction.call(this, e);
+      // const clickEventFunction = eventFunction(left);
+      // clickEventFunction.call(this, e);
 
       const thisIndex = this.parentElement.getAttribute("index");
       const thisId = /d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(this.parentElement.className)[0];

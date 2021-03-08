@@ -6968,6 +6968,120 @@ DataPatch.prototype.photoWhiteViewStandard = function () {
   return targetColumns;
 }
 
+DataPatch.prototype.photoChainingTarget = function () {
+  const chainingMethods = {
+    photoBoo: function (thisCase, value) {
+      if (typeof value !== "boolean") {
+        value = (value === "true");
+      }
+
+      let resultObj;
+      let photoStatus;
+      let contentsPhotoDate;
+      let photographer;
+      let interviewer;
+      let rawInterviewStatus;
+      let rawInterviewLink;
+      let rawPhotoStatus;
+      let rawPhotoLink;
+      let shareClientPhoto;
+      let shareClientContents;
+      let shareDesignerPhoto;
+      let shareDesignerContents;
+      let blogPortfolio;
+      let blogReview;
+      let instagramPortfolio;
+      let instagramReview;
+
+      if (value) {
+        photoStatus = "세팅 대기";
+        contentsPhotoDate = "3800-01-01";
+        photographer = "";
+        interviewer = "";
+        rawInterviewStatus = "세팅 대기";
+        rawInterviewLink = "";
+        rawPhotoStatus = "촬영 대기";
+        rawPhotoLink = "";
+        shareClientPhoto = "1800-01-01";
+        shareClientContents = "1800-01-01";
+        shareDesignerPhoto = "1800-01-01";
+        shareDesignerContents = "1800-01-01";
+        blogPortfolio = "1800-01-01";
+        blogReview = "1800-01-01";
+        instagramPortfolio = "1800-01-01";
+        instagramReview = "1800-01-01";
+      } else {
+        photoStatus = "해당 없음";
+        contentsPhotoDate = "1800-01-01";
+        photographer = "";
+        interviewer = "";
+        rawInterviewStatus = "해당 없음";
+        rawInterviewLink = "";
+        rawPhotoStatus = "해당 없음";
+        rawPhotoLink = "";
+        shareClientPhoto = "1800-01-01";
+        shareClientContents = "1800-01-01";
+        shareDesignerPhoto = "1800-01-01";
+        shareDesignerContents = "1800-01-01";
+        blogPortfolio = "1800-01-01";
+        blogReview = "1800-01-01";
+        instagramPortfolio = "1800-01-01";
+        instagramReview = "1800-01-01";
+      }
+
+      resultObj = { photoStatus, contentsPhotoDate, photographer, interviewer, rawInterviewStatus, rawInterviewLink, rawPhotoStatus, rawPhotoLink, shareClientPhoto, shareClientContents, shareDesignerPhoto, shareDesignerContents, blogPortfolio, blogReview, instagramPortfolio, instagramReview };
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
+    },
+    photoStatus: function (thisCase, value) {
+      let resultObj;
+      let photoBoo;
+      let contentsPhotoDate;
+      let photographer;
+      let interviewer;
+      let rawInterviewStatus;
+      let rawInterviewLink;
+      let rawPhotoStatus;
+      let rawPhotoLink;
+      let shareClientPhoto;
+      let shareClientContents;
+      let shareDesignerPhoto;
+      let shareDesignerContents;
+      let blogPortfolio;
+      let blogReview;
+      let instagramPortfolio;
+      let instagramReview;
+
+      if (value === "해당 없음") {
+        photoBoo = false;
+        contentsPhotoDate = "1800-01-01";
+        photographer = "";
+        interviewer = "";
+        rawInterviewStatus = "해당 없음";
+        rawInterviewLink = "";
+        rawPhotoStatus = "해당 없음";
+        rawPhotoLink = "";
+        shareClientPhoto = "1800-01-01";
+        shareClientContents = "1800-01-01";
+        shareDesignerPhoto = "1800-01-01";
+        shareDesignerContents = "1800-01-01";
+        blogPortfolio = "1800-01-01";
+        blogReview = "1800-01-01";
+        instagramPortfolio = "1800-01-01";
+        instagramReview = "1800-01-01";
+        resultObj = { photoBoo, contentsPhotoDate, photographer, interviewer, rawInterviewStatus, rawInterviewLink, rawPhotoStatus, rawPhotoLink, shareClientPhoto, shareClientContents, shareDesignerPhoto, shareDesignerContents, blogPortfolio, blogReview, instagramPortfolio, instagramReview };
+      } else {
+        resultObj = {};
+      }
+
+      return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
+    }
+  };
+
+  const chainingTargets = Object.keys(chainingMethods);
+
+  return { chainingTargets, chainingMethods };
+}
+
 DataPatch.prototype.photoMap = function () {
   const statusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
@@ -7031,6 +7145,303 @@ DataPatch.prototype.photoMap = function () {
     };
 
     inputArr = [ '대기', '진행중', '완료', '홀딩', '드랍' ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(400),
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+  const photoBooToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = [ 'true', 'false' ];
+
+    if (targetArr.includes(value)) {
+      finalValue = (value === "true");
+    } else {
+      finalValue = pastValue;
+    }
+
+    return Boolean(finalValue);
+  };
+  const photoBooInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+
+      items = [ 'true', 'false' ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "false") {
+        grandMother.setAttribute("drop", "true");
+      } else {
+        grandMother.setAttribute("drop", "false");
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = finalValue;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = [ 'true', 'false' ];
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = "80";
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      background: "#2fa678",
+      fontSize: "inherit",
+      color: "#ffffff",
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px #2fa678",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(400),
+      color: "#ffffff",
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+  const photoStatusToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ];
+
+    if (targetArr.includes(value)) {
+      finalValue = value;
+    } else {
+      finalValue = pastValue;
+    }
+
+    return finalValue;
+  };
+  const photoStatusInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+
+      items = [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "해당 없음") {
+        grandMother.setAttribute("drop", "true");
+      } else {
+        grandMother.setAttribute("drop", "false");
+      }
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = finalValue;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    inputArr = [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ];
     length = inputArr.length;
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
@@ -7310,8 +7721,8 @@ DataPatch.prototype.photoMap = function () {
     designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     action: { name: "응대", position: "process.action", type: "string", items: [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ], searchBoo: true, },
-    photoBoo: { name: "촬영 여부", position: "contents.photo.boo", type: "boolean", items: [ "true", "false" ], searchBoo: true, },
-    photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
+    photoBoo: { name: "촬영 여부", position: "contents.photo.boo", type: "object", items: [ "true", "false" ], inputFunction: photoBooInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: photoBooToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "object", items: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], inputFunction: photoStatusInputFunction.toString().replace(/\}$/, '').replace(/function \(mother, input, callback\) \{/gi, ''), objectFunction: photoStatusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     photographer: { name: "포토", position: "contents.photo.info.photographer", type: "string", items: [ '미정', '김다현', '이현익', '정경일', '김기용', '배창규', '박혜연', '허완', '학생', '디자이너', '해당 없음' ], searchBoo: true, },
     interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", items: [ '미정', '박혜연', '정재은', '강해진', '배창규', '임혜령', '임지민', '이큰별', '인턴', '해당 없음' ], searchBoo: true, },

@@ -1277,9 +1277,26 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.client = clients.length;
 
           //proposal
+          cliidArr = [];
+          processTong = [];
+          for (let client of clients) {
+            cliidArr.push({ cliid: client.cliid });
+          }
+          if (cliidArr.length > 0) {
+            searchQuery = { "$or": cliidArr };
+            process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+            for (let i of process) {
+              processTong.push(i);
+            }
+            obj.proposal = processTong.length;
+          } else {
+            obj.proposal = 0;
+          }
+
+          //recommend
           searchQuery = { "proposal.date": { "$gte": arr[0], "$lt": arr[2] } };
           proposals = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
-          obj.proposal = proposals.length;
+          obj.recommend = proposals.length;
 
           //contract
           searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
