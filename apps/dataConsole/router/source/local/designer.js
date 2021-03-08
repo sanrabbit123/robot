@@ -225,6 +225,14 @@ DesignerJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
+  if (this.standardDoms.length === 2) {
+    GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
+      instance.standardDoms[1].click();
+      clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
+      GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
+    }, 401);
+  }
+
 }
 
 DesignerJs.prototype.infoArea = function (info) {
@@ -1350,7 +1358,7 @@ DesignerJs.prototype.spreadData = async function (search = null) {
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
 
-    if (search === null) {
+    if (search === null || search === '' || search === '-') {
       designers = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getDesigners"));
     } else {
       designers = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchDesigners"));
@@ -5919,7 +5927,14 @@ DesignerJs.prototype.makeSearchEvent = function (search = null) {
         grayOn = true;
       }
 
-      instance.whiteBox = null;
+      if (instance.whiteBox !== null) {
+        if (instance.whiteBox.cancelBox !== undefined && instance.whiteBox.cancelBox !== null) {
+          const cancelFunction = instance.whiteCancelMaker(null, false);
+          cancelFunction.call(instance.whiteBox.cancelBox, { type: "click" });
+        } else {
+          instance.whiteBox === null;
+        }
+      }
       instance.onView = "mother";
 
       if (search === null) {

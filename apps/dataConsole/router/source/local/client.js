@@ -227,6 +227,14 @@ ClientJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
+  if (this.standardDoms.length === 2) {
+    GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
+      instance.standardDoms[1].click();
+      clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
+      GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
+    }, 401);
+  }
+
   GeneralJs.ajax("idArr=" + JSON.stringify(cliidArr) + "&method=client&property=important", "/getHistoryProperty", function (obj) {
     const cliidObj = JSON.parse(obj);
     let boo, tempFunction;
@@ -1376,7 +1384,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
 
-    if (search === null) {
+    if (search === null || search === '' || search === '-') {
       clients = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getClients"));
     } else {
       clients = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
@@ -3826,7 +3834,14 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
         grayOn = true;
       }
 
-      instance.whiteBox = null;
+      if (instance.whiteBox !== null) {
+        if (instance.whiteBox.cancelBox !== undefined && instance.whiteBox.cancelBox !== null) {
+          const cancelFunction = instance.whiteCancelMaker(null, false);
+          cancelFunction.call(instance.whiteBox.cancelBox, { type: "click" });
+        } else {
+          instance.whiteBox === null;
+        }
+      }
       instance.onView = "mother";
 
       if (search === null) {

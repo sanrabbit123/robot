@@ -767,7 +767,7 @@ class DevContext extends Array {
         }
       }
       let tong, tong2;
-      let projects;
+      let projects, projectHistories;
       let fixedMatrix, fixedTempArr;
       let tempObj;
       let objArr;
@@ -792,6 +792,7 @@ class DevContext extends Array {
           interviewer: interviewer.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
           photoDate: photoDate.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
           photoDateHours: photoDateHours.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
+          photoIssue: issue.trim(),
           interviewContents: interviewContents.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
           portfolioContents: portfolioContents.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
           photoFix: photoFix.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/g, '').trim(),
@@ -827,8 +828,9 @@ class DevContext extends Array {
       }
 
       finalArr = [];
-      for (let { proid, client, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents } of objArr) {
+      for (let { proid, client, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, photoIssue, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents } of objArr) {
         projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: MONGOC });
+        projectHistories = await back.getHistoryById("project", proid, { selfMongo: MONGOHISTORYC });
         if (proid !== projects[0].proid) {
           throw new Error("invaild proid : " + proid);
         }
@@ -868,6 +870,9 @@ class DevContext extends Array {
         updateQuery2["contents.instagram.portfolio.boo"] = (updateQuery2["contents.instagram.portfolio.date"].valueOf() > EMPTYDATEBOO.valueOf());
         updateQuery2["contents.instagram.review.date"] = stringToDate(instaInterview);
         updateQuery2["contents.instagram.review.boo"] = (updateQuery2["contents.instagram.review.date"].valueOf() > EMPTYDATEBOO.valueOf());
+        if (projectHistories["photo"] === "") {
+          updateQuery2["photo"] = photoIssue;
+        }
 
         if (shareClientPhoto === 'O') {
           if (updateQuery2["contents.blog.review.boo"]) {

@@ -564,14 +564,14 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes fadeoutlite{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-20px);}}
   @keyframes fadeinlite{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-  .justfadeinoriginal{animation:justfadeinoriginal 0.4s ease forwards;}
-  .justfadeoutoriginal{animation:justfadeoutoriginal 0.4s ease forwards;}
-  .justfadein{animation:justfadein 0.4s ease forwards;}
-  .justfadeout{animation:justfadeout 0.4s ease forwards;}
-  .fadeout{animation:fadeout 0.4s ease forwards;}
-  .fadein{animation:fadein 0.4s ease forwards;}
-  .fadedown{animation:fadedown 0.4s ease forwards;}
-  .fadeup{animation:fadeup 0.4s ease forwards;}
+  .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
+  .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
+  .justfadein{animation:justfadein 0.3s ease forwards;}
+  .justfadeout{animation:justfadeout 0.3s ease forwards;}
+  .fadeout{animation:fadeout 0.3s ease forwards;}
+  .fadein{animation:fadein 0.3s ease forwards;}
+  .fadedown{animation:fadedown 0.3s ease forwards;}
+  .fadeup{animation:fadeup 0.3s ease forwards;}
   .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear infinite;}
   .totalMother{display:block;position:fixed;top:0px;left:0px;height:calc(100% - 123px);width:100%;overflow-x:hidden;overflow-y:scroll;}
   .totalMother::-webkit-scrollbar{display:none;}
@@ -1289,7 +1289,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
           thisButton.setAttribute("progress", "doing");
 
-          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr) + "&method=" + thisPathName + "&property=issue", "/getHistoryProperty").then(function (data) {
+          GeneralJs.ajaxPromise("idArr=" + JSON.stringify(idArr) + "&method=" + thisPathName + "&property=" + (pathArr[0].replace(/\//g, '') === "photo" ? "photo" : "issue"), "/getHistoryProperty").then(function (data) {
             const rawObj = JSON.parse(data);
             let personArr, temp_clone, pastClassName;
             let longUpdateEvent;
@@ -1646,6 +1646,9 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
 
 GeneralJs.prototype.greenBar = function () {
   const instance = this;
+  let pathArr = window.location.pathname.split("?");
+  let thisPathName = pathArr[0].replace(/\//g, '');
+
   let div_clone, div_clone2, div_clone3, svg_icon;
   let input_clone;
   let style = {};
@@ -1865,7 +1868,8 @@ GeneralJs.prototype.greenBar = function () {
   //navigator icons
   const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
   let naviIconsHost, naviIconsLeftException;
-  let naviIconsLinks, naviIconsContextLinks
+  let naviIconsLinks, naviIconsContextLinks;
+  let naviIconsMap;
 
   naviIconsHost = window.location.protocol + "//" + window.location.host;
   naviIconsLinks = [
@@ -1892,6 +1896,14 @@ GeneralJs.prototype.greenBar = function () {
     2,
     3,
   ];
+  naviIconsMap = [
+    [ "client", "analytics" ],
+    [ "proposal" ],
+    [ "project", "photo" ],
+    [ "designer", "aspirant" ],
+    [ "contents" ],
+    [ "service" ]
+  ];
 
   for (let i = 0; i < naviIcons.length; i++) {
     svg_icon = SvgTong.stringParsing(naviIcons[i]);
@@ -1908,6 +1920,9 @@ GeneralJs.prototype.greenBar = function () {
     };
     for (let i in additionalStyle) {
       svg_icon.style[i] = additionalStyle[i];
+    }
+    if (naviIconsMap[i].includes(thisPathName)) {
+      svg_icon.style.opacity = String(0.5);
     }
     GeneralJs.addHrefEvent(svg_icon, (naviIconsHost + naviIconsLinks[i]));
     svg_icon.addEventListener("contextmenu", function (e) {
@@ -1999,10 +2014,6 @@ GeneralJs.prototype.greenBar = function () {
   this.searchInput(div_clone);
   this.totalContents.appendChild(div_clone);
   this.searchInput.focus();
-
-  this.belowButtons.naviIcons.service.style.opacity = String(0.4);
-  // this.belowButtons.sub.talkIcon.style.opacity = String(0.4);
-  // this.belowButtons.sub.folder.style.opacity = String(0.4);
 
   //move right area
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);

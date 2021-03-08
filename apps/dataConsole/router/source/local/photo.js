@@ -226,6 +226,14 @@ PhotoJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
+  if (this.standardDoms.length === 2) {
+    GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
+      instance.standardDoms[1].click();
+      clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
+      GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
+    }, 401);
+  }
+
   GeneralJs.ajax("idArr=" + JSON.stringify(proidArr) + "&method=project&property=important", "/getHistoryProperty", function (obj) {
     const proidObj = JSON.parse(obj);
     let boo, tempFunction;
@@ -1561,8 +1569,8 @@ PhotoJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
     let histories_obj, histories_tempObj;
 
-    if (search === null) {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=300&where=" + JSON.stringify({ "$and": [ { "desid": { "$regex": "^d" } }, { "process.status": { "$not": { "$regex": "^드" } } } ] }), "/getPhotos"));
+    if (search === null || search === '' || search === '-') {
+      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=200&where=" + JSON.stringify({ "$and": [ { "desid": { "$regex": "^d" } }, { "process.status": { "$not": { "$regex": "^드" } } } ] }), "/getPhotos"));
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchPhotos"));
     }
@@ -4313,7 +4321,14 @@ PhotoJs.prototype.makeSearchEvent = function (search = null) {
         grayOn = true;
       }
 
-      instance.whiteBox = null;
+      if (instance.whiteBox !== null) {
+        if (instance.whiteBox.cancelBox !== undefined && instance.whiteBox.cancelBox !== null) {
+          const cancelFunction = instance.whiteCancelMaker(null, false);
+          cancelFunction.call(instance.whiteBox.cancelBox, { type: "click" });
+        } else {
+          instance.whiteBox === null;
+        }
+      }
       instance.onView = "mother";
 
       if (search === null) {

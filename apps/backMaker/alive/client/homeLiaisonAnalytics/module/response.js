@@ -32,7 +32,7 @@ const Response = function (response) {
   ];
   this.status = new Menu(response.status, [ '드랍', '진행', '응대중', '완료', '장기' ], false);
   this.action = new Menu(response.action, actionList, false);
-  this.outreason = new Menu(response.outreason, [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], true);
+  this.outreason = new Menu(response.outreason, [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행', '기타 문제' ], true);
   this.outspot = new Menu(response.outspot, actionList, false);
   this.kakao = response.kakao;
   this.service = new ProjectService(response.service);

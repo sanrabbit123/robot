@@ -21,7 +21,7 @@ class MapArray extends Array {
   }
 }
 
-const DashboardJs = function () {
+const ServiceJs = function () {
   this.mother = new GeneralJs();
   this.map = /<%map%>/;
   this.totalContents = this.mother.totalContents;
@@ -34,7 +34,7 @@ const DashboardJs = function () {
   }
 }
 
-DashboardJs.prototype.svgTitles = function (color) {
+ServiceJs.prototype.svgTitles = function (color) {
   const instance = this;
   const { items, src, lightSrc } = this.map.main.titles;
 
@@ -55,7 +55,7 @@ DashboardJs.prototype.svgTitles = function (color) {
   return resultArr;
 }
 
-DashboardJs.prototype.projectStatus = async function (on = true) {
+ServiceJs.prototype.projectStatus = async function (on = true) {
   const instance = this;
   const [ svgTitle, mainArea ] = this.matrixDoms[0].dom.children;
   const { main: { titles: { items, src } }, sub: { on: { src: onSrc }, numbers } } = this.map;
@@ -222,7 +222,7 @@ DashboardJs.prototype.projectStatus = async function (on = true) {
   }
 }
 
-DashboardJs.prototype.memberBoard = async function (on = true) {
+ServiceJs.prototype.memberBoard = async function (on = true) {
   const instance = this;
   const [ svgTitle, mainArea ] = this.matrixDoms[1].dom.children;
   const { main: { members: { names, src } }, sub: { memberWording: { src: memberWordingSrc } } } = this.map;
@@ -507,7 +507,7 @@ DashboardJs.prototype.memberBoard = async function (on = true) {
   }
 }
 
-DashboardJs.prototype.spreadMatrix = function () {
+ServiceJs.prototype.spreadMatrix = function () {
   const instance = this;
   const { margin, borderRadius } = this;
   const titleMap = this.svgTitles("#303030");
@@ -527,7 +527,7 @@ DashboardJs.prototype.spreadMatrix = function () {
   let categoryDetailBoxMargin;
   let detailSvgWordingHeight, detailSvgWordingWidth;
 
-  bigSvgHeight = 21;
+  bigSvgHeight = 18;
   detailSvgTop = 22;
   detailSvgLeft = 25;
   categoryDetailBoxMargin = 8;
@@ -1170,7 +1170,7 @@ DashboardJs.prototype.spreadMatrix = function () {
   this.totalContents.appendChild(matrixMother);
 }
 
-DashboardJs.prototype.launching = async function () {
+ServiceJs.prototype.launching = async function () {
   const instance = this;
   try {
     this.belowHeight = this.mother.belowHeight;

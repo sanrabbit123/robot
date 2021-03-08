@@ -440,8 +440,8 @@ DataRouter.prototype.rou_get_First = function () {
         target = "client";
       } else if (/^de/i.test(req.params.id)) {
         target = "designer";
-      } else if (/^da/i.test(req.params.id)) {
-        target = "dashboards";
+      } else if (/^ser/i.test(req.params.id)) {
+        target = "service";
       } else if (/^proj/i.test(req.params.id)) {
         target = "project";
       } else if (/^prop/i.test(req.params.id)) {
@@ -706,43 +706,123 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
       } else if (req.url === "/searchProjects" || req.url === "/searchPhotos") {
         rawJson = await instance.back.getProjectsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-        if (/\/project/g.test(req.headers.referer)) {
-          if (rawJson.length === 0) {
-            mapArr = Object.values(instance.patch.clientMap());
-            searchQuery = {};
-            searchArr = [];
-            for (let { position, searchBoo } of mapArr) {
-              if (searchBoo) {
-                tempObj = {};
-                tempObj2 = {};
-                if (req.body.query !== "") {
-                  tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
-                } else {
-                  tempObj["$regex"] = new RegExp('.', 'gi');
+        if (/\/project/g.test(req.headers.referer) || /\/photo/g.test(req.headers.referer)) {
+
+          if (/^d/i.test(req.body.query)) {
+            req.body.query = req.body.query.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\:\;\?\/\|\<\>\,\.\\\]\[\{\} \n\t]/g, '').replace(/^d/i, '');
+            if (rawJson.length === 0) {
+              mapArr = Object.values(instance.patch.designerMap());
+              searchQuery = {};
+              searchArr = [];
+              for (let { position, searchBoo } of mapArr) {
+                if (searchBoo) {
+                  tempObj = {};
+                  tempObj2 = {};
+                  if (req.body.query !== "") {
+                    tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                  } else {
+                    tempObj["$regex"] = new RegExp('.', 'gi');
+                  }
+                  tempObj2[position] = tempObj["$regex"];
+                  searchArr.push(tempObj2);
                 }
-                tempObj2[position] = tempObj["$regex"];
-                searchArr.push(tempObj2);
               }
-            }
-            searchQuery["$or"] = searchArr;
-            if (req.body.query !== "") {
-              rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-            } else {
-              rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-            }
+              searchQuery["$or"] = searchArr;
+              if (req.body.query !== "") {
+                rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+              } else {
+                rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+              }
 
-            whereQuery = {};
-            whereQuery["$or"] = [];
-            for (let client of rawJson) {
-              whereQuery["$or"].push({ cliid: client.cliid });
-            }
+              whereQuery = {};
+              whereQuery["$or"] = [];
+              for (let designers of rawJson) {
+                whereQuery["$or"].push({ desid: designers.desid });
+              }
 
-            if (whereQuery["$or"].length > 0) {
-              rawJson = await instance.back.getProjectsByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
-            } else {
-              rawJson = [];
-            }
+              if (whereQuery["$or"].length > 0) {
+                rawJson = await instance.back.getProjectsByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
+              } else {
+                rawJson = [];
+              }
 
+            }
+          } else {
+            if (rawJson.length === 0) {
+              mapArr = Object.values(instance.patch.clientMap());
+              searchQuery = {};
+              searchArr = [];
+              for (let { position, searchBoo } of mapArr) {
+                if (searchBoo) {
+                  tempObj = {};
+                  tempObj2 = {};
+                  if (req.body.query !== "") {
+                    tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                  } else {
+                    tempObj["$regex"] = new RegExp('.', 'gi');
+                  }
+                  tempObj2[position] = tempObj["$regex"];
+                  searchArr.push(tempObj2);
+                }
+              }
+              searchQuery["$or"] = searchArr;
+              if (req.body.query !== "") {
+                rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+              } else {
+                rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+              }
+
+              whereQuery = {};
+              whereQuery["$or"] = [];
+              for (let client of rawJson) {
+                whereQuery["$or"].push({ cliid: client.cliid });
+              }
+
+              if (whereQuery["$or"].length > 0) {
+                rawJson = await instance.back.getProjectsByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
+              } else {
+                rawJson = [];
+              }
+
+              if (rawJson.length === 0) {
+                mapArr = Object.values(instance.patch.designerMap());
+                searchQuery = {};
+                searchArr = [];
+                for (let { position, searchBoo } of mapArr) {
+                  if (searchBoo) {
+                    tempObj = {};
+                    tempObj2 = {};
+                    if (req.body.query !== "") {
+                      tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+                    } else {
+                      tempObj["$regex"] = new RegExp('.', 'gi');
+                    }
+                    tempObj2[position] = tempObj["$regex"];
+                    searchArr.push(tempObj2);
+                  }
+                }
+                searchQuery["$or"] = searchArr;
+                if (req.body.query !== "") {
+                  rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+                } else {
+                  rawJson = await instance.back.getDesignersByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
+                }
+
+                whereQuery = {};
+                whereQuery["$or"] = [];
+                for (let designers of rawJson) {
+                  whereQuery["$or"].push({ desid: designers.desid });
+                }
+
+                if (whereQuery["$or"].length > 0) {
+                  rawJson = await instance.back.getProjectsByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
+                } else {
+                  rawJson = [];
+                }
+
+              }
+
+            }
           }
 
           filteredArr = [];
@@ -756,6 +836,17 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             tong = [];
             for (let i of this) {
               tempArr = i.flatDeath();
+              for (let j of tempArr) {
+                tong.push(j);
+              }
+            }
+            return tong;
+          }
+          filteredArr.planeDeath = function () {
+            let tong, tempArr;
+            tong = [];
+            for (let i of this) {
+              tempArr = i.planeDeath();
               for (let j of tempArr) {
                 tong.push(j);
               }
@@ -1296,6 +1387,8 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
           searchQuery3 = { "desid": { "$regex": "^d" } };
           searchQuery2 = { "$and": [ searchQuery4, searchQuery3 ] };
         }
+
+        searchQuery2["$and"].push({ "process.status": { "$not": { "$regex": "^[홀드]" } } });
 
         temp = await back.getProjectsByQuery(searchQuery2, { selfMongo: instance.mongo });
 

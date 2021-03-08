@@ -172,6 +172,14 @@ AnalyticsJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
+  if (this.standardDoms.length === 2) {
+    GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
+      instance.standardDoms[1].click();
+      clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
+      GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
+    }, 401);
+  }
+
 }
 
 AnalyticsJs.prototype.infoArea = function (info) {
@@ -3212,7 +3220,14 @@ AnalyticsJs.prototype.makeSearchEvent = function (option = null) {
         }, 401);
       }
 
-      instance.whiteBox = null;
+      if (instance.whiteBox !== null) {
+        if (instance.whiteBox.cancelBox !== undefined && instance.whiteBox.cancelBox !== null) {
+          const cancelFunction = instance.whiteCancelMaker(null, false);
+          cancelFunction.call(instance.whiteBox.cancelBox, { type: "click" });
+        } else {
+          instance.whiteBox === null;
+        }
+      }
       instance.onView = "mother";
 
       await instance.spreadData(option);
