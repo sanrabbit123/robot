@@ -503,7 +503,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   let obj = {};
-  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
+  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents", "/sse/get_photo" ];
   obj.func = async function (req, res) {
     try {
       const thisPath = req.url.split('_')[1];
@@ -551,67 +551,83 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getPhotos" ];
   obj.func = async function (req, res) {
     try {
-      let standard, raw_data, data;
+      let standard, raw_data, data, optionQuery, whereQuery;
 
       if (req.url === "/getClients") {
         standard = instance.patch.clientStandard();
+        optionQuery = { withTools: true, selfMongo: instance.mongo };
+        if (req.body.sort !== undefined) {
+          optionQuery.sort = JSON.parse(req.body.sort);
+        }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestClients(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestClients(req.body.limit, optionQuery);
           } else {
-            raw_data = await instance.back.getLatestClients("all", { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestClients("all", optionQuery);
           }
         } else {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+            optionQuery.limit = Number(req.body.limit);
           }
+          raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), optionQuery);
         }
       } else if (req.url === "/getDesigners") {
         standard = instance.patch.designerStandard();
+        optionQuery = { withTools: true, selfMongo: instance.mongo };
+        if (req.body.sort !== undefined) {
+          optionQuery.sort = JSON.parse(req.body.sort);
+        }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestDesigners(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestDesigners(req.body.limit, optionQuery);
           } else {
-            raw_data = await instance.back.getLatestDesigners("all", { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestDesigners("all", optionQuery);
           }
         } else {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+            optionQuery.limit = Number(req.body.limit);
           }
+          raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), optionQuery);
         }
       } else if (req.url === "/getProjects" || req.url === "/getPhotos") {
         standard = instance.patch.projectStandard();
+        optionQuery = { withTools: true, selfMongo: instance.mongo };
+        if (req.body.sort !== undefined) {
+          optionQuery.sort = JSON.parse(req.body.sort);
+        }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestProjects(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestProjects(req.body.limit, optionQuery);
           } else {
-            raw_data = await instance.back.getLatestProjects("all", { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestProjects("all", optionQuery);
           }
         } else {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getProjectsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await instance.back.getProjectsByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+            optionQuery.limit = Number(req.body.limit);
           }
+          whereQuery = JSON.parse(req.body.where);
+          if (req.url === "/getPhotos") {
+            whereQuery["$and"].push({ "process.calculation.payments.first.date": { "$gt": (new Date(2000, 0, 1)) } });
+          }
+          raw_data = await instance.back.getProjectsByQuery(whereQuery, optionQuery);
         }
       } else if (req.url === "/getContents") {
         standard = instance.patch.contentsStandard();
+        optionQuery = { withTools: true, selfMongo: instance.mongo };
+        if (req.body.sort !== undefined) {
+          optionQuery.sort = JSON.parse(req.body.sort);
+        }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestContentsArr(req.body.limit, { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestContentsArr(req.body.limit, optionQuery);
           } else {
-            raw_data = await instance.back.getLatestContentsArr("all", { withTools: true, selfMongo: instance.mongo });
+            raw_data = await instance.back.getLatestContentsArr("all", optionQuery);
           }
         } else {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
-          } else {
-            raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), { withTools: true, selfMongo: instance.mongo });
+            optionQuery.limit = Number(req.body.limit);
           }
+          raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), optionQuery);
         }
       }
 
@@ -831,6 +847,8 @@ DataRouter.prototype.rou_post_updateDocument = function () {
         case "date":
           if (value === "-" || value === "") {
             value = "1800-01-01";
+          } else if (/예정/g.test(value)) {
+            value = "3800-01-01";
           }
           if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(value)) {
             if (value.length === 10) {

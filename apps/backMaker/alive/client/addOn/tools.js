@@ -253,6 +253,8 @@ const withTools = function (Client) {
 
       if (/^1[678]/.test(dayString)) {
         dayString = '-';
+      } else if (/^3/.test(dayString)) {
+        dayString = '예정';
       }
 
       return dayString;

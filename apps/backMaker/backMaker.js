@@ -2699,8 +2699,8 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
           conid: "",
           photo: {
             boo: true,
-            status: "해당 없음",
-            date: new Date(1800, 0, 1),
+            status: "세팅 대기",
+            date: new Date(3800, 0, 1),
             info: {
               photographer: "미정",
               interviewer: "미정",

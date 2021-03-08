@@ -268,7 +268,7 @@ ClientJs.prototype.infoArea = function (info) {
   let enterEventFunction, leaveEventFunction;
   let sortEventFunction;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
-  let dropPoint;
+  let dropPoint, redPoint;
   let onoffDummy;
   let thisOnOff;
   let originalColumns;
@@ -400,7 +400,14 @@ ClientJs.prototype.infoArea = function (info) {
     const thisId = /c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(mother.className)[0];
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const cliidChildren = instance.totalMother.children[0].children;
-    const finalColor = (mother.getAttribute("drop") === "true") ? "#cccccc" : "#404040";
+    let finalColor;
+    finalColor = "#404040";
+    if (mother.getAttribute("red") === "true") {
+      finalColor = "#d13939";
+    }
+    if (mother.getAttribute("drop") === "true") {
+      finalColor = "#cccccc";
+    }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
@@ -446,10 +453,12 @@ ClientJs.prototype.infoArea = function (info) {
 
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
+              finalColor = "#404040";
               if (standardArea.children[z].getAttribute("drop") === "true") {
                 finalColor = "#cccccc";
-              } else {
-                finalColor = "#404040";
+              }
+              if (standardArea.children[z].getAttribute("red") === "true") {
+                finalColor = "#d13939";
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -651,7 +660,7 @@ ClientJs.prototype.infoArea = function (info) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
@@ -1250,6 +1259,7 @@ ClientJs.prototype.infoArea = function (info) {
   }
 
   dropPoint = DataPatch.clientDropPoint();
+  redPoint = DataPatch.clientRedPoint();
 
   for (let obj of target) {
     if (num === 1) {
@@ -1267,16 +1277,25 @@ ClientJs.prototype.infoArea = function (info) {
     div_clone2.setAttribute("index", String(num));
     if (num !== 0) {
       div_clone2.classList.add(this.cases[num].cliid);
+
+      div_clone2.setAttribute("drop", "false");
+      div_clone2.setAttribute("red", "false");
       if (dropPoint.values.includes(obj[dropPoint.column])) {
         style2.color = "#cccccc";
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
           this.standardDoms[num].children[z].style.color = "#cccccc";
         }
         div_clone2.setAttribute("drop", "true");
+      } else if (redPoint.values.includes(obj[redPoint.column])) {
+        style2.color = "#d13939";
+        for (let z = 0; z < this.standardDoms[num].children.length; z++) {
+          this.standardDoms[num].children[z].style.color = "#d13939";
+        }
+        div_clone2.setAttribute("red", "true");
       } else {
         style2.color = "inherit";
-        div_clone2.setAttribute("drop", "false");
       }
+
       if (window.localStorage.getItem(this.cases[num].cliid) === null) {
         window.localStorage.setItem(this.cases[num].cliid, JSON.stringify(onoffDummy));
         thisOnOff = onoffDummy;
@@ -2400,7 +2419,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);

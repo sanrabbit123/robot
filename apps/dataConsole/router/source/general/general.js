@@ -115,6 +115,8 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       if (value === "-" || value === "") {
         filteredValue = "-";
         finalValue = "-";
+      } else if (/예정/g.test(value)) {
+        finalValue = "예정";
       } else {
         filteredValue = DataPatch.toolsDateFilter(value);
         if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {

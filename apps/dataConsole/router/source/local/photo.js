@@ -268,7 +268,7 @@ PhotoJs.prototype.infoArea = function (info) {
   let enterEventFunction, leaveEventFunction;
   let sortEventFunction;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
-  let dropPoint;
+  let dropPoint, redPoint;
   let onoffDummy;
   let thisOnOff;
   let originalColumns;
@@ -278,8 +278,8 @@ PhotoJs.prototype.infoArea = function (info) {
   leftPosition = [];
   widthArr = [];
 
-  if (window.localStorage.getItem("project_columnsOrder") !== null && window.localStorage.getItem("project_columnsOrder") !== undefined) {
-    originalColumns = JSON.parse(window.localStorage.getItem("project_columnsOrder"));
+  if (window.localStorage.getItem("photo_columnsOrder") !== null && window.localStorage.getItem("photo_columnsOrder") !== undefined) {
+    originalColumns = JSON.parse(window.localStorage.getItem("photo_columnsOrder"));
     for (let c of originalColumns) {
       info.standard[c.name].left = c.left;
     }
@@ -400,7 +400,14 @@ PhotoJs.prototype.infoArea = function (info) {
     const thisId = /p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(mother.className)[0];
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const proidChildren = instance.totalMother.children[0].children;
-    const finalColor = (mother.getAttribute("drop") === "true") ? "#cccccc" : "#404040";
+    let finalColor;
+    finalColor = "#404040";
+    if (mother.getAttribute("red") === "true") {
+      finalColor = "#d13939";
+    }
+    if (mother.getAttribute("drop") === "true") {
+      finalColor = "#cccccc";
+    }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
@@ -445,10 +452,12 @@ PhotoJs.prototype.infoArea = function (info) {
           let finalColor;
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
+              finalColor = "#404040";
               if (standardArea.children[z].getAttribute("drop") === "true") {
                 finalColor = "#cccccc";
-              } else {
-                finalColor = "#404040";
+              }
+              if (standardArea.children[z].getAttribute("red") === "true") {
+                finalColor = "#d13939";
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -696,7 +705,7 @@ PhotoJs.prototype.infoArea = function (info) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
@@ -1332,8 +1341,8 @@ PhotoJs.prototype.infoArea = function (info) {
     originalColumns = [];
     allColumns = [];
 
-    if (window.localStorage.getItem("project_columnsOrder") !== null && window.localStorage.getItem("project_columnsOrder") !== undefined) {
-      originalColumns = JSON.parse(window.localStorage.getItem("project_columnsOrder"));
+    if (window.localStorage.getItem("photo_columnsOrder") !== null && window.localStorage.getItem("photo_columnsOrder") !== undefined) {
+      originalColumns = JSON.parse(window.localStorage.getItem("photo_columnsOrder"));
     } else {
       for (let c of instance.caseDoms[0].children) {
         originalColumns.push({ name: c.getAttribute("column"), width: Number(c.style.width.replace(/[^0-9\.\-]/g, '')), left: Number(c.style.left.replace(/[^0-9\.\-]/g, '')) });
@@ -1362,7 +1371,7 @@ PhotoJs.prototype.infoArea = function (info) {
       }
     }
 
-    window.localStorage.setItem("project_columnsOrder", JSON.stringify(allColumns));
+    window.localStorage.setItem("photo_columnsOrder", JSON.stringify(allColumns));
 
     for (let c of instance.caseDoms) {
       for (let d of c.children) {
@@ -1377,7 +1386,8 @@ PhotoJs.prototype.infoArea = function (info) {
     e.stopPropagation();
   }
 
-  dropPoint = DataPatch.projectDropPoint();
+  dropPoint = DataPatch.photoDropPoint();
+  redPoint = DataPatch.photoRedPoint();
 
   for (let obj of target) {
 
@@ -1396,16 +1406,25 @@ PhotoJs.prototype.infoArea = function (info) {
     div_clone2.setAttribute("index", String(num));
     if (num !== 0) {
       div_clone2.classList.add(this.cases[num].proid);
+
+      div_clone2.setAttribute("drop", "false");
+      div_clone2.setAttribute("red", "false");
       if (dropPoint.values.includes(obj[dropPoint.column])) {
         style2.color = "#cccccc";
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
           this.standardDoms[num].children[z].style.color = "#cccccc";
         }
         div_clone2.setAttribute("drop", "true");
+      } else if (redPoint.values.includes(obj[redPoint.column])) {
+        style2.color = "#d13939";
+        for (let z = 0; z < this.standardDoms[num].children.length; z++) {
+          this.standardDoms[num].children[z].style.color = "#d13939";
+        }
+        div_clone2.setAttribute("red", "true");
       } else {
         style2.color = "inherit";
-        div_clone2.setAttribute("drop", "false");
       }
+
       if (window.localStorage.getItem(this.cases[num].proid) === null) {
         window.localStorage.setItem(this.cases[num].proid, JSON.stringify(onoffDummy));
         thisOnOff = onoffDummy;
@@ -1543,10 +1562,23 @@ PhotoJs.prototype.spreadData = async function (search = null) {
     let histories_obj, histories_tempObj;
 
     if (search === null) {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getPhotos"));
+      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=300&where=" + JSON.stringify({ "$and": [ { "desid": { "$regex": "^d" } }, { "process.status": { "$not": { "$regex": "^드" } } } ] }), "/getPhotos"));
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchPhotos"));
     }
+
+    projects.data.sort((a, b) => {
+      function convert(str) {
+        if (str === '' || str === '-') {
+          return 18000101;
+        } else if (/예정/g.test(str)) {
+          return 38000101;
+        } else {
+          return Number(str.replace(/[^0-9]/g, ''));
+        }
+      }
+      return convert(b.info.contentsPhotoDate) - convert(a.info.contentsPhotoDate);
+    });
 
     cliidArr = [];
     desidArr = [];
@@ -2827,7 +2859,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
@@ -4616,7 +4648,7 @@ PhotoJs.prototype.makeImportantEvent = function (id, update = true) {
         };
 
         for (let i = 0; i < length; i++) {
-          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#d13939"));
           for (let j in alarmStyle) {
             alarmCircle.style[j] = alarmStyle[j];
           }

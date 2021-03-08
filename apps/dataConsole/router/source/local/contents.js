@@ -633,7 +633,7 @@ ContentsJs.prototype.infoArea = function (info) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);
@@ -5074,7 +5074,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           for (let j in style) {
             button_clone.style[j] = style[j];
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '') ? (new Date()) : this.textContent, updateValueEvent);
+          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
           button_clone.appendChild(calendar.calendarBase);
           button_clone.style.height = String(calendar.calendarHeight) + ea;
           this.appendChild(button_clone);

@@ -718,20 +718,33 @@ class DevContext extends Array {
 
 
 
-
+      const MONGOC = this.MONGOLOCALC;
+      const MONGOHISTORYC = this.MONGOLOCALC;
+      const EMPTYDATE = new Date(1800, 0, 1);
+      const EMPTYDATEBOO = new Date(2000, 0, 1);
+      const FOREDATE = new Date(3800, 0, 1);
       const sheets = new GoogleSheet();
       const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
       const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
       const ABC = [];
       for (let i of alphabet) { ABC.push(i); }
       for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
-      const dateToString = function (str, hours = null) {
+      const stringToDate = function (str, hours = null) {
         let tempArr, hoursParsing;
         tempArr = str.split("-");
         if (tempArr.length !== 3) {
           throw new Error("invaild date string");
         }
-
+        if (Number(tempArr[0].replace(/^0/, '')) > 3000) {
+          if (hours !== null) {
+            return new Date(3800, 0, 1);
+          } else {
+            return new Date(1800, 0, 1);
+          }
+        }
+        if (Number(tempArr[0].replace(/^0/, '')) < 2000) {
+          return new Date(1800, 0, 1);
+        }
         if (hours === null) {
           return new Date(Number(tempArr[0].replace(/^0/, '')), Number(tempArr[1].replace(/^0/, '')), Number(tempArr[2].replace(/^0/, '')));
         } else {
@@ -740,9 +753,15 @@ class DevContext extends Array {
           } else {
             hoursParsing = 0;
           }
-          hoursParsing += Number(hours.replace(/[^0-9]/g, ''));
+          hoursParsing += Number(hours.split(':')[0].replace(/[^0-9]/g, ''));
           if (Number.isNaN(hoursParsing)) {
             throw new Error("invaild date hour string");
+          }
+          if (hoursParsing === 24) {
+            hoursParsing = 12;
+          }
+          if (0 >= hoursParsing || 24 <= hoursParsing) {
+            console.log(hoursParsing, str, hours);
           }
           return new Date(Number(tempArr[0].replace(/^0/, '')), Number(tempArr[1].replace(/^0/, '')), Number(tempArr[2].replace(/^0/, '')), hoursParsing);
         }
@@ -755,8 +774,8 @@ class DevContext extends Array {
       let photoStatusCases;
       let portfolioContentsCases, interviewContentsCases, photoFixCases;
       let finalArr;
-      let tempArr;
-      let whereQuery, updateQuery;
+      let temp, tempArr;
+      let whereQuery, updateQuery, updateQuery2;
 
       tong = await sheets.get_value_inPython(sheetsId, "총괄 시트!A2:X");
 
@@ -792,46 +811,113 @@ class DevContext extends Array {
       interviewContentsCases = [ '세팅 대기', '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ];
       photoFixCases = [ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ];
 
+      projects = await back.getProjectsByQuery({}, { selfMongo: MONGOC });
+      for (let p of projects) {
+        whereQuery = {};
+        updateQuery = {};
+        whereQuery["proid"] = p.proid;
+        updateQuery["contents.photo.boo"] = true;
+        updateQuery["contents.photo.status"] = "세팅 대기";
+        updateQuery["contents.photo.date"] = new Date(3800, 0, 1);
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        temp = await back.getHistoryById("project", p.proid, { selfMongo: MONGOHISTORYC });
+        if (temp === null) {
+          await back.createHistory("project", whereQuery, { selfMongo: MONGOHISTORYC });
+        }
+      }
+
       finalArr = [];
       for (let { proid, client, photoBoo, photoStatus, designer, photographer, interviewer, photoDate, photoDateHours, interviewContents, portfolioContents, photoFix, blogInterview, blogPortfolio, instaInterview, instaPortfolio, shareDesignerPhoto, shareClientPhoto, shareClientContents } of objArr) {
-        projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: this.MONGOC });
+        projects = await back.getProjectsByNames([ client.trim(), designer.trim() ], { selfMongo: MONGOC });
         if (proid !== projects[0].proid) {
           throw new Error("invaild proid : " + proid);
         }
         if (!photoStatusCases.includes(photoStatus)) {
-          throw new Error("invaild photoStatus : " + proid);
+          throw new Error("invaild photoStatusCases : " + proid);
         }
         if (!portfolioContentsCases.includes(portfolioContents)) {
-          throw new Error("invaild photoStatus : " + proid);
+          throw new Error("invaild portfolioContentsCases : " + proid);
         }
         if (!interviewContentsCases.includes(interviewContents)) {
-          throw new Error("invaild photoStatus : " + proid);
+          throw new Error("invaild interviewContentsCases : " + proid);
         }
         if (!photoFixCases.includes(photoFix)) {
-          throw new Error("invaild photoStatus : " + proid);
+          throw new Error("invaild photoFixCases : " + proid);
         }
         tempArr = [];
+
         whereQuery = {};
         updateQuery = {};
+        updateQuery2 = {};
+
         whereQuery["proid"] = proid;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
-        updateQuery[""] = ;
+        updateQuery["contents.photo.boo"] = (photoBoo === 'O');
+        updateQuery["contents.photo.status"] = photoStatus;
+        updateQuery["contents.photo.date"] = stringToDate(photoDate, photoDateHours);
+        updateQuery["contents.photo.info.photographer"] = photographer.trim() === "미정" ? "" : photographer.trim();
+        updateQuery["contents.photo.info.interviewer"] = interviewer.trim() === "미정" ? "" : interviewer.trim();
+        updateQuery["contents.raw.portfolio.status"] = portfolioContents;
+        updateQuery["contents.raw.interview.status"] = interviewContents;
+        updateQuery["contents.raw.photo.status"] = photoFix;
+
+        updateQuery2["contents.blog.portfolio.date"] = stringToDate(blogPortfolio);
+        updateQuery2["contents.blog.portfolio.boo"] = (updateQuery2["contents.blog.portfolio.date"].valueOf() > EMPTYDATEBOO.valueOf());
+        updateQuery2["contents.blog.review.date"] = stringToDate(blogInterview);
+        updateQuery2["contents.blog.review.boo"] = (updateQuery2["contents.blog.review.date"].valueOf() > EMPTYDATEBOO.valueOf());
+        updateQuery2["contents.instagram.portfolio.date"] = stringToDate(instaPortfolio);
+        updateQuery2["contents.instagram.portfolio.boo"] = (updateQuery2["contents.instagram.portfolio.date"].valueOf() > EMPTYDATEBOO.valueOf());
+        updateQuery2["contents.instagram.review.date"] = stringToDate(instaInterview);
+        updateQuery2["contents.instagram.review.boo"] = (updateQuery2["contents.instagram.review.date"].valueOf() > EMPTYDATEBOO.valueOf());
+
+        if (shareClientPhoto === 'O') {
+          if (updateQuery2["contents.blog.review.boo"]) {
+            updateQuery["contents.share.client.photo"] = updateQuery2["contents.blog.review.date"];
+            updateQuery["contents.share.designer.photo"] = updateQuery2["contents.blog.review.date"];
+          } else if (updateQuery2["contents.blog.portfolio.boo"]) {
+            updateQuery["contents.share.client.photo"] = updateQuery2["contents.blog.portfolio.date"];
+            updateQuery["contents.share.designer.photo"] = updateQuery2["contents.blog.portfolio.date"];
+          } else {
+            updateQuery["contents.share.client.photo"] = EMPTYDATE;
+            updateQuery["contents.share.designer.photo"] = EMPTYDATE;
+          }
+        } else {
+          updateQuery["contents.share.client.photo"] = EMPTYDATE;
+          updateQuery["contents.share.designer.photo"] = EMPTYDATE;
+        }
+
+        if (shareClientContents === 'O') {
+          if (updateQuery2["contents.blog.review.boo"]) {
+            updateQuery["contents.share.client.contents"] = updateQuery2["contents.blog.review.date"];
+            updateQuery["contents.share.designer.contents"] = updateQuery2["contents.blog.review.date"];
+          } else if (updateQuery2["contents.blog.portfolio.boo"]) {
+            updateQuery["contents.share.client.contents"] = updateQuery2["contents.blog.portfolio.date"];
+            updateQuery["contents.share.designer.contents"] = updateQuery2["contents.blog.portfolio.date"];
+          } else {
+            updateQuery["contents.share.client.contents"] = EMPTYDATE;
+            updateQuery["contents.share.designer.contents"] = EMPTYDATE;
+          }
+        } else {
+          updateQuery["contents.share.client.contents"] = EMPTYDATE;
+          updateQuery["contents.share.designer.contents"] = EMPTYDATE;
+        }
 
         tempArr.push(whereQuery);
         tempArr.push(updateQuery);
+        tempArr.push(updateQuery2);
 
         finalArr.push(tempArr);
       }
 
+      console.log(finalArr);
+
+      for (let [ whereQuery, updateQuery, updateQuery2 ] of finalArr) {
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        await back.updateHistory("project", [ whereQuery, updateQuery2 ], { selfMongo: MONGOHISTORYC });
+      }
 
 
-      //
+
+
       // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
 
 

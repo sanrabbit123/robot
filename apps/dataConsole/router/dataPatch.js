@@ -449,6 +449,10 @@ DataPatch.prototype.clientDropPoint = function () {
   return { column: "status", map: "requests.0.analytics.response.status", values: [ "드랍" ] };
 }
 
+DataPatch.prototype.clientRedPoint = function () {
+  return { column: "status", map: "requests.0.analytics.response.status", values: [ "장기" ] };
+}
+
 DataPatch.prototype.clientStandard = function () {
   let model = {};
   let targetArr, margin;
@@ -1557,6 +1561,10 @@ DataPatch.prototype.clientMap = function () {
 
 DataPatch.prototype.designerDropPoint = function () {
   return { column: "status", map: "information.contract.status", values: [ "협약 해지" ] };
+}
+
+DataPatch.prototype.designerRedPoint = function () {
+  return { column: "status", map: "information.contract.status", values: [ "신청 대기", "컨택중" ] };
 }
 
 DataPatch.prototype.designerStandard = function () {
@@ -3255,7 +3263,11 @@ DataPatch.prototype.designerRawMap = function () {
 //PROJECT ---------------------------------------------------------------------------------------
 
 DataPatch.prototype.projectDropPoint = function () {
-  return { column: "status", map: "process.status", values: [ "홀딩", "드랍" ] };
+  return { column: "status", map: "process.status", values: [ "드랍" ] };
+}
+
+DataPatch.prototype.projectRedPoint = function () {
+  return { column: "status", map: "process.status", values: [ "대기", "홀딩" ] };
 }
 
 DataPatch.prototype.projectStandard = function () {
@@ -6798,7 +6810,15 @@ DataPatch.prototype.contentsMap = function () {
   return map;
 }
 
-//PROJECT ---------------------------------------------------------------------------------------
+//PHOTO ---------------------------------------------------------------------------------------
+
+DataPatch.prototype.photoDropPoint = function () {
+  return { column: "photoStatus", map: "contents.photo.status", values: [ "해당 없음" ] };
+}
+
+DataPatch.prototype.photoRedPoint = function () {
+  return { column: "photoStatus", map: "contents.photo.status", values: [ "촬영 홀딩" ] };
+}
 
 DataPatch.prototype.photoStandard = function () {
   let model = {};
@@ -6839,71 +6859,71 @@ DataPatch.prototype.photoStandard = function () {
     },
     contentsPhotoDate: {
       name: "촬영일",
-      width: 160,
+      width: 120,
     },
     photographer: {
       name: "포토",
-      width: 120,
+      width: 100,
     },
     interviewer: {
       name: "인터뷰어",
-      width: 120,
+      width: 100,
     },
     rawPortfolioStatus: {
       name: "포트폴리오 상태",
-      width: 160,
+      width: 120,
     },
     rawPortfolioLink: {
       name: "포트폴리오 링크",
-      width: 160,
+      width: 120,
     },
     rawInterviewStatus: {
       name: "고객 후기 상태",
-      width: 160,
+      width: 120,
     },
     rawInterviewLink: {
       name: "고객 후기 링크",
-      width: 160,
+      width: 120,
     },
     rawPhotoStatus: {
       name: "원본 사진 상태",
-      width: 160,
+      width: 120,
     },
     rawPhotoLink: {
       name: "원본 사진 링크",
-      width: 160,
+      width: 120,
     },
     blogPortfolio: {
       name: "포트폴리오 B",
-      width: 160,
+      width: 120,
     },
     blogReview: {
       name: "고객 후기 B",
-      width: 160,
+      width: 120,
     },
     instagramPortfolio: {
       name: "포트폴리오 I",
-      width: 160,
+      width: 120,
     },
     instagramReview: {
       name: "고객 후기 I",
-      width: 160,
+      width: 120,
     },
     shareClientPhoto: {
       name: "사진 공유 C",
-      width: 160,
+      width: 120,
     },
     shareDesignerPhoto: {
       name: "사진 공유 D",
-      width: 160,
+      width: 120,
     },
     shareClientContents: {
       name: "컨텐츠 공유 C",
-      width: 160,
+      width: 120,
     },
     shareDesignerContents: {
       name: "컨텐츠 공유 D",
-      width: 160,
+      width: 120,
     },
   };
 
@@ -7294,7 +7314,7 @@ DataPatch.prototype.photoMap = function () {
     photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     photographer: { name: "포토", position: "contents.photo.info.photographer", type: "string", items: [ '미정', '김다현', '이현익', '정경일', '김기용', '배창규', '박혜연', '허완', '학생', '디자이너', '해당 없음' ], searchBoo: true, },
-    interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", searchBoo: true, },
+    interviewer: { name: "인터뷰어", position: "contents.photo.info.interviewer", type: "string", items: [ '미정', '박혜연', '정재은', '강해진', '배창규', '임혜령', '임지민', '이큰별', '인턴', '해당 없음' ], searchBoo: true, },
     rawPortfolioStatus: { name: "포트폴리오 상태", position: "contents.raw.portfolio.status", type: "string", items: [ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], searchBoo: true, },
     rawPortfolioLink: { name: "포트폴리오 링크", position: "contents.raw.portfolio.link", type: "link", searchBoo: true, },
     rawInterviewStatus: { name: "고객 후기 상태", position: "contents.raw.interview.status", type: "string", items: [ '세팅 대기', '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ], searchBoo: true, },
