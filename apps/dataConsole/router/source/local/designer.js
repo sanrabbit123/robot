@@ -21,6 +21,8 @@ const DesignerJs = function () {
   this.whiteConvert = 0;
   this.whiteMatrixA = null;
   this.whiteMatrixB = null;
+  this.aspirants = [];
+  this.aspirants_searchInput = null;
 }
 
 DesignerJs.prototype.standardBar = function (standard) {
@@ -3817,6 +3819,13 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
     instance.whiteBox.contentsBox.classList.remove("fadeup");
     instance.whiteBox.contentsBox.classList.add("fadedown");
 
+    //aspirant search
+    if (instance.aspirants_searchInput !== null) {
+      instance.aspirants_searchInput.previousElementSibling.style.opacity = String(1);
+      instance.aspirants_searchInput.parentNode.removeChild(instance.aspirants_searchInput);
+      instance.aspirants_searchInput = null;
+    }
+
     //dom delete
     GeneralJs.timeouts.whiteBox = setTimeout(function () {
       instance.whiteBox.contentsBox.remove();
@@ -4150,6 +4159,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   let reportSortTitleTop;
   let alarmTargets;
   let alarmCircle;
+
 
   motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   ea = "px";
@@ -4986,6 +4996,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
     //name
     div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("hoverDefault_lite");
     style = {
       position: "relative",
       marginTop: String(cardTitleTop) + ea,
@@ -5005,6 +5016,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     for (let i in style) {
       text_div.style[i] = style[i];
     }
+    div_clone.addEventListener("click", buttonsTargets[0].click);
     div_clone.appendChild(text_div);
     cardArea.appendChild(div_clone);
 
@@ -5016,6 +5028,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
     //phone
     div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("hoverDefault_lite");
     style = {
       position: "absolute",
       top: String((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + ea,
@@ -5039,6 +5052,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       text_div.style[i] = style[i];
     }
     div_clone.appendChild(text_div);
+    div_clone.addEventListener("click", buttonsTargets[0].click);
     cardArea.appendChild(div_clone);
 
     cardTitleWidth = text_div.getBoundingClientRect().width;
@@ -5520,6 +5534,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     dataDoms.push(dataDataBox);
   }
 
+  this.aspirants = dataDoms;
   dataScrollBox.appendChild(dataDataZone);
 
   dataArea.appendChild(dataScrollBox);
@@ -5794,6 +5809,27 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
   try {
     return function () {
+      const searchTarget = instance.searchInput.parentNode;
+      const searchTarget_new = searchTarget.cloneNode(true);
+      searchTarget.style.opacity = String(0);
+      searchTarget_new.style.position = "absolute";
+      searchTarget.parentNode.insertBefore(searchTarget_new, instance.searchInput.parentNode.nextElementSibling);
+      searchTarget_new.querySelector("input").addEventListener("keypress", function (e) {
+        this.value = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
+        if (e.keyCode === 13) {
+          const finalValue = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
+          const regexp = new RegExp(finalValue, "gi");
+          for (let dom of instance.aspirants) {
+            if (!regexp.test(dom.textContent)) {
+              dom.style.display = "none";
+            } else {
+              dom.style.display = "block";
+            }
+          }
+        }
+      });
+      instance.aspirants_searchInput = searchTarget_new;
+
       let div_clone, svg_icon;
       let style;
       let ea = "px";
@@ -6323,6 +6359,14 @@ DesignerJs.prototype.launching = async function () {
       if (getTarget !== null) {
         getTarget.click();
       }
+    } else if (getObj.mode === "aspirant") {
+
+      tempFunction = this.cardViewMaker();
+      tempFunction().then(() => {
+        const temp = instance.reportViewMaker();
+        temp();
+      });
+
     }
 
   } catch (e) {

@@ -3116,8 +3116,12 @@ DataPatch.prototype.designerRawMap = function () {
     total: [
       { column: "meetingTime", },
       { column: "email", },
-      { column: "address", },
       { column: "classification", },
+      { column: "bankName", complex: [ "bankAccount", "bankTo" ] },
+      { column: "company", complex: [ "businessNumber" ] },
+      { column: "interiorCareer", },
+      { column: "stylingCareer", },
+      { column: "careerDetail", },
       { column: "webChannel", },
       { column: "snsChannel", },
       { column: "comeFrom", },

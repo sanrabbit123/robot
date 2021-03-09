@@ -1887,7 +1887,7 @@ GeneralJs.prototype.greenBar = function () {
     "/analytics",
     "/proposal",
     "/photo",
-    "/designer",
+    "/designer?mode=aspirant",
     "/contents",
     "/service",
   ];
@@ -2073,7 +2073,6 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.moveArea.right = div_clone2;
   this.below.appendChild(div_clone2);
 
-
   //move left area
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   div_clone2.id = "moveLeftArea";
@@ -2128,7 +2127,6 @@ GeneralJs.prototype.greenBar = function () {
   })
   this.belowButtons.moveArea.left = div_clone2;
   this.below.appendChild(div_clone2);
-
 
   //sub pannel button
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);

@@ -140,6 +140,17 @@ Ghost.prototype.ultimateReflection = async function () {
 
 Ghost.prototype.launching = async function () {
   const instance = this;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const http = require("http");
+  const express = require("express");
+  const app = express();
+  const bodyParser = require("body-parser");
+  const useragent = require("express-useragent");
+  const staticFolder = process.env.HOME + '/static';
+  app.use(useragent.express());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+  app.use(express.static(staticFolder));
   try {
     let message;
     if (process.argv[2] === "backupnow") {
@@ -159,6 +170,52 @@ Ghost.prototype.launching = async function () {
           console.log(err);
         });
       });
+    } else {
+
+      const { name, rawObj: address } = await this.mother.ipCheck();
+      if (name === "unknown") {
+        throw new Error("invalid address");
+      }
+
+      //set router
+      app.post("/shell", function (req, res) {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.command === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'command'" }));
+        } else {
+          const { command } = req.body;
+          shell.exec(command);
+          res.send(JSON.stringify({ message: "success" }));
+        }
+      });
+
+      app.get("/backup", function (req, res) {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        instance.mongoToJson().then(function () {
+          return instance.ultimateReflection();
+        }).then(function () {
+          console.log("backup done");
+        }).catch(function (err) {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "success" }));
+      });
+
+      //server on
+      http.createServer(app).listen(3000, address.ip.inner, () => {
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      });
+
     }
 
   } catch (e) {
