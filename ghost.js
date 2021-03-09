@@ -154,8 +154,10 @@ Ghost.prototype.launching = async function () {
   try {
     let message;
     if (process.argv[2] === "backupnow") {
+
       await this.mongoToJson();
       await this.ultimateReflection();
+
     } else if (process.argv[2] === "backup") {
       message = '';
       this.schedule.scheduleJob(this.objectToCron({ hours: 22, minutes: 30, seconds: 30 }), function () {
@@ -175,6 +177,16 @@ Ghost.prototype.launching = async function () {
       const { name, rawObj: address } = await this.mother.ipCheck();
       if (name === "unknown") {
         throw new Error("invalid address");
+      }
+
+      const dirParsing = function (dir) {
+        if (/__home__/g.test(dir)) {
+          dir = dir.replace(/__home__/, process.env.HOME);
+        }
+        if (/__samba__/g.test(dir)) {
+          dir = dir.replace(/__samba__/, process.env.HOME + "/samba/drive/HomeLiaisonServer");
+        }
+        return dir;
       }
 
       //set router
@@ -211,33 +223,61 @@ Ghost.prototype.launching = async function () {
         res.send(JSON.stringify({ message: "success" }));
       });
 
-      app.post("/mkdir", function (req, res) {
+      app.post([ "/mkdir", "/rm", "/touch" ], function (req, res) {
+        let command;
+        let order;
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        if (req.body.dir === undefined) {
-          res.send(JSON.stringify({ error: "must be property 'dir'" }));
+        if (req.body.target === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'target'" }));
         } else {
-          let { dir } = req.body;
-          if (/__home__/g.test(dir)) {
-            dir = dir.replace(/__home__/, process.env.HOME);
+          if (req.url === "/mkdir") {
+            order = "mkdir";
+          } else if (req.url === "/rm") {
+            order = "rm -rf";
+          } else if (req.url === "/touch") {
+            order = "touch";
           }
-          if (/__samba__/g.test(dir)) {
-            dir = dir.replace(/__samba__/, process.env.HOME + "/samba");
+          let { target } = req.body;
+          command = '';
+          if (Array.isArray(target)) {
+            for (let d of target) {
+              d = dirParsing(d);
+              command += `${order} ${shellLink(d)};`;
+            }
+          } else {
+            target = dirParsing(target);
+            command = `${order} ${shellLink(target)}`;
           }
-          if (/__drive__/g.test(dir)) {
-            dir = dir.replace(/__drive__/, process.env.HOME + "/samba/drive");
-          }
-          shell.exec(`mkdir ${shellLink(dir)}`, { async: true });
+          shell.exec(command, { async: true });
           res.send(JSON.stringify({ message: "success" }));
         }
       });
 
+      app.post("/readDir", function (req, res) {
+        let command;
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.target === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'target'" }));
+        } else {
+          let { target } = req.body;
+          fileSystem(`readDir`, [ target ]).then((list) => {
+            res.send(JSON.stringify(list));
+          }).catch((e) => { throw new Error(e); });
+        }
+      });
+
       //server on
-      http.createServer(app).listen(3000, address.ip.inner, () => {
+      http.createServer(app).listen(3000, () => {
         console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       });
 
