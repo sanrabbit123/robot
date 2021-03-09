@@ -1334,6 +1334,32 @@ BackMaker.prototype.getClientReport = async function () {
   }
 }
 
+BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo: null }) {
+  const instance = this;
+  try {
+    if (typeof option !== "object" || Array.isArray(option)) {
+      throw new Error("invaild option input");
+    }
+    const clients = await this.getClientsByQuery({}, { withTools: true, ...option });
+    const projects = await this.getProjectsByQuery({}, { withTools: true, ...option });
+    const cases = clients.getType().getTypeCases(projects);
+    const targetClient = await this.getClientById(id, option);
+    let resultObj = {};
+
+    if (targetClient === null) {
+      resultObj.cases = null;
+      resultObj.proid = null;
+    } else {
+      resultObj.cases = cases.parsingCases(targetClient);
+      resultObj.proid = cases.parsingProid(targetClient);
+    }
+
+    return resultObj;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // GET Contents --------------------------------------------------------------------------------
 
 BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null }) {

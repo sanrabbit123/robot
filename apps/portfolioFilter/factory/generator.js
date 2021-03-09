@@ -23,4 +23,12 @@ module.exports = {
     h += "\nmain.start();\n";
     return h;
   },
+  rawFilter: function (target, options) {
+    let h = '';
+    h += require("./script/general.js").exec(target, options);
+    h += require("./script/to_portfolio/raw.js").exec(options);
+    h += "\nvar main = new ExecMain(text, \"" + options.home_dir + "\");";
+    h += "\nmain.start();\n";
+    return h;
+  },
 }

@@ -138,6 +138,7 @@ PortfolioFilter.prototype.to_portfolio = async function () {
 
   try {
     let file_list, resultFolderBoo;
+    let rawFix_file_list;
     let new_photo_name, new_photo_name_list;
     let photo_sizes;
     let resultFolder;
@@ -160,11 +161,19 @@ PortfolioFilter.prototype.to_portfolio = async function () {
       shell.exec(`mv ${shellLink(this.options.home_dir)}/resource/${file_list[i]} ${shellLink(this.options.home_dir)}/resource/photo${String(i + 1)}.jpg`);
       file_list[i] = "photo" + String(i + 1) + ".jpg";
     }
-    console.log(file_list);
     options.photo_list = file_list;
+    console.log(file_list);
+
+    rawFix_file_list = [];
+    for (let photo of file_list) {
+      rawFix_file_list.push(`${this.options.photo_dir}/${photo}`);
+    }
+    console.log(rawFix_file_list);
+
+    await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
+    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
 
     photo_sizes = [ "780", "원본" ];
-
     for (let i of resultFolderBoo) {
       shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
     }
@@ -189,7 +198,6 @@ PortfolioFilter.prototype.to_portfolio = async function () {
 
     await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
-
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
 
     return resultFolder;
@@ -493,7 +501,7 @@ PortfolioFilter.prototype.addtionalRepair = async function (pid, tNumber) {
 
     await s3FileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
-    
+
   } catch (e) {
     console.log(e);
   }

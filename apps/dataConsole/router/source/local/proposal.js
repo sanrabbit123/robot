@@ -963,6 +963,18 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           document.querySelector(".pp_designer_question").classList.add("pp_designer_question_add");
           document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_remove");
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
+
+          GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
+            let { result } = JSON.parse(obj);
+            if (result !== null) {
+              result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
+              result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
+              result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
+              instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
+              (instance.load_processLoad_third())(result);
+            }
+          });
+
         }, 300);
 
       }
@@ -2896,7 +2908,6 @@ ProposalJs.prototype.list_launching = async function () {
   await this.list_searchBar();
   await this.list_mainArea();
 }
-
 
 ProposalJs.prototype.load_initevent = function () {
   const instance = this;

@@ -1,6 +1,44 @@
 const CLIENT_DIR = process.cwd() + "/apps/backMaker/alive/client";
 const { Client, Clients } = require(CLIENT_DIR + "/addOn/generator.js");
 
+class ClientTypeCases extends Array {
+  parsingCases(client) {
+    const requestTypes = client.getType();
+    let arr = [], result = [];
+    for (let i of requestTypes) {
+      arr.push(`${i.budget.type}_${i.address.type}_${i.pyeong.type}_${i.contract.type}_${i.living.type}`);
+    }
+    for (let i of arr) {
+      for (let obj of this) {
+        if (obj.name === i) {
+          result.push(obj);
+        }
+      }
+    }
+    return result;
+  }
+
+  parsingProid(client) {
+    const caseArray = this.parsingCases(client);
+    let targetProid;
+
+    targetProid = null;
+
+    for (let i = 0; i < caseArray.length; i++) {
+      caseArray[caseArray.length - 1 - i].proidArr.sort();
+      caseArray[caseArray.length - 1 - i].contractArr.sort();
+      for (let j = 0; j < caseArray[caseArray.length - 1 - i].proidArr.length; j++) {
+        targetProid = caseArray[caseArray.length - 1 - i].proidArr[j];
+      }
+      for (let j = 0; j < caseArray[caseArray.length - 1 - i].contractArr.length; j++) {
+        targetProid = caseArray[caseArray.length - 1 - i].contractArr[j];
+      }
+    }
+
+    return targetProid;
+  }
+}
+
 class ClientTypes extends Array {
 
   getCompositionWords() {
@@ -16,8 +54,9 @@ class ClientTypes extends Array {
     typeSet.sort((a, b) => {
       return Number(a.split("_")[0]) - Number(b.split("_")[0]);
     });
-    let resultArr = [];
-    let cliidArr, tempObj, tempArr, proidArr, contractArr;
+    let resultArr, cliidArr, tempObj, tempArr, proidArr, contractArr;
+
+    resultArr = new ClientTypeCases();
 
     for (let i of typeSet) {
       tempObj = { name: i, case: {} };

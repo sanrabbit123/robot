@@ -605,13 +605,6 @@ class DevContext extends Array {
 
 
 
-      // const clients = await back.getClientsByQuery({}, { withTools: true, fromLocal: true });
-      // const projects = await back.getProjectsByQuery({}, { fromLocal: true });
-      // const cases = clients.getType().getTypeCases(projects);
-      // for (let c of cases) {
-      //   console.log(c);
-      // }
-
 
 
       /*
@@ -638,7 +631,6 @@ class DevContext extends Array {
         "SDGothicNeoa-hExBd",
         // "SDGothicNeoa-iHv",
       ];
-
 
       const subTargets = [ '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '[', ']', '{', '}', '<', '>', ',', '.', '?', '/', ':', ';', '~', '“', '”', '‘', '’' ];
 
@@ -717,6 +709,9 @@ class DevContext extends Array {
       */
 
 
+      // Photo sheets to Photo console START ============================================================================================================
+      // ================================================================================================================================================
+      /*
 
       const MONGOC = this.MONGOLOCALC;
       const MONGOHISTORYC = this.MONGOLOCALC;
@@ -920,89 +915,25 @@ class DevContext extends Array {
         await back.updateHistory("project", [ whereQuery, updateQuery2 ], { selfMongo: MONGOHISTORYC });
       }
 
-
-
-
       // await sheets.update_value_inPython(sheetsId, "총괄 시트", fixedMatrix, [ 0, 0 ]);
 
+      */
+      // Photo sheets to Photo console END ==============================================================================================================
+      // ================================================================================================================================================
 
 
 
 
-      // const sheets = new GoogleSheet();
-      // const sheetsId = "1yyBGnVXfmu9maQWxXs4-_ngDwefdzmqzTp9NYyI6CGw";
-      // const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-      // const ABC = [];
-      // for (let i of alphabet) { ABC.push(i); }
-      // for (let i of alphabet) { for (let j of alphabet) { ABC.push(i + j); } }
-      // let tong, tong2;
-      //
-      // tong = await sheets.get_value_inPython(sheetsId, "응대중 고객 현황!A10:I70");
-      //
-      // console.log(tong);
-      //
-      //
-      // tong2 = await sheets.get_value_inPython(sheetsId, "프로젝트케어!A9:J");
-      //
-      // console.log(tong2);
-      //
-      //
-      // const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
-      // let MONGOLOCALC, arr, arr2;
-      // let whereQuery, updateQuery;
-      // let designers, contentsArr;
-      //
-      // designers = await back.getDesignersByQuery({});
-      // contentsArr = await back.getContentsArrByQuery({});
-      //
-      // MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-      // await MONGOLOCALC.connect();
-      //
-      // arr = await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).find({}).toArray();
-      // arr2 = await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
-      //
-      // for (let { cliid } of arr) {
-      //   whereQuery = { cliid };
-      //   updateQuery = { "manager": "-" };
-      //   await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).updateOne(whereQuery, { "$set": updateQuery });
-      // }
-      // for (let [ cliid, nothing, name, status, action, manager, kakao, prefer, issue ] of tong) {
-      //   whereQuery = { cliid };
-      //   updateQuery = { manager, issue };
-      //   await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).updateOne(whereQuery, { "$set": updateQuery });
-      // }
-      //
-      // for (let { proid } of arr2) {
-      //   whereQuery = { proid };
-      //   updateQuery = { "manager": "-" };
-      //   await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { "$set": updateQuery });
-      // }
-      // for (let [ proid, name, status, contract, designer, service, action, manager, nothing, issue ] of tong2) {
-      //   whereQuery = { proid };
-      //   updateQuery = { manager, issue };
-      //   await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).updateOne(whereQuery, { "$set": updateQuery });
-      // }
-      //
-      // for (let { desid } of designers) {
-      //   await MONGOLOCALC.db(`miro81`).collection(`designerHistory`).insertOne({
-      //     desid,
-      //     manager: "-",
-      //     issuse: "",
-      //     important: false,
-      //   });
-      // }
-      //
-      // for (let { conid } of contentsArr) {
-      //   await MONGOLOCALC.db(`miro81`).collection(`contentsHistory`).insertOne({
-      //     conid,
-      //     manager: "-",
-      //     issuse: "",
-      //     important: false,
-      //   });
-      // }
-      //
-      //
-      // MONGOLOCALC.close();
+
+
+      console.log(await back.getCaseProidById("c2103_aa15s"));
+
+
+
+
+
+
+
 
 
 

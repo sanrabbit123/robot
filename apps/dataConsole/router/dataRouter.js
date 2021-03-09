@@ -2871,6 +2871,42 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_parsingProposal = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/parsingProposal";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.id === undefined) {
+        throw new Error("must be cliid");
+      }
+      const { id } = req.body;
+      const { cases, proid } = await back.getCaseProidById(id, { selfMongo: instance.mongo });
+      let project;
+
+      res.set("Content-Type", "application/json");
+      if (proid === null) {
+        res.send(JSON.stringify({ result: null }));
+      } else {
+        project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        if (project === null) {
+          res.send(JSON.stringify({ result: null }));
+        } else {
+          res.send(JSON.stringify({ result: {
+            proid: project.proid,
+            proposal: project.proposal.detail
+          }}));
+        }
+      }
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 DataRouter.prototype.setMembers = async function () {
