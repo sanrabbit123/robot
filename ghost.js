@@ -24,7 +24,7 @@ const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
 const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
 const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
-const NaverBlogParsing = require(APP_PATH + "/naverAPIs/NaverBlogParsing.js");
+const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
 
 const Ghost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
@@ -189,7 +189,7 @@ Ghost.prototype.launching = async function () {
           res.send(JSON.stringify({ error: "must be property 'command'" }));
         } else {
           const { command } = req.body;
-          shell.exec(command);
+          shell.exec(command, { async: true });
           res.send(JSON.stringify({ message: "success" }));
         }
       });
@@ -209,6 +209,31 @@ Ghost.prototype.launching = async function () {
           console.log(err);
         });
         res.send(JSON.stringify({ message: "success" }));
+      });
+
+      app.post("/mkdir", function (req, res) {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.dir === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'dir'" }));
+        } else {
+          let { dir } = req.body;
+          if (/__home__/g.test(dir)) {
+            dir = dir.replace(/__home__/, process.env.HOME);
+          }
+          if (/__samba__/g.test(dir)) {
+            dir = dir.replace(/__samba__/, process.env.HOME + "/samba");
+          }
+          if (/__drive__/g.test(dir)) {
+            dir = dir.replace(/__drive__/, process.env.HOME + "/samba/drive");
+          }
+          shell.exec(`mkdir ${shellLink(dir)}`, { async: true });
+          res.send(JSON.stringify({ message: "success" }));
+        }
       });
 
       //server on
