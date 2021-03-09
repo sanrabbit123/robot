@@ -83,10 +83,10 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     }
 
     //on green left
-    if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
-      await GeneralJs.sleep(200);
-      GeneralJs.stacks["grayLeftButton"].click();
-    }
+    // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
+    //   await GeneralJs.sleep(200);
+    //   GeneralJs.stacks["grayLeftButton"].click();
+    // }
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

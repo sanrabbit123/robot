@@ -13,6 +13,9 @@ const ProposalJs = function () {
   this.below_tong = new Map();
   this.list_domBox = new Map();
   this.listSearchInput = null;
+
+  //auto-make proposal function property
+  this.firstDo_secondToggle = true;
 }
 
 ProposalJs.prototype.totalInitial = function () {
@@ -404,7 +407,7 @@ ProposalJs.prototype.below_initial = function () {
   style = {
     position: "absolute",
     width: String(75) + ea,
-    height: String(GeneralJs.isMac() ? 44 : 41) + ea,
+    height: String(GeneralJs.isMac() ? 42 : 41) + ea,
     top: String(31.5) + ea,
     right: String(49) + ea,
     background: "white",
@@ -412,7 +415,7 @@ ProposalJs.prototype.below_initial = function () {
     fontSize: String(17) + ea,
     fontWeight: String(500) + ea,
     textAlign: "center",
-    paddingTop: String(GeneralJs.isMac() ? 13 : 16) + ea,
+    paddingTop: String(GeneralJs.isMac() ? 15 : 16) + ea,
     color: "#2fa678",
     cursor: "pointer",
     animation: "justfadeinoriginal 0.4s ease forwards",
@@ -964,16 +967,19 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_remove");
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
 
-          GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
-            let { result } = JSON.parse(obj);
-            if (result !== null) {
-              result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
-              result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
-              result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
-              instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
-              (instance.load_processLoad_third())(result);
-            }
-          });
+          if (instance.firstDo_secondToggle) {
+            GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
+              let { result } = JSON.parse(obj);
+              instance.firstDo_secondToggle = false;
+              if (result !== null) {
+                result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
+                result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
+                result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
+                instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
+                (instance.load_processLoad_third())(result);
+              }
+            });
+          }
 
         }, 300);
 
@@ -1563,6 +1569,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
           div_clone2.classList.add("pp_designer_selected_box");
           div_clone3 = GeneralJs.nodes.div.cloneNode(true);
           div_clone3.classList.add("pp_designer_selected_box_title");
+          div_clone3.classList.add("hoverDefault");
           div_clone3.textContent = fourth.titles[j];
           div_clone2.appendChild(div_clone3);
           div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -1571,6 +1578,102 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
           div_clone2.appendChild(div_clone3);
           div_clone.appendChild(div_clone2);
         }
+
+        div_clone.setAttribute("draggable", "true");
+        div_clone.style.cursor = "pointer";
+        div_clone.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("dragData", this.getAttribute("cus_id"));
+        });
+        div_clone.addEventListener("dragenter", function (e) {
+          e.preventDefault();
+        });
+        div_clone.addEventListener("dragleave", function (e) {
+          e.preventDefault();
+        });
+        div_clone.addEventListener("dragover", function (e) {
+          e.preventDefault();
+        });
+        div_clone.addEventListener("drop", function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          const selectedMother = this.parentNode;
+          const domParsing = function (dom) {
+            const { children } = dom;
+            const [ designer, service, fee, popup, value ] = children;
+
+            let resultObj;
+            let designerInputs, serviceInputs, feeInputs;
+
+            resultObj = {};
+            resultObj.desid = null;
+            designerInputs = designer.querySelectorAll("input");
+            for (let i of designerInputs) {
+              if (i.checked) {
+                resultObj.desid = i.value;
+              }
+            }
+
+            serviceInputs = service.querySelectorAll("input");
+            resultObj.service = [];
+            for (let i of serviceInputs) {
+              resultObj.service.push(i.checked);
+            }
+
+            feeInputs = fee.children[1].querySelectorAll("input");
+            if (feeInputs.length === 2) {
+              resultObj.fee = '';
+              for (let i of feeInputs) {
+                resultObj.fee += fee.children[1].textContent + "__split__" + i.value;
+                resultObj.fee += "__split__";
+              }
+              resultObj.fee = resultObj.fee.slice(0, -9);
+            } else if (feeInputs.length === 1) {
+              resultObj.fee = fee.children[1].textContent + "__split__" + feeInputs[0].value;
+            } else {
+              resultObj.fee = null;
+            }
+
+            resultObj.popup = popup.children[1].textContent;
+
+            resultObj.value = value.textContent;
+
+            return resultObj;
+          }
+          const objToDom = function (obj, dom, id0, id1) {
+            const { children } = dom;
+            const [ designerDom, serviceDom, feeDom, popupDom, valueDom ] = children;
+            const { desid, service, fee, popup, value } = obj;
+            let designerInputs, serviceInputs, feeInputs, feeTarget;
+
+            designerInputs = designerDom.querySelectorAll("input");
+            for (let i of designerInputs) {
+              i.checked = (i.value === desid);
+            }
+
+            serviceInputs = serviceDom.querySelectorAll("input");
+            for (let i = 0; i < service.length; i++) {
+              serviceInputs[i].checked = service[i];
+            }
+
+            if (fee.split("__split__").length === 2) {
+              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+            } else if (fee.split("__split__").length === 4) {
+              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+            }
+
+            popupDom.children[1].children[0].textContent = popup;
+            valueDom.textContent = value;
+          }
+          const orderId_from = Number(e.dataTransfer.getData("dragData").replace(/[^0-9]/g, ''));
+          const orderId_to = Number(this.getAttribute("cus_id").replace(/[^0-9]/g, ''));
+          const dom_from = selectedMother.children[orderId_from + 1];
+          const dom_to = selectedMother.children[orderId_to + 1];
+          const info_from = JSON.parse(JSON.stringify(domParsing(dom_from)));
+          const info_to = JSON.parse(JSON.stringify(domParsing(dom_to)));
+          objToDom(info_from, dom_to, orderId_from, orderId_to);
+          objToDom(info_to, dom_from, orderId_to, orderId_from);
+        });
 
         //remember value
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
@@ -3115,6 +3218,10 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
 
 ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   const instance = this;
+
+  //prevent auto-make proposal function
+  this.firstDo_secondToggle = false;
+
   let e = {};
   let labels = document.querySelectorAll(".pp_clients_label");
   for (let lbj of labels) {
@@ -3387,7 +3494,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   /* columns */
   .columns{position:sticky;top:0px;display:block;border-radius:5px;padding:58px 8px 2px calc(var(--left-padding) + 8px);z-index:1;background:#fff;transition:background 0s;}
-  .columnobj{display:inline-block;position:relative;font-weight:700;vertical-align:top;text-align:center;margin:32px 0px 0px 8px;margin-left:2px;padding:8px 16px 6px 16px;min-height:24px;color:#2fa678;cursor:pointer;}
+  .columnobj{display:inline-block;position:relative;font-weight:600;vertical-align:top;text-align:center;margin:32px 0px 0px 8px;margin-left:2px;padding:8px 16px 6px 16px;min-height:24px;color:#2fa678;cursor:pointer;}
 
   /* total data */
   .data{position:relative;background:#fff;overflow-x:visible;overflow-y:scroll;padding-left:var(--left-padding);transition:background 0s;}
@@ -3406,7 +3513,7 @@ ProposalJs.prototype.cssInjection = function () {
   #belowid{position:fixed;height:123px;text-align: center;bottom:0;width:calc(100% - 190px);left:190px;z-index:100;transform:translateY(0px)}
   .below2{position:relative;padding:20px;height:100%;transform: translateX(0px);width: calc(100vw - 230px);}
   .bletotal{display:inline-block;position:relative;overflow:hidden;border-radius:3px;}
-  .bleobj{position:relative;color:#2fa678;margin:4px;margin-top:5px;font-family:'sandoll';font-weight:700;padding:5px 14px 6px 14px;background: linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);border-radius:3px;}
+  .bleobj{position:relative;color:#2fa678;margin:4px;margin-top:5px;font-family:'sandoll';font-weight:600;padding:5px 14px 6px 14px;background: linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);border-radius:3px;}
   .blegarim{position:absolute;top:4px;left:4px;width:calc(100% - 8px);height:calc(100% - 8px);background:linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);opacity:0;cursor:pointer;border-radius:5px;}
   .blegarim:hover{opacity:0.5;}
   #belowgreen_back{width:200%;background:linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%);}
@@ -3421,7 +3528,7 @@ ProposalJs.prototype.cssInjection = function () {
   #initcolumn_column_stikcy{position:sticky;top:0;width:100%;height:130px;background:#f7f7f7;z-index:3;}
   .rowdiv_init{position:relative;display:block;opacity:1;width:163px;left:17px;height:30px;margin:0px;margin-bottom:7px;font-family:'sandoll';color:#303030;font-weight:600;padding:1px 2px 1px 8px;cursor: pointer;}
   .rowdiv_init div{color:inherit;}
-  .columnobjinit{right:0;display:inline-block;position:absolute;font-weight:700;transition:all 0s;min-height:24px;color:#2fa678;bottom:10px;cursor:pointer;}
+  .columnobjinit{right:0;display:inline-block;position:absolute;font-weight:600;transition:all 0s;min-height:24px;color:#2fa678;bottom:10px;cursor:pointer;}
 
   /* search bar */
   .searchbar{width:588px;position:fixed;height:80px;top:0;right:0px;z-index:1;background:#fff;transition:background 0s;overflow: visible;}
@@ -3738,7 +3845,7 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_contents_money_text,.pp_designer_selected_box_contents_money_text2{
     font-size: inherit;
     display: inline-block;
-    font-weight: 700;
+    font-weight: 600;
     color: #606060;
     padding-bottom: 3px;
   }
@@ -3762,7 +3869,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-left: 6px;
     margin-right: 6px;
-    top: ${GeneralJs.isMac() ? String(12) : String(13)}px;
+    top: ${GeneralJs.isMac() ? String(14) : String(13)}px;
   }
 
   .pp_designer_selected_box_contents_selection{
@@ -3821,7 +3928,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: block;
     height: 2.9vh;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
     margin-left: 22px;
     margin-bottom: 1.2vh;
@@ -3882,7 +3989,7 @@ ProposalJs.prototype.cssInjection = function () {
   .ppw_left_description_inbox_detail{
     height: 2.4vh;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     position: relative;
   }
 
@@ -3911,7 +4018,7 @@ ProposalJs.prototype.cssInjection = function () {
     color: #fff;
     font-size: 14px;
     padding-bottom: ${GeneralJs.isMac() ? String(3) : String(0)}px;
-    font-weight: 700;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3953,7 +4060,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   .ppw_right_set{
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     overflow: hidden;
     position: relative;
   }
