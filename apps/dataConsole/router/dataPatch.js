@@ -3187,8 +3187,11 @@ DataPatch.prototype.designerRawMap = function () {
           "조정 필요",
           "미팅 대기",
           "미팅 완료",
+          "계약서 발송",
+          "계약 합의중",
           "계약 완료",
-          "드랍",
+          "메뉴얼 발송",
+          "드랍"
         ];
       };
       return { type: "menu", thisColumnName: "status", inputFunction: stringToItems, outputFunction: items };

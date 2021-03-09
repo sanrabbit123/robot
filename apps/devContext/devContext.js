@@ -926,7 +926,6 @@ class DevContext extends Array {
 
 
 
-      console.log(await back.getCaseProidById("c2103_aa15s"));
 
 
 

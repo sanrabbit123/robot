@@ -4192,9 +4192,15 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   dataDataFactorsTotal = [];
   alarmTargets = [];
 
+  titleIcon0 = {};
+  titleIcon0_2 = {};
+  titleIcon0_3 = {};
+  titleIcon0_4 = {};
+
   editFunction = function (thisColumnName, inputFunction, outputFunction) {
     return {
       calendar: function (e) {
+        e.stopPropagation();
         if (e.cancelable) {
           e.preventDefault();
         }
@@ -4316,7 +4322,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           top: String(0) + ea,
           left: String(0) + ea,
           width: String(100) + '%',
-          height: String(6 + (36 * data.data.length) + 200) + ea,
+          height: String(6 + (36 * data.data.length) + 500) + ea,
           animation: "justfadein 0.3s ease forwards",
         };
         for (let i in style) {
@@ -4333,6 +4339,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         grandMother.appendChild(calendarTong);
       },
       menu: function (e) {
+        e.stopPropagation();
         if (e.cancelable) {
           e.preventDefault();
         }
@@ -4413,6 +4420,10 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
             GeneralJs.stacks.reportSortTitleFunction();
 
+            if (/드[랍롭]/.test(finalValue)) {
+              titleIcon0.click();
+            }
+
             grandMother.removeChild(grandMother.lastChild);
             grandMother.removeChild(grandMother.lastChild);
           });
@@ -4489,7 +4500,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           top: String(0) + ea,
           left: String(0) + ea,
           width: String(100) + '%',
-          height: String(6 + (36 * data.data.length) + 200) + ea,
+          height: String(6 + (36 * data.data.length) + 500) + ea,
           animation: "justfadein 0.3s ease forwards",
         };
         for (let i in style) {
@@ -5425,7 +5436,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         width: "auto",
         lineHeight: String(1.8),
         color: "#202020",
-        fontWeight: data.data[j][sameStandard.name] ? String(600) : String(300),
+        fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
         transition: "all 0s ease",
         textAlign: "center",
       };
@@ -5433,11 +5444,13 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         text_div.style[i] = style[i];
       }
       dataDataFactor.appendChild(text_div);
-      dataDataFactor.addEventListener("click", dataAreaToCardEvent);
       if (editables[z] !== undefined) {
         tempFunction = editables[z];
         tempFunctionOutput = tempFunction();
+        dataDataFactor.addEventListener("click", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
         dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
+      } else {
+        dataDataFactor.addEventListener("click", dataAreaToCardEvent);
       }
       dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
       if (alarmStandard[data.mode].target.includes(z)) {

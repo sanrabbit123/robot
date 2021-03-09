@@ -95,7 +95,7 @@ const withTools = function (Aspirant) {
         tempObj.folderId = aspirant.portfolio[0].folderId;
         tempObj.portfolioConfirms = JSON.stringify(aspirant.portfolio[0].confirm);
       }
-      tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
+      tempObj.relation = aspirant.submit.partnership.boo;
       if (!tempObj.binary) {
         for (let i of aspirant.information.channel.web) {
           tempObj.binary = true;
@@ -141,7 +141,7 @@ const withTools = function (Aspirant) {
       if (aspirant.portfolio.length > 0) {
         tempObj.folderId = aspirant.portfolio[0].folderId;
       }
-      tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
+      tempObj.relation = aspirant.submit.partnership.boo;
       if (!tempObj.binary) {
         for (let i of aspirant.information.channel.web) {
           tempObj.binary = true;
@@ -195,7 +195,7 @@ const withTools = function (Aspirant) {
       if (aspirant.portfolio.length > 0) {
         tempObj.folderId = aspirant.portfolio[0].folderId;
       }
-      tempObj.relation = (aspirant.submit.presentation.boo && aspirant.submit.partnership.boo);
+      tempObj.relation = aspirant.submit.partnership.boo;
       if (!tempObj.binary) {
         for (let i of aspirant.information.channel.web) {
           tempObj.binary = true;

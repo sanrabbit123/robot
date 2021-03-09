@@ -1599,7 +1599,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       if (req.url === "/getDesignerReport") {
 
-        row = await back.getAspirantsByQuery({}, { withTools: true, selfMongo: instance.mongo, portfolioReset: true });
+        row = await back.getAspirantsByQuery({ "meeting.status": { "$not": { "$regex": "드" } } }, { withTools: true, selfMongo: instance.mongo, portfolioReset: true });
         realData = [];
         for (let i of row) {
           if (i.flatDeath(req.body.mode) !== null) {
