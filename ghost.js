@@ -401,8 +401,10 @@ Ghost.prototype.launching = async function () {
           target = dirParsing(target);
           hangul.fixDirPromise(target).then(function (tree) {
             console.log("done");
+            process.exit();
           }).catch(function (err) {
             console.log(err);
+            process.exit();
           });
           res.send(JSON.stringify({ message: "will do" }));
         }
