@@ -224,11 +224,13 @@ Ghost.prototype.launching = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
+
   app.use(useragent.express());
   app.use(bodyParser.json());
   app.use(multiForms.array());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.static(staticFolder));
+
   try {
     let message = {};
     if (process.argv[2] === "backup") {
