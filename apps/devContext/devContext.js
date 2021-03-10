@@ -930,13 +930,13 @@ class DevContext extends Array {
 
 
 
-      const MONGOC = this.MONGOLOCALC;
-      const collection = "designerMatrix";
-      let matrixTong;
-      let whereQuery, updateQuery;
-
-      matrixTong = await back.mongoRead(collection, {}, { selfMongo: MONGOC });
-      console.log(matrixTong);
+      // const MONGOC = this.MONGOLOCALC;
+      // const collection = "designerMatrix";
+      // let matrixTong;
+      // let whereQuery, updateQuery;
+      //
+      // matrixTong = await back.mongoRead(collection, {}, { selfMongo: MONGOC });
+      // console.log(matrixTong);
 
       // for (let { desid } of matrixTong) {
       //   whereQuery = { desid };
@@ -967,6 +967,10 @@ class DevContext extends Array {
       //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { console: true });
       // }
 
+
+      shell.exec(`ls -al`, { silent: true }, function (err, stdout, stderr) {
+        console.log(stdout)
+      });
 
 
 
