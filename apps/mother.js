@@ -398,7 +398,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
-Mother.prototype.curlRequestSystem = function (url, data = {}, header = {}) {
+Mother.prototype.curlSystem = function (url, data = {}, header = {}) {
   const shell = require(`shelljs`);
   const shellLink = function (str) {
     let arr = str.split('/');
@@ -437,7 +437,11 @@ Mother.prototype.curlRequestSystem = function (url, data = {}, header = {}) {
       if (err) {
         reject(err);
       } else {
-        resolve(stdout);
+        if (/^[\[\{]/.test(stdout.trim())) {
+          resolve(JSON.parse(stdout.trim()));
+        } else {
+          resolve(stdout);
+        }
       }
     });
   });

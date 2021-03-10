@@ -144,7 +144,7 @@ Ghost.prototype.ultimateReflection = async function () {
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, curlRequestSystem } = this.mother;
+  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, curlSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
@@ -177,7 +177,7 @@ Ghost.prototype.requestObject = async function () {
       target: motherDir,
     };
 
-    res = await curlRequestSystem(to, json);
+    res = await curlSystem(to, json);
 
     console.log(res);
 
