@@ -144,7 +144,7 @@ Ghost.prototype.ultimateReflection = async function () {
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
@@ -155,14 +155,15 @@ Ghost.prototype.requestObject = async function () {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     let to, json;
+    let res;
 
     // to = "http://homeliaison.ddns.net:3000/shell";
-    // to = "http://homeliaison.ddns.net:3000/readDir";
-    to = "http://homeliaison.ddns.net:3000/fixDir";
+    to = "http://homeliaison.ddns.net:3000/readDir";
+    // to = "http://homeliaison.ddns.net:3000/fixDir";
     // to = "http://homeliaison.ddns.net:3000/mkdir";
 
-    const motherDir = "__samba__/디자이너";
-    // const motherDir = "__samba__/디자이너/신청자";
+    // const motherDir = "__samba__/디자이너";
+    const motherDir = "__samba__/디자이너/신청자";
     // let orders, aspirants;
     //
     // orders = [];
@@ -176,6 +177,10 @@ Ghost.prototype.requestObject = async function () {
       target: motherDir,
     };
 
+    res = await requestSystem(to, json);
+
+    console.log(res.data);
+
     return { json, to };
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,6 +193,17 @@ Ghost.prototype.requestObject = async function () {
     MONGOLOCALC.close();
     console.log(`done`);
   }
+}
+
+Ghost.prototype.dirParsing = function (dir) {
+  const instance = this;
+  if (/__home__/g.test(dir)) {
+    dir = dir.replace(/__home__/, process.env.HOME);
+  }
+  if (/__samba__/g.test(dir)) {
+    dir = dir.replace(/__samba__/, instance.homeliaisonServer);
+  }
+  return dir;
 }
 
 Ghost.prototype.launching = async function () {
@@ -259,16 +275,6 @@ Ghost.prototype.launching = async function () {
         throw new Error("invalid address");
       }
 
-      const dirParsing = function (dir) {
-        if (/__home__/g.test(dir)) {
-          dir = dir.replace(/__home__/, process.env.HOME);
-        }
-        if (/__samba__/g.test(dir)) {
-          dir = dir.replace(/__samba__/, instance.homeliaisonServer);
-        }
-        return dir;
-      }
-
       //set router
       app.post("/shell", function (req, res) {
         let order;
@@ -279,6 +285,7 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         if (req.body.command === undefined) {
+          console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'command'" }));
         } else {
           const { command } = req.body;
@@ -322,6 +329,7 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         if (req.body.target === undefined) {
+          console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'target'" }));
         } else {
           if (req.url === "/mkdir") {
@@ -335,11 +343,11 @@ Ghost.prototype.launching = async function () {
           command = '';
           if (Array.isArray(target)) {
             for (let d of target) {
-              d = dirParsing(d);
+              d = instance.dirParsing(d);
               command += `${order} ${shellLink(d)};`;
             }
           } else {
-            target = dirParsing(target);
+            target = instance.dirParsing(target);
             command = `${order} ${shellLink(target)}`;
           }
           shell.exec(command, { async: true });
@@ -356,10 +364,11 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         if (req.body.target === undefined) {
+          console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'target'" }));
         } else {
           let { target } = req.body;
-          target = dirParsing(target);
+          target = instance.dirParsing(target);
           fileSystem(`readDir`, [ target ]).then((list) => {
             res.send(JSON.stringify(list));
           }).catch((e) => { throw new Error(e); });
@@ -375,6 +384,7 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         if (req.body.command === undefined) {
+          console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'command'" }));
         } else {
           let { command } = req.body;
@@ -391,14 +401,15 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         if (req.body.target === undefined) {
+          console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'target'" }));
         } else {
           let { target } = req.body;
-          target = dirParsing(target);
+          target = instance.dirParsing(target);
           shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true });
           res.send(JSON.stringify({ message: "will do" }));
         }
-      })
+      });
 
       //server on
       http.createServer(app).listen(3000, () => {
