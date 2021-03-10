@@ -141,17 +141,52 @@ Ghost.prototype.ultimateReflection = async function () {
   }
 }
 
-Ghost.prototype.requestObject = function () {
-  const to = "http://homeliaison.ddns.net:3000/readDir";
-  // const to = "http://homeliaison.ddns.net:3000/mkdir";
+Ghost.prototype.requestObject = async function () {
+  const instance = this;
+  const back = this.back;
+  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  try {
+    await MONGOC.connect();
+    await MONGOLOCALC.connect();
 
-  let resultObj;
+    // DEV AREA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    let to, json;
 
-  resultObj = {
-    target: "__samba__/디자이너",
+    // to = "http://homeliaison.ddns.net:3000/shell";
+    // to = "http://homeliaison.ddns.net:3000/readDir";
+    // to = "http://homeliaison.ddns.net:3000/fixDir";
+    to = "http://homeliaison.ddns.net:3000/mkdir";
+
+    const motherDir = "__samba__/디자이너/신청자";
+    let orders, aspirants;
+
+    orders = [];
+
+    aspirants = await back.getAspirantsByQuery({}, { selfMongo: MONGOLOCALC });
+    for (let a of aspirants) {
+      orders.push(motherDir + "/" + a.aspid + "_" + a.designer);
+    }
+
+    json = {
+      target: orders,
+    };
+
+    return { json, to };
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+    MONGOLOCALC.close();
+    console.log(`done`);
   }
-
-  return { json: resultObj, to };
 }
 
 Ghost.prototype.launching = async function () {
@@ -364,7 +399,11 @@ Ghost.prototype.launching = async function () {
         } else {
           let { target } = req.body;
           target = dirParsing(target);
-          hangul.fixDir(target);
+          hangul.fixDirPromise(target).then(function (tree) {
+            console.log("done");
+          }).catch(function (err) {
+            console.log(err);
+          });
           res.send(JSON.stringify({ message: "will do" }));
         }
       })

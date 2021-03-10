@@ -88,7 +88,7 @@ ParsingHangul.prototype.fixString = function (ugly) {
   return assemble(newString);
 }
 
-ParsingHangul.prototype.fixDir = function (target) {
+ParsingHangul.prototype.fixDir = function (target, callback = null) {
   const instance = this;
   const { shell, shellLink, treeParsing } = this.mother;
   let boo, fixedString;
@@ -162,6 +162,24 @@ ParsingHangul.prototype.fixDir = function (target) {
       }
     }
   }
+
+  if (callback !== null) {
+    callback(tree);
+  }
+
+}
+
+ParsingHangul.prototype.fixDirPromise = function (target) {
+  const instance = this;
+  return new Promise(function (resolve, reject) {
+    if (target === undefined || target === null) {
+      reject("invaild arguments");
+    } else {
+      instance.fixDir(target, function (tree) {
+        resolve(tree);
+      });
+    }
+  });
 }
 
 module.exports = ParsingHangul;
