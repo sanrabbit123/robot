@@ -78,6 +78,22 @@ GeneralJs.idOrderDecode = function (number) {
   return result;
 }
 
+GeneralJs.colorChip = {
+  white: "white",
+  whiteIcon: "white",
+  gray0: "#f7f7f7",
+  gray1: "#f2f2f2",
+  gray2: "#ececec",
+  gray3: "#dddddd",
+  deactive: "#bbbbbb",
+  shadow: "#808080",
+  black: "#404040",
+  green: "#2fa678",
+  gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+  red: "#ff5f57",
+  yellow: "#ffbd3d",
+};
+
 GeneralJs.vaildValue = function (column, value, pastValue) {
   let map;
   let filteredValue;
@@ -502,8 +518,8 @@ GeneralJs.prototype.generalCss = function () {
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
   *{margin:0;padding:0;transition:all 0.3s ease;font-family:'sandoll'}
   *::-webkit-scrollbar{display:none;}
-  input::placeholder {color:white;opacity:0.5;}
-  body,div{font-size:0;color:#404040;margin:0;}
+  input::placeholder {color:${GeneralJs.colorChip.white};opacity:0.5;}
+  body,div{font-size:0;color:${GeneralJs.colorChip.black};margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}
   b,strong{font-weight:inherit;display:inline;}
@@ -575,7 +591,7 @@ GeneralJs.prototype.generalCss = function () {
   .loading{position:absolute;left:50%;transform:rotate(0deg);transform-origin:50% 50%;animation:loadingrotate 1.7s linear infinite;}
   .totalMother{display:block;position:fixed;top:0px;left:0px;height:calc(100% - 123px);width:100%;overflow-x:hidden;overflow-y:scroll;}
   .totalMother::-webkit-scrollbar{display:none;}
-  .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);background:white}
+  .totalFather{width:100%;position:relative;overflow-x:hidden;overflow-y:scroll;height:calc(100vh - 123px);background:${GeneralJs.colorChip.white}}
   .totalFather::-webkit-scrollbar{display:none;}
   .noScrollBar{}
   .noScrollBar::-webkit-scrollbar{display:none;}
@@ -643,7 +659,7 @@ GeneralJs.prototype.returnReport = function (color) {
 }
 
 GeneralJs.prototype.returnLoading = function () {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="#59AF89"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="#009B6A"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="#59AF89"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="#009B6A"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="#59AF89"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="#009B6A"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="#59AF89"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="#59AF89"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="#59AF89"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="#59AF89"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="#59AF89"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="${GeneralJs.colorChip.green}"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="#009B6A"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="${GeneralJs.colorChip.green}"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="#009B6A"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="${GeneralJs.colorChip.green}"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="#009B6A"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="${GeneralJs.colorChip.green}"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="${GeneralJs.colorChip.green}"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="${GeneralJs.colorChip.green}"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="${GeneralJs.colorChip.green}"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="${GeneralJs.colorChip.green}"/></svg>`;
 }
 
 GeneralJs.prototype.returnTitleArr = function (color, height = 23) {
@@ -754,7 +770,7 @@ GeneralJs.prototype.searchInput = function (greenBox) {
     border: String(0),
     textAlign: "center",
     fontWeight: String(100),
-    color: "white",
+    color: GeneralJs.colorChip.white,
     outline: "none",
   };
   for (let i in style) {
@@ -961,14 +977,14 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   width: String(width) + ea,
                   paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
                   height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-                  background: "#2fa678",
+                  background: GeneralJs.colorChip.green,
                   textAlign: "center",
                   fontSize: String(14) + ea,
                   fontWeight: String(400),
-                  color: "#ffffff",
+                  color: GeneralJs.colorChip.white,
                   borderRadius: String(3) + ea,
                   animation: "fadeuplite 0.3s ease forwards",
-                  boxShadow: "0px 2px 11px -6px #2fa678",
+                  boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
                   zIndex: String(3),
                   cursor: "pointer",
                 };
@@ -977,7 +993,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   fontSize: "inherit",
                   fontWeight: String(400),
-                  color: "#ffffff",
+                  color: GeneralJs.colorChip.white,
                   zIndex: String(3),
                   textAlign: "center",
                   background: "transparent",
@@ -1160,14 +1176,14 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   width: String(width) + ea,
                   paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
                   height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-                  background: "#2fa678",
+                  background: GeneralJs.colorChip.green,
                   textAlign: "center",
                   fontSize: String(14) + ea,
                   fontWeight: String(400),
-                  color: "#ffffff",
+                  color: GeneralJs.colorChip.white,
                   borderRadius: String(3) + ea,
                   animation: "fadeuplite 0.3s ease forwards",
-                  boxShadow: "0px 2px 11px -6px #2fa678",
+                  boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
                   zIndex: String(3),
                   cursor: "pointer",
                 };
@@ -1176,7 +1192,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                   position: "absolute",
                   fontSize: "inherit",
                   fontWeight: String(400),
-                  color: "#ffffff",
+                  color: GeneralJs.colorChip.white,
                   zIndex: String(3),
                   textAlign: "center",
                   background: "transparent",
@@ -1245,13 +1261,13 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 temp_clone.textContent = personArr[i];
                 temp_clone.style.width = String(updateWidth) + ea;
                 temp_clone.style.left = String(barLeft) + ea;
-                temp_clone.style.color = "#404040";
+                temp_clone.style.color = GeneralJs.colorChip.black;
                 temp_clone.addEventListener("click", memberEvent);
                 temp_clone.addEventListener("contextmenu", memberEvent);
                 grayTong.appendChild(temp_clone);
 
                 temp_clone = infoAreaData.children[i].children[targetIndex].cloneNode(true);
-                temp_clone.style.color = "#404040";
+                temp_clone.style.color = GeneralJs.colorChip.black;
                 temp_clone.style.left = String(barLeft + columnIndent) + ea;
                 grayTong.appendChild(temp_clone);
               }
@@ -1269,7 +1285,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
               grayTitle.style.transform = "translateX(0" + ea + ")";
               grayData.style.transform = "translateX(0" + ea + ")";
               thisButton.style.transform = "translateX(-" + String(barWidth) + ea + ")";
-              thisButton.style.background = "#dddddd";
+              thisButton.style.background = GeneralJs.colorChip.gray3;
               clearTimeout(GeneralJs.timeouts["grayRightBarOn"]);
               GeneralJs.timeouts["grayRightBarOn"] = null;
             }, 0);
@@ -1362,7 +1378,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
               input_clone.value = text_div.textContent;
               style = {
                 position: "absolute",
-                color: "#2fa678",
+                color: GeneralJs.colorChip.green,
                 fontSize: text_div.style.fontSize,
                 fontWeight: text_div.style.fontWeight,
                 top: text_div.style.top,
@@ -1414,7 +1430,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
                 text_div = GeneralJs.nodes.div.cloneNode(true);
                 text_div.textContent = personArr[i];
                 text_div.style.fontSize = String(14) + ea;
-                text_div.style.color = "#404040";
+                text_div.style.color = GeneralJs.colorChip.black;
                 text_div.style.position = "absolute";
                 text_div.style.top = String(0) + ea;
                 text_div.style.left = String(34) + ea;
@@ -1451,7 +1467,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
           document.getElementById("rightGrayPannel_title").style.transform = "translateX(" + String(secondWidth) + ea + ")";
           document.getElementById("rightGrayPannel_data").style.transform = "translateX(" + String(secondWidth) + ea + ")";
           thisButton.style.transform = "translateX(0" + ea + ")";
-          thisButton.style.background = "#2fa678";
+          thisButton.style.background = GeneralJs.colorChip.green;
           GeneralJs.timeouts["grayRightBarOff"] = setTimeout(function () {
             thisButton.setAttribute("progress", "done");
             thisButton.setAttribute("set", "off");
@@ -1583,7 +1599,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
     fontWeight: String(200),
     height: String(height) + ea,
     top: String(0) + ea,
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
   };
   for (let i in style) {
     div_clone2.style[i] = style[i];
@@ -1632,7 +1648,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
       height: String(height) + ea,
       right: String(0) + ea,
       top: String(0) + ea,
-      color: "#2fa678"
+      color: GeneralJs.colorChip.green
     };
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -1668,7 +1684,7 @@ GeneralJs.prototype.greenBar = function () {
   style = {
     display: "block",
     position: "fixed",
-    background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+    background: GeneralJs.colorChip.gradientGreen,
     bottom: String(0),
     left: String(0),
     width: "100%",
@@ -1684,9 +1700,9 @@ GeneralJs.prototype.greenBar = function () {
   margin = 18;
   start = 7;
   colors = [
-    "#59AF89",
-    "#FFBD3D",
-    "#FF5F57",
+    GeneralJs.colorChip.green,
+    GeneralJs.colorChip.yellow,
+    GeneralJs.colorChip.red,
   ];
 
   for (let i = 0; i < colors.length; i++) {
@@ -1710,7 +1726,7 @@ GeneralJs.prototype.greenBar = function () {
   right = 38;
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.white)));
   div_clone2.classList.add("hoverDefault");
   style = {
     display: "block",
@@ -1752,7 +1768,7 @@ GeneralJs.prototype.greenBar = function () {
 
   //arrow - right
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow("#ffffff")));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.white)));
   div_clone2.classList.add("hoverDefault");
   for (let i in style) {
     div_clone2.style[i] = style[i];
@@ -1791,7 +1807,7 @@ GeneralJs.prototype.greenBar = function () {
   belowTop = top + 34;
 
   //report
-  svg_icon = SvgTong.stringParsing(this.returnReport("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnReport(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   style = {
     display: "block",
@@ -1809,7 +1825,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //return
-  svg_icon = SvgTong.stringParsing(this.returnReturn("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnReturn(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1833,7 +1849,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //button C
-  svg_icon = SvgTong.stringParsing(this.returnCinitial("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnCinitial(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1851,7 +1867,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //button R
-  svg_icon = SvgTong.stringParsing(this.returnRinitialItalic("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnRinitialItalic(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1869,7 +1885,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //navigator icons
-  const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr("#ffffff", 23);
+  const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr(GeneralJs.colorChip.white, 23);
   let naviIconsHost, naviIconsLeftException;
   let naviIconsLinks, naviIconsContextLinks;
   let naviIconsMap;
@@ -1937,7 +1953,7 @@ GeneralJs.prototype.greenBar = function () {
   }
 
   //extract icon
-  svg_icon = SvgTong.stringParsing(this.returnExtract("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnExtract(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1956,7 +1972,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //talk icon
-  svg_icon = SvgTong.stringParsing(this.returnTalk("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnTalk(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1975,7 +1991,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //file manager icon
-  svg_icon = SvgTong.stringParsing(this.returnFolder("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnFolder(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -1994,7 +2010,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //profile icon
-  svg_icon = SvgTong.stringParsing(this.returnProfile("#ffffff"));
+  svg_icon = SvgTong.stringParsing(this.returnProfile(GeneralJs.colorChip.white));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2134,7 +2150,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone2.classList.add("hoverdefault_lite_reverse");
   style = {
     position: "fixed",
-    background: "#2fa678",
+    background: GeneralJs.colorChip.green,
     right: String(0) + ea,
     width: String(19) + ea,
     height: String(60) + ea,
@@ -2148,9 +2164,9 @@ GeneralJs.prototype.greenBar = function () {
   }
   div_clone2.setAttribute("progress", "done");
   div_clone2.setAttribute("set", "off");
-  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 0)) + ea, "#ffffff"));
-  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 1)) + ea, "#ffffff"));
-  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 2)) + ea, "#ffffff"));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 0)) + ea, GeneralJs.colorChip.white));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 1)) + ea, GeneralJs.colorChip.white));
+  div_clone2.insertAdjacentHTML(`beforeend`, this.returnCircle("transform:scale(0.5);left:4px;top:" + String((11) + ((12) * 2)) + ea, GeneralJs.colorChip.white));
   div_clone2.addEventListener("click", GeneralJs.grayLeftLaunching());
   GeneralJs.stacks["grayLeftButton"] = div_clone2;
   this.below.appendChild(div_clone2);
@@ -2181,7 +2197,7 @@ GeneralJs.prototype.dashboardBox = function () {
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "fixed",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       right: String(20) + ea,
       width: String(width) + ea,
       height: String(height) + ea,
@@ -2206,7 +2222,7 @@ GeneralJs.prototype.dashboardBox = function () {
       height: String(14) + ea,
       top: String(0),
       left: String(0),
-      background: "#ececec",
+      background: GeneralJs.colorChip.gray2,
       cursor: "move",
       transition: "all 0s ease",
     };
@@ -2301,7 +2317,7 @@ GeneralJs.prototype.dashboardBox = function () {
       width: String(100) + "%",
       height: "calc(100% - " + String(14) + ea + ")",
       marginTop: String(14 + ((GeneralJs.isMac()) ? 0 : 3)) + ea,
-      background: "white",
+      background: GeneralJs.colorChip.white,
       transition: "all 0s ease",
     };
     for (let i in style) {
@@ -2362,7 +2378,7 @@ GeneralJs.prototype.memberView = function () {
       height: String(160) + ea,
       top: String(-104) + ea,
       left: String(220) + ea,
-      background: "white",
+      background: GeneralJs.colorChip.white,
       borderRadius: String(4) + ea,
       opacity: String(0.9),
       boxShadow: "0px 6px 18px -9px #505050",
@@ -2391,7 +2407,7 @@ GeneralJs.prototype.memberView = function () {
       div_clone2.style.backgroundSize = '102% 102%';
       div_clone2.style.backgroundPosition = '-1% -1%';
     } else {
-      temp = SvgTong.stringParsing(instance.returnProfile("#dddddd", true));
+      temp = SvgTong.stringParsing(instance.returnProfile(GeneralJs.colorChip.gray3, true));
       temp.style.position = "absolute";
       temp.style.width = "100%";
       temp.style.height = "100%";
@@ -2439,7 +2455,7 @@ GeneralJs.prototype.memberView = function () {
       top: String(66) + ea,
       left: String(158) + ea,
       width: String(139) + ea,
-      borderBottom: "1px solid #ececec",
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
     };
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -2454,7 +2470,7 @@ GeneralJs.prototype.memberView = function () {
       left: String(158) + ea,
       fontSize: String(12.5) + ea,
       fontWeight: String(400),
-      color: "#2fa678",
+      color: GeneralJs.colorChip.green,
       width: String(137) + ea,
       overflow: "hidden",
     };
@@ -2499,7 +2515,7 @@ GeneralJs.prototype.memberView = function () {
     div_clone.appendChild(div_clone2);
 
     //logout icon
-    svg_clone = SvgTong.stringParsing(instance.returnLogout("#2fa678"));
+    svg_clone = SvgTong.stringParsing(instance.returnLogout(GeneralJs.colorChip.green));
     svg_clone.classList.add("hoverDefault");
     style = {
       position: "absolute",
@@ -2546,7 +2562,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
     borderRadius: String(5) + ea,
     top: String(0) + ea,
     left: String(0) + ea,
-    background: "#404040",
+    background: GeneralJs.colorChip.black,
     opacity: String(0.2),
     zIndex: String(4),
     cursor: "pointer",
@@ -2571,7 +2587,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
       borderRadius: String(5) + ea,
       top: "calc(25% - 61.5px)",
       left: "25%",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       boxShadow: "0px 4px 13px -8px #808080",
       opacity: String(0.95),
       zIndex: String(4),
@@ -2585,7 +2601,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
       borderRadius: String(5) + ea,
       top: "calc(35% - 61.5px)",
       left: "35%",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       boxShadow: "0px 4px 13px -8px #808080",
       opacity: String(0.95),
       zIndex: String(4),
@@ -2626,11 +2642,11 @@ GeneralJs.prototype.greenAlert = async function (message) {
     GeneralJs.stacks["greenAlert_greenBox"] = div_clone;
     style = {
       position: "absolute",
-      background: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+      background: GeneralJs.colorChip.gradientGreen,
       borderRadius: String(5) + ea,
       height: String(42) + ea,
       top: String(-83) + ea,
-      boxShadow: "0px 5px 12px -8px #2fa678",
+      boxShadow: "0px 5px 12px -8px " + GeneralJs.colorChip.green,
       opacity: String(0),
       width: String(2000) + ea,
       transition: "all 0s ease"
@@ -2643,7 +2659,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
     style = {
       position: "absolute",
       textAlign: "center",
-      color: "white",
+      color: GeneralJs.colorChip.white,
       height: String(28) + ea,
       fontSize: String(19) + ea,
       fontWeight: String(200),
@@ -2719,7 +2735,7 @@ GeneralJs.prototype.loginBox = async function () {
         position: "fixed",
         width: "100%",
         height: "100%",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         opacity: String(0),
         zIndex: String(3),
         backdropFilter: "invert(1)",
@@ -2736,7 +2752,7 @@ GeneralJs.prototype.loginBox = async function () {
         position: "fixed",
         width: "100%",
         height: "100%",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         opacity: String(0),
         zIndex: String(3),
         backdropFilter: "blur(4px)",
@@ -2895,7 +2911,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       fontSize: String(12) + ea,
       fontWeight: String(400),
       textAlign: "left",
-      color: "#404040",
+      color: GeneralJs.colorChip.black,
       cursor: "pointer",
       top: String(eventInitTop + (lineHeight * indexNumber)) + ea,
       left: String(eventLeft) + ea,
@@ -2945,7 +2961,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
             eventFunc = obj.eventFunc;
 
             if (date.getFullYear() === this.year && date.getMonth() === this.month && date.getDate() === this.date) {
-              svg_clone = SvgTong.stringParsing(instance.returnCircle("", "#2fa678"));
+              svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorChip.green));
               for (let k in circleEventStyle) {
                 svg_clone.style[k] = circleEventStyle[k];
               }
@@ -2999,7 +3015,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       style = {
         position: "relative",
         height: ((option.bigMode === undefined) ? String(height / 9) + ea : "calc(calc(100% - " + String(36) + ea + ") / " + String(matrix.length) + ")"),
-        background: "white",
+        background: GeneralJs.colorChip.white,
         width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
         left: String(leftMargin * 1) + ea,
       };
@@ -3023,11 +3039,11 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           position: "relative",
           width: "calc(100% / 7)",
           height: ((option.bigMode === undefined) ? String(height / 8) + ea : String(100) + '%'),
-          background: "white",
+          background: GeneralJs.colorChip.white,
           cursor: "pointer",
           overflow: "scroll",
-          borderBottom: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
-          borderRight: ((option.bigMode === undefined) ? String(0) : "1px solid #dddddd"),
+          borderBottom: ((option.bigMode === undefined) ? String(0) : "1px solid " + GeneralJs.colorChip.gray3),
+          borderRight: ((option.bigMode === undefined) ? String(0) : "1px solid " + GeneralJs.colorChip.gray3),
           boxSizing: ((option.bigMode === undefined) ? "initial" : "border-box"),
         };
         for (let k in style) {
@@ -3035,8 +3051,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
 
         if (option.bigMode !== undefined && i === 0) {
-          div_clone2.style.background = "#f7f7f7";
-          div_clone2.style.borderTop = "1px solid #dddddd";
+          div_clone2.style.background = GeneralJs.colorChip.gray0;
+          div_clone2.style.borderTop = "1px solid " + GeneralJs.colorChip.gray3;
           if (j === 0) {
             div_clone2.style.borderTopLeftRadius = String(5) + ea;
           } else if (j === 6) {
@@ -3045,7 +3061,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
 
         if (option.bigMode !== undefined && j === 0) {
-          div_clone2.style.borderLeft = "1px solid #dddddd";
+          div_clone2.style.borderLeft = "1px solid " + GeneralJs.colorChip.gray3;
         }
 
         if (option.bigMode !== undefined && i === matrix.length) {
@@ -3072,7 +3088,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           fontWeight: ((i === 0) ? String(500) : String(200)),
           width: "100%",
           textAlign: ((option.bigMode === undefined) ? "center" : "left"),
-          color: ((j < 5) ? "#404040" : "#2fa678"),
+          color: ((j < 5) ? GeneralJs.colorChip.black : GeneralJs.colorChip.green),
           cursor: "pointer",
         };
         for (let k in style) {
@@ -3094,7 +3110,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           }
           if (matrix[i - 1][j] !== null) {
             if (thisDate === matrix[i - 1][j].date) {
-              div_clone3.style.color = "#2fa678";
+              div_clone3.style.color = GeneralJs.colorChip.green;
               div_clone3.style.fontWeight = String(400);
             }
           }
@@ -3186,7 +3202,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     arrowWidth = 11;
   }
 
-  svg_clone = SvgTong.stringParsing(this.returnArrow("left", "#2fa678"));
+  svg_clone = SvgTong.stringParsing(this.returnArrow("left", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,
@@ -3245,7 +3261,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   titleZone.appendChild(svg_zone);
 
   //next arrow
-  svg_clone = SvgTong.stringParsing(this.returnArrow("right", "#2fa678"));
+  svg_clone = SvgTong.stringParsing(this.returnArrow("right", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,

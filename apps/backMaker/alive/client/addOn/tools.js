@@ -1000,11 +1000,12 @@ const withToolsArr = function (Clients) {
     tong = new RequestsTong();
     for (let i of this) {
       tempArr = i.requests;
-      for (let j of tempArr) {
-        j.cliid = i.cliid;
-        j.name = i.name;
-        j.phone = i.phone;
-        tong.push(j);
+      for (let j = 0; j < tempArr.length; j++) {
+        tempArr[j].cliid = i.cliid;
+        tempArr[j].name = i.name;
+        tempArr[j].phone = i.phone;
+        tempArr[j].index = j;
+        tong.push(tempArr[j]);
       }
     }
     tong.sort((a, b) => {

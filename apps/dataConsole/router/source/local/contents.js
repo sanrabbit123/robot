@@ -5819,7 +5819,7 @@ ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           width: String(100) + '%',
           textAlign: "center",
           fontSize: String(19) + ea,
-          fontWeight: String(100),
+          fontWeight: String(200),
           height: String(30) + ea,
         };
 

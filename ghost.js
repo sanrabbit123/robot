@@ -38,6 +38,8 @@ const Ghost = function () {
   this.address = ADDRESS;
   this.schedule = schedule;
   this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
+  this.ghost = process.cwd() + "/ghost.js";
+  this.robot = process.cwd() + "/robot.js";
 }
 
 Ghost.prototype.objectToCron = function (obj = {}) {
@@ -153,27 +155,30 @@ Ghost.prototype.launching = async function () {
   app.use(bodyParser.json());
   app.use(express.static(staticFolder));
   try {
-    let message;
-    if (process.argv[2] === "backupnow") {
+    let message = {};
+    if (process.argv[2] === "backup") {
 
       await this.mongoToJson();
       await this.ultimateReflection();
 
-    } else if (process.argv[2] === "backup") {
-      message = '';
+    } else if (process.argv[2] === "cron") {
+
+      //backup
+      message.backup = '';
       this.schedule.scheduleJob(this.objectToCron({ hours: 22, minutes: 30, seconds: 30 }), function () {
         instance.mongoToJson().then(function (m) {
-          message += m;
+          message.backup += m;
           return instance.ultimateReflection();
         }).then(function (m) {
-          message += "\n"
-          message += m;
+          message.backup += "\n"
+          message.backup += m;
           console.log(message);
         }).catch(function (err) {
           console.log(err);
         });
       });
-    } else {
+
+    } else if (process.argv[2] === undefined || process.argv[2] === "server") {
 
       const { name, rawObj: address } = await this.mother.ipCheck();
       if (name === "unknown") {
@@ -192,6 +197,7 @@ Ghost.prototype.launching = async function () {
 
       //set router
       app.post("/shell", function (req, res) {
+        let order;
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
@@ -202,7 +208,15 @@ Ghost.prototype.launching = async function () {
           res.send(JSON.stringify({ error: "must be property 'command'" }));
         } else {
           const { command } = req.body;
-          shell.exec(command, { async: true });
+          order = '';
+          if (Array.isArray(command)) {
+            for (let c of command) {
+              order += c + ';';
+            }
+          } else {
+            order = command;
+          }
+          shell.exec(order, { async: true });
           res.send(JSON.stringify({ message: "success" }));
         }
       });
@@ -274,6 +288,23 @@ Ghost.prototype.launching = async function () {
           fileSystem(`readDir`, [ target ]).then((list) => {
             res.send(JSON.stringify(list));
           }).catch((e) => { throw new Error(e); });
+        }
+      });
+
+      app.post("/robot", function (req, res) {
+        let command;
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.command === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'command'" }));
+        } else {
+          let { command } = req.body;
+          const { stdout } = shell.exec("node " + instance.robot + " " + command);
+          res.send(JSON.stringify({ stdout }));
         }
       });
 

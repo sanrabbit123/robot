@@ -46,7 +46,7 @@ DesignerJs.prototype.standardBar = function (standard) {
   style = {
     display: "block",
     position: "relative",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     top: String(0),
     left: String(0),
     width: String(this.grayBarWidth) + ea,
@@ -60,7 +60,7 @@ DesignerJs.prototype.standardBar = function (standard) {
     paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: style.width,
   };
 
@@ -303,7 +303,7 @@ DesignerJs.prototype.infoArea = function (info) {
     paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
-    background: "#ffffff",
+    background: GeneralJs.colorChip.white,
     width: style.width,
     left: style.left,
     color: "inherit",
@@ -611,7 +611,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -628,7 +628,7 @@ DesignerJs.prototype.infoArea = function (info) {
             left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
             width: String(width) + ea,
             height: String(260) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
             color: "#2fa678",
@@ -648,7 +648,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -672,7 +672,7 @@ DesignerJs.prototype.infoArea = function (info) {
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               borderRadius: String(3) + ea,
               animation: "fadeuplite 0.3s ease forwards",
@@ -688,7 +688,7 @@ DesignerJs.prototype.infoArea = function (info) {
               position: "absolute",
               fontSize: "inherit",
               fontWeight: String(400),
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               textAlign: "center",
               background: "transparent",
@@ -712,7 +712,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -731,7 +731,7 @@ DesignerJs.prototype.infoArea = function (info) {
             width: String(width) + ea,
             paddingTop: String(height * 0.3) + ea,
             height: String(width * 0.9) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -760,7 +760,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
@@ -921,7 +921,7 @@ DesignerJs.prototype.infoArea = function (info) {
         height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
         opacity: String(0.7),
         zIndex: String(3),
-        background: "white",
+        background: GeneralJs.colorChip.white,
         animation: "justfadeinmiddle 0.3s ease forwards",
       };
       for (let i in style) {
@@ -959,7 +959,7 @@ DesignerJs.prototype.infoArea = function (info) {
           textAlign: "center",
           fontSize: "inherit",
           fontWeight: String(500),
-          color: "#ffffff",
+          color: GeneralJs.colorChip.white,
           zIndex: String(3),
           borderRadius: String(3) + ea,
           animation: "fadeuplite 0.3s ease forwards",
@@ -975,7 +975,7 @@ DesignerJs.prototype.infoArea = function (info) {
           position: "absolute",
           fontSize: "inherit",
           fontWeight: String(400),
-          color: "#ffffff",
+          color: GeneralJs.colorChip.white,
           zIndex: String(3),
           textAlign: "center",
           background: "transparent",
@@ -1478,7 +1478,7 @@ DesignerJs.prototype.cardViewMaker = function () {
         height: String(fixedHeightSize) + ea,
         marginLeft: String(margin) + ea,
         marginTop: String(margin) + ea,
-        background: "#ffffff",
+        background: GeneralJs.colorChip.white,
         borderRadius: String(5) + ea,
         cursor: "pointer",
       };
@@ -1801,7 +1801,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
     bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
@@ -1819,7 +1819,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * 3) + ea,
@@ -1831,7 +1831,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(div_clone3);
 
   //right arrow
-  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(leftMargin * (12 / 60)) + ea,
@@ -1856,7 +1856,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(rightArrowBox);
 
   //left arrow
-  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
+  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
   for (let i in style) {
     leftArrow.style[i] = style[i];
   }
@@ -1875,7 +1875,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(leftArrowBox);
 
   //h initial icon
-  hInitial = SvgTong.stringParsing(this.mother.returnHinitial("#2fa678"));
+  hInitial = SvgTong.stringParsing(this.mother.returnHinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     hInitial.style[i] = style[i];
   }
@@ -1895,11 +1895,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(hInitialBox);
 
   //m initial icon
-  convertIcon = SvgTong.stringParsing(this.mother.returnMinitial("#2fa678"));
+  convertIcon = SvgTong.stringParsing(this.mother.returnMinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     convertIcon.style[i] = style[i];
   }
-  convertIcon.style.right = String(leftMargin + (leftMargin * (50 / 60))) + ea;
+  convertIcon.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (49 / 60) : (54 / 60)))) + ea;
   convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60))) + ea;
   div_clone2.appendChild(convertIcon);
 
@@ -1918,7 +1918,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    background: "#dddddd",
+    background: GeneralJs.colorChip.gray3,
     height: String(1) + ea,
     width: "calc(100% - " + (leftMargin * 2) + ea + ")",
     bottom: String(0) + ea,
@@ -2109,7 +2109,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -2126,7 +2126,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             left: String(0) + ea,
             width: String(width) + ea,
             height: String(260) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
             color: "#2fa678",
@@ -2146,7 +2146,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -2170,7 +2170,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               background: "#2fa678",
               textAlign: "center",
               fontSize: "inherit",
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               borderRadius: String(3) + ea,
               animation: "fadeuplite 0.3s ease forwards",
@@ -2187,7 +2187,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               position: "absolute",
               fontSize: "inherit",
               fontWeight: String(400),
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               textAlign: "center",
               background: "transparent",
@@ -2211,7 +2211,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -2230,7 +2230,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             width: String(width) + ea,
             paddingTop: String(height * 0.3) + ea,
             height: String(width * 0.9) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -2259,7 +2259,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
@@ -2550,7 +2550,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         fontSize: String(fontSize) + ea,
         fontWeight: String(300),
         cursor: "pointer",
-        color: (dateArr[j].onoff ? "#2fa678" : "#bbbbbb"),
+        color: (dateArr[j].onoff ? GeneralJs.colorChip.green : GeneralJs.colorChip.deactive),
       };
       for (let j in style) {
         div_clone5.style[j] = style[j];
@@ -2563,11 +2563,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let onoff;
           if (this.getAttribute("onoff") === "true") {
             onoff = 0;
-            this.style.color = "#bbbbbb";
+            this.style.color = GeneralJs.colorChip.deactive;
             this.setAttribute("onoff", "false");
           } else {
             onoff = 1;
-            this.style.color = "#2fa678";
+            this.style.color = GeneralJs.colorChip.green;
             this.setAttribute("onoff", "true");
           }
           await GeneralJs.ajaxPromise("type=update&year=" + this.getAttribute("year") + "&month=" + this.getAttribute("month") + "&onoff=" + String(onoff) + "&desid=" + thisCase[standard[1]], "/realtimeDesigner");
@@ -2656,7 +2656,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         padding: String(margin) + ea,
         width: "calc(100% - " + String((fontSize * 9) + (margin * 2)) + ea + ")",
         height: String(Math.abs(contentsBoxHeight) - Math.abs(areaMotherTop) + Math.abs(areaTop) - (margin * 2)) + ea,
-        background: "#f7f7f7",
+        background: GeneralJs.colorChip.gray0,
         borderRadius: String(4) + ea,
       };
       for (let j in style) {
@@ -2693,7 +2693,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           position: "relative",
           fontSize: String(fontSize - 2.5) + ea,
           fontWeight: String(600),
-          background: "white",
+          background: GeneralJs.colorChip.white,
           paddingTop: String(margin / 2) + ea,
           paddingBottom: String(margin * 0.65) + ea,
           paddingRight: String(margin) + ea,
@@ -2859,7 +2859,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           position: "relative",
           top: String(titleHeight + (margin / 2) + (GeneralJs.isMac() ? 0 : -2)) + ea,
           left: String(0) + ea,
-          background: "#f7f7f7",
+          background: GeneralJs.colorChip.gray0,
           borderRadius: String(4) + ea,
           width: "100%",
           height: String(height - (titleHeight + (margin / 2))) + ea,
@@ -3076,6 +3076,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         let invisibleTextStyle;
         let totalMatrix;
         let x, y, z;
+        let checkList;
+        let checkListBase, checkListBaseWhite;
+        let checkListWidth, checkListMargin;
 
         totalMatrix = [];
         leftWordWidth = 30;
@@ -3083,16 +3086,181 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         margin = 10;
         matrixMargin = 8;
         boxNumber = xValues.length * yValues.length;
+        checkListWidth = 480;
+        checkListMargin = 23;
+
+        //check list base
+        checkList = [
+          {
+            name: "서비스 가능 지역",
+            items: [
+              "서울",
+              "인천",
+              "경기",
+              "강원",
+              "충청",
+              "대전",
+              "세종",
+              "전라",
+              "경상",
+              "제주",
+              "부산",
+              "대구",
+              "울산",
+              "광주",
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "디자인 기술",
+            items: [
+              "도면",
+              "3D",
+              "컨셉 보드",
+              "제품 리스트",
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "디자인 제안 방식",
+            items: [
+              "PPT",
+              "SHEETS",
+              "문서",
+              "카톡",
+              "전화",
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "스타일링 횟수",
+            items: [
+              "2회",
+              "3회",
+              "4회",
+              "5회 이상"
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "구매 대행 여부",
+            items: [
+              "진행",
+              "안 함",
+            ],
+            multiple: false,
+            type: "radio",
+          },
+          {
+            name: "제작 가능",
+            items: [
+              "가구",
+              "패브릭"
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "시공 능력",
+            items: [
+              "1단계",
+              "2단계",
+              "3단계",
+              "4단계",
+            ],
+            multiple: false,
+            type: "radio",
+          },
+          {
+            name: "스타일 경향성",
+            items: [
+              { name: "모던", range: [ 0, 5 ] },
+              { name: "글램", range: [ 0, 5 ] },
+              { name: "코지", range: [ 0, 5 ] },
+              { name: "엔틱", range: [ 0, 5 ] },
+              { name: "내추럴", range: [ 0, 5 ] },
+              { name: "미니멈", range: [ 0, 5 ] },
+            ],
+            multiple: true,
+            type: "rangecheckbox",
+          },
+          {
+            name: "디자이너 성격",
+            items: [
+              "착함",
+              "나쁨",
+              "돈밝힘",
+              "성실함",
+              "게으름",
+              "위험함",
+              "쿨함"
+            ],
+            multiple: true,
+            type: "checkbox",
+          },
+          {
+            name: "홈리에종 관계",
+            items: [
+              "매우 좋음",
+              "그냥 평범",
+              "좋지 않음",
+            ],
+            multiple: false,
+            type: "radio",
+          },
+          {
+            name: "디자이너 태그",
+            items: [],
+            multiple: true,
+            type: "multipletext",
+          }
+        ];
+        checkListBase = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          width: String(checkListWidth - checkListMargin) + ea,
+          top: String(0) + ea,
+          left: String(leftMargin) + ea,
+          height: String(100) + '%',
+          borderRadius: String(5) + ea,
+          border: "1px solid " + GeneralJs.colorChip.gray3,
+          background: GeneralJs.colorChip.gray1,
+        };
+        for (let i in style) {
+          checkListBase.style[i] = style[i];
+        }
+        checkListBaseWhite = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          height: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          top: String(matrixMargin * 2) + ea,
+          left: String(matrixMargin * 2) + ea,
+          borderRadius: String(5) + ea,
+          background: GeneralJs.colorChip.white,
+        };
+        for (let i in style) {
+          checkListBaseWhite.style[i] = style[i];
+        }
+        for (let i = 0; i < checkList.length; i++) {
+
+        }
+        checkListBase.appendChild(checkListBaseWhite);
+        div_clone.appendChild(checkListBase);
 
         //base
         matrixBase = GeneralJs.nodes.div.cloneNode(true);
         style = {
           position: "absolute",
           top: String(0) + ea,
-          left: String(leftMargin) + ea,
-          width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+          left: String(leftMargin + checkListWidth) + ea,
+          width: "calc(100% - " + String((leftMargin * 2) + checkListWidth) + ea + ")",
           height: String(100) + '%',
-          background: "white",
+          background: GeneralJs.colorChip.white,
         };
         for (let i in style) {
           matrixBase.style[i] = style[i];
@@ -3106,9 +3274,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           right: String(0) + ea,
           width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
           height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
-          background: "#f2f2f2",
+          background: GeneralJs.colorChip.gray1,
           borderRadius: String(5) + ea,
-          border: "1px solid #dddddd",
+          border: "1px solid " + GeneralJs.colorChip.gray3,
         };
         for (let i in style) {
           matrix.style[i] = style[i];
@@ -3120,7 +3288,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           width: "calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ")",
           height: "calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ")",
           borderRadius: String(5) + ea,
-          background: "white",
+          background: GeneralJs.colorChip.white,
           overflow: "hidden",
         };
 
@@ -3183,7 +3351,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
 
             if (this.getAttribute("toggle") === "off") {
               this.style.background = "#2fa678";
-              this.style.color = "white";
+              this.style.color = GeneralJs.colorChip.white;
               this.firstChild.textContent = this.getAttribute("name") + " : " + this.getAttribute("original");
               this.setAttribute("toggle", "on");
             } else if (this.getAttribute("toggle") === "on") {
@@ -3209,19 +3377,19 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 friends[i].style.color = "transparent";
               }
               friends[friends.length - 1].style.color = "transparent";
-              invisible.style.color = "white";
+              invisible.style.color = GeneralJs.colorChip.white;
               invisible.firstChild.style.zIndex = String(1);
             } else {
               for (let i = 0; i < friends.length - 1; i++) {
                 if (friends[i].getAttribute("toggle") === "on") {
-                  friends[i].style.color = "white";
+                  friends[i].style.color = GeneralJs.colorChip.white;
                 } else {
                   friends[i].style.color = "#dddddd";
                 }
                 friends[i].style.borderBottom = "1px dashed #dddddd";
               }
               if (friends[friends.length - 1].getAttribute("toggle") === "on") {
-                friends[friends.length - 1].style.color = "white";
+                friends[friends.length - 1].style.color = GeneralJs.colorChip.white;
               } else {
                 friends[friends.length - 1].style.color = "#dddddd";
               }
@@ -3311,7 +3479,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             } else {
               zTitleBox.setAttribute("toggle", "on");
               style2.background = "#2fa678";
-              style2.color = "white";
+              style2.color = GeneralJs.colorChip.white;
             }
 
             for (let k in style2) {
@@ -3340,7 +3508,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               }
               totalMatrix[x][y][z].style.color = "transparent";
             }
-            invisible.style.color = "white";
+            invisible.style.color = GeneralJs.colorChip.white;
             invisible.firstChild.style.zIndex = String(1);
           }
 
@@ -3499,7 +3667,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           left: String(leftMargin) + ea,
           width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
           height: String(100) + '%',
-          background: "white",
+          background: GeneralJs.colorChip.white,
         };
         for (let i in style) {
           matrixBase.style[i] = style[i];
@@ -3525,7 +3693,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           width: "calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ")",
           height: "calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ")",
           borderRadius: String(5) + ea,
-          background: "white",
+          background: GeneralJs.colorChip.white,
           overflow: "hidden",
           border: "1px solid #dddddd",
           cursor: "pointer",
@@ -3782,8 +3950,6 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           GeneralJs.timeouts["whiteConvertMatrixReturn"] = null;
         }, 301);
 
-      } else {
-        //pass
       }
 
     } catch (e) {
@@ -3918,7 +4084,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     style = {
       position: "fixed",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       top: String(margin) + ea,
       left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
       borderRadius: String(5) + ea,
@@ -4302,7 +4468,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
         style = {
           position: "absolute",
-          background: "white",
+          background: GeneralJs.colorChip.white,
           top: String(whiteTop) + ea,
           left: String(whiteLeft) + ea,
           boxShadow: "0px 4px 14px -8px #808080",
@@ -4467,7 +4633,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           position: "relative",
           width: String(100) + '%',
           height: String(itemHeight) + ea,
-          background: "white",
+          background: GeneralJs.colorChip.white,
           boxShadow: "0px 2px 14px -8px #808080",
           borderRadius: String(3) + ea,
           marginBottom: String(5) + ea,
@@ -5874,7 +6040,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
       div_clone.classList.add("totalWhite");
       style = {
         position: "fixed",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,
@@ -6023,7 +6189,7 @@ DesignerJs.prototype.backGrayBar = function () {
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: String(this.grayBarWidth) + ea,
     height: String(100) + "vh",
     top: String(0) + ea,
@@ -6087,7 +6253,7 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
       div_clone.classList.add("totalWhite");
       style = {
         position: "fixed",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,

@@ -4026,7 +4026,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     width: String(500) + ea,
     height: String(30) + ea,
     fontSize: String(29) + ea,
-    fontWeight: String(100),
+    fontWeight: String(200),
     border: String(0) + ea,
     outline: String(0) + ea,
     color: "#404040",
