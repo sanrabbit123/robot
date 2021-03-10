@@ -102,7 +102,7 @@ ParsingHangul.prototype.fixDir = async function (target) {
 
     this.setMap();
 
-    tree = treeParsing(target);
+    tree = await treeParsing(target);
     console.log("aaa2");
     await this.mother.sleep(5000);
 

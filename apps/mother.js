@@ -1139,7 +1139,7 @@ Mother.prototype.getDateMatrix = function (year, month) {
   return result;
 }
 
-Mother.prototype.treeParsing = function (target) {
+Mother.prototype.treeParsing = async function (target) {
   if (/^\./.test(target)) {
     target = process.cwd() + target.slice(1);
   }
@@ -1162,7 +1162,7 @@ Mother.prototype.treeParsing = function (target) {
     newStr = newStr.slice(0, -1);
     return newStr;
   }
-  return new Promise(function(resolve, reject) {
+  try {
     const makeFileArr = function (target) {
       const { stdout } = shell.exec(`ls -al ${shellLink(target)}`, { silent: true });
       let fileList;
@@ -1429,8 +1429,11 @@ Mother.prototype.treeParsing = function (target) {
       return finalTree;
     }
 
-    resolve(setTree(target));
-  });
+    return setTree(target);
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 Mother.prototype.returnRandoms = function () {
