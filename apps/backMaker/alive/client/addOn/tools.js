@@ -861,11 +861,7 @@ const withToolsArr = function (Clients) {
       constructor(sample) {
         for (let i in sample) {
           if (typeof sample[i] === "string") {
-            if (sample[i].length > 100) {
-              this[i] = "TEXT";
-            } else {
-              this[i] = "VARCHAR(255)";
-            }
+            this[i] = "TEXT";
           } else if (typeof sample[i] === "number") {
             this[i] = "INT(11)";
           } else if (typeof sample[i] === "boolean") {
