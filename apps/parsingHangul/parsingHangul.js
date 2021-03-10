@@ -88,7 +88,7 @@ ParsingHangul.prototype.fixString = function (ugly) {
   return assemble(newString);
 }
 
-ParsingHangul.prototype.fixDir = async function (target, callback = null) {
+ParsingHangul.prototype.fixDir = async function (target) {
   const instance = this;
   const { shell, shellLink, treeParsing } = this.mother;
   try {
