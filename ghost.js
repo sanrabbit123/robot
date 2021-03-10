@@ -144,7 +144,7 @@ Ghost.prototype.ultimateReflection = async function () {
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem, curlSystem } = this.mother;
+  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
@@ -177,14 +177,7 @@ Ghost.prototype.requestObject = async function () {
       "target": motherDir,
     };
 
-    const axios = require('axios');
-
-    axios.post(to, { "target": "__samba__/디자이너/신청자" }).then(function (response) {
-      console.log(response)
-    }).catch(function (error) {
-
-    });
-    // res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
+    res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
 
     console.log(res);
 

@@ -329,12 +329,17 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   const axios = require('axios');
   const FormData = require('form-data');
 
-  let method = "get";
-  let dataKeys = Object.keys(data);
-  let configKeys = Object.keys(config);
-  let dataBoo = false;
-  let configBoo = false;
+  let method, dataKeys, configKeys;
+  let dataBoo, configBoo, jsonBoo;
   let options;
+  let form;
+
+  method = "get";
+  dataKeys = Object.keys(data);
+  configKeys = Object.keys(config);
+  dataBoo = false;
+  configBoo = false;
+  jsonBoo = false;
 
   if (dataKeys.length === 0 && configKeys.length === 0) {
     method = "get";
@@ -351,6 +356,14 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
     method = "post";
     dataBoo = true;
     configBoo = (configKeys.length === 0) ? false : true;
+  }
+
+  if (configBoo) {
+    for (let i in config) {
+      if (/json/gi.test(config[i])) {
+        jsonBoo = true;
+      }
+    }
   }
 
   return new Promise(function (resolve, reject) {
@@ -370,28 +383,36 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       }
 
     } else if (method === "post") {
-      let form = new FormData();
-      for (let key in data) {
-        if (typeof data[key] === 'object') {
-          form.append(key, JSON.stringify(data[key]));
-        } else {
-          form.append(key, data[key]);
-        }
-      }
-      let formHeaders = form.getHeaders();
 
-      if (!configBoo) {
-        axios.post(url, form, { headers: { ...formHeaders } }).then(function (response) {
+      if (jsonBoo) {
+        axios.post(url, data, { ...config }).then(function (response) {
           resolve(response);
         }).catch(function (error) {
           reject(error);
         });
       } else {
-        axios.post(url, form, { ...config, ...({ headers: { ...formHeaders } }) }).then(function (response) {
-          resolve(response);
-        }).catch(function (error) {
-          reject(error);
-        });
+        form = new FormData();
+        for (let key in data) {
+          if (typeof data[key] === 'object') {
+            form.append(key, JSON.stringify(data[key]));
+          } else {
+            form.append(key, data[key]);
+          }
+        }
+        let formHeaders = form.getHeaders();
+        if (!configBoo) {
+          axios.post(url, form, { headers: { ...formHeaders } }).then(function (response) {
+            resolve(response);
+          }).catch(function (error) {
+            reject(error);
+          });
+        } else {
+          axios.post(url, form, { ...config, ...({ headers: { ...formHeaders } }) }).then(function (response) {
+            resolve(response);
+          }).catch(function (error) {
+            reject(error);
+          });
+        }
       }
 
     }
