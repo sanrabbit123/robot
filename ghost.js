@@ -395,7 +395,7 @@ Ghost.prototype.launching = async function () {
         } else {
           let { target } = req.body;
           target = dirParsing(target);
-          shell.exec(`node robot.js fixDir ${shellLink(target)}`, { async: true });
+          shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true });
           res.send(JSON.stringify({ message: "will do" }));
         }
       })
