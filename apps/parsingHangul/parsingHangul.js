@@ -102,12 +102,12 @@ ParsingHangul.prototype.fixDir = async function (target) {
 
     this.setMap();
 
+    tree = treeParsing(target);
+    console.log("aaa2");
     await this.mother.sleep(5000);
 
     console.log("aaa");
 
-    // tree = treeParsing(target);
-    //
     // min = tree.minLength;
     // max = tree.maxLength;
     //
