@@ -143,10 +143,12 @@ Ghost.prototype.ultimateReflection = async function () {
 
 Ghost.prototype.requestObject = function () {
   const to = "http://homeliaison.ddns.net:3000/readDir";
+  // const to = "http://homeliaison.ddns.net:3000/mkdir";
+
   let resultObj;
 
   resultObj = {
-    target: "__samba__",
+    target: "__samba__/디자이너",
   }
 
   return { json: resultObj, to };
@@ -212,7 +214,11 @@ Ghost.prototype.launching = async function () {
       }
 
       const { stdout } = shell.exec(order, { silent: true });
-      console.log(stdout);
+      if (/^[\[\{]/.test(stdout.trim())) {
+        console.log(JSON.parse(stdout.trim()));
+      } else {
+        console.log(stdout);
+      }
 
     } else if (process.argv[2] === undefined || process.argv[2] === "server") {
 
@@ -344,6 +350,24 @@ Ghost.prototype.launching = async function () {
           res.send(JSON.stringify({ stdout }));
         }
       });
+
+      app.post("/fixDir", function (req, res) {
+        const hangul = new ParsingHangul();
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.target === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'target'" }));
+        } else {
+          let { target } = req.body;
+          target = dirParsing(target);
+          hangul.fixDir(target);
+          res.send(JSON.stringify({ message: "will do" }));
+        }
+      })
 
       //server on
       http.createServer(app).listen(3000, () => {
