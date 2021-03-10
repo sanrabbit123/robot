@@ -179,7 +179,7 @@ Ghost.prototype.requestObject = async function () {
 
     res = await requestSystem(to, json);
 
-    console.log(res.data);
+    console.log(res);
 
     return { json, to };
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -217,7 +217,7 @@ Ghost.prototype.launching = async function () {
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  // app.use(bodyParser.json());
   app.use(express.static(staticFolder));
   try {
     let message = {};
