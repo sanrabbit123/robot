@@ -141,6 +141,17 @@ Ghost.prototype.ultimateReflection = async function () {
   }
 }
 
+Ghost.prototype.requestObject = function () {
+  const to = "http://homeliaison.ddns.net:3000/readDir";
+  let resultObj;
+
+  resultObj = {
+    target: "__samba__",
+  }
+
+  return { json: resultObj, to };
+}
+
 Ghost.prototype.launching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
@@ -177,6 +188,31 @@ Ghost.prototype.launching = async function () {
           console.log(err);
         });
       });
+
+    } else if (process.argv[2] === "ghost" || process.argv[2] === "request") {
+
+      const { json, to } = this.requestObject();
+      let order;
+
+      order = '';
+      order += "curl"
+      order += " ";
+      order += "-d";
+      order += " ";
+      order += "'";
+      order += JSON.stringify(json);
+      order += "'";
+      order += " ";
+      order += '-H "Content-Type: application/json" -X POST ';
+
+      if (process.argv[3] !== undefined) {
+        order += process.argv[3];
+      } else {
+        order += to;
+      }
+
+      const { stdout } = shell.exec(order, { silent: true });
+      console.log(stdout);
 
     } else if (process.argv[2] === undefined || process.argv[2] === "server") {
 
@@ -285,6 +321,7 @@ Ghost.prototype.launching = async function () {
           res.send(JSON.stringify({ error: "must be property 'target'" }));
         } else {
           let { target } = req.body;
+          target = dirParsing(target);
           fileSystem(`readDir`, [ target ]).then((list) => {
             res.send(JSON.stringify(list));
           }).catch((e) => { throw new Error(e); });
