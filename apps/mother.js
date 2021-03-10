@@ -398,55 +398,6 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
-Mother.prototype.curlSystem = function (url, data = {}, header = {}) {
-  const shell = require(`shelljs`);
-  const shellLink = function (str) {
-    let arr = str.split('/');
-    let newStr = '';
-    for (let i of arr) {
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-        newStr += i + '/';
-      } else if (!/'/g.test(i)) {
-        newStr += "'" + i + "'" + '/';
-      } else if (!/"/g.test(i)) {
-        newStr += '"' + i + '"' + '/';
-      } else {
-        newStr += i + '/';
-      }
-    }
-    newStr = newStr.slice(0, -1);
-    return newStr;
-  }
-  const dataKeys = Object.keys(data);
-  let order;
-  order = '';
-  order += "curl"
-  order += " ";
-  if (dataKeys.length > 0) {
-    order += "-d";
-    order += " ";
-    order += "'";
-    order += JSON.stringify(data);
-    order += "'";
-    order += " ";
-    order += '-H "Content-Type: application/json" -X POST ';
-  }
-  order += shellLink(url);
-  return new Promise(function (resolve, reject) {
-    shell.exec(order, { async: true, silent: true }, function (err, stdout, stderr) {
-      if (err) {
-        reject(err);
-      } else {
-        if (/^[\[\{]/.test(stdout.trim())) {
-          resolve(JSON.parse(stdout.trim()));
-        } else {
-          resolve(stdout);
-        }
-      }
-    });
-  });
-}
-
 Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postData = {}, customMethod = "GET") {
   let meth = "GET";
   let postKeys = Object.keys(postData);

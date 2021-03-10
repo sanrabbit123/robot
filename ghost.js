@@ -177,7 +177,14 @@ Ghost.prototype.requestObject = async function () {
       "target": motherDir,
     };
 
-    res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
+    const axios = require('axios');
+
+    axios.post(to, { "target": "__samba__/디자이너/신청자" }).then(function (response) {
+      console.log(response)
+    }).catch(function (error) {
+
+    });
+    // res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
 
     console.log(res);
 
@@ -213,11 +220,14 @@ Ghost.prototype.launching = async function () {
   const express = require("express");
   const app = express();
   const bodyParser = require("body-parser");
+  const multer = require("multer");
+  const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
-  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  app.use(multiForms.array());
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.static(staticFolder));
   try {
     let message = {};
