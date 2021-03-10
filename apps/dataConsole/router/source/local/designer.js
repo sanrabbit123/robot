@@ -3054,7 +3054,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         div_clone = contentsArea.cloneNode(false);
         div_clone.style.animation = "fadeinlite 0.3s ease forwards";
 
-        const { matrixA, values } = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixA", "/designerMatrix"));
+        const { matrixA, analytics, values } = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixA", "/designerMatrix"));
+        const { region, tools, designMethod, designNumber, purchase, makeAble, construct, style: analyticsStyle, personality, relation } = analytics;
         const { xValues, yValues, zValues } = values;
         const classNameConst = "designerMatrixFactor";
 
@@ -3078,7 +3079,15 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         let x, y, z;
         let checkList;
         let checkListBase, checkListBaseWhite;
+        let checkListFactor, checkListFactorTitle, checkListFactorContents, checkListFactorContentsItem, checkListFactorContentsItemText, checkListFactorContentsItemText2;
         let checkListWidth, checkListMargin;
+        let minimumButtonWidth;
+        let checkDivideNum;
+        let checkNum;
+        let checkBoxEvent, radioEvent, rangeEvent;
+        let styleFactorTitle;
+        let checkFactorButtonMargin;
+        let designNumberArr, purchaseArr, constructArr, relationArr;
 
         totalMatrix = [];
         leftWordWidth = 30;
@@ -3086,13 +3095,32 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         margin = 10;
         matrixMargin = 8;
         boxNumber = xValues.length * yValues.length;
-        checkListWidth = 480;
-        checkListMargin = 23;
+        checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
+        checkListMargin = 20;
+        minimumButtonWidth = 75;
+        checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
+        checkFactorButtonMargin = 5;
+
+        console.log(analytics);
+
+        designNumberArr = [];
+        for (let i = designNumber.min; i < designNumber.max + 1; i++) {
+          designNumberArr.push(String(i) + '회');
+        }
+        purchaseArr = [];
+        if (purchase) {
+          purchaseArr.push("진행");
+        } else {
+          purchaseArr.push("안 함");
+        }
+        constructArr = [ String(construct) + "단계" ];
+        relationArr = [ relation ];
 
         //check list base
         checkList = [
           {
             name: "서비스 가능 지역",
+            column: "region",
             items: [
               "서울",
               "인천",
@@ -3110,10 +3138,12 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               "광주",
             ],
             multiple: true,
-            type: "checkbox",
+            type: "string",
+            value: region
           },
           {
             name: "디자인 기술",
+            column: "tools",
             items: [
               "도면",
               "3D",
@@ -3121,10 +3151,12 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               "제품 리스트",
             ],
             multiple: true,
-            type: "checkbox",
+            type: "string",
+            value: tools
           },
           {
             name: "디자인 제안 방식",
+            column: "designMethod",
             items: [
               "PPT",
               "SHEETS",
@@ -3133,39 +3165,50 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               "전화",
             ],
             multiple: true,
-            type: "checkbox",
+            type: "string",
+            value: designMethod
           },
           {
             name: "스타일링 횟수",
+            column: "designNumber",
             items: [
               "2회",
               "3회",
               "4회",
-              "5회 이상"
+              "5회",
+              "6회",
+              "7회",
+              "8회",
             ],
             multiple: true,
-            type: "checkbox",
+            type: "range",
+            value: designNumberArr
           },
           {
             name: "구매 대행 여부",
+            column: "purchase",
             items: [
-              "진행",
               "안 함",
+              "진행",
             ],
             multiple: false,
-            type: "radio",
+            type: "boolean",
+            value: purchaseArr
           },
           {
             name: "제작 가능",
+            column: "makeAble",
             items: [
               "가구",
               "패브릭"
             ],
             multiple: true,
-            type: "checkbox",
+            type: "string",
+            value: makeAble
           },
           {
             name: "시공 능력",
+            column: "construct",
             items: [
               "1단계",
               "2단계",
@@ -3173,23 +3216,27 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               "4단계",
             ],
             multiple: false,
-            type: "radio",
+            type: "number",
+            value: constructArr
           },
           {
             name: "스타일 경향성",
+            column: "style",
             items: [
-              { name: "모던", range: [ 0, 5 ] },
-              { name: "글램", range: [ 0, 5 ] },
-              { name: "코지", range: [ 0, 5 ] },
-              { name: "엔틱", range: [ 0, 5 ] },
-              { name: "내추럴", range: [ 0, 5 ] },
-              { name: "미니멈", range: [ 0, 5 ] },
+              { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
+              { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
+              { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
+              { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
+              { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
+              { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
             ],
             multiple: true,
-            type: "rangecheckbox",
+            type: "object",
+            value: []
           },
           {
             name: "디자이너 성격",
+            column: "personality",
             items: [
               "착함",
               "나쁨",
@@ -3200,31 +3247,28 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               "쿨함"
             ],
             multiple: true,
-            type: "checkbox",
+            type: "string",
+            value: personality
           },
           {
             name: "홈리에종 관계",
+            column: "relation",
             items: [
               "매우 좋음",
               "그냥 평범",
               "좋지 않음",
             ],
             multiple: false,
-            type: "radio",
-          },
-          {
-            name: "디자이너 태그",
-            items: [],
-            multiple: true,
-            type: "multipletext",
+            type: "string",
+            value: relationArr
           }
         ];
         checkListBase = GeneralJs.nodes.div.cloneNode(true);
         style = {
           position: "absolute",
-          width: String(checkListWidth - checkListMargin) + ea,
+          width: String(checkListWidth - (checkListMargin / 2)) + ea,
           top: String(0) + ea,
-          left: String(leftMargin) + ea,
+          right: String(leftMargin) + ea,
           height: String(100) + '%',
           borderRadius: String(5) + ea,
           border: "1px solid " + GeneralJs.colorChip.gray3,
@@ -3235,19 +3279,350 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         }
         checkListBaseWhite = GeneralJs.nodes.div.cloneNode(true);
         style = {
-          position: "absolute",
-          width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-          height: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-          top: String(matrixMargin * 2) + ea,
-          left: String(matrixMargin * 2) + ea,
+          position: "relative",
+          width: "calc(100% - " + String(matrixMargin * 8) + ea + ")",
+          height: "calc(100% - " + String(matrixMargin * 8) + ea + ")",
+          marginTop: String(matrixMargin * 2) + ea,
+          marginLeft: String(matrixMargin * 2) + ea,
+          padding: String(matrixMargin * 2) + ea,
           borderRadius: String(5) + ea,
           background: GeneralJs.colorChip.white,
+          overflow: "scroll",
         };
         for (let i in style) {
           checkListBaseWhite.style[i] = style[i];
         }
-        for (let i = 0; i < checkList.length; i++) {
 
+        checkBoxEvent = function (e) {
+          const column = this.getAttribute("column");
+          const type = this.getAttribute("type");
+          const { children: siblings } = this.parentElement;
+          let resultObj, sortArray;
+
+          if (this.getAttribute("toggle") === "off") {
+            this.style.background = GeneralJs.colorChip.green;
+            this.children[0].style.color = GeneralJs.colorChip.white;
+            this.setAttribute("toggle", "on");
+          } else {
+            this.style.background = GeneralJs.colorChip.gray1;
+            this.children[0].style.color = GeneralJs.colorChip.deactive;
+            this.setAttribute("toggle", "off");
+          }
+
+          resultObj = {};
+          resultObj["analytics." + column] = [];
+          sortArray = [];
+          for (let dom of siblings) {
+            if (dom.getAttribute("toggle") === "on") {
+              if (type === "number") {
+                resultObj["analytics." + column].push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
+              } else if (type === "boolean") {
+                resultObj["analytics." + column].push(!/[안미비]/gi.test(dom.getAttribute("value")));
+              } else if (type === "range") {
+                sortArray.push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
+              } else {
+                resultObj["analytics." + column].push(dom.getAttribute("value"));
+              }
+            }
+          }
+
+          if (type === "range") {
+            if (sortArray.length > 0) {
+              sortArray.sort();
+              resultObj["analytics." + column] = {
+                min: sortArray[0],
+                max: sortArray[sortArray.length - 1]
+              };
+            } else {
+              resultObj["analytics." + column] = {
+                min: 2,
+                max: 2
+              };
+            }
+          }
+
+          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(resultObj), "/designerMatrix", function(res) {});
+        }
+
+        radioEvent = function (e) {
+          const column = this.getAttribute("column");
+          const type = this.getAttribute("type");
+          const { children: siblings } = this.parentElement;
+          let resultObj;
+
+          resultObj = {};
+
+          if (this.getAttribute("toggle") === "off") {
+            this.style.background = GeneralJs.colorChip.green;
+            this.children[0].style.color = GeneralJs.colorChip.white;
+            this.setAttribute("toggle", "on");
+            for (let dom of siblings) {
+              if (dom !== this) {
+                dom.setAttribute("toggle", "off");
+                dom.style.background = GeneralJs.colorChip.gray1;
+                dom.children[0].style.color = GeneralJs.colorChip.deactive;
+              }
+            }
+          } else {
+            this.style.background = GeneralJs.colorChip.gray1;
+            this.children[0].style.color = GeneralJs.colorChip.deactive;
+            this.setAttribute("toggle", "off");
+            for (let dom of siblings) {
+              if (dom !== this) {
+                dom.setAttribute("toggle", "on");
+                dom.style.background = GeneralJs.colorChip.gray1;
+                dom.children[0].style.color = GeneralJs.colorChip.deactive;
+              }
+            }
+          }
+
+          if (type === "number") {
+            resultObj["analytics." + column] = Number(this.getAttribute("value").replace(/[^0-9\.\-]/g, ''));
+          } else if (type === "boolean") {
+            resultObj["analytics." + column] = !/[안미비]/gi.test(this.getAttribute("value"));
+          } else {
+            resultObj["analytics." + column] = this.getAttribute("value");
+          }
+
+          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(resultObj), "/designerMatrix", function(res) {});
+        }
+
+        rangeEvent = function (e) {
+          const column = this.getAttribute("column");
+          const nameConst = "checkListFactorContentsItemText";
+          const [ x, y, z ] = [ Number(this.getAttribute('x')), Number(this.getAttribute('y')), Number(this.getAttribute('z')) ];
+          const max = Number(this.getAttribute('max'));
+          let onTarget, offTarget;
+          let target;
+          let resultObj;
+
+          resultObj = {};
+          resultObj["analytics." + column] = {};
+
+          onTarget = [];
+          offTarget = [];
+          for (let i = 0; i < max; i++) {
+            target = document.getElementById(nameConst + String(x) + String(y) + String(i));
+            if (i <= z) {
+              onTarget.push(target);
+            } else {
+              offTarget.push(target);
+            }
+          }
+
+          for (let dom of onTarget) {
+            dom.style.background = GeneralJs.colorChip.green;
+          }
+
+          for (let dom of offTarget) {
+            dom.style.background = GeneralJs.colorChip.gray1;
+          }
+
+          document.getElementById(nameConst + String(x) + String(y) + "value").firstChild.textContent = String(z + 1);
+
+          for (let k = 0; k < checkList[x].items.length; k++) {
+            resultObj["analytics." + column][checkList[x].items[k].column] = Number(document.getElementById(nameConst + String(x) + String(k) + "value").firstChild.textContent);
+          }
+          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(resultObj), "/designerMatrix", function(res) {});
+        }
+
+        styleFactorTitle = {
+          position: "relative",
+          fontSize: String(14) + ea,
+          fontWeight: String(600),
+          color: GeneralJs.colorChip.black,
+          marginBottom: String(7) + ea,
+        };
+
+        checkNum = 0;
+        for (let { name, column, items, multiple, type, value } of checkList) {
+          checkListFactor = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "relative",
+          };
+          for (let i in style) {
+            checkListFactor.style[i] = style[i];
+          }
+
+          checkListFactorTitle = GeneralJs.nodes.div.cloneNode(true);
+          checkListFactorTitle.insertAdjacentHTML("beforeend", "<b style=\"color:" + GeneralJs.colorChip.green + "\" >" + String(checkNum + 1) + ".</b>&nbsp;" + name);
+          for (let i in styleFactorTitle) {
+            checkListFactorTitle.style[i] = styleFactorTitle[i];
+          }
+          checkListFactor.appendChild(checkListFactorTitle);
+
+          checkListFactorContents = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            position: "relative",
+            background: GeneralJs.colorChip.white,
+            borderRadius: String(5) + ea,
+            padding: String(checkFactorButtonMargin) + ea,
+            paddingRight: String(0) + ea,
+            height: String((30 * Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1))) + (checkFactorButtonMargin * (Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1)) - 1))) + ea,
+            marginBottom: String(14) + ea,
+            overflow: "hidden",
+            width: "calc(100% - " + String(checkFactorButtonMargin + 0) + ea + ")",
+            border: "1px solid " + GeneralJs.colorChip.gray2,
+          };
+          for (let i in style) {
+            checkListFactorContents.style[i] = style[i];
+          }
+          for (let i = 0; i < items.length; i++) {
+            checkListFactorContentsItem = GeneralJs.nodes.div.cloneNode(true);
+            if (value.includes(items[i])) {
+              checkListFactorContentsItem.setAttribute("toggle", "on");
+            } else {
+              checkListFactorContentsItem.setAttribute("toggle", "off");
+            }
+            style = {
+              display: (type !== "object") ? "inline-block" : "block",
+              position: "relative",
+              width: (type !== "object") ? "calc(calc(100% - " + String(checkFactorButtonMargin * (items.length <= checkDivideNum ? items.length : checkDivideNum)) + ea + ") / " + String((items.length <= checkDivideNum ? items.length : checkDivideNum)) + ")" : "calc(100% - " + String(checkFactorButtonMargin) + ea + ")",
+              height: String(30) + ea,
+              borderRadius: String(3) + ea,
+              background: (type !== "object") ? (value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1) : GeneralJs.colorChip.white,
+              marginRight: String(checkFactorButtonMargin) + ea,
+              marginBottom: String(checkFactorButtonMargin) + ea,
+              cursor: "pointer",
+              transition: "all 0s ease",
+            }
+            for (let j in style) {
+              checkListFactorContentsItem.style[j] = style[j];
+            }
+
+            if (typeof items[i] === "object") {
+              //gray back
+              checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                width: String(minimumButtonWidth) + ea,
+                height: String(30) + ea,
+                borderRadius: String(3) + ea,
+                top: String(0) + ea,
+                left: String(0),
+                background: GeneralJs.colorChip.gray0,
+                cursor: "pointer",
+                transition: "all 0s ease",
+                fontSize: String(13) + ea,
+                fontWeight: String(500),
+                color: GeneralJs.colorChip.black,
+              };
+              for (let j in style) {
+                checkListFactorContentsItemText.style[j] = style[j];
+              }
+              checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
+
+              //range number
+              checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
+              checkListFactorContentsItemText.id = "checkListFactorContentsItemText" + String(checkNum) + String(i) + "value";
+              for (let j in style) {
+                checkListFactorContentsItemText.style[j] = style[j];
+              }
+              checkListFactorContentsItemText.style.left = "";
+              checkListFactorContentsItemText.style.right = String(0);
+              checkListFactorContentsItemText2 = GeneralJs.nodes.div.cloneNode(true);
+              checkListFactorContentsItemText2.textContent = String(analyticsStyle[items[i].column]);
+              style = {
+                position: "absolute",
+                width: String(minimumButtonWidth) + ea,
+                height: String(30) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(500),
+                borderRadius: String(3) + ea,
+                top: String(checkFactorButtonMargin) + ea,
+                left: String(0),
+                textAlign: "center",
+                color: GeneralJs.colorChip.green,
+                cursor: "pointer",
+                transition: "all 0s ease",
+              };
+              for (let j in style) {
+                checkListFactorContentsItemText2.style[j] = style[j];
+              }
+              checkListFactorContentsItemText.appendChild(checkListFactorContentsItemText2);
+              checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
+
+              //ranges
+              for (let j = 0; j < items[i].range[1]; j++) {
+                checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
+                checkListFactorContentsItemText.classList.add("hoverDefault");
+                checkListFactorContentsItemText.id = "checkListFactorContentsItemText" + String(checkNum) + String(i) + String(j);
+                checkListFactorContentsItemText.setAttribute('x', String(checkNum));
+                checkListFactorContentsItemText.setAttribute('y', String(i));
+                checkListFactorContentsItemText.setAttribute('z', String(j));
+                checkListFactorContentsItemText.setAttribute('max', String(items[i].range[1]));
+                checkListFactorContentsItemText.setAttribute("column", column);
+                checkListFactorContentsItemText.setAttribute("type", type);
+                checkListFactorContentsItemText.setAttribute("value", String(j + 1));
+                style = {
+                  position: "absolute",
+                  width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].range[1] + 1)) + ea + ") / " + String(items[i].range[1]) + ")",
+                  height: String(30) + ea,
+                  borderRadius: String(3) + ea,
+                  top: String(0) + ea,
+                  left: "calc(" + String(minimumButtonWidth) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].range[1] + 1)) + ea + ") / " + String(items[i].range[1]) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
+                  background: (j < analyticsStyle[items[i].column]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1,
+                  cursor: "pointer",
+                  transition: "all 0s ease",
+                };
+                for (let k in style) {
+                  checkListFactorContentsItemText.style[k] = style[k];
+                }
+                checkListFactorContentsItemText.addEventListener("click", rangeEvent);
+                checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
+              }
+
+              //name text
+              checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
+              checkListFactorContentsItemText.textContent = items[i].name;
+              style = {
+                position: "absolute",
+                width: String(minimumButtonWidth) + ea,
+                height: String(30) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(500),
+                borderRadius: String(3) + ea,
+                top: String(checkFactorButtonMargin) + ea,
+                left: String(0),
+                textAlign: "center",
+                color: GeneralJs.colorChip.black,
+                cursor: "pointer",
+                transition: "all 0s ease",
+              }
+              for (let j in style) {
+                checkListFactorContentsItemText.style[j] = style[j];
+              }
+              checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
+            } else {
+              checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
+              checkListFactorContentsItemText.textContent = items[i];
+              style = {
+                position: "absolute",
+                width: String(100) + '%',
+                height: String(30) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(500),
+                borderRadius: String(3) + ea,
+                top: String(checkFactorButtonMargin) + ea,
+                textAlign: "center",
+                color: value.includes(items[i]) ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
+                cursor: "pointer",
+                transition: "all 0s ease",
+              }
+              for (let j in style) {
+                checkListFactorContentsItemText.style[j] = style[j];
+              }
+              checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
+              checkListFactorContentsItem.setAttribute("column", column);
+              checkListFactorContentsItem.setAttribute("type", type);
+              checkListFactorContentsItem.setAttribute("value", items[i]);
+              checkListFactorContentsItem.addEventListener("click", (multiple ? checkBoxEvent : radioEvent));
+            }
+            checkListFactorContents.appendChild(checkListFactorContentsItem);
+          }
+          checkListFactor.appendChild(checkListFactorContents);
+          checkListBaseWhite.appendChild(checkListFactor);
+          checkNum++;
         }
         checkListBase.appendChild(checkListBaseWhite);
         div_clone.appendChild(checkListBase);
@@ -3257,8 +3632,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         style = {
           position: "absolute",
           top: String(0) + ea,
-          left: String(leftMargin + checkListWidth) + ea,
-          width: "calc(100% - " + String((leftMargin * 2) + checkListWidth) + ea + ")",
+          left: String(leftMargin) + ea,
+          width: "calc(100% - " + String((leftMargin * 2) + checkListWidth + (checkListMargin / 2)) + ea + ")",
           height: String(100) + '%',
           background: GeneralJs.colorChip.white,
         };
@@ -3321,14 +3696,14 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           top: String(0) + ea,
           left: String(0) + ea,
           color: "transparent",
-          fontSize: String(38) + ea,
+          fontSize: String(34) + ea,
           fontWeight: String(400),
           fontFamily: "graphik",
         };
 
         invisibleTextStyle = {
           position: "absolute",
-          top: "calc(50% - " + String(32.5) + ea + ")",
+          top: "calc(50% - " + String(29.5) + ea + ")",
           width: String(84) + ea,
           left: "calc(50% - " + String(42) + ea + ")",
           textAlign: "center",
@@ -3454,8 +3829,10 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             invisibleText.style[j] = invisibleTextStyle[j];
           }
           invisibleText.textContent = xValues[x] + yValues[y];
+          invisibleText.setAttribute('x', x);
+          invisibleText.setAttribute('y', y);
           invisibleText.addEventListener("click", function (e) {
-            document.getElementById(classNameConst + String(x) + String(y) + String(1)).click();
+            document.getElementById(classNameConst + String(this.getAttribute('x')) + String(this.getAttribute('y')) + String(1)).click();
           });
           invisible.appendChild(invisibleText);
           matrixFactor.appendChild(invisible);

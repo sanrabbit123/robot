@@ -930,16 +930,42 @@ class DevContext extends Array {
 
 
 
+      const MONGOC = this.MONGOLOCALC;
+      const collection = "designerMatrix";
+      let matrixTong;
+      let whereQuery, updateQuery;
 
+      matrixTong = await back.mongoRead(collection, {}, { selfMongo: MONGOC });
+      console.log(matrixTong);
 
-      console.log("hello?");
-      console.log("hello?");
-      console.log("hello?");
-      console.log("hello?");
-      console.log("hello?");
-      console.log("hello?");
-      console.log("hello?");
-
+      // for (let { desid } of matrixTong) {
+      //   whereQuery = { desid };
+      //   updateQuery = {};
+      //   updateQuery["analytics"] = {
+      //     region: [],
+      //     tools: [],
+      //     designMethod: [],
+      //     designNumber: {
+      //       min: 2,
+      //       max: 3,
+      //     },
+      //     purchase: false,
+      //     makeAble: [],
+      //     construct: 1,
+      //     style: {
+      //       modern: 1,
+      //       glam: 1,
+      //       cozy: 1,
+      //       antique: 1,
+      //       natural: 1,
+      //       minimum: 1,
+      //     },
+      //     personality: [],
+      //     relation: "그냥 평범",
+      //   };
+      //
+      //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { console: true });
+      // }
 
 
 

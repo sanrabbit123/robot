@@ -1068,7 +1068,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           date: today
         };
 
-        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { local: null, console: true, selfMongo: null }).catch(function (e) {
+        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { local: null, local: true, selfMongo: null }).catch(function (e) {
           throw new Error(e);
         });
 
@@ -2632,15 +2632,17 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
       let json;
       let standardA, standardB;
       let today;
+      let whereQuery, updateQuery;
 
       responseObj = {};
 
       if (button === "get") {
-        thisObjs = await back.mongoRead("designerMatrix", { desid }, { console: true });
+        thisObjs = await back.mongoRead("designerMatrix", { desid }, { local: true });
         if (thisObjs.length > 0) {
           thisObj = thisObjs[0];
           responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
           responseObj["values"] = thisObj.matrix[req.body.target].standard;
+          responseObj["analytics"] = thisObj.analytics;
         } else {
           today = new Date();
           standardA = {
@@ -2716,9 +2718,31 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
                 value: matrixB,
                 update: today,
               },
+            },
+            analytics: {
+              region: [],
+              tools: [],
+              designMethod: [],
+              designerNumber: {
+                min: 2,
+                max: 3,
+              },
+              purchase: false,
+              makeAble: [],
+              construct: 1,
+              style: {
+                modern: 1,
+                glam: 1,
+                cozy: 1,
+                antique: 1,
+                natural: 1,
+                minimum: 1,
+              },
+              personality: [],
+              relation: "그냥 평범",
             }
           };
-          await back.mongoCreate("designerMatrix", json, { console: true });
+          await back.mongoCreate("designerMatrix", json, { local: true });
 
           responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
           responseObj["values"] = thisObj.matrix[req.body.target].standard;
@@ -2726,10 +2750,14 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
       } else if (button === "update") {
         if (req.body.matrixA !== undefined) {
           matrixA = JSON.parse(req.body.matrixA);
-          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixA.value": matrixA, "matrix.matrixA.update": (new Date()) } ], { console: true });
-        } else {
+          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixA.value": matrixA, "matrix.matrixA.update": (new Date()) } ], { local: true });
+        } else if (req.body.matrixB !== undefined) {
           matrixB = JSON.parse(req.body.matrixB);
-          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixB.value": matrixB, "matrix.matrixB.update": (new Date()) } ], { console: true });
+          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixB.value": matrixB, "matrix.matrixB.update": (new Date()) } ], { local: true });
+        } else {
+          whereQuery = { desid };
+          updateQuery = JSON.parse(req.body.update);
+          await back.mongoUpdate("designerMatrix", [ whereQuery, updateQuery ], { local: true });
         }
       }
 
