@@ -174,10 +174,10 @@ Ghost.prototype.requestObject = async function () {
     // }
 
     json = {
-      target: motherDir,
+      "target": motherDir,
     };
 
-    res = await requestSystem(to, json);
+    res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
 
     console.log(res);
 
@@ -216,8 +216,8 @@ Ghost.prototype.launching = async function () {
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   app.use(useragent.express());
-  app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
   app.use(express.static(staticFolder));
   try {
     let message = {};
