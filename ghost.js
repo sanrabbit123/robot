@@ -158,21 +158,22 @@ Ghost.prototype.requestObject = async function () {
 
     // to = "http://homeliaison.ddns.net:3000/shell";
     // to = "http://homeliaison.ddns.net:3000/readDir";
-    // to = "http://homeliaison.ddns.net:3000/fixDir";
-    to = "http://homeliaison.ddns.net:3000/mkdir";
+    to = "http://homeliaison.ddns.net:3000/fixDir";
+    // to = "http://homeliaison.ddns.net:3000/mkdir";
 
-    const motherDir = "__samba__/디자이너/신청자";
-    let orders, aspirants;
-
-    orders = [];
-
-    aspirants = await back.getAspirantsByQuery({}, { selfMongo: MONGOLOCALC });
-    for (let a of aspirants) {
-      orders.push(motherDir + "/" + a.aspid + "_" + a.designer);
-    }
+    const motherDir = "__samba__/디자이너";
+    // const motherDir = "__samba__/디자이너/신청자";
+    // let orders, aspirants;
+    //
+    // orders = [];
+    //
+    // aspirants = await back.getAspirantsByQuery({}, { selfMongo: MONGOLOCALC });
+    // for (let a of aspirants) {
+    //   orders.push(motherDir + "/" + a.aspid + "_" + a.designer);
+    // }
 
     json = {
-      target: orders,
+      target: motherDir,
     };
 
     return { json, to };
@@ -228,7 +229,7 @@ Ghost.prototype.launching = async function () {
 
     } else if (process.argv[2] === "ghost" || process.argv[2] === "request") {
 
-      const { json, to } = this.requestObject();
+      const { json, to } = await this.requestObject();
       let order;
 
       order = '';
@@ -242,11 +243,7 @@ Ghost.prototype.launching = async function () {
       order += " ";
       order += '-H "Content-Type: application/json" -X POST ';
 
-      if (process.argv[3] !== undefined) {
-        order += process.argv[3];
-      } else {
-        order += to;
-      }
+      order += to;
 
       const { stdout } = shell.exec(order, { silent: true });
       if (/^[\[\{]/.test(stdout.trim())) {
@@ -386,7 +383,7 @@ Ghost.prototype.launching = async function () {
         }
       });
 
-      app.post("/fixDir", function (req, res) {
+      app.post("/fixDir", async function (req, res) {
         const hangul = new ParsingHangul();
         res.set({
           "Content-Type": "application/json",
@@ -394,21 +391,25 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        if (req.body.target === undefined) {
-          res.send(JSON.stringify({ error: "must be property 'target'" }));
-        } else {
-          let { target } = req.body;
-          target = dirParsing(target);
-          hangul.fixDirPromise(target).then(function (tree) {
-            console.log("done");
-            process.exit();
-          }).catch(function (err) {
-            console.log(err);
-            process.exit();
-          });
-          res.send(JSON.stringify({ message: "will do" }));
+        try {
+          if (req.body.target === undefined) {
+            res.send(JSON.stringify({ error: "must be property 'target'" }));
+          } else {
+            let { target } = req.body;
+            target = dirParsing(target);
+            hangul.fixDirPromise(target).then(function (tree) {
+              console.log("done");
+              process.exit();
+            }).catch(function (err) {
+              console.log(err);
+              process.exit();
+            });
+            res.send(JSON.stringify({ message: "will do" }));
+          }
+        } catch (e) {
+          console.log(e);
         }
-      })
+      });
 
       //server on
       http.createServer(app).listen(3000, () => {
