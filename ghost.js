@@ -177,9 +177,9 @@ Ghost.prototype.requestObject = async function () {
       "target": motherDir,
     };
 
-    res = await requestSystem(to, { "target": "http://homeliaison.ddns.net:3000/readDir" }, { "Content-Type": "application/json" });
+    res = await requestSystem(to, json, { "Content-Type": "application/json" });
 
-    console.log(res);
+    console.log(res.data);
 
     return { json, to };
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
