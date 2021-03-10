@@ -37,6 +37,7 @@ const Ghost = function () {
   this.sheets = new GoogleSheet();
   this.address = ADDRESS;
   this.schedule = schedule;
+  this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
 }
 
 Ghost.prototype.objectToCron = function (obj = {}) {
@@ -184,7 +185,7 @@ Ghost.prototype.launching = async function () {
           dir = dir.replace(/__home__/, process.env.HOME);
         }
         if (/__samba__/g.test(dir)) {
-          dir = dir.replace(/__samba__/, process.env.HOME + "/samba/drive/HomeLiaisonServer");
+          dir = dir.replace(/__samba__/, instance.homeliaisonServer);
         }
         return dir;
       }

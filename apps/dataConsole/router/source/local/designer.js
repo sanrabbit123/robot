@@ -1900,7 +1900,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     convertIcon.style[i] = style[i];
   }
   convertIcon.style.right = String(leftMargin + (leftMargin * (50 / 60))) + ea;
-  convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (11 / 60))) + ea;
+  convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60))) + ea;
   div_clone2.appendChild(convertIcon);
 
   //m initial button
