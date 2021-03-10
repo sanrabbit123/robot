@@ -144,7 +144,7 @@ Ghost.prototype.ultimateReflection = async function () {
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem, requestSystem } = this.mother;
+  const { shell, shellLink, fileSystem, s3FileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
