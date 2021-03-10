@@ -225,6 +225,22 @@ Robot.prototype.clientReportToSheets = async function () {
   }
 }
 
+Robot.prototype.fixDir = async function (target) {
+  try {
+    const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+    const hangul = new ParsingHangul();
+    hangul.fixDirPromise(target).then(function (tree) {
+      console.log("done");
+      process.exit();
+    }).catch(function (err) {
+      console.log(err);
+      process.exit();
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
@@ -302,6 +318,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/clientReportToSheets/gi.test(process.argv[2])) {
       await this.clientReportToSheets();
+
+    } else if (/fixDir/gi.test(process.argv[2])) {
+      await this.fixDir(process.argv[3]);
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

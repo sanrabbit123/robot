@@ -384,7 +384,6 @@ Ghost.prototype.launching = async function () {
       });
 
       app.post("/fixDir", function (req, res) {
-        const hangul = new ParsingHangul();
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
@@ -396,7 +395,7 @@ Ghost.prototype.launching = async function () {
         } else {
           let { target } = req.body;
           target = dirParsing(target);
-          hangul.fixDir(target);
+          shell.exec(`node robot.js fixDir ${shellLink(target)}`, { async: true });
           res.send(JSON.stringify({ message: "will do" }));
         }
       })
