@@ -88,64 +88,28 @@ ParsingHangul.prototype.fixString = function (ugly) {
   return assemble(newString);
 }
 
-ParsingHangul.prototype.fixDir = function (target, callback = null) {
+ParsingHangul.prototype.fixDir = async function (target, callback = null) {
   const instance = this;
   const { shell, shellLink, treeParsing } = this.mother;
-  let boo, fixedString;
-  let temp;
-  let fixedAbsolute;
-  let min, max;
-  let tree;
-  let finalTarget;
-  let arr;
+  try {
+    let boo, fixedString;
+    let temp;
+    let fixedAbsolute;
+    let min, max;
+    let tree;
+    let finalTarget;
+    let arr;
 
-  this.setMap();
+    this.setMap();
 
-  tree = treeParsing(target);
+    tree = treeParsing(target);
 
-  min = tree.minLength;
-  max = tree.maxLength;
-
-  fixedString = null;
-  boo = false;
-  for (let { fileName, absolute } of tree.returnIndexFlat(min)) {
-    boo = false;
-    for (let i of fileName) {
-      if (this.problemsCodes.includes(i.charCodeAt(0))) {
-        boo = true;
-      }
-    }
-    if (boo) {
-      fixedString = this.fixString(fileName);
-      temp = absolute.split("/");
-      temp.pop();
-      fixedAbsolute = temp.join("/") + "/" + fixedString;
-      shell.exec(`mv ${shellLink(absolute)} ${shellLink(fixedAbsolute)}`);
-      console.log(`fix ${fixedString}`);
-    }
-  }
-
-  if (fixedString === null) {
-    finalTarget = tree.target;
-  } else {
-    temp = target.split("/");
-    temp.pop();
-    finalTarget = temp.join("/") + "/" + fixedString;
-  }
-
-  console.log(`target set : min(${String(min)}), max(${String(max)})`);
-
-  tree = treeParsing(finalTarget);
-
-  for (let i = min + 1; i < max + 1; i++) {
-    tree = treeParsing(finalTarget);
-    console.log(`tree reload`);
-    arr = tree.returnIndexFlat(i);
-    console.log(`find index ${String(i)} flat`);
+    min = tree.minLength;
+    max = tree.maxLength;
 
     fixedString = null;
     boo = false;
-    for (let { fileName, absolute } of arr) {
+    for (let { fileName, absolute } of tree.returnIndexFlat(min)) {
       boo = false;
       for (let i of fileName) {
         if (this.problemsCodes.includes(i.charCodeAt(0))) {
@@ -161,12 +125,49 @@ ParsingHangul.prototype.fixDir = function (target, callback = null) {
         console.log(`fix ${fixedString}`);
       }
     }
-  }
 
-  if (callback !== null) {
-    callback(tree);
-  }
+    if (fixedString === null) {
+      finalTarget = tree.target;
+    } else {
+      temp = target.split("/");
+      temp.pop();
+      finalTarget = temp.join("/") + "/" + fixedString;
+    }
 
+    console.log(`target set : min(${String(min)}), max(${String(max)})`);
+
+    tree = treeParsing(finalTarget);
+
+    for (let i = min + 1; i < max + 1; i++) {
+      tree = treeParsing(finalTarget);
+      console.log(`tree reload`);
+      arr = tree.returnIndexFlat(i);
+      console.log(`find index ${String(i)} flat`);
+
+      fixedString = null;
+      boo = false;
+      for (let { fileName, absolute } of arr) {
+        boo = false;
+        for (let i of fileName) {
+          if (this.problemsCodes.includes(i.charCodeAt(0))) {
+            boo = true;
+          }
+        }
+        if (boo) {
+          fixedString = this.fixString(fileName);
+          temp = absolute.split("/");
+          temp.pop();
+          fixedAbsolute = temp.join("/") + "/" + fixedString;
+          shell.exec(`mv ${shellLink(absolute)} ${shellLink(fixedAbsolute)}`);
+          console.log(`fix ${fixedString}`);
+        }
+      }
+    }
+
+    return tree;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ParsingHangul.prototype.fixDirPromise = function (target) {

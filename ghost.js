@@ -383,7 +383,7 @@ Ghost.prototype.launching = async function () {
         }
       });
 
-      app.post("/fixDir", async function (req, res) {
+      app.post("/fixDir", function (req, res) {
         const hangul = new ParsingHangul();
         res.set({
           "Content-Type": "application/json",
@@ -391,25 +391,22 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        try {
-          if (req.body.target === undefined) {
-            res.send(JSON.stringify({ error: "must be property 'target'" }));
-          } else {
-            let { target } = req.body;
-            target = dirParsing(target);
-            hangul.fixDirPromise(target).then(function (tree) {
-              console.log("done");
-              process.exit();
-            }).catch(function (err) {
-              console.log(err);
-              process.exit();
-            });
-            res.send(JSON.stringify({ message: "will do" }));
-          }
-        } catch (e) {
-          console.log(e);
+        if (req.body.target === undefined) {
+          res.send(JSON.stringify({ error: "must be property 'target'" }));
+        } else {
+          let { target } = req.body;
+          target = dirParsing(target);
+          console.log(1);
+          hangul.fixDirPromise(target).then(function (tree) {
+            console.log("done");
+            process.exit();
+          }).catch(function (err) {
+            console.log(err);
+            process.exit();
+          });
+          res.send(JSON.stringify({ message: "will do" }));
         }
-      });
+      })
 
       //server on
       http.createServer(app).listen(3000, () => {
