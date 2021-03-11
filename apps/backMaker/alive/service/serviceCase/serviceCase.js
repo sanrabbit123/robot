@@ -33,6 +33,14 @@ ServiceCase.prototype.toNormal = function () {
   return this.value;
 }
 
+class ServiceMatrixArr extends Array {
+
+}
+
+class ServiceMatrix extends Array {
+
+}
+
 class ServiceCases extends Array {
 
   constructor(arr) {
@@ -53,6 +61,18 @@ class ServiceCases extends Array {
     } else {
       return false;
     }
+  }
+
+  getMatrix() {
+    let arr = new ServiceMatrixArr();
+    for (let i of this) {
+      arr.push(new ServiceMatrix(i.matrix));
+    }
+    return arr;
+  }
+
+  get matrix() {
+    return this.getMatrix()
   }
 
   queryCase(str) {

@@ -960,174 +960,231 @@ class DevContext extends Array {
       // }
 
 
-      let target = [
-        {
-          name: "서비스 가능 지역",
-          column: "region",
-          items: [
-            "서울",
-            "인천",
-            "경기",
-            "강원",
-            "충청",
-            "대전",
-            "세종",
-            "전라",
-            "경상",
-            "제주",
-            "부산",
-            "대구",
-            "울산",
-            "광주",
-          ],
-          multiple: true,
-          type: "string",
-        },
-        {
-          name: "디자인 기술",
-          column: "tools",
-          items: [
-            "도면",
-            "3D",
-            "컨셉 보드",
-            "제품 리스트",
-          ],
-          multiple: true,
-          type: "string",
-        },
-        {
-          name: "디자인 제안 방식",
-          column: "designMethod",
-          items: [
-            "PPT",
-            "SHEETS",
-            "문서",
-            "카톡",
-            "전화",
-          ],
-          multiple: true,
-          type: "string",
-        },
-        {
-          name: "스타일링 횟수",
-          column: "designNumber",
-          items: [
-            "2회",
-            "3회",
-            "4회",
-            "5회",
-            "6회",
-            "7회",
-            "8회",
-          ],
-          multiple: true,
-          type: "range",
-        },
-        {
-          name: "구매 대행 여부",
-          column: "purchase",
-          items: [
-            "안 함",
-            "진행",
-          ],
-          multiple: false,
-          type: "boolean",
-        },
-        {
-          name: "제작 가능",
-          column: "makeAble",
-          items: [
-            "가구",
-            "패브릭"
-          ],
-          multiple: true,
-          type: "string",
-        },
-        {
-          name: "시공 능력",
-          column: "construct",
-          items: [
-            "1단계",
-            "2단계",
-            "3단계",
-            "4단계",
-          ],
-          multiple: false,
-          type: "number",
-        },
-        {
-          name: "스타일 경향성",
-          column: "style",
-          items: [
-            { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
-            { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
-            { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
-            { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
-            { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
-            { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
-          ],
-          multiple: true,
-          type: "object",
-        },
-        {
-          name: "디자이너 성격",
-          column: "personality",
-          items: [
-            "착함",
-            "나쁨",
-            "돈밝힘",
-            "성실함",
-            "게으름",
-            "위험함",
-            "쿨함"
-          ],
-          multiple: true,
-          type: "string",
-        },
-        {
-          name: "홈리에종 관계",
-          column: "relation",
-          items: [
-            "매우 좋음",
-            "그냥 평범",
-            "좋지 않음",
-          ],
-          multiple: false,
-          type: "string",
-        }
-      ];
-      let matrix, temp;
+      // let target = [
+      //   {
+      //     name: "서비스 가능 지역",
+      //     column: "region",
+      //     items: [
+      //       "서울",
+      //       "인천",
+      //       "경기",
+      //       "강원",
+      //       "충청",
+      //       "대전",
+      //       "세종",
+      //       "전라",
+      //       "경상",
+      //       "제주",
+      //       "부산",
+      //       "대구",
+      //       "울산",
+      //       "광주",
+      //     ],
+      //     multiple: true,
+      //     type: "string",
+      //   },
+      //   {
+      //     name: "디자인 기술",
+      //     column: "tools",
+      //     items: [
+      //       "도면",
+      //       "3D",
+      //       "컨셉 보드",
+      //       "제품 리스트",
+      //     ],
+      //     multiple: true,
+      //     type: "string",
+      //   },
+      //   {
+      //     name: "디자인 제안 방식",
+      //     column: "designMethod",
+      //     items: [
+      //       "PPT",
+      //       "SHEETS",
+      //       "문서",
+      //       "카톡",
+      //       "전화",
+      //     ],
+      //     multiple: true,
+      //     type: "string",
+      //   },
+      //   {
+      //     name: "스타일링 횟수",
+      //     column: "designNumber",
+      //     items: [
+      //       "2회",
+      //       "3회",
+      //       "4회",
+      //       "5회",
+      //       "6회",
+      //       "7회",
+      //       "8회",
+      //     ],
+      //     multiple: true,
+      //     type: "range",
+      //   },
+      //   {
+      //     name: "구매 대행 여부",
+      //     column: "purchase",
+      //     items: [
+      //       "안 함",
+      //       "진행",
+      //     ],
+      //     multiple: false,
+      //     type: "boolean",
+      //   },
+      //   {
+      //     name: "제작 가능",
+      //     column: "makeAble",
+      //     items: [
+      //       "가구",
+      //       "패브릭"
+      //     ],
+      //     multiple: true,
+      //     type: "string",
+      //   },
+      //   {
+      //     name: "시공 능력",
+      //     column: "construct",
+      //     items: [
+      //       "1단계",
+      //       "2단계",
+      //       "3단계",
+      //       "4단계",
+      //     ],
+      //     multiple: false,
+      //     type: "number",
+      //   },
+      //   {
+      //     name: "스타일 경향성",
+      //     column: "style",
+      //     items: [
+      //       { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
+      //       { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
+      //       { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
+      //       { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
+      //       { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
+      //       { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
+      //     ],
+      //     multiple: true,
+      //     type: "object",
+      //   },
+      //   {
+      //     name: "디자이너 성격",
+      //     column: "personality",
+      //     items: [
+      //       "착함",
+      //       "나쁨",
+      //       "돈밝힘",
+      //       "성실함",
+      //       "게으름",
+      //       "위험함",
+      //       "쿨함"
+      //     ],
+      //     multiple: true,
+      //     type: "string",
+      //   },
+      //   {
+      //     name: "홈리에종 관계",
+      //     column: "relation",
+      //     items: [
+      //       "매우 좋음",
+      //       "그냥 평범",
+      //       "좋지 않음",
+      //     ],
+      //     multiple: false,
+      //     type: "string",
+      //   }
+      // ];
+      // let matrix, temp;
+      //
+      // matrix = [];
+      // temp = [ "" ];
+      //
+      // for (let i = 0; i < target[0].items.length; i++) {
+      //   temp.push(" ");
+      // }
+      // matrix.push(temp);
+      //
+      // for (let obj of target) {
+      //   temp = [];
+      //   temp.push(obj.name);
+      //   for (let i = 0; i < target[0].items.length; i++) {
+      //     if (obj.items[i] !== undefined) {
+      //       if (typeof obj.items[i] !== "string") {
+      //         temp.push(obj.items[i].name);
+      //       } else {
+      //         temp.push(obj.items[i]);
+      //       }
+      //     } else {
+      //       temp.push(" ");
+      //     }
+      //   }
+      //   matrix.push(temp);
+      // }
+      //
+      // console.log(matrix);
+      // console.log(await ghostRequest(`updateSheets`, {
+      //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+      //   values: matrix,
+      // }));
 
-      matrix = [];
-      temp = [ "" ];
 
-      for (let i = 0; i < target[0].items.length; i++) {
-        temp.push(" ");
-      }
-      matrix.push(temp);
 
-      for (let obj of target) {
-        temp = [];
-        temp.push(obj.name);
-        for (let i = 0; i < target[0].items.length; i++) {
-          if (obj.items[i] !== undefined) {
-            if (typeof obj.items[i] !== "string") {
-              temp.push(obj.items[i].name);
-            } else {
-              temp.push(obj.items[i]);
-            }
-          } else {
-            temp.push(" ");
-          }
-        }
-        matrix.push(temp);
-      }
+      // const clients = await back.getClientsByQuery({}, { withTools: true, selfMongo: this.MONGOLOCALC });
+      // const requestTong = clients.getRequestsTong();
+      // let history;
+      // let matrix, temp;
+      // let arr;
+      //
+      // arr = [
+      //   // { name: "8월", start: [ 2020, 6, 31 ], end: [ 2020, 8, 1 ] },
+      //   // { name: "9월", start: [ 2020, 7, 31 ], end: [ 2020, 9, 1 ] },
+      //   // { name: "10월", start: [ 2020, 8, 30 ], end: [ 2020, 10, 1 ] },
+      //   // { name: "11월", start: [ 2020, 9, 31 ], end: [ 2020, 11, 1 ] },
+      //   // { name: "12월", start: [ 2020, 10, 30 ], end: [ 2021, 0, 1 ] },
+      //   // { name: "1월", start: [ 2020, 11, 31 ], end: [ 2021, 1, 1 ] },
+      //   { name: "2월", start: [ 2021, 0, 31 ], end: [ 2021, 2, 1 ] },
+      // ];
+      //
+      // for (let { name: sheetName, start, end } of arr) {
+      //   matrix = [];
+      //   matrix = [
+      //     [ "성함", "아이디", "유출 이유", "유출 시점", "응대 기록 1", "응대 기록 2", "응대 기록 3", "응대 기록 4", "응대 기록 5", "응대 기록 6" ]
+      //   ];
+      //   for (let { name, cliid, request, analytics } of requestTong) {
+      //     if (request.timeline.valueOf() > (new Date(start[0], start[1], start[2])).valueOf()) {
+      //       if (request.timeline.valueOf() < (new Date(end[0], end[1], end[2])).valueOf()) {
+      //         if (analytics.response.status.value === "드랍") {
+      //           history = await back.getHistoryById("client", cliid, { selfMongo: this.MONGOLOCALC });
+      //           temp = [];
+      //           temp.push(name);
+      //           temp.push(cliid);
+      //           if (analytics.response.outreason.values.length > 0) {
+      //             temp.push(analytics.response.outreason.values[0]);
+      //           } else {
+      //             temp.push('');
+      //           }
+      //           temp.push(analytics.response.outspot.value);
+      //           temp.push(history.history.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           temp.push(history.space.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           temp.push(history.construct.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           temp.push(history.styling.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           temp.push(history.budget.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           temp.push(history.progress.replace(/\n/g, ' ').replace(/[\[\]\{\}\"\'\/\?]/g, ''));
+      //           matrix.push(temp);
+      //         }
+      //       }
+      //     }
+      //   }
+      //   console.log(await ghostRequest(`updateSheets`, {
+      //     id: "1XaZDtPRCAxOYj7sTqZ-scrbQtjy9IKaHNFWJgyo7wtk",
+      //     values: matrix,
+      //     sheetName: sheetName,
+      //     cleanView: true
+      //   }));
+      // }
 
-      console.log(matrix);
-      console.log(await ghostRequest(`updateSheets`, {
-        id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
-        values: matrix,
-      }));
 
 
 
