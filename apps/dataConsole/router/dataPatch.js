@@ -3267,6 +3267,153 @@ DataPatch.prototype.designerRawMap = function () {
   return { portfolioBooArr, updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets };
 }
 
+DataPatch.prototype.designerCheckList = function (valueObj) {
+  let base = [
+    {
+      name: "서비스 가능 지역",
+      column: "region",
+      items: [
+        "서울",
+        "인천",
+        "경기",
+        "강원",
+        "충청",
+        "대전",
+        "세종",
+        "전라",
+        "경상",
+        "제주",
+        "부산",
+        "대구",
+        "울산",
+        "광주",
+      ],
+      multiple: true,
+      type: "string",
+    },
+    {
+      name: "디자인 기술",
+      column: "tools",
+      items: [
+        "도면",
+        "3D",
+        "컨셉 보드",
+        "제품 리스트",
+      ],
+      multiple: true,
+      type: "string",
+    },
+    {
+      name: "디자인 제안 방식",
+      column: "designMethod",
+      items: [
+        "PPT",
+        "SHEETS",
+        "문서",
+        "카톡",
+        "전화",
+      ],
+      multiple: true,
+      type: "string",
+    },
+    {
+      name: "스타일링 횟수",
+      column: "designNumber",
+      items: [
+        "2회",
+        "3회",
+        "4회",
+        "5회",
+        "6회",
+        "7회",
+        "8회",
+      ],
+      multiple: true,
+      type: "range",
+    },
+    {
+      name: "구매 대행 여부",
+      column: "purchase",
+      items: [
+        "안 함",
+        "진행",
+      ],
+      multiple: false,
+      type: "boolean",
+    },
+    {
+      name: "제작 가능",
+      column: "makeAble",
+      items: [
+        "가구",
+        "패브릭"
+      ],
+      multiple: true,
+      type: "string",
+    },
+    {
+      name: "시공 능력",
+      column: "construct",
+      items: [
+        "1단계",
+        "2단계",
+        "3단계",
+        "4단계",
+      ],
+      multiple: false,
+      type: "number",
+    },
+    {
+      name: "스타일 경향성",
+      column: "style",
+      items: [
+        { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
+        { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
+        { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
+        { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
+        { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
+        { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
+      ],
+      multiple: true,
+      type: "object",
+    },
+    {
+      name: "디자이너 성격",
+      column: "personality",
+      items: [
+        "착함",
+        "나쁨",
+        "돈밝힘",
+        "성실함",
+        "게으름",
+        "위험함",
+        "쿨함"
+      ],
+      multiple: true,
+      type: "string",
+    },
+    {
+      name: "홈리에종 관계",
+      column: "relation",
+      items: [
+        "매우 좋음",
+        "그냥 평범",
+        "좋지 않음",
+      ],
+      multiple: false,
+      type: "string",
+    }
+  ];
+  for (let i in valueObj) {
+    for (let obj of base) {
+      if (obj.column === i) {
+        obj.value = valueObj[i];
+      }
+    }
+  }
+  return base;
+};
+
 //PROJECT ---------------------------------------------------------------------------------------
 
 DataPatch.prototype.projectDropPoint = function () {

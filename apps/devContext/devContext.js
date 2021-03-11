@@ -364,12 +364,11 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest } = this.mother;
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
       const back = new BackMaker();
-
 
       /*
 
@@ -602,10 +601,6 @@ class DevContext extends Array {
 
 
       */
-
-
-
-
 
       /*
 
@@ -927,9 +922,6 @@ class DevContext extends Array {
       // ================================================================================================================================================
       // ================================================================================================================================================
 
-
-
-
       // const MONGOC = this.MONGOLOCALC;
       // const collection = "designerMatrix";
       // let matrixTong;
@@ -967,10 +959,13 @@ class DevContext extends Array {
       //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { console: true });
       // }
 
-
-      shell.exec(`ls -al`, { silent: true }, function (err, stdout, stderr) {
-        console.log(stdout)
+      await ghostRequest(`updateSheets`, {
+        id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+        values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
+        cleanView: true
       });
+
+
 
 
 

@@ -154,6 +154,7 @@ Ghost.prototype.requestObject = async function () {
     // DEV AREA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     let to, json;
     let res;
 
@@ -177,11 +178,28 @@ Ghost.prototype.requestObject = async function () {
       "target": motherDir,
     };
 
-    res = await requestSystem(to, json, { "Content-Type": "application/json" });
+    const { data } = await requestSystem(to, json, { "Content-Type": "application/json" });
 
-    console.log(res.data);
+    console.log(data);
 
-    return { json, to };
+    let tong, targetNames;
+
+    targetNames = [
+      "등록서류",
+      "포트폴리오",
+    ];
+    tong = [];
+    // for (let folderName of data) {
+    //   if (folderName !== `.DS_Store`) {
+    //     for (let targetName of targetNames) {
+    //       tong.push(motherDir + "/" + folderName + "/" + targetName);
+    //     }
+    //   }
+    // }
+
+
+    return { json: { target: tong }, to: "http://homeliaison.ddns.net:3000/mkdir" };
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -307,7 +325,7 @@ Ghost.prototype.launching = async function () {
         }
       });
 
-      app.get("/backup", function (req, res) {
+      app.post("/backup", function (req, res) {
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
@@ -413,6 +431,77 @@ Ghost.prototype.launching = async function () {
           target = instance.dirParsing(target);
           shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true });
           res.send(JSON.stringify({ message: "will do" }));
+        }
+      });
+
+      app.post("/updateSheets", function (req, res) {
+        const sheets = new GoogleSheet();
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+
+        let id, sheetName, values, startPoint;
+        if (req.body.id === undefined || req.body.values === undefined) {
+          console.log(req.body);
+          res.send(JSON.stringify({ error: "must be property 'id, sheetName, values, startPoint'" }));
+        } else {
+          id = req.body.id;
+          values = req.body.values;
+          sheetName = "";
+          if (req.body.sheetName !== undefined) {
+            sheetName = req.body.sheetName;
+          }
+          startPoint = [ 0, 0 ];
+          if (req.body.startPoint !== undefined) {
+            startPoint = req.body.startPoint;
+          }
+          if (req.body.clean !== undefined || req.body.cleanView !== undefined) {
+            sheets.setting_cleanView_inPython(id).then(function (message) {
+              return sheets.update_value_inPython(id, sheetName, values, startPoint);
+            }).then(function (message) {
+              console.log(message);
+              console.log("done");
+            }).catch(function (err) {
+              res.send(JSON.stringify({ error: err }));
+              throw new Error(err);
+            });
+          } else {
+            sheets.update_value_inPython(id, sheetName, values, startPoint).then(function (message) {
+              console.log(message);
+              console.log("done");
+            }).catch(function (err) {
+              res.send(JSON.stringify({ error: err }));
+              throw new Error(err);
+            });
+          }
+          res.send(JSON.stringify({ message: "will do" }));
+        }
+      });
+
+      app.post("/getSheets", function (req, res) {
+        const sheets = new GoogleSheet();
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        let id, range;
+        if (req.body.id === undefined || req.body.values === undefined) {
+          console.log(req.body);
+          res.send(JSON.stringify({ error: "must be property 'id, range'" }));
+        } else {
+          id = req.body.id;
+          range = req.body.range;
+          sheets.get_value_inPython(id, range).then(function (result) {
+            res.send(JSON.stringify(result));
+          }).catch(function (err) {
+            res.send(JSON.stringify({ error: err }));
+            throw new Error(err);
+          });
         }
       });
 

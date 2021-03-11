@@ -487,6 +487,59 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
   });
 }
 
+Mother.prototype.curlSystem = function (url, data = {}, config = {}) {
+  const shell = require(`shelljs`);
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+        newStr += i + '/';
+      } else if (!/'/g.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
+  let order, dataKeys, configKeys;
+
+  dataKeys = Object.keys(data);
+  configKeys = Object.keys(config);
+
+  order = '';
+  order += "curl";
+  order += " ";
+  if (dataKeys.length > 0) {
+    order += "-d";
+    order += " ";
+    order += "'";
+    order += JSON.stringify(data);
+    order += "'";
+    order += " ";
+    order += '-H "Content-Type: application/json" -X POST ';
+  }
+  order += url;
+
+  return new Promise(function (resolve, reject) {
+    shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+      if (err) {
+        reject(err);
+      } else {
+        if (/^[\[\{]/.test(stdout.trim())) {
+          resolve(JSON.parse(stdout.trim()));
+        } else {
+          resolve(stdout.trim());
+        }
+      }
+    });
+  });
+}
+
 Mother.prototype.headRequest = function (to, port = 80, header = {}) {
   let target;
   const http = require("http");
@@ -572,6 +625,58 @@ Mother.prototype.binaryRequest = function (to, port = 80) {
     });
     req.on('error', function (e) { reject(e); });
     req.end();
+  });
+}
+
+Mother.prototype.ghostRequest = function (path, data = {}) {
+  const shell = require(`shelljs`);
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+        newStr += i + '/';
+      } else if (!/'/g.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
+  const address = require(`${process.cwd()}/apps/infoObj.js`);
+  const { ddns, port, protocol } = address.officeinfo.ghost;
+  let order, url;
+
+  url = `${protocol}://${ddns}:${String(port)}/${path}`;
+
+  order = '';
+  order += "curl";
+  order += " ";
+  order += "-d";
+  order += " ";
+  order += "'";
+  order += JSON.stringify(data);
+  order += "'";
+  order += " ";
+  order += '-H "Content-Type: application/json" -X POST ';
+  order += url;
+
+  return new Promise(function (resolve, reject) {
+    shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+      if (err) {
+        reject(err);
+      } else {
+        if (/^[\[\{]/.test(stdout.trim())) {
+          resolve(JSON.parse(stdout.trim()));
+        } else {
+          resolve(stdout.trim());
+        }
+      }
+    });
   });
 }
 
