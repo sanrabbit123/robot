@@ -458,7 +458,7 @@ Ghost.prototype.launching = async function () {
           if (req.body.startPoint !== undefined) {
             startPoint = req.body.startPoint;
           }
-          if (req.body.clean !== undefined || req.body.cleanView !== undefined) {
+          if (req.body.clean === true || req.body.cleanView === true) {
             sheets.setting_cleanView_inPython(id).then(function (message) {
               return sheets.update_value_inPython(id, sheetName, values, startPoint);
             }).then(function (message) {

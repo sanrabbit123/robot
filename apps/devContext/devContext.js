@@ -959,19 +959,202 @@ class DevContext extends Array {
       //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { console: true });
       // }
 
-      let res;
-      res = await ghostRequest(`getSheets`, {
+
+      let target = [
+        {
+          name: "서비스 가능 지역",
+          column: "region",
+          items: [
+            "서울",
+            "인천",
+            "경기",
+            "강원",
+            "충청",
+            "대전",
+            "세종",
+            "전라",
+            "경상",
+            "제주",
+            "부산",
+            "대구",
+            "울산",
+            "광주",
+          ],
+          multiple: true,
+          type: "string",
+        },
+        {
+          name: "디자인 기술",
+          column: "tools",
+          items: [
+            "도면",
+            "3D",
+            "컨셉 보드",
+            "제품 리스트",
+          ],
+          multiple: true,
+          type: "string",
+        },
+        {
+          name: "디자인 제안 방식",
+          column: "designMethod",
+          items: [
+            "PPT",
+            "SHEETS",
+            "문서",
+            "카톡",
+            "전화",
+          ],
+          multiple: true,
+          type: "string",
+        },
+        {
+          name: "스타일링 횟수",
+          column: "designNumber",
+          items: [
+            "2회",
+            "3회",
+            "4회",
+            "5회",
+            "6회",
+            "7회",
+            "8회",
+          ],
+          multiple: true,
+          type: "range",
+        },
+        {
+          name: "구매 대행 여부",
+          column: "purchase",
+          items: [
+            "안 함",
+            "진행",
+          ],
+          multiple: false,
+          type: "boolean",
+        },
+        {
+          name: "제작 가능",
+          column: "makeAble",
+          items: [
+            "가구",
+            "패브릭"
+          ],
+          multiple: true,
+          type: "string",
+        },
+        {
+          name: "시공 능력",
+          column: "construct",
+          items: [
+            "1단계",
+            "2단계",
+            "3단계",
+            "4단계",
+          ],
+          multiple: false,
+          type: "number",
+        },
+        {
+          name: "스타일 경향성",
+          column: "style",
+          items: [
+            { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
+            { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
+            { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
+            { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
+            { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
+            { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
+          ],
+          multiple: true,
+          type: "object",
+        },
+        {
+          name: "디자이너 성격",
+          column: "personality",
+          items: [
+            "착함",
+            "나쁨",
+            "돈밝힘",
+            "성실함",
+            "게으름",
+            "위험함",
+            "쿨함"
+          ],
+          multiple: true,
+          type: "string",
+        },
+        {
+          name: "홈리에종 관계",
+          column: "relation",
+          items: [
+            "매우 좋음",
+            "그냥 평범",
+            "좋지 않음",
+          ],
+          multiple: false,
+          type: "string",
+        }
+      ];
+      let matrix, temp;
+
+      matrix = [];
+      temp = [ "" ];
+
+      for (let i = 0; i < target[0].items.length; i++) {
+        temp.push(" ");
+      }
+      matrix.push(temp);
+
+      for (let obj of target) {
+        temp = [];
+        temp.push(obj.name);
+        for (let i = 0; i < target[0].items.length; i++) {
+          if (obj.items[i] !== undefined) {
+            if (typeof obj.items[i] !== "string") {
+              temp.push(obj.items[i].name);
+            } else {
+              temp.push(obj.items[i]);
+            }
+          } else {
+            temp.push(" ");
+          }
+        }
+        matrix.push(temp);
+      }
+
+      console.log(matrix);
+      console.log(await ghostRequest(`updateSheets`, {
         id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
-        range: "A1:D2"
-      });
-      console.log(res);
+        values: matrix,
+      }));
+
 
 
 
 
       // TOOLS =========================================================================================================================================
 
-      // naver blog to json
+
+      // get sheets
+
+      // console.log(await ghostRequest(`getSheets`, {
+      //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+      //   range: "A1:D2"
+      // }));
+
+
+      // update sheets
+
+      // console.log(await ghostRequest(`updateSheets`, {
+      //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+      //   values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
+      //   cleanView: true
+      // }));
+
+
+      // naverBlog to json
+
       // const blog = new NaverBlogParsing();
       // await blog.blogToJson();
 
