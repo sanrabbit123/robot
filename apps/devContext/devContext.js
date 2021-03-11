@@ -959,12 +959,12 @@ class DevContext extends Array {
       //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { console: true });
       // }
 
-      await ghostRequest(`updateSheets`, {
+      let res;
+      res = await ghostRequest(`getSheets`, {
         id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
-        values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
-        cleanView: true
+        range: "A1:D2"
       });
-
+      console.log(res);
 
 
 

@@ -490,7 +490,7 @@ Ghost.prototype.launching = async function () {
           "Access-Control-Allow-Headers": '*',
         });
         let id, range;
-        if (req.body.id === undefined || req.body.values === undefined) {
+        if (req.body.id === undefined || req.body.range === undefined) {
           console.log(req.body);
           res.send(JSON.stringify({ error: "must be property 'id, range'" }));
         } else {
