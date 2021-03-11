@@ -1185,6 +1185,128 @@ class DevContext extends Array {
       //   }));
       // }
 
+      const fileName = `${process.cwd()}/temp/rawMatrix.js`;
+
+      const rawMatrix = await ghostRequest(`getSheets`, {
+        id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+        range: "A1:S"
+      });
+      await fileSystem(`write`, [ fileName, JSON.stringify(rawMatrix, null, 2) ]);
+
+      // const rawMatrix = JSON.parse(await fileSystem(`readString`, [ fileName ]));
+
+      let matrix;
+      let tempTong, max;
+      let tong;
+      let tempNum, orderNum;
+      let from, to;
+      let finalTong;
+
+      tempTong = [];
+      for (let arr of rawMatrix) {
+        tempTong.push(arr.length);
+      }
+
+      tempTong.sort((a, b) => { return b - a; });
+      max = tempTong[0];
+
+      matrix = rawMatrix.map((arr) => {
+        const count = max - arr.length;
+        for (let i = 0; i < count; i++) {
+          arr.push('');
+        }
+        return arr;
+      });
+
+      for (let arr of matrix) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].trim().length === 0) {
+            arr[i] = '';
+          }
+        }
+      }
+
+      tong = [];
+      tempNum = 0;
+      for (let arr of matrix) {
+        if (arr[0] === '-') {
+          tong.push({
+            column: arr[2],
+            name: arr[5],
+            items: [],
+            index: tempNum,
+          });
+        }
+        tempNum++;
+      }
+
+      console.log(tong);
+
+      const arrToObj = function (arr) {
+        const stylingTendencyToObj = function (items) {
+          let newArr = [];
+          let temp, tempObj;
+          for (let i of items) {
+            temp = i.split('_');
+            tempObj = {};
+            tempObj["name"] = temp[0];
+            tempObj["column"] = temp[1];
+            tempObj["range"] = [ 0, 10 ];
+            tempObj["type"] = "number";
+            newArr.push(tempObj);
+          }
+          return newArr;
+        }
+        const [ type, multiple, name, column, position ] = arr;
+        let items_tong = arr.slice(5);
+        let items;
+        items = [];
+        for (let i of items_tong) {
+          if (i !== '') {
+            items.push(i);
+          }
+        }
+        if (items.length === 1 && (items[0] === "INT" || items[0] === "LONG TEXT")) {
+          items = [];
+        }
+        if (column === "stylingTendency") {
+          items = stylingTendencyToObj(items);
+        }
+        return { type, multiple: /true/gi.test(multiple), name, column, position, items };
+      }
+
+      for (let z = 0; z < tong.length; z++) {
+        console.log(tong[z].column);
+        from = tong[z].index + 1;
+        if (z !== tong.length - 1) {
+          to = tong[z + 1].index;
+        } else {
+          to = matrix.length;
+        }
+        for (let i = from; i < to; i++) {
+          if (matrix[i][0] !== '' && matrix[i][0] !== ' ' && matrix[i][0] !== '-' && matrix[i][0] !== 'null') {
+            console.log(arrToObj(matrix[i]));
+            tong[z].items.push(arrToObj(matrix[i]));
+          }
+        }
+        console.log(`================`);
+      }
+
+
+
+      finalTong = {};
+      for (let obj of tong) {
+        finalTong[obj.column] = obj;
+        delete obj.index;
+        delete obj.column;
+      }
+
+      await fileSystem(`write`, [ `${process.cwd()}/temp/checkListFinalTong.js`, JSON.stringify(finalTong, null, 2) ]);
+
+
+      console.log(finalTong);
+
+
 
 
 
