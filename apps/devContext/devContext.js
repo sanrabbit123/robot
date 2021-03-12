@@ -1185,6 +1185,12 @@ class DevContext extends Array {
       //   }));
       // }
 
+
+      // ===============================================================================================================================================
+      // Sheets to checkList ===========================================================================================================================
+      // ===============================================================================================================================================
+      /*
+
       const fileName = `${process.cwd()}/temp/rawMatrix.js`;
 
       const rawMatrix = await ghostRequest(`getSheets`, {
@@ -1292,8 +1298,6 @@ class DevContext extends Array {
         console.log(`================`);
       }
 
-
-
       finalTong = {};
       for (let obj of tong) {
         finalTong[obj.column] = obj;
@@ -1305,8 +1309,9 @@ class DevContext extends Array {
 
 
       console.log(finalTong);
+      shell.exec(`atom ${process.cwd()}/temp/checkListFinalTong.js`);
 
-
+      */
 
 
 
@@ -1353,13 +1358,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "황세화";
-      // const pid = "p83";
-      // const rid = "re077";
+      // const client = "박나리";
+      // const pid = "p86";
+      // const rid = "re080";
       // const links = [
-      //   "https://docs.google.com/document/d/1XabSzOaZ8HdwTOqusiHhHLFWHa5Q4NR4D9JEeKtnkIs/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1nOKdXKJbG_ALStyB4aFb3tx2EnjERcNSG5KdnpDD9oI/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/1kULSIWckEo2Rlqw8uiVk-2rte6i0-MgH?usp=sharing",
+      //   "https://docs.google.com/document/d/1-BqxYqKZ_2PQba8U9FKSHeuxXmPu47XB3tKbVSTKt1E/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1NKSVBKd9zvf3VzEA94eWDqOZ9p0cHsDwU3bQDboH28g/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/11m2Lh75pMvIxAe_e6MxaPNmGzAaFopFm?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1403,7 +1408,7 @@ class DevContext extends Array {
 
       // etc tools
 
-      // await this.spellCheck("p83");
+      // await this.spellCheck("p86");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

@@ -159,12 +159,13 @@ Ghost.prototype.requestObject = async function () {
     let res;
 
     // to = "http://homeliaison.ddns.net:3000/shell";
-    to = "http://homeliaison.ddns.net:3000/readDir";
-    // to = "http://homeliaison.ddns.net:3000/fixDir";
+    // to = "http://homeliaison.ddns.net:3000/readDir";
+    to = "http://homeliaison.ddns.net:3000/fixDir";
     // to = "http://homeliaison.ddns.net:3000/mkdir";
 
     // const motherDir = "__samba__/디자이너";
-    const motherDir = "__samba__/디자이너/신청자";
+    // const motherDir = "__samba__/디자이너/신청자";
+    const motherDir = "__samba__/사진_등록_포트폴리오";
     // let orders, aspirants;
     //
     // orders = [];
@@ -178,17 +179,17 @@ Ghost.prototype.requestObject = async function () {
       "target": motherDir,
     };
 
-    const { data } = await requestSystem(to, json, { "Content-Type": "application/json" });
-
-    console.log(data);
-
-    let tong, targetNames;
-
-    targetNames = [
-      "등록서류",
-      "포트폴리오",
-    ];
-    tong = [];
+    // const { data } = await requestSystem(to, json, { "Content-Type": "application/json" });
+    //
+    // console.log(data);
+    //
+    // let tong, targetNames;
+    //
+    // targetNames = [
+    //   "등록서류",
+    //   "포트폴리오",
+    // ];
+    // tong = [];
     // for (let folderName of data) {
     //   if (folderName !== `.DS_Store`) {
     //     for (let targetName of targetNames) {
@@ -198,7 +199,7 @@ Ghost.prototype.requestObject = async function () {
     // }
 
 
-    return { json: { target: tong }, to: "http://homeliaison.ddns.net:3000/mkdir" };
+    return { json, to };
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
