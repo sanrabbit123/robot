@@ -371,10 +371,17 @@ PortfolioFilter.prototype.total_make = async function () {
 
     console.log(fromArr);
     console.log(toArr);
-
     await this.mother.s3FileUpload(fromArr, toArr);
-
     console.log(`s3 upload done`);
+
+
+    console.log(await this.mother.ghostRequest("fixDir", {
+      await: true,
+      target: "__samba__/사진_등록_포트폴리오"
+    }));
+    console.log(`ghost request done`);
+
+
   } catch (e) {
     console.log(e);
   } finally {

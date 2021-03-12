@@ -176,7 +176,8 @@ Ghost.prototype.requestObject = async function () {
     // }
 
     json = {
-      "target": motherDir,
+      await: true,
+      target: motherDir,
     };
 
     // const { data } = await requestSystem(to, json, { "Content-Type": "application/json" });
@@ -441,7 +442,7 @@ Ghost.prototype.launching = async function () {
                   console.log(`fix done`);
                 }
               });
-            }, (10 * 1000));
+            }, (10 * 60 * 1000));
           } else {
             shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
               if (err) {
