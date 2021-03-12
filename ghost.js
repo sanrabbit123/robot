@@ -284,7 +284,12 @@ Ghost.prototype.launching = async function () {
 
   try {
     let message = '';
-    if (process.argv[2] === "backup") {
+
+    if (process.argv[2] === "pm2") {
+
+      console.log(`pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- cron;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- kakao;`);
+
+    } else if (process.argv[2] === "backup") {
 
       await this.mongoToJson();
       await this.ultimateReflection();
