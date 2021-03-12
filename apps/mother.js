@@ -1667,4 +1667,17 @@ Mother.prototype.mysqlQuery = function (query, option = { local: true }) {
   }
 }
 
+Mother.prototype.copyToClipboard = function (data) {
+  const os = require("os");
+  let pbcopy;
+  if (os.type() === 'Darwin') {
+    //mac
+    pbcopy = require('child_process').spawn('pbcopy');
+    pbcopy.stdin.write(data);
+    pbcopy.stdin.end();
+  } else {
+    //linux
+  }
+}
+
 module.exports = Mother;

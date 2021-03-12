@@ -287,7 +287,7 @@ Ghost.prototype.launching = async function () {
 
     if (process.argv[2] === "pm2") {
 
-      console.log(`pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- cron;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- kakao;`);
+      console.log(`pm2 kill;pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- cron;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- kakao;pm2 monit;`);
 
     } else if (process.argv[2] === "backup") {
 
