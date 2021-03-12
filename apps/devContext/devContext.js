@@ -960,6 +960,7 @@ class DevContext extends Array {
       // }
 
 
+
       // let target = [
       //   {
       //     name: "서비스 가능 지역",
@@ -1312,6 +1313,122 @@ class DevContext extends Array {
       shell.exec(`atom ${process.cwd()}/temp/checkListFinalTong.js`);
 
       */
+
+
+
+
+      {
+        analytics: {
+          region: {
+            available: [ "서울", "경기" ],
+            transportation: {
+              method: "자동차",
+              expenses: {
+                actual: {
+                  boo: true
+                },
+                unit: {
+                  boo: true,
+                  amount: 0,
+                }
+              },
+            },
+          },
+          meeting: {
+            measure: {
+              direct: false,
+              furniture: false,
+            },
+            team: false,
+            style: "",
+          },
+          project: {
+            index: false,
+            budget: {
+              resultOffer: false,
+              method: "문서",
+            },
+            time: {
+              first: 7,
+              entire: 30,
+            },
+            paperWork: [],
+            communication: {
+              method: "",
+              count: 0,
+            },
+            retouch: {
+              partial: 3,
+              entire: 4
+            }
+          },
+          construct: {
+            level: 1,
+            possible: {
+              supervision: true,
+              partialSupervision: true,
+              others: true
+            },
+            contract: {
+              method: "협업사 계약",
+              othersFinishing: "",
+              communication: "",
+            }
+          },
+          styling: {
+            level: 0,
+            map: {
+              texture: [],
+              color: [],
+              density: 0,
+            },
+            tendency: {
+              modern: 0,
+              glam: 0,
+              antique: 0,
+              natural: 0,
+              minimum: 0,
+              vintage: 0,
+              feminine: 0,
+              exotic: 0,
+            },
+            furniture: {
+              builtin: true,
+              design: true
+            },
+            fabric: {
+              manufacture: false,
+              method: "",
+            }
+          },
+          purchase: {
+            agencies: {
+              boo: true,
+              fee: 0,
+            },
+            setting: {
+              takeIn: false,
+              install: true,
+              storage: true,
+              detail: "",
+            },
+            detail: "",
+          },
+          etc: {
+            matrix: [],
+            operationBudget: {
+              min: 5000000,
+              max: 10000000
+            },
+            styleTuple: [],
+            relation: ""
+          }
+        }
+      }
+
+
+
+
 
 
 
