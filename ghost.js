@@ -141,6 +141,44 @@ Ghost.prototype.ultimateReflection = async function () {
   }
 }
 
+Ghost.prototype.analyticsToMongo = async function () {
+  try {
+    const app = new GoogleAnalytics();
+    await app.analyticsToMongo();
+
+    return `analytics to mongo done`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Ghost.prototype.clientReport = async function () {
+  try {
+    const sheets = new GoogleSheet();
+    const sheetId = "14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM";
+    const startPoint = [ 0, 0 ];
+    const report = await this.back.getClientReport();
+    await sheets.update_value_inPython(sheetId, "", report.getMatrix(), startPoint);
+    console.log(`\x1b[33m%s\x1b[0m`, `sheets upload done`);
+
+    return `client report done`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Ghost.prototype.sendAspirantPresentation = async function () {
+  try {
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakao = new KakaoTalk();
+    await kakao.sendAspirantPresentation();
+
+    return `send aspirant presentation done`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
@@ -245,7 +283,7 @@ Ghost.prototype.launching = async function () {
   app.use(express.static(staticFolder));
 
   try {
-    let message = {};
+    let message = '';
     if (process.argv[2] === "backup") {
 
       await this.mongoToJson();
@@ -254,15 +292,40 @@ Ghost.prototype.launching = async function () {
     } else if (process.argv[2] === "cron") {
 
       //backup
-      message.backup = '';
+      message = '';
       this.schedule.scheduleJob(this.objectToCron({ hours: 22, minutes: 30, seconds: 30 }), function () {
         instance.mongoToJson().then(function (m) {
-          message.backup += m;
+          message += m;
           return instance.ultimateReflection();
         }).then(function (m) {
-          message.backup += "\n"
-          message.backup += m;
-          console.log(message);
+          message += "\n"
+          message += m;
+          return instance.analyticsToMongo();
+        }).then(function (m) {
+          message += "\n"
+          message += m;
+          return instance.clientReport();
+        }).then(function (m) {
+          message += "\n"
+          message += m;
+          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
+          console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
+          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
+        }).catch(function (err) {
+          console.log(err);
+        });
+      });
+
+    } else if (process.argv[2] === "kakao") {
+
+      //backup
+      message = '';
+      this.schedule.scheduleJob(this.objectToCron({ hours: 14, minutes: 30, seconds: 30 }), function () {
+        instance.sendAspirantPresentation().then(function (m) {
+          message += m;
+          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
+          console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
+          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
         }).catch(function (err) {
           console.log(err);
         });
