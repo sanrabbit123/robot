@@ -430,7 +430,27 @@ Ghost.prototype.launching = async function () {
         } else {
           let { target } = req.body;
           target = instance.dirParsing(target);
-          shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true });
+          if (req.body.await === true) {
+            console.log(`waiting 10 minutes...`);
+            setTimeout(function () {
+              console.log(`fix start`);
+              shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(`fix done`);
+                }
+              });
+            }, (10 * 1000));
+          } else {
+            shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(`fix done`);
+              }
+            });
+          }
           res.send(JSON.stringify({ message: "will do" }));
         }
       });
