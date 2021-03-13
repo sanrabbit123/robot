@@ -52,6 +52,25 @@ class AreaMatrix extends Array {
     }
   }
 
+  getStandards() {
+    return {
+      xValues: [
+        "F",
+        "S",
+        "T",
+        "XT"
+      ],
+      yValues: [
+        "B",
+        "N"
+      ],
+      zValues: [
+        "premium",
+        "normal"
+      ]
+    };
+  }
+
   toNormal() {
     let arr = [];
     for (let i of this) {
@@ -310,8 +329,8 @@ const ConstructContract = function (json) {
   ], false);
   this.othersFinishing = new Menu(json.othersFinishing, [
     "톤만 제안",
-    "톤 제안 후 시공사 마감재 풀에서 선택",
-    "톤 제안 후 필요시 마감재를 별도로 선택",
+    "시공사 마감재풀 내 선택",
+    "별도로 마감재 선택",
     "해당 없음"
   ], false);
   this.communication = json.communication;
@@ -409,8 +428,8 @@ const ProjectAnalytics = function (json) {
   this.budget = new ProjectBudget(json.budget);
   this.time = new ProjectTime(json.time);
   this.paperWork = new Menu(json.paperWork, [
-    "도면(배치도)",
-    "3D(스케치업)",
+    "도면",
+    "3D",
     "컨셉 보드",
     "제품 리스트",
     "참고 이미지",

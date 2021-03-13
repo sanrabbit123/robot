@@ -2636,131 +2636,25 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
       responseObj = {};
 
       if (button === "get") {
-        thisObjs = await back.mongoRead("designerMatrix", { desid }, { local: true });
-        if (false) {
+        thisObjs = await back.getDesignersByQuery({ desid }, { selfMongo: instance.mongo });
+        if (thisObjs.length > 0) {
           thisObj = thisObjs[0];
-          responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
-          responseObj["values"] = thisObj.matrix[req.body.target].standard;
-          responseObj["analytics"] = thisObj.analytics;
+          responseObj[req.body.target] = thisObj.analytics.etc.matrix;
+          responseObj["values"] = thisObj.analytics.etc.matrix.getStandards();
+          responseObj["analytics"] = thisObj.analytics.toNormal();
         } else {
-          today = new Date();
-          standardA = {
-            xValues: [
-              "F",
-              "S",
-              "T",
-              "XT"
-            ],
-            yValues: [
-              "B",
-              "N"
-            ],
-            zValues: [
-              "premium",
-              "normal",
-            ]
-          };
-          standardB = {
-            xValues: [
-              "디자인",
-              "스타일링",
-              "시공 운영",
-              "부가 서비스",
-              "제작 여부",
-              "현장 경험",
-              "고객 응대",
-              "고객 평가",
-              "리스크 관리",
-              "홈리에종",
-            ],
-            yValues: [
-              "10",
-              "9",
-              "8",
-              "7",
-              "6",
-              "5",
-              "4",
-              "3",
-              "2",
-              "1",
-            ],
-          };
-
-          matrixA = [];
-          for (let i = 0; i < 4; i++) {
-            temp0 = [];
-            for (let j = 0; j < 2; j++) {
-              temp1 = [];
-              for (let k = 0; k < 2; k++) {
-                temp1.push(0);
-              }
-              temp0.push(temp1);
-            }
-            matrixA.push(temp0);
-          }
-
-          matrixB = [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ];
-
-          json = {
-            desid: desid,
-            matrix: {
-              matrixA: {
-                standard: standardA,
-                value: matrixA,
-                update: today,
-              },
-              matrixB: {
-                standard: standardB,
-                value: matrixB,
-                update: today,
-              },
-            },
-            analytics: {
-              region: [],
-              tools: [],
-              designMethod: [],
-              designerNumber: {
-                min: 2,
-                max: 3,
-              },
-              purchase: false,
-              makeAble: [],
-              construct: 1,
-              style: {
-                modern: 1,
-                glam: 1,
-                cozy: 1,
-                antique: 1,
-                natural: 1,
-                minimum: 1,
-              },
-              personality: [],
-              relation: "그냥 평범",
-            }
-          };
-          // await back.mongoCreate("designerMatrix", json, { local: true });
-
-          responseObj[req.body.target] = matrixA;
-          responseObj["values"] = standardA;
-          responseObj["analytics"] = json.analytics;
-
+          responseObj["error"] = "There is no designer";
         }
       } else if (button === "update") {
+        whereQuery = { desid };
+        updateQuery = {};
         if (req.body.matrixA !== undefined) {
-          matrixA = JSON.parse(req.body.matrixA);
-          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixA.value": matrixA, "matrix.matrixA.update": (new Date()) } ], { local: true });
-        } else if (req.body.matrixB !== undefined) {
-          matrixB = JSON.parse(req.body.matrixB);
-          await back.mongoUpdate("designerMatrix", [ { desid }, { "matrix.matrixB.value": matrixB, "matrix.matrixB.update": (new Date()) } ], { local: true });
+          updateQuery["analytics.etc.matrix"] = JSON.parse(req.body.matrixA);
         } else {
-          whereQuery = { desid };
           updateQuery = JSON.parse(req.body.update);
-          await back.mongoUpdate("designerMatrix", [ whereQuery, updateQuery ], { local: true });
         }
+        await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
-
-      console.log(responseObj);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseObj));
