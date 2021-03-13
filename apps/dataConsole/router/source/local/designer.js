@@ -3101,18 +3101,20 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
         checkFactorButtonMargin = 5;
 
-        designNumberArr = [];
-        for (let i = designNumber.min; i < designNumber.max + 1; i++) {
-          designNumberArr.push(String(i) + '회');
-        }
-        purchaseArr = [];
-        if (purchase) {
-          purchaseArr.push("진행");
-        } else {
-          purchaseArr.push("안 함");
-        }
-        constructArr = [ String(construct) + "단계" ];
-        relationArr = [ relation ];
+        // designNumberArr = [];
+        // for (let i = designNumber.min; i < designNumber.max + 1; i++) {
+        //   designNumberArr.push(String(i) + '회');
+        // }
+        // purchaseArr = [];
+        // if (purchase) {
+        //   purchaseArr.push("진행");
+        // } else {
+        //   purchaseArr.push("안 함");
+        // }
+        // constructArr = [ String(construct) + "단계" ];
+        // relationArr = [ relation ];
+
+        /*
 
         //check list base
         checkList = DataPatch.designerCheckList({ region, tools, designMethod, designNumber: designNumberArr, purchase: purchaseArr, makeAble, construct: constructArr, style: [], personality, relation: relationArr });
@@ -3479,6 +3481,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         }
         checkListBase.appendChild(checkListBaseWhite);
         div_clone.appendChild(checkListBase);
+
+        */
 
         //base
         matrixBase = GeneralJs.nodes.div.cloneNode(true);

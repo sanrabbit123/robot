@@ -1890,14 +1890,13 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       let query;
       let requrl;
 
-      query = JSON.parse(req.body.query);
-
       link = '';
       link_index = 0;
       row_message = '';
       new_message = '';
 
       if (req.body.linkmake !== undefined) {
+        query = JSON.parse(req.body.query);
         requrl = url.format({
             protocol: req.protocol,
             host: req.get('host'),
@@ -2638,7 +2637,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
 
       if (button === "get") {
         thisObjs = await back.mongoRead("designerMatrix", { desid }, { local: true });
-        if (thisObjs.length > 0) {
+        if (false) {
           thisObj = thisObjs[0];
           responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
           responseObj["values"] = thisObj.matrix[req.body.target].standard;
@@ -2654,13 +2653,11 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
             ],
             yValues: [
               "B",
-              "N",
-              "O"
+              "N"
             ],
             zValues: [
               "premium",
               "normal",
-              "economy"
             ]
           };
           standardB = {
@@ -2693,9 +2690,9 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
           matrixA = [];
           for (let i = 0; i < 4; i++) {
             temp0 = [];
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < 2; j++) {
               temp1 = [];
-              for (let k = 0; k < 3; k++) {
+              for (let k = 0; k < 2; k++) {
                 temp1.push(0);
               }
               temp0.push(temp1);
@@ -2742,10 +2739,12 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
               relation: "그냥 평범",
             }
           };
-          await back.mongoCreate("designerMatrix", json, { local: true });
+          // await back.mongoCreate("designerMatrix", json, { local: true });
 
-          responseObj[req.body.target] = thisObj.matrix[req.body.target].value;
-          responseObj["values"] = thisObj.matrix[req.body.target].standard;
+          responseObj[req.body.target] = matrixA;
+          responseObj["values"] = standardA;
+          responseObj["analytics"] = json.analytics;
+
         }
       } else if (button === "update") {
         if (req.body.matrixA !== undefined) {
@@ -2760,6 +2759,8 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
           await back.mongoUpdate("designerMatrix", [ whereQuery, updateQuery ], { local: true });
         }
       }
+
+      console.log(responseObj);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseObj));

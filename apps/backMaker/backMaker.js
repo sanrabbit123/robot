@@ -2041,6 +2041,9 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
   try {
     let dummy, dummySetting, latestDesigner, latestDesignerArr;
     let newOption = {};
+    let temp0, temp1;
+    let matrixStandard0, matrixStandard1, matrixStandard2;
+
 
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;
@@ -2307,6 +2310,22 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     dummy.structure.desid = this.idMaker(latestDesigner.desid);
     for (let i = 0; i < 5; i++) {
       dummy.structure.setting.proposal.push(dummySetting(i));
+    }
+
+    matrixStandard0 = [ 'F', 'S', 'T', 'XT' ];
+    matrixStandard1 = [ 'N', 'B' ];
+    matrixStandard2 = [ 'normal', 'premium' ];
+
+    for (let i = 0; i < matrixStandard0.length; i++) {
+      temp0 = [];
+      for (let j = 0; j < matrixStandard1.length; j++) {
+        temp1 = [];
+        for (let k = 0; k < matrixStandard2.length; k++) {
+          temp1.push(0);
+        }
+        temp0.push(temp1);
+      }
+      dummy.structure.analytics.etc.matrix.push(temp0);
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
