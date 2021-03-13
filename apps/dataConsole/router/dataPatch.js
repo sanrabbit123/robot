@@ -3267,147 +3267,1027 @@ DataPatch.prototype.designerRawMap = function () {
   return { portfolioBooArr, updateStandard, alarmStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables, cloudLinkTargets };
 }
 
-DataPatch.prototype.designerCheckList = function (valueObj) {
+DataPatch.prototype.designerCheckList = function (valueObj = {}) {
   let base = [
     {
-      name: "서비스 가능 지역",
+      name: "지역",
       column: "region",
       items: [
-        "서울",
-        "인천",
-        "경기",
-        "강원",
-        "충청",
-        "대전",
-        "세종",
-        "전라",
-        "경상",
-        "제주",
-        "부산",
-        "대구",
-        "울산",
-        "광주",
-      ],
-      multiple: true,
-      type: "string",
+        {
+          type: "string",
+          multiple: true,
+          name: "서비스 가능 지역",
+          column: "available",
+          position: function (items) {
+            let updateQuery = {};
+            updateQuery["analytics.region.available"] = items;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "서울",
+            "인천",
+            "경기",
+            "강원",
+            "충청",
+            "대전",
+            "세종",
+            "전라",
+            "경상",
+            "제주",
+            "부산",
+            "대구",
+            "울산",
+            "광주"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "이동 수단",
+          column: "transportation",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.region.transportation.method"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "자동차",
+            "대중교통"
+          ]
+        },
+        {
+          type: "string",
+          multiple: true,
+          name: "출장비 책정 기준",
+          column: "travelExpenses",
+          position: function (items) {
+            let updateQuery = {};
+            if (items.includes("교통비")) {
+              updateQuery["analytics.region.transportation.expenses.actual.boo"] = true;
+            } else {
+              updateQuery["analytics.region.transportation.expenses.actual.boo"] = false;
+            }
+            if (items.includes("출장일수당")) {
+              updateQuery["analytics.region.transportation.expenses.unit.boo"] = true;
+            } else {
+              updateQuery["analytics.region.transportation.expenses.unit.boo"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "교통비",
+            "출장일수당"
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "출장일수당 금액",
+          column: "travelExpensesEa",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.region.transportation.expenses.unit.amount"] = (Number(item.replace(/[^0-9]/g, '')) * 10000);
+            return updateQuery;
+          },
+          dependency: {
+            mother: "travelExpenses",
+            includes: "출장일수당"
+          },
+          items: [
+            "5만원",
+            "7만원",
+            "10만원",
+            "20만원",
+            "30만원"
+          ]
+        }
+      ]
     },
     {
-      name: "디자인 기술",
-      column: "tools",
+      name: "현장 미팅",
+      column: "meeting",
       items: [
-        "도면",
-        "3D",
-        "컨셉 보드",
-        "제품 리스트",
-      ],
-      multiple: true,
-      type: "string",
+        {
+          type: "boolean",
+          multiple: false,
+          name: "직접 실측 여부",
+          column: "directMeasure",
+          position: function (item) {
+            let updateQuery = {};
+            if (item === "yes") {
+              updateQuery["analytics.meeting.measure.direct"] = true;
+            } else {
+              updateQuery["analytics.meeting.measure.direct"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "가져갈 가구 체크",
+          column: "furniture",
+          position: function (item) {
+            let updateQuery = {};
+            if (/실측/gi.test(item)) {
+              updateQuery["analytics.meeting.measure.furniture"] = true;
+            } else {
+              updateQuery["analytics.meeting.measure.furniture"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "거주하는 집에 가서 보고 실측",
+            "고객에게 사진과 사이즈를 받음"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "시공사 동행 여부",
+          column: "withContruct",
+          position: function (item) {
+            let updateQuery = {};
+            if (item === "yes") {
+              updateQuery["analytics.meeting.team"] = true;
+            } else {
+              updateQuery["analytics.meeting.team"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "미팅 스타일",
+          column: "meetingStyle",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.meeting.style"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "철저한 준비",
+            "일단 가서 체크"
+          ]
+        }
+      ]
     },
     {
-      name: "디자인 제안 방식",
-      column: "designMethod",
+      name: "프로젝트 운영",
+      column: "project",
       items: [
-        "PPT",
-        "SHEETS",
-        "문서",
-        "카톡",
-        "전화",
-      ],
-      multiple: true,
-      type: "string",
+        {
+          type: "boolean",
+          multiple: false,
+          name: "프로젝트 개요 설명 여부",
+          column: "indexGuide",
+          position: function (item) {
+            let updateQuery = {};
+            if (item === "yes") {
+              updateQuery["analytics.project.index"] = true;
+            } else {
+              updateQuery["analytics.project.index"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "예산기획 결과 제공",
+          column: "budgetGuide",
+          position: function (item) {
+            let updateQuery = {};
+            if (item === "yes") {
+              updateQuery["analytics.project.budget.resultOffer"] = true;
+            } else {
+              updateQuery["analytics.project.budget.resultOffer"] = false;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "예산기획 제공 방식",
+          column: "budgetGuideMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.project.budget.method"] = item;
+            return updateQuery;
+          },
+          dependency: {
+            mother: "budgetGuide",
+            includes: "yes"
+          },
+          items: [
+            "문서",
+            "구두"
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "1차 제안 소요 시간",
+          column: "projectTimeFirst",
+          position: function (item) {
+            let updateQuery = {};
+            if (/이상/gi.test(item)) {
+              updateQuery["analytics.project.time.first"] = 28;
+            } else {
+              updateQuery["analytics.project.time.first"] = Number(item.replace(/[^0-9]/gi, '')) * 7;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1주일 이내",
+            "2주일 이내",
+            "3주일 이내",
+            "3주 이상"
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "전체 제안 소요 시간",
+          column: "projectTimeEntire",
+          position: function (item) {
+            let updateQuery = {};
+            if (/이상/gi.test(item)) {
+              updateQuery["analytics.project.time.entire"] = 120;
+            } else {
+              updateQuery["analytics.project.time.entire"] = Number(item.replace(/[^0-9]/gi, '')) * 30;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1개월 이내",
+            "2개월 이내",
+            "3개월 이내",
+            "3개월 이상"
+          ]
+        },
+        {
+          type: "string",
+          multiple: true,
+          name: "페이퍼 워크",
+          column: "paperWork",
+          position: function (items) {
+            let updateQuery = {};
+            updateQuery["analytics.project.paperWork"] = items;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "도면(배치도)",
+            "3D(스케치업)",
+            "컨셉 보드",
+            "제품 리스트",
+            "참고 이미지",
+            "비정형 손메모",
+            "구두 설명",
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "선호 커뮤니케이션 방식",
+          column: "preferCommunication",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.project.communication.method"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "대면",
+            "비대면"
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "고객 미팅 횟수",
+          column: "meetingNumber",
+          position: function (item) {
+            let updateQuery = {};
+            if (/각각/gi.test(item)) {
+              updateQuery["analytics.project.communication.count"] = 0;
+            } else {
+              updateQuery["analytics.project.communication.count"] = Number(item.replace(/[^0-9]/g, ''));
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "2회",
+            "3회",
+            "4회 이상",
+            "각각 상이",
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "전체 수정 횟수",
+          column: "retouchNumberEntire",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.project.retouch.entire"] = Number(item.replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1회",
+            "2회",
+            "3회",
+            "4회",
+            "5회 이상"
+          ]
+        },
+        {
+          type: "number",
+          multiple: false,
+          name: "부분 수정 횟수",
+          column: "retouchNumberEntire",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.project.retouch.partial"] = Number(item.replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1회",
+            "2회",
+            "3회",
+            "4회",
+            "5회 이상"
+          ]
+        },
+      ]
     },
     {
-      name: "스타일링 횟수",
-      column: "designNumber",
-      items: [
-        "2회",
-        "3회",
-        "4회",
-        "5회",
-        "6회",
-        "7회",
-        "8회",
-      ],
-      multiple: true,
-      type: "range",
-    },
-    {
-      name: "구매 대행 여부",
-      column: "purchase",
-      items: [
-        "안 함",
-        "진행",
-      ],
-      multiple: false,
-      type: "boolean",
-    },
-    {
-      name: "제작 가능",
-      column: "makeAble",
-      items: [
-        "가구",
-        "패브릭"
-      ],
-      multiple: true,
-      type: "string",
-    },
-    {
-      name: "시공 능력",
+      name: "시공",
       column: "construct",
       items: [
-        "1단계",
-        "2단계",
-        "3단계",
-        "4단계",
-      ],
-      multiple: false,
-      type: "number",
+        {
+          type: "number",
+          multiple: false,
+          name: "시공 능력",
+          column: "constructLevel",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.level"] = Number(item.replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1단계",
+            "2단계",
+            "3단계"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "시공 감리 여부",
+          column: "constructSupervision",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.possible.supervision"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "시공 계약 방식",
+          column: "constructContractMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.contract.method"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "직접 계약, 직접 감리",
+            "직접 계약, 외주 감리",
+            "협업사 계약",
+            "공정별 연결"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "공정별 감리 여부",
+          column: "constructPartialSupervision",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.possible.partialSupervision"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: {
+            mother: "constructContractMethod",
+            includes: "공정별 연결"
+          },
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "타 시공사 진행 가능 여부",
+          column: "outsidePossible",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.possible.others"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "타 시공사 진행 마감재 범위",
+          column: "outsideMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.contract.othersFinishing"] = item;
+            return updateQuery;
+          },
+          dependency: {
+            mother: "outsidePossible",
+            includes: "yes"
+          },
+          items: [
+            "톤만 제안",
+            "톤 제안 후 시공사 마감재 풀에서 선택",
+            "톤 제안 후 필요시 마감재를 별도로 선택"
+          ]
+        },
+        {
+          type: "input",
+          multiple: false,
+          name: "시공사 커뮤니케이션 방식",
+          column: "constructCommunication",
+          position: function (input) {
+            let updateQuery = {};
+            updateQuery["analytics.construct.contract.communication"] = input;
+            return updateQuery;
+          },
+          dependency: null,
+          items: []
+        }
+      ]
     },
     {
-      name: "스타일 경향성",
-      column: "style",
+      name: "스타일링",
+      column: "styling",
       items: [
-        { name: "모던", column: "modern", range: [ 0, 10 ], type: "number" },
-        { name: "글램", column: "glam", range: [ 0, 10 ], type: "number" },
-        { name: "코지", column: "cozy", range: [ 0, 10 ], type: "number" },
-        { name: "엔틱", column: "antique", range: [ 0, 10 ], type: "number" },
-        { name: "내추럴", column: "natural", range: [ 0, 10 ], type: "number" },
-        { name: "미니멈", column: "minimum", range: [ 0, 10 ], type: "number" },
-      ],
-      multiple: true,
-      type: "object",
+        {
+          type: "number",
+          multiple: false,
+          name: "스타일링 능력",
+          column: "stylingLevel",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.level"] = Number(item.replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "1단계",
+            "2단계",
+            "3단계"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "스타일 제안 방식",
+          column: "stylingMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.method"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "순차 제안",
+            "한번에 제안"
+          ]
+        },
+        {
+          type: "object",
+          multiple: true,
+          name: "스타일 경향성",
+          column: "stylingTendency",
+          position: function (items) {
+            let updateQuery = {};
+            let motherStringConst, motherString;
+            motherStringConst = "analytics.styling.tendency.style.";
+            for (let { column, value } of items) {
+              motherString = motherStringConst;
+              motherString += column;
+              updateQuery[motherString] = value;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            {
+              name: "모던",
+              column: "modern",
+              value: 10
+            },
+            {
+              name: "글램",
+              column: "glam",
+              value: 10
+            },
+            {
+              name: "엔틱",
+              column: "antique",
+              value: 10
+            },
+            {
+              name: "내추럴",
+              column: "natural",
+              value: 10
+            },
+            {
+              name: "미니멈",
+              column: "minimum",
+              value: 10
+            },
+            {
+              name: "빈티지",
+              column: "vintage",
+              value: 10
+            },
+            {
+              name: "페미닌",
+              column: "feminine",
+              value: 10
+            },
+            {
+              name: "이그저틱",
+              column: "exotic",
+              value: 10
+            },
+          ]
+        },
+        {
+          type: "object",
+          multiple: true,
+          name: "텍스처 경향성",
+          column: "textureTendency",
+          position: function (items) {
+            let updateQuery = {};
+            let motherStringConst, motherString;
+            motherStringConst = "analytics.styling.tendency.texture.";
+            for (let { column, value } of items) {
+              motherString = motherStringConst;
+              motherString += column;
+              updateQuery[motherString] = value;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            {
+              name: "진한 우드",
+              column: "darkWood",
+              value: 10
+            },
+            {
+              name: "연한 우드",
+              column: "whiteWood",
+              value: 10
+            },
+            {
+              name: "도장",
+              column: "coating",
+              value: 10
+            },
+            {
+              name: "금속",
+              column: "metal",
+              value: 10
+            },
+          ]
+        },
+        {
+          type: "object",
+          multiple: true,
+          name: "컬러톤 경향성",
+          column: "colorTendency",
+          position: function (items) {
+            let updateQuery = {};
+            let motherStringConst, motherString;
+            motherStringConst = "analytics.styling.tendency.color.";
+            for (let { column, value } of items) {
+              motherString = motherStringConst;
+              motherString += column;
+              updateQuery[motherString] = value;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            {
+              name: "진한 우드",
+              column: "darkWood",
+              value: 10
+            },
+            {
+              name: "연한 우드",
+              column: "whiteWood",
+              value: 10
+            },
+            {
+              name: "블랙앤화이트",
+              column: "highContrast",
+              value: 10
+            },
+            {
+              name: "비비드(컬러풀)",
+              column: "vivid",
+              value: 10
+            },
+            {
+              name: "화이트",
+              column: "white",
+              value: 10
+            },
+            {
+              name: "모노톤",
+              column: "mono",
+              value: 10
+            },
+          ]
+        },
+        {
+          type: "object",
+          multiple: true,
+          name: "밀도 경향성",
+          column: "densityTendency",
+          position: function (items) {
+            let updateQuery = {};
+            let motherStringConst, motherString;
+            motherStringConst = "analytics.styling.tendency.density.";
+            for (let { column, value } of items) {
+              motherString = motherStringConst;
+              motherString += column;
+              updateQuery[motherString] = value;
+            }
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            {
+              name: "맥시멈",
+              column: "maximun",
+              value: 10
+            },
+            {
+              name: "미니멈",
+              column: "minimum",
+              value: 10
+            }
+          ]
+        },
+
+
+        {
+          type: "boolean",
+          multiple: false,
+          name: "빌트인 가구 가능",
+          column: "builtinAble",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.furniture.builtin"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "가구 제작 가능",
+          column: "makeFurnitureAble",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.furniture.design"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "패브릭 직접 발주 가능",
+          column: "makeFabricAble",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.fabric.manufacture"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "패브릭 발주 방식",
+          column: "makeFabricMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.styling.fabric.method"] = item;
+            return updateQuery;
+          },
+          dependency: {
+            mother: "makeFabricAble",
+            includes: "no"
+          },
+          items: [
+            "업체 연결",
+            "기성 제품 추천"
+          ]
+        }
+      ]
     },
     {
-      name: "디자이너 성격",
-      column: "personality",
+      name: "구매",
+      column: "purchase",
       items: [
-        "착함",
-        "나쁨",
-        "돈밝힘",
-        "성실함",
-        "게으름",
-        "위험함",
-        "쿨함"
-      ],
-      multiple: true,
-      type: "string",
+        {
+          type: "boolean",
+          multiple: false,
+          name: "구매 대행 여부",
+          column: "agenciesPossible",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.agencies.boo"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "input",
+          multiple: false,
+          name: "구매 대행 수수료",
+          column: "agenciesFee",
+          position: function (input) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.agencies.boo"] = Number(input.replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: {
+            mother: "agenciesPossible",
+            includes: "yes"
+          },
+          items: []
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "배송 받아줌 여부",
+          column: "takeInPossible",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.setting.takeIn"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "조립 및 설치 서비스 제공",
+          column: "installPossible",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.setting.install"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "정리수납 서비스 제공",
+          column: "storagePossible",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.setting.storage"] = /yes/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "제품 설치 및 세팅시",
+          column: "installPossibleMethod",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.setting.detail"] = item;
+            return updateQuery;
+          },
+          dependency: {
+            mother: "installPossible",
+            includes: "yes"
+          },
+          items: [
+            "세팅맨 연계",
+            "무료 지원"
+          ]
+        },
+        {
+          type: "input",
+          multiple: false,
+          name: "고객과의 거래 방식",
+          column: "purchaseClientDetail",
+          position: function (input) {
+            let updateQuery = {};
+            updateQuery["analytics.purchase.detail"] = input;
+            return updateQuery;
+          },
+          dependency: null,
+          items: []
+        }
+      ]
     },
     {
-      name: "홈리에종 관계",
-      column: "relation",
+      name: "기타",
+      column: "etc",
       items: [
-        "매우 좋음",
-        "그냥 평범",
-        "좋지 않음",
-      ],
-      multiple: false,
-      type: "string",
+        {
+          type: "number",
+          multiple: false,
+          name: "고객 예산 운영 범위",
+          column: "operationBudget",
+          position: function (item) {
+            let updateQuery = {};
+            let tempArr;
+            tempArr = item.split('-');
+            updateQuery["analytics.etc.operationBudget.min"] = Number(tempArr[0].trim().replace(/[^0-9]/g, ''));
+            updateQuery["analytics.etc.operationBudget.max"] = Number(tempArr[1].trim().replace(/[^0-9]/g, ''));
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "0 - 500",
+            "500 - 1000",
+            "1000 - 1500",
+            "1500 - 2000",
+            "2000 - 3000",
+            "3000 - 4000",
+            "4000 - ",
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "디자이너 작업 스타일 1",
+          column: "designerpersonality1",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.etc.personality.fast"] = /빠/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "빠른 편",
+            "느린 편"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "디자이너 작업 스타일 2",
+          column: "designerpersonality2",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.etc.personality.careful"] = /꼼/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "꼼꼼한 편",
+            "일반"
+          ]
+        },
+        {
+          type: "boolean",
+          multiple: false,
+          name: "디자이너 작업 스타일 3",
+          column: "designerpersonality3",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.etc.personality.lead"] = /리드/gi.test(item);
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "디자이너가 리드하는 편",
+            "고객에게 맞추는 편"
+          ]
+        },
+        {
+          type: "string",
+          multiple: false,
+          name: "홈리에종 관계",
+          column: "relationship",
+          position: function (item) {
+            let updateQuery = {};
+            updateQuery["analytics.etc.relation"] = item;
+            return updateQuery;
+          },
+          dependency: null,
+          items: [
+            "지속가능성 높음",
+            "그냥 평범",
+            "확인중",
+            "좋지 않음"
+          ]
+        }
+      ]
     }
   ];
-  for (let i in valueObj) {
-    for (let obj of base) {
-      if (obj.column === i) {
-        obj.value = valueObj[i];
+  if (Object.keys(valueObj).length > 0) {
+    for (let i in valueObj) {
+      for (let obj of base) {
+        if (obj.column === i) {
+          obj.value = valueObj[i];
+        }
       }
     }
   }

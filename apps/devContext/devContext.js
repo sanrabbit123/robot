@@ -1377,20 +1377,36 @@ class DevContext extends Array {
           },
           styling: {
             level: 0,
-            map: {
-              texture: [],
-              color: [],
-              density: 0,
-            },
+            method: "",
             tendency: {
-              modern: 0,
-              glam: 0,
-              antique: 0,
-              natural: 0,
-              minimum: 0,
-              vintage: 0,
-              feminine: 0,
-              exotic: 0,
+              style: {
+                modern: 0,
+                glam: 0,
+                antique: 0,
+                natural: 0,
+                minimum: 0,
+                vintage: 0,
+                feminine: 0,
+                exotic: 0,
+              },
+              texture: {
+                darkWood: 0,
+                whiteWood: 0,
+                coating: 0,
+                metal: 0
+              },
+              color: {
+                darkWood: 0,
+                whiteWood: 0,
+                highContrast: 0,
+                vivid: 0,
+                white: 0,
+                mono: 0
+              },
+              density: {
+                maximun: 0,
+                minimum: 0,
+              }
             },
             furniture: {
               builtin: true,
@@ -1420,7 +1436,11 @@ class DevContext extends Array {
               min: 5000000,
               max: 10000000
             },
-            styleTuple: [],
+            personality: {
+              fast: true,
+              careful: true,
+              lead: true
+            },
             relation: ""
           }
         }
