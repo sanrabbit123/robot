@@ -2115,19 +2115,130 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
           }
         },
         analytics: {
-          personality: 0,
-          grade: 0,
-          reliability: 0,
-          availables: {
-            area: [],
-            style: [],
-            service: [],
-            tech: [],
-            make: {
-              furniture: false,
-              fabric: false,
+          region: {
+            available: [ "서울", "경기" ],
+            transportation: {
+              method: "자동차",
+              expenses: {
+                actual: {
+                  boo: true
+                },
+                unit: {
+                  boo: true,
+                  amount: 0,
+                }
+              },
             },
           },
+          meeting: {
+            measure: {
+              direct: false,
+              furniture: false,
+            },
+            team: false,
+            style: "철저한 준비",
+          },
+          project: {
+            index: false,
+            budget: {
+              resultOffer: false,
+              method: "문서",
+            },
+            time: {
+              first: 7,
+              entire: 30,
+            },
+            paperWork: [],
+            communication: {
+              method: "대면",
+              count: 0,
+            },
+            retouch: {
+              partial: 3,
+              entire: 4
+            }
+          },
+          construct: {
+            level: 1,
+            possible: {
+              supervision: false,
+              partialSupervision: false,
+              others: false
+            },
+            contract: {
+              method: "협업사 계약",
+              othersFinishing: "해당 없음",
+              communication: "",
+            }
+          },
+          styling: {
+            level: 1,
+            method: "순차 제안",
+            tendency: {
+              style: {
+                modern: 0,
+                glam: 0,
+                antique: 0,
+                natural: 0,
+                minimum: 0,
+                vintage: 0,
+                feminine: 0,
+                exotic: 0,
+              },
+              texture: {
+                darkWood: 0,
+                whiteWood: 0,
+                coating: 0,
+                metal: 0
+              },
+              color: {
+                darkWood: 0,
+                whiteWood: 0,
+                highContrast: 0,
+                vivid: 0,
+                white: 0,
+                mono: 0
+              },
+              density: {
+                maximun: 0,
+                minimum: 0,
+              }
+            },
+            furniture: {
+              builtin: false,
+              design: false
+            },
+            fabric: {
+              manufacture: false,
+              method: "업체 연결",
+            }
+          },
+          purchase: {
+            agencies: {
+              boo: false,
+              fee: 0,
+            },
+            setting: {
+              takeIn: false,
+              install: true,
+              storage: true,
+              detail: "해당 없음",
+            },
+            detail: "",
+          },
+          etc: {
+            matrix: [],
+            operationBudget: {
+              min: 5000000,
+              max: 10000000
+            },
+            personality: {
+              fast: true,
+              careful: true,
+              lead: true
+            },
+            relation: "확인중"
+          }
         },
         realTime: {
           availableDate: [],

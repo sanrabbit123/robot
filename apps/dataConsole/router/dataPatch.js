@@ -3508,7 +3508,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           },
           items: [
             "문서",
-            "구두"
+            "구두",
+            "제안 없음"
           ]
         },
         {
@@ -3761,7 +3762,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           items: [
             "톤만 제안",
             "톤 제안 후 시공사 마감재 풀에서 선택",
-            "톤 제안 후 필요시 마감재를 별도로 선택"
+            "톤 제안 후 필요시 마감재를 별도로 선택",
+            "해당 없음"
           ]
         },
         {
@@ -4062,7 +4064,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           },
           items: [
             "업체 연결",
-            "기성 제품 추천"
+            "기성 제품 추천",
+            "직접 제작"
           ]
         }
       ]
@@ -4167,7 +4170,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           },
           items: [
             "세팅맨 연계",
-            "무료 지원"
+            "무료 지원",
+            "해당 없음"
           ]
         },
         {
