@@ -4505,13 +4505,13 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           position: function (input, reverse = false) {
             if (!reverse) {
               let updateQuery = {};
-              updateQuery["analytics.purchase.agencies.boo"] = Number(input.replace(/[^0-9]/g, ''));
+              updateQuery["analytics.purchase.agencies.fee"] = Number(input.replace(/[^0-9]/g, ''));
               return updateQuery;
             } else {
               let analytics, resultArr;
               analytics = input;
               resultArr = [];
-              resultArr.push(String(analytics.purchase.agencies.boo));
+              resultArr.push(String(analytics.purchase.agencies.fee));
               return resultArr;
             }
           },
