@@ -127,10 +127,6 @@ DataConsole.prototype.connect = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
     console.log(``);
 
-
-    console.log(address);
-
-
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
     if ([ "home", "office" ].includes(name.replace(/info/i, ''))) {
