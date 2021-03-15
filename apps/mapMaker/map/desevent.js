@@ -1258,6 +1258,174 @@ module.exports = {
           }
         }
       ]
+    },
+    {
+      "name": "portfolio",
+      "title": "포트폴리오 발송",
+      "src": {
+        "desktop": "title3_6rspot692_031110.svg",
+        "mobile": "title3_6rspot692_031110.svg"
+      },
+      "children": [
+        {
+          "title": "링크",
+          "green": true,
+          "src": {
+            "desktop": "factorTitle309_2rspot632_031110.svg",
+            "mobile": "factorTitle309_2rspot632_031110.svg"
+          },
+          "notice": {
+            "title": "각각의 항목을 눌러, 상세 정보를 입력해주세요!",
+            "src": {
+              "desktop": [
+                "notice300_19rspot551_031110.svg",
+                "notice301_19rspot551_031110.svg"
+              ],
+              "mobile": []
+            }
+          },
+          "buttons": [
+            {
+              "title": "홈페이지",
+              "type": {
+                "desktop": "check",
+                "mobile": "check"
+              },
+              "limit": false,
+              "src": {
+                "desktop": {
+                  "off": "b_checkdesktop300_off_4rspot532_031110.svg",
+                  "on": "b_checkdesktop300_on_4rspot532_031110.svg"
+                },
+                "mobile": {
+                  "off": "b_checkmobile300_off_4rspot664_031110.svg",
+                  "on": "b_checkmobile300_on_4rspot664_031110.svg"
+                }
+              },
+              "popup": {
+                "description": {
+                  "desktop": [
+                    "운영하시는 사이트가 있다면, 링크 형식으로 적어주세요!"
+                  ],
+                  "mobile": [
+                    "운영하시는 사이트가 있다면,",
+                    "전체 링크 형식으로 적어주세요!"
+                  ]
+                },
+                "src": {
+                  "desktop": "b_checkdesktop300_popup_22rspot949_031110.svg",
+                  "mobile": "b_checkmobile300_popup_4rspot97_031110.svg"
+                }
+              }
+            },
+            {
+              "title": "소셜 네트워크",
+              "type": {
+                "desktop": "check",
+                "mobile": "check"
+              },
+              "limit": false,
+              "src": {
+                "desktop": {
+                  "off": "b_checkdesktop301_off_6rspot773_031110.svg",
+                  "on": "b_checkdesktop301_on_6rspot773_031110.svg"
+                },
+                "mobile": {
+                  "off": "b_checkmobile301_off_6rspot905_031110.svg",
+                  "on": "b_checkmobile301_on_6rspot905_031110.svg"
+                }
+              },
+              "popup": {
+                "description": {
+                  "desktop": [
+                    "운영하시는 SNS가 있다면, 링크 형식으로 적어주세요!"
+                  ],
+                  "mobile": [
+                    "운영하시는 SNS 채널이 있다면,",
+                    "전체 링크 형식으로 적어주세요!"
+                  ]
+                },
+                "src": {
+                  "desktop": "b_checkdesktop301_popup_21rspot937_031110.svg",
+                  "mobile": "b_checkmobile301_popup_4rspot97_031110.svg"
+                }
+              }
+            },
+            {
+              "title": "클라우드",
+              "type": {
+                "desktop": "check",
+                "mobile": "check"
+              },
+              "limit": false,
+              "src": {
+                "desktop": {
+                  "off": "b_checkdesktop302_off_4rspot613_031110.svg",
+                  "on": "b_checkdesktop302_on_4rspot613_031110.svg"
+                },
+                "mobile": {
+                  "off": "b_checkmobile302_off_4rspot745_031110.svg",
+                  "on": "b_checkmobile302_on_4rspot745_031110.svg"
+                }
+              },
+              "popup": {
+                "description": {
+                  "desktop": [
+                    "클라우드에 포트폴리오가 있다면, 전체 링크 형식으로 적어주세요!"
+                  ],
+                  "mobile": [
+                    "클라우드에 포트폴리오가 있다면,",
+                    "전체 링크 형식으로 적어주세요!"
+                  ]
+                },
+                "src": {
+                  "desktop": "b_checkdesktop302_popup_26rspot908_031110.svg",
+                  "mobile": "b_checkmobile302_popup_5rspot209_031110.svg"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "title": "포트폴리오",
+          "green": true,
+          "src": {
+            "desktop": "factorTitle319_5rspot453_031110.svg",
+            "mobile": "factorTitle319_5rspot453_031110.svg"
+          },
+          "popup": {
+            "description": {
+              "desktop": [
+                "포트폴리오는 50MB 이하의 파일로 보내주시고,",
+                "링크로 보내주셔도 됩니다 :)"
+              ],
+              "mobile": [
+                "포트폴리오는 50MB 이하의",
+                "pdf파일로 보내주시고,",
+                "링크로 보내주셔도 됩니다 :)"
+              ]
+            },
+            "src": {
+              "desktop": "popup319_7rspot494_031110.svg",
+              "mobile": "mopopup319_2rspot714_031110.svg"
+            }
+          },
+          "notice": {
+            "title": "포트폴리오는 50MB 이하의 pdf파일로 보내주시고, 링크로 보내주셔도 됩니다 :)",
+            "mobileException": "포트폴리오는 파일이 없을시, 링크로 보내주셔도 됩니다 :)",
+            "src": {
+              "desktop": [
+                "notice310_32rspot562_031110.svg",
+                "notice311_32rspot562_031110.svg"
+              ],
+              "mobile": [
+                "monotice310_23rspot869_031110.svg",
+                "monotice311_23rspot869_031110.svg"
+              ]
+            }
+          }
+        }
+      ]
     }
   ],
   "sub": {

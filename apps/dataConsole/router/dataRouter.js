@@ -431,34 +431,62 @@ DataRouter.prototype.rou_get_Binary = function () {
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
+  let ipTong;
+
+  ipTong = [ 127001 ];
+  for (let info in instance.address) {
+    if (instance.address[info].ip.outer.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+    }
+    if (instance.address[info].ip.inner.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    }
+  }
+
+  ipTong = Array.from(new Set(ipTong));
+
   obj.link = "/:id";
   obj.func = function (req, res) {
     try {
       let target;
 
-      if (/^cl/i.test(req.params.id)) {
-        target = "client";
-      } else if (/^de/i.test(req.params.id)) {
-        target = "designer";
-      } else if (/^ser/i.test(req.params.id)) {
-        target = "service";
-      } else if (/^proj/i.test(req.params.id)) {
-        target = "project";
-      } else if (/^prop/i.test(req.params.id)) {
-        target = "proposal";
-      } else if (/^ana/i.test(req.params.id)) {
-        target = "analytics";
-      } else if (/^con/i.test(req.params.id)) {
-        target = "contents";
-      } else if (/^pho/i.test(req.params.id)) {
-        target = "photo";
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+
+        res.set("Content-Type", "text/html");
+        res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
+          alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
+          window.location.href = "https://home-liaison.com";
+        </script></body></html>`);
+
       } else {
-        target = "client";
+
+        if (/^cl/i.test(req.params.id)) {
+          target = "client";
+        } else if (/^de/i.test(req.params.id)) {
+          target = "designer";
+        } else if (/^ser/i.test(req.params.id)) {
+          target = "service";
+        } else if (/^proj/i.test(req.params.id)) {
+          target = "project";
+        } else if (/^prop/i.test(req.params.id)) {
+          target = "proposal";
+        } else if (/^ana/i.test(req.params.id)) {
+          target = "analytics";
+        } else if (/^con/i.test(req.params.id)) {
+          target = "contents";
+        } else if (/^pho/i.test(req.params.id)) {
+          target = "photo";
+        } else {
+          target = "client";
+        }
+
+        const html = DataRouter.baseMaker(target);
+        res.set("Content-Type", "text/html");
+        res.send(html);
+
       }
 
-      const html = DataRouter.baseMaker(target);
-      res.set("Content-Type", "text/html");
-      res.send(html);
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
