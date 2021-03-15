@@ -1,4 +1,4 @@
-const DataRouter = function (MONGOC, MONGOLOCALC) {
+const DataRouter = function (MONGOC, MONGOLOCALC, isGhost = false) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -22,6 +22,7 @@ const DataRouter = function (MONGOC, MONGOLOCALC) {
   this.pythonApp = this.dir + "/python/app.py";
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.members = {};
+  this.isGhost = isGhost;
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
@@ -478,33 +479,43 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (/^cl/i.test(req.params.id)) {
-          target = "client";
-        } else if (/^de/i.test(req.params.id)) {
-          target = "designer";
-        } else if (/^ser/i.test(req.params.id)) {
-          target = "service";
-        } else if (/^proj/i.test(req.params.id)) {
-          target = "project";
-        } else if (/^prop/i.test(req.params.id)) {
-          target = "proposal";
-        } else if (/^ana/i.test(req.params.id)) {
-          target = "analytics";
-        } else if (/^con/i.test(req.params.id)) {
-          target = "contents";
-        } else if (/^pho/i.test(req.params.id)) {
-          target = "photo";
-        } else {
-          target = "client";
-        }
+        if (instance.isGhost) {
 
-        instance.baseMaker(target).then(function (html) {
           res.set("Content-Type", "text/html");
-          res.send(html);
-        }).catch(function (err) {
-          throw new Error(err);
-        });
+          res.send(`<html><head><title>Permission denied</title></head><body><script>
+            alert("접근할 수 없는 경로입니다!");
+            window.location.href = "https://home-liaison.com";</script></body></html>`);
 
+        } else {
+
+          if (/^cl/i.test(req.params.id)) {
+            target = "client";
+          } else if (/^de/i.test(req.params.id)) {
+            target = "designer";
+          } else if (/^ser/i.test(req.params.id)) {
+            target = "service";
+          } else if (/^proj/i.test(req.params.id)) {
+            target = "project";
+          } else if (/^prop/i.test(req.params.id)) {
+            target = "proposal";
+          } else if (/^ana/i.test(req.params.id)) {
+            target = "analytics";
+          } else if (/^con/i.test(req.params.id)) {
+            target = "contents";
+          } else if (/^pho/i.test(req.params.id)) {
+            target = "photo";
+          } else {
+            target = "client";
+          }
+
+          instance.baseMaker(target).then(function (html) {
+            res.set("Content-Type", "text/html");
+            res.send(html);
+          }).catch(function (err) {
+            throw new Error(err);
+          });
+
+        }
       }
 
     } catch (e) {

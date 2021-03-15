@@ -120,11 +120,12 @@ DataConsole.prototype.connect = async function () {
   try {
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
+    const isGhost = (address.isGhost === true);
     if (name === "unknown") {
       throw new Error("invalid address");
     }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
     console.log(``);
 
     //set mongo connetion
@@ -170,7 +171,7 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC, MONGOLOCALC);
+    const router = new DataRouter(MONGOC, MONGOLOCALC, isGhost);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

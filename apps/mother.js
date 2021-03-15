@@ -877,6 +877,7 @@ Mother.prototype.ipCheck = function () {
           obj.rawObj.ip = {};
           obj.rawObj.ip.outer = obj.rawObj.outer;
           obj.rawObj.ip.inner = obj.rawObj.inner;
+          obj.rawObj.isGhost = true;
         }
       }
 
