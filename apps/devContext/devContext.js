@@ -1463,10 +1463,6 @@ class DevContext extends Array {
 
 
 
-      const reflection = new MongoReflection();
-      await reflection.frontReflection();
-
-
 
 
 
