@@ -1622,11 +1622,22 @@ Mother.prototype.decryptoHash = function (password, hash) {
   });
 }
 
-Mother.prototype.mysqlQuery = function (query, option = { local: true }) {
+Mother.prototype.mysqlQuery = function (query, option = { local: true, front: false, office: false, home: false }) {
   const mysql = require('mysql2');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const mysqlStandard = ADDRESS["frontinfo"];
-  const host = (option.local === true) ? "localhost" : ADDRESS["frontinfo"]["host"];
+  let host;
+  if (option.local === true) {
+    host = "localhost";
+  } else if (option.front === true) {
+    host = ADDRESS["frontinfo"]["host"];
+  } else if (option.office === true) {
+    host = ADDRESS["officeinfo"]["ghost"]["ddns"];
+  } else if (option.home === true) {
+    host = ADDRESS["homeinfo"]["ghost"]["ddns"];
+  } else {
+    host = "localhost";
+  }
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });
   let tong = {};

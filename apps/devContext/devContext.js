@@ -364,7 +364,7 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery } = this.mother;
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
@@ -1458,17 +1458,13 @@ class DevContext extends Array {
 
 
 
-      
 
 
 
 
 
-
-
-
-
-
+      const reflection = new MongoReflection();
+      await reflection.frontReflection();
 
 
 

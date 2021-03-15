@@ -12,16 +12,111 @@ const MongoReflection = function () {
   this.dropExceptionList = [ "googleAnalytics_total" ];
 }
 
-MongoReflection.prototype.showTables = async function () {
+MongoReflection.prototype.showTables = async function (location = "local") {
   const instance = this;
   const { mysqlQuery } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   try {
     let tableArr = [];
-    const raw = await mysqlQuery("SHOW TABLES;");
+    let whereQuery = {};
+    if (/local/gi.test(location)) {
+      whereQuery["local"] = true;
+    } else if (/front/gi.test(location) || /web/gi.test(location)) {
+      whereQuery["front"] = true;
+    } else if (/office/gi.test(location)) {
+      whereQuery["office"] = true;
+    } else if (/home/gi.test(location)) {
+      whereQuery["home"] = true;
+    }
+    const raw = await mysqlQuery("SHOW TABLES;", whereQuery);
     for (let i of raw) {
-      tableArr.push(Object.values(i)[0]);
+      tableArr.push(String(Object.values(i)[0]));
     }
     return tableArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.showColumns = async function (table, location = "local") {
+  const instance = this;
+  const { mysqlQuery } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  try {
+    let result = [];
+    let whereQuery = {};
+    if (/local/gi.test(location)) {
+      whereQuery["local"] = true;
+    } else if (/front/gi.test(location) || /web/gi.test(location)) {
+      whereQuery["front"] = true;
+    } else if (/office/gi.test(location)) {
+      whereQuery["office"] = true;
+    } else if (/home/gi.test(location)) {
+      whereQuery["home"] = true;
+    }
+    const raw = await mysqlQuery("DESC " + table, whereQuery);
+    for (let obj of raw) {
+      if (String(obj.Field) !== 'id' && String(obj.Field) !== 'Id' && String(obj.Field) !== 'ID') {
+        result.push({
+          column: String(obj.Field),
+          type: String(obj.Type)
+        });
+      }
+    }
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.showData = async function (table, location = "local") {
+  const instance = this;
+  const { mysqlQuery } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  class MysqlObject {
+    toInsertQuery() {
+      let sql;
+      let columns = Object.keys(this);
+
+      sql = "INSERT INTO ";
+      sql += table;
+      sql += " (";
+      for (let i of columns) {
+        sql += i + ',';
+      }
+      sql = sql.slice(0, -1) + ") VALUES (";
+      for (let i of columns) {
+        sql += "'" + String(this[i]).replace(/\'/g, '"') + "',";
+      }
+      sql = sql.slice(0, -1) + ");";
+
+      return sql;
+    }
+  }
+  try {
+    let result = [];
+    let whereQuery = {};
+    let refinedObj;
+    if (/local/gi.test(location)) {
+      whereQuery["local"] = true;
+    } else if (/front/gi.test(location) || /web/gi.test(location)) {
+      whereQuery["front"] = true;
+    } else if (/office/gi.test(location)) {
+      whereQuery["office"] = true;
+    } else if (/home/gi.test(location)) {
+      whereQuery["home"] = true;
+    }
+    const raw = await mysqlQuery("SELECT * FROM " + table, whereQuery);
+    for (let obj of raw) {
+      refinedObj = new MysqlObject();
+      for (let i in obj) {
+        if (i !== "id" && i !== "Id" && i !== "ID") {
+          refinedObj[i] = String(obj[i]);
+        }
+      }
+      result.push(refinedObj);
+    }
+    return result;
   } catch (e) {
     console.log(e);
   }
@@ -229,6 +324,62 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
     await mysqlQuery(sqlList);
     console.log(`\x1b[33m%s\x1b[0m`, `mariaDB flat reflection success`);
     console.log(``);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.frontReflection = async function (to = "local") {
+  const instance = this;
+  const { mysqlQuery } = this.mother;
+  try {
+
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `mariaDB front reflection start ==================================================`);
+
+    const from = "front";
+    const targets = await this.showTables(from);
+    const status = await this.showTables(to);
+    let targets_refined, fromQuery, whereQuery, columnsArr, createQuery, queryArr, rows;
+
+    whereQuery = {};
+    fromQuery = {};
+    whereQuery[to] = true;
+    fromQuery[from] = true;
+    queryArr = [];
+
+    targets_refined = [];
+    for (let i of targets) {
+      if (i !== "conlist" && i !== "sessions") {
+        targets_refined.push(i);
+      }
+    }
+
+    for (let table of targets_refined) {
+      if (status.includes(table)) {
+        await mysqlQuery("DROP TABLE " + table, whereQuery);
+      }
+      createQuery = "CREATE TABLE " + table + " (id INT(11) NOT NULL AUTO_INCREMENT,";
+      columnsArr = await this.showColumns(table, from);
+      for (let { column, type } of columnsArr) {
+        createQuery += column + ' ' + type + ',';
+      }
+      createQuery += "PRIMARY KEY (id));";
+      queryArr.push(createQuery);
+
+      console.log(`create table : ${table}`);
+
+      rows = await this.showData(table, from);
+      for (let i of rows) {
+        queryArr.push(i.toInsertQuery());
+      }
+
+      console.log(`insert setting : ${table}`);
+    }
+
+    //execute
+    await mysqlQuery(queryArr, whereQuery);
+    console.log(`\x1b[33m%s\x1b[0m`, `mariaDB front reflection success`);
 
   } catch (e) {
     console.log(e);
