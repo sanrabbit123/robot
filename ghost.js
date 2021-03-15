@@ -197,8 +197,8 @@ Ghost.prototype.requestObject = async function () {
     let res;
 
     // to = "http://homeliaison.ddns.net:3000/shell";
-    // to = "http://homeliaison.ddns.net:3000/readDir";
-    to = "http://homeliaison.ddns.net:3000/fixDir";
+    to = "https://homeliaison.ddns.net:3000/readDir";
+    // to = "http://homeliaison.ddns.net:3000/fixDir";
     // to = "http://homeliaison.ddns.net:3000/mkdir";
 
     // const motherDir = "__samba__/디자이너";
@@ -214,7 +214,6 @@ Ghost.prototype.requestObject = async function () {
     // }
 
     json = {
-      await: true,
       target: motherDir,
     };
 
