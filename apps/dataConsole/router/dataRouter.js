@@ -329,7 +329,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first") {
 
   } else if (mode === "middle") {
 
-    const DataMiddle = require(`${this.dir}/router/DataMiddle.js`);
+    const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     return new Promise(function(resolve, reject) {
       DataMiddle.baseHtml(target, fontStyle).then(function (html) {
         resolve(html);
