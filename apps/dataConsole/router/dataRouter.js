@@ -12,6 +12,7 @@ const DataRouter = function (MONGOC, MONGOLOCALC) {
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.patchClass = DataPatch;
   this.patch = new DataPatch();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
@@ -24,194 +25,6 @@ const DataRouter = function (MONGOC, MONGOLOCALC) {
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
-
-DataRouter.baseMaker = function (target) {
-  const DataPatch = require(`${process.cwd()}/apps/dataConsole/router/dataPatch.js`);
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  let dataPatchScript, html;
-  let prototypes;
-
-  prototypes = Object.keys(DataPatch.prototype);
-
-  dataPatchScript = `const DataPatch = new Function();\n`;
-  if (target !== "photo") {
-    for (let i of prototypes) {
-      if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
-        dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-      }
-    }
-  } else {
-    for (let i of prototypes) {
-      if ((new RegExp("^photo")).test(i) || (new RegExp("^project")).test(i) || /^tools/.test(i)) {
-        dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-      }
-    }
-  }
-  html = `<!DOCTYPE html>
-  <html lang="ko" dir="ltr">
-    <head>
-      <meta charset="utf-8">
-      <title></title>
-      <style>
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
-            font-weight: 700;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
-            font-weight: 400;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
-            font-weight: 500;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
-            font-weight: 800;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
-            font-weight: 600;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
-            font-weight: 200;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
-            font-weight: 100;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
-            font-weight: 900;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'sandoll';
-            src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Futura';
-            src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff') format('woff');
-            font-weight: 500;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Futura';
-            src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff') format('woff');
-            font-weight: 600;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff') format('woff');
-            font-weight: 200;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
-            font-weight: 200;
-            font-style: italic;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff') format('woff');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
-            font-weight: 300;
-            font-style: italic;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff') format('woff');
-            font-weight: 400;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
-            font-weight: 400;
-            font-style: italic;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
-            font-weight: 500;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
-            font-weight: 500;
-            font-style: italic;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff') format('woff');
-            font-weight: 600;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'graphik';
-            src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
-                url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
-            font-weight: 600;
-            font-style: italic;
-        }
-      </style>
-      <script>${dataPatchScript}</script>
-    </head>
-    <body>
-      <div id="totalcontents"></div>
-      <script src="${target}.js"></script>
-    </body>
-  </html>`;
-
-  return html;
-}
 
 DataRouter.queryFilter = function (str) {
   str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
@@ -319,6 +132,214 @@ DataRouter.splitToSpace = function (str) {
 }
 
 //GENERAL METHODS ---------------------------------------------------------------------------------
+
+DataRouter.prototype.baseMaker = function (target, mode = "first") {
+  const instance = this;
+  const ADDRESS = this.address;
+  const DataPatch = this.patchClass;
+  let dataPatchScript, html;
+  let prototypes;
+  let fontStyle;
+
+  fontStyle = `
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
+      font-weight: 800;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
+      font-weight: 600;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
+      font-weight: 200;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
+      font-weight: 100;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
+      font-weight: 900;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'sandoll';
+      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
+      font-weight: 300;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Futura';
+      src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Futura';
+      src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff') format('woff');
+      font-weight: 600;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff') format('woff');
+      font-weight: 200;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
+      font-weight: 200;
+      font-style: italic;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff') format('woff');
+      font-weight: 300;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
+      font-weight: 300;
+      font-style: italic;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+  }
+
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
+      font-weight: 400;
+      font-style: italic;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
+      font-weight: 500;
+      font-style: italic;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff') format('woff');
+      font-weight: 600;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'graphik';
+      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
+          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
+      font-weight: 600;
+      font-style: italic;
+  }`;
+
+  if (mode === "first") {
+
+    prototypes = Object.keys(DataPatch.prototype);
+    dataPatchScript = `const DataPatch = new Function();\n`;
+    if (target !== "photo") {
+      for (let i of prototypes) {
+        if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
+          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+        }
+      }
+    } else {
+      for (let i of prototypes) {
+        if ((new RegExp("^photo")).test(i) || (new RegExp("^project")).test(i) || /^tools/.test(i)) {
+          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+        }
+      }
+    }
+    html = `<!DOCTYPE html>
+    <html lang="ko" dir="ltr">
+      <head>
+        <meta charset="utf-8">
+        <title>HomeLiaison Console: ${target}</title>
+        <style>${fontStyle}</style>
+        <script>${dataPatchScript}</script>
+      </head>
+      <body>
+        <div id="totalcontents"></div>
+        <script src="${target}.js"></script>
+      </body>
+    </html>`;
+
+    return new Promise(function(resolve, reject) {
+      resolve(html);
+    });
+
+
+  } else if (mode === "middle") {
+
+    const DataMiddle = require(`${this.dir}/router/DataMiddle.js`);
+    return new Promise(function(resolve, reject) {
+      DataMiddle.baseHtml(target, fontStyle).then(function (html) {
+        resolve(html);
+      }).catch(function (e) {
+        reject(e);
+      })
+    });
+
+  }
+}
 
 DataRouter.prototype.getDateMatrix = async function (length = 6) {
   const instance = this;
@@ -432,7 +453,6 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
   let ipTong;
-
   ipTong = [ 127001 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
@@ -442,9 +462,7 @@ DataRouter.prototype.rou_get_First = function () {
       ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
     }
   }
-
   ipTong = Array.from(new Set(ipTong));
-
   obj.link = "/:id";
   obj.func = function (req, res) {
     try {
@@ -456,8 +474,7 @@ DataRouter.prototype.rou_get_First = function () {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
           alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
-          window.location.href = "https://home-liaison.com";
-        </script></body></html>`);
+          window.location.href = "https://home-liaison.com";</script></body></html>`);
 
       } else {
 
@@ -481,12 +498,35 @@ DataRouter.prototype.rou_get_First = function () {
           target = "client";
         }
 
-        const html = DataRouter.baseMaker(target);
-        res.set("Content-Type", "text/html");
-        res.send(html);
+        instance.baseMaker(target).then(function (html) {
+          res.set("Content-Type", "text/html");
+          res.send(html);
+        }).catch(function (err) {
+          throw new Error(err);
+        });
 
       }
 
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_get_Middle = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/middle/:id";
+  obj.func = function (req, res) {
+    try {
+      instance.baseMaker(req.params.id, "middle").then(function (html) {
+        res.set("Content-Type", "text/html");
+        res.send(html);
+      }).catch(function (err) {
+        throw new Error(err);
+      });
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

@@ -42,6 +42,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
     let code0, code1;
     let result;
 
+    //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
@@ -50,9 +51,15 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
 
+    //write local js
     console.log(`set target : `, staticDirList);
     for (let i of staticDirList) {
+
+      result = '';
+      code0 = '';
+      code1 = '';
       svgTongItemsString = null;
+
       if (i !== `.DS_Store`) {
         execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
         execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
@@ -73,7 +80,19 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
         console.log(`${i} babel compile success`);
         await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, (polyfillString + "\n\n" + result) ]);
       }
+
     }
+
+    //just general js
+    result = '';
+    code0 = '';
+    code1 = '';
+
+    code0 = s3String + "\n\n" + sseString + "\n\n" + svgTongString;
+    code1 = generalString + "\n\n" + consoleGeneralString;
+    result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
+    console.log(`general.js babel compile success`);
+    await fileSystem(`write`, [ `${process.env.HOME}/static/general.js`, (polyfillString + "\n\n" + result) ]);
 
   } catch (e) {
     console.log(e);
@@ -108,9 +127,13 @@ DataConsole.prototype.connect = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
     console.log(``);
 
+
+    console.log(address);
+
+
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    if (address.host === "localhost") {
+    if ([ "home", "office" ].includes(name.replace(/info/i, ''))) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`set DB server => 127.0.0.1`);
     } else {

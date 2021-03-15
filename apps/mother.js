@@ -859,6 +859,27 @@ Mother.prototype.ipCheck = function () {
       }
       obj.name = target;
       obj.rawObj = values[targetNum];
+
+      if (target === "home" || target === "office") {
+        const networkInterfaces = require("os").networkInterfaces();
+        let macList;
+        macList = [];
+        for (let i in networkInterfaces) {
+          for (let { mac, family } of networkInterfaces[i]) {
+            if (/4/g.test(family) && Number(mac.replace(/[^0-9]/g, '')) !== 0) {
+              macList.push(mac);
+            }
+          }
+        }
+        macList = Array.from(new Set(macList));
+        if (macList.includes(obj.rawObj.ghost.mac)) {
+          obj.rawObj = values[targetNum].ghost;
+          obj.rawObj.ip = {};
+          obj.rawObj.ip.outer = obj.rawObj.outer;
+          obj.rawObj.ip.inner = obj.rawObj.inner;
+        }
+      }
+
       resolve(obj);
     }).catch(function (error) {
       reject(error);

@@ -3347,3 +3347,31 @@ GeneralJs.prototype.generalStacks = function () {
   const instance = this;
   GeneralJs.stacks["latestSort"] = [ null ];
 }
+
+GeneralJs.prototype.loadingRun = function () {
+  const instance = this;
+  let loading;
+  let style;
+  let ea = "px";
+  let width, height;
+
+  loading = this.returnLoadingIcon();
+  width = 50;
+  height = 50;
+  style = {
+    width: String(width) + ea,
+    height: String(height) + ea,
+    top: "calc(calc(100% - " + String((this.belowHeight !== undefined && this.belowHeight !== null) ? this.belowHeight : 0) + ea + ") / 2 - " + String(width / 2) + ea + ")",
+    left: "calc(50% - " + String(height / 2) + ea + ")",
+  };
+
+  for (let i in style) {
+    loading.style[i] = style[i];
+  }
+
+  this.totalContents.appendChild(loading);
+
+  return new Promise(function (resolve, reject) {
+    resolve(loading);
+  });
+}
