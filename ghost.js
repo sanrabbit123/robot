@@ -363,6 +363,7 @@ Ghost.prototype.launching = async function () {
 
     } else if (process.argv[2] === undefined || process.argv[2] === "server") {
 
+      //set address info
       const { name, rawObj: address } = await this.mother.ipCheck();
       if (name === "unknown") {
         throw new Error("invalid address");
@@ -595,8 +596,35 @@ Ghost.prototype.launching = async function () {
         }
       });
 
+      //set pem key
+      let pems = {};
+      let pemsLink = process.cwd() + "/pems/" + address.host;
+      let certDir, keyDir, caDir;
+
+      certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+      keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+      caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+      for (let i of certDir) {
+        if (i !== `.DS_Store`) {
+          pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+        }
+      }
+      for (let i of keyDir) {
+        if (i !== `.DS_Store`) {
+          pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+        }
+      }
+      pems.ca = [];
+      for (let i of caDir) {
+        if (i !== `.DS_Store`) {
+          pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+        }
+      }
+      pems.allowHTTP1 = true;
+
       //server on
-      http.createServer(app).listen(3000, () => {
+      https.createServer(pems, app).listen(3000, address.ip.inner, () => {
         console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       });
 
