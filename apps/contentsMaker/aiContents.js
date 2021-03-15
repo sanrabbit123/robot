@@ -387,30 +387,17 @@ AiContents.prototype.to_mysql = async function () {
 
 AiContents.prototype.to_poo = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  const mother = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, copyToClipboard } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   try {
 
-    //setting binary folders -------------------------------------------------------------------------------------------------
-    let pooPath_mother, pooPath;
-    let webPath_mother, webPath;
-
-    //set uragen main poo folder
-    pooPath_mother = shellLink(this.motherLink.mainBinary);
-    pooPath = {
-      list_image: pooPath_mother + "/list_image",
-      porpor: pooPath_mother + "/list_svg/porporpor",
-      revrev: pooPath_mother + "/list_svg/revrevrev",
-    };
-
-    //set new-web folder
-    webPath_mother = shellLink(this.motherLink.webPath);
-    webPath = {
-      porpor: webPath_mother + "/_PortfolioDetail",
-      revrev: webPath_mother + "/_Review",
-    };
-
-    //setting ids -----------------------------------------------------------------------------------------------------------
+    const front_www = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
+    const office_www = `${ADDRESS["officeinfo"]["ghost"]["user"]}@${ADDRESS["officeinfo"]["ghost"]["host"]}:/home/${ADDRESS["officeinfo"]["ghost"]["user"]}/samba/drive/front/www`;
+    const image = `list_image`;
+    const porporpor = `list_svg/porporpor`;
+    const revrevrev = `list_svg/revrevrev`;
+    let p_path_server, r_path_server;
+    let order;
     let arr;
     let p_id, r_id;
     let p_path, r_path;
@@ -432,51 +419,62 @@ AiContents.prototype.to_poo = async function () {
 
     //move svgs and ai delete
     p_path = `${this.options.home_dir}/result/${p_id}code`;
-    svgAis = await fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
-    for (let i of svgAis) { if (/\.ai$/g.test(i)) {
-      delete_arr.push(i);
-    }}
-    mother.shell.exec(`cp -r ${p_path} ${webPath.porpor}`);
-    mother.shell.exec(`cp ${p_path}/moportivecgaro${p_id}.svg ${pooPath.porpor}/mobile/motitlegaro/`);
-    mother.shell.exec(`cp ${p_path}/portivecgaro${p_id}.svg ${pooPath.porpor}/titlegaro/`);
-    mother.shell.exec(`cp ${p_path}/porhovecgaro${p_id}.svg ${pooPath.porpor}/titlehovergaro/`);
-    mother.shell.exec(`cp ${p_path}/moportivec${p_id}.svg ${pooPath.porpor}/mobile/motitlesero/`);
-    mother.shell.exec(`cp ${p_path}/portivec${p_id}.svg ${pooPath.porpor}/titlesero/`);
-    mother.shell.exec(`cp ${p_path}/porhovec${p_id}.svg ${pooPath.porpor}/titlehoversero/`);
-    for (let ai of delete_arr) {
-      mother.shell.exec(`rm -f ${p_path}/portp${p_id}/svg/${ai}`);
+    p_path_server = [
+      `${front_www}/${porporpor}`,
+      `${office_www}/${porporpor}`
+    ];
+
+    order = ``;
+    for (let path of p_path_server) {
+      order += `scp ${shellLink(p_path)}/moportivecgaro${p_id}.svg ${path}/mobile/motitlegaro/;`;
+      order += `scp ${shellLink(p_path)}/portivecgaro${p_id}.svg ${path}/titlegaro/;`;
+      order += `scp ${shellLink(p_path)}/porhovecgaro${p_id}.svg ${path}/titlehovergaro/;`;
+      order += `scp ${shellLink(p_path)}/moportivec${p_id}.svg ${path}/mobile/motitlesero/;`;
+      order += `scp ${shellLink(p_path)}/portivec${p_id}.svg ${path}/titlesero/;`;
+      order += `scp ${shellLink(p_path)}/porhovec${p_id}.svg ${path}/titlehoversero/;`;
     }
 
-    //image copy to poo
-    mother.shell.exec(`cp -r ${p_path}/portp${p_id} ${pooPath.list_image}`);
+    svgAis = await fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
+    delete_arr = [];
+    for (let i of svgAis) {
+      if (/\.ai$/g.test(i)) {
+        delete_arr.push(i);
+      }
+    }
+    for (let ai of delete_arr) {
+      order += `rm -f ${shellLink(p_path)}/portp${p_id}/svg/${ai};`;
+    }
 
     //review version
     if (r_id !== `none`) {
       r_path = `${this.options.home_dir}/result/${r_id}code`;
-      revAis = await fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
-      for (let i of revAis) { if (/\.ai$/g.test(i)) {
-        revdelete_arr.push(i);
-      }}
-      mother.shell.exec(`cp -r ${r_path} ${webPath.revrev}`);
-      mother.shell.exec(`cp ${r_path}/morevtivec${r_id}.svg ${pooPath.revrev}/morevivector/`);
-      mother.shell.exec(`cp ${r_path}/revhovec${r_id}.svg ${pooPath.revrev}/revhovector/`);
-      mother.shell.exec(`cp ${r_path}/revtivec${r_id}.svg ${pooPath.revrev}/revivector/`);
-      mother.shell.exec(`cp ${r_path}/nu${r_id}.svg ${pooPath.revrev}/detail/number`);
-      for (let ai of revdelete_arr) {
-        mother.shell.exec(`rm -f ${r_path}/${r_id}/${ai}`);
+      r_path_server = [
+        `${front_www}/${revrevrev}`,
+        `${office_www}/${revrevrev}`
+      ];
+
+      for (let path of r_path_server) {
+        order += `scp ${shellLink(r_path)}/morevtivec${r_id}.svg ${path}/morevivector/;`;
+        order += `scp ${shellLink(r_path)}/revhovec${r_id}.svg ${path}/revhovector/;`;
+        order += `scp ${shellLink(r_path)}/revtivec${r_id}.svg ${path}/revivector/;`;
+        order += `scp ${shellLink(r_path)}/nu${r_id}.svg ${path}/detail/number;`;
+        order += `scp -r ${shellLink(r_path)}/${r_id} ${path}/detail/;`;
       }
-      mother.shell.exec(`cp -r ${r_path}/${r_id} ${pooPath.revrev}/detail/`);
+
+      revAis = await fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
+      for (let i of revAis) {
+        if (/\.ai$/g.test(i)) {
+          revdelete_arr.push(i);
+        }
+      }
+      for (let ai of revdelete_arr) {
+        order += `rm -f ${shellLink(r_path)}/${r_id}/${ai};`;
+      }
+
     }
 
-
-    //setting scp message -----------------------------------------------------------------------------------------------------------
-    let scpMsg = '';
-    scpMsg += `scp -r ${pooPath.porpor} miro81@home-liaison.com:/miro81/www/list_svg/;`;
-    scpMsg += `scp -r ${pooPath.list_image}/portp${p_id} miro81@home-liaison.com:/miro81/www/list_image/;`;
-    if (r_id !== `none`) {
-      scpMsg += `scp -r ${pooPath.revrev} miro81@home-liaison.com:/miro81/www/list_svg/;`;
-    }
-
+    order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
+    order += `scp -r ${shellLink(p_path)}/portp${p_id} ${office_www}/${image}/;`;
 
     //to S3
     let s3TargetDir, s3TargetDirList;
@@ -507,10 +505,11 @@ AiContents.prototype.to_poo = async function () {
     console.log(fromArr);
     console.log(toArr);
 
-    await this.mother.s3FileUpload(fromArr, toArr);
+    await s3FileUpload(fromArr, toArr);
 
     //view scp
-    console.log(scpMsg);
+    console.log(order);
+    copyToClipboard(order);
 
   } catch (e) {
     console.log(e.message);
