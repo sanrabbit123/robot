@@ -504,7 +504,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                     height: String(30 - modeMinus) + ea,
                     borderRadius: String(3) + ea,
                     top: String(0) + ea,
-                    left: "calc(" + String(minimumButtonWidth * 2) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
+                    left: "calc(" + String(minimumButtonWidth) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
                     background: (j < value.search(items[i].column).value) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1,
                     cursor: "pointer",
                     transition: "all 0s ease",
