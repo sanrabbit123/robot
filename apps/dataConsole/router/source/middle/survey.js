@@ -935,6 +935,7 @@ SurveyJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
     this.totalContents = document.getElementById("totalcontents");
+    this.totalContents.style.height = String(window.innerHeight) + "px";
 
     //tablet
     if (window.innerWidth < 1400 && window.innerWidth >= 800) {
