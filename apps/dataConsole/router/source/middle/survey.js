@@ -100,10 +100,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
   const modeMinus = this.modeMinus;
   let fontSize0, fontSize1, fontSize2, fontSize3;
 
-  fontSize0 = 14 - modeMinus + 1;
-  fontSize1 = 13 - modeMinus + 1;
+  fontSize0 = 14 - modeMinus;
+  fontSize1 = 13 - modeMinus;
   fontSize2 = 34 - (modeMinus * 3);
-  fontSize3 = 23 - modeMinus + 1;
+  fontSize3 = 23 - modeMinus;
 
   return async function (e) {
     try {
@@ -956,7 +956,7 @@ SurveyJs.prototype.launching = async function (loading) {
 
     //tablet
     if (window.innerWidth < 1400 && window.innerWidth > 1000) {
-      this.modeMinus = 2;
+      this.modeMinus = 1;
       this.mode = "tablet";
       this.sero = false;
     //mobile
