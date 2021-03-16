@@ -191,6 +191,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       }
 
       checkBoxEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         const column = this.getAttribute("column");
         const type = this.getAttribute("type");
         const { children: siblings } = this.parentElement;
@@ -223,6 +225,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       }
 
       radioEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         const column = this.getAttribute("column");
         const type = this.getAttribute("type");
         const { children: siblings } = this.parentElement;
@@ -254,6 +258,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       }
 
       rangeEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         const column = this.getAttribute("column");
         const nameConst = "checkRange";
         const [ x, y, z ] = [ Number(this.getAttribute('x')), Number(this.getAttribute('y')), Number(this.getAttribute('z')) ];
