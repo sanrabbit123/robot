@@ -515,7 +515,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
 
                 //name text
                 checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                checkListFactorContentsItemText.textContent = items[i].name;
+                checkListFactorContentsItemText.textContent = items[i].name.replace(/한 /g, "");
                 style = {
                   position: "absolute",
                   width: String(minimumButtonWidth) + ea,

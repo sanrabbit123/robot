@@ -4292,7 +4292,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "비비드(컬러풀)",
+              name: "비비드",
               column: "vivid",
               value: 10
             },
