@@ -3320,6 +3320,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "서울",
             "인천",
@@ -3352,6 +3353,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "자동차",
             "대중교통"
@@ -3390,6 +3392,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "교통비",
             "출장일수당"
@@ -3417,6 +3420,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "travelExpenses",
             includes: "출장일수당"
           },
+          survey: true,
           items: [
             "0만원",
             "5만원",
@@ -3459,6 +3463,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -3491,6 +3496,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "직접 가서 보고 실측",
             "사진과 사이즈를 받음"
@@ -3523,6 +3529,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -3547,6 +3554,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "철저한 준비",
             "일단 가서 체크"
@@ -3585,6 +3593,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -3617,6 +3626,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -3644,6 +3654,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "budgetGuide",
             includes: "yes"
           },
+          survey: true,
           items: [
             "문서",
             "구두",
@@ -3677,6 +3688,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "1주일 이내",
             "2주일 이내",
@@ -3711,6 +3723,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "1개월 이내",
             "2개월 이내",
@@ -3736,6 +3749,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "도면",
             "3D",
@@ -3765,6 +3779,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "대면",
             "비대면"
@@ -3801,6 +3816,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "2회",
             "3회",
@@ -3831,6 +3847,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "1회",
             "2회",
@@ -3862,6 +3879,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "1회",
             "2회",
@@ -3895,6 +3913,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: false,
           items: [
             "1단계",
             "2단계",
@@ -3924,6 +3943,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -3948,6 +3968,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "직접 계약, 직접 감리",
             "직접 계약, 외주 감리",
@@ -3981,6 +4002,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "constructContractMethod",
             includes: "공정별 연결"
           },
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4009,6 +4031,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4036,6 +4059,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "outsidePossible",
             includes: "yes"
           },
+          survey: true,
           items: [
             "톤만 제안",
             "시공사 마감재풀 내 선택",
@@ -4062,6 +4086,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: []
         }
       ]
@@ -4089,6 +4114,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: false,
           items: [
             "1단계",
             "2단계",
@@ -4114,6 +4140,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "순차 제안",
             "한번에 제안"
@@ -4149,6 +4176,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             {
               name: "모던",
@@ -4222,6 +4250,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             {
               name: "진한 우드",
@@ -4275,6 +4304,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             {
               name: "진한 우드",
@@ -4338,6 +4368,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             {
               name: "맥시멈",
@@ -4374,6 +4405,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4402,6 +4434,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4430,6 +4463,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4457,6 +4491,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "makeFabricAble",
             includes: "no"
           },
+          survey: true,
           items: [
             "업체 연결",
             "기성 제품 추천",
@@ -4492,6 +4527,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4519,6 +4555,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "agenciesPossible",
             includes: "yes"
           },
+          survey: true,
           items: []
         },
         {
@@ -4544,6 +4581,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4572,6 +4610,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4600,6 +4639,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "yes",
             "no"
@@ -4627,6 +4667,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             mother: "installPossible",
             includes: "yes"
           },
+          survey: true,
           items: [
             "세팅맨 연계",
             "무료 지원",
@@ -4652,6 +4693,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: []
         }
       ]
@@ -4690,6 +4732,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "0 - 500",
             "500 - 1000",
@@ -4717,6 +4760,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "빠른 편",
             "느린 편"
@@ -4741,6 +4785,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "꼼꼼한 편",
             "일반"
@@ -4765,6 +4810,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: true,
           items: [
             "디자이너가 리드하는 편",
             "고객에게 맞추는 편"
@@ -4789,6 +4835,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             }
           },
           dependency: null,
+          survey: false,
           items: [
             "지속가능성 높음",
             "그냥 평범",
