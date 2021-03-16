@@ -103,7 +103,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
 
   fontSize0 = 14 - modeMinus;
   fontSize1 = 13 - modeMinus;
-  fontSize2 = 34 - modeMinus;
+  fontSize2 = 34 - (modeMinus * 2);
   fontSize3 = 23 - modeMinus;
 
   return async function (e) {
@@ -654,7 +654,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
 
       invisibleTextStyle = {
         position: "absolute",
-        top: "calc(50% - " + String(29.5) + ea + ")",
+        top: "calc(50% - " + String(27.5) + ea + ")",
         width: String(84) + ea,
         left: "calc(50% - " + String(42) + ea + ")",
         textAlign: "center",
