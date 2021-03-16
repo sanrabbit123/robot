@@ -30,7 +30,9 @@ MiddleCommunication.execFuntion = function () {
   });
 
   window.addEventListener("resize", function (e) {
-    window.location.reload();
+    if (window.innerWidth > 1200) {
+      window.location.reload();
+    }
   });
 
 }
