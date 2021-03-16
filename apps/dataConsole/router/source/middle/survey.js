@@ -1082,7 +1082,7 @@ SurveyJs.prototype.launching = async function (loading) {
     this.totalContents = document.getElementById("totalcontents");
 
     const getObj = GeneralJs.returnGet();
-    let desid, designers, designer;
+    let desid, designers, designer, phone;
 
     if (getObj.desid === undefined) {
       alert("잘못된 접근입니다!");
@@ -1097,6 +1097,7 @@ SurveyJs.prototype.launching = async function (loading) {
         throw new Error("invaild desid");
       }
       designer = designers[0];
+      phone = designer.information.phone;
       designer = designer.designer;
 
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
@@ -1104,9 +1105,11 @@ SurveyJs.prototype.launching = async function (loading) {
         if (!expired) {
           instance.confirmLaunching(desid, designer);
         } else {
-          alert("잘못된 접근입니다!");
-          window.location.href = "https://home-liaison.com";
-          throw new Error("desid expired");
+          instance.mother.certificationBox(designer, "010-2747-3403", function (back, box) {
+            document.body.removeChild(box);
+            document.body.removeChild(back);
+            instance.confirmLaunching(desid, designer);
+          });
         }
       });
     }

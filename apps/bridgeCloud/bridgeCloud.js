@@ -1021,7 +1021,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - certification
   funcObj.post_certification = async function (req, res) {
     try {
-      const resultObj = req.body;
+      const requestObj = req.body;
       await KAKAO.sendTalk("certification", requestObj["name"], requestObj["phone"], requestObj["certification"]);
       res.set({
         "Content-Type": "text/plain",

@@ -114,6 +114,7 @@ DataConsole.prototype.connect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
+  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -142,9 +143,12 @@ DataConsole.prototype.connect = async function () {
       console.log(`set DB server => ${this.address.mongoinfo.host}`);
     }
     MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-
     await MONGOC.connect();
     await MONGOLOCALC.connect();
+
+    //set kakao
+    const kakaoInstance = new KakaoTalk();
+    await kakaoInstance.ready();
 
     //set pem key
     let pems = {};
@@ -175,7 +179,7 @@ DataConsole.prototype.connect = async function () {
 
     //set router
     const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC, MONGOLOCALC, isGhost);
+    const router = new DataRouter(MONGOC, MONGOLOCALC, kakaoInstance, isGhost);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

@@ -1,4 +1,4 @@
-const DataRouter = function (MONGOC, MONGOLOCALC, isGhost = false) {
+const DataRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, isGhost = false) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -23,6 +23,7 @@ const DataRouter = function (MONGOC, MONGOLOCALC, isGhost = false) {
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.members = {};
   this.isGhost = isGhost;
+  this.kakao = kakaoInstance;
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
@@ -3017,6 +3018,29 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_kakaoCertification = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/kakaoCertification";
+  obj.func = async function (req, res) {
+    try {
+      const requestObj = req.body;
+      await instance.kakao.sendTalk("certification", requestObj["name"], requestObj["phone"], requestObj["certification"]);
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send("success");
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 

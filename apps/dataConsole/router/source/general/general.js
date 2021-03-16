@@ -580,6 +580,8 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes fadeoutlite{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-20px);}}
   @keyframes fadeinlite{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  @keyframes fadecancel{from{opacity:0}to{opacity:0.2}}
+
   .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
   .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
   .justfadein{animation:justfadein 0.3s ease forwards;}
@@ -3375,4 +3377,262 @@ GeneralJs.prototype.loadingRun = function () {
   return new Promise(function (resolve, reject) {
     resolve(loading);
   });
+}
+
+GeneralJs.prototype.certificationBox = function (name, phone, callback) {
+  const instance = this;
+  const boo = (window.innerWidth < 1000) ? "mobile" : "desktop";
+
+  SvgTong["pending_svgIcon"] = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 129.921 20.859"><path d="M0.819 1.673h10.78v2.244H7.676C7.719 7.107 9.875 9.418 12.225 10.188l-1.466 2.156C9.185 11.75 7.201 10.033 6.317 8.098c-0.604 2.046-2.781 4.137-4.743 4.818L0 10.781c2.954-1.1 4.916-3.63 4.916-6.799V3.917H0.819V1.673zM3.342 20.309v-6.578h2.695v4.422h11.406v2.156H3.342zM14.316 15.139V7.745h-3.062V5.545h3.062V0h2.695v15.139H14.316z" fill="#5F5F5F"/><path d="M19.404 12.102V9.924h7.891V7.239H29.969v2.685h7.891v2.178H19.404zM21.323 8.537l-1.121-2.134c3.428-0.353 7.072-2.244 7.072-5.391V0.396h2.781v0.616c0 3.146 4.14 5.236 7.072 5.391l-1.143 2.156c-2.738-0.396-6.295-2.091-7.331-4.489C27.619 6.469 24.276 8.119 21.323 8.537zM28.653 20.815c-4.528 0-7.137-1.475-7.137-3.873 0-2.376 2.609-3.872 7.115-3.872 4.528 0 7.115 1.496 7.115 3.872C35.747 19.341 33.16 20.815 28.653 20.815zM28.632 15.248c-2.652 0-4.355 0.66-4.355 1.717 0 1.056 1.704 1.694 4.355 1.694s4.377-0.639 4.377-1.694C33.009 15.908 31.284 15.248 28.632 15.248z" fill="#5F5F5F"/><path d="M49.221 11.815v1.343c3.816 0.264 5.994 1.672 5.994 3.74 0 2.332-2.674 3.763-7.288 3.763 -4.614 0-7.288-1.431-7.288-3.763 0-2.068 2.156-3.477 5.908-3.74v-1.343H38.7V9.615h18.456v2.2H49.221zM55.086 8.867C52.089 8.625 49.113 6.997 47.928 4.995c-1.035 2.068-3.902 3.608-7.137 3.872l-1.121-2.112c3.169-0.153 5.951-1.474 6.662-3.586H40.597V0.99h14.726v2.179h-5.756c0.819 2.112 3.924 3.41 6.662 3.542C55.84 7.415 55.474 8.142 55.086 8.867zM47.906 15.292c-2.76 0-4.528 0.595-4.528 1.629 0 1.012 1.768 1.605 4.528 1.605s4.571-0.594 4.571-1.605C52.477 15.887 50.666 15.292 47.906 15.292z" fill="#5F5F5F"/><path d="M64.076 0.902c3.105 0 5.412 2.068 5.412 4.973 0 2.948-2.307 4.774-5.412 4.774 -3.104 0-5.412-1.826-5.412-4.774C58.664 3.015 60.971 0.902 64.076 0.902zM64.076 8.405c1.488 0 2.716-0.924 2.716-2.553 0-1.737-1.186-2.684-2.716-2.684s-2.717 1.034-2.717 2.684C61.359 7.481 62.566 8.405 64.076 8.405zM61.381 20.595V12.234h2.695v2.067h8.15v-2.09h2.674v8.383H61.381zM72.226 16.414h-8.15v2.003h8.15V16.414zM72.204 11.134V0h2.674v11.134H72.204z" fill="#5F5F5F"/><path d="M89.775 14.698c-2.479 0.66-7.072 0.946-9.487 0.946h-1.875V2.091h2.651V13.313c2.781 0 6.123-0.265 8.365-0.814L89.775 14.698zM94.152 20.859H91.5V0h2.652V20.859z" fill="#5F5F5F"/><path d="M100.037 13.774c2.911 0 5.757-0.088 8.063-0.639l0.302 2.179c-1.983 0.506-5.066 0.704-9.055 0.704h-1.984V1.914h9.336v2.201h-6.662V13.774zM112.542 7.877h2.933v2.267h-2.933V20.859h-2.673V0h2.673V7.877z" fill="#5F5F5F"/><path d="M116.681 15.688h2.804v2.75h-2.804V15.688z" fill="#5F5F5F"/><path d="M121.898 15.688h2.804v2.75h-2.804V15.688z" fill="#5F5F5F"/><path d="M127.117 15.688h2.804v2.75h-2.804V15.688z" fill="#5F5F5F"/></svg>';
+  SvgTong["certification_svgIcon"] = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 285.128 20.881"><path d="M4.333 20.837v-4.73H0v-2.179h18.456v2.179h-4.42v4.73h-2.674v-4.73H7.007v4.73H4.333zM0.949 5.611v-2.156H17.55v2.156H0.949zM9.271 13.026c-3.989 0-6.641-1.211-6.641-3.345 0-2.156 2.652-3.345 6.641-3.345 4.01 0 6.662 1.188 6.662 3.345C15.933 11.815 13.281 13.026 9.271 13.026zM9.271 8.361c-2.199 0-3.816 0.44-3.816 1.342 0 0.837 1.617 1.299 3.816 1.299s3.838-0.462 3.838-1.299C13.109 8.802 11.47 8.361 9.271 8.361zM5.541 0.353h7.396v2.134H5.541V0.353z" fill="#5F5F5F"/><path d="M22.573 13.687c2.091 0.065 4.549-0.133 5.908-0.484l0.258 2.156c-1.531 0.418-4.527 0.572-6.899 0.572h-1.94V2.486h7.719v2.179c-1.682 0-3.342-0.022-5.045-0.022V13.687zM34.108 20.859V10.407H32.297v9.483h-2.522V0.374h2.522v7.855h1.811V0h2.566v20.859H34.108z" fill="#5F5F5F"/><path d="M49.113 9.373v1.805h7.935v2.179H38.592v-2.179h7.848V9.373h-6.016V7.195h2.803l-0.518-3.234 2.587-0.396L45.75 7.195h4.075l0.539-3.631 2.609 0.396 -0.625 3.234h2.803v2.178H49.113zM40.36 2.948v-2.156h14.833v2.156H40.36zM40.92 20.309v-5.853H43.594v3.696h11.319v2.156H40.92z" fill="#5F5F5F"/><path d="M69.552 1.563c3.363 0 5.541 2.178 5.541 5.148 0 2.992-2.178 5.127-5.541 5.127 -3.342 0-5.52-2.135-5.52-5.127C64.033 3.74 66.21 1.563 69.552 1.563zM66.555 20.309v-6.688h2.695v4.532h11.47v2.156H66.555zM69.552 9.571c1.768 0 2.803-1.21 2.803-2.86 0-1.606-1.035-2.816-2.803-2.816 -1.725 0-2.781 1.21-2.781 2.816C66.771 8.361 67.827 9.571 69.552 9.571zM77.594 15.139V0h2.673v15.139H77.594z" fill="#5F5F5F"/><path d="M101.138 12.124H82.682v-2.156h18.456V12.124zM99.068 8.802c-2.997-0.242-5.973-1.87-7.137-3.873 -1.035 2.068-3.924 3.608-7.158 3.873l-1.1-2.112c3.169-0.154 5.951-1.475 6.662-3.587h-5.756V0.924h14.726v2.179h-5.735c0.819 2.112 3.902 3.41 6.641 3.543L99.068 8.802zM91.931 20.859c-4.549 0-7.158-1.475-7.158-3.873 0-2.376 2.609-3.851 7.137-3.851s7.137 1.475 7.137 3.851C99.046 19.385 96.438 20.859 91.931 20.859zM91.91 15.292c-2.652 0-4.377 0.66-4.377 1.717 0 1.056 1.725 1.694 4.377 1.694 2.673 0 4.398-0.639 4.398-1.694C96.308 15.952 94.583 15.292 91.91 15.292z" fill="#5F5F5F"/><path d="M102.625 11.684V1.276h2.695v3.213h4.269V1.232h2.674v10.451H102.625zM109.588 6.623h-4.269v2.883h4.269V6.623zM105.406 20.309v-6.578h2.695v4.422H119.313v2.156H105.406zM113.275 7.812V5.567h2.911V0h2.673v15.139h-2.673V7.812H113.275z" fill="#5F5F5F"/><path d="M121.273 18.395v-2.178h7.848v-2.024c-3.169-0.33-5.153-1.782-5.153-3.807 0-2.332 2.587-3.873 6.554-3.873s6.533 1.541 6.533 3.873c0 2.046-2.026 3.521-5.261 3.828v2.003h7.935v2.178H121.273zM122.395 5.831v-2.156h16.214v2.156H122.395zM130.523 8.581c-2.07 0-3.816 0.616-3.816 1.805 0 1.21 1.747 1.782 3.816 1.782s3.795-0.572 3.795-1.782C134.318 9.197 132.593 8.581 130.523 8.581zM126.879 0.44h7.223v2.156h-7.223V0.44z" fill="#5F5F5F"/><path d="M140.57 11.552V9.527h18.456v2.024H140.57zM142.898 20.639v-4.862h11.104v-1.101h-11.19v-1.958h13.863v4.863h-11.082v1.078h11.557v1.979H142.898zM143.006 8.428V3.696h10.845V2.597h-10.888V0.66h13.583v4.753h-10.866v1.078h11.319v1.937H143.006z" fill="#5F5F5F"/><path d="M171.445 0.902c3.104 0 5.411 2.068 5.411 4.973 0 2.948-2.307 4.774-5.411 4.774 -3.105 0-5.412-1.826-5.412-4.774C166.033 3.015 168.339 0.902 171.445 0.902zM171.445 8.405c1.487 0 2.716-0.924 2.716-2.553 0-1.737-1.186-2.684-2.716-2.684 -1.531 0-2.717 1.034-2.717 2.684C168.728 7.481 169.935 8.405 171.445 8.405zM168.75 20.595V12.234h2.695v2.067h8.149v-2.09h2.674v8.383H168.75zM179.594 16.414h-8.149v2.003h8.149V16.414zM179.573 11.134V0h2.674v11.134H179.573z" fill="#5F5F5F"/><path d="M195.418 11.662c-1.789 0.418-4.656 0.572-7.395 0.572 -0.885 0-1.747-0.022-2.631-0.022V5.523h6.296V3.564h-6.296V1.387h8.991v6.204h-6.296v2.486c2.415 0 5.455-0.065 6.985-0.506L195.418 11.662zM201.564 13.884v6.997h-2.674V16.063h-11.255v-2.179H201.564zM198.869 12.828V9.638h-3.04V7.415h3.04v-2.156h-3.04V3.015h3.04V0h2.674v12.828H198.869z" fill="#5F5F5F"/><path d="M203.934 4.995h9.746v2.178h-9.746V4.995zM208.85 16.591c-2.651 0-4.484-1.826-4.484-4.312 0-2.663 1.854-4.335 4.484-4.335 2.652 0 4.463 1.716 4.463 4.335C213.313 14.896 211.502 16.591 208.85 16.591zM206.155 1.628h5.498v2.179h-5.498V1.628zM208.85 10.1c-1.186 0-2.048 0.88-2.048 2.179 0 1.298 0.862 2.178 2.048 2.178 1.187 0 2.049-0.924 2.049-2.178C210.899 10.979 210.037 10.1 208.85 10.1zM218.79 20.859V10.628h-1.682v9.263h-2.522V0.374h2.522v8.054h1.682V0h2.544v20.859H218.79z" fill="#5F5F5F"/><path d="M231.079 20.837v-7.261h-7.826v-2.179h18.455v2.179h-7.934v7.261H231.079zM224.071 7.745c3.084-0.33 6.469-2.2 6.943-4.664h-6.124V0.902h15.157v2.179h-6.102c0.475 2.464 3.881 4.246 6.942 4.576 -0.366 0.727-0.754 1.431-1.121 2.135 -2.651-0.309-6.166-2.201-7.287-4.181 -1.078 2.112-4.441 3.895-7.244 4.269L224.071 7.745z" fill="#5F5F5F"/><path d="M251.344 15.776c-1.336-0.836-3.169-2.927-3.708-4.973 -0.561 2.179-2.113 4.335-4.011 5.501l-1.573-1.87c2.587-1.717 4.269-4.863 4.269-9.308V2.024h2.588v3.08c0 4.049 1.487 7.218 3.967 8.735L251.344 15.776zM253.35 19.891V9.418h-2.76V7.195h2.76V0.396h2.501V19.891H253.35zM257.381 20.859V0h2.544v20.859H257.381z" fill="#5F5F5F"/><path d="M261.844 18.263V16.063h4.117v-3.543l2.695 0.11V16.063h4.787v-3.433l2.694-0.11V16.063h4.161v2.2H261.844zM271.093 12.036c-4.484 0-7.438-2.223-7.438-5.259 0-3.081 2.954-5.325 7.438-5.325s7.438 2.244 7.438 5.325C278.532 9.813 275.578 12.036 271.093 12.036zM271.093 3.719c-2.846 0-4.679 1.298-4.679 3.059 0 1.738 1.833 3.015 4.679 3.015 2.824 0 4.7-1.276 4.7-3.015C275.793 5.017 273.939 3.719 271.093 3.719z" fill="#5F5F5F"/><path d="M282.153 1.387h2.976l-0.323 12.014h-2.285L282.153 1.387zM282.283 15.645h2.76v2.729h-2.76V15.645z" fill="#5F5F5F"/></svg>';
+  SvgTong["loader_svgIcon"] = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="#59AF89"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="#009B6A"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="#59AF89"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="#009B6A"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="#59AF89"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="#009B6A"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="#59AF89"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="#59AF89"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="#59AF89"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="#59AF89"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="#59AF89"/><rect width="566.929" height="566.929" fill="none"/></svg>';
+
+  pending = "pending_svgIcon";
+  certification = "certification_svgIcon";
+  loader = "loader_svgIcon";
+
+  let randomArr;
+  if (GeneralJs.isIE()) {
+    randomArr = window.msCrypto.getRandomValues(new Uint32Array(10));
+  } else {
+    randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+  }
+
+  const randomKey = randomArr[Math.floor(Math.random() * 10)];
+  const randomStr = String(randomKey);
+  let randomValue;
+  let randomValueAjaxData;
+
+  if (randomStr.length > 6) {
+    randomValue = randomStr.slice(0, 6);
+  } else {
+    randomValue = randomStr;
+    for (let i = randomStr.length; i < 6; i++) {
+      randomValue += String(Math.floor(Math.random() * 10));
+    }
+    randomValue = randomStr;
+  }
+
+  randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
+
+  GeneralJs.ajax(randomValueAjaxData, "/kakaoCertification", function (data) {});
+
+  let div_back, div_clone, div_clone2, svg_clone;
+  let input_back, input_clone;
+  let height, width, ea = (boo === "desktop") ? "px" : "vw";
+  let wordWidth, whiteWidth, whiteHeight;
+  let style = {};
+  let endEvent;
+
+  whiteWidth = (boo === "desktop") ? 334 : 77;
+  whiteHeight = (boo === "desktop") ? 132 : 31;
+
+  div_back = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    animation: "fadecancel 0.4s ease forwards",
+    transition: "all 0.3s ease",
+    position: "fixed",
+    top: String(0),
+    left: String(0),
+    width: "100%",
+    height: "100%",
+    background: "#606060",
+    opacity: String(0.2),
+    zIndex: String(1),
+  };
+  for (let i in style) {
+    div_back.style[i] = style[i];
+  }
+  document.body.appendChild(div_back);
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  if (boo === "desktop") {
+    style = {
+      animation: "fadeup 0.4s ease forwards",
+      transition: "all 0.3s ease",
+      position: "fixed",
+      top: "calc(50% - " + String(66) + ea + ")",
+      left: "calc(50% - " + String(120) + ea + ")",
+      width: String(240) + ea,
+      height: String(130) + ea,
+      background: GeneralJs.colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 5px 15px -14px #404040",
+      zIndex: String(1),
+    };
+  } else {
+    style = {
+      animation: "fadeup 0.4s ease forwards",
+      transition: "all 0.3s ease",
+      position: "fixed",
+      top: "calc(50% - " + String(17) + ea + ")",
+      left: "calc(50% - " + String(26) + ea + ")",
+      width: String(52) + ea,
+      height: String(34) + ea,
+      background: GeneralJs.colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 5px 15px -14px #404040",
+      zIndex: String(1),
+    };
+  }
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  style = {
+    width: String(whiteWidth) + ea,
+    height: String(whiteHeight) + ea,
+    left: "calc(50% - " + String(whiteWidth / 2) + ea + ")",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+  height = (boo === "desktop") ? 19 : 4.5;
+
+  svg_clone = SvgTong.stringParsing(SvgTong["certification_svgIcon"]);
+  wordWidth = SvgTong.getRatio(svg_clone) * height;
+  style = {
+    position: "absolute",
+    top: String((boo === "desktop") ? 31 : 7) + ea,
+    left: "calc(50% - " + String(wordWidth / 2) + ea + ")",
+    width: String(wordWidth) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  div_clone2 = svg_clone;
+  div_clone.appendChild(div_clone2);
+
+  height = (boo === "desktop") ? 30 : 7.6;
+  svg_clone = SvgTong.stringParsing(SvgTong["loader_svgIcon"]);
+  svg_clone.classList.add("loading");
+  svg_clone.classList.add("loaderc");
+  width = SvgTong.getRatio(svg_clone) * height;
+  style = {
+    top: String((boo === "desktop") ? 67 : 15.5) + ea,
+    left: "calc(50% - " + String((wordWidth / 2) + ((boo === "desktop") ? 1 : 0.5)) + ea + ")",
+    marginLeft: String(0) + ea,
+    width: String(width) + ea,
+    height: String(height) + ea,
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  div_clone.appendChild(svg_clone);
+
+  input_back = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    bottom: String((boo === "desktop") ? 32 : 7.5) + ea,
+    left: String((boo === "desktop") ? (GeneralJs.isMac() ? 80 : 79) : 18) + ea,
+    borderRadius: String((boo === "desktop") ? 4 : 1) + ea,
+    width: String((boo === "desktop") ? 218 : 51.4) + ea,
+    height: String((boo === "desktop") ? 34 : 8) + ea,
+    background: "#f2f2f2",
+  };
+  for (let i in style) {
+    input_back.style[i] = style[i];
+  }
+
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
+  input_clone.setAttribute("type", "text");
+  style = {
+    width: "100%",
+    border: String(0) + ea,
+    fontSize: String((boo === "desktop") ? 15 : 3.8) + ea,
+    outline: String(0) + ea,
+    fontFamily: "Noto Sans KR",
+    background: "transparent",
+    height: String((boo === "desktop") ? 34 : 6.8) + ea,
+    textAlign: "center",
+  };
+  for (let i in style) {
+    input_clone.style[i] = style[i];
+  }
+  input_back.appendChild(input_clone);
+  div_clone.appendChild(input_back);
+
+  document.body.appendChild(div_clone);
+
+  input_clone.focus();
+  setTimeout(function () {
+    window.location.reload();
+  }, (10 * 60 * 1000));
+
+  endEvent = function (e) {
+    let svg_clone, div_clone2;
+    let style;
+    let width, height;
+    let whiteWidth, whiteHeight;
+    let ea;
+
+    ea = (boo === "desktop") ? "px" : "vw";
+
+    if (this.value.length > 5) {
+      if (this.value === randomValue) {
+        while (div_clone.firstChild) {
+          div_clone.removeChild(div_clone.lastChild);
+        }
+
+        whiteWidth = (boo === "desktop") ? 200 : 46;
+        whiteHeight = (boo === "desktop") ? 132 : 31;
+
+        height = (boo === "desktop") ? 19 : 4.5;
+        svg_clone = SvgTong.stringParsing(SvgTong["pending_svgIcon"]);
+        width = SvgTong.getRatio(svg_clone) * height;
+        style = {
+          position: "absolute",
+          top: String((boo === "desktop") ? 31 : 7) + ea,
+          left: "calc(50% - " + String(width / 2) + ea + ")",
+          width: String(width) + ea,
+          height: String(height) + ea,
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        div_clone2 = svg_clone;
+        div_clone.appendChild(div_clone2);
+
+        height = (boo === "desktop") ? 39 : 9.6;
+
+        svg_clone = SvgTong.stringParsing(SvgTong["loader_svgIcon"]);
+        svg_clone.classList.add("loading");
+        svg_clone.classList.add("loaderc");
+        width = SvgTong.getRatio(svg_clone) * height;
+        style = {
+          top: String((boo === "desktop") ? 63 : 14.5) + ea,
+          left: "50%",
+          marginLeft: '-' + String(width / 2) + ea,
+          width: String(width) + ea,
+          height: String(height) + ea,
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        div_clone.appendChild(svg_clone);
+
+        div_clone.style.width = String(whiteWidth) + ea;
+        div_clone.style.left = "calc(50% - " + String(whiteWidth / 2) + ea + ")";
+        div_clone.style.height = String(whiteHeight) + ea;
+
+        callback(div_back, div_clone);
+
+      } else {
+        alert("인증번호를 정확히 입력해주세요!");
+        this.value = '';
+      }
+    }
+  }
+
+  if (boo === "desktop") {
+    input_clone.addEventListener("keyup", endEvent);
+  } else {
+    input_clone.addEventListener("keyup", function (e) {
+      if (this.value.length > 5) {
+        this.blur();
+      }
+    });
+    input_clone.addEventListener("blur", endEvent);
+  }
+
 }

@@ -23,10 +23,11 @@ const KakaoTalk = function () {
   };
   this.token = {
     office: 'f05cb48bb2b2397b0a00673f9d042cb11e617e2f474adb80aa21def198e93defb9772db0decfdceb11711fe00220d7353e22750dfa4a033787d2b65baa74c0edRpWklMHb+gajmvp0DWz3EOkwdpHCjhFmkliDkyfGD20Rw/GTrgkATGf016jQH2sPQym/QCo7cxJnGmM4do74ZA==',
-    home: '9dc4aa330c3c0529cf34d99f0af15bc604e94eac3f60b9318a2832dd2e2b3215a7bcb8d7590db241f62e291cbf54ba028beebc20aa4b4df6018dc4b2e1c67036NM/jS90vphEelYX1MmcGrWaQho8VzcjLtgNPOKs6PYBPhdrhWkCldWjqZW48SpHhilOQNDRvImw8k76D6Gk6ww==',
+    home: 'b2f51783a1004fed1f37546ce3ba70e0f35dbb83596fd1de9e1a566378829cc7236f4fc3f11cba3c282ba8aded9ca605f2f0ba33a8553e14338d500066d1ef080SyrABKf1MNRZE4FQYSEFwbS3q1wRyx5w+RG+MucwI36Imbqg1+/bDzOVvg+9lbU4yKhg6COCCPDGwwpf9WL4A==',
     bridge: 'ad71db7b43a31011c2cad920198f0820c3ee1984db28fea5770ea728b8b1bc0fbc231da21c02113119568762aec1588c0a7c29b05c354d07493a8b9341436d3fZaVjZRr90NmU9J/cDxAMHR3tjA9/k6mK22IkZFPVHMGbuqY3erFhtZAq6/L4B4JCcG5cmfbRJAGE4OTK71Udwg==',
     front: 'c14a594407ce851449e11aa060556b54faf1e4de714adc353e49f645c9720880a1149ed617ad5ef19de94fed1da6094bdeb4f1a8756bed3b3fe74c8120490fe4hX3mInjDzik6Yz05qMUnpOJkL6ix9DcJRLVAZpofdBoZA89GFnHTtZJ5BUx\/iFFVdRVHW2vD4cA0dmbL8Qkf0A==',
     console: '',
+    ghost: '',
   };
   this.authObj = {};
   this.templates = {};
