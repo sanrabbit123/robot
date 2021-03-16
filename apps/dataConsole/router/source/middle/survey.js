@@ -608,9 +608,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       };
       if (!sero) {
         style.position = "relative";
-        style.left = String(0) + ea;
-        style.width = String(100) + '%';
-        style.height = String((window.innerWidth * 1.5)) + ea;
+        style.marginTop = String(leftMargin) + ea;
+        style.left = String(leftMargin) + ea;
+        style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
+        style.height = String((window.innerWidth * 1.2)) + ea;
       }
       for (let i in style) {
         matrixBase.style[i] = style[i];
@@ -975,7 +976,7 @@ SurveyJs.prototype.launching = async function (loading) {
 
     //tablet
     if (window.innerWidth < 1400 && window.innerWidth > 1000) {
-      this.modeMinus = 1.5;
+      this.modeMinus = 2;
       this.mode = "tablet";
       this.sero = false;
     //mobile
