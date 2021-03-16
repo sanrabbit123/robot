@@ -206,18 +206,18 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
           this.setAttribute("toggle", "off");
         }
 
-        resultObj = [];
-        for (let dom of siblings) {
-          if (dom.getAttribute("toggle") === "on") {
-            if (type === "number") {
-              resultObj.push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
-            } else if (type === "boolean") {
-              resultObj.push(!/[안미비n]/gi.test(dom.getAttribute("value")));
-            } else {
-              resultObj.push(dom.getAttribute("value"));
-            }
-          }
-        }
+        // resultObj = [];
+        // for (let dom of siblings) {
+        //   if (dom.getAttribute("toggle") === "on") {
+        //     if (type === "number") {
+        //       resultObj.push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
+        //     } else if (type === "boolean") {
+        //       resultObj.push(!/[안미비n]/gi.test(dom.getAttribute("value")));
+        //     } else {
+        //       resultObj.push(dom.getAttribute("value"));
+        //     }
+        //   }
+        // }
 
         // GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(resultObj)), "/designerMatrix", function(res) {});
       }
