@@ -12,6 +12,7 @@ const SurveyJs = function () {
   this.mother = new GeneralJs();
   this.whiteBox = null;
   this.contentsBox = null;
+  this.margin = 0;
 }
 
 
@@ -26,22 +27,8 @@ SurveyJs.prototype.baseMaker = function () {
   let margin;
   let mode;
 
-  //tablet
-  if (window.innerWidth < 1400 && window.innerWidth >= 800) {
-    margin = 0;
-    ea = "px";
-    mode = "tablet";
-
-  //mobile
-  } else if (window.innerWidth < 800) {
-    mode = "mobile";
-
-  //desktop
-  } else {
-    margin = 30;
-    ea = "px";
-    mode = "desktop";
-  }
+  margin = this.margin;
+  ea = "px";
 
   div_clone = GeneralJs.nodes.div.cloneNode();
   style = {
@@ -98,6 +85,14 @@ SurveyJs.prototype.baseMaker = function () {
 SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, leftMargin, thisCase) {
   const instance = this;
   const { designer, desid } = thisCase;
+  const modeMinus = this.modeMinus;
+  let fontSize0, fontSize1, fontSize2, fontSize3;
+
+  fontSize0 = 14 - modeMinus;
+  fontSize1 = 13 - modeMinus;
+  fontSize2 = 34 - modeMinus;
+  fontSize3 = 23 - modeMinus;
+
   return async function (e) {
     try {
 
@@ -156,7 +151,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       leftWordWidth = 30;
       bottomWordWidth = 34;
       margin = 10;
-      matrixMargin = 8;
+      matrixMargin = 8 - modeMinus;
       boxNumber = xValues.length * yValues.length;
       checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
       checkListMargin = 20;
@@ -302,7 +297,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
 
       styleFactorTitle = {
         position: "relative",
-        fontSize: String(14) + ea,
+        fontSize: String(fontSize0) + ea,
         fontWeight: String(600),
         color: GeneralJs.colorChip.black,
         marginBottom: String(7) + ea,
@@ -368,7 +363,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
             borderRadius: String(5) + ea,
             padding: String(checkFactorButtonMargin) + ea,
             paddingRight: String(0) + ea,
-            height: String((30 * Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1))) + (checkFactorButtonMargin * (Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1)) - 1))) + ea,
+            height: String((30 * Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1))) + (checkFactorButtonMargin * (Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1)) - 1)) - modeMinus) + ea,
             marginBottom: String(14) + ea,
             overflow: "hidden",
             width: "calc(100% - " + String(checkFactorButtonMargin + 0) + ea + ")",
@@ -390,7 +385,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 display: (type !== "object") ? "inline-block" : "block",
                 position: "relative",
                 width: (type !== "object") ? "calc(calc(100% - " + String(checkFactorButtonMargin * (items.length <= checkDivideNum ? items.length : checkDivideNum)) + ea + ") / " + String((items.length <= checkDivideNum ? items.length : checkDivideNum)) + ")" : "calc(100% - " + String(checkFactorButtonMargin) + ea + ")",
-                height: String(30) + ea,
+                height: String(30 - modeMinus) + ea,
                 borderRadius: String(3) + ea,
                 background: (type !== "object") ? (value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1) : GeneralJs.colorChip.white,
                 marginRight: String(checkFactorButtonMargin) + ea,
@@ -415,7 +410,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   background: GeneralJs.colorChip.gray0,
                   cursor: "pointer",
                   transition: "all 0s ease",
-                  fontSize: String(13) + ea,
+                  fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   color: GeneralJs.colorChip.black,
                 };
@@ -437,8 +432,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 style = {
                   position: "absolute",
                   width: String(minimumButtonWidth) + ea,
-                  height: String(30) + ea,
-                  fontSize: String(13) + ea,
+                  height: String(30 - modeMinus) + ea,
+                  fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   borderRadius: String(3) + ea,
                   top: String(checkFactorButtonMargin) + ea,
@@ -469,7 +464,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   style = {
                     position: "absolute",
                     width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
-                    height: String(30) + ea,
+                    height: String(30 - modeMinus) + ea,
                     borderRadius: String(3) + ea,
                     top: String(0) + ea,
                     left: "calc(" + String(minimumButtonWidth) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
@@ -490,8 +485,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 style = {
                   position: "absolute",
                   width: String(minimumButtonWidth) + ea,
-                  height: String(30) + ea,
-                  fontSize: String(13) + ea,
+                  height: String(30 - modeMinus) + ea,
+                  fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   borderRadius: String(3) + ea,
                   top: String(checkFactorButtonMargin) + ea,
@@ -511,8 +506,8 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 style = {
                   position: "absolute",
                   width: String(100) + '%',
-                  height: String(30) + ea,
-                  fontSize: String(13) + ea,
+                  height: String(30 - modeMinus) + ea,
+                  fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   borderRadius: String(3) + ea,
                   top: String(checkFactorButtonMargin) + ea,
@@ -541,7 +536,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
               position: "relative",
               width: String(100) + "%",
               height: String(26) + ea,
-              fontSize: String(14) + ea,
+              fontSize: String(fontSize0) + ea,
               fontWeight: String(300),
               border: String(0),
               outline: String(0),
@@ -623,7 +618,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
 
       style3 = {
         position: "absolute",
-        fontSize: String(14) + ea,
+        fontSize: String(fontSize0) + ea,
         top: "calc(50% - " + String(13.5) + ea + ")",
         width: String(100) + '%',
         textAlign: "center",
@@ -639,7 +634,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         top: String(0) + ea,
         left: String(0) + ea,
         color: "transparent",
-        fontSize: String(34) + ea,
+        fontSize: String(fontSize2) + ea,
         fontWeight: String(400),
         fontFamily: "graphik",
       };
@@ -856,7 +851,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       style2 = {
         position: "absolute",
         width: String(100) + '%',
-        fontSize: String(23) + ea,
+        fontSize: String(fontSize3) + ea,
         bottom: String(0),
         textAlign: "center",
         fontFamily: "graphik",
@@ -900,7 +895,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       };
       style2 = {
         position: "absolute",
-        fontSize: String(23) + ea,
+        fontSize: String(fontSize3) + ea,
         top: "calc(50% - " + String(16) + ea + ")",
         textAlign: "center",
         fontFamily: "graphik",
@@ -940,8 +935,22 @@ SurveyJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
     this.totalContents = document.getElementById("totalcontents");
+
+    //tablet
+    if (window.innerWidth < 1400 && window.innerWidth >= 800) {
+      this.modeMinus = 2;
+    //mobile
+    } else if (window.innerWidth < 800) {
+      this.modeMinus = 4;
+    //desktop
+    } else {
+      this.modeMinus = 0;
+    }
+    this.margin = 20;
+    this.margin = this.margin - this.modeMinus;
+
     this.baseMaker();
-    this.convertWhiteContents(this.whiteBox, this.contentsBox, 30, { designer: "홍민영", desid: "d2003_aa01s" }).call(this.whiteBox, null);
+    this.convertWhiteContents(this.whiteBox, this.contentsBox, this.margin, { designer: "홍민영", desid: "d2003_aa01s" }).call(this.whiteBox, null);
   } catch (e) {
     console.log(e);
   }
