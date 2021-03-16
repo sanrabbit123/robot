@@ -60,8 +60,11 @@ SurveyJs.prototype.baseMaker = function () {
     animation: "fadeuplite 0.3s ease forwards",
   };
   if (this.modeMinus !== 0) {
+    style.top = String(0) + ea;
+    style.left = String(0) + ea;
     style.width = String(window.innerWidth) + ea;
     style.height = String(window.innerHeight) + ea;
+    style.boxShadow = "";
   }
   for (let i in style) {
     whiteBox.style[i] = style[i];
