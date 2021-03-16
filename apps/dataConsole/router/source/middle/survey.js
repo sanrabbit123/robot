@@ -98,6 +98,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
   const instance = this;
   const { designer, desid } = thisCase;
   const modeMinus = this.modeMinus;
+  const sero = this.sero;
   let fontSize0, fontSize1, fontSize2, fontSize3;
 
   fontSize0 = 14 - modeMinus;
@@ -185,6 +186,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         border: "1px solid " + GeneralJs.colorChip.gray3,
         background: GeneralJs.colorChip.gray1,
       };
+      if (!sero) {
+        style.position = "relative";
+        style.width = String(100) + '%';
+      }
       for (let i in style) {
         checkListBase.style[i] = style[i];
       }
@@ -960,8 +965,8 @@ SurveyJs.prototype.launching = async function (loading) {
       this.mode = "tablet";
       this.sero = false;
     //mobile
-  } else if (window.innerWidth <= 1000) {
-      this.modeMinus = 4;
+    } else if (window.innerWidth <= 1000) {
+      this.modeMinus = 3;
       this.mode = "mobile";
       this.sero = true;
     //desktop
