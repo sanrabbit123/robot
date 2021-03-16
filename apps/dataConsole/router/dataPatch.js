@@ -4184,13 +4184,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "글램",
-              column: "glam",
-              value: 10
-            },
-            {
-              name: "엔틱",
-              column: "antique",
+              name: "클래식",
+              column: "classic",
               value: 10
             },
             {
@@ -4199,8 +4194,8 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "미니멈",
-              column: "minimum",
+              name: "북유럽",
+              column: "scandinavian",
               value: 10
             },
             {
@@ -4209,8 +4204,13 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "페미닌",
-              column: "feminine",
+              name: "믹스매치",
+              column: "mixmatch",
+              value: 10
+            },
+            {
+              name: "오리엔탈",
+              column: "oriental",
               value: 10
             },
             {

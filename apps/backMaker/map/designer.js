@@ -136,12 +136,12 @@ module.exports = {
         tendency: {
           style: {
             modern: 0,
-            glam: 0,
-            antique: 0,
+            classic: 0,
             natural: 0,
-            minimum: 0,
+            mixmatch: 0,
+            scandinavian: 0,
             vintage: 0,
-            feminine: 0,
+            oriental: 0,
             exotic: 0,
           },
           texture: {

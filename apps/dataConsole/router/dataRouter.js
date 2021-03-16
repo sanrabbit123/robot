@@ -2966,26 +2966,49 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_setDeadline = function () {
+DataRouter.prototype.rou_post_manageDeadline = function () {
   const instance = this;
   const back = this.back;
   let obj = {};
-  obj.link = "/setDeadline";
+  obj.link = "/manageDeadline";
   obj.func = async function (req, res) {
     try {
       if (req.body.json === undefined) {
         throw new Error("must be json");
       }
       const { json } = req.body;
-      const { deadline, name } = JSON.parse(json);
-      console.log(new Date())
-      console.log(new Date(deadline));
+      const obj = JSON.parse(json);
+      const now = new Date();
+      let rows, resultObj;
 
-      // instance.mongolocal
+      if (obj.mode === "set") {
 
+        rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
+        if (rows.length > 0) {
+          await back.mongoUpdate("deadline", [ { name: obj.name }, { deadline: new Date(obj.deadline) } ], { console: true });
+        } else {
+          await back.mongoCreate("deadline", { deadline: new Date(obj.deadline), name: obj.name }, { console: true });
+        }
+
+        resultObj = { message: "done" };
+
+      } else if (obj.mode === "get") {
+
+        rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
+        if (rows.length > 0) {
+          if (now.valueOf() > rows[0].deadline.valueOf()) {
+            resultObj = { expired: true };
+          } else {
+            resultObj = { expired: false };
+          }
+        } else {
+          resultObj = { expired: true };
+        }
+
+      }
 
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ message: "done" }));
+      res.send(JSON.stringify(resultObj));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

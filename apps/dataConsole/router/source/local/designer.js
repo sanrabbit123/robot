@@ -3089,21 +3089,21 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
       let style, style2, style3;
       let ea = "px";
       let temp;
-      let today;
+      let dateObj;
 
       if (instance.whiteConvert === 0) {
 
         //sse connetion
         if (GeneralJs.timeouts["linkCreateTimeout_" + desid] === null || GeneralJs.timeouts["linkCreateTimeout_" + desid] === undefined) {
-          today = new Date();
-          today.setHours(today.getHours() + 8);
-          GeneralJs.ajax("json=" + JSON.stringify({ deadline: today, name: "designerCheckList_" + desid }), "/setDeadline", async function (res) {
+          dateObj = new Date();
+          dateObj.setHours(dateObj.getHours() + 8);
+          GeneralJs.ajax("json=" + JSON.stringify({ deadline: dateObj, name: "designerCheckList_" + desid, mode: "set" }), "/manageDeadline", async function (res) {
             await window.navigator.clipboard.writeText("https://" + GHOSTHOST + "/middle/survey?desid=" + desid);
             instance.mother.greenAlert("링크가 생성 및 복사되었습니다!");
             GeneralJs.timeouts["linkCreateTimeout_" + desid] = setTimeout(function () {
               clearTimeout(GeneralJs.timeouts["linkCreateTimeout_" + desid]);
               GeneralJs.timeouts["linkCreateTimeout_" + desid] = null;
-            }, 10000);
+            }, 6000);
           });
         }
         if (!esConnect) {

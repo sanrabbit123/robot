@@ -258,24 +258,24 @@ TendencyTexture.prototype.toNormal = function () {
 
 const TendencyStyle = function (json) {
   this.modern = json.modern;
-  this.glam = json.glam;
-  this.antique = json.antique;
+  this.classic = json.classic;
   this.natural = json.natural;
-  this.minimum = json.minimum;
+  this.mixmatch = json.mixmatch;
+  this.scandinavian = json.scandinavian;
   this.vintage = json.vintage;
-  this.feminine = json.feminine;
+  this.oriental = json.oriental;
   this.exotic = json.exotic;
 }
 
 TendencyStyle.prototype.toNormal = function () {
   let obj = {};
   obj.modern = this.modern;
-  obj.glam = this.glam;
-  obj.antique = this.antique;
+  obj.classic = this.classic;
   obj.natural = this.natural;
-  obj.minimum = this.minimum;
+  obj.mixmatch = this.mixmatch;
+  obj.scandinavian = this.scandinavian;
   obj.vintage = this.vintage;
-  obj.feminine = this.feminine;
+  obj.oriental = this.oriental;
   obj.exotic = this.exotic;
   return obj;
 }

@@ -1037,6 +1037,43 @@ SurveyJs.checkListSseEvent = function (e) {
   }
 }
 
+SurveyJs.prototype.confirmLaunching = function (desid, designer) {
+  const instance = this;
+  let ea;
+
+  //set sse
+  es = new EventSource("https://" + SSEHOST + ":3000/specificsse/get_checklist/" + desid);
+  es.addEventListener("updateTong", SurveyJs.checkListSseEvent);
+
+  //tablet
+  if (window.innerWidth < 1400 && window.innerWidth > 1000) {
+    this.modeMinus = 1;
+    this.mode = "tablet";
+    this.sero = false;
+  //mobile
+  } else if (window.innerWidth <= 1000) {
+    this.modeMinus = 1;
+    this.mode = "mobile";
+    this.sero = true;
+  //desktop
+  } else {
+    this.modeMinus = 0;
+    this.mode = "desktop";
+    this.sero = false;
+  }
+
+  if (this.modeMinus !== 0) {
+    document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
+  }
+
+  this.margin = 20;
+  this.margin = this.margin - this.modeMinus;
+
+  this.baseMaker();
+  this.convertWhiteContents(this.whiteBox, this.contentsBox, this.margin, { designer, desid }).call(this.whiteBox, null);
+
+}
+
 SurveyJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -1045,7 +1082,7 @@ SurveyJs.prototype.launching = async function (loading) {
     this.totalContents = document.getElementById("totalcontents");
 
     const getObj = GeneralJs.returnGet();
-    let desid, es, designers, designer;
+    let desid, designers, designer;
 
     if (getObj.desid === undefined) {
       alert("잘못된 접근입니다!");
@@ -1062,36 +1099,16 @@ SurveyJs.prototype.launching = async function (loading) {
       designer = designers[0];
       designer = designer.designer;
 
-      //set sse
-      es = new EventSource("https://" + SSEHOST + ":3000/specificsse/get_checklist/" + desid);
-      es.addEventListener("updateTong", SurveyJs.checkListSseEvent);
-
-      //tablet
-      if (window.innerWidth < 1400 && window.innerWidth > 1000) {
-        this.modeMinus = 1;
-        this.mode = "tablet";
-        this.sero = false;
-      //mobile
-      } else if (window.innerWidth <= 1000) {
-        this.modeMinus = 1;
-        this.mode = "mobile";
-        this.sero = true;
-      //desktop
-      } else {
-        this.modeMinus = 0;
-        this.mode = "desktop";
-        this.sero = false;
-      }
-
-      if (this.modeMinus !== 0) {
-        document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
-      }
-
-      this.margin = 20;
-      this.margin = this.margin - this.modeMinus;
-
-      this.baseMaker();
-      this.convertWhiteContents(this.whiteBox, this.contentsBox, this.margin, { designer, desid }).call(this.whiteBox, null);
+      GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
+        const { expired } = JSON.parse(json);
+        if (!expired) {
+          instance.confirmLaunching(desid, designer);
+        } else {
+          alert("잘못된 접근입니다!");
+          window.location.href = "https://home-liaison.com";
+          throw new Error("desid expired");
+        }
+      });
     }
   } catch (e) {
     console.log(e);
