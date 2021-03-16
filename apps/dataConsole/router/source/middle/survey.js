@@ -172,7 +172,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       boxNumber = xValues.length * yValues.length;
       checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
       checkListMargin = 20;
-      minimumButtonWidth = sero ? 32 : 75;
+      minimumButtonWidth = sero ? 30 : 75;
       checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
       checkFactorButtonMargin = 5;
       domDictionary = {};
@@ -434,7 +434,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                 style = {
                   position: "absolute",
-                  width: String(minimumButtonWidth * 2) + ea,
+                  width: String(minimumButtonWidth) + ea,
                   height: String(30) + ea,
                   borderRadius: String(3) + ea,
                   top: String(0) + ea,
@@ -451,17 +451,14 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 }
                 checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
 
-                //range back
+                //range number
                 checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                 checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + "value";
-                style.width = String(minimumButtonWidth) + ea;
                 for (let j in style) {
                   checkListFactorContentsItemText.style[j] = style[j];
                 }
                 checkListFactorContentsItemText.style.left = "";
                 checkListFactorContentsItemText.style.right = String(0);
-
-                //range number
                 checkListFactorContentsItemText2 = GeneralJs.nodes.div.cloneNode(true);
                 checkListFactorContentsItemText2.textContent = String(value.search(items[i].column).value);
                 style = {
@@ -500,7 +497,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   checkListFactorContentsItemText.setAttribute("value", String(j + 1));
                   style = {
                     position: "absolute",
-                    width: "calc(calc(100% - " + String(minimumButtonWidth * 3) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
+                    width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
                     height: String(30 - modeMinus) + ea,
                     borderRadius: String(3) + ea,
                     top: String(0) + ea,
@@ -521,7 +518,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 checkListFactorContentsItemText.textContent = items[i].name;
                 style = {
                   position: "absolute",
-                  width: String(minimumButtonWidth * 2) + ea,
+                  width: String(minimumButtonWidth) + ea,
                   height: String(30 - modeMinus) + ea,
                   fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
