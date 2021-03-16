@@ -198,6 +198,8 @@ module.exports = function () {
       z-index: 1;
     }
 
+    html{-ms-touch-action: manipulation;touch-action: manipulation;}
+
     `;
     html += "#mopostEvent_div{width:75vw;height:90vw;border:0px;left:8vw;top:45vw;position:fixed;z-index:1;padding:4.2vw;padding-bottom:6vw;background:white;box-shadow:0px 2px 9px -4px #a0a0a0;border-radius:5px;animation:fadeup 0.4s ease forwards;}";
     html += ".mothankyou_block{position:relative;display:block;width:100%;margin-bottom:5.2vw;animation:fadeup 0.6s ease forwards;}";

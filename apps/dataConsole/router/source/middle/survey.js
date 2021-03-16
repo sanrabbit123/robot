@@ -13,10 +13,9 @@ const SurveyJs = function () {
   this.whiteBox = null;
   this.contentsBox = null;
   this.margin = 0;
+  this.mode = "desktop";
+  this.sero = false;
 }
-
-
-
 
 SurveyJs.prototype.baseMaker = function () {
   const instance = this;
@@ -956,14 +955,20 @@ SurveyJs.prototype.launching = async function (loading) {
     this.totalContents = document.getElementById("totalcontents");
 
     //tablet
-    if (window.innerWidth < 1400 && window.innerWidth >= 800) {
+    if (window.innerWidth < 1400 && window.innerWidth > 1000) {
       this.modeMinus = 2;
+      this.mode = "tablet";
+      this.sero = false;
     //mobile
-    } else if (window.innerWidth < 800) {
+  } else if (window.innerWidth <= 1000) {
       this.modeMinus = 4;
+      this.mode = "mobile";
+      this.sero = true;
     //desktop
     } else {
       this.modeMinus = 0;
+      this.mode = "desktop";
+      this.sero = false;
     }
 
     if (this.modeMinus !== 0) {

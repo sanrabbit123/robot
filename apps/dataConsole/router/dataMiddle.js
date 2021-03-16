@@ -77,6 +77,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '')
     <html lang="ko" dir="ltr">
       <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
         <title></title>
         <style>${fontStyle}</style>
       </head>

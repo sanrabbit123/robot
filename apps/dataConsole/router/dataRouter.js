@@ -313,6 +313,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first") {
     <html lang="ko" dir="ltr">
       <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
         <title>HomeLiaison Console: ${target}</title>
         <style>${fontStyle}</style>
         <script>${dataPatchScript}</script>
