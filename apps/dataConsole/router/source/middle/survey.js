@@ -43,7 +43,9 @@ SurveyJs.prototype.baseMaker = function () {
     div_clone.style[i] = style[i];
   }
 
-  this.totalContents.appendChild(div_clone);
+  if (this.modeMinus === 0) {
+    this.totalContents.appendChild(div_clone);
+  }
 
   whiteBox = GeneralJs.nodes.div.cloneNode();
   style = {
@@ -57,6 +59,10 @@ SurveyJs.prototype.baseMaker = function () {
     boxShadow: "0px 2px 11px -6px #808080",
     animation: "fadeuplite 0.3s ease forwards",
   };
+  if (this.modeMinus !== 0) {
+    style.width = String(window.innerWidth) + ea;
+    style.height = String(window.innerHeight) + ea;
+  }
   for (let i in style) {
     whiteBox.style[i] = style[i];
   }
@@ -70,6 +76,10 @@ SurveyJs.prototype.baseMaker = function () {
     height: String(window.innerHeight - (margin * 4)) + ea,
     background: GeneralJs.colorChip.white,
   };
+  if (this.modeMinus !== 0) {
+    style.width = String(window.innerWidth) + ea;
+    style.height = String(window.innerHeight - (margin * 2)) + ea;
+  }
   for (let i in style) {
     contentsBox.style[i] = style[i];
   }
@@ -935,7 +945,6 @@ SurveyJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
     this.totalContents = document.getElementById("totalcontents");
-    this.totalContents.style.height = String(window.innerHeight) + "px";
 
     //tablet
     if (window.innerWidth < 1400 && window.innerWidth >= 800) {

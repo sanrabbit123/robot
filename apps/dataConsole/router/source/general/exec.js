@@ -1,6 +1,6 @@
 const local_funcs = new /<%name%>/Js();
 
-document.getElementById("totalcontents").style.height = String(window.innerHeight) + "px";
+// document.getElementById("totalcontents").style.height = String(window.innerHeight) + "px";
 
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
