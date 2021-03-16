@@ -982,7 +982,7 @@ SurveyJs.prototype.launching = async function (loading) {
       this.sero = false;
     //mobile
     } else if (window.innerWidth <= 1000) {
-      this.modeMinus = 3;
+      this.modeMinus = 2;
       this.mode = "mobile";
       this.sero = true;
     //desktop
