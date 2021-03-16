@@ -14,6 +14,9 @@ const SurveyJs = function () {
   this.contentsBox = null;
 }
 
+
+
+
 SurveyJs.prototype.baseMaker = function () {
   const instance = this;
   let div_clone;
@@ -21,9 +24,24 @@ SurveyJs.prototype.baseMaker = function () {
   let style;
   let ea;
   let margin;
+  let mode;
 
-  margin = 30;
-  ea = "px";
+  //tablet
+  if (window.innerWidth < 1400 && window.innerWidth >= 800) {
+    margin = 0;
+    ea = "px";
+    mode = "tablet";
+
+  //mobile
+  } else if (window.innerWidth < 800) {
+    mode = "mobile";
+
+  //desktop
+  } else {
+    margin = 30;
+    ea = "px";
+    mode = "desktop";
+  }
 
   div_clone = GeneralJs.nodes.div.cloneNode();
   style = {

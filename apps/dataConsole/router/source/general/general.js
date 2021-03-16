@@ -538,7 +538,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fa{from{opacity:0;}to{opacity:1;}}
   @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
-  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;}
+  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%}
   .hiddenp,.switch{display:none;}
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;top:-20px}
   .hoverDefault_lite{cursor:pointer;opacity:1}
