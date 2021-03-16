@@ -172,7 +172,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       boxNumber = xValues.length * yValues.length;
       checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
       checkListMargin = 20;
-      minimumButtonWidth = 75;
+      minimumButtonWidth = 30;
       checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
       checkFactorButtonMargin = 5;
       domDictionary = {};
@@ -607,6 +607,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         background: GeneralJs.colorChip.white,
       };
       if (sero) {
+        style.display = "none";
         style.position = "relative";
         style.marginTop = String(leftMargin + 3) + ea;
         style.marginBottom = String(leftMargin + 3) + ea;
@@ -982,7 +983,7 @@ SurveyJs.prototype.launching = async function (loading) {
       this.sero = false;
     //mobile
     } else if (window.innerWidth <= 1000) {
-      this.modeMinus = 2;
+      this.modeMinus = 1;
       this.mode = "mobile";
       this.sero = true;
     //desktop
