@@ -623,6 +623,58 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_SpecificServerSent = function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const SseStream = require(`${this.module}/sseStream.js`);
+  let obj = {};
+  obj.link = [ "/specificsse/get_checklist/:id" ];
+  obj.func = async function (req, res) {
+    try {
+      const thisPath = req.url.split('/')[2].split('_')[1];
+      const thisId = req.params.id;
+      const sseStream = new SseStream(req);
+      const logDir = instance.dir + "/log";
+      let log_past, log_new;
+
+      res.set({
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      log_dir = await fileSystem(`readDir`, [ logDir ]);
+      if (!log_dir.includes("designerMatrix_" + thisId + "_latest.json")) {
+        await fileSystem(`write`, [ logDir + "/designerMatrix_" + thisId + "_latest.json", JSON.stringify({ desid: thisId, column: "", type: "", order: [] }) ]);
+      }
+
+      sseStream.pipe(res);
+
+      const pusher = setInterval(async function () {
+        try {
+          log_new = await fileSystem(`readString`, [ logDir + "/designerMatrix_" + thisId + "_latest.json" ]);
+          if (log_new !== log_past) {
+            sseStream.write({ event: 'updateTong', data: log_new });
+          }
+          log_past = log_new;
+        } catch (e) {
+          console.log(e);
+        }
+      }, 1200);
+
+      res.on('close', function () {
+        clearInterval(pusher);
+        sseStream.unpipe(res);
+      });
+
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 //POST ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_post_getDocuments = function () {
@@ -2699,10 +2751,12 @@ DataRouter.prototype.rou_post_getRawContents = function () {
 DataRouter.prototype.rou_post_designerMatrix = function () {
   const instance = this;
   const back = this.back;
+  const { fileSystem } = this.mother;
   let obj = {};
   obj.link = "/designerMatrix";
   obj.func = async function (req, res) {
     try {
+      const logDir = `${instance.dir}/log`;
       const { button, desid } = req.body;
       let responseObj;
       let thisObjs, thisObj;
@@ -2725,6 +2779,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
         } else {
           responseObj["error"] = "There is no designer";
         }
+
       } else if (button === "update") {
         whereQuery = { desid };
         updateQuery = {};
@@ -2734,6 +2789,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
           updateQuery = JSON.parse(req.body.update);
         }
         await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        await fileSystem(`write`, [ logDir + "/designerMatrix_" + desid + "_latest.json", JSON.stringify({ desid, column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) }) ]);
       }
 
       res.set("Content-Type", "application/json");
@@ -2909,6 +2965,35 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_setDeadline = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/setDeadline";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.json === undefined) {
+        throw new Error("must be json");
+      }
+      const { json } = req.body;
+      const { deadline, name } = JSON.parse(json);
+      console.log(new Date())
+      console.log(new Date(deadline));
+
+      // instance.mongolocal
+
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 

@@ -23,6 +23,7 @@ const DesignerJs = function () {
   this.whiteMatrixB = null;
   this.aspirants = [];
   this.aspirants_searchInput = null;
+  this.whiteSse = null;
 }
 
 DesignerJs.prototype.standardBar = function (standard) {
@@ -3021,9 +3022,66 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   mother.appendChild(div_clone);
 }
 
+DesignerJs.checkListSseEvent = function (e) {
+  const { desid, column, type, order } = JSON.parse(e.data);
+  const idName = desid + "_" + column;
+  const targetDom = document.getElementById(idName);
+  const rangeConstant = "checkRange";
+  const matrixConstant = "designerMatrixFactor";
+  let temp, flatTong, matrixFactors;
+  if (targetDom !== null) {
+    const { children } = targetDom;
+    if (type === "check" || type === "radio") {
+      for (let i = 0; i < children.length; i++) {
+        if (order[i] === 1) {
+          children[i].setAttribute("toggle", "on");
+          children[i].style.background = GeneralJs.colorChip.green;
+          children[i].children[0].style.color = GeneralJs.colorChip.white;
+        } else {
+          children[i].setAttribute("toggle", "off");
+          children[i].style.background = GeneralJs.colorChip.gray1;
+          children[i].children[0].style.color = GeneralJs.colorChip.deactive;
+        }
+      }
+    } else if (type === "range") {
+      for (let i = 0; i < children.length; i++) {
+        children[i].querySelector("." + rangeConstant + column + "_value").firstChild.textContent = String(order[i].value);
+        temp = children[i].querySelectorAll("." + rangeConstant + column + "_boxes");
+        for (let j = 0; j < temp.length; j++) {
+          if (order[i].value > j) {
+            temp[j].style.background = GeneralJs.colorChip.green;
+          } else {
+            temp[j].style.background = GeneralJs.colorChip.gray1;
+          }
+        }
+      }
+    } else if (type === "input") {
+      targetDom.querySelector("input").value = order[0];
+    } else if (type === "matrix") {
+      flatTong = [];
+      for (let z = 0; z < order[0].length; z++) {
+        for (let i = 0; i < order.length; i++) {
+          for (let j = 0; j < order[i][z].length; j++) {
+            flatTong.push(order[i][z][j]);
+          }
+        }
+      }
+      matrixFactors = document.querySelectorAll('.' + matrixConstant);
+      for (let i = 0; i < matrixFactors.length; i++) {
+        if (flatTong[i] !== (matrixFactors[i].getAttribute("toggle") === "on" ? 1 : 0)) {
+          matrixFactors[i].click();
+        }
+      }
+    }
+  }
+}
+
 DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, contentsArea, leftMargin, thisCase) {
   const instance = this;
   const { designer, desid } = thisCase;
+  let es;
+  let esConnect = false;
+  this.whiteSse = es;
   return async function (e) {
     try {
 
@@ -3031,8 +3089,28 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
       let style, style2, style3;
       let ea = "px";
       let temp;
+      let today;
 
       if (instance.whiteConvert === 0) {
+
+        //sse connetion
+        if (GeneralJs.timeouts["linkCreateTimeout_" + desid] === null || GeneralJs.timeouts["linkCreateTimeout_" + desid] === undefined) {
+          today = new Date();
+          today.setHours(today.getHours() + 8);
+          GeneralJs.ajax("json=" + JSON.stringify({ deadline: today, name: "designerCheckList_" + desid }), "/setDeadline", async function (res) {
+            await window.navigator.clipboard.writeText("https://" + GHOSTHOST + "/middle/survey?desid=" + desid);
+            instance.mother.greenAlert("링크가 생성 및 복사되었습니다!");
+            GeneralJs.timeouts["linkCreateTimeout_" + desid] = setTimeout(function () {
+              clearTimeout(GeneralJs.timeouts["linkCreateTimeout_" + desid]);
+              GeneralJs.timeouts["linkCreateTimeout_" + desid] = null;
+            }, 10000);
+          });
+        }
+        if (!esConnect) {
+          es = new EventSource("https://" + SSEHOST + ":3000/specificsse/get_checklist/" + desid);
+          instance.whiteSse = es;
+        }
+        es.addEventListener("updateTong", DesignerJs.checkListSseEvent);
 
         //convert animation
         if (instance.whiteMatrixB !== null) {
@@ -3132,7 +3210,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           const column = this.getAttribute("column");
           const type = this.getAttribute("type");
           const { children: siblings } = this.parentElement;
-          let resultObj;
+          let resultObj, checkOrder;
 
           if (this.getAttribute("toggle") === "off") {
             this.style.background = GeneralJs.colorChip.green;
@@ -3145,7 +3223,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           }
 
           resultObj = [];
+          checkOrder = [];
           for (let dom of siblings) {
+            checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
             if (dom.getAttribute("toggle") === "on") {
               if (type === "number") {
                 resultObj.push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
@@ -3157,13 +3237,16 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             }
           }
 
-          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(resultObj)), "/designerMatrix", function(res) {});
+          GeneralJs.ajax("type=check&order=" + JSON.stringify(checkOrder) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(resultObj)), "/designerMatrix", function(res) {});
         }
 
         radioEvent = function (e) {
           const column = this.getAttribute("column");
           const type = this.getAttribute("type");
           const { children: siblings } = this.parentElement;
+          let checkOrder;
+
+          checkOrder = [];
           if (this.getAttribute("toggle") === "off") {
             this.style.background = GeneralJs.colorChip.green;
             this.children[0].style.color = GeneralJs.colorChip.white;
@@ -3174,6 +3257,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 dom.style.background = GeneralJs.colorChip.gray1;
                 dom.children[0].style.color = GeneralJs.colorChip.deactive;
               }
+              checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
             }
           } else {
             this.style.background = GeneralJs.colorChip.gray1;
@@ -3182,13 +3266,14 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             for (let dom of siblings) {
               if (dom !== this) {
                 dom.setAttribute("toggle", "on");
-                dom.style.background = GeneralJs.colorChip.gray1;
-                dom.children[0].style.color = GeneralJs.colorChip.deactive;
+                dom.style.background = GeneralJs.colorChip.green;
+                dom.children[0].style.color = GeneralJs.colorChip.white;
               }
+              checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
             }
           }
 
-          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(this.getAttribute("value"))), "/designerMatrix", function(res) {});
+          GeneralJs.ajax("type=radio&order=" + JSON.stringify(checkOrder) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(this.getAttribute("value"))), "/designerMatrix", function(res) {});
         }
 
         rangeEvent = function (e) {
@@ -3235,14 +3320,14 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             itemsTong.push({ column: k, value: resultObj[k] });
           }
 
-          GeneralJs.ajax("button=update&desid=" + desid + "&update=" + JSON.stringify(thisCheckListObj.position(itemsTong)), "/designerMatrix", function(res) {});
+          GeneralJs.ajax("type=range&order=" + JSON.stringify(itemsTong) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(thisCheckListObj.position(itemsTong)), "/designerMatrix", function(res) {});
         }
 
         inputEvent = function (e) {
           if ((e.type === "keypress" && e.keyCode === 13) || (e.type === "blur")) {
             const column = this.getAttribute("column");
             const updateQuery = JSON.stringify(checkList.search(column).position(this.value));
-            GeneralJs.ajax("button=update&desid=" + desid + "&update=" + updateQuery, "/designerMatrix", function(res) {});
+            GeneralJs.ajax("type=input&order=" + JSON.stringify([ this.value ]) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + updateQuery, "/designerMatrix", function(res) {});
           }
         }
 
@@ -3307,7 +3392,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             }
             checkListFactor.appendChild(checkListFactorTitle);
 
+            //items tong
             checkListFactorContents = GeneralJs.nodes.div.cloneNode(true);
+            checkListFactorContents.id = desid + "_" + column;
             style = {
               position: "relative",
               background: GeneralJs.colorChip.white,
@@ -3371,14 +3458,17 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                   }
                   checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
 
-                  //range number
+                  //range number tong
                   checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                   checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + "value";
+                  checkListFactorContentsItemText.classList.add("checkRange" + String(column) + "_value");
                   for (let j in style) {
                     checkListFactorContentsItemText.style[j] = style[j];
                   }
                   checkListFactorContentsItemText.style.left = "";
                   checkListFactorContentsItemText.style.right = String(0);
+
+                  //range number text
                   checkListFactorContentsItemText2 = GeneralJs.nodes.div.cloneNode(true);
                   checkListFactorContentsItemText2.textContent = String(value.search(items[i].column).value);
                   style = {
@@ -3388,7 +3478,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                     fontSize: String(13) + ea,
                     fontWeight: String(500),
                     borderRadius: String(3) + ea,
-                    top: String(checkFactorButtonMargin) + ea,
+                    top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
                     left: String(0),
                     textAlign: "center",
                     color: GeneralJs.colorChip.green,
@@ -3405,6 +3495,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                   for (let j = 0; j < items[i].value; j++) {
                     checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                     checkListFactorContentsItemText.classList.add("hoverDefault");
+                    checkListFactorContentsItemText.classList.add("checkRange" + String(column) + "_boxes");
                     checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + String(j);
                     checkListFactorContentsItemText.setAttribute('x', String(checkNum));
                     checkListFactorContentsItemText.setAttribute('y', String(i));
@@ -3441,7 +3532,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                     fontSize: String(13) + ea,
                     fontWeight: String(500),
                     borderRadius: String(3) + ea,
-                    top: String(checkFactorButtonMargin) + ea,
+                    top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
                     left: String(0),
                     textAlign: "center",
                     color: GeneralJs.colorChip.black,
@@ -3462,7 +3553,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                     fontSize: String(13) + ea,
                     fontWeight: String(500),
                     borderRadius: String(3) + ea,
-                    top: String(checkFactorButtonMargin) + ea,
+                    top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
                     textAlign: "center",
                     color: value.includes(items[i]) ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
                     cursor: "pointer",
@@ -3533,6 +3624,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
 
         //entire matrix
         matrix = GeneralJs.nodes.div.cloneNode(true);
+        matrix.id = desid + "_" + "matrixA";
         style = {
           position: "absolute",
           top: String(0) + ea,
@@ -3679,7 +3771,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               temp0.push(temp1);
             }
 
-            await GeneralJs.ajaxPromise("button=update&desid=" + desid + "&matrixA=" + JSON.stringify(temp0), "/designerMatrix");
+            await GeneralJs.ajaxPromise("type=matrix&order=" + JSON.stringify(temp0) + "&column=matrixA&button=update&desid=" + desid + "&matrixA=" + JSON.stringify(temp0), "/designerMatrix");
 
           } catch (e) {
             GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
@@ -4200,6 +4292,12 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
       } else if (instance.whiteConvert === 1 || instance.whiteConvert === 2) {
       // } else if (instance.whiteConvert === 2) {
 
+        //disconnect sse
+        es.close();
+        esConnect = false;
+        es = null;
+        instance.whiteSse = null;
+
         //convert animation
         if (instance.whiteMatrixA !== null) {
           instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
@@ -4263,6 +4361,12 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
       instance.aspirants_searchInput.previousElementSibling.style.opacity = String(1);
       instance.aspirants_searchInput.parentNode.removeChild(instance.aspirants_searchInput);
       instance.aspirants_searchInput = null;
+    }
+
+    //sse close
+    if (instance.whiteSse !== null && instance.whiteSse !== undefined) {
+      instance.whiteSse.close();
+      instance.whiteSse = null;
     }
 
     //dom delete

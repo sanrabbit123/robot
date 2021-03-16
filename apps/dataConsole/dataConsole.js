@@ -10,6 +10,8 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
   const { fileSystem, babelSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = address.host;
+  const SSEHOST_CONSOLE = this.address.backinfo.host;
+  const GHOSTHOST = this.address.homeinfo.ghost.host;
   try {
 
     //set static
@@ -38,13 +40,15 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
     }
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, polyfillString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
     let code0, code1;
     let result;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
+    sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
+    ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
@@ -70,7 +74,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
           });
           svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
         }
-        code0 = s3String + "\n\n" + sseString + "\n\n" + svgTongString;
+        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
         code1 = generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString;
         if (svgTongItemsString === null) {
           result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
@@ -88,7 +92,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
     code0 = '';
     code1 = '';
 
-    code0 = s3String + "\n\n" + sseString + "\n\n" + svgTongString;
+    code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
     code1 = generalString + "\n\n" + consoleGeneralString;
     result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
     console.log(`general.js babel compile success`);

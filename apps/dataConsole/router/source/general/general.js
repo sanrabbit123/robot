@@ -2628,7 +2628,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
     if (GeneralJs.timeouts["greenAlertLevel0_TimeOut"] !== undefined && GeneralJs.timeouts["greenAlertLevel0_TimeOut"] !== null) {
       GeneralJs.stacks["greenAlert_greenBox"].style.animation = "fadedowndelay 0.4s ease forwards";
       await GeneralJs.sleep(401);
-      this.below.removeChild(GeneralJs.stacks["greenAlert_greenBox"]);
+      document.body.removeChild(GeneralJs.stacks["greenAlert_greenBox"]);
       clearTimeout(GeneralJs.timeouts["greenAlertLevel1_TimeOut"]);
       clearTimeout(GeneralJs.timeouts["greenAlertLevel0_TimeOut"]);
       GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = null;
@@ -2641,15 +2641,16 @@ GeneralJs.prototype.greenAlert = async function (message) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     GeneralJs.stacks["greenAlert_greenBox"] = div_clone;
     style = {
-      position: "absolute",
+      position: "fixed",
       background: GeneralJs.colorChip.gradientGreen,
       borderRadius: String(5) + ea,
-      height: String(42) + ea,
-      top: String(-83) + ea,
+      height: String(40) + ea,
+      bottom: String((this.belowHeight === undefined ? 0 : this.belowHeight) + 22) + ea,
       boxShadow: "0px 5px 12px -8px " + GeneralJs.colorChip.green,
       opacity: String(0),
       width: String(2000) + ea,
-      transition: "all 0s ease"
+      transition: "all 0s ease",
+      zIndex: String(200),
     };
     for (let i in style) {
       div_clone.style[i] = style[i];
@@ -2662,8 +2663,8 @@ GeneralJs.prototype.greenAlert = async function (message) {
       color: GeneralJs.colorChip.white,
       height: String(28) + ea,
       fontSize: String(19) + ea,
-      fontWeight: String(200),
-      top: String(6) + ea,
+      fontWeight: String(300),
+      top: String(GeneralJs.isMac() ? 6 : 8) + ea,
     };
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -2671,7 +2672,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
     div_clone2.textContent = message;
 
     div_clone.appendChild(div_clone2);
-    this.below.appendChild(div_clone);
+    document.body.appendChild(div_clone);
 
     wordWidth = div_clone2.getBoundingClientRect().width;
     width = wordWidth + (margin * 2);
@@ -2685,7 +2686,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
       div_clone.style.animation = "fadedowndelay 0.4s ease forwards";
       GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = setTimeout(function () {
         div_clone.removeChild(div_clone2);
-        instance.below.removeChild(div_clone);
+        document.body.removeChild(div_clone);
         clearTimeout(GeneralJs.timeouts["greenAlertLevel1_TimeOut"]);
         GeneralJs.timeouts["greenAlertLevel1_TimeOut"] = null;
         clearTimeout(GeneralJs.timeouts["greenAlertLevel0_TimeOut"]);
@@ -2694,7 +2695,7 @@ GeneralJs.prototype.greenAlert = async function (message) {
     }, 2400);
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=" + (typeof e === "object" ? JSON.stringify(e) : String(e)).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

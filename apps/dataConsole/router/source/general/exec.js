@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
           }
         }
       });
+      local_funcs.entireSse = es;
     }
 
     //on green left
