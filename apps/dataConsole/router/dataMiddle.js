@@ -29,6 +29,10 @@ MiddleCommunication.execFuntion = function () {
     window.location.href = "https://home-liaison.com";
   });
 
+  window.addEventListener("resize", function (e) {
+    window.location.reload();
+  });
+
 }
 
 MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '') {

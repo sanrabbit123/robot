@@ -483,7 +483,9 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 //ranges
                 for (let j = 0; j < items[i].value; j++) {
                   checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                  checkListFactorContentsItemText.classList.add("hoverDefault");
+                  if (instance.mode === "desktop") {
+                    checkListFactorContentsItemText.classList.add("hoverDefault");
+                  }
                   checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + String(j);
                   checkListFactorContentsItemText.setAttribute('x', String(checkNum));
                   checkListFactorContentsItemText.setAttribute('y', String(i));
@@ -541,7 +543,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   borderRadius: String(3) + ea,
-                  top: String(checkFactorButtonMargin - modeMinus) + ea,
+                  top: String(checkFactorButtonMargin - (modeMinus / 2)) + ea,
                   textAlign: "center",
                   color: value.includes(items[i]) ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
                   cursor: "pointer",
@@ -802,7 +804,9 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
           invisible.style[j] = invisibleStyle[j];
         }
         invisibleText = GeneralJs.nodes.div.cloneNode(true);
-        invisibleText.classList.add("hoverDefault_lite");
+        if (instance.mode === "desktop") {
+          invisibleText.classList.add("hoverDefault_lite");
+        }
         for (let j in invisibleTextStyle) {
           invisibleText.style[j] = invisibleTextStyle[j];
         }
