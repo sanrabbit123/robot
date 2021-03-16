@@ -515,7 +515,7 @@ GeneralJs.prototype.totalContents = document.getElementById("totalcontents");
 GeneralJs.prototype.generalCss = function () {
   const styleTag = document.querySelector("style");
   const css = `
-  html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale}
+  html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale;-ms-touch-action: manipulation;touch-action: manipulation;}
   *{margin:0;padding:0;transition:all 0.3s ease;font-family:'sandoll';-webkit-tap-highlight-color: transparent;}
   *::-webkit-scrollbar{display:none;}
   input::placeholder {color:${GeneralJs.colorChip.white};opacity:0.5;}
