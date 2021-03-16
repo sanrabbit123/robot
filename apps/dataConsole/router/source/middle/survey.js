@@ -117,6 +117,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       //start matrixA
       div_clone = contentsArea.cloneNode(false);
       div_clone.style.animation = "fadeinlite 0.3s ease forwards";
+      if (!sero) {
+        div_clone.style.top = String(0);
+        div_clone.style.height = "auto";
+      }
 
       const responseObject = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixA", "/designerMatrix"));
       if (responseObject.analytics === undefined) {
@@ -189,6 +193,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       if (!sero) {
         style.position = "relative";
         style.width = String(100) + '%';
+        style.right = String(0) + ea;
+        style.borderRadius = String(0) + ea;
+        style.border = String(0);
+        style.height = "auto";
       }
       for (let i in style) {
         checkListBase.style[i] = style[i];
@@ -598,6 +606,12 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         height: String(100) + '%',
         background: GeneralJs.colorChip.white,
       };
+      if (!sero) {
+        style.position = "relative";
+        style.left = String(0) + ea;
+        style.width = String(100) + '%';
+        style.height = String((window.innerWidth * 1.5)) + ea;
+      }
       for (let i in style) {
         matrixBase.style[i] = style[i];
       }
@@ -961,7 +975,7 @@ SurveyJs.prototype.launching = async function (loading) {
 
     //tablet
     if (window.innerWidth < 1400 && window.innerWidth > 1000) {
-      this.modeMinus = 1;
+      this.modeMinus = 1.5;
       this.mode = "tablet";
       this.sero = false;
     //mobile
