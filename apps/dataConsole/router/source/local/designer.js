@@ -3592,7 +3592,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
 
         invisibleTextStyle = {
           position: "absolute",
-          top: "calc(50% - " + String(27.5) + ea + ")",
+          top: "calc(50% - " + String(25) + ea + ")",
           width: String(84) + ea,
           left: "calc(50% - " + String(42) + ea + ")",
           textAlign: "center",
