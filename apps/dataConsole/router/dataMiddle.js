@@ -14,6 +14,8 @@ MiddleCommunication.execFuntion = function () {
 
   const app = new __name__Js();
 
+  document.getElementById("totalcontents").style.height = String(window.innerHeight) + "px";
+
   document.addEventListener("DOMContentLoaded", function (e) {
     app.mother.generalCss();
     app.mother.loadingRun().then(app.launching.bind(app)).catch(function (err) {

@@ -947,6 +947,11 @@ SurveyJs.prototype.launching = async function (loading) {
     } else {
       this.modeMinus = 0;
     }
+
+    if (this.modeMinus !== 0) {
+      document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}")
+    }
+
     this.margin = 20;
     this.margin = this.margin - this.modeMinus;
 
