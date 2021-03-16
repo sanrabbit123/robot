@@ -172,7 +172,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       boxNumber = xValues.length * yValues.length;
       checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
       checkListMargin = 20;
-      minimumButtonWidth = sero ? 20 : 70;
+      minimumButtonWidth = sero ? 30 : 75;
       checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
       checkFactorButtonMargin = 5;
       domDictionary = {};
@@ -541,7 +541,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   fontSize: String(fontSize1) + ea,
                   fontWeight: String(500),
                   borderRadius: String(3) + ea,
-                  top: String(checkFactorButtonMargin) + ea,
+                  top: String(checkFactorButtonMargin - modeMinus) + ea,
                   textAlign: "center",
                   color: value.includes(items[i]) ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
                   cursor: "pointer",
