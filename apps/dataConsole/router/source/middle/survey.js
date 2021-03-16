@@ -100,10 +100,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
   const modeMinus = this.modeMinus;
   let fontSize0, fontSize1, fontSize2, fontSize3;
 
-  fontSize0 = 14 - modeMinus;
-  fontSize1 = 13 - modeMinus;
+  fontSize0 = 14 - modeMinus + 1;
+  fontSize1 = 13 - modeMinus + 1;
   fontSize2 = 34 - (modeMinus * 3);
-  fontSize3 = 23 - modeMinus;
+  fontSize3 = 23 - modeMinus + 1;
 
   return async function (e) {
     try {
