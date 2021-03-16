@@ -608,10 +608,10 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       };
       if (!sero) {
         style.position = "relative";
-        style.marginTop = String(leftMargin + 2) + ea;
-        style.marginBottom = String(leftMargin + 2) + ea;
+        style.marginTop = String(leftMargin + 3) + ea;
+        style.marginBottom = String(leftMargin + 3) + ea;
         style.left = String(matrixMargin * 2) + ea;
-        style.width = "calc(100% - " + String(matrixMargin * 8) + ea + ")";
+        style.width = "calc(100% - " + String(matrixMargin * 4) + ea + ")";
         style.height = String((window.innerWidth * 1)) + ea;
       }
       for (let i in style) {
