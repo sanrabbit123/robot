@@ -434,7 +434,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                 style = {
                   position: "absolute",
-                  width: String(minimumButtonWidth) + ea,
+                  width: String(minimumButtonWidth * 2) + ea,
                   height: String(30) + ea,
                   borderRadius: String(3) + ea,
                   top: String(0) + ea,
@@ -451,14 +451,17 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 }
                 checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
 
-                //range number
+                //range back
                 checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                 checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + "value";
+                style.width = String(minimumButtonWidth) + ea;
                 for (let j in style) {
                   checkListFactorContentsItemText.style[j] = style[j];
                 }
                 checkListFactorContentsItemText.style.left = "";
                 checkListFactorContentsItemText.style.right = String(0);
+
+                //range number
                 checkListFactorContentsItemText2 = GeneralJs.nodes.div.cloneNode(true);
                 checkListFactorContentsItemText2.textContent = String(value.search(items[i].column).value);
                 style = {
@@ -497,11 +500,11 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                   checkListFactorContentsItemText.setAttribute("value", String(j + 1));
                   style = {
                     position: "absolute",
-                    width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
+                    width: "calc(calc(100% - " + String(minimumButtonWidth * 3) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
                     height: String(30 - modeMinus) + ea,
                     borderRadius: String(3) + ea,
                     top: String(0) + ea,
-                    left: "calc(" + String(minimumButtonWidth) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
+                    left: "calc(" + String(minimumButtonWidth * 2) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
                     background: (j < value.search(items[i].column).value) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1,
                     cursor: "pointer",
                     transition: "all 0s ease",
