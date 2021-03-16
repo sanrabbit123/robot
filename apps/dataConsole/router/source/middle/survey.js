@@ -423,6 +423,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 marginBottom: String(checkFactorButtonMargin) + ea,
                 cursor: "pointer",
                 transition: "all 0s ease",
+                overflow: "hidden",
               }
               for (let j in style) {
                 checkListFactorContentsItem.style[j] = style[j];

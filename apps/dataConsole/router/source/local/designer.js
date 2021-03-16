@@ -3343,6 +3343,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                   marginBottom: String(checkFactorButtonMargin) + ea,
                   cursor: "pointer",
                   transition: "all 0s ease",
+                  overflow: "hidden",
                 }
                 for (let j in style) {
                   checkListFactorContentsItem.style[j] = style[j];
