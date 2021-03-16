@@ -7,7 +7,7 @@ module.exports = function () {
   font-display: swap;
   src: local('Noto Sans KR Regular'), local('NotoSansKR-Regular'), url('/notoSans.woff2') format('woff2');
   unicode-range: U+20-22, U+27-2a, U+2c-38, U+3a-3b, U+3f, U+41-47, U+4a-4c, U+4f-5d, U+61-7b, U+7d, U+a1, U+ab, U+ae, U+b7, U+bb, U+bf, U+2013-2014, U+201c-201d, U+2122, U+ac00, U+ace0, U+ae30, U+b2e4, U+b85c, U+b9ac, U+c0ac, U+c2a4, U+c2dc, U+c774, U+c778, U+c9c0, U+d558;}
-  html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale}
+  html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;-ms-touch-action: manipulation;touch-action: manipulation;}
   *{-webkit-tap-highlight-color: transparent;}
   body{margin:0}
   body,div{font-size:0;-ms-overflow-style: none;}
