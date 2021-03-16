@@ -1880,7 +1880,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     hInitial.style[i] = style[i];
   }
   hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
+  hInitial.style.height = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60))) + ea;
+  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60)) * SvgTong.getRatio(hInitial)) + ea;
   div_clone2.appendChild(hInitial);
 
   //h initial button
@@ -1900,7 +1901,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     convertIcon.style[i] = style[i];
   }
   convertIcon.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (49 / 60) : (54 / 60)))) + ea;
-  convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60))) + ea;
+  convertIcon.style.height = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60))) + ea;
+  convertIcon.style.width = String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60)) * SvgTong.getRatio(convertIcon)) + ea;
   div_clone2.appendChild(convertIcon);
 
   //m initial button

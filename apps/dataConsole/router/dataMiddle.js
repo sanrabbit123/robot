@@ -14,7 +14,7 @@ MiddleCommunication.execFuntion = function () {
 
   const app = new __name__Js();
 
-  document.addEventListener("DOMContentLoaded", async function (e) {
+  document.addEventListener("DOMContentLoaded", function (e) {
     app.mother.generalCss();
     app.mother.loadingRun().then(app.launching.bind(app)).catch(function (err) {
       throw new Error(err);
@@ -44,7 +44,6 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '')
 
     name = target.slice(0, 1).toUpperCase() + target.split(".")[0].slice(1);
     middleString = await fileSystem(`readString`, [ this.sourceDir + "/" + target ]);
-    middleString = middleString.replace(/\/<%name%>\//g, name);
     if (/\/<%patch%>\//g.test(middleString)) {
       onoffObj = JSON.parse(middleString.slice(0, [ ...middleString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
       middleString = middleString.slice([ ...middleString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
