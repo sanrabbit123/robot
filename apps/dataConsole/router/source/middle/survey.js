@@ -117,7 +117,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       //start matrixA
       div_clone = contentsArea.cloneNode(false);
       div_clone.style.animation = "fadeinlite 0.3s ease forwards";
-      if (!sero) {
+      if (sero) {
         div_clone.style.top = String(0);
         div_clone.style.height = "auto";
       }
@@ -190,7 +190,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         border: "1px solid " + GeneralJs.colorChip.gray3,
         background: GeneralJs.colorChip.gray1,
       };
-      if (!sero) {
+      if (sero) {
         style.position = "relative";
         style.width = String(100) + '%';
         style.right = String(0) + ea;
@@ -606,7 +606,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         height: String(100) + '%',
         background: GeneralJs.colorChip.white,
       };
-      if (!sero) {
+      if (sero) {
         style.position = "relative";
         style.marginTop = String(leftMargin + 3) + ea;
         style.marginBottom = String(leftMargin + 3) + ea;
