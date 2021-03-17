@@ -212,6 +212,32 @@ BackMaker.filters = {
 
 // METHOD ------------------------------------------------------------------------------------
 
+BackMaker.prototype.getMap = function (mode = "id", type = "array") {
+  let map;
+  if (mode === "id") {
+    if (type === "array") {
+      map = [
+        { standard: "desid", method: "getDesignerById" },
+        { standard: "cliid", method: "getClientById" },
+        { standard: "proid", method: "getProjectById" },
+        { standard: "conid", method: "getContentsById" },
+        { standard: "aspid", method: "getAspirantById" },
+        { standard: "serid", method: "getServiceById" }
+      ];
+    } else {
+      map = {
+        client: { standard: "cliid", method: "getClientById" },
+        designer: { standard: "desid", method: "getDesignerById" },
+        project: { standard: "proid", method: "getProjectById" },
+        contents: { standard: "conid", method: "getContentsById" },
+        aspirant: { standard: "aspid", method: "getAspirantById" },
+        service: { standard: "serid", method: "getServiceById" }
+      };
+    }
+    return map;
+  }
+}
+
 BackMaker.prototype.idMaker = function (pastId) {
   const instance = this;
   const { orderSystem } = this.mother;

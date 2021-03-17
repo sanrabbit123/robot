@@ -135,7 +135,7 @@ DataRouter.splitToSpace = function (str) {
 
 //GENERAL METHODS ---------------------------------------------------------------------------------
 
-DataRouter.prototype.baseMaker = function (target, mode = "first") {
+DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const instance = this;
   const ADDRESS = this.address;
   const DataPatch = this.patchClass;
@@ -334,7 +334,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first") {
 
     const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     return new Promise(function(resolve, reject) {
-      DataMiddle.baseHtml(target, fontStyle).then(function (html) {
+      DataMiddle.baseHtml(target, fontStyle, req).then(function (html) {
         resolve(html);
       }).catch(function (e) {
         reject(e);
@@ -510,7 +510,7 @@ DataRouter.prototype.rou_get_First = function () {
             target = "client";
           }
 
-          instance.baseMaker(target).then(function (html) {
+          instance.baseMaker(target, "first", null).then(function (html) {
             res.set("Content-Type", "text/html");
             res.send(html);
           }).catch(function (err) {
@@ -534,7 +534,7 @@ DataRouter.prototype.rou_get_Middle = function () {
   obj.link = "/middle/:id";
   obj.func = function (req, res) {
     try {
-      instance.baseMaker(req.params.id, "middle").then(function (html) {
+      instance.baseMaker(req.params.id, "middle", req).then(function (html) {
         res.set("Content-Type", "text/html");
         res.send(html);
       }).catch(function (err) {

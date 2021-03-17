@@ -1,11 +1,27 @@
 /<%patch%>/ {
-  "entire": false,
-  "client": false,
-  "designer": true,
-  "project": false,
-  "contents": false,
-  "service": false,
-  "photo": false
+  "patch": {
+    "entire": false,
+    "client": false,
+    "designer": true,
+    "project": false,
+    "contents": false,
+    "service": false,
+    "photo": false
+  },
+  "meta": {
+    "title": [
+      "thisPerson",
+      "return thisPerson.designer + ' 디자이너님 체크리스트'"
+    ],
+    "description": [
+      "thisPerson",
+      "return thisPerson.designer + ' 디자이너님의 체크리스트 작성 페이지입니다.'"
+    ],
+    "image": [
+      "thisPerson",
+      "return 'https://__thisHost__/hlimage.jpg'"
+    ]
+  }
 } %/%/g
 
 const SurveyJs = function () {
