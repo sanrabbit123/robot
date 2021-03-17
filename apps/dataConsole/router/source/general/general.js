@@ -648,6 +648,10 @@ GeneralJs.prototype.returnMinitial = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.946 72.772"><path d="M0 0h21.781l16.997 45.291L55.572 0h21.374v72.772H60.558V21.679L40.407 72.772h-5.395L14.758 21.679v51.093H0V0z" fill="${color}"/></svg>`;
 }
 
+GeneralJs.prototype.returnAinitial = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.005 72.772"><path d="M23.918 0h21.475l23.613 72.772H51.805l-4.987-16.183H20.457l-4.987 16.183H0L23.918 0zM24.02 44.884h19.236l-9.567-31.45L24.02 44.884z" fill="${color}"/></svg>`;
+}
+
 GeneralJs.prototype.returnRinitial = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.116 56.198"><path d="M0 0h20.121c13.283 0 21.693 5.423 21.693 17.056v0.314c0 8.488-4.952 12.969-11.554 14.933L45.116 56.198H31.596L18.156 34.505h-5.502v21.693H0V0zM19.807 25.859c6.366 0 9.589-2.672 9.589-8.095v-0.314c0-5.738-3.458-7.703-9.589-7.703h-7.152v16.113H19.807z" fill="${color}"/></svg>`;
 }
@@ -3413,9 +3417,9 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
     randomValue = randomStr;
   }
 
-  randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
+  randomValueAjaxData = "method=" + "certification" + "&name=" + name + "&phone=" + phone + "&option=" + JSON.stringify({ company: "홈리에종", certification: randomValue });
 
-  GeneralJs.ajax(randomValueAjaxData, "/kakaoCertification", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "/alimTalk", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;

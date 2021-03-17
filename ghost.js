@@ -298,6 +298,7 @@ Ghost.prototype.launching = async function () {
       //backup
       message = '';
       this.schedule.scheduleJob(this.objectToCron({ hours: 22, minutes: 30, seconds: 30 }), function () {
+        message = '';
         instance.mongoToJson().then(function (m) {
           message += m;
           return instance.ultimateReflection();

@@ -2986,9 +2986,9 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
 
         rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
         if (rows.length > 0) {
-          await back.mongoUpdate("deadline", [ { name: obj.name }, { deadline: new Date(obj.deadline) } ], { console: true });
+          await back.mongoUpdate("deadline", [ { name: obj.name }, { deadline: new Date(obj.deadline), middleline: new Date(obj.middleline) } ], { console: true });
         } else {
-          await back.mongoCreate("deadline", { deadline: new Date(obj.deadline), name: obj.name }, { console: true });
+          await back.mongoCreate("deadline", { deadline: new Date(obj.deadline), middleline: new Date(obj.middleline), name: obj.name }, { console: true });
         }
 
         resultObj = { message: "done" };
@@ -2997,13 +2997,19 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
 
         rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
         if (rows.length > 0) {
-          if (now.valueOf() > rows[0].deadline.valueOf()) {
-            resultObj = { expired: true };
+          resultObj = {};
+          if (now.valueOf() > rows[0].middleline.valueOf()) {
+            resultObj.expired = true;
           } else {
-            resultObj = { expired: false };
+            resultObj.expired = false;
+          }
+          if (now.valueOf() > rows[0].deadline.valueOf()) {
+            resultObj.dead = true;
+          } else {
+            resultObj.dead = false;
           }
         } else {
-          resultObj = { expired: true };
+          resultObj = { expired: true, dead: true };
         }
 
       }
@@ -3018,25 +3024,25 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_kakaoCertification = function () {
+DataRouter.prototype.rou_post_alimTalk = function () {
   const instance = this;
   const back = this.back;
   let obj = {};
-  obj.link = "/kakaoCertification";
+  obj.link = "/alimTalk";
   obj.func = async function (req, res) {
     try {
+      if (req.body.method === undefined || req.body.name === undefined || req.body.phone === undefined) {
+        throw new Error("must be method, name, phone");
+      }
       const requestObj = req.body;
-      await instance.kakao.sendTalk("certification", requestObj["name"], requestObj["phone"], {
-        company: "홈리에종",
-        certification: requestObj["certification"]
-      });
+      await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, (req.body.option !== undefined ? JSON.parse(req.body.option) : {}));
       res.set({
-        "Content-Type": "text/plain",
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      res.send("success");
+      res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

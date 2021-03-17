@@ -1117,17 +1117,21 @@ SurveyJs.prototype.launching = async function (loading) {
       designer = designer.designer;
 
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
-        const { expired } = JSON.parse(json);
-        if (!expired) {
-          instance.confirmLaunching(desid, designer);
-        } else {
-          const testPhone = "010-2747-3403";
-          instance.mother.certificationBox(designer, testPhone, function (back, box) {
-          // instance.mother.certificationBox(designer, phone, function (back, box) {
-            document.body.removeChild(box);
-            document.body.removeChild(back);
+        const { expired, dead } = JSON.parse(json);
+        if (!dead) {
+          if (!expired) {
             instance.confirmLaunching(desid, designer);
-          });
+          } else {
+            // const testPhone = "010-2747-3403";
+            instance.mother.certificationBox(designer, phone, function (back, box) {
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+              instance.confirmLaunching(desid, designer);
+            });
+          }
+        } else {
+          alert("페이지가 만료되었습니다! 관리자에게 문의하세요!");
+          window.location.href = "https://home-liaison.com";
         }
       });
     }
