@@ -1127,7 +1127,7 @@ DataPatch.prototype.clientMap = function () {
       border: String(0),
     };
 
-    for (let i = 0; i < length; i++) {
+    for (let i = length - 1; i > -1; i--) {
       button_clone = GeneralJs.nodes.div.cloneNode(true);
       button_clone.classList.add("removeTarget");
       for (let j in buttonStyle) {

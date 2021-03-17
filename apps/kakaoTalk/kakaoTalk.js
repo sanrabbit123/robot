@@ -7,6 +7,7 @@ const KakaoTalk = function () {
   this.userid = "hliaison";
   this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
   this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
+  this.senderPhone = "0220392252";
   this.ip = {
     office: address.officeinfo.ip.outer,
     home: address.homeinfo.ip.outer,
@@ -87,91 +88,144 @@ KakaoTalk.prototype.setTemplate = async function () {
 
 KakaoTalk.prototype.templateTong = function (target) {
   const tong = {
-    pastcomplete: "TA_7532",
-    complete: "TC_1244",
-    photo: "TC_1179",
-    designerPartnership: "TD_5890",
-    designerPresentation: "TD_5891",
-    designerPresentationAlarm: "TD_6666",
-    portfolioFail: "TD_7334",
+    photo: {
+      name: "사진 전송 완료 안내",
+      id: "TC_1179",
+      needs: [],
+      convert: null
+    },
+    complete: {
+      name: "신청 완료 안내",
+      id: "TC_1244",
+      needs: [],
+      convert: null
+    },
+    certification: {
+      name: "인증카톡",
+      id: "TC_9600",
+      needs: [
+        "company",
+        "certification"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "회사명", to: obj.company },
+          { from: "고객명", to: obj.name },
+          { from: "인증번호", to: obj.certification }
+        ];
+      },
+    },
+    designerPartnership: {
+      name: "파트너십 신청",
+      id: "TD_5890",
+      needs: [],
+      convert: null
+    },
+    designerPresentation: {
+      name: "설명회 신청 수정",
+      id: "TD_5891",
+      needs: [],
+      convert: null
+    },
+    designerPresentationAlarm: {
+      name: "설명회 사전 안내",
+      id: "TD_6666",
+      needs: [
+        "date"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "고객명", to: obj.name },
+          { from: "날짜", to: obj.date }
+        ];
+      }
+    },
+    portfolioFail: {
+      name: "포트폴리오 전송 실패 안내",
+      id: "TD_7334",
+      needs: [],
+      convert: null
+    },
+    designerCheckList: {
+      name: "디자이너 체크리스트",
+      id: "TD_9193",
+      needs: [
+        "date",
+        "desid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "고객명", to: obj.name },
+          { from: "날짜", to: obj.date },
+          { from: "desid", to: obj.desid }
+        ];
+      }
+    },
   };
   return tong[target];
 }
 
-KakaoTalk.prototype.setTalk = async function (method, name, phone) {
+KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) {
   const instance = this;
   try {
-    let client = { name: name, phone: phone };
-    let targetId = this.templateTong(method);
-    let options = {
+    const client = { name: name, phone: phone, ...option };
+    const { id: targetId, needs, convert } = this.templateTong(method);
+    let tong, contents;
+    let convertArr;
+    let tempRegexp;
+
+    tong = {
       apikey: this.authObj.apikey,
       userid: this.authObj.userid,
       token: this.authObj.token,
       senderkey: this.authObj.senderkey,
       tpl_code: targetId,
-      sender: "0220392252",
+      sender: this.senderPhone,
       receiver_1: client.phone.replace(/-/g, ''),
       recvname_1: client.name,
       subject_1: this.templates[targetId].templtName,
-      message_1: this.templates[targetId].templtContent.replace(/#\{[^\{\}]+\}/g, client.name),
+      message_1: "",
       button_1: { button: this.templates[targetId].buttons },
       failover: "Y",
       fsubject_1: this.templates[targetId].templtName,
-    }
-
-    if (this.templates[targetId].buttons.length === 0) {
-      options.fmessage_1 = this.templates[targetId].templtContent.replace(/#\{[^\{\}]+\}/g, client.name);
-    } else if (this.templates[targetId].buttons.length === 1) {
-      options.fmessage_1 = this.templates[targetId].templtContent.replace(/#\{[^\{\}]+\}/g, client.name) + "\n\n" + this.templates[targetId].buttons[0].name + " : " + this.templates[targetId].buttons[0].linkPc;
-    }
-
-    this.message = options;
-    return options;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-KakaoTalk.prototype.setCertification = async function (name, phone, certification) {
-  const instance = this;
-  try {
-    let client = { name: name, phone: phone, certification: certification };
-    let targetId = "TC_9600";
-    let options = {
-      apikey: this.authObj.apikey,
-      userid: this.authObj.userid,
-      token: this.authObj.token,
-      senderkey: this.authObj.senderkey,
-      tpl_code: targetId,
-      sender: "0220392252",
-      receiver_1: client.phone.replace(/-/g, ''),
-      recvname_1: client.name,
-      subject_1: this.templates[targetId].templtName,
-      message_1: this.templates[targetId].templtContent.replace(/#\{회사명\}/g, "홈리에종").replace(/#\{고객명\}/g, client.name).replace(/#\{인증번호\}/g, client.certification),
-      button_1: { button: this.templates[targetId].buttons },
-      failover: "Y",
-      fsubject_1: this.templates[targetId].templtName,
-      fmessage_1: this.templates[targetId].templtContent.replace(/#\{회사명\}/g, "홈리에종").replace(/#\{고객명\}/g, client.name).replace(/#\{인증번호\}/g, client.certification)
+      fmessage_1: ""
     };
 
-    this.message = options;
-    return options;
+    if (convert === null) {
+      contents = this.templates[targetId].templtContent.replace(/#\{[^\{\}]+\}/g, client.name);
+    } else {
+      contents = this.templates[targetId].templtContent;
+      for (let i of needs) {
+        if (client[i] === undefined) {
+          throw new Error("invaild option");
+        }
+      }
+      convertArr = convert(client);
+      for (let { from, to } of convertArr) {
+        tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
+        contents = contents.replace(tempRegexp, to);
+      }
+    }
+
+    tong.message_1 = contents;
+    tong.fmessage_1 = contents;
+    for (let i = 0; i < this.templates[targetId].buttons.length; i++) {
+      tong.fmessage_1 += "\n\n";
+      tong.fmessage_1 += this.templates[targetId].buttons[0].name + " : " + this.templates[targetId].buttons[0].linkPc;
+    }
+
+    this.message = tong;
+    return tong;
   } catch (e) {
     console.log(e);
   }
 }
 
-KakaoTalk.prototype.sendTalk = async function (method, name, phone, certification = null) {
+KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj = {}) {
   const instance = this;
   try {
     let options;
-
-    if (method !== 'certification') {
-      options = await this.setTalk(method, name, phone);
-    } else {
-      options = await this.setCertification(name, phone, certification);
-    }
-
+    options = await this.setTalk(method, name, phone, convertObj);
     const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
     console.log(data);
   } catch (e) {
@@ -190,7 +244,7 @@ KakaoTalk.prototype.ready = async function () {
 }
 
 KakaoTalk.prototype.getTemplate = function (target) {
-  return this.templates[this.templateTong(target)];
+  return this.templates[this.templateTong(target).id];
 }
 
 KakaoTalk.prototype.sendAspirantPresentation = async function () {
@@ -214,7 +268,7 @@ KakaoTalk.prototype.sendAspirantPresentation = async function () {
           token: this.authObj.token,
           senderkey: this.authObj.senderkey,
           tpl_code: targetId,
-          sender: "0220392252",
+          sender: this.senderPhone,
           receiver_1: phone.replace(/-/g, ''),
           recvname_1: name,
           subject_1: this.templates[targetId].templtName,

@@ -11,15 +11,15 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return thisPerson.designer + ' 디자이너님 체크리스트'"
+      "return (thisPerson.designer + ' 디자이너님 체크리스트');"
     ],
     "description": [
       "thisPerson",
-      "return thisPerson.designer + ' 디자이너님의 체크리스트 작성 페이지입니다.'"
+      "return (thisPerson.designer + ' 디자이너님의 체크리스트 작성 페이지입니다.');"
     ],
     "image": [
       "thisPerson",
-      "return 'https://__thisHost__/hlimage.jpg'"
+      "return ('https://__thisHost__/hlimage.jpg');"
     ]
   }
 } %/%/g
@@ -1122,7 +1122,8 @@ SurveyJs.prototype.launching = async function (loading) {
           instance.confirmLaunching(desid, designer);
         } else {
           const testPhone = "010-2747-3403";
-          instance.mother.certificationBox(designer, phone, function (back, box) {
+          instance.mother.certificationBox(designer, testPhone, function (back, box) {
+          // instance.mother.certificationBox(designer, phone, function (back, box) {
             document.body.removeChild(box);
             document.body.removeChild(back);
             instance.confirmLaunching(desid, designer);

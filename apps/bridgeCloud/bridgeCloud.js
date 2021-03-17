@@ -1022,7 +1022,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   funcObj.post_certification = async function (req, res) {
     try {
       const requestObj = req.body;
-      await KAKAO.sendTalk("certification", requestObj["name"], requestObj["phone"], requestObj["certification"]);
+      await KAKAO.sendTalk("certification", requestObj["name"], requestObj["phone"], {
+        company: "홈리에종",
+        certification: requestObj["certification"]
+      });
       res.set({
         "Content-Type": "text/plain",
         "Access-Control-Allow-Origin": '*',

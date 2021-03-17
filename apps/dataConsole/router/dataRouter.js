@@ -3026,7 +3026,10 @@ DataRouter.prototype.rou_post_kakaoCertification = function () {
   obj.func = async function (req, res) {
     try {
       const requestObj = req.body;
-      await instance.kakao.sendTalk("certification", requestObj["name"], requestObj["phone"], requestObj["certification"]);
+      await instance.kakao.sendTalk("certification", requestObj["name"], requestObj["phone"], {
+        company: "홈리에종",
+        certification: requestObj["certification"]
+      });
       res.set({
         "Content-Type": "text/plain",
         "Access-Control-Allow-Origin": '*',

@@ -430,7 +430,7 @@ PaymentJs.prototype.blocks = {
   contract: [
     {
       name: "contract0",
-      height: { desktop: "430px", mobile: "129vw", },
+      height: { desktop: "430px", mobile: "143vw", },
       callback: {
         desktop: function (dom) {
           return dom;
