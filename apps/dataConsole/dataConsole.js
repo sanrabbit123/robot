@@ -135,7 +135,7 @@ DataConsole.prototype.connect = async function () {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    if ([ "home", "office" ].includes(name.replace(/info/i, ''))) {
+    if (/localhost/gi.test(address.host)) {
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`set DB server => 127.0.0.1`);
     } else {

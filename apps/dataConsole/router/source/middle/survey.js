@@ -1105,7 +1105,8 @@ SurveyJs.prototype.launching = async function (loading) {
         if (!expired) {
           instance.confirmLaunching(desid, designer);
         } else {
-          instance.mother.certificationBox(designer, "010-2747-3403", function (back, box) {
+          const testPhone = "010-2747-3403";
+          instance.mother.certificationBox(designer, phone, function (back, box) {
             document.body.removeChild(box);
             document.body.removeChild(back);
             instance.confirmLaunching(desid, designer);
