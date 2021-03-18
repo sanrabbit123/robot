@@ -8,69 +8,11 @@ const MiddleCommunication = function () {
   this.sourceDir = `${this.dir}/source/middle`;
   this.generalJs = `${process.env.HOME}/static/general.js`;
   this.patchClass = DataPatch;
+  this.meta = {};
 }
 
-MiddleCommunication.prototype.metaDictionary = function (target = null) {
-  let dic;
-
-  dic = {
-    survey: {
-      patch: {
-        entire: false,
-        client: false,
-        designer: true,
-        project: false,
-        contents: false,
-        service: false,
-        photo: false
-      },
-      meta: {
-        title: [
-          "thisPerson",
-          "return (thisPerson.designer + ' 디자이너님 체크리스트');"
-        ],
-        description: [
-          "thisPerson",
-          "return (thisPerson.designer + ' 디자이너님의 체크리스트 작성 페이지입니다.');"
-        ],
-        image: [
-          "thisPerson",
-          "return ('https://__thisHost__/hlimage.jpg');"
-        ]
-      }
-    },
-    proposal: {
-      patch: {
-        entire: false,
-        client: true,
-        designer: false,
-        project: false,
-        contents: false,
-        service: false,
-        photo: false
-      },
-      meta: {
-        title: [
-          "thisPerson",
-          "return (thisPerson.name + ' 고객님 제안서');"
-        ],
-        description: [
-          "thisPerson",
-          "return (thisPerson.name + ' 고객님 디자이너 제안 페이지입니다.');"
-        ],
-        image: [
-          "thisPerson",
-          "return ('https://__thisHost__/hlimage.jpg');"
-        ]
-      }
-    }
-  };
-
-  if (target === null) {
-    return dic;
-  } else {
-    return dic[target.replace(/\.js$/gi, '')];
-  }
+MiddleCommunication.prototype.setMetadata = function (property, value) {
+  this.meta[property] = value;
 }
 
 MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '', req) {
@@ -88,7 +30,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
     if (!/\.js$/.test(target)) {
       target = target + ".js";
     }
-    const { meta } = this.metaDictionary(target);
+    const meta = this.meta[target.replace(/\.js/gi, '')];
 
     idArr = back.getMap("id", "array");
     id = null, idMethod = null, thisPerson = null;

@@ -7,7 +7,7 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
-  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -57,7 +57,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
 
     //write local js
-    console.log(`set target : `, staticDirList);
+    console.log(`set target :`, staticDirList);
     for (let i of staticDirList) {
 
       result = '';
@@ -93,27 +93,27 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
           }
         }
 
-        //babel compile
+        //merge
         code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
         code1 = dataPatchScript;
         code2 = generalString + "\n\n" + consoleGeneralString;
         code3 = fileString + "\n\n" + execString;
 
         result = '';
-        result += await babelSystem(code0);
+        result += code0;
         result += "\n\n";
         if (svgTongItemsString === null) {
           result += svgTongItemsString;
           result += "\n\n";
         }
-        result += await babelSystem(code1);
+        result += code1;
         result += "\n\n";
-        result += await babelSystem(code2);
+        result += code2;
         result += "\n\n";
-        result += await babelSystem(code3);
+        result += code3;
         result += "\n\n";
 
-        console.log(`${i} babel compile success`);
+        console.log(`${i} merge success`);
         await fileSystem(`write`, [ `${staticFolder}/${i}`, (polyfillString + "\n\n" + result) ]);
       }
 
@@ -126,7 +126,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
   const instance = this;
-  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -149,7 +149,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
     let code0, code1, code2, code3;
     let result;
-    let onoffObj, prototypes, dataPatchScript, prototypeBoo;
+    let prototypes, dataPatchScript, prototypeBoo;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -163,7 +163,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
 
     //write local js
-    console.log(`set middle target : `, staticDirList);
+    console.log(`set middle target :`, staticDirList);
     for (let i of staticDirList) {
 
       result = '';
@@ -183,48 +183,58 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         }
 
         //set data patch
-        onoffObj = DataMiddle.metaDictionary(i).patch;
-        prototypes = Object.keys(DataPatch.prototype);
-        dataPatchScript = `const DataPatch = new Function();\n`;
-        if (onoffObj.entire) {
-          for (let p of prototypes) {
-            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-          }
-        } else {
-          for (let p of prototypes) {
-            prototypeBoo = /^tools/.test(p);
-            for (let j in onoffObj) {
-              if (onoffObj[j] && !prototypeBoo) {
-                prototypeBoo = (new RegExp("^" + j)).test(p);
-              }
+        if (/\/<%patch%>\//g.test(fileString)) {
+          const { patch: onoffObj, meta } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+
+          //set meta info
+          DataMiddle.setMetadata(i.replace(/\.js/gi, ''), meta);
+
+          //set browser js
+          fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
+
+          //set data patch
+          prototypes = Object.keys(DataPatch.prototype);
+          dataPatchScript = `const DataPatch = new Function();\n`;
+          if (onoffObj.entire) {
+            for (let i of prototypes) {
+              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
             }
-            if (prototypeBoo) {
-              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
+          } else {
+            for (let i of prototypes) {
+              prototypeBoo = /^tools/.test(i);
+              for (let j in onoffObj) {
+                if (onoffObj[j] && !prototypeBoo) {
+                  prototypeBoo = (new RegExp("^" + j)).test(i);
+                }
+              }
+              if (prototypeBoo) {
+                dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+              }
             }
           }
         }
 
-        //babel compile
+        //merge
         code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
         code1 = dataPatchScript;
         code2 = generalString + "\n\n" + consoleGeneralString;
         code3 = fileString + "\n\n" + execString;
 
         result = '';
-        result += await babelSystem(code0);
+        result += code0;
         result += "\n\n";
         if (svgTongItemsString === null) {
           result += svgTongItemsString;
           result += "\n\n";
         }
-        result += await babelSystem(code1);
+        result += code1;
         result += "\n\n";
-        result += await babelSystem(code2);
+        result += code2;
         result += "\n\n";
-        result += await babelSystem(code3);
+        result += code3;
         result += "\n\n";
 
-        console.log(`${i} babel compile success`);
+        console.log(`${i} merge success`);
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, (polyfillString + "\n\n" + result) ]);
       }
 
