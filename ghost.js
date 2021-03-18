@@ -201,9 +201,9 @@ Ghost.prototype.requestObject = async function () {
     // to = "http://homeliaison.ddns.net:3000/fixDir";
     // to = "http://homeliaison.ddns.net:3000/mkdir";
 
-    // const motherDir = "__samba__/디자이너";
+    const motherDir = "__samba__/디자이너";
     // const motherDir = "__samba__/디자이너/신청자";
-    const motherDir = "__samba__/사진_등록_포트폴리오";
+    // const motherDir = "__samba__/사진_등록_포트폴리오";
     // let orders, aspirants;
     //
     // orders = [];

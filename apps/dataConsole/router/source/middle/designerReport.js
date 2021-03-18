@@ -2,7 +2,7 @@
   "patch": {
     "entire": false,
     "client": false,
-    "designer": false,
+    "designer": true,
     "project": false,
     "contents": false,
     "service": false,
@@ -11,11 +11,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 제안서');"
+      "return (thisPerson.name + ' 디자이너님 리포트');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 디자이너 제안 페이지입니다.');"
+      "return (thisPerson.name + ' 디자이너님 리포트 페이지입니다.');"
     ],
     "image": [
       "thisPerson",
@@ -24,7 +24,7 @@
   }
 } %/%/g
 
-const ProposalJs = function () {
+const DesignerReportJs = function () {
   this.mother = new GeneralJs();
   this.margin = 0;
   this.mode = "desktop";
@@ -32,7 +32,7 @@ const ProposalJs = function () {
   this.totalContents = document.getElementById("totalcontents");
 }
 
-ProposalJs.prototype.launching = async function (loading) {
+DesignerReportJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();
