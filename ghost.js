@@ -73,7 +73,7 @@ Ghost.prototype.objectToCron = function (obj = {}) {
 Ghost.prototype.consoleQ = function (question) {
   const readline = require(`readline`);
   const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     rL.question(question, function (input) {
       resolve(input);
       rL.close();
