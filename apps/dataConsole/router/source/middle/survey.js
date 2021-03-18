@@ -1,15 +1,3 @@
-/<%patch%>/ {
-  "patch": {
-    "entire": false,
-    "client": false,
-    "designer": true,
-    "project": false,
-    "contents": false,
-    "service": false,
-    "photo": false
-  }
-} %/%/g
-
 const SurveyJs = function () {
   this.mother = new GeneralJs();
   this.whiteBox = null;
@@ -18,58 +6,6 @@ const SurveyJs = function () {
   this.mode = "desktop";
   this.sero = false;
   this.totalContents = document.getElementById("totalcontents");
-}
-
-SurveyJs.metaSetting = function (obj) {
-  if (obj.title === undefined || obj.description === undefined || obj.image === undefined) {
-    throw new Error("invaild arguments");
-  }
-  const meta = document.createElement("META");
-  const head = document.querySelector("head");
-  const body = document.querySelector("body");
-  const style = document.querySelector("style");
-  if (style === null) {
-    throw new Error("must be style tag in head");
-  }
-  const { title, description, image } = obj;
-  let meta_clone, title_tag, div_clone;
-
-  //title
-  meta_clone = meta.cloneNode(true);
-  meta_clone.setAttribute("property", "og:title");
-  meta_clone.setAttribute("content", title);
-  head.insertBefore(meta_clone, style);
-
-  //description
-  meta_clone = meta.cloneNode(true);
-  meta_clone.setAttribute("property", "og:description");
-  meta_clone.setAttribute("content", description);
-  head.insertBefore(meta_clone, style);
-
-  //image
-  meta_clone = meta.cloneNode(true);
-  meta_clone.setAttribute("property", "og:image");
-  meta_clone.setAttribute("content", image);
-  head.insertBefore(meta_clone, style);
-
-  //description
-  meta_clone = meta.cloneNode(true);
-  meta_clone.setAttribute("name", "description");
-  meta_clone.setAttribute("content", description);
-  head.insertBefore(meta_clone, style);
-
-  //title tag
-  title_tag = document.createElement("TITLE");
-  title_tag.textContent = title;
-  head.insertBefore(title_tag, style);
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.style.display = "none";
-  div_clone.style.position = "absolute";
-  div_clone.style.opacity = String(0);
-  div_clone.style.fontSize = String(0);
-  div_clone.textContent = description;
-  body.insertBefore(div_clone, body.firstChild);
 }
 
 SurveyJs.prototype.baseMaker = function () {
@@ -1156,13 +1092,6 @@ SurveyJs.prototype.launching = async function (loading) {
       phone = thisPerson.information.phone;
       designer = thisPerson.designer;
 
-      //meta setting
-      SurveyJs.metaSetting({
-        title: (thisPerson.designer + " 디자이너님 체크리스트"),
-        description: (thisPerson.designer + " 디자이너님의 체크리스트 작성 페이지입니다."),
-        image: (window.location.protocol + "//" + window.location.host + "/hlimage.jpg")
-      });
-
       //get dead line
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
         const { expired, dead } = JSON.parse(json);
@@ -1170,7 +1099,7 @@ SurveyJs.prototype.launching = async function (loading) {
           if (!expired) {
             instance.confirmLaunching(desid, designer);
           } else {
-            const targetPhone = /localhost/.test(window.location.localhost) ? "010-2747-3403" : phone;
+            const targetPhone = /localhost/.test(window.location.localhost) ? "010-2747-3403" : "010-2747-3403";
             instance.mother.certificationBox(designer, targetPhone, function (back, box) {
               document.body.removeChild(box);
               document.body.removeChild(back);

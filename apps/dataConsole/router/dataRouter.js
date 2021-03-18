@@ -1,4 +1,4 @@
-const DataRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, isGhost = false) {
+const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, isGhost = false) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -9,11 +9,11 @@ const DataRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, isGhost = false
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.patchClass = DataPatch;
   this.patch = new DataPatch();
+  this.middle = DataMiddle;
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.calendar = new GoogleCalendar();
@@ -139,6 +139,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const instance = this;
   const ADDRESS = this.address;
   const DataPatch = this.patchClass;
+  const DataMiddle = this.middle;
   let dataPatchScript, html;
   let prototypes;
   let fontStyle;
@@ -332,13 +333,16 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
 
   } else if (mode === "middle") {
 
-    const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     return new Promise(function(resolve, reject) {
-      DataMiddle.baseHtml(target, fontStyle, req).then(function (html) {
-        resolve(html);
-      }).catch(function (e) {
-        reject(e);
-      })
+      if (DataMiddle !== null) {
+        DataMiddle.baseHtml(target, fontStyle, req).then(function (html) {
+          resolve(html);
+        }).catch(function (e) {
+          reject(e);
+        });
+      } else {
+        resolve(`<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`);
+      }
     });
 
   }

@@ -5,7 +5,7 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder, address) {
+DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
   const { fileSystem, babelSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
@@ -82,21 +82,121 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address) {
           result = (await babelSystem(code0)) + "\n\n" + svgTongItemsString + "\n\n" + (await babelSystem(code1));
         }
         console.log(`${i} babel compile success`);
-        await fileSystem(`write`, [ `${process.env.HOME}/static/${i}`, (polyfillString + "\n\n" + result) ]);
+        await fileSystem(`write`, [ `${staticFolder}/${i}`, (polyfillString + "\n\n" + result) ]);
       }
 
     }
 
-    //just general js
-    result = '';
-    code0 = '';
-    code1 = '';
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-    code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
-    code1 = generalString + "\n\n" + consoleGeneralString;
-    result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
-    console.log(`general.js babel compile success`);
-    await fileSystem(`write`, [ `${process.env.HOME}/static/general.js`, (polyfillString + "\n\n" + result) ]);
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
+  const instance = this;
+  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const S3HOST = this.address.s3info.host;
+  const SSEHOST = address.host;
+  const SSEHOST_CONSOLE = this.address.backinfo.host;
+  const GHOSTHOST = this.address.homeinfo.ghost.host;
+  try {
+
+    //set static
+    const staticDir = `${this.dir}/router/source/middle`;
+    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
+    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+    }
+    const targetStaticFolder = await fileSystem(`readDir`, [ staticFolder ]);;
+    if (!targetStaticFolder.includes(`middle`)) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}/middle`);
+    }
+    console.log(`set middle static`);
+
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
+    let code0, code1, code2, code3;
+    let result;
+    let onoffObj, prototypes, dataPatchScript, prototypeBoo;
+
+    //set general js
+    s3String = "const S3HOST = \"" + S3HOST + "\";";
+    sseString = "const SSEHOST = \"" + SSEHOST + "\";";
+    sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
+    ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+
+    //write local js
+    console.log(`set middle target : `, staticDirList);
+    for (let i of staticDirList) {
+
+      result = '';
+      code0 = '';
+      code1 = '';
+      svgTongItemsString = null;
+
+      if (i !== `.DS_Store`) {
+        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
+        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+        fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
+        if (/\/<%map%>\//g.test(fileString)) {
+          fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+            return JSON.stringify(require(`${instance.dir}/router/source/svg/middle/map/${i}`), null, 2);
+          });
+          svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/middle/svgTong/${i}` ]);
+        }
+
+        //set data patch
+        onoffObj = DataMiddle.metaDictionary(i).patch;
+        prototypes = Object.keys(DataPatch.prototype);
+        dataPatchScript = `const DataPatch = new Function();\n`;
+        if (onoffObj.entire) {
+          for (let i of prototypes) {
+            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+          }
+        } else {
+          for (let i of prototypes) {
+            prototypeBoo = /^tools/.test(i);
+            for (let j in onoffObj) {
+              if (onoffObj[j] && !prototypeBoo) {
+                prototypeBoo = (new RegExp("^" + j)).test(i);
+              }
+            }
+            if (prototypeBoo) {
+              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+            }
+          }
+        }
+
+        //babel compile
+        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
+        code1 = dataPatchScript + "\n\n";
+        code2 = generalString + "\n\n" + consoleGeneralString + "\n\n";
+        code3 = fileString + "\n\n" + execString;
+
+        result = '';
+        result += await babelSystem(code0);
+        result += "\n\n";
+        if (svgTongItemsString === null) {
+          result += svgTongItemsString;
+          result += "\n\n";
+        }
+        result += await babelSystem(code1);
+        result += "\n\n";
+        result += await babelSystem(code2);
+        result += "\n\n";
+        result += await babelSystem(code3);
+        result += "\n\n";
+        
+        console.log(`${i} babel compile success`);
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, (polyfillString + "\n\n" + result) ]);
+      }
+
+    }
 
   } catch (e) {
     console.log(e);
@@ -115,6 +215,8 @@ DataConsole.prototype.connect = async function () {
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+  const DataRouter = require(`${this.dir}/router/dataRouter.js`);
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -125,7 +227,8 @@ DataConsole.prototype.connect = async function () {
   try {
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
-    const isGhost = (address.isGhost === true);
+    let isGhost = (address.isGhost === true);
+    let isLocal;
     if (name === "unknown") {
       throw new Error("invalid address");
     }
@@ -136,9 +239,11 @@ DataConsole.prototype.connect = async function () {
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
     if (/localhost/gi.test(address.host)) {
+      isLocal = true;
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`set DB server => 127.0.0.1`);
     } else {
+      isLocal = false;
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       console.log(`set DB server => ${this.address.mongoinfo.host}`);
     }
@@ -149,6 +254,14 @@ DataConsole.prototype.connect = async function () {
     //set kakao
     const kakaoInstance = new KakaoTalk();
     await kakaoInstance.ready();
+
+    //set dataMiddle
+    let DataMiddle;
+    if (isLocal || isGhost) {
+      DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+    } else {
+      DataMiddle = null;
+    }
 
     //set pem key
     let pems = {};
@@ -178,8 +291,7 @@ DataConsole.prototype.connect = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const DataRouter = require(`${this.dir}/router/dataRouter.js`);
-    const router = new DataRouter(MONGOC, MONGOLOCALC, kakaoInstance, isGhost);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, isGhost);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
@@ -191,8 +303,12 @@ DataConsole.prototype.connect = async function () {
     console.log(`set router`);
 
     //set static
-    await this.renderStatic(staticFolder, address);
+    await this.renderStatic(staticFolder, address, DataPatch);
+    if (DataMiddle !== null) {
+      await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle);
+    }
 
+    //error handle
     // app.use(function (req, res, next) {
     //   res.status(404);
     //   res.send('<script>window.location.href = "https://' + instance.address.backinfo.host + '/client"</script>');
