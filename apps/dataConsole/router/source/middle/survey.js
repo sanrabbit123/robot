@@ -7,20 +7,6 @@
     "contents": false,
     "service": false,
     "photo": false
-  },
-  "meta": {
-    "title": [
-      "thisPerson",
-      "return (thisPerson.designer + ' 디자이너님 체크리스트');"
-    ],
-    "description": [
-      "thisPerson",
-      "return (thisPerson.designer + ' 디자이너님의 체크리스트 작성 페이지입니다.');"
-    ],
-    "image": [
-      "thisPerson",
-      "return ('https://__thisHost__/hlimage.jpg');"
-    ]
   }
 } %/%/g
 
@@ -31,6 +17,59 @@ const SurveyJs = function () {
   this.margin = 0;
   this.mode = "desktop";
   this.sero = false;
+  this.totalContents = document.getElementById("totalcontents");
+}
+
+SurveyJs.metaSetting = function (obj) {
+  if (obj.title === undefined || obj.description === undefined || obj.image === undefined) {
+    throw new Error("invaild arguments");
+  }
+  const meta = document.createElement("META");
+  const head = document.querySelector("head");
+  const body = document.querySelector("body");
+  const style = document.querySelector("style");
+  if (style === null) {
+    throw new Error("must be style tag in head");
+  }
+  const { title, description, image } = obj;
+  let meta_clone, title_tag, div_clone;
+
+  //title
+  meta_clone = meta.cloneNode(true);
+  meta_clone.setAttribute("property", "og:title");
+  meta_clone.setAttribute("content", title);
+  head.insertBefore(meta_clone, style);
+
+  //description
+  meta_clone = meta.cloneNode(true);
+  meta_clone.setAttribute("property", "og:description");
+  meta_clone.setAttribute("content", description);
+  head.insertBefore(meta_clone, style);
+
+  //image
+  meta_clone = meta.cloneNode(true);
+  meta_clone.setAttribute("property", "og:image");
+  meta_clone.setAttribute("content", image);
+  head.insertBefore(meta_clone, style);
+
+  //description
+  meta_clone = meta.cloneNode(true);
+  meta_clone.setAttribute("name", "description");
+  meta_clone.setAttribute("content", description);
+  head.insertBefore(meta_clone, style);
+
+  //title tag
+  title_tag = document.createElement("TITLE");
+  title_tag.textContent = title;
+  head.insertBefore(title_tag, style);
+
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.style.display = "none";
+  div_clone.style.position = "absolute";
+  div_clone.style.opacity = String(0);
+  div_clone.style.fontSize = String(0);
+  div_clone.textContent = description;
+  body.insertBefore(div_clone, body.firstChild);
 }
 
 SurveyJs.prototype.baseMaker = function () {
@@ -1093,18 +1132,19 @@ SurveyJs.prototype.confirmLaunching = function (desid, designer) {
 SurveyJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
+    const getObj = GeneralJs.returnGet();
+    let thisPerson, desid, designers, designer, phone;
+
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
-    this.totalContents = document.getElementById("totalcontents");
-
-    const getObj = GeneralJs.returnGet();
-    let desid, designers, designer, phone;
 
     if (getObj.desid === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = "https://home-liaison.com";
       throw new Error("invaild query string");
     } else {
+
+      //get this person
       desid = getObj.desid;
       designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners"));
       if (designers.length === 0) {
@@ -1112,18 +1152,26 @@ SurveyJs.prototype.launching = async function (loading) {
         window.location.href = "https://home-liaison.com";
         throw new Error("invaild desid");
       }
-      designer = designers[0];
-      phone = designer.information.phone;
-      designer = designer.designer;
+      thisPerson = designers[0];
+      phone = thisPerson.information.phone;
+      designer = thisPerson.designer;
 
+      //meta setting
+      SurveyJs.metaSetting({
+        title: (thisPerson.designer + " 디자이너님 체크리스트"),
+        description: (thisPerson.designer + " 디자이너님의 체크리스트 작성 페이지입니다."),
+        image: (window.location.protocol + "//" + window.location.host + "/hlimage.jpg")
+      });
+
+      //get dead line
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
         const { expired, dead } = JSON.parse(json);
         if (!dead) {
           if (!expired) {
             instance.confirmLaunching(desid, designer);
           } else {
-            // const testPhone = "010-2747-3403";
-            instance.mother.certificationBox(designer, phone, function (back, box) {
+            const targetPhone = /localhost/.test(window.location.localhost) ? "010-2747-3403" : "010-2727-3403";
+            instance.mother.certificationBox(designer, targetPhone, function (back, box) {
               document.body.removeChild(box);
               document.body.removeChild(back);
               instance.confirmLaunching(desid, designer);

@@ -45,33 +45,6 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
     let html, middleDir, middleString;
     let name;
     let prototypes, dataPatchScript, prototypeBoo;
-    let idArr, id, idMethod;
-    let thisPerson;
-    let titleString, metaTitle;
-    let descriptionString, metaDescription;
-    let imageString, metaImage;
-
-    idArr = back.getMap("id", "array");
-    id = null, idMethod = null, thisPerson = null;
-    for (let { standard, method } of idArr) {
-      if (req.query[standard] !== undefined) {
-        id = req.query[standard];
-        idMethod = method;
-        break;
-      } else {
-        id = null;
-        idMethod = null;
-      }
-    }
-
-    if (id === null) {
-      throw new Error("There is no id, query must include id");
-    }
-
-    thisPerson = await (back[idMethod])(id);
-    if (thisPerson === null) {
-      throw new Error("There is no data, insert vaild id");
-    }
 
     if (!/\.js$/.test(target)) {
       target = target + ".js";
@@ -79,12 +52,9 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
 
     name = target.slice(0, 1).toUpperCase() + target.split(".")[0].slice(1);
     middleString = await fileSystem(`readString`, [ this.sourceDir + "/" + target ]);
-    titleString = '';
-    descriptionString = '';
-    imageString = '';
 
     if (/\/<%patch%>\//g.test(middleString)) {
-      const { patch: onoffObj, meta } = JSON.parse(middleString.slice(0, [ ...middleString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+      const { patch: onoffObj } = JSON.parse(middleString.slice(0, [ ...middleString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
 
       //set browser js
       middleString = middleString.slice([ ...middleString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
@@ -110,15 +80,6 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
         }
       }
       middleString = dataPatchScript + middleString;
-
-      //set meta data
-      metaTitle = new Function(...meta.title);
-      metaDescription = new Function(...meta.description);
-      metaImage = new Function(...meta.image);
-
-      titleString = metaTitle(thisPerson);
-      descriptionString = metaDescription(thisPerson);
-      imageString = metaImage(thisPerson);
     }
 
     html = `<!DOCTYPE html>
@@ -126,15 +87,9 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
-        <meta content="${titleString}" property="og:title">
-        <meta content="${descriptionString}" property="og:description">
-        <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">
-        <meta name="description" content="${descriptionString}">
-        <title>${titleString}</title>
         <style>${fontStyle}</style>
       </head>
       <body>
-        <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
         <div id="totalcontents"></div>
         <script src="/general.js"></script>
         <script>${middleString};\n(${MiddleCommunication.execFuntion.toString().replace(/__name__/g, name)})();</script>
