@@ -140,9 +140,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const ADDRESS = this.address;
   const DataPatch = this.patchClass;
   const DataMiddle = this.middle;
-  let dataPatchScript, html;
-  let prototypes;
-  let fontStyle;
+  let html, fontStyle;
 
   fontStyle = `
   @font-face {
@@ -296,21 +294,6 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
 
   if (mode === "first") {
 
-    prototypes = Object.keys(DataPatch.prototype);
-    dataPatchScript = `const DataPatch = new Function();\n`;
-    if (target !== "photo") {
-      for (let i of prototypes) {
-        if ((new RegExp("^" + target)).test(i) || /^tools/.test(i)) {
-          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-        }
-      }
-    } else {
-      for (let i of prototypes) {
-        if ((new RegExp("^photo")).test(i) || (new RegExp("^project")).test(i) || /^tools/.test(i)) {
-          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-        }
-      }
-    }
     html = `<!DOCTYPE html>
     <html lang="ko" dir="ltr">
       <head>
@@ -318,7 +301,6 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
         <title>HomeLiaison Console: ${target}</title>
         <style>${fontStyle}</style>
-        <script>${dataPatchScript}</script>
       </head>
       <body>
         <div id="totalcontents"></div>

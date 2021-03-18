@@ -41,8 +41,9 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
-    let code0, code1;
+    let code0, code1, code2, code3;
     let result;
+    let prototypes, dataPatchScript, prototypeBoo;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -74,13 +75,44 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
           });
           svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
         }
-        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
-        code1 = generalString + "\n\n" + consoleGeneralString + "\n\n" + fileString + "\n\n" + execString;
-        if (svgTongItemsString === null) {
-          result = (await babelSystem(code0)) + "\n\n" + (await babelSystem(code1));
+
+        //set data patch
+        prototypes = Object.keys(DataPatch.prototype);
+        dataPatchScript = `const DataPatch = new Function();\n`;
+        if (i.trim().replace(/\.js/gi, '') !== "photo") {
+          for (let p of prototypes) {
+            if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
+              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
+            }
+          }
         } else {
-          result = (await babelSystem(code0)) + "\n\n" + svgTongItemsString + "\n\n" + (await babelSystem(code1));
+          for (let p of prototypes) {
+            if ((new RegExp("^photo")).test(p) || (new RegExp("^project")).test(p) || /^tools/.test(p)) {
+              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
+            }
+          }
         }
+
+        //babel compile
+        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
+        code1 = dataPatchScript;
+        code2 = generalString + "\n\n" + consoleGeneralString;
+        code3 = fileString + "\n\n" + execString;
+
+        result = '';
+        result += await babelSystem(code0);
+        result += "\n\n";
+        if (svgTongItemsString === null) {
+          result += svgTongItemsString;
+          result += "\n\n";
+        }
+        result += await babelSystem(code1);
+        result += "\n\n";
+        result += await babelSystem(code2);
+        result += "\n\n";
+        result += await babelSystem(code3);
+        result += "\n\n";
+
         console.log(`${i} babel compile success`);
         await fileSystem(`write`, [ `${staticFolder}/${i}`, (polyfillString + "\n\n" + result) ]);
       }
@@ -155,27 +187,27 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         prototypes = Object.keys(DataPatch.prototype);
         dataPatchScript = `const DataPatch = new Function();\n`;
         if (onoffObj.entire) {
-          for (let i of prototypes) {
-            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+          for (let p of prototypes) {
+            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
           }
         } else {
-          for (let i of prototypes) {
-            prototypeBoo = /^tools/.test(i);
+          for (let p of prototypes) {
+            prototypeBoo = /^tools/.test(p);
             for (let j in onoffObj) {
               if (onoffObj[j] && !prototypeBoo) {
-                prototypeBoo = (new RegExp("^" + j)).test(i);
+                prototypeBoo = (new RegExp("^" + j)).test(p);
               }
             }
             if (prototypeBoo) {
-              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
             }
           }
         }
 
         //babel compile
         code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
-        code1 = dataPatchScript + "\n\n";
-        code2 = generalString + "\n\n" + consoleGeneralString + "\n\n";
+        code1 = dataPatchScript;
+        code2 = generalString + "\n\n" + consoleGeneralString;
         code3 = fileString + "\n\n" + execString;
 
         result = '';
@@ -191,7 +223,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += "\n\n";
         result += await babelSystem(code3);
         result += "\n\n";
-        
+
         console.log(`${i} babel compile success`);
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, (polyfillString + "\n\n" + result) ]);
       }
