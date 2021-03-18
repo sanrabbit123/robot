@@ -1057,6 +1057,21 @@ const withToolsArr = function (Clients) {
     return tongs;
   }
 
+  Clients.prototype.search = function (cliid) {
+    let result = null;
+    for (let i of this) {
+      if (i.cliid === cliid) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+
+  Clients.prototype.find = function (cliid) {
+    return this.search(cliid);
+  }
+
   return Clients;
 }
 

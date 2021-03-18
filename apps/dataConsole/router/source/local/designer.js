@@ -3210,7 +3210,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           let margin;
           let boxNumber;
           let matrixFactor;
-          let matrixStyle, matrixMargin;
+          let matrixBaseStyle, matrixStyle, matrixMargin;
           let xTitleBoxesTong, yTitleBoxesTong;
           let xTitleBox, yTitleBox, zTitleBox;
           let xTitleBoxWord, yTitleBoxWord, zTitleBoxWord;
@@ -3223,6 +3223,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           let x, y, z;
           let checkList;
           let checkListBase, checkListBaseWhite;
+          let checkListBaseStyle;
           let checkListFactor, checkListFactorTitle, checkListFactorContents, checkListFactorContentsItem, checkListFactorContentsItemText, checkListFactorContentsItemText2;
           let checkListWidth, checkListMargin;
           let minimumButtonWidth;
@@ -3253,7 +3254,13 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           //start check list
           checkList = DataPatch.designerCheckList(analytics);
           checkListBase = GeneralJs.nodes.div.cloneNode(true);
-          style = {
+          checkListBase.addEventListener("dblclick", function (e) {
+            if (instance.whiteMemoBox !== undefined && instance.whiteMemoBox !== null) {
+              instance.whiteMemoBox.style.display = "block";
+              instance.whiteMemoBox.style.animation = "fadeupmiddle 0.3s ease forwards";
+            }
+          });
+          checkListBaseStyle = {
             position: "absolute",
             width: String(checkListWidth - (checkListMargin / 2)) + ea,
             top: String(0) + ea,
@@ -3263,8 +3270,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             border: "1px solid " + GeneralJs.colorChip.gray3,
             background: GeneralJs.colorChip.gray1,
           };
-          for (let i in style) {
-            checkListBase.style[i] = style[i];
+          for (let i in checkListBaseStyle) {
+            checkListBase.style[i] = checkListBaseStyle[i];
           }
 
           checkBoxEvent = function (e) {
@@ -3671,7 +3678,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
 
           //start matrixA
           matrixBase = GeneralJs.nodes.div.cloneNode(true);
-          style = {
+          matrixBaseStyle = {
             position: "absolute",
             top: String(0) + ea,
             left: String(leftMargin) + ea,
@@ -3679,8 +3686,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             height: String(100) + '%',
             background: GeneralJs.colorChip.white,
           };
-          for (let i in style) {
-            matrixBase.style[i] = style[i];
+          for (let i in matrixBaseStyle) {
+            matrixBase.style[i] = matrixBaseStyle[i];
           }
 
           //entire matrix
@@ -4025,8 +4032,167 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
           matrixBase.appendChild(yTitleBoxesTong);
 
           div_clone.appendChild(matrixBase);
+
+          //memo box
+          GeneralJs.timeouts["checkListMemoBox"] = setTimeout(function () {
+            GeneralJs.ajax("method=designer&property=history&idArr=" + JSON.stringify([ desid ]), "/getHistoryProperty", function (res) {
+              const resObj = JSON.parse(res);
+              if (resObj[desid] === undefined) {
+                throw new Error("history error");
+              }
+              const history = resObj[desid];
+              let memoBox;
+              let memoWhite;
+              let memoTitle;
+              let memoArea;
+              let memoTextScroll, memoText;
+              let style;
+              let ea;
+
+              ea = "px";
+
+              memoBox = GeneralJs.nodes.div.cloneNode(true);
+              memoBox.setAttribute("mode", "left");
+              style = {
+                ...matrixBaseStyle,
+                display: "block",
+                right: "",
+                borderRadius: String(5) + ea,
+                border: "1px solid " + GeneralJs.colorChip.gray3,
+                background: GeneralJs.colorChip.gray1,
+                animation: "fadeupmiddle 0.3s ease forwards"
+              };
+              for (let i in style) {
+                memoBox.style[i] = style[i];
+              }
+              memoBox.addEventListener("contextmenu", function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (this.getAttribute("mode") === "left") {
+                  this.style.width = checkListBaseStyle.width;
+                  this.style.left = "";
+                  this.style.right = checkListBaseStyle.right;
+                  this.setAttribute("mode", "right");
+                } else {
+                  this.style.width = matrixBaseStyle.width;
+                  this.style.right = "";
+                  this.style.left = matrixBaseStyle.left;
+                  this.setAttribute("mode", "left");
+                }
+              });
+              memoBox.addEventListener("dblclick", function (e) {
+                this.style.display = "none";
+                this.style.animation = "";
+              });
+
+              memoWhite = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "relative",
+                top: String(matrixMargin * 2) + ea,
+                left: String(matrixMargin * 2) + ea,
+                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+                height: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+                borderRadius: String(5) + ea,
+                background: GeneralJs.colorChip.white,
+              };
+              for (let i in style) {
+                memoWhite.style[i] = style[i];
+              }
+              memoBox.appendChild(memoWhite);
+
+              memoTitle = GeneralJs.nodes.div.cloneNode(true);
+              memoTitle.insertAdjacentHTML("beforeend", '<b style="color:' + GeneralJs.colorChip.green + '">0. </b> ' + designer + ' 디자이너 메모');
+              style = {
+                position: "absolute",
+                top: String((matrixMargin * 2) + 3) + ea,
+                left: String(matrixMargin * 2) + ea,
+                fontSize: String(14) + ea,
+                fontWeight: String(600),
+                color: GeneralJs.colorChip.black,
+                marginBottom: String(7) + ea,
+              }
+              for (let i in style) {
+                memoTitle.style[i] = style[i];
+              }
+              memoWhite.appendChild(memoTitle);
+
+              memoArea = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "relative",
+                top: String((matrixMargin * 2) + 3 + 19 + 7) + ea,
+                left: String(matrixMargin * 2) + ea,
+                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+                height: "calc(100% - " + String((matrixMargin * 4) + 3 + 19 + 7) + ea + ")",
+                borderRadius: String(5) + ea,
+                border: "1px solid " + GeneralJs.colorChip.gray2,
+                boxSizing: "border-box",
+              }
+              for (let i in style) {
+                memoArea.style[i] = style[i];
+              }
+
+              memoWhite.appendChild(memoArea);
+
+              memoTextScroll = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "absolute",
+                top: String((matrixMargin * 2) - 4) + ea,
+                left: String(matrixMargin * 2) + ea,
+                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+                height: "calc(100% - " + String((matrixMargin * 4) - 4) + ea + ")",
+                overflow: "scroll",
+              }
+              for (let i in style) {
+                memoTextScroll.style[i] = style[i];
+              }
+              memoArea.appendChild(memoTextScroll);
+
+              memoText = GeneralJs.nodes.textarea.cloneNode(true);
+              memoText.value = history;
+              style = {
+                position: "absolute",
+                top: String(0) + ea,
+                left: String(0) + ea,
+                width: String(100) + '%',
+                height: String(5000) + ea,
+                fontSize: String(14) + ea,
+                fontWeight: String(300),
+                outline: String(0),
+                border: String(0),
+                lineHeight: String(1.66),
+                wordSpacing: String(-1) + ea,
+                color: GeneralJs.colorChip.black
+              }
+              for (let i in style) {
+                memoText.style[i] = style[i];
+              }
+              memoText.addEventListener("blur", function (e) {
+                const cookies = GeneralJs.getCookiesAll();
+                const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+              });
+              memoText.addEventListener("keypress", function (e) {
+                if (e.keyCode === 13) {
+                  const cookies = GeneralJs.getCookiesAll();
+                  const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                }
+              })
+
+              memoTextScroll.appendChild(memoText);
+
+              instance.whiteMemoBox = memoBox;
+              div_clone.appendChild(memoBox);
+
+              memoText.focus();
+            });
+            clearTimeout(GeneralJs.timeouts["checkListMemoBox"]);
+            GeneralJs.timeouts["checkListMemoBox"] = null;
+          }, 500);
+
           instance.whiteMatrixA = div_clone;
           motherArea.appendChild(div_clone);
+
         });
 
       // DEV => designer needs and schedule area =================================================================

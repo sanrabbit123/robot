@@ -289,6 +289,21 @@ const withToolsArr = function (ContentsArr) {
     }
   }
 
+  ContentsArr.prototype.search = function (conid) {
+    let result = null;
+    for (let i of this) {
+      if (i.conid === conid) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+
+  ContentsArr.prototype.find = function (conid) {
+    return this.search(conid);
+  }
+
   return ContentsArr;
 }
 

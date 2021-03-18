@@ -540,6 +540,21 @@ const withToolsArr = function (Projects) {
     }
   }
 
+  Projects.prototype.search = function (proid) {
+    let result = null;
+    for (let i of this) {
+      if (i.proid === proid) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+
+  Projects.prototype.find = function (proid) {
+    return this.search(proid);
+  }
+
   return Projects;
 }
 

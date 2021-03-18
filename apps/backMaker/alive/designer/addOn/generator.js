@@ -298,6 +298,21 @@ const withToolsArr = function (Designers) {
     }
   }
 
+  Designers.prototype.search = function (desid) {
+    let result = null;
+    for (let i of this) {
+      if (i.desid === desid) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+
+  Designers.prototype.find = function (desid) {
+    return this.search(desid);
+  }
+
   return Designers;
 }
 

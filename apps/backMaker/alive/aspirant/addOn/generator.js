@@ -382,6 +382,21 @@ const withToolsArr = function (Aspirants) {
     }
   }
 
+  Aspirants.prototype.search = function (aspid) {
+    let result = null;
+    for (let i of this) {
+      if (i.aspid === aspid) {
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+
+  Aspirants.prototype.find = function (aspid) {
+    return this.search(aspid);
+  }
+
   return Aspirants;
 }
 

@@ -235,6 +235,43 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   }
 }
 
+DataConsole.prototype.mergeRouter = async function (middle = true) {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+    const routerFragments = this.dir + "/router/fragments";
+    const routerFragmentsDir_raw = await fileSystem(`readDir`, [ routerFragments ]);
+    const finalStringConst = "dataRouter.js";
+    let routerFragmentsDir, codeString;
+
+    routerFragmentsDir = [];
+    for (let i of routerFragmentsDir_raw) {
+      if (i !== `.DS_Store`) {
+        if (middle) {
+          routerFragmentsDir.push(i);
+        } else {
+          if (!/middle/gi.test(i.split('_')[1])) {
+            routerFragmentsDir.push(i);
+          }
+        }
+      }
+    }
+    routerFragmentsDir.sort((a, b) => { return Number(a.replace(/[^0-9]/g, '')) - Number(b.replace(/[^0-9]/g, '')); });
+
+    codeString = '';
+    for (let i of routerFragmentsDir) {
+      codeString += await fileSystem(`readString`, [ routerFragments + "/" + i ]);
+      codeString += "\n\n";
+    }
+
+    await fileSystem(`write`, [ `${this.dir}/router/${finalStringConst}`, codeString ]);
+    const DataRouter = require(`${this.dir}/router/${finalStringConst}`);
+    return DataRouter;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
@@ -246,9 +283,6 @@ DataConsole.prototype.connect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
-  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
-  const DataRouter = require(`${this.dir}/router/dataRouter.js`);
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -284,6 +318,7 @@ DataConsole.prototype.connect = async function () {
     await MONGOLOCALC.connect();
 
     //set kakao
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
     const kakaoInstance = new KakaoTalk();
     await kakaoInstance.ready();
 
@@ -323,6 +358,8 @@ DataConsole.prototype.connect = async function () {
     pems.allowHTTP1 = true;
 
     //set router
+    const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+    const DataRouter = await this.mergeRouter(DataMiddle !== null);
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, isGhost);
     await router.setMembers();
     const rouObj = router.getAll();

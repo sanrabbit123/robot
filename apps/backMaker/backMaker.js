@@ -3668,6 +3668,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
       dummy = {
         desid: updateQuery.desid,
         important: false,
+        history: "",
         issue: "",
         manager: "-"
       };

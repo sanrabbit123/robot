@@ -12,3 +12,4 @@ include/
 lib/
 pyvenv.cfg
 apps/dataConsole/log/
+apps/dataConsole/router/dataRouter.js

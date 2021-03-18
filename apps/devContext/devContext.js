@@ -2,6 +2,7 @@ const ROBOT_PATH = process.cwd();
 const APP_PATH = ROBOT_PATH + "/apps";
 const Mother = require(APP_PATH + "/mother.js");
 const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
+const BackReport = require(APP_PATH + "/backMaker/backReport.js");
 const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
@@ -369,6 +370,7 @@ class DevContext extends Array {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
       const back = new BackMaker();
+      const report = new BackReport();
 
       /*
 
@@ -1457,12 +1459,32 @@ class DevContext extends Array {
 
 
 
+      // const app = await report.getDesignerProposalReport({ selfMongo: this.MONGOLOCALC });
+      // console.log(app);
+      // console.log(app.matrix);
 
 
 
-
-
-
+      // const { mongo, mongoconsoleinfo } = this.mother;
+      // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      // const designers = await back.getDesignersByQuery({});
+      // let whereQuery, updateQuery;
+      //
+      // await MONGOC.connect();
+      //
+      // await MONGOC.db(`miro81`).collection(`designerHistory`).deleteMany({});
+      //
+      // for (let d of designers) {
+      //   await MONGOC.db(`miro81`).collection(`designerHistory`).insertOne({
+      //     desid: d.desid,
+      //     important: false,
+      //     history: "",
+      //     issue: "",
+      //     manager: "-"
+      //   });
+      // }
+      //
+      // MONGOC.close();
 
 
 
