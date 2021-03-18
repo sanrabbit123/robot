@@ -1099,7 +1099,7 @@ SurveyJs.prototype.launching = async function (loading) {
           if (!expired) {
             instance.confirmLaunching(desid, designer);
           } else {
-            const targetPhone = /localhost/.test(window.location.localhost) ? "010-2747-3403" : "010-2747-3403";
+            const targetPhone = /localhost/.test(window.location.host) ? "010-2747-3403" : phone;
             instance.mother.certificationBox(designer, targetPhone, function (back, box) {
               document.body.removeChild(box);
               document.body.removeChild(back);
