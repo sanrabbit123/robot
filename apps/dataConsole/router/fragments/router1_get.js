@@ -432,6 +432,7 @@ DataRouter.prototype.rou_get_Address = function () {
 
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   let obj = {};
@@ -460,7 +461,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 800);
+      }, 1000);
 
       res.on('close', function () {
         clearInterval(pusher);
@@ -477,6 +478,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 
 DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   let obj = {};
@@ -487,7 +489,9 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       const thisId = req.params.id;
       const sseStream = new SseStream(req);
       const logDir = instance.dir + "/log";
-      let log_past, log_new;
+      const sseConst = "sse_designerMatrix";
+      let log_past, log_new_raw, log_new, log_new_string;
+      let sseObjs;
 
       res.set({
         "Access-Control-Allow-Origin": '*',
@@ -495,24 +499,26 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
         "Access-Control-Allow-Headers": '*',
       });
 
-      log_dir = await fileSystem(`readDir`, [ logDir ]);
-      if (!log_dir.includes("designerMatrix_" + thisId + "_latest.json")) {
-        await fileSystem(`write`, [ logDir + "/designerMatrix_" + thisId + "_latest.json", JSON.stringify({ desid: thisId, column: "", type: "", order: [] }) ]);
+      sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
+      if (sseObjs.length === 0) {
+        await back.mongoCreate(sseConst, { desid, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
       }
 
       sseStream.pipe(res);
 
       const pusher = setInterval(async function () {
         try {
-          log_new = await fileSystem(`readString`, [ logDir + "/designerMatrix_" + thisId + "_latest.json" ]);
-          if (log_new !== log_past) {
-            sseStream.write({ event: 'updateTong', data: log_new });
+          log_new_raw = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
+          log_new = { desid: log_new_raw[0].desid, column: log_new_raw[0].column, type: log_new_raw[0].type, order: log_new_raw[0].order };
+          log_new_string = JSON.stringify(log_new);
+          if (log_new_string !== log_past) {
+            sseStream.write({ event: 'updateTong', data: log_new_string });
           }
-          log_past = log_new;
+          log_past = log_new_string;
         } catch (e) {
           console.log(e);
         }
-      }, 800);
+      }, 1000);
 
       res.on('close', function () {
         clearInterval(pusher);

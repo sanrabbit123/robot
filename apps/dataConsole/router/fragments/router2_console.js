@@ -2081,6 +2081,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
     try {
       const logDir = `${instance.dir}/log`;
       const { button, desid } = req.body;
+      const sseConst = "sse_designerMatrix";
       let responseObj;
       let thisObjs, thisObj;
       let temp0, temp1;
@@ -2089,6 +2090,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
       let standardA, standardB;
       let today;
       let whereQuery, updateQuery;
+      let sseObjs;
 
       responseObj = {};
 
@@ -2103,6 +2105,11 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
           responseObj["error"] = "There is no designer";
         }
 
+        sseObjs = await back.mongoRead(sseConst, { desid }, { selfMongo: instance.mongolocal });
+        if (sseObjs.length === 0) {
+          await back.mongoCreate(sseConst, { desid, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
+        }
+
       } else if (button === "update") {
         whereQuery = { desid };
         updateQuery = {};
@@ -2112,7 +2119,8 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
           updateQuery = JSON.parse(req.body.update);
         }
         await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        await fileSystem(`write`, [ logDir + "/designerMatrix_" + desid + "_latest.json", JSON.stringify({ desid, column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) }) ]);
+        await back.mongoUpdate(sseConst, [ { desid }, { column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) } ], { selfMongo: instance.mongolocal });
+        // await fileSystem(`write`, [ logDir + "/designerMatrix_" + desid + "_latest.json", JSON.stringify({ desid, column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) }) ]);
       }
 
       res.set("Content-Type", "application/json");

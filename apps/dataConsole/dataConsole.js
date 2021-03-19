@@ -284,7 +284,7 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -317,13 +317,22 @@ DataConsole.prototype.connect = async function () {
     if (/localhost/gi.test(address.host)) {
       isLocal = true;
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-      console.log(`set DB server => 127.0.0.1`);
+      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
     } else {
       isLocal = false;
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      console.log(`set DB server => ${this.address.mongoinfo.host}`);
+      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
+      if (isGhost) {
+        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
+      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     }
-    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    console.log(``);
+
     await MONGOC.connect();
     await MONGOLOCALC.connect();
 
