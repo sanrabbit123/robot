@@ -5,7 +5,7 @@ const DataConsole = function () {
   this.dir = process.cwd() + "/apps/dataConsole";
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
+DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
@@ -124,11 +124,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, isGhost) {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
-  const SSEHOST = address.host;
+  const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   try {
@@ -382,9 +382,9 @@ DataConsole.prototype.connect = async function () {
     console.log(`set router`);
 
     //set static
-    await this.renderStatic(staticFolder, address, DataPatch);
+    await this.renderStatic(staticFolder, address, DataPatch, isGhost);
     if (DataMiddle !== null) {
-      await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle);
+      await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
     }
 
     //error handle
