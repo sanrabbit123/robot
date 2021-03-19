@@ -596,7 +596,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 1200);
+      }, 800);
 
       res.on('close', function () {
         clearInterval(pusher);
@@ -648,7 +648,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 1200);
+      }, 800);
 
       res.on('close', function () {
         clearInterval(pusher);

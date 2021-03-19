@@ -84,6 +84,7 @@ const withTools = function (Project) {
     }
     const callHistoryToString = function (historyArr) {
       let totalString = '';
+      historyArr.reverse();
       for (let { date, who } of historyArr) {
         totalString += dateToString(date) + ", ";
       }

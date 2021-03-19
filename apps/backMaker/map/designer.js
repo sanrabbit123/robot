@@ -76,59 +76,22 @@ module.exports = {
     analytics: {
       region: {
         available: [ "서울", "경기" ],
-        transportation: {
-          method: "자동차",
-          expenses: {
-            actual: {
-              boo: true
-            },
-            unit: {
-              boo: true,
-              amount: 0,
-            }
-          },
-        },
-      },
-      meeting: {
-        measure: {
-          direct: false,
-          furniture: false,
-        },
-        team: false,
-        style: "",
+        transportation: "자동차"
       },
       project: {
-        index: false,
-        budget: {
-          resultOffer: false,
-          method: "문서",
-        },
         time: {
           first: 7,
           entire: 30,
         },
         paperWork: [],
-        communication: {
-          method: "",
-          count: 0,
-        },
-        retouch: {
-          partial: 3,
-          entire: 4
-        }
       },
       construct: {
         level: 1,
         possible: {
           supervision: true,
-          partialSupervision: true,
           others: true
         },
-        contract: {
-          method: "협업사 계약",
-          othersFinishing: "",
-          communication: "",
-        }
+        contract: [ "협업사 계약" ],
       },
       styling: {
         level: 0,
@@ -173,17 +136,11 @@ module.exports = {
         }
       },
       purchase: {
-        agencies: {
-          boo: true,
-          fee: 0,
-        },
+        agencies: false,
         setting: {
-          takeIn: false,
-          install: true,
-          storage: true,
-          detail: "",
+          install: false,
+          storage: false,
         },
-        detail: "",
       },
       etc: {
         matrix: [],
@@ -191,12 +148,15 @@ module.exports = {
           min: 5000000,
           max: 10000000
         },
-        personality: {
-          fast: true,
-          careful: true,
-          lead: true
-        },
-        relation: ""
+        personality: [
+          { name: "고객 미팅 횟수에 연연하지 않음", value: false },
+          { name: "현장 미팅전, 심도 있는 준비", value: false },
+          { name: "조립 및 설치 서비스 무료 제공", value: false },
+          { name: "빠른 디자인 제안 속도", value: false },
+          { name: "꼼꼼한 페이퍼 워크", value: false },
+          { name: "주체적으로 리드하며 진행", value: false },
+        ],
+        relation: "확인중"
       }
     },
     realTime: {

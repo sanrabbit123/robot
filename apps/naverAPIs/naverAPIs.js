@@ -167,6 +167,11 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "조합하는 기", "조합하기" ],
     [ "완성해 주는", "완성해주는" ],
     [ "우아미", "우다미" ],
+    [ "형 대감", "형태감" ],
+    [ "조명 색", "조명색" ],
+    [ "되자 이 님", "디자이너님" ],
+    [ "되자 이", "디자이너" ],
+    [ "되자 너 님", "디자이너님" ]
   ];
   try {
     let resultArr = [];

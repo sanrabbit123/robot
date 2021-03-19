@@ -1489,6 +1489,10 @@ class DevContext extends Array {
 
 
 
+
+
+
+
       // TOOLS =========================================================================================================================================
 
 
@@ -1530,13 +1534,13 @@ class DevContext extends Array {
 
       // contents upload
 
-      // const client = "박나리";
-      // const pid = "p86";
-      // const rid = "re080";
+      // const client = "이희윤";
+      // const pid = "p87";
+      // const rid = "re081";
       // const links = [
-      //   "https://docs.google.com/document/d/1-BqxYqKZ_2PQba8U9FKSHeuxXmPu47XB3tKbVSTKt1E/edit?usp=sharing",
-      //   "https://docs.google.com/document/d/1NKSVBKd9zvf3VzEA94eWDqOZ9p0cHsDwU3bQDboH28g/edit?usp=sharing",
-      //   "https://drive.google.com/drive/folders/11m2Lh75pMvIxAe_e6MxaPNmGzAaFopFm?usp=sharing",
+      //   "https://docs.google.com/document/d/1fn5bhPaqgL8m7GJ8eiW4khznz9YCdjHWxm4lxWgO2as/edit?usp=sharing",
+      //   "https://docs.google.com/document/d/1YHrCm_CmFr2qwKJIbnzprNdfCkfSvCKS35QG21-jcQc/edit?usp=sharing",
+      //   "https://drive.google.com/drive/folders/1LK96is7wYn4PGtajU08a9BEJsM2VTjq4?usp=sharing",
       // ];
       // const webLinks = [
       //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1576,11 +1580,11 @@ class DevContext extends Array {
       //addtional photo repair
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p85", 6);
+      // await filter.addtionalRepair("p87", 4);
 
       // etc tools
 
-      // await this.spellCheck("p86");
+      // await this.spellCheck("p87");
       // await this.getGoogleWriteJson();
       // await this.googlePythonTest();
       // await this.deletePorfolio("p60");

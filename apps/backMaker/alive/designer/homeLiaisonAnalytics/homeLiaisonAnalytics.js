@@ -81,18 +81,33 @@ class AreaMatrix extends Array {
 
 }
 
-const Personality = function (json) {
-  this.fast = json.fast;
-  this.careful = json.careful;
-  this.lead = json.lead;
+const PersonalityFactor = function (json) {
+  this.name = json.name;
+  this.value = json.value;
 }
 
-Personality.prototype.toNormal = function () {
+PersonalityFactor.prototype.toNormal = function () {
   let obj = {};
-  obj.fast = this.fast;
-  obj.careful = this.careful;
-  obj.lead = this.lead;
+  obj.name = this.name;
+  obj.value = this.value;
   return obj;
+}
+
+class Personality extends Array {
+  constructor(json) {
+    super();
+    for (let i of json) {
+      this.push(new PersonalityFactor(i));
+    }
+  }
+
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
 }
 
 const OperationBudget = function (json) {
@@ -132,48 +147,26 @@ EtcAnalytics.prototype.toNormal = function () {
 //purchase
 
 const PurchaseSetting = function (json) {
-  this.takeIn = json.takeIn;
   this.install = json.install;
   this.storage = json.storage;
-  this.detail = new Menu(json.detail, [
-    "세팅맨 연계",
-    "무료 지원",
-    "해당 없음"
-  ], false);
 }
 
 PurchaseSetting.prototype.toNormal = function () {
   let obj = {};
-  obj.takeIn = this.takeIn;
   obj.install = this.install;
   obj.storage = this.storage;
-  obj.detail = this.detail.toNormal();
-  return obj;
-}
-
-const PurchaseAgencies = function (json) {
-  this.boo = json.boo;
-  this.fee = json.fee;
-}
-
-PurchaseAgencies.prototype.toNormal = function () {
-  let obj = {};
-  obj.boo = this.boo;
-  obj.fee = this.fee;
   return obj;
 }
 
 const PurchaseAnalytics = function (json) {
-  this.agencies = new PurchaseAgencies(json.agencies);
+  this.agencies = json.agencies;
   this.setting = new PurchaseSetting(json.setting);
-  this.detail = json.detail;
 }
 
 PurchaseAnalytics.prototype.toNormal = function () {
   let obj = {};
-  obj.agencies = this.agencies.toNormal();
+  obj.agencies = this.agencies;
   obj.setting = this.setting.toNormal();
-  obj.detail = this.detail;
   return obj;
 }
 
@@ -320,40 +313,14 @@ StylingAnalytics.prototype.toNormal = function () {
 
 //construct
 
-const ConstructContract = function (json) {
-  this.method = new Menu(json.method, [
-    "직접 계약, 직접 감리",
-    "직접 계약, 외주 감리",
-    "협업사 계약",
-    "공정별 연결"
-  ], false);
-  this.othersFinishing = new Menu(json.othersFinishing, [
-    "톤만 제안",
-    "시공사 마감재풀 내 선택",
-    "별도로 마감재 선택",
-    "해당 없음"
-  ], false);
-  this.communication = json.communication;
-}
-
-ConstructContract.prototype.toNormal = function () {
-  let obj = {};
-  obj.method = this.method.toNormal();
-  obj.othersFinishing = this.othersFinishing.toNormal();
-  obj.communication = this.communication;
-  return obj;
-}
-
 const ConstructPossible = function (json) {
   this.supervision = json.supervision;
-  this.partialSupervision = json.partialSupervision;
   this.others = json.others;
 }
 
 ConstructPossible.prototype.toNormal = function () {
   let obj = {};
   obj.supervision = this.supervision;
-  obj.partialSupervision = this.partialSupervision;
   obj.others = this.others;
   return obj;
 }
@@ -361,7 +328,12 @@ ConstructPossible.prototype.toNormal = function () {
 const ConstructAnalytics = function (json) {
   this.level = json.level;
   this.possible = new ConstructPossible(json.possible);
-  this.contract = new ConstructContract(json.contract);
+  this.contract = new Menu(json.contract, [
+    "직접 계약, 직접 감리",
+    "직접 계약, 외주 감리",
+    "협업사 계약",
+    "공정별 연결"
+  ], true);
 }
 
 ConstructAnalytics.prototype.toNormal = function () {
@@ -375,30 +347,6 @@ ConstructAnalytics.prototype.toNormal = function () {
 
 //project
 
-const ProjectRetouch = function (json) {
-  this.partial = json.partial;
-  this.entire = json.entire;
-}
-
-ProjectRetouch.prototype.toNormal = function () {
-  let obj = {};
-  obj.partial = this.partial;
-  obj.entire = this.entire;
-  return obj;
-}
-
-const ProjectCommunication = function (json) {
-  this.method = new Menu(json.method, [ "대면", "비대면" ], false);
-  this.count = json.count;
-}
-
-ProjectCommunication.prototype.toNormal = function () {
-  let obj = {};
-  obj.method = this.method.toNormal();
-  obj.count = this.count;
-  return obj;
-}
-
 const ProjectTime = function (json) {
   this.first = json.first;
   this.entire = json.entire;
@@ -411,123 +359,28 @@ ProjectTime.prototype.toNormal = function () {
   return obj;
 }
 
-const ProjectBudget = function (json) {
-  this.resultOffer = json.resultOffer;
-  this.method = new Menu(json.method, [ "문서", "구두", "제안 없음" ], false);
-}
-
-ProjectBudget.prototype.toNormal = function () {
-  let obj = {};
-  obj.resultOffer = this.resultOffer;
-  obj.method = this.method.toNormal();
-  return obj;
-}
-
 const ProjectAnalytics = function (json) {
-  this.index = json.index;
-  this.budget = new ProjectBudget(json.budget);
   this.time = new ProjectTime(json.time);
   this.paperWork = new Menu(json.paperWork, [
     "도면",
     "3D",
-    "컨셉 보드",
+    "컨셉 제안",
+    "마감재 제안",
     "제품 리스트",
     "참고 이미지",
-    "비정형 손메모",
-    "구두 설명",
+    "드로잉",
   ], true);
-  this.communication = new ProjectCommunication(json.communication);
-  this.retouch = new ProjectRetouch(json.retouch);
 }
 
 ProjectAnalytics.prototype.toNormal = function () {
   let obj = {};
-  obj.index = this.index;
-  obj.budget = this.budget.toNormal();
   obj.time = this.time.toNormal();
   obj.paperWork = this.paperWork.toNormal();
-  obj.communication = this.communication.toNormal();
-  obj.retouch = this.retouch.toNormal();
-  return obj;
-}
-
-
-//meeting
-
-const MeetingMeasure = function (json) {
-  this.direct = json.direct;
-  this.furniture = json.furniture;
-}
-
-MeetingMeasure.prototype.toNormal = function () {
-  let obj = {};
-  obj.direct = this.direct;
-  obj.furniture = this.furniture;
-  return obj;
-}
-
-const MeetingAnalytics = function (json) {
-  this.measure = new MeetingMeasure(json.measure);
-  this.team = json.team;
-  this.style = new Menu(json.style, [ "철저한 준비", "일단 가서 체크" ], false);
-}
-
-MeetingAnalytics.prototype.toNormal = function () {
-  let obj = {};
-  obj.measure = this.measure.toNormal();
-  obj.team = this.team;
-  obj.style = this.style.toNormal();
   return obj;
 }
 
 
 //region
-
-const TransportationExpensesUnit = function (json) {
-  this.boo = json.boo;
-  this.amount = json.amount;
-}
-
-TransportationExpensesUnit.prototype.toNormal = function () {
-  let obj = {};
-  obj.boo = this.boo;
-  obj.amount = this.amount;
-  return obj;
-}
-
-const TransportationExpensesActual = function (json) {
-  this.boo = json.boo;
-}
-
-TransportationExpensesActual.prototype.toNormal = function () {
-  let obj = {};
-  obj.boo = this.boo;
-  return obj;
-}
-
-const TransportationExpenses = function (json) {
-  this.actual = new TransportationExpensesActual(json.actual);
-  this.unit = new TransportationExpensesUnit(json.unit);
-}
-
-TransportationExpenses.prototype.toNormal = function () {
-  let obj = {};
-  obj.actual = this.actual.toNormal();
-  obj.unit = this.unit.toNormal();
-  return obj;
-}
-
-const Transportation = function (json) {
-  this.method = new Menu(json.method, [ "자동차", "대중교통" ], false);
-  this.expenses = new TransportationExpenses(json.expenses);
-}
-
-Transportation.prototype.toNormal = function () {
-  let obj = {};
-  obj.method = this.method.toNormal();
-  obj.expenses = this.expenses.toNormal();
-  return obj;
-}
 
 const RegionAnalytics = function (json) {
   this.available = new Menu(json.available, [
@@ -546,7 +399,7 @@ const RegionAnalytics = function (json) {
     "울산",
     "광주"
   ], true);
-  this.transportation = new Transportation(json.transportation);
+  this.transportation = new Menu(json.transportation, [ "자동차", "대중교통" ], false);
 }
 
 RegionAnalytics.prototype.toNormal = function () {
@@ -561,7 +414,6 @@ RegionAnalytics.prototype.toNormal = function () {
 
 const HomeLiaisonAnalytics = function (json) {
   this.region = new RegionAnalytics(json.region);
-  this.meeting = new MeetingAnalytics(json.meeting);
   this.project = new ProjectAnalytics(json.project);
   this.construct = new ConstructAnalytics(json.construct);
   this.styling = new StylingAnalytics(json.styling);
@@ -572,7 +424,6 @@ const HomeLiaisonAnalytics = function (json) {
 HomeLiaisonAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.region = this.region.toNormal();
-  obj.meeting = this.meeting.toNormal();
   obj.project = this.project.toNormal();
   obj.construct = this.construct.toNormal();
   obj.styling = this.styling.toNormal();

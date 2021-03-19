@@ -1019,6 +1019,8 @@ DataPatch.prototype.clientMap = function () {
       return [];
     }
 
+    temp.reverse();
+
     for (let i of temp) {
       temp2 = i.split("-");
       obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
@@ -1041,7 +1043,7 @@ DataPatch.prototype.clientMap = function () {
     endEvent = function (e) {
       let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
       let totalString = '';
-      for (let i = 0; i < inputs.length; i++) {
+      for (let i = inputs.length - 1; i > -1; i--) {
         if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
           totalString += DataPatch.toolsDateFilter(inputs[i].value);
           totalString += ", ";
@@ -1119,7 +1121,7 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       background: "#2fa678",
       width: String(width) + ea,
-      height: (GeneralJs.isMac() ? "89%" : "100%"),
+      height: (GeneralJs.isMac() ? "96%" : "100%"),
       left: String(0) + ea,
       top: String(0) + ea,
       borderRadius: String(3) + ea,
@@ -1399,7 +1401,7 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "15%" : "22%",
       borderRadius: String(3) + ea,
@@ -1889,7 +1891,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2205,7 +2207,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2469,7 +2471,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2748,7 +2750,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -3346,10 +3348,10 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           position: function (item, reverse = false) {
             if (!reverse) {
               let updateQuery = {};
-              updateQuery["analytics.region.transportation.method"] = item;
+              updateQuery["analytics.region.transportation"] = item;
               return updateQuery;
             } else {
-              return [ item.region.transportation.method ];
+              return [ item.region.transportation ];
             }
           },
           dependency: null,
@@ -3359,308 +3361,12 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             "대중교통"
           ]
         },
-        {
-          type: "string",
-          multiple: true,
-          name: "출장비 책정 기준",
-          column: "travelExpenses",
-          position: function (items, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (items.includes("교통비")) {
-                updateQuery["analytics.region.transportation.expenses.actual.boo"] = true;
-              } else {
-                updateQuery["analytics.region.transportation.expenses.actual.boo"] = false;
-              }
-              if (items.includes("출장일수당")) {
-                updateQuery["analytics.region.transportation.expenses.unit.boo"] = true;
-              } else {
-                updateQuery["analytics.region.transportation.expenses.unit.boo"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = items;
-              resultArr = [];
-              if (analytics.region.transportation.expenses.actual.boo) {
-                resultArr.push("교통비");
-              }
-              if (analytics.region.transportation.expenses.unit.boo) {
-                resultArr.push("출장일수당");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "교통비",
-            "출장일수당"
-          ]
-        },
-        {
-          type: "number",
-          multiple: false,
-          name: "출장일수당 금액",
-          column: "travelExpensesEa",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.region.transportation.expenses.unit.amount"] = (Number(item.replace(/[^0-9]/g, '')) * 10000);
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(String(Math.floor(analytics.region.transportation.expenses.unit.amount / 10000)) + "만원");
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "travelExpenses",
-            includes: "출장일수당"
-          },
-          survey: true,
-          items: [
-            "0만원",
-            "5만원",
-            "7만원",
-            "10만원",
-            "20만원",
-            "30만원"
-          ]
-        }
-      ]
-    },
-    {
-      name: "현장 미팅",
-      column: "meeting",
-      items: [
-        {
-          type: "boolean",
-          multiple: false,
-          name: "직접 실측 여부",
-          column: "directMeasure",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (item === "yes") {
-                updateQuery["analytics.meeting.measure.direct"] = true;
-              } else {
-                updateQuery["analytics.meeting.measure.direct"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.meeting.measure.direct) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "yes",
-            "no"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "가져갈 가구 체크",
-          column: "furniture",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (/실측/gi.test(item)) {
-                updateQuery["analytics.meeting.measure.furniture"] = true;
-              } else {
-                updateQuery["analytics.meeting.measure.furniture"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.meeting.measure.furniture) {
-                resultArr.push("직접 가서 보고 실측");
-              } else {
-                resultArr.push("사진과 사이즈를 받음");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "직접 가서 보고 실측",
-            "사진과 사이즈를 받음"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "시공사 동행 여부",
-          column: "withContruct",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (item === "yes") {
-                updateQuery["analytics.meeting.team"] = true;
-              } else {
-                updateQuery["analytics.meeting.team"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.meeting.team) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "yes",
-            "no"
-          ]
-        },
-        {
-          type: "string",
-          multiple: false,
-          name: "미팅 스타일",
-          column: "meetingStyle",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.meeting.style"] = item;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.meeting.style);
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "철저한 준비",
-            "일단 가서 체크"
-          ]
-        }
       ]
     },
     {
       name: "프로젝트 운영",
       column: "project",
       items: [
-        {
-          type: "boolean",
-          multiple: false,
-          name: "프로젝트 개요 설명 여부",
-          column: "indexGuide",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (item === "yes") {
-                updateQuery["analytics.project.index"] = true;
-              } else {
-                updateQuery["analytics.project.index"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.project.index) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "yes",
-            "no"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "예산기획 결과 제공",
-          column: "budgetGuide",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (item === "yes") {
-                updateQuery["analytics.project.budget.resultOffer"] = true;
-              } else {
-                updateQuery["analytics.project.budget.resultOffer"] = false;
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.project.budget.resultOffer) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "yes",
-            "no"
-          ]
-        },
-        {
-          type: "string",
-          multiple: false,
-          name: "예산기획 제공 방식",
-          column: "budgetGuideMethod",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.project.budget.method"] = item;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.project.budget.method);
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "budgetGuide",
-            includes: "yes"
-          },
-          survey: true,
-          items: [
-            "문서",
-            "구두",
-            "제안 없음"
-          ]
-        },
         {
           type: "number",
           multiple: false,
@@ -3699,7 +3405,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "number",
           multiple: false,
-          name: "전체 제안 소요 시간",
+          name: "전체 제안 소요 시간 (디자인 제안 기준)",
           column: "projectTimeEntire",
           position: function (item, reverse = false) {
             if (!reverse) {
@@ -3753,139 +3459,11 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           items: [
             "도면",
             "3D",
-            "컨셉 보드",
+            "컨셉 제안",
+            "마감재 제안",
             "제품 리스트",
             "참고 이미지",
-            "비정형 손메모",
-            "구두 설명",
-          ]
-        },
-        {
-          type: "string",
-          multiple: false,
-          name: "선호 커뮤니케이션 방식",
-          column: "preferCommunication",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.project.communication.method"] = item;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.project.communication.method);
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "대면",
-            "비대면"
-          ]
-        },
-        {
-          type: "number",
-          multiple: false,
-          name: "고객 미팅 횟수",
-          column: "meetingNumber",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              if (/각각/gi.test(item)) {
-                updateQuery["analytics.project.communication.count"] = 0;
-              } else {
-                updateQuery["analytics.project.communication.count"] = Number(item.replace(/[^0-9]/g, ''));
-              }
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.project.communication.count === 0) {
-                resultArr.push("각각 상이");
-              } else {
-                if (analytics.project.communication.count >= 4) {
-                  resultArr.push(String(analytics.project.communication.count) + "회 이상");
-                } else {
-                  resultArr.push(String(analytics.project.communication.count) + "회");
-                }
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "2회",
-            "3회",
-            "4회 이상",
-            "각각 상이",
-          ]
-        },
-        {
-          type: "number",
-          multiple: false,
-          name: "전체 수정 횟수",
-          column: "retouchNumberEntire",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.project.retouch.entire"] = Number(item.replace(/[^0-9]/g, ''));
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.project.retouch.entire > 4) {
-                resultArr.push(String(analytics.project.retouch.entire) + "회 이상");
-              } else {
-                resultArr.push(String(analytics.project.retouch.entire) + "회");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "1회",
-            "2회",
-            "3회",
-            "4회",
-            "5회 이상"
-          ]
-        },
-        {
-          type: "number",
-          multiple: false,
-          name: "부분 수정 횟수",
-          column: "retouchNumberPartial",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.project.retouch.partial"] = Number(item.replace(/[^0-9]/g, ''));
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.project.retouch.partial > 4) {
-                resultArr.push(String(analytics.project.retouch.partial) + "회 이상");
-              } else {
-                resultArr.push(String(analytics.project.retouch.partial) + "회");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "1회",
-            "2회",
-            "3회",
-            "4회",
-            "5회 이상"
+            "드로잉",
           ]
         },
       ]
@@ -3951,20 +3529,18 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         },
         {
           type: "string",
-          multiple: false,
+          multiple: true,
           name: "시공 계약 방식",
           column: "constructContractMethod",
           position: function (item, reverse = false) {
             if (!reverse) {
               let updateQuery = {};
-              updateQuery["analytics.construct.contract.method"] = item;
+              updateQuery["analytics.construct.contract"] = item;
               return updateQuery;
             } else {
-              let analytics, resultArr;
+              let analytics;
               analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.construct.contract.method);
-              return resultArr;
+              return analytics.construct.contract;
             }
           },
           dependency: null,
@@ -3974,38 +3550,6 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             "직접 계약, 외주 감리",
             "협업사 계약",
             "공정별 연결"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "공정별 감리 여부",
-          column: "constructPartialSupervision",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.construct.possible.partialSupervision"] = /yes/gi.test(item);
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.construct.possible.partialSupervision) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "constructContractMethod",
-            includes: "공정별 연결"
-          },
-          survey: true,
-          items: [
-            "yes",
-            "no"
           ]
         },
         {
@@ -4037,58 +3581,6 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             "no"
           ]
         },
-        {
-          type: "string",
-          multiple: false,
-          name: "타 시공사 진행 마감재 범위",
-          column: "outsideMethod",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.construct.contract.othersFinishing"] = item;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.construct.contract.othersFinishing);
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "outsidePossible",
-            includes: "yes"
-          },
-          survey: true,
-          items: [
-            "톤만 제안",
-            "시공사 마감재풀 내 선택",
-            "별도로 마감재 선택",
-            "해당 없음"
-          ]
-        },
-        {
-          type: "input",
-          multiple: false,
-          name: "시공사 커뮤니케이션 방식",
-          column: "constructCommunication",
-          position: function (input, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.construct.contract.communication"] = input;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = input;
-              resultArr = [];
-              resultArr.push(analytics.construct.contract.communication);
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: []
-        }
       ]
     },
     {
@@ -4147,7 +3639,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           ]
         },
         {
-          type: "object",
+          type: "object.multiple",
           multiple: true,
           name: "스타일 경향성",
           column: "stylingTendency",
@@ -4221,7 +3713,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           ]
         },
         {
-          type: "object",
+          type: "object.multiple",
           multiple: true,
           name: "텍스처 경향성",
           column: "textureTendency",
@@ -4275,7 +3767,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           ]
         },
         {
-          type: "object",
+          type: "object.multiple",
           multiple: true,
           name: "컬러톤 경향성",
           column: "colorTendency",
@@ -4339,7 +3831,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           ]
         },
         {
-          type: "object",
+          type: "object.singular",
           multiple: true,
           name: "밀도 경향성",
           column: "densityTendency",
@@ -4512,67 +4004,13 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           position: function (item, reverse = false) {
             if (!reverse) {
               let updateQuery = {};
-              updateQuery["analytics.purchase.agencies.boo"] = /yes/gi.test(item);
+              updateQuery["analytics.purchase.agencies"] = /yes/gi.test(item);
               return updateQuery;
             } else {
               let analytics, resultArr;
               analytics = item;
               resultArr = [];
-              if (analytics.purchase.agencies.boo) {
-                resultArr.push("yes");
-              } else {
-                resultArr.push("no");
-              }
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "yes",
-            "no"
-          ]
-        },
-        {
-          type: "input",
-          multiple: false,
-          name: "구매 대행 수수료",
-          column: "agenciesFee",
-          position: function (input, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.purchase.agencies.fee"] = Number(input.replace(/[^0-9]/g, ''));
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = input;
-              resultArr = [];
-              resultArr.push(String(analytics.purchase.agencies.fee));
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "agenciesPossible",
-            includes: "yes"
-          },
-          survey: true,
-          items: []
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "배송 받아줌 여부",
-          column: "takeInPossible",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.purchase.setting.takeIn"] = /yes/gi.test(item);
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              if (analytics.purchase.setting.takeIn) {
+              if (analytics.purchase.agencies) {
                 resultArr.push("yes");
               } else {
                 resultArr.push("no");
@@ -4645,57 +4083,6 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
             "no"
           ]
         },
-        {
-          type: "string",
-          multiple: false,
-          name: "제품 설치 및 세팅시",
-          column: "installPossibleMethod",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.purchase.setting.detail"] = item;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.purchase.setting.detail);
-              return resultArr;
-            }
-          },
-          dependency: {
-            mother: "installPossible",
-            includes: "yes"
-          },
-          survey: true,
-          items: [
-            "세팅맨 연계",
-            "무료 지원",
-            "해당 없음"
-          ]
-        },
-        {
-          type: "input",
-          multiple: false,
-          name: "고객과의 거래 방식",
-          column: "purchaseClientDetail",
-          position: function (input, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.purchase.detail"] = input;
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = input;
-              resultArr = [];
-              resultArr.push(analytics.purchase.detail);
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: []
-        }
       ]
     },
     {
@@ -4703,32 +4090,61 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
       column: "etc",
       items: [
         {
-          type: "number",
-          multiple: false,
-          name: "고객 예산 운영 범위",
+          type: "string",
+          multiple: true,
+          name: "가능한 고객 예산 운영 범위 (단위: 만원)",
           column: "operationBudget",
           position: function (item, reverse = false) {
             if (!reverse) {
               let updateQuery = {};
               let tempArr;
-              tempArr = item.split('-');
-              updateQuery["analytics.etc.operationBudget.min"] = Number(tempArr[0].trim().replace(/[^0-9]/g, '')) * 10000;
-              updateQuery["analytics.etc.operationBudget.max"] = Number(tempArr[1].trim().replace(/[^0-9]/g, '')) * 10000;
+              let allTong;
+              allTong = [];
+              for (let i of item) {
+                tempArr = i.split('-');
+                for (let j = 0; j < tempArr.length; j++) {
+                  if (tempArr[j].trim().replace(/[^0-9]/g, '').length > 0) {
+                    allTong.push(Number(tempArr[j].trim().replace(/[^0-9]/g, '')) * 10000);
+                  } else {
+                    allTong.push(10000 * 10000);
+                  }
+                }
+              }
+              allTong.sort((a, b) => { return a - b; });
+              updateQuery["analytics.etc.operationBudget.min"] = allTong[0];
+              updateQuery["analytics.etc.operationBudget.max"] = allTong[allTong.length - 1];
               return updateQuery;
             } else {
               let analytics, resultArr, resultStr;
               analytics = item;
-              resultArr = [];
-              resultStr = '';
-              resultStr += String(analytics.etc.operationBudget.min / 10000);
-              resultStr += ' ';
-              resultStr += '-';
-              if (analytics.etc.operationBudget.max !== 0) {
-                resultStr += ' ';
-                resultStr += String(analytics.etc.operationBudget.max / 10000);
-              }
-              resultArr.push(resultStr);
-              return resultArr;
+              const convertNumbers = function (min, max) {
+                let items = [
+                  "0 - 500",
+                  "500 - 1000",
+                  "1000 - 2000",
+                  "2000 - 5000",
+                  "5000 - 10000",
+                ];
+                let result = [], realResult = [];
+                for (let i = 0; i < items.length; i++) {
+                  if (min === (Number(items[i].split('-')[0].trim().replace(/[^0-9]/g, '')) * 10000)) {
+                    result.push(items[i]);
+                  }
+                  if (max === (Number(items[i].split('-')[1].trim().replace(/[^0-9]/g, '')) * 10000)) {
+                    result.push(items[i]);
+                  }
+                }
+                result = Array.from(new Set(result));
+                for (let i of result) {
+                  if (i === "5000 - 10000") {
+                    realResult.push("5000 -");
+                  } else {
+                    realResult.push(i);
+                  }
+                }
+                return realResult;
+              };
+              return convertNumbers(analytics.etc.operationBudget.min, analytics.etc.operationBudget.max);
             }
           },
           dependency: null,
@@ -4742,78 +4158,47 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           ]
         },
         {
-          type: "boolean",
-          multiple: false,
-          name: "디자이너 작업 스타일 1",
-          column: "designerpersonality1",
-          position: function (item, reverse = false) {
+          type: "string",
+          multiple: true,
+          name: "디자이너 개인 장점",
+          column: "personality",
+          position: function (items, reverse = false) {
             if (!reverse) {
+              const itemsTong = [
+                "고객 미팅 횟수에 연연하지 않음",
+                "현장 미팅전, 심도 있는 준비",
+                "조립 및 설치 서비스 무료 제공",
+                "빠른 디자인 제안 속도",
+                "꼼꼼한 페이퍼 워크",
+                "주체적으로 리드하며 진행",
+              ];
               let updateQuery = {};
-              updateQuery["analytics.etc.personality.fast"] = /빠/gi.test(item);
+              updateQuery["analytics.etc.personality"] = [];
+              for (let i of itemsTong) {
+                updateQuery["analytics.etc.personality"].push({ name: i, value: items.includes(i) });
+              }
               return updateQuery;
             } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.etc.personality.fast ? "빠른 편" : "느린 편");
-              return resultArr;
+              let analytics = items;
+              let result;
+              result = [];
+              for (let { name, value } of analytics.etc.personality) {
+                if (value) {
+                  result.push(name);
+                }
+              }
+              return result;
             }
           },
           dependency: null,
           survey: true,
           items: [
-            "빠른 편",
-            "느린 편"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "디자이너 작업 스타일 2",
-          column: "designerpersonality2",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.etc.personality.careful"] = /꼼/gi.test(item);
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.etc.personality.careful ? "꼼꼼한 편" : "일반");
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "꼼꼼한 편",
-            "일반"
-          ]
-        },
-        {
-          type: "boolean",
-          multiple: false,
-          name: "디자이너 작업 스타일 3",
-          column: "designerpersonality3",
-          position: function (item, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.etc.personality.lead"] = /리드/gi.test(item);
-              return updateQuery;
-            } else {
-              let analytics, resultArr;
-              analytics = item;
-              resultArr = [];
-              resultArr.push(analytics.etc.personality.lead ? "디자이너가 리드하는 편" : "고객에게 맞추는 편");
-              return resultArr;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "디자이너가 리드하는 편",
-            "고객에게 맞추는 편"
+            "고객 미팅 횟수에 연연하지 않음",
+            "현장 미팅전, 심도 있는 준비",
+            "조립 및 설치 서비스 무료 제공",
+            "빠른 디자인 제안 속도",
+            "꼼꼼한 페이퍼 워크",
+            "주체적으로 리드하며 진행",
           ]
         },
         {
@@ -5437,7 +4822,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -5658,7 +5043,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -5913,7 +5298,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "15%" : "22%",
       borderRadius: String(3) + ea,
@@ -6179,7 +5564,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
@@ -6623,6 +6008,8 @@ DataPatch.prototype.projectMap = function () {
       return [];
     }
 
+    temp.reverse();
+
     for (let i of temp) {
       temp2 = i.split("-");
       obj = new Date(Number(temp2[0]), Number(temp2[1].replace(/^0/, '') - 1), Number(temp2[2].replace(/^0/, '')));
@@ -6645,7 +6032,7 @@ DataPatch.prototype.projectMap = function () {
     endEvent = function (e) {
       let inputs = this.parentElement.parentElement.querySelectorAll(".inputTarget");
       let totalString = '';
-      for (let i = 0; i < inputs.length; i++) {
+      for (let i = inputs.length - 1; i > -1; i--) {
         if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(DataPatch.toolsDateFilter(inputs[i].value))) {
           totalString += DataPatch.toolsDateFilter(inputs[i].value);
           totalString += ", ";
@@ -6723,15 +6110,15 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "#2fa678",
       width: String(width) + ea,
-      height: (GeneralJs.isMac() ? "89%" : "100%"),
+      height: (GeneralJs.isMac() ? "96%" : "100%"),
       left: String(0) + ea,
-      top: String(0) + ea,
+      top: String(5) + ea,
       borderRadius: String(3) + ea,
       outline: String(0),
       border: String(0),
     };
 
-    for (let i = 0; i < length; i++) {
+    for (let i = length - 1; i > -1; i--) {
       button_clone = GeneralJs.nodes.div.cloneNode(true);
       button_clone.classList.add("removeTarget");
       for (let j in buttonStyle) {
@@ -7169,7 +6556,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
@@ -7388,7 +6775,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -7634,7 +7021,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -7882,7 +7269,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -8100,7 +7487,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -8285,7 +7672,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -9274,7 +8661,7 @@ DataPatch.prototype.photoMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "89%",
+      height: "96%",
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,

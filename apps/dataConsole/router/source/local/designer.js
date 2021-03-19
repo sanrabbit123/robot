@@ -3200,6 +3200,26 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             throw new Error(responseObject.error);
             return;
           }
+          class ItemsArray extends Array {
+            constructor(arr) {
+              super();
+              for (let i of arr) {
+                this.push(i);
+              }
+            }
+            get maxLength() {
+              let tong = [];
+              for (let i of this) {
+                if (typeof i !== "string") {
+                  return null;
+                } else {
+                  tong.push(i.length);
+                }
+              }
+              tong.sort((a, b) => { return b - a; });
+              return tong[0];
+            }
+          }
           const { matrixA, analytics, values } = responseObject;
           const { xValues, yValues, zValues } = values;
           const classNameConst = "designerMatrixFactor";
@@ -3349,8 +3369,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             const nameConst = "checkRange";
             const [ x, y, z ] = [ Number(this.getAttribute('x')), Number(this.getAttribute('y')), Number(this.getAttribute('z')) ];
             const max = Number(this.getAttribute('max'));
+            const multiple = this.getAttribute("multiple") === "true";
             let onTarget, offTarget;
-            let target;
+            let target, oppositeTarget;
             let resultObj;
             let thisCheckListObj;
             let itemsTong;
@@ -3367,6 +3388,14 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
               } else {
                 offTarget.push(target);
               }
+              if (!multiple) {
+                oppositeTarget = document.getElementById(nameConst + column + String(x) + String(1 - y) + String(max - i - 1));
+                if (i > z) {
+                  onTarget.push(oppositeTarget);
+                } else {
+                  offTarget.push(oppositeTarget);
+                }
+              }
             }
 
             for (let dom of onTarget) {
@@ -3378,6 +3407,9 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             }
 
             document.getElementById(nameConst + column + String(x) + String(y) + "value").firstChild.textContent = String(z + 1);
+            if (!multiple) {
+              document.getElementById(nameConst + column + String(x) + String(1 - y) + "value").firstChild.textContent = String(max - (z + 1));
+            }
 
             for (let k = 0; k < thisCheckListObj.items.length; k++) {
               resultObj[thisCheckListObj.items[k].column] = Number(document.getElementById(nameConst + column + String(x) + String(k) + "value").firstChild.textContent);
@@ -3445,6 +3477,8 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             }
             for (let { name, column, items, multiple, type, value, dependency } of checkList[c].items) {
 
+              items = new ItemsArray(items);
+
               checkListFactor = GeneralJs.nodes.div.cloneNode(true);
               style = {
                 position: "relative",
@@ -3469,12 +3503,16 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 borderRadius: String(5) + ea,
                 padding: String(checkFactorButtonMargin) + ea,
                 paddingRight: String(0) + ea,
-                height: String((30 * Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1))) + (checkFactorButtonMargin * (Math.ceil(items.length / (type !== "object" ? checkDivideNum : 1)) - 1))) + ea,
                 marginBottom: String(14) + ea,
                 overflow: "hidden",
                 width: "calc(100% - " + String(checkFactorButtonMargin + 0) + ea + ")",
                 border: "1px solid " + GeneralJs.colorChip.gray2,
               };
+              if (!/^object/gi.test(type) && items.maxLength < 16) {
+                style.height = String((30 * Math.ceil(items.length / checkDivideNum)) + (checkFactorButtonMargin * (Math.ceil(items.length / checkDivideNum) - 1))) + ea;
+              } else {
+                style.height = String((30 * Math.ceil(items.length / 1)) + (checkFactorButtonMargin * (Math.ceil(items.length / 1) - 1))) + ea;
+              }
               for (let i in style) {
                 checkListFactorContents.style[i] = style[i];
               }
@@ -3488,23 +3526,29 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                     checkListFactorContentsItem.setAttribute("toggle", "off");
                   }
                   style = {
-                    display: (type !== "object") ? "inline-block" : "block",
                     position: "relative",
-                    width: (type !== "object") ? "calc(calc(100% - " + String(checkFactorButtonMargin * (items.length <= checkDivideNum ? items.length : checkDivideNum)) + ea + ") / " + String((items.length <= checkDivideNum ? items.length : checkDivideNum)) + ")" : "calc(100% - " + String(checkFactorButtonMargin) + ea + ")",
                     height: String(30) + ea,
                     borderRadius: String(3) + ea,
-                    background: (type !== "object") ? (value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1) : GeneralJs.colorChip.white,
                     marginRight: String(checkFactorButtonMargin) + ea,
                     marginBottom: String(checkFactorButtonMargin) + ea,
                     cursor: "pointer",
                     transition: "all 0s ease",
                     overflow: "hidden",
                   }
+                  if (!/^object/gi.test(type) && items.maxLength < 16) {
+                    style.display = "inline-block";
+                    style.width = "calc(calc(100% - " + String(checkFactorButtonMargin * (items.length <= checkDivideNum ? items.length : checkDivideNum)) + ea + ") / " + String((items.length <= checkDivideNum ? items.length : checkDivideNum)) + ")";
+                    style.background = value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1;
+                  } else {
+                    style.display = "block";
+                    style.width = "calc(100% - " + String(checkFactorButtonMargin) + ea + ")";
+                    style.background = GeneralJs.colorChip.white;
+                  }
                   for (let j in style) {
                     checkListFactorContentsItem.style[j] = style[j];
                   }
 
-                  if (typeof items[i] === "object") {
+                  if (/^object/gi.test(type)) {
                     //gray back
                     checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
                     style = {
@@ -3572,6 +3616,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                       checkListFactorContentsItemText.setAttribute("column", column);
                       checkListFactorContentsItemText.setAttribute("type", type);
                       checkListFactorContentsItemText.setAttribute("value", String(j + 1));
+                      checkListFactorContentsItemText.setAttribute("multiple", (type.split('.')[1] === "multiple") ? "true" : "false");
                       style = {
                         position: "absolute",
                         width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
