@@ -3542,7 +3542,11 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                   } else {
                     style.display = "block";
                     style.width = "calc(100% - " + String(checkFactorButtonMargin) + ea + ")";
-                    style.background = GeneralJs.colorChip.white;
+                    if (/^object/gi.test(type)) {
+                      style.background = GeneralJs.colorChip.white;
+                    } else {
+                      style.background = value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1;
+                    }
                   }
                   for (let j in style) {
                     checkListFactorContentsItem.style[j] = style[j];
@@ -4578,7 +4582,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
         if (instance.whiteMatrixB !== null) {
           instance.whiteMatrixB.style.animation = "fadeoutlite 0.3s ease forwards";
         }
-        contentsArea.style.animation = "fadeinlite 0.3s ease forwards";
+        contentsArea.style.opacity = String(1);
         instance.whiteConvert = 3;
         GeneralJs.timeouts["whiteConvertMatrixReturn"] = setTimeout(function () {
           if (instance.whiteMatrixA !== null) {

@@ -488,7 +488,11 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                 } else {
                   style.display = "block";
                   style.width = "calc(100% - " + String(checkFactorButtonMargin) + ea + ")";
-                  style.background = GeneralJs.colorChip.white;
+                  if (/^object/gi.test(type)) {
+                    style.background = GeneralJs.colorChip.white;
+                  } else {
+                    style.background = value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1;
+                  }
                 }
                 for (let j in style) {
                   checkListFactorContentsItem.style[j] = style[j];
