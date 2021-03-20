@@ -628,17 +628,22 @@ Mother.prototype.binaryRequest = function (to, port = 80) {
   });
 }
 
-Mother.prototype.ghostRequest = function (path, data = {}, bind = null) {
+Mother.prototype.ghostRequest = function (path, data = {}) {
+  /*
+  // bind usage example
+  const designerRequest = this.mother.ghostRequest().__bind__("designer");
+  console.log(await designerRequest("ls"));
+  */
   let requestFunction = new Function();
   class BindPromise extends Promise {
-    __setBindMode__(mode) {
-      this.__bindMode__ = mode;
-    }
-    __bind__(mode = null) {
+    __bind__(mode) {
+      if (mode === undefined) {
+        throw new Error("must be bind path mode");
+      }
       return requestFunction(mode);
     }
   }
-  requestFunction = function (bind) {
+  requestFunction = function (bind = null) {
     return function requestLaunchingFunction(path, data = {}) {
       let promiseObj;
       const shell = require(`shelljs`);
@@ -688,11 +693,10 @@ Mother.prototype.ghostRequest = function (path, data = {}, bind = null) {
           }
         });
       });
-      promiseObj.__setBindMode__(bind);
       return promiseObj;
     }
   }
-  return (requestFunction(bind))(path, data);
+  return (requestFunction())(path, data);
 }
 
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {

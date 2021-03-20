@@ -581,11 +581,7 @@ Ghost.prototype.launching = async function () {
   try {
     let message = '';
 
-    if (process.argv[2] === "pm2") {
-
-      console.log(`pm2 kill;pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -x --interpreter /usr/bin/python3 ${shellLink(process.cwd())}/ghost.py -- cron;pm2 monit;`);
-
-    } else if (process.argv[2] === "backup") {
+    if (process.argv[2] === "backup") {
 
       //backup
       message = '';
@@ -684,6 +680,9 @@ Ghost.prototype.launching = async function () {
       for (let obj of designerPost) {
         app.post(obj.link, obj.func);
       }
+
+      //launching python cron
+      shell.exec(`python3 ${shellLink(this.pythonApp)} cron`, { async: true });
 
       //server on
       https.createServer(pems, app).listen(3000, address.ip.inner, () => {

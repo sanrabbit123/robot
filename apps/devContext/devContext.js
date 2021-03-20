@@ -1487,11 +1487,8 @@ class DevContext extends Array {
       // MONGOC.close();
 
 
-
-
-      console.log(await this.mother.ghostRequest("ls"));
-
-      const designerRequest = this.mother.ghostRequest().__bind__("designer");
+      console.log(await ghostRequest("ls"));
+      const designerRequest = ghostRequest().__bind__("designer");
       console.log(await designerRequest("ls"));
 
 
