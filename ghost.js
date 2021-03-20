@@ -252,9 +252,10 @@ Ghost.prototype.dirParsing = function (dir) {
   return dir;
 }
 
-Ghost.prototype.ghostRouter = function () {
+Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const [ MONGOC, MONGOLOCALC ] = needs;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -536,9 +537,10 @@ Ghost.prototype.ghostRouter = function () {
   return resultObj;
 }
 
-Ghost.prototype.clientRouter = function () {
+Ghost.prototype.clientRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const [ MONGOC, MONGOLOCALC ] = needs;
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -578,9 +580,10 @@ Ghost.prototype.clientRouter = function () {
   return resultObj;
 }
 
-Ghost.prototype.designerRouter = function () {
+Ghost.prototype.designerRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const [ MONGOC, MONGOLOCALC ] = needs;
   const folderName = "디자이너";
   const pathNameConst = "/designer_";
   const standardId = "desid";
@@ -655,7 +658,7 @@ Ghost.prototype.designerRouter = function () {
             allList.push(i);
           }
         }
-        return back.getDesignersByQuery(whereQuery);
+        return back.getDesignersByQuery(whereQuery, { selfMongo: MONGOC });
       }).then((designers) => {
         for (let d of designers) {
           targetDIds.push(d.information.did);
@@ -691,9 +694,10 @@ Ghost.prototype.designerRouter = function () {
   return resultObj;
 }
 
-Ghost.prototype.photoRouter = function () {
+Ghost.prototype.photoRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const [ MONGOC, MONGOLOCALC ] = needs;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -733,9 +737,10 @@ Ghost.prototype.photoRouter = function () {
   return resultObj;
 }
 
-Ghost.prototype.photorawRouter = function () {
+Ghost.prototype.photorawRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const [ MONGOC, MONGOLOCALC ] = needs;
   const folderName = "사진_미등록_포트폴리오";
   const pathNameConst = "/photoraw_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -846,10 +851,19 @@ Ghost.prototype.launching = async function () {
       if (name === "unknown") {
         throw new Error("invalid address");
       }
-
       console.log(``);
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
       console.log(``);
+
+
+      //set mongo connetion
+      let MONGOC, MONGOLOCALC;
+      const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
+
+      await MONGOC.connect();
+      await MONGOLOCALC.connect();
 
       //set pem key
       let pems = {};
@@ -886,7 +900,7 @@ Ghost.prototype.launching = async function () {
       pems.allowHTTP1 = true;
 
       //set router
-      const { get, post } = this.ghostRouter();
+      const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC ]);
       for (let obj of get) {
         app.get(obj.link, obj.func);
       }
@@ -896,7 +910,7 @@ Ghost.prototype.launching = async function () {
 
       //set sub routers
       for (let r of routerTargets) {
-        routerObj = (this[r + "Router"])();
+        routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC ]);
         for (let obj of routerObj.get) {
           app.get(obj.link, obj.func);
         }

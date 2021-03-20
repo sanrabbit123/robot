@@ -1488,10 +1488,10 @@ class DevContext extends Array {
 
       const designerRequest = ghostRequest().bindPath("designer");
 
-      console.log(`designer`);
-      console.log(await designerRequest("ls"));
 
-      
+      console.log(await designerRequest("folder", { id: [ "d2004_aa02s", "d1911_aa02s" ] }));
+
+
 
       // TOOLS =========================================================================================================================================
 
