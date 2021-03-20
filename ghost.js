@@ -369,7 +369,13 @@ Ghost.prototype.ghostRouter = function () {
       target = instance.dirParsing(target);
 
       fileSystem(`readDir`, [ target ]).then((list) => {
-        res.send(JSON.stringify(list));
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
 
     }
@@ -533,7 +539,7 @@ Ghost.prototype.clientRouter = function () {
   const instance = this;
   const folderName = "고객";
   const pathNameConst = "/client_";
-  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -547,8 +553,14 @@ Ghost.prototype.clientRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ designerDir ]).then((list) => {
-        res.send(JSON.stringify(list));
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
     }
   };
@@ -559,7 +571,6 @@ Ghost.prototype.clientRouter = function () {
     for (let j = 0; j < funcObj[i].link.length; j++) {
       funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
     }
-    console.log(funcObj[i]);
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
@@ -569,7 +580,7 @@ Ghost.prototype.designerRouter = function () {
   const instance = this;
   const folderName = "디자이너";
   const pathNameConst = "/designer_";
-  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -583,8 +594,14 @@ Ghost.prototype.designerRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ designerDir ]).then((list) => {
-        res.send(JSON.stringify(list));
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
     }
   };
@@ -604,7 +621,7 @@ Ghost.prototype.photoRouter = function () {
   const instance = this;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
-  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -618,8 +635,14 @@ Ghost.prototype.photoRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ designerDir ]).then((list) => {
-        res.send(JSON.stringify(list));
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
     }
   };
@@ -639,7 +662,7 @@ Ghost.prototype.photorawRouter = function () {
   const instance = this;
   const folderName = "사진_미등록_포트폴리오";
   const pathNameConst = "/photoraw_";
-  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -653,8 +676,14 @@ Ghost.prototype.photorawRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ designerDir ]).then((list) => {
-        res.send(JSON.stringify(list));
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
     }
   };
