@@ -539,7 +539,7 @@ Ghost.prototype.clientRouter = function () {
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "ls", "readDir" ],
+    link: [ "/ls", "/readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -575,7 +575,7 @@ Ghost.prototype.designerRouter = function () {
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "ls", "readDir" ],
+    link: [ "/ls", "/readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -610,7 +610,7 @@ Ghost.prototype.photoRouter = function () {
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "ls", "readDir" ],
+    link: [ "/ls", "/readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -645,7 +645,7 @@ Ghost.prototype.photorawRouter = function () {
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "ls", "readDir" ],
+    link: [ "/ls", "/readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
