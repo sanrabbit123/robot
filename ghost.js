@@ -535,23 +535,7 @@ Ghost.prototype.designerRouter = function () {
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "/ls" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      fileSystem(`readDir`, [ designerDir ]).then((list) => {
-        res.send(JSON.stringify(list));
-      }).catch((e) => { throw new Error(e); });
-    }
-  };
-
-  //POST - ls
-  funcObj.post_ls = {
-    link: [ "/ls" ],
+    link: [ "/designer_ls", "/designer_readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",

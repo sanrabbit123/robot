@@ -26,7 +26,7 @@ pathDic = returnModulepath()
 sys.path.append(pathDic["module"])
 ROBOT_PATH = pathDic["robot"]
 ROBOT = ROBOT_PATH + "/robot.js"
-
+SAMBA = os.getenv("HOME") + "/samba/drive/HomeLiaisonServer"
 
 # python start --------------------------------------------------------------------------------------------------------
 
@@ -141,6 +141,10 @@ async def ultimateReflection():
 async def clientReport():
     await run([ 'node', ROBOT, 'clientReportToSheets' ])
 
+# cron 6
+async def fixServerDirectory():
+    await run([ 'node', ROBOT, 'fixDir', SAMBA ])
+
 
 # start process ------------------------------------------------------------------------------------------------------------
 
@@ -217,7 +221,8 @@ if sys.argv.__len__() > 1:
         scheduler.add_job(analyticsParsing, 'cron', hour='2', minute='30', second='30')
         scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
         scheduler.add_job(ultimateReflection, 'cron', hour='3', minute='30', second='30')
-        scheduler.add_job(clientReport, 'cron', hour='4', minute='10', second='30')
+        scheduler.add_job(clientReport, 'cron', hour='4', minute='30', second='30')
+        scheduler.add_job(fixServerDirectory, 'cron', hour='5', minute='30', second='30')
         scheduler.start()
         try:
             asyncio.get_event_loop().run_forever()

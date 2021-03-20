@@ -628,56 +628,71 @@ Mother.prototype.binaryRequest = function (to, port = 80) {
   });
 }
 
-Mother.prototype.ghostRequest = function (path, data = {}) {
-  const shell = require(`shelljs`);
-  const shellLink = function (str) {
-    let arr = str.split('/');
-    let newStr = '';
-    for (let i of arr) {
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-        newStr += i + '/';
-      } else if (!/'/g.test(i)) {
-        newStr += "'" + i + "'" + '/';
-      } else if (!/"/g.test(i)) {
-        newStr += '"' + i + '"' + '/';
-      } else {
-        newStr += i + '/';
-      }
+Mother.prototype.ghostRequest = function (path, data = {}, bind = null) {
+  let requestFunction = new Function();
+  class BindPromise extends Promise {
+    __setBindMode__(mode) {
+      this.__bindMode__ = mode;
     }
-    newStr = newStr.slice(0, -1);
-    return newStr;
+    __bind__(mode = null) {
+      return requestFunction(mode);
+    }
   }
-  const address = require(`${process.cwd()}/apps/infoObj.js`);
-  const { ddns, port, protocol } = address.officeinfo.ghost;
-  let order, url;
-
-  url = `${protocol}://${ddns}:${String(port)}/${path}`;
-
-  order = '';
-  order += "curl";
-  order += " ";
-  order += "-d";
-  order += " ";
-  order += "'";
-  order += JSON.stringify(data);
-  order += "'";
-  order += " ";
-  order += '-H "Content-Type: application/json" -X POST ';
-  order += url;
-
-  return new Promise(function (resolve, reject) {
-    shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
-      if (err) {
-        reject(err);
-      } else {
-        if (/^[\[\{]/.test(stdout.trim())) {
-          resolve(JSON.parse(stdout.trim()));
-        } else {
-          resolve(stdout.trim());
+  requestFunction = function (bind) {
+    return function requestLaunchingFunction(path, data = {}) {
+      let promiseObj;
+      const shell = require(`shelljs`);
+      const shellLink = function (str) {
+        let arr = str.split('/');
+        let newStr = '';
+        for (let i of arr) {
+          if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+            newStr += i + '/';
+          } else if (!/'/g.test(i)) {
+            newStr += "'" + i + "'" + '/';
+          } else if (!/"/g.test(i)) {
+            newStr += '"' + i + '"' + '/';
+          } else {
+            newStr += i + '/';
+          }
         }
+        newStr = newStr.slice(0, -1);
+        return newStr;
       }
-    });
-  });
+      const address = require(`${process.cwd()}/apps/infoObj.js`);
+      const { ddns, port, protocol } = address.officeinfo.ghost;
+      let order, url;
+      url = `${protocol}://${ddns}:${String(port)}/${bind !== null ? bind + "_" : ""}${path}`;
+      order = '';
+      order += "curl";
+      order += " ";
+      order += "-d";
+      order += " ";
+      order += "'";
+      order += JSON.stringify(data);
+      order += "'";
+      order += " ";
+      order += '-H "Content-Type: application/json" -X POST ';
+      order += url;
+
+      promiseObj = new BindPromise(function (resolve, reject) {
+        shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+          if (err) {
+            reject(err);
+          } else {
+            if (/^[\[\{]/.test(stdout.trim())) {
+              resolve(JSON.parse(stdout.trim()));
+            } else {
+              resolve(stdout.trim());
+            }
+          }
+        });
+      });
+      promiseObj.__setBindMode__(bind);
+      return promiseObj;
+    }
+  }
+  return (requestFunction(bind))(path, data);
 }
 
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
