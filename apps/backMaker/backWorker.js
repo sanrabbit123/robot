@@ -16,30 +16,29 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   const instance = this;
   const back = this.back;
   const { mongo, mongoinfo } = this.mother;
-  const toUpdateQuery = function (aspid) {
+  const toUpdateQuery = function (aspirant) {
     let updateQuery = {};
 
-    updateQuery["designer"]
+    updateQuery["designer"] = aspirant.designer;
 
-    updateQuery["information.contract.date"]
-    updateQuery["information.phone"]
-    updateQuery["information.email"]
-    updateQuery["information.address"]
+    updateQuery["information.contract.date"] = new Date();
+    updateQuery["information.phone"] = aspirant.phone;
+    updateQuery["information.email"] = aspirant.email;
+    updateQuery["information.address"] = [ aspirant.address ];
 
-    updateQuery["information.personalSystem.webPage"]
-    updateQuery["information.personalSystem.sns"]
+    updateQuery["information.personalSystem.webPage"] = aspirant.information.web;
+    updateQuery["information.personalSystem.sns"] = aspirant.information.sns;
 
-    updateQuery["information.business.career.startY"]
-    updateQuery["information.business.career.startM"]
+    updateQuery["information.business.career.startY"] = null;
+    updateQuery["information.business.career.startM"] = null;
 
-    updateQuery["information.business.account"]
+    updateQuery["information.business.account"] = null;
 
-    updateQuery["information.business.businessInfo.classification"]
-    updateQuery["information.business.businessInfo.businessNumber"]
+    updateQuery["information.business.businessInfo.classification"] = null;
+    updateQuery["information.business.businessInfo.businessNumber"] = null;
 
-    updateQuery["information.business.service.construct.partner"]
-    updateQuery["information.business.service.construct.method"]
-
+    updateQuery["information.business.service.construct.partner"] = null;
+    updateQuery["information.business.service.construct.method"] = null;
 
     return updateQuery;
   }
