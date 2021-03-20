@@ -857,7 +857,6 @@ Ghost.prototype.launching = async function () {
 
 
       //set mongo connetion
-      let MONGOC, MONGOLOCALC;
       const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
