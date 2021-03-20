@@ -1486,10 +1486,25 @@ class DevContext extends Array {
       //
       // MONGOC.close();
 
+      const clientRequest = ghostRequest().bindPath("client");
+      const designerRequest = ghostRequest().bindPath("designer");
+      const photoRequest = ghostRequest().bindPath("photo");
+      const photorawRequest = ghostRequest().bindPath("photoraw");
 
+      console.log(`entire`);
       console.log(await ghostRequest("ls"));
-      const designerRequest = ghostRequest().__bind__("designer");
+
+      console.log(`client`);
+      console.log(await clientRequest("ls"));
+
+      console.log(`designer`);
       console.log(await designerRequest("ls"));
+
+      console.log(`photo`);
+      console.log(await photoRequest("ls"));
+
+      console.log(`photoraw`);
+      console.log(await photorawRequest("ls"));
 
 
       // TOOLS =========================================================================================================================================

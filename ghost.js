@@ -529,16 +529,17 @@ Ghost.prototype.ghostRouter = function () {
   return resultObj;
 }
 
-Ghost.prototype.designerRouter = function () {
+Ghost.prototype.clientRouter = function () {
   const instance = this;
-  const designerFolderName = "디자이너";
-  const designerDir = this.homeliaisonServer + "/" + designerFolderName;
+  const folderName = "고객";
+  const pathNameConst = "/client_";
+  const designerDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
   //POST - ls
   funcObj.post_ls = {
-    link: [ "/designer_ls", "/designer_readDir" ],
+    link: [ "ls", "readDir" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -555,6 +556,114 @@ Ghost.prototype.designerRouter = function () {
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
+    for (let j = 0; j < funcObj[i].link.length; j++) {
+      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+    }
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+Ghost.prototype.designerRouter = function () {
+  const instance = this;
+  const folderName = "디자이너";
+  const pathNameConst = "/designer_";
+  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - ls
+  funcObj.post_ls = {
+    link: [ "ls", "readDir" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ designerDir ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    for (let j = 0; j < funcObj[i].link.length; j++) {
+      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+    }
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+Ghost.prototype.photoRouter = function () {
+  const instance = this;
+  const folderName = "사진_등록_포트폴리오";
+  const pathNameConst = "/photo_";
+  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - ls
+  funcObj.post_ls = {
+    link: [ "ls", "readDir" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ designerDir ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    for (let j = 0; j < funcObj[i].link.length; j++) {
+      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+    }
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+Ghost.prototype.photorawRouter = function () {
+  const instance = this;
+  const folderName = "사진_미등록_포트폴리오";
+  const pathNameConst = "/photoraw_";
+  const designerDir = this.homeliaisonServer + "/" + folderName;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - ls
+  funcObj.post_ls = {
+    link: [ "ls", "readDir" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ designerDir ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    for (let j = 0; j < funcObj[i].link.length; j++) {
+      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+    }
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
@@ -640,6 +749,13 @@ Ghost.prototype.launching = async function () {
       let pems = {};
       let pemsLink = process.cwd() + "/pems/" + address.host;
       let certDir, keyDir, caDir;
+      let routerObj;
+      let routerTargets = [
+        "client",
+        "designer",
+        "photo",
+        "photoraw"
+      ];
 
       certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
       keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -672,13 +788,15 @@ Ghost.prototype.launching = async function () {
         app.post(obj.link, obj.func);
       }
 
-      //set designer router
-      const { get: designerGet, post: designerPost } = this.designerRouter();
-      for (let obj of designerGet) {
-        app.get(obj.link, obj.func);
-      }
-      for (let obj of designerPost) {
-        app.post(obj.link, obj.func);
+      //set sub routers
+      for (let r of routerTargets) {
+        routerObj = (this[r + "Router"])();
+        for (let obj of routerObj.get) {
+          app.get(obj.link, obj.func);
+        }
+        for (let obj of routerObj.post) {
+          app.post(obj.link, obj.func);
+        }
       }
 
       //launching python cron

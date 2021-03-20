@@ -628,15 +628,15 @@ Mother.prototype.binaryRequest = function (to, port = 80) {
   });
 }
 
-Mother.prototype.ghostRequest = function (path, data = {}) {
+Mother.prototype.ghostRequest = function (path = "", data = {}) {
   /*
   // bind usage example
-  const designerRequest = this.mother.ghostRequest().__bind__("designer");
+  const designerRequest = this.mother.ghostRequest().bindPath("designer");
   console.log(await designerRequest("ls"));
   */
   let requestFunction = new Function();
   class BindPromise extends Promise {
-    __bind__(mode) {
+    bindPath(mode) {
       if (mode === undefined) {
         throw new Error("must be bind path mode");
       }
@@ -667,7 +667,7 @@ Mother.prototype.ghostRequest = function (path, data = {}) {
       const address = require(`${process.cwd()}/apps/infoObj.js`);
       const { ddns, port, protocol } = address.officeinfo.ghost;
       let order, url;
-      url = `${protocol}://${ddns}:${String(port)}/${bind !== null ? bind + "_" : ""}${path}`;
+      url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "") ? bind + "_" : ""}${path}`;
       order = '';
       order += "curl";
       order += " ";
@@ -681,17 +681,21 @@ Mother.prototype.ghostRequest = function (path, data = {}) {
       order += url;
 
       promiseObj = new BindPromise(function (resolve, reject) {
-        shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
-          if (err) {
-            reject(err);
-          } else {
-            if (/^[\[\{]/.test(stdout.trim())) {
-              resolve(JSON.parse(stdout.trim()));
+        if (path === "") {
+          resolve("bind");
+        } else {
+          shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+            if (err) {
+              reject(err);
             } else {
-              resolve(stdout.trim());
+              if (/^[\[\{]/.test(stdout.trim())) {
+                resolve(JSON.parse(stdout.trim()));
+              } else {
+                resolve(stdout.trim());
+              }
             }
-          }
-        });
+          });
+        }
       });
       return promiseObj;
     }
