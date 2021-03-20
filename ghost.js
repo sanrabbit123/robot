@@ -559,6 +559,7 @@ Ghost.prototype.clientRouter = function () {
     for (let j = 0; j < funcObj[i].link.length; j++) {
       funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
     }
+    console.log(funcObj[i]);
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
