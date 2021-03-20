@@ -40,6 +40,7 @@ const Ghost = function () {
   this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
+  this.pythonApp = process.cwd() + "/ghost.py";
 }
 
 Ghost.prototype.objectToCron = function (obj = {}) {
@@ -167,18 +168,6 @@ Ghost.prototype.clientReport = async function () {
   }
 }
 
-Ghost.prototype.sendAspirantPresentation = async function () {
-  try {
-    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    const kakao = new KakaoTalk();
-    await kakao.sendAspirantPresentation();
-
-    return `send aspirant presentation done`;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
@@ -263,6 +252,324 @@ Ghost.prototype.dirParsing = function (dir) {
   return dir;
 }
 
+Ghost.prototype.ghostRouter = function () {
+  const instance = this;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - shell
+  funcObj.post_shell = {
+    link: [ "/shell" ],
+    func: function (req, res) {
+      let order;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.command === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'command'" }));
+      } else {
+        const { command } = req.body;
+        order = '';
+        if (Array.isArray(command)) {
+          for (let c of command) {
+            order += c + ';';
+          }
+        } else {
+          order = command;
+        }
+        shell.exec(order, { async: true });
+        res.send(JSON.stringify({ message: "success" }));
+      }
+    }
+  };
+
+  //POST - backup
+  funcObj.post_backup = {
+    link: [ "/backup" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      instance.mongoToJson().then(function () {
+        return instance.ultimateReflection();
+      }).then(function () {
+        console.log("backup done");
+      }).catch(function (err) {
+        console.log(err);
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    }
+  };
+
+  //POST - mkdir
+  funcObj.post_mkdir = {
+    link: [ "/mkdir", "/rm", "/touch" ],
+    func: function (req, res) {
+      let command;
+      let order;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.target === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'target'" }));
+      } else {
+        if (req.url === "/mkdir") {
+          order = "mkdir";
+        } else if (req.url === "/rm") {
+          order = "rm -rf";
+        } else if (req.url === "/touch") {
+          order = "touch";
+        }
+        let { target } = req.body;
+        command = '';
+        if (Array.isArray(target)) {
+          for (let d of target) {
+            d = instance.dirParsing(d);
+            command += `${order} ${shellLink(d)};`;
+          }
+        } else {
+          target = instance.dirParsing(target);
+          command = `${order} ${shellLink(target)}`;
+        }
+        shell.exec(command, { async: true });
+        res.send(JSON.stringify({ message: "success" }));
+      }
+    }
+  };
+
+  //POST - readDir
+  funcObj.post_readDir = {
+    link: [ "/readDir" ],
+    func: function (req, res) {
+      let command;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.target === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'target'" }));
+      } else {
+        let { target } = req.body;
+        target = instance.dirParsing(target);
+        fileSystem(`readDir`, [ target ]).then((list) => {
+          res.send(JSON.stringify(list));
+        }).catch((e) => { throw new Error(e); });
+      }
+    }
+  };
+
+  //POST - robot
+  funcObj.post_robot = {
+    link: [ "/robot" ],
+    func: function (req, res) {
+      let command;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.command === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'command'" }));
+      } else {
+        let { command } = req.body;
+        const { stdout } = shell.exec("node " + instance.robot + " " + command);
+        res.send(JSON.stringify({ stdout }));
+      }
+    }
+  };
+
+  //POST - fixDir
+  funcObj.post_fixDir = {
+    link: [ "/fixDir" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.target === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'target'" }));
+      } else {
+        let { target } = req.body;
+        target = instance.dirParsing(target);
+        if (req.body.await === true) {
+          console.log(`waiting 10 minutes...`);
+          setTimeout(function () {
+            console.log(`fix start`);
+            shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(`fix done`);
+              }
+            });
+          }, (10 * 60 * 1000));
+        } else {
+          shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(`fix done`);
+            }
+          });
+        }
+        res.send(JSON.stringify({ message: "will do" }));
+      }
+    }
+  };
+
+  //POST - updateSheets
+  funcObj.post_updateSheets = {
+    link: [ "/updateSheets" ],
+    func: function (req, res) {
+      const sheets = new GoogleSheet();
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      let id, sheetName, values, startPoint;
+      if (req.body.id === undefined || req.body.values === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'id, sheetName, values, startPoint'" }));
+      } else {
+        id = req.body.id;
+        values = req.body.values;
+        sheetName = "";
+        if (req.body.sheetName !== undefined) {
+          sheetName = req.body.sheetName;
+        }
+        startPoint = [ 0, 0 ];
+        if (req.body.startPoint !== undefined) {
+          startPoint = req.body.startPoint;
+        }
+        if (req.body.clean === true || req.body.cleanView === true) {
+          sheets.setting_cleanView_inPython(id).then(function (message) {
+            return sheets.update_value_inPython(id, sheetName, values, startPoint);
+          }).then(function (message) {
+            console.log(message);
+            console.log("done");
+          }).catch(function (err) {
+            res.send(JSON.stringify({ error: err }));
+            throw new Error(err);
+          });
+        } else {
+          sheets.update_value_inPython(id, sheetName, values, startPoint).then(function (message) {
+            console.log(message);
+            console.log("done");
+          }).catch(function (err) {
+            res.send(JSON.stringify({ error: err }));
+            throw new Error(err);
+          });
+        }
+        res.send(JSON.stringify({ message: "will do" }));
+      }
+    }
+  };
+
+  //POST - getSheets
+  funcObj.post_getSheets = {
+    link: [ "/getSheets" ],
+    func: function (req, res) {
+      const sheets = new GoogleSheet();
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let id, range;
+      if (req.body.id === undefined || req.body.range === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'id, range'" }));
+      } else {
+        id = req.body.id;
+        range = req.body.range;
+        sheets.get_value_inPython(id, range).then(function (result) {
+          res.send(JSON.stringify(result));
+        }).catch(function (err) {
+          res.send(JSON.stringify({ error: err }));
+          throw new Error(err);
+        });
+      }
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+Ghost.prototype.designerRouter = function () {
+  const instance = this;
+  const designerFolderName = "디자이너";
+  const designerDir = this.homeliaisonServer + "/" + designerFolderName;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - ls
+  funcObj.post_ls = {
+    link: [ "/ls" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ designerDir ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //POST - ls
+  funcObj.post_ls = {
+    link: [ "/ls" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ designerDir ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
 Ghost.prototype.launching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
@@ -286,57 +593,26 @@ Ghost.prototype.launching = async function () {
 
     if (process.argv[2] === "pm2") {
 
-      console.log(`pm2 kill;pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- cron;pm2 start -f ${shellLink(process.cwd())}/ghost.js -- kakao;pm2 monit;`);
+      console.log(`pm2 kill;pm2 start ${shellLink(process.cwd())}/ghost.js -- server;pm2 start -x --interpreter /usr/bin/python3 ${shellLink(process.cwd())}/ghost.py -- cron;pm2 monit;`);
 
     } else if (process.argv[2] === "backup") {
 
-      await this.mongoToJson();
-      await this.ultimateReflection();
-
-    } else if (process.argv[2] === "cron") {
-
       //backup
       message = '';
-      this.schedule.scheduleJob(this.objectToCron({ hours: 22, minutes: 30, seconds: 30 }), function () {
-        message = '';
-        instance.mongoToJson().then(function (m) {
-          message += m;
-          return instance.ultimateReflection();
-        }).then(function (m) {
-          message += "\n"
-          message += m;
-          return instance.analyticsToMongo();
-        }).then(function (m) {
-          message += "\n"
-          message += m;
-          return instance.clientReport();
-        }).then(function (m) {
-          message += "\n"
-          message += m;
-          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-          console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
-          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-        }).catch(function (err) {
-          console.log(err);
-        });
+      instance.mongoToJson().then(function (m) {
+        message += m;
+        return instance.ultimateReflection();
+      }).then(function (m) {
+        message += "\n"
+        message += m;
+        console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
+        console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
+        console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
+      }).catch(function (err) {
+        console.log(err);
       });
 
-    } else if (process.argv[2] === "kakao") {
-
-      //backup
-      message = '';
-      this.schedule.scheduleJob(this.objectToCron({ hours: 14, minutes: 30, seconds: 30 }), function () {
-        instance.sendAspirantPresentation().then(function (m) {
-          message += m;
-          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-          console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
-          console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-        }).catch(function (err) {
-          console.log(err);
-        });
-      });
-
-    } else if (process.argv[2] === "ghost" || process.argv[2] === "request") {
+    } else if (process.argv[2] === "request") {
 
       const { json, to } = await this.requestObject();
       let order;
@@ -361,240 +637,18 @@ Ghost.prototype.launching = async function () {
         console.log(stdout);
       }
 
-    } else if (process.argv[2] === undefined || process.argv[2] === "server") {
+    } else if (process.argv[2] === undefined || process.argv[2] === "server" || process.argv[2] === "ghost") {
 
       //set address info
       const { name, rawObj: address } = await this.mother.ipCheck();
+      let isGhost = (address.isGhost === true);
       if (name === "unknown") {
         throw new Error("invalid address");
       }
 
-      //set router
-      app.post("/shell", function (req, res) {
-        let order;
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.command === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'command'" }));
-        } else {
-          const { command } = req.body;
-          order = '';
-          if (Array.isArray(command)) {
-            for (let c of command) {
-              order += c + ';';
-            }
-          } else {
-            order = command;
-          }
-          shell.exec(order, { async: true });
-          res.send(JSON.stringify({ message: "success" }));
-        }
-      });
-
-      app.post("/backup", function (req, res) {
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        instance.mongoToJson().then(function () {
-          return instance.ultimateReflection();
-        }).then(function () {
-          console.log("backup done");
-        }).catch(function (err) {
-          console.log(err);
-        });
-        res.send(JSON.stringify({ message: "success" }));
-      });
-
-      app.post([ "/mkdir", "/rm", "/touch" ], function (req, res) {
-        let command;
-        let order;
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.target === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'target'" }));
-        } else {
-          if (req.url === "/mkdir") {
-            order = "mkdir";
-          } else if (req.url === "/rm") {
-            order = "rm -rf";
-          } else if (req.url === "/touch") {
-            order = "touch";
-          }
-          let { target } = req.body;
-          command = '';
-          if (Array.isArray(target)) {
-            for (let d of target) {
-              d = instance.dirParsing(d);
-              command += `${order} ${shellLink(d)};`;
-            }
-          } else {
-            target = instance.dirParsing(target);
-            command = `${order} ${shellLink(target)}`;
-          }
-          shell.exec(command, { async: true });
-          res.send(JSON.stringify({ message: "success" }));
-        }
-      });
-
-      app.post("/readDir", function (req, res) {
-        let command;
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.target === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'target'" }));
-        } else {
-          let { target } = req.body;
-          target = instance.dirParsing(target);
-          fileSystem(`readDir`, [ target ]).then((list) => {
-            res.send(JSON.stringify(list));
-          }).catch((e) => { throw new Error(e); });
-        }
-      });
-
-      app.post("/robot", function (req, res) {
-        let command;
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.command === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'command'" }));
-        } else {
-          let { command } = req.body;
-          const { stdout } = shell.exec("node " + instance.robot + " " + command);
-          res.send(JSON.stringify({ stdout }));
-        }
-      });
-
-      app.post("/fixDir", function (req, res) {
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        if (req.body.target === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'target'" }));
-        } else {
-          let { target } = req.body;
-          target = instance.dirParsing(target);
-          if (req.body.await === true) {
-            console.log(`waiting 10 minutes...`);
-            setTimeout(function () {
-              console.log(`fix start`);
-              shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log(`fix done`);
-                }
-              });
-            }, (10 * 60 * 1000));
-          } else {
-            shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(`fix done`);
-              }
-            });
-          }
-          res.send(JSON.stringify({ message: "will do" }));
-        }
-      });
-
-      app.post("/updateSheets", function (req, res) {
-        const sheets = new GoogleSheet();
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-
-        let id, sheetName, values, startPoint;
-        if (req.body.id === undefined || req.body.values === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'id, sheetName, values, startPoint'" }));
-        } else {
-          id = req.body.id;
-          values = req.body.values;
-          sheetName = "";
-          if (req.body.sheetName !== undefined) {
-            sheetName = req.body.sheetName;
-          }
-          startPoint = [ 0, 0 ];
-          if (req.body.startPoint !== undefined) {
-            startPoint = req.body.startPoint;
-          }
-          if (req.body.clean === true || req.body.cleanView === true) {
-            sheets.setting_cleanView_inPython(id).then(function (message) {
-              return sheets.update_value_inPython(id, sheetName, values, startPoint);
-            }).then(function (message) {
-              console.log(message);
-              console.log("done");
-            }).catch(function (err) {
-              res.send(JSON.stringify({ error: err }));
-              throw new Error(err);
-            });
-          } else {
-            sheets.update_value_inPython(id, sheetName, values, startPoint).then(function (message) {
-              console.log(message);
-              console.log("done");
-            }).catch(function (err) {
-              res.send(JSON.stringify({ error: err }));
-              throw new Error(err);
-            });
-          }
-          res.send(JSON.stringify({ message: "will do" }));
-        }
-      });
-
-      app.post("/getSheets", function (req, res) {
-        const sheets = new GoogleSheet();
-        res.set({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": '*',
-        });
-        let id, range;
-        if (req.body.id === undefined || req.body.range === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'id, range'" }));
-        } else {
-          id = req.body.id;
-          range = req.body.range;
-          sheets.get_value_inPython(id, range).then(function (result) {
-            res.send(JSON.stringify(result));
-          }).catch(function (err) {
-            res.send(JSON.stringify({ error: err }));
-            throw new Error(err);
-          });
-        }
-      });
+      console.log(``);
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+      console.log(``);
 
       //set pem key
       let pems = {};
@@ -622,6 +676,24 @@ Ghost.prototype.launching = async function () {
         }
       }
       pems.allowHTTP1 = true;
+
+      //set router
+      const { get, post } = this.ghostRouter();
+      for (let obj of get) {
+        app.get(obj.link, obj.func);
+      }
+      for (let obj of post) {
+        app.post(obj.link, obj.func);
+      }
+
+      //set designer router
+      const { get: designerGet, post: designerPost } = this.designerRouter();
+      for (let obj of designerGet) {
+        app.get(obj.link, obj.func);
+      }
+      for (let obj of designerPost) {
+        app.post(obj.link, obj.func);
+      }
 
       //server on
       https.createServer(pems, app).listen(3000, address.ip.inner, () => {
