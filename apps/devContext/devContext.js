@@ -1489,10 +1489,7 @@ class DevContext extends Array {
 
 
 
-      console.log(await this.mother.ghostRequest("ls", { target: "__samba__" }));
-
-      console.log(this.mother.ghostRequest().__bind__());
-
+      console.log(await this.mother.ghostRequest("ls"));
 
       const designerRequest = this.mother.ghostRequest().__bind__("designer");
       console.log(await designerRequest("ls"));

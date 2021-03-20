@@ -359,16 +359,19 @@ Ghost.prototype.ghostRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
+
+      let target;
       if (req.body.target === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'target'" }));
+        target = "__samba__";
       } else {
-        let { target } = req.body;
-        target = instance.dirParsing(target);
-        fileSystem(`readDir`, [ target ]).then((list) => {
-          res.send(JSON.stringify(list));
-        }).catch((e) => { throw new Error(e); });
+        target = req.body.target;
       }
+      target = instance.dirParsing(target);
+
+      fileSystem(`readDir`, [ target ]).then((list) => {
+        res.send(JSON.stringify(list));
+      }).catch((e) => { throw new Error(e); });
+
     }
   };
 
@@ -404,15 +407,15 @@ Ghost.prototype.ghostRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      let target;
 
+      let target;
       if (req.body.target === undefined) {
         target = "__samba__";
       } else {
         target = req.body.target;
       }
-
       target = instance.dirParsing(target);
+
       if (req.body.await === true) {
         console.log(`waiting 10 minutes...`);
         setTimeout(function () {
