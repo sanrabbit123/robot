@@ -674,14 +674,40 @@ Ghost.prototype.designerRouter = function (needs) {
     }
   };
 
-
-
-  //POST - check designer sub id
-
-
   //POST - create new designer folder
-
-
+  funcObj.post_createFolder = {
+    link: [ "/create", "/createFolder" ],
+    func: function (req, res) {
+      let id, subid;
+      let folderName;
+      let basicList = [
+        "포트폴리오",
+        "등록서류",
+        "고객안내및제안문서"
+      ];
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.id !== undefined && req.body.subid !== undefined) {
+        folderName = req.body.subid + "_" + req.body.id;
+        shell.exec(`mkdir ${shellLink(sambaDir)}/${folderName}`, { async: true }, function (err, stdout, stderr) {
+          if (err) {
+            console.log(err);
+          } else {
+            for (let b of basicList) {
+              shell.exec(`mkdir ${shellLink(sambaDir)}/${folderName}/${b}`);
+            }
+          }
+        });
+        res.send(JSON.stringify({ folderName: folderName }));
+      } else {
+        res.send(JSON.stringify({ error: "must be property 'id' and 'subid'" }));
+      }
+    }
+  };
 
   //end : set router
   let resultObj = { get: [], post: [] };
@@ -854,7 +880,6 @@ Ghost.prototype.launching = async function () {
       console.log(``);
       console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
       console.log(``);
-
 
       //set mongo connetion
       const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
