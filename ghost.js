@@ -254,6 +254,7 @@ Ghost.prototype.dirParsing = function (dir) {
 
 Ghost.prototype.ghostRouter = function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -537,6 +538,7 @@ Ghost.prototype.ghostRouter = function () {
 
 Ghost.prototype.clientRouter = function () {
   const instance = this;
+  const back = this.back;
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -578,8 +580,10 @@ Ghost.prototype.clientRouter = function () {
 
 Ghost.prototype.designerRouter = function () {
   const instance = this;
+  const back = this.back;
   const folderName = "디자이너";
   const pathNameConst = "/designer_";
+  const standardId = "desid";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
@@ -606,6 +610,76 @@ Ghost.prototype.designerRouter = function () {
     }
   };
 
+  //POST - get designer folders
+  funcObj.post_folders = {
+    link: [ "/folder", "/folders" ],
+    func: function (req, res) {
+      let target, whereQuery;
+      let tempObj;
+      let allList;
+      let targetDIds;
+      let finalList;
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      if (req.body.id === undefined || req.body.id === undefined || req.body.id === "entire" || req.body.id === "all") {
+        target = "entire";
+        whereQuery = {};
+      } else if (Array.isArray(req.body.id)) {
+        target = req.body.id;
+        whereQuery = { "$or": [] };
+        for (let id of target) {
+          tempObj = {};
+          tempObj[standardId] = id;
+          whereQuery["$or"].push(tempObj);
+        }
+      } else {
+        target = req.body.id;
+        whereQuery = {};
+        whereQuery[standardId] = target;
+      }
+
+      allList = [];
+      targetDIds = [];
+      finalList = [];
+
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        allList = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            allList.push(i);
+          }
+        }
+        return back.getDesignersByQuery(whereQuery);
+      }).then((designers) => {
+        for (let d of designers) {
+          targetDIds.push(d.information.did);
+        }
+        for (let i of allList) {
+          if (targetDIds.includes(i.split("_")[0].trim())) {
+            finalList.push(i);
+          }
+        }
+        res.send(JSON.stringify(finalList));
+      }).catch((e) => { throw new Error(e); });
+
+    }
+  };
+
+
+
+  //POST - check designer sub id
+
+
+  //POST - create new designer folder
+
+
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -619,6 +693,7 @@ Ghost.prototype.designerRouter = function () {
 
 Ghost.prototype.photoRouter = function () {
   const instance = this;
+  const back = this.back;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -660,13 +735,14 @@ Ghost.prototype.photoRouter = function () {
 
 Ghost.prototype.photorawRouter = function () {
   const instance = this;
+  const back = this.back;
   const folderName = "사진_미등록_포트폴리오";
   const pathNameConst = "/photoraw_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
-  //POST - ls
+  //POST - read directory
   funcObj.post_ls = {
     link: [ "/ls", "/readDir" ],
     func: function (req, res) {
