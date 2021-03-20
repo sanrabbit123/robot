@@ -1488,9 +1488,30 @@ class DevContext extends Array {
 
 
 
+
+      // aspirants to designers
+
+      const aspirantToDesigner = function (aspidArr) {
+        if (!Array.isArray(aspidArr)) {
+          throw new Error("argument must be aspid arr");
+        }
+        let whereQuery;
+        whereQuery = { "$or": [] };
+        for (let aspid of aspidArr) {
+          whereQuery["$or"].push({ aspid });
+        }
+        await back.getAspirantsByQuery(whereQuery);
+      }
+
+
+
+
+
+
+
       const designerRequest = ghostRequest().bindPath("designer");
       console.log(await designerRequest("folder", { id: [ "d2004_aa02s", "d1911_aa02s" ] }));
-      console.log(await designerRequest("folder"));
+
 
 
       // TOOLS =========================================================================================================================================

@@ -2087,7 +2087,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
         desid: "",
         information: {
           contract: {
-            status: "",
+            status: "협약 완료",
             date: new Date(1800, 0, 1),
           },
           phone: "",
@@ -2133,7 +2133,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
                   ],
                   online: true
                 },
-                percentage: 0,
+                percentage: 30,
                 percentageHistory: []
               },
               construct: {
@@ -2294,6 +2294,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
       return JSON.parse(JSON.stringify(settingObj));
     }
     dummy.structure.desid = this.idMaker(latestDesigner.desid);
+    dummy.structure.information.did = 'd' + String(Number(latestDesigner.information.did.replace(/[^0-9]/gi, '')) + 1);
     for (let i = 0; i < 5; i++) {
       dummy.structure.setting.proposal.push(dummySetting(i));
     }
