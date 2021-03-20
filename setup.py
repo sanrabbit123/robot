@@ -10,6 +10,7 @@ class RobotInstall:
             [ "notion" ],
             [ "flask" ],
             [ "pymysql" ],
+            [ "PyMySQL" ],
             [ "pymongo" ],
             [ "argparse" ],
             [ "cryptography" ],
@@ -18,6 +19,10 @@ class RobotInstall:
             [ "bs4" ],
             [ "html5lib" ],
             [ "lxml" ],
+            [ "aiohttp" ],
+            [ "wheel" ],
+            [ "gunicorn" ],
+            [ "apscheduler" ]
         ]
         self.upgrade = [
             [ "google-api-core" ],
