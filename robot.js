@@ -241,6 +241,23 @@ Robot.prototype.fixDir = async function (target) {
   }
 };
 
+Robot.prototype.fixGhostDir = async function (target) {
+  try {
+    this.mother.ghostRequest("fixDir");
+    const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+    const hangul = new ParsingHangul();
+    hangul.fixDirPromise(target).then(function (tree) {
+      console.log("done");
+      process.exit();
+    }).catch(function (err) {
+      console.log(err);
+      process.exit();
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;

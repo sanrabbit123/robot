@@ -350,7 +350,7 @@ Ghost.prototype.ghostRouter = function () {
 
   //POST - readDir
   funcObj.post_readDir = {
-    link: [ "/readDir" ],
+    link: [ "/readDir", "/ls" ],
     func: function (req, res) {
       let command;
       res.set({
@@ -404,25 +404,19 @@ Ghost.prototype.ghostRouter = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
+      let target;
+
       if (req.body.target === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'target'" }));
+        target = "__samba__";
       } else {
-        let { target } = req.body;
-        target = instance.dirParsing(target);
-        if (req.body.await === true) {
-          console.log(`waiting 10 minutes...`);
-          setTimeout(function () {
-            console.log(`fix start`);
-            shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(`fix done`);
-              }
-            });
-          }, (10 * 60 * 1000));
-        } else {
+        target = req.body.target;
+      }
+
+      target = instance.dirParsing(target);
+      if (req.body.await === true) {
+        console.log(`waiting 10 minutes...`);
+        setTimeout(function () {
+          console.log(`fix start`);
           shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
             if (err) {
               console.log(err);
@@ -430,9 +424,18 @@ Ghost.prototype.ghostRouter = function () {
               console.log(`fix done`);
             }
           });
-        }
-        res.send(JSON.stringify({ message: "will do" }));
+        }, (10 * 60 * 1000));
+      } else {
+        shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(`fix done`);
+          }
+        });
       }
+
+      res.send(JSON.stringify({ message: "will do" }));
     }
   };
 

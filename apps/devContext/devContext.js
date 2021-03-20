@@ -1489,6 +1489,9 @@ class DevContext extends Array {
 
 
 
+      console.log(await this.mother.ghostRequest("ls"));
+
+
 
 
 
