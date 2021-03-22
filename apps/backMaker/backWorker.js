@@ -13,17 +13,43 @@ const BackWorker = function () {
 }
 
 BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { selfMongo: null }) {
+  /*
+  aspidArr = [
+    { aspid: "a2000_0000", contract: new Date() }
+  ];
+  */
+  class AspidArr extends Array {
+    constructor(arr) {
+      super();
+      for (let i of arr) {
+        if (i.aspid === undefined || i.contract === undefined) {
+          throw new Error("invaild aspid arr");
+        }
+        this.push(i);
+      }
+    }
+    search(aspid) {
+      let target = null;
+      for (let i of this) {
+        if (aspid === i.aspid) {
+          target = i.contract;
+          break;
+        }
+      }
+      return target;
+    }
+  }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, slack_bot } = this.mother;
-  const toUpdateQuery = function (aspirant) {
+  const { mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
+  const toUpdateQuery = function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
     let updateQuery = {};
     let snsObj, tempObj;
 
     updateQuery["designer"] = aspirant.designer;
-    updateQuery["information.contract.date"] = new Date();
+    updateQuery["information.contract.date"] = contractDay;
 
     //phone
     if (aspirant.phone === "" || aspirant.phone === undefined || aspirant.phone === null) {
@@ -57,7 +83,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       } else if (/insta/gi.test(link)) {
         tempObj.kind = "Instagram";
       }
-      tempObj.link = link;
+      tempObj.href = link;
       updateQuery["information.personalSystem.sns"].push(tempObj);
     }
 
@@ -117,10 +143,12 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     return updateQuery;
   }
+  const designerRequest = ghostRequest().bindPath("designer");
   try {
     if (!Array.isArray(aspidArr)) {
       throw new Error("argument must be aspid arr");
     }
+    aspidArr = new AspidArr(aspidArr);
 
     let MONGOC;
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -131,18 +159,21 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     let whereQuery;
     whereQuery = { "$or": [] };
-    for (let aspid of aspidArr) {
+    for (let { aspid } of aspidArr) {
       whereQuery["$or"].push({ aspid });
     }
 
     const targetAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: MONGOC });
-    let aspirantJson, updateQuery;
+    let aspirantJson, updateQuery, contractDay, newDesid, newDesigner;
 
     for (let aspirant of targetAspirants) {
+      contractDay = aspidArr.search(aspirant.aspid);
       aspirantJson = aspirant.toNormal();
-      updateQuery = toUpdateQuery(aspirantJson);
+      updateQuery = toUpdateQuery(aspirantJson, contractDay);
       if (updateQuery !== null) {
-        await back.createDesigner(updateQuery, { selfMongo: MONGOC });
+        newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
+        newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
+        await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
       }
     }
 

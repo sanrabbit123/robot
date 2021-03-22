@@ -691,8 +691,8 @@ Ghost.prototype.designerRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      if (req.body.id !== undefined && req.body.subid !== undefined) {
-        folderName = req.body.subid + "_" + req.body.id;
+      if (req.body.name !== undefined && req.body.subid !== undefined) {
+        folderName = req.body.subid + "_" + req.body.name;
         shell.exec(`mkdir ${shellLink(sambaDir)}/${folderName}`, { async: true }, function (err, stdout, stderr) {
           if (err) {
             console.log(err);
@@ -704,7 +704,7 @@ Ghost.prototype.designerRouter = function (needs) {
         });
         res.send(JSON.stringify({ folderName: folderName }));
       } else {
-        res.send(JSON.stringify({ error: "must be property 'id' and 'subid'" }));
+        res.send(JSON.stringify({ error: "must be property 'name' and 'subid'" }));
       }
     }
   };
