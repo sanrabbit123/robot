@@ -1493,11 +1493,58 @@ class DevContext extends Array {
       }
       await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
 
+
+
+      // ALIMTALK
+
+      const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      const kakao = new KakaoTalk();
+      await kakao.ready();
+      const method = "designerCheckList";
+      const designers = await back.getDesignersByQuery({});
+
+      const today = new Date();
+      const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
+      let expiredString = '';
+      let targetDesigners = [];
+      let tempObj;
+
+      if (today.getDay() !== 0 && today.getDay() !== 6) {
+        //pyeong-day
+        today.setDate(today.getDate() + 7);
+      } else {
+        if (today.getDay() !== 0) {
+          //saturday
+          today.setDate(today.getDate() + 9);
+        } else {
+          //sunday
+          today.setDate(today.getDate() + 8);
+        }
+      }
+
+      expiredString += String(today.getMonth() + 1) + "월";
+      expiredString += " ";
+      expiredString += String(today.getDate()) + "일";
+      expiredString += " ";
+      expiredString += dayArr[today.getDay()] + "요일";
+      expiredString += " ";
+      expiredString += String(14) + "시";
+
+      for (let d of designers) {
+        if (/완료/gi.test(d.information.contract.status.value)) {
+          targetDesigners.push({ desid: d.desid, designer: d.designer, phone: d.information.phone });
+        }
+      }
+
+      for (let { desid, designer, phone } of targetDesigners) {
+        await kakao.sendTalk(method, designer, phone, {
+          date: expiredString,
+          host: ADDRESS.homeinfo.ghost.host,
+          desid: desid,
+        });
+      }
+
       */
-
-
-
-
 
 
 
