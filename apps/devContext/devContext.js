@@ -1449,6 +1449,8 @@ class DevContext extends Array {
 
 
 
+      /*
+
       // ASPIRANT TO DESIGNER
 
       const nameList = [
@@ -1485,14 +1487,14 @@ class DevContext extends Array {
       aspidArr = [];
       for (let [ name, contractDay ] of nameList) {
         whereQuery = { designer: name };
-        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOLOCALC });
+        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
         aspirant = aspirants[0];
         aspidArr.push({ aspid: aspirant.aspid, contract: stringToDate(contractDay) });
       }
-      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOLOCALC });
+      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
 
+      */
 
-      
 
 
 
