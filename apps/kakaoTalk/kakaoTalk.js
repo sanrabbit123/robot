@@ -147,19 +147,21 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: null
     },
     designerCheckList: {
-      name: "디자이너 체크리스트",
-      id: "TD_9193",
+      name: "체크리스트 최종",
+      id: "TD_9625",
       needs: [
         "date",
+        "host",
         "desid"
       ],
       convert: function (obj) {
         return [
-          { from: "고객명", to: obj.name },
-          { from: "날짜", to: obj.date },
-          { from: "desid", to: obj.desid }
+          { from: "designer", to: obj.name },
+          { from: "date", to: obj.date },
+          { from: "host", to: obj.host },
+          { from: "desid", to: obj.desid },
         ];
-      }
+      },
     },
   };
   return tong[target];

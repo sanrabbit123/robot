@@ -2365,7 +2365,20 @@ DataRouter.prototype.rou_post_alimTalk = function () {
         throw new Error("must be method, name, phone");
       }
       const requestObj = req.body;
-      await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, (req.body.option !== undefined ? JSON.parse(req.body.option) : {}));
+      let option;
+      if (req.body.option === undefined) {
+        option = {};
+      } else {
+        option = JSON.parse(req.body.option);
+        if (/ADDRESS\[/g.test(option.host)) {
+          if (/\(ghost\)/gi.test(option.host)) {
+            option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].ghost.host;
+          } else {
+            option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].host;
+          }
+        }
+      }
+      await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',

@@ -386,16 +386,6 @@ Robot.prototype.launching = async function () {
           await this.getConsulting(re2);
         }
 
-      //aiohttp
-      } else if (re === "aiohttp" || re === "8") {
-        console.log(`source ./bin/activate;gunicorn --bind 0.0.0.0:5000 wsgi:app;`);
-        process.exit();
-
-      //aiohttp install
-      } else if (re === "aiohttpInstall" || re === "9") {
-        console.log(`python3 -m venv .;source ./bin/activate;pip3 install aiohttp;pip3 install gunicorn;pip3 install requests;pip3 install bs4;`);
-        process.exit();
-
       //exit
       } else if (re === "exit" || re === "10") {
         process.exit();

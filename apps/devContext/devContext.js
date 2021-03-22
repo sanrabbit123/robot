@@ -1447,40 +1447,46 @@ class DevContext extends Array {
 
 
       const nameList = [
-        "박정훈",
-        "손병준",
-        "윤보라",
-        "이한솔",
-        // "이지영",
-        "류상현",
-        "김현영",
-        "정민재",
-        "최문형",
-        "전진화",
-        "이정아",
-        "강주현",
-        "호지희",
-        "왕지연",
-        "한채은",
-        "조원숙",
-        "권미정",
-        "서한수",
-        "김상화",
-        "김윤진",
+        [ "박정훈", "" ],
+        [ "손병준", "" ],
+        [ "윤보라", "" ],
+        [ "이한솔", "" ],
+        [ "이지영", "" ],
+        [ "류상현", "" ],
+        [ "김현영", "" ],
+        [ "정민재", "" ],
+        [ "최문형", "" ],
+        [ "전진화", "" ],
+        [ "이정아", "" ],
+        [ "강주현", "" ],
+        [ "호지희", "" ],
+        [ "왕지연", "" ],
+        [ "한채은", "" ],
+        [ "조원숙", "" ],
+        [ "권미정", "" ],
+        [ "서한수", "" ],
+        [ "김상화", "" ],
+        [ "김윤진", "" ],
       ];
+      const stringToDate = function (str) {
+        // temp = str.split('-');
+        // temp[0]
+        // temp[1]
+        // temp[2]
+      }
 
       let whereQuery, updateQuery;
       let aspirants, aspirant;
       let aspidArr;
 
-      // aspidArr = [];
-      // for (let name of nameList) {
-      //   whereQuery = { designer: name };
-      //   aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
-      //   aspirant = aspirants[0];
-      //   aspidArr.push(aspirant.aspid);
-      // }
-      // await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
+      aspidArr = [];
+      for (let [ name, contractDay ] of nameList) {
+        whereQuery = { designer: name };
+        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOLOCALC });
+        aspirant = aspirants[0];
+        aspidArr.push({ aspid: aspirant.aspid, contract: stringToDate(contractDay) });
+      }
+      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOLOCALC });
 
 
 

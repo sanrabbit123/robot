@@ -1445,7 +1445,7 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null || search === '' || search === '-') {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("limit=100&where=" + JSON.stringify({ desid: { "$regex": "^d" } }), "/getProjects"));
+      projects = JSON.parse(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ desid: { "$regex": "^d" }, "process.status": { "$regex": "^[대진홀]" } }), "/getProjects"));
     } else {
       projects = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchProjects"));
     }

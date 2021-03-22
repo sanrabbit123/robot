@@ -3071,35 +3071,20 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     expiredString += String(14) + "시";
 
     if (window.confirm(thisCase[standard[0]] + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-      GeneralJs.ajax("method=designerCheckList&name=" + thisCase[standard[0]] + "&phone=" + thisCase.phone + "&option=" + JSON.stringify({ date: expiredString, desid: thisCase[standard[1]] }), "/alimTalk", function (rawJson) {
+      GeneralJs.ajax("method=designerCheckList&name=" + thisCase[standard[0]] + "&phone=" + thisCase.phone + "&option=" + JSON.stringify({ date: expiredString, desid: thisCase[standard[1]], host: "ADDRESS[homeinfo(ghost)]" }), "/alimTalk", function (rawJson) {
         let middleDate, deadDate;
-
         if (JSON.parse(rawJson).message !== "success") {
-
           throw new Error("alimTalk error");
-
         } else {
-
           instance.mother.greenAlert("알림톡이 전송되었습니다!");
-
-          //copy link and set deadline
+          //set deadline
           if (GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] === null || GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] === undefined) {
             middleDate = new Date();
             middleDate.setHours(middleDate.getHours() + 8);
             deadDate = new Date();
             deadDate.setDate(deadDate.getDate() + 9);
-            GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + thisCase[standard[1]], mode: "set" }), "/manageDeadline", function (res) {
-              window.navigator.clipboard.writeText("https://" + GHOSTHOST + "/middle/survey?desid=" + thisCase[standard[1]]).then(function () {
-                GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] = setTimeout(function () {
-                  clearTimeout(GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]]);
-                  GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] = null;
-                }, 6000);
-              }).catch(function (err) {
-                throw new Error(err);
-              });
-            });
+            GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + thisCase[standard[1]], mode: "set" }), "/manageDeadline", function (res) {});
           }
-
         }
       });
     }
