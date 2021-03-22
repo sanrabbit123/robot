@@ -3828,6 +3828,16 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               column: "mono",
               value: 10
             },
+            {
+              name: "밝은 톤",
+              column: "bright",
+              value: 10
+            },
+            {
+              name: "어두운 톤",
+              column: "dark",
+              value: 10
+            },
           ]
         },
         {
@@ -4160,17 +4170,18 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "string",
           multiple: true,
-          name: "디자이너 개인 장점",
+          name: "디자이너 개인 특징",
           column: "personality",
           position: function (items, reverse = false) {
             if (!reverse) {
               const itemsTong = [
-                "고객 미팅 횟수에 연연하지 않음",
-                "현장 미팅전, 심도 있는 준비",
+                "고객 미팅 회수에 연연하지 않는 편",
+                "현장(최초) 미팅 전 심도 있게 준비하는 편",
+                "디자인 제안 속도가 상대적으로 빠른 편",
+                "3D 요청시 유료 제공",
+                "디자인 기획을 리드하는 편",
+                "디자인 기획시 고객에게 맞추는 편",
                 "조립 및 설치 서비스 무료 제공",
-                "빠른 디자인 제안 속도",
-                "꼼꼼한 페이퍼 워크",
-                "주체적으로 리드하며 진행",
               ];
               let updateQuery = {};
               updateQuery["analytics.etc.personality"] = [];
@@ -4193,12 +4204,13 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
           dependency: null,
           survey: true,
           items: [
-            "고객 미팅 횟수에 연연하지 않음",
-            "현장 미팅전, 심도 있는 준비",
+            "고객 미팅 회수에 연연하지 않는 편",
+            "현장(최초) 미팅 전 심도 있게 준비하는 편",
+            "디자인 제안 속도가 상대적으로 빠른 편",
+            "3D 요청시 유료 제공",
+            "디자인 기획을 리드하는 편",
+            "디자인 기획시 고객에게 맞추는 편",
             "조립 및 설치 서비스 무료 제공",
-            "빠른 디자인 제안 속도",
-            "꼼꼼한 페이퍼 워크",
-            "주체적으로 리드하며 진행",
           ]
         },
         {

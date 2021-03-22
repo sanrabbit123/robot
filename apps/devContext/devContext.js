@@ -3,6 +3,7 @@ const APP_PATH = ROBOT_PATH + "/apps";
 const Mother = require(APP_PATH + "/mother.js");
 const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const BackReport = require(APP_PATH + "/backMaker/backReport.js");
+const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
 const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
@@ -371,6 +372,7 @@ class DevContext extends Array {
       await this.MONGOLOCALC.connect();
       const back = new BackMaker();
       const report = new BackReport();
+      const work = new BackWorker();
 
       /*
 
@@ -1457,8 +1459,6 @@ class DevContext extends Array {
 
 
 
-
-
       // const app = await report.getDesignerProposalReport({ selfMongo: this.MONGOLOCALC });
       // console.log(app);
       // console.log(app.matrix);
@@ -1479,6 +1479,43 @@ class DevContext extends Array {
       // const designerRequest = ghostRequest().bindPath("designer");
       // console.log(await designerRequest("folder", { id: [ "d2004_aa02s", "d1911_aa02s" ] }));
 
+
+      const nameList = [
+        "박정훈",
+        "손병준",
+        "윤보라",
+        "이한솔",
+        "이지영",
+        "류상현",
+        "김현영",
+        "정민재",
+        "최문형",
+        "전진화",
+        "이정아",
+        "강주현",
+        "호지희",
+        "왕지연",
+        "한채은",
+        "조원숙",
+        "권미정",
+        "서한수",
+        "김상화",
+        "김윤진",
+      ];
+
+      let whereQuery, updateQuery;
+      let aspirants, aspirant;
+      let aspidArr;
+
+      aspidArr = [];
+      for (let name of nameList) {
+        whereQuery = { designer: name };
+        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOLOCALC });
+        aspirant = aspirants[0];
+        aspidArr.push(aspirant.aspid);
+      }
+
+      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOLOCALC });
 
 
 

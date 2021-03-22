@@ -220,6 +220,8 @@ const TendencyColor = function (json) {
   this.vivid = json.vivid;
   this.white = json.white;
   this.mono = json.mono;
+  this.bright = json.bright;
+  this.dark = json.dark;
 }
 
 TendencyColor.prototype.toNormal = function () {
@@ -230,6 +232,8 @@ TendencyColor.prototype.toNormal = function () {
   obj.vivid = this.vivid;
   obj.white = this.white;
   obj.mono = this.mono;
+  obj.bright = this.bright;
+  obj.dark = this.dark;
   return obj;
 }
 

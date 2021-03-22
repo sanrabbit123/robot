@@ -15,9 +15,10 @@ const BackWorker = function () {
 BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { selfMongo: null }) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo } = this.mother;
+  const { mongo, mongoinfo, slack_bot } = this.mother;
   const toUpdateQuery = function (aspirant) {
     const today = new Date();
+    const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
     let updateQuery = {};
 
     updateQuery["designer"] = aspirant.designer;
@@ -25,19 +26,22 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //phone
     if (aspirant.phone === "" || aspirant.phone === undefined || aspirant.phone === null) {
-      throw new Error("There is no phone");
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 핸드폰 번호가 없습니다!", channel: "#300_designer" });
+      return null;
     }
     updateQuery["information.phone"] = aspirant.phone;
 
     //email
     if (aspirant.email === "" || aspirant.email === undefined || aspirant.email === null) {
-      throw new Error("There is no email");
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 이메일이 없습니다!", channel: "#300_designer" });
+      return null;
     }
     updateQuery["information.email"] = aspirant.email;
 
     //address
     if (aspirant.address === "" || aspirant.address === undefined || aspirant.address === null) {
-      throw new Error("There is no address");
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 주소가 없습니다!", channel: "#300_designer" });
+      return null;
     }
     updateQuery["information.address"] = [ aspirant.address ];
 
@@ -46,16 +50,18 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     updateQuery["information.personalSystem.sns"] = aspirant.information.sns;
 
     //career
-    if (aspirant.information.styling.year === 0 && aspirant.information.styling.month === 0) {
-      throw new Error("There is no career");
+    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 스타일링 경력 사항이 없습니다!", channel: "#300_designer" });
+      return null;
     }
-    today.setMonth(today.getMonth() - ((aspirant.information.styling.year * 12) + aspirant.information.styling.month));
+    today.setMonth(today.getMonth() - ((aspirant.information.career.styling.year * 12) + aspirant.information.career.styling.month));
     updateQuery["information.business.career.startY"] = today.getFullYear();
     updateQuery["information.business.career.startM"] = today.getMonth() + 1;
 
     //account
     if (aspirant.information.account.number === "" || aspirant.information.account.number === null || aspirant.information.account.number === undefined) {
-      throw new Error("There is no account");
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 계좌 번호가 없습니다!", channel: "#300_designer" });
+      return null;
     }
     updateQuery["information.business.account"] = [
       {
@@ -67,7 +73,8 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //classification and businessNumber
     if (aspirant.information.company.classification === "" || aspirant.information.company.classification === null || aspirant.information.company.classification === undefined) {
-      throw new Error("There is no classification");
+      slack_bot.chat.postMessage({ text: thisDesigner + " 사업자 정보가 없습니다!", channel: "#300_designer" });
+      return null;
     }
     if (/개인/gi.test(aspirant.information.company.classification)) {
       if (/일반/gi.test(aspirant.information.company.classification)) {
@@ -111,11 +118,14 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
 
     const targetAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: MONGOC });
-    let aspirantJson;
+    let aspirantJson, updateQuery;
 
     for (let aspirant of targetAspirants) {
       aspirantJson = aspirant.toNormal();
-      await back.createDesigner(toUpdateQuery(aspirantJson), { selfMongo: MONGOC });
+      updateQuery = toUpdateQuery(aspirantJson);
+      if (updateQuery !== null) {
+        await back.createDesigner(updateQuery, { selfMongo: MONGOC });
+      }
     }
 
   } catch (e) {

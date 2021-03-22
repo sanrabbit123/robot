@@ -2189,7 +2189,9 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
                 highContrast: 0,
                 vivid: 0,
                 white: 0,
-                mono: 0
+                mono: 0,
+                bright: 0,
+                dark: 0,
               },
               density: {
                 maximun: 0,
@@ -2219,12 +2221,13 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
               max: 10000000
             },
             personality: [
-              { name: "고객 미팅 횟수에 연연하지 않음", value: false },
-              { name: "현장 미팅전, 심도 있는 준비", value: false },
+              { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
+              { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },
+              { name: "디자인 제안 속도가 상대적으로 빠른 편", value: false },
+              { name: "3D 요청시 유료 제공", value: false },
+              { name: "디자인 기획을 리드하는 편", value: false },
+              { name: "디자인 기획시 고객에게 맞추는 편", value: false },
               { name: "조립 및 설치 서비스 무료 제공", value: false },
-              { name: "빠른 디자인 제안 속도", value: false },
-              { name: "꼼꼼한 페이퍼 워크", value: false },
-              { name: "주체적으로 리드하며 진행", value: false },
             ],
             relation: "확인중"
           }
