@@ -4159,7 +4159,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 fontWeight: String(600),
                 color: GeneralJs.colorChip.black,
                 marginBottom: String(7) + ea,
-              }
+              };
               for (let i in style) {
                 memoTitle.style[i] = style[i];
               }
@@ -4175,7 +4175,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 borderRadius: String(5) + ea,
                 border: "1px solid " + GeneralJs.colorChip.gray2,
                 boxSizing: "border-box",
-              }
+              };
               for (let i in style) {
                 memoArea.style[i] = style[i];
               }
@@ -4190,7 +4190,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
                 height: "calc(100% - " + String((matrixMargin * 4) - 4) + ea + ")",
                 overflow: "scroll",
-              }
+              };
               for (let i in style) {
                 memoTextScroll.style[i] = style[i];
               }
@@ -4211,7 +4211,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 lineHeight: String(1.66),
                 wordSpacing: String(-1) + ea,
                 color: GeneralJs.colorChip.black
-              }
+              };
               for (let i in style) {
                 memoText.style[i] = style[i];
               }
@@ -4226,7 +4226,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                   const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
                   GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
                 }
-              })
+              });
 
               memoTextScroll.appendChild(memoText);
 

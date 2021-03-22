@@ -3641,7 +3641,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "object.multiple",
           multiple: true,
-          name: "스타일 경향성",
+          name: "스타일 선호도",
           column: "stylingTendency",
           position: function (items, reverse = false) {
             if (!reverse) {
@@ -3715,7 +3715,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "object.multiple",
           multiple: true,
-          name: "텍스처 경향성",
+          name: "텍스처 선호도",
           column: "textureTendency",
           position: function (items, reverse = false) {
             if (!reverse) {
@@ -3769,7 +3769,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "object.multiple",
           multiple: true,
-          name: "컬러톤 경향성",
+          name: "컬러톤 선호도",
           column: "colorTendency",
           position: function (items, reverse = false) {
             if (!reverse) {
@@ -3833,7 +3833,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
         {
           type: "object.singular",
           multiple: true,
-          name: "밀도 경향성",
+          name: "밀도 선호도",
           column: "densityTendency",
           position: function (items, reverse = false) {
             if (!reverse) {

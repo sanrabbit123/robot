@@ -637,7 +637,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
 
       sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
       if (sseObjs.length === 0) {
-        await back.mongoCreate(sseConst, { desid, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
+        await back.mongoCreate(sseConst, { desid: thisId, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
       }
 
       sseStream.pipe(res);

@@ -1469,48 +1469,19 @@ class DevContext extends Array {
       // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
       // const designers = await back.getDesignersByQuery({});
       // let whereQuery, updateQuery;
-      //
       // await MONGOC.connect();
-      //
-      // await MONGOC.db(`miro81`).collection(`designerHistory`).deleteMany({});
-      //
       // for (let d of designers) {
-      //   await MONGOC.db(`miro81`).collection(`designerHistory`).insertOne({
-      //     desid: d.desid,
-      //     important: false,
-      //     history: "",
-      //     issue: "",
-      //     manager: "-"
-      //   });
+      //   await MONGOC.db(`miro81`).collection(`designerHistory`).updateOne({ desid: d.desid }, { $set: { needs: "" } });
+      //   console.log(`${d.desid} done`);
       // }
-      //
       // MONGOC.close();
 
-
-
-
-      // aspirants to designers
-
-      const aspirantToDesigner = function (aspidArr) {
-        if (!Array.isArray(aspidArr)) {
-          throw new Error("argument must be aspid arr");
-        }
-        let whereQuery;
-        whereQuery = { "$or": [] };
-        for (let aspid of aspidArr) {
-          whereQuery["$or"].push({ aspid });
-        }
-        await back.getAspirantsByQuery(whereQuery);
-      }
+      // const designerRequest = ghostRequest().bindPath("designer");
+      // console.log(await designerRequest("folder", { id: [ "d2004_aa02s", "d1911_aa02s" ] }));
 
 
 
 
-
-
-
-      const designerRequest = ghostRequest().bindPath("designer");
-      console.log(await designerRequest("folder", { id: [ "d2004_aa02s", "d1911_aa02s" ] }));
 
 
 

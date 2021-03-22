@@ -200,6 +200,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       let baseWhiteStyle;
       let domDictionary;
       let inputEvent;
+      let checkListBaseStyle, matrixBaseStyle;
 
       totalMatrix = [];
       leftWordWidth = 30;
@@ -217,7 +218,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       //check list base
       checkList = DataPatch.designerCheckList(analytics);
       checkListBase = GeneralJs.nodes.div.cloneNode(true);
-      style = {
+      checkListBaseStyle = {
         position: "absolute",
         width: String(checkListWidth - (checkListMargin / 2)) + ea,
         top: String(0) + ea,
@@ -228,15 +229,15 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
         background: GeneralJs.colorChip.gray1,
       };
       if (sero) {
-        style.position = "relative";
-        style.width = String(100) + '%';
-        style.right = String(0) + ea;
-        style.borderRadius = String(0) + ea;
-        style.border = String(0);
-        style.height = "auto";
+        checkListBaseStyle.position = "relative";
+        checkListBaseStyle.width = String(100) + '%';
+        checkListBaseStyle.right = String(0) + ea;
+        checkListBaseStyle.borderRadius = String(0) + ea;
+        checkListBaseStyle.border = String(0);
+        checkListBaseStyle.height = "auto";
       }
-      for (let i in style) {
-        checkListBase.style[i] = style[i];
+      for (let i in checkListBaseStyle) {
+        checkListBase.style[i] = checkListBaseStyle[i];
       }
 
       checkBoxEvent = function (e) {
@@ -673,7 +674,171 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       checkListBase.appendChild(checkListFactorMiddle);
       div_clone.appendChild(checkListBase);
 
+      //memo box
+      matrixBaseStyle = {
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(leftMargin) + ea,
+        width: "calc(100% - " + String((leftMargin * 2) + checkListWidth + (checkListMargin / 2)) + ea + ")",
+        height: String(100) + '%',
+        background: GeneralJs.colorChip.white,
+      };
+      GeneralJs.ajax("method=designer&property=needs&idArr=" + JSON.stringify([ desid ]), "/getHistoryProperty", function (res) {
+        const resObj = JSON.parse(res);
+        if (resObj[desid] === undefined) {
+          throw new Error("needs error");
+        }
+        const history = resObj[desid];
+        let memoBox;
+        let memoWhite;
+        let memoTitle;
+        let memoArea;
+        let memoTextScroll, memoText;
+        let style;
+        let ea;
+
+        ea = "px";
+
+        memoBox = GeneralJs.nodes.div.cloneNode(true);
+        memoBox.setAttribute("mode", "left");
+        style = {
+          ...matrixBaseStyle,
+          display: "block",
+          right: "",
+          borderRadius: String(5) + ea,
+          border: "1px solid " + GeneralJs.colorChip.gray3,
+          background: GeneralJs.colorChip.gray1,
+          animation: "fadeupmiddle 0.3s ease forwards"
+        };
+        for (let i in style) {
+          memoBox.style[i] = style[i];
+        }
+        memoBox.addEventListener("contextmenu", function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (this.getAttribute("mode") === "left") {
+            this.style.width = checkListBaseStyle.width;
+            this.style.left = "";
+            this.style.right = checkListBaseStyle.right;
+            this.setAttribute("mode", "right");
+          } else {
+            this.style.width = matrixBaseStyle.width;
+            this.style.right = "";
+            this.style.left = matrixBaseStyle.left;
+            this.setAttribute("mode", "left");
+          }
+        });
+        memoBox.addEventListener("dblclick", function (e) {
+          this.style.display = "none";
+          this.style.animation = "";
+        });
+
+        memoWhite = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "relative",
+          top: String(matrixMargin * 2) + ea,
+          left: String(matrixMargin * 2) + ea,
+          width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          height: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          borderRadius: String(5) + ea,
+          background: GeneralJs.colorChip.white,
+        };
+        for (let i in style) {
+          memoWhite.style[i] = style[i];
+        }
+        memoBox.appendChild(memoWhite);
+
+        memoTitle = GeneralJs.nodes.div.cloneNode(true);
+        memoTitle.insertAdjacentHTML("beforeend", '<b style="color:' + GeneralJs.colorChip.green + '">0. </b> 홈리에종에게 하고 싶은 말');
+        style = {
+          position: "absolute",
+          top: String((matrixMargin * 2) + 3) + ea,
+          left: String(matrixMargin * 2) + ea,
+          fontSize: String(14) + ea,
+          fontWeight: String(600),
+          color: GeneralJs.colorChip.black,
+          marginBottom: String(7) + ea,
+        };
+        for (let i in style) {
+          memoTitle.style[i] = style[i];
+        }
+        memoWhite.appendChild(memoTitle);
+
+        memoArea = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "relative",
+          top: String((matrixMargin * 2) + 3 + 19 + 7) + ea,
+          left: String(matrixMargin * 2) + ea,
+          width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          height: "calc(100% - " + String((matrixMargin * 4) + 3 + 19 + 7) + ea + ")",
+          borderRadius: String(5) + ea,
+          border: "1px solid " + GeneralJs.colorChip.gray2,
+          boxSizing: "border-box",
+        };
+        for (let i in style) {
+          memoArea.style[i] = style[i];
+        }
+
+        memoWhite.appendChild(memoArea);
+
+        memoTextScroll = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          top: String((matrixMargin * 2) - 4) + ea,
+          left: String(matrixMargin * 2) + ea,
+          width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
+          height: "calc(100% - " + String((matrixMargin * 4) - 4) + ea + ")",
+          overflow: "scroll",
+        };
+        for (let i in style) {
+          memoTextScroll.style[i] = style[i];
+        }
+        memoArea.appendChild(memoTextScroll);
+
+        memoText = GeneralJs.nodes.textarea.cloneNode(true);
+        memoText.value = history;
+        style = {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(100) + '%',
+          height: String(5000) + ea,
+          fontSize: String(14) + ea,
+          fontWeight: String(300),
+          outline: String(0),
+          border: String(0),
+          lineHeight: String(1.66),
+          wordSpacing: String(-1) + ea,
+          color: GeneralJs.colorChip.black
+        };
+        for (let i in style) {
+          memoText.style[i] = style[i];
+        }
+        memoText.addEventListener("blur", function (e) {
+          const cookies = GeneralJs.getCookiesAll();
+          const ajaxData = "method=designer&id=" + desid + "&column=needs&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+          GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+        });
+        memoText.addEventListener("keypress", function (e) {
+          if (e.keyCode === 13) {
+            const cookies = GeneralJs.getCookiesAll();
+            const ajaxData = "method=designer&id=" + desid + "&column=needs&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+            GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+          }
+        });
+
+        memoTextScroll.appendChild(memoText);
+
+        instance.whiteMemoBox = memoBox;
+        div_clone.appendChild(memoBox);
+
+        memoText.focus();
+      });
+
       //base
+      /*
+
+
       matrixBase = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "absolute",
@@ -1040,8 +1205,13 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
       matrixBase.appendChild(yTitleBoxesTong);
 
       div_clone.appendChild(matrixBase);
+
+      */
+
       instance.whiteMatrixA = div_clone;
       motherArea.appendChild(div_clone);
+
+
 
     } catch (e) {
       console.log(e);
@@ -1167,7 +1337,11 @@ SurveyJs.prototype.launching = async function (loading) {
       phone = thisPerson.information.phone;
       designer = thisPerson.designer;
 
+      //test
+      instance.confirmLaunching(desid, designer);
+
       //get dead line
+      /*
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
         const { expired, dead } = JSON.parse(json);
         if (!dead) {
@@ -1187,6 +1361,7 @@ SurveyJs.prototype.launching = async function (loading) {
           window.location.href = "https://home-liaison.com";
         }
       });
+      */
     }
   } catch (e) {
     console.log(e);
