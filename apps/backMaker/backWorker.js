@@ -20,9 +20,10 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
     let updateQuery = {};
+    let snsObj, tempObj;
 
     updateQuery["designer"] = aspirant.designer;
-    updateQuery["information.contract.date"] = today;
+    updateQuery["information.contract.date"] = new Date();
 
     //phone
     if (aspirant.phone === "" || aspirant.phone === undefined || aspirant.phone === null) {
@@ -46,17 +47,34 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     updateQuery["information.address"] = [ aspirant.address ];
 
     //web and sns
-    updateQuery["information.personalSystem.webPage"] = aspirant.information.web;
-    updateQuery["information.personalSystem.sns"] = aspirant.information.sns;
+    updateQuery["information.personalSystem.webPage"] = aspirant.information.channel.web;
+    updateQuery["information.personalSystem.sns"] = [];
+    for (let link of aspirant.information.channel.sns) {
+      tempObj = {};
+      tempObj.kind = "etc";
+      if (/naver/gi.test(link)) {
+        tempObj.kind = "Naver";
+      } else if (/insta/gi.test(link)) {
+        tempObj.kind = "Instagram";
+      }
+      tempObj.link = link;
+      updateQuery["information.personalSystem.sns"].push(tempObj);
+    }
 
     //career
-    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 스타일링 경력 사항이 없습니다!", channel: "#300_designer" });
+    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0 && aspirant.information.career.interior.year === 0 && aspirant.information.career.interior.month === 0) {
+      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 경력 사항이 없습니다!", channel: "#300_designer" });
       return null;
     }
-    today.setMonth(today.getMonth() - ((aspirant.information.career.styling.year * 12) + aspirant.information.career.styling.month));
-    updateQuery["information.business.career.startY"] = today.getFullYear();
-    updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
+      today.setMonth(today.getMonth() - ((aspirant.information.career.styling.year * 12) + aspirant.information.career.styling.month));
+      updateQuery["information.business.career.startY"] = today.getFullYear();
+      updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+    } else {
+      today.setMonth(today.getMonth() - ((aspirant.information.career.interior.year * 12) + aspirant.information.career.interior.month));
+      updateQuery["information.business.career.startY"] = today.getFullYear();
+      updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+    }
 
     //account
     if (aspirant.information.account.number === "" || aspirant.information.account.number === null || aspirant.information.account.number === undefined) {

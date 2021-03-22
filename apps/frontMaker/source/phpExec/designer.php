@@ -8,7 +8,7 @@ $htmlhtml = new Blockstyle();
 $headhtml = '';
 $titleinfo = ['디자이너 | 홈리에종','홈리에종과 협업중인 홈스타일링 디자이너 리스트입니다.','/designer.php','/list_image/portpp18/t19p18.jpg'];
 $htmlindex = new Designerf();
-$htmlindex->setNull([ "de024", "de018", "de019" ]);
+$htmlindex->setNull([ "de024", "de018", "de019", "de004", "de007", "de035", "de036" ]);
 $row = $htmlindex->setRow();
 if ($row === "error") {
   header('Location: https://home-liaison.com');

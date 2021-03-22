@@ -139,40 +139,6 @@ class DevContext extends Array {
     }
   }
 
-  async deletePorfolio(porlid) {
-    let a, b;
-
-    a = `DELETE FROM porlist WHERE porlid = '${porlid}';`;
-    await this.MONGOC.db("miro81").collection("FP1_porlist").deleteOne({ porlid: porlid });
-
-    b = `DELETE FROM pordeta WHERE porlid = '${porlid}';`;
-    await this.MONGOC.db("miro81").collection("FP2_pordeta").deleteOne({ porlid: porlid });
-
-    let result = (a + b);
-    console.log(result);
-    return result;
-  }
-
-  async deletePorfolioWithReview(porlid, revid) {
-    let a, b, c, d;
-
-    a = `DELETE FROM porlist WHERE porlid = '${porlid}';`;
-    await this.MONGOC.db("miro81").collection("FP1_porlist").deleteOne({ porlid: porlid });
-
-    b = `DELETE FROM pordeta WHERE porlid = '${porlid}';`;
-    await this.MONGOC.db("miro81").collection("FP2_pordeta").deleteOne({ porlid: porlid });
-
-    c = `DELETE FROM revlist WHERE revid = '${revid}';`;
-    await this.MONGOC.db("miro81").collection("FR1_revlist").deleteOne({ revid: revid });
-
-    d = `DELETE FROM revdeta WHERE revid = '${revid}';`;
-    await this.MONGOC.db("miro81").collection("FR2_revdeta").deleteOne({ revid: revid });
-
-    let result = (a + b + c + d);
-    console.log(result);
-    return result;
-  }
-
   async googlePythonTest() {
     const analytics = new GoogleAnalytics();
     const clients = await analytics.getClientsInfoByNumber(1);
@@ -1485,7 +1451,7 @@ class DevContext extends Array {
         "손병준",
         "윤보라",
         "이한솔",
-        "이지영",
+        // "이지영",
         "류상현",
         "김현영",
         "정민재",
@@ -1507,15 +1473,19 @@ class DevContext extends Array {
       let aspirants, aspirant;
       let aspidArr;
 
-      aspidArr = [];
-      for (let name of nameList) {
-        whereQuery = { designer: name };
-        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOLOCALC });
-        aspirant = aspirants[0];
-        aspidArr.push(aspirant.aspid);
-      }
+      // aspidArr = [];
+      // for (let name of nameList) {
+      //   whereQuery = { designer: name };
+      //   aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
+      //   aspirant = aspirants[0];
+      //   aspidArr.push(aspirant.aspid);
+      // }
+      // await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
 
-      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOLOCALC });
+
+
+
+
 
 
 
@@ -1609,7 +1579,7 @@ class DevContext extends Array {
       //addtional photo repair
 
       // const filter = new PortfolioFilter();
-      // await filter.addtionalRepair("p87", 4);
+      // await filter.addtionalRepair("p87", 3);
 
       // etc tools
 
