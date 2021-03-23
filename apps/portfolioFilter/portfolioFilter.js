@@ -22,10 +22,12 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.apartName = apart(apartName);
   this.pid = pid;
+  this.resourceFolderName = "resource";
+  this.resultFolderName = "result";
   this.options = {
     home_dir: `${process.env.HOME}/portfolioFilter`,
-    photo_dir: `${process.env.HOME}/portfolioFilter/resource`,
-    result_dir: `${process.env.HOME}/portfolioFilter/result`,
+    photo_dir: `${process.env.HOME}/portfolioFilter/${this.resourceFolderName}`,
+    result_dir: `${process.env.HOME}/portfolioFilter/${this.resultFolderName}`,
   }
 }
 
@@ -125,7 +127,7 @@ PortfolioFilter.prototype.just_filter = function (str) {
   return str;
 }
 
-PortfolioFilter.prototype.to_portfolio = async function () {
+PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, todayMaker } = this.mother;
   let options = {
@@ -172,8 +174,11 @@ PortfolioFilter.prototype.to_portfolio = async function () {
 
     await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
+    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
 
-    photo_sizes = [ "780", "원본" ];
+    console.log("this1");
+
+    photo_sizes = liteMode ? [ "780" ] : [ "780", "원본" ];
     for (let i of resultFolderBoo) {
       shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
     }
@@ -182,6 +187,8 @@ PortfolioFilter.prototype.to_portfolio = async function () {
     resultFolder = `${this.options.result_dir}/${this.folderName}`;
     this.resultFolder = resultFolder;
     shell.exec(`mkdir ${shellLink(resultFolder)}`);
+
+    console.log("this2");
 
     for (let i of photo_sizes) {
       new_photo_name_list = [];
@@ -194,11 +201,17 @@ PortfolioFilter.prototype.to_portfolio = async function () {
       options.size = i;
       await fileSystem(`write`, [ `${this.options.home_dir}/script/to_portfolio.js`, this.generator.factory.to_portfolio(new_photo_name_list, options) ]);
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_portfolio.scpt`);
+      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
     }
 
-    await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
-    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
-    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
+    console.log("this3");
+
+    if (!liteMode) {
+      console.log("this4");
+      await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
+      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
+      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
+    }
 
     return resultFolder;
 
@@ -207,7 +220,7 @@ PortfolioFilter.prototype.to_portfolio = async function () {
   }
 }
 
-PortfolioFilter.prototype.parsing_fileList = async function (resultFolder) {
+PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteMode = false) {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
@@ -224,23 +237,28 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder) {
     fileList_png = [];
 
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
-    fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
-    fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
+    if (!liteMode) {
+      fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
+      fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
+    }
 
     for (let i of fileList_780_raw) {
       if (i !== `.DS_Store`) {
         fileList_780.push(resultFolder + "/780/" + i);
       }
     }
-    for (let i of fileList_original_raw) {
-      if (i !== `.DS_Store`) {
-        fileList_original.push(resultFolder + "/원본/" + i);
+
+    if (!liteMode) {
+      for (let i of fileList_original_raw) {
+        if (i !== `.DS_Store`) {
+          fileList_original.push(resultFolder + "/원본/" + i);
+        }
       }
-    }
-    for (let i of fileList_png_raw) {
-      if (/\.png$/g.test(i)) {
-        fileList_png.push(resultFolderParent + "/" + i);
-        console.log(i);
+      for (let i of fileList_png_raw) {
+        if (/\.png$/g.test(i)) {
+          fileList_png.push(resultFolderParent + "/" + i);
+          console.log(i);
+        }
       }
     }
 
@@ -295,7 +313,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
   }
 }
 
-PortfolioFilter.prototype.total_make = async function () {
+PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, slack_bot } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
@@ -311,8 +329,8 @@ PortfolioFilter.prototype.total_make = async function () {
   const idFilter = function (past) {
     return String(idFilterNum(past));
   }
-
   try {
+    const targetFolderIdConst = "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21";
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
@@ -320,61 +338,69 @@ PortfolioFilter.prototype.total_make = async function () {
     let webViewLink;
     let resultFolder;
 
-    resultFolder = await this.to_portfolio();
-    const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder);
+    resultFolder = await this.to_portfolio(liteMode);
+    const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_original, fileList_png);
 
-    thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21");
-    await drive.sleep(1000);
+    //google drive upload
+    thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
+    await drive.sleep(500);
     console.log(`make folder ${this.folderName} done`);
     folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
-    await drive.sleep(1000);
+    await drive.sleep(500);
     console.log(`make folder ${this.folderName}/780 done`);
-    folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
-    await drive.sleep(1000);
-    console.log(`make folder ${this.folderName}/원본 done`);
+    if (!liteMode) {
+      folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
+      await drive.sleep(500);
+      console.log(`make folder ${this.folderName}/원본 done`);
+    }
 
     for (let f of fileList_780) {
       await drive.upload_inPython(folderId_780, f);
-      await drive.sleep(400);
+      await drive.sleep(300);
       console.log(`upload file ${f} done`);
     }
-    for (let f of fileList_original) {
-      await drive.upload_inPython(folderId_original, f);
-      await drive.sleep(400);
-      console.log(`upload file ${f} done`);
-    }
-    for (let f of fileList_png) {
-      await drive.upload_inPython(thisFolderId, f);
-      await drive.sleep(400);
-      console.log(`upload file ${f} done`);
-    }
-
-    //this is problem
-    webViewLink = await drive.read_webView_inPython(thisFolderId);
-    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
-
-    shell.exec(`mv ${shellLink(this.resultFolder)}/원본 ${shellLink(this.resultFolder)}/${this.pid}`);
-    pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
-    fromArr = [];
-    toArr = [];
-
-    pidFolder.sort((a, b) => { return idFilterNum(a) - idFilterNum(b); });
-
-    for (let i of pidFolder) {
-      if (i !== `.DS_Store`) {
-        shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
-        fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
-        toArr.push(`corePortfolio/original/${this.pid}/i${idFilter(i)}${this.pid}.jpg`);
+    if (!liteMode) {
+      for (let f of fileList_original) {
+        await drive.upload_inPython(folderId_original, f);
+        await drive.sleep(300);
+        console.log(`upload file ${f} done`);
+      }
+      for (let f of fileList_png) {
+        await drive.upload_inPython(thisFolderId, f);
+        await drive.sleep(300);
+        console.log(`upload file ${f} done`);
       }
     }
 
-    console.log(fromArr);
-    console.log(toArr);
-    await this.mother.s3FileUpload(fromArr, toArr);
-    console.log(`s3 upload done`);
+    //slack
+    webViewLink = await drive.read_webView_inPython(thisFolderId);
+    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
 
+    //s3 upload
+    if (!liteMode) {
+      shell.exec(`mv ${shellLink(this.resultFolder)}/원본 ${shellLink(this.resultFolder)}/${this.pid}`);
+      pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
+      fromArr = [];
+      toArr = [];
 
+      pidFolder.sort((a, b) => { return idFilterNum(a) - idFilterNum(b); });
+
+      for (let i of pidFolder) {
+        if (i !== `.DS_Store`) {
+          shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+          fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+          toArr.push(`corePortfolio/original/${this.pid}/i${idFilter(i)}${this.pid}.jpg`);
+        }
+      }
+
+      console.log(fromArr);
+      console.log(toArr);
+      await this.mother.s3FileUpload(fromArr, toArr);
+      console.log(`s3 upload done`);
+    }
+
+    //fix dir
     console.log(await this.mother.ghostRequest("fixDir", {
       await: true,
       target: "__samba__/사진_등록_포트폴리오"
@@ -509,6 +535,50 @@ PortfolioFilter.prototype.addtionalRepair = async function (pid, tNumber) {
     await s3FileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+PortfolioFilter.prototype.rawToRaw = async function (arr) {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const errorMessage = `argument must be => [ { client: "", designer: "", pid: "", link: "" } ... ]`;
+  class RawArray extends Array {
+    constructor(arr) {
+      super();
+      if (arr.length === 0) {
+        throw new Error(errorMessage);
+      }
+      for (let i of arr) {
+        if (i.client === undefined || i.designer === undefined || i.pid === undefined || i.link === undefined) {
+          throw new Error(errorMessage);
+        }
+        this.push(i);
+      }
+    }
+  }
+  try {
+    if (!Array.isArray(arr)) {
+      throw new Error(errorMessage);
+    }
+    arr = new RawArray(arr);
+    const drive = new GoogleDrive();
+    let folderPath;
+
+    await this.static_setting();
+
+    for (let { client, designer, pid, link } of arr) {
+      folderPath = await drive.get_folder(link);
+      shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
+      shell.exec(`mv ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+      this.clientName = client;
+      this.designer = designer;
+      this.pid = pid;
+      this.apartName = "";
+      await this.total_make(true);
+    }
   } catch (e) {
     console.log(e);
   }

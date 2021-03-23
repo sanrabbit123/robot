@@ -193,4 +193,35 @@ GoogleAPIs.prototype.pythonExecute = function (target, args = [], inputObj) {
   });
 }
 
+GoogleAPIs.prototype.shellLink = function (str) {
+  let arr = str.split('/');
+  let newStr = '';
+  for (let i of arr) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      newStr += i + '/';
+    } else if (!/'/g.test(i)) {
+      newStr += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      newStr += '"' + i + '"' + '/';
+    } else {
+      newStr += i + '/';
+    }
+  }
+  newStr = newStr.slice(0, -1);
+  return newStr;
+}
+
+GoogleAPIs.prototype.parsingId = function (link) {
+  const linkArr = (link.split('?'))[0].split('/');
+  let target;
+  for (let i of linkArr) {
+    if (!/drive/gi.test(i) && !/google/gi.test(i) && !/file/gi.test(i) && !/folders/gi.test(i) && !/view/gi.test(i)) {
+      if (i.length > 12) {
+        target = i;
+      }
+    }
+  }
+  return target;
+}
+
 module.exports = GoogleAPIs;

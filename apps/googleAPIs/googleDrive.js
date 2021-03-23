@@ -8,12 +8,121 @@ const GoogleDrive = function (credentials = "default") {
 
 GoogleDrive.prototype.read_folder = function (folder_id) {
   const instance = this;
+  if (/^http/.test(folder_id) || /google/gi.test(folder_id)) {
+    folder_id = this.general.parsingId(folder_id);
+  }
   return new Promise(function (resolve, reject) {
-    instance.drive.files.list({ q: `'${folder_id}' in parents` }, (err, res) => {
-      if (err) { return reject(err) };
-      resolve(res.data.files);
+    instance.general.get_app("drive").then(function (drive) {
+      drive.files.list({ q: `'${folder_id}' in parents` }, (err, res) => {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(res.data.files);
+        }
+      });
     });
   });
+}
+
+GoogleDrive.prototype.get_file = function (file_id) {
+  const instance = this;
+  const fs = require("fs");
+  if (/^http/.test(file_id) || /google/gi.test(file_id)) {
+    file_id = this.general.parsingId(file_id);
+  }
+  return new Promise(function (resolve, reject) {
+    let fileName, saveFile, drive, dest;
+    instance.general.get_app("drive").then(function (thisApp) {
+      drive = thisApp;
+      return drive.files.get({ fileId: file_id });
+    }).then(function (file) {
+      fileName = file.data.name;
+      saveFile = process.cwd() + "/temp/" + fileName;
+      dest = fs.createWriteStream(saveFile);
+      drive.files.get({
+        fileId: file_id,
+        alt: "media"
+      }, {
+        responseType: "stream"
+      }).then(function (stream) {
+        stream.data.on("end", function () {
+          resolve(saveFile);
+        }).on("error", function (err) {
+          reject(err);
+        }).pipe(dest);
+      }).catch(function (err) {
+        reject(err);
+      });
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+GoogleDrive.prototype.get_folder = async function (folder_id) {
+  const instance = this;
+  const { fileSystem, shellLink } = this.general;
+  const shell = require("shelljs");
+  const fileSave = function (drive, file_id, file_name, target_folder) {
+    const fs = require("fs");
+    let saveFile, dest;
+    return new Promise(function (resolve, reject) {
+      saveFile = target_folder + "/" + file_name;
+      dest = fs.createWriteStream(saveFile);
+      drive.files.get({
+        fileId: file_id,
+        alt: "media"
+      }, {
+        responseType: "stream"
+      }).then(function (stream) {
+        stream.data.on("end", function () {
+          resolve(saveFile);
+        }).on("error", function (err) {
+          reject(err);
+        }).pipe(dest);
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
+  }
+  if (/^http/.test(folder_id) || /google/gi.test(folder_id)) {
+    folder_id = this.general.parsingId(folder_id);
+  }
+  try {
+    const drive = await this.general.get_app("drive");
+    const { data: { name: folderName } } = await drive.files.get({ fileId: folder_id });
+    const { data: { files } } = await drive.files.list({ q: `'${folder_id}' in parents` });
+    const targetFolderNameConst = "drive";
+    const tempFolder = process.cwd() + "/temp";
+    const tempFolderDir = await fileSystem(`readDir`, [ tempFolder ]);
+    const folderPath = tempFolder + "/" + targetFolderNameConst + "/" + folderName.replace(/[\\\/\&\= ]/g, '_');
+    let driveFolderDir, index;
+
+    //init setting
+    if (!tempFolderDir.includes(targetFolderNameConst)) {
+      shell.exec(`mkdir ${shellLink(tempFolder + "/" + targetFolderNameConst)}`);
+    }
+    driveFolderDir = await fileSystem(`readDir`, [ tempFolder + "/" + targetFolderNameConst ]);
+    for (let i of driveFolderDir) {
+      shell.exec(`rm -rf ${shellLink(tempFolder + "/" + targetFolderNameConst + "/" + i)}`);
+    }
+
+    //make folder in process temp folder
+    shell.exec(`mkdir ${shellLink(folderPath)}`);
+
+    //download files
+    index = 0;
+    for (let { id, name } of files) {
+      await this.sleep(500);
+      console.log(index, await fileSave(drive, id, name, folderPath));
+      index = index + 1;
+    }
+
+    console.log(`total: ${String(index)}`);
+    return folderPath;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 GoogleDrive.prototype.read_webView = function (file_id) {
