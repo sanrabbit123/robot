@@ -1494,7 +1494,6 @@ class DevContext extends Array {
       await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
 
 
-
       // ALIMTALK
 
       const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
@@ -1508,6 +1507,8 @@ class DevContext extends Array {
       let expiredString = '';
       let targetDesigners = [];
       let tempObj;
+      let middleDate, deadDate;
+      let rows;
 
       if (today.getDay() !== 0 && today.getDay() !== 6) {
         //pyeong-day
@@ -1536,17 +1537,34 @@ class DevContext extends Array {
         }
       }
 
+      middleDate = new Date();
+      middleDate.setHours(middleDate.getHours() + 8);
+      deadDate = new Date();
+      deadDate.setDate(deadDate.getDate() + 9);
+
       for (let { desid, designer, phone } of targetDesigners) {
-        await kakao.sendTalk(method, designer, phone, {
-          date: expiredString,
-          host: ADDRESS.homeinfo.ghost.host,
-          desid: desid,
-        });
+        console.log(method, designer, phone);
+        console.log(expiredString, ADDRESS.homeinfo.ghost.host, desid);
+        rows = await back.mongoRead("deadline", { name: "designerCheckList_" + desid }, { console: true });
+        if (rows.length > 0) {
+          await back.mongoUpdate("deadline", [ { name: "designerCheckList_" + desid }, { deadline: deadDate, middleline: middleDate } ], { console: true });
+        } else {
+          await back.mongoCreate("deadline", { deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid }, { console: true });
+        }
+        // await kakao.sendTalk(method, designer, phone, {
+        //   date: expiredString,
+        //   host: ADDRESS.homeinfo.ghost.host,
+        //   desid: desid,
+        // });
       }
 
+      await kakao.sendTalk(method, "배창규", "010-2747-3403", {
+        date: expiredString,
+        host: ADDRESS.homeinfo.ghost.host,
+        desid: "d1701_aa01s",
+      });
+
       */
-
-
 
 
       // const drive = new GoogleDrive();
@@ -1644,39 +1662,15 @@ class DevContext extends Array {
 
       //raw photo to raw portfolio
 
-      const filter = new PortfolioFilter();
-      await filter.rawToRaw([
-        {
-          client: "김혜수",
-          designer: "김지은",
-          pid: "p100",
-          link: "https://drive.google.com/drive/folders/1_rqoqwBuSVFUOrWo38kI_rk_KxFDHitz",
-        },
-        {
-          client: "안신애",
-          designer: "전경화",
-          pid: "p101",
-          link: "https://drive.google.com/drive/folders/1_h9H0evmUuvi4M4Qg7PR-rJjK9eTVQgQ",
-        },
-        {
-          client: "권용현",
-          designer: "김지은",
-          pid: "p102",
-          link: "https://drive.google.com/drive/folders/1i-YSKpx_aPiMxzF8FfgXpKza6PtKt0_H",
-        },
-        {
-          client: "장영일",
-          designer: "김경수",
-          pid: "p103",
-          link: "https://drive.google.com/drive/folders/1k44Ukc6TQkCxITSVoFl32bn4kZkMUywz",
-        },
-        {
-          client: "이상희",
-          designer: "김지은",
-          pid: "p104",
-          link: "https://drive.google.com/drive/folders/1xtXOVZ-HYUlk7TVDRnjql5Do7us2731n",
-        },
-      ]);
+      // const filter = new PortfolioFilter();
+      // await filter.rawToRaw([
+      //   {
+      //     client: "김정운",
+      //     designer: "김다래",
+      //     pid: "p106",
+      //     link: "https://drive.google.com/drive/folders/1vN6tDwrT5TttpSQR8lqxat6ZwbhYZMuJ",
+      //   },
+      // ]);
 
       // etc tools
 

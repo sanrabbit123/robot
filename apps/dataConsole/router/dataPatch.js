@@ -3696,17 +3696,17 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "믹스매치",
+              name: "글램",
               column: "mixmatch",
               value: 10
             },
             {
-              name: "오리엔탈",
+              name: "동양",
               column: "oriental",
               value: 10
             },
             {
-              name: "이그저틱",
+              name: "엑조틱",
               column: "exotic",
               value: 10
             },
@@ -3809,7 +3809,7 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "블랙앤화이트",
+              name: "고대비",
               column: "highContrast",
               value: 10
             },
@@ -3829,12 +3829,12 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
               value: 10
             },
             {
-              name: "밝은 톤",
+              name: "밝은톤",
               column: "bright",
               value: 10
             },
             {
-              name: "어두운 톤",
+              name: "다크톤",
               column: "dark",
               value: 10
             },

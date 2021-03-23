@@ -3078,13 +3078,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else {
           instance.mother.greenAlert("알림톡이 전송되었습니다!");
           //set deadline
-          if (GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] === null || GeneralJs.timeouts["linkCreateTimeout_" + thisCase[standard[1]]] === undefined) {
-            middleDate = new Date();
-            middleDate.setHours(middleDate.getHours() + 8);
-            deadDate = new Date();
-            deadDate.setDate(deadDate.getDate() + 9);
-            GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + thisCase[standard[1]], mode: "set" }), "/manageDeadline", function (res) {});
-          }
+          middleDate = new Date();
+          middleDate.setHours(middleDate.getHours() + 8);
+          deadDate = new Date();
+          deadDate.setDate(deadDate.getDate() + 9);
+          GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + thisCase[standard[1]], mode: "set" }), "/manageDeadline", function (res) {});
         }
       });
     }
