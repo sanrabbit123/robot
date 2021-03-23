@@ -1567,8 +1567,32 @@ class DevContext extends Array {
       */
 
 
-      // const drive = new GoogleDrive();
-      // console.log(await drive.get_folder("https://drive.google.com/drive/folders/1Q3SgaM4Yp-59ne720tV0eQg1hdEFK7av"));
+      const calendar = new GoogleCalendar();
+      await calendar.ready();
+
+      const allEvents = await calendar.listEvents("designerMeeting");
+      let temp, tempArr, refinedArr;
+
+      for (let { title } of allEvents) {
+        temp = title.replace(/[^가-힣]/gi, '_');
+        for (let i = 0; i < 30; i++) {
+          temp = temp.replace(/__/gi, '_');
+        }
+        temp = temp.replace(/^_/g, '').replace(/_$/g, '').trim();
+        tempArr = temp.split('_');
+        refinedArr = [];
+        for (let i of tempArr) {
+          if (!/현장/g.test(i) && !/미팅/g.test(i) && !/세팅/g.test(i) && !/셋팅/g.test(i) && i.length > 1 && !/점검/g.test(i) && !/실측/g.test(i) && !/변경예정/g.test(i) && !/다시잡아야/g.test(i) && !/이기석/g.test(i) && !/원중희/g.test(i) && !/최호식/g.test(i) && !/유창민/g.test(i)) {
+            refinedArr.push(i);
+          }
+        }
+        console.log(refinedArr);
+      }
+
+
+
+
+
 
 
       // TOOLS =========================================================================================================================================

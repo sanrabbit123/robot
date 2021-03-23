@@ -96,11 +96,8 @@ const GoogleCalendar = function (credentials = "default") {
 
 GoogleCalendar.prototype.returnCalendarIds = function () {
   const obj = {
-    photographing: "85bu1rdpu930d1bqmhvlu5c70k@group.calendar.google.com",
-    designerMeeting: "67t0gdlj7on3nnfmrnb69n9700@group.calendar.google.com",
-    blogContents: "kju44o2oej8n15tv0tlhq2ieqo@group.calendar.google.com",
-    projectCalendar: "61l8ieh4alq01846pjjqsq0o34@group.calendar.google.com",
-    clientCalendar: "khdeun9s66a70279um2n58a6no@group.calendar.google.com",
+    photographing: "d5qo2jf12banfo2m66us9qhcp4@group.calendar.google.com",
+    designerMeeting: "gb87kl84fejja1h4gggh8in6gc@group.calendar.google.com",
   };
   return obj;
 }

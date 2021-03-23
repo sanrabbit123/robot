@@ -1078,19 +1078,19 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
-        if (req.body.calendar !== undefined) {
-          tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
-          tempAspirant = tempAspirants[0];
-          if (tempAspirant.calendar.id !== "") {
-            instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
-          } else {
-            instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
-              back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
-            }).catch(function (e) {
-              console.log(e);
-            });
-          }
-        }
+        // if (req.body.calendar !== undefined) {
+        //   tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
+        //   tempAspirant = tempAspirants[0];
+        //   if (tempAspirant.calendar.id !== "") {
+        //     instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
+        //   } else {
+        //     instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
+        //       back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
+        //     }).catch(function (e) {
+        //       console.log(e);
+        //     });
+        //   }
+        // }
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
@@ -1819,43 +1819,6 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_makeSchedule = function () {
-  const instance = this;
-  const { shell, shellLink } = this.mother;
-  const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
-  let obj = {};
-  obj.link = "/makeSchedule";
-  obj.func = async function (req, res) {
-    try {
-      let { title, description, start } = JSON.parse(req.body.requestObj);
-      let to, end;
-
-      start = new Date(start);
-      if (JSON.parse(req.body.requestObj).end === undefined) {
-        end = new Date(start);
-      } else {
-        end = new Date(JSON.parse(req.body.requestObj).end);
-      }
-
-      if (req.body.to === undefined) {
-        to = "photographing";
-      } else {
-        to = req.body.to;
-      }
-
-      const calendar = new GoogleCalendar();
-      await calendar.makeSchedule(to, title, description, start, end);
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ "message": "done" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

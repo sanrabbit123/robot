@@ -2824,7 +2824,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
             description += "인터뷰어 : " + updateQuery["contents.photo.info.interviewer"];
             start = updateQuery["contents.photo.date"];
             end = updateQuery["contents.photo.date"];
-            await GeneralJs.ajaxPromise("requestObj=" + JSON.stringify({ title, description, start, end }), "/makeSchedule");
+            // await GeneralJs.ajaxPromise("requestObj=" + JSON.stringify({ title, description, start, end }), "/makeSchedule");
 
             //slack
             message = '';
