@@ -569,6 +569,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
                     checkListFactorContentsItemText.setAttribute("column", column);
                     checkListFactorContentsItemText.setAttribute("type", type);
                     checkListFactorContentsItemText.setAttribute("value", String(j + 1));
+                    checkListFactorContentsItemText.setAttribute("multiple", (type.split('.')[1] === "multiple") ? "true" : "false");
                     style = {
                       position: "absolute",
                       width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
