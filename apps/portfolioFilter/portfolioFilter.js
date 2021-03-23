@@ -176,8 +176,6 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
 
-    console.log("this1");
-
     photo_sizes = liteMode ? [ "780" ] : [ "780", "원본" ];
     for (let i of resultFolderBoo) {
       shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${i};`);
@@ -187,8 +185,6 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     resultFolder = `${this.options.result_dir}/${this.folderName}`;
     this.resultFolder = resultFolder;
     shell.exec(`mkdir ${shellLink(resultFolder)}`);
-
-    console.log("this2");
 
     for (let i of photo_sizes) {
       new_photo_name_list = [];
@@ -204,10 +200,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
     }
 
-    console.log("this3");
-
     if (!liteMode) {
-      console.log("this4");
       await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
@@ -407,11 +400,10 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }));
     console.log(`ghost request done`);
 
+    await this.mother.sleep(3000);
 
   } catch (e) {
     console.log(e);
-  } finally {
-    process.exit();
   }
 }
 

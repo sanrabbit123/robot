@@ -1553,49 +1553,6 @@ class DevContext extends Array {
       // console.log(await drive.get_folder("https://drive.google.com/drive/folders/1Q3SgaM4Yp-59ne720tV0eQg1hdEFK7av"));
 
 
-      const photo = new PortfolioFilter();
-      await photo.rawToRaw([
-        {
-          client: "조문희",
-          designer: "김남희",
-          pid: "p99",
-          link: "https://drive.google.com/drive/folders/1Q3SgaM4Yp-59ne720tV0eQg1hdEFK7av",
-        },
-        {
-          client: "김혜수",
-          designer: "김지은",
-          pid: "p100",
-          link: "https://drive.google.com/drive/folders/1_rqoqwBuSVFUOrWo38kI_rk_KxFDHitz",
-        },
-        {
-          client: "안신애",
-          designer: "전경화",
-          pid: "p101",
-          link: "https://drive.google.com/drive/folders/1_h9H0evmUuvi4M4Qg7PR-rJjK9eTVQgQ",
-        },
-        {
-          client: "권용현",
-          designer: "김지은",
-          pid: "p102",
-          link: "https://drive.google.com/drive/folders/1i-YSKpx_aPiMxzF8FfgXpKza6PtKt0_H",
-        },
-        {
-          client: "장영일",
-          designer: "김경수",
-          pid: "p103",
-          link: "https://drive.google.com/drive/folders/1k44Ukc6TQkCxITSVoFl32bn4kZkMUywz",
-        },
-        {
-          client: "이상희",
-          designer: "김지은",
-          pid: "p104",
-          link: "https://drive.google.com/drive/folders/1xtXOVZ-HYUlk7TVDRnjql5Do7us2731n",
-        },
-      ]);
-
-
-
-
       // TOOLS =========================================================================================================================================
 
 
@@ -1684,6 +1641,42 @@ class DevContext extends Array {
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p87", 3);
+
+      //raw photo to raw portfolio
+
+      const filter = new PortfolioFilter();
+      await filter.rawToRaw([
+        {
+          client: "김혜수",
+          designer: "김지은",
+          pid: "p100",
+          link: "https://drive.google.com/drive/folders/1_rqoqwBuSVFUOrWo38kI_rk_KxFDHitz",
+        },
+        {
+          client: "안신애",
+          designer: "전경화",
+          pid: "p101",
+          link: "https://drive.google.com/drive/folders/1_h9H0evmUuvi4M4Qg7PR-rJjK9eTVQgQ",
+        },
+        {
+          client: "권용현",
+          designer: "김지은",
+          pid: "p102",
+          link: "https://drive.google.com/drive/folders/1i-YSKpx_aPiMxzF8FfgXpKza6PtKt0_H",
+        },
+        {
+          client: "장영일",
+          designer: "김경수",
+          pid: "p103",
+          link: "https://drive.google.com/drive/folders/1k44Ukc6TQkCxITSVoFl32bn4kZkMUywz",
+        },
+        {
+          client: "이상희",
+          designer: "김지은",
+          pid: "p104",
+          link: "https://drive.google.com/drive/folders/1xtXOVZ-HYUlk7TVDRnjql5Do7us2731n",
+        },
+      ]);
 
       // etc tools
 
