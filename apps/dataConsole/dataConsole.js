@@ -56,7 +56,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
-    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+    // polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
 
     //write local js
     console.log(`set target :`, staticDirList);
@@ -116,10 +116,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        // finalMinifyObj = await minify((polyfillString + "\n\n" + result), { sourceMap: true });
+        // finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
         // finalMinifyString = finalMinifyObj.code;
         // await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
-        await fileSystem(`write`, [ `${staticFolder}/${i}`, polyfillString + "\n\n" + result ]);
+        await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
       }
 
     }
@@ -132,7 +132,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, isGhost) {
   const instance = this;
   const { minify } = require("terser");
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, babelSystem } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -241,8 +241,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += code3;
         result += "\n\n";
 
-        console.log(`${i} merge success`);
-        finalMinifyObj = await minify((polyfillString + "\n\n" + result), { sourceMap: true });
+        result = await babelSystem(result);
+
+        console.log(`${i} babel compile success`);
+        finalMinifyObj = await minify((polyfillString + "\n\n" + result), { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
         finalMinifyString = finalMinifyObj.code;
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
       }
