@@ -1341,11 +1341,7 @@ SurveyJs.prototype.launching = async function (loading) {
       phone = thisPerson.information.phone;
       designer = thisPerson.designer;
 
-      //test
-      instance.confirmLaunching(desid, designer);
-
       //get dead line
-      /*
       GeneralJs.ajax("json=" + JSON.stringify({ mode: "get", name: "designerCheckList_" + desid }), "/manageDeadline", function (json) {
         const { expired, dead } = JSON.parse(json);
         if (!dead) {
@@ -1365,7 +1361,6 @@ SurveyJs.prototype.launching = async function (loading) {
           window.location.href = "https://home-liaison.com";
         }
       });
-      */
     }
   } catch (e) {
     console.log(e);

@@ -151,6 +151,14 @@ module.exports = function () {
     box-shadow: 0px 5px 15px -14px #404040;
     z-index: 1;
   }
+  .backblurdefault {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .backblurdefault_lite {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+  }
 
 
   @media (min-width:1611px) {

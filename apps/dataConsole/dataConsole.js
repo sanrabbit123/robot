@@ -7,6 +7,7 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
+  const { minify } = require("terser");
   const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = address.host;
@@ -44,6 +45,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
+    let finalMinifyObj, finalMinifyString;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -114,7 +116,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        await fileSystem(`write`, [ `${staticFolder}/${i}`, (polyfillString + "\n\n" + result) ]);
+        // finalMinifyObj = await minify((polyfillString + "\n\n" + result), { sourceMap: true });
+        // finalMinifyString = finalMinifyObj.code;
+        // await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
+        await fileSystem(`write`, [ `${staticFolder}/${i}`, polyfillString + "\n\n" + result ]);
       }
 
     }
@@ -126,6 +131,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, isGhost) {
   const instance = this;
+  const { minify } = require("terser");
   const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
@@ -150,6 +156,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
+    let finalMinifyObj, finalMinifyString;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -235,7 +242,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, (polyfillString + "\n\n" + result) ]);
+        finalMinifyObj = await minify((polyfillString + "\n\n" + result), { sourceMap: true });
+        finalMinifyString = finalMinifyObj.code;
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
       }
 
     }
@@ -292,7 +301,7 @@ DataConsole.prototype.connect = async function () {
   const multer = require("multer");
   const multiForms = multer();
   const useragent = require("express-useragent");
-  const staticFolder = process.env.HOME + '/static';
+  const staticFolder = process.env.HOME + "/static";
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -394,6 +403,11 @@ DataConsole.prototype.connect = async function () {
     await this.renderStatic(staticFolder, address, DataPatch, isGhost);
     if (DataMiddle !== null) {
       await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+    }
+
+    //set binary
+    if (!/localhost/gi.test(address.host)) {
+      await DataMiddle.middleBinary();
     }
 
     //error handle

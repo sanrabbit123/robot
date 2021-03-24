@@ -141,157 +141,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
   const ADDRESS = this.address;
   const DataPatch = this.patchClass;
   const DataMiddle = this.middle;
-  let html, fontStyle;
-
-  fontStyle = `
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
-      font-weight: 700;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
-      font-weight: 400;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
-      font-weight: 500;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
-      font-weight: 800;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
-      font-weight: 600;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
-      font-weight: 200;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
-      font-weight: 100;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
-      font-weight: 900;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'sandoll';
-      src: url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
-      font-weight: 300;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'Futura';
-      src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Medium.woff') format('woff');
-      font-weight: 500;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'Futura';
-      src: url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/futura/Futura-Bold.woff') format('woff');
-      font-weight: 600;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Light.woff') format('woff');
-      font-weight: 200;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
-      font-weight: 200;
-      font-style: italic;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Regular.woff') format('woff');
-      font-weight: 300;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
-      font-weight: 300;
-      font-style: italic;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Medium.woff') format('woff');
-      font-weight: 400;
-      font-style: normal;
-  }
-
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
-      font-weight: 400;
-      font-style: italic;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
-      font-weight: 500;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
-      font-weight: 500;
-      font-style: italic;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-Bold.woff') format('woff');
-      font-weight: 600;
-      font-style: normal;
-  }
-  @font-face {
-      font-family: 'graphik';
-      src: url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
-          url('${ADDRESS.s3info.host}/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
-      font-weight: 600;
-      font-style: italic;
-  }`;
+  let html;
 
   if (mode === "first") {
 
@@ -301,7 +151,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
         <title>HomeLiaison Console: ${target}</title>
-        <style>${fontStyle}</style>
+        <style></style>
       </head>
       <body>
         <div id="totalcontents"></div>
@@ -318,7 +168,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
 
     return new Promise(function(resolve, reject) {
       if (DataMiddle !== null) {
-        DataMiddle.baseHtml(target, fontStyle, req).then(function (html) {
+        DataMiddle.baseHtml(target, req).then(function (html) {
           resolve(html);
         }).catch(function (e) {
           reject(e);
@@ -1750,19 +1600,19 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
-        if (req.body.calendar !== undefined) {
-          tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
-          tempAspirant = tempAspirants[0];
-          if (tempAspirant.calendar.id !== "") {
-            instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
-          } else {
-            instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
-              back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
-            }).catch(function (e) {
-              console.log(e);
-            });
-          }
-        }
+        // if (req.body.calendar !== undefined) {
+        //   tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
+        //   tempAspirant = tempAspirants[0];
+        //   if (tempAspirant.calendar.id !== "") {
+        //     instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
+        //   } else {
+        //     instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
+        //       back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
+        //     }).catch(function (e) {
+        //       console.log(e);
+        //     });
+        //   }
+        // }
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
@@ -2491,43 +2341,6 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_makeSchedule = function () {
-  const instance = this;
-  const { shell, shellLink } = this.mother;
-  const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
-  let obj = {};
-  obj.link = "/makeSchedule";
-  obj.func = async function (req, res) {
-    try {
-      let { title, description, start } = JSON.parse(req.body.requestObj);
-      let to, end;
-
-      start = new Date(start);
-      if (JSON.parse(req.body.requestObj).end === undefined) {
-        end = new Date(start);
-      } else {
-        end = new Date(JSON.parse(req.body.requestObj).end);
-      }
-
-      if (req.body.to === undefined) {
-        to = "photographing";
-      } else {
-        to = req.body.to;
-      }
-
-      const calendar = new GoogleCalendar();
-      await calendar.makeSchedule(to, title, description, start, end);
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ "message": "done" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

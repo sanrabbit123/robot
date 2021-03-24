@@ -15,7 +15,62 @@ MiddleCommunication.prototype.setMetadata = function (property, value) {
   this.meta[property] = value;
 }
 
-MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '', req) {
+MiddleCommunication.prototype.middleBinary = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink, s3FileList, binaryRequest } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const S3HOST = ADDRESS["s3info"]["host"];
+  const binaryPathConst = "dataConsole/middle";
+  const staticFolder = process.env.HOME + "/static";
+  try {
+    const middleBinaries = await s3FileList(binaryPathConst);
+    const staticDir = await fileSystem(`readDir`, [ staticFolder ]);
+    let staticMiddleDir;
+    let tempArr, refined, targets;
+    let binaryTarget;
+    let tempObject;
+
+    //set middle targets
+    refined = [];
+    for (let i of middleBinaries) {
+      tempArr = i.split('/');
+      if (tempArr.length > 3) {
+        refined.push(tempArr[2]);
+      }
+    }
+    targets = Array.from(new Set(refined));
+
+    //static setting and download binary
+    if (!staticDir.includes("middle")) {
+      shell.exec(`mkdir ${shellLink(staticFolder)}/middle`);
+    }
+    staticMiddleDir = await fileSystem(`readDir`, [ staticFolder + "/middle" ]);
+    for (let i of targets) {
+      binaryTarget = [];
+      if (!staticMiddleDir.includes(i)) {
+        shell.exec(`mkdir ${shellLink(staticFolder + "/middle/" + i)}`);
+      }
+      for (let b of middleBinaries) {
+        tempArr = b.split('/');
+        if (tempArr.length > 3) {
+          if (tempArr[2] === i && tempArr[3] !== '') {
+            binaryTarget.push(tempArr.join('/'));
+          }
+        }
+      }
+      for (let b of binaryTarget) {
+        tempObject = await binaryRequest(S3HOST + "/" + b);
+        await fileSystem(`writeBinary`, [ staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1], tempObject ]);
+        console.log(`binary "${b}" download done`);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MiddleCommunication.prototype.baseHtml = async function (target, req) {
   const instance = this;
   const back = this.back;
   const { fileSystem } = this.mother;
@@ -73,7 +128,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, fontStyle = '',
         <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">
         <meta name="description" content="${descriptionString}">
         <title>${titleString}</title>
-        <style>${fontStyle}</style>
+        <style></style>
       </head>
       <body>
         <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>

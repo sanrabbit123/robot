@@ -27,6 +27,7 @@ const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
 const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
 const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
+const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 
 class DevContext extends Array {
 
@@ -1551,29 +1552,42 @@ class DevContext extends Array {
         } else {
           await back.mongoCreate("deadline", { deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid }, { console: true });
         }
-        // await kakao.sendTalk(method, designer, phone, {
-        //   date: expiredString,
-        //   host: ADDRESS.homeinfo.ghost.host,
-        //   desid: desid,
-        // });
+        await kakao.sendTalk(method, designer, phone, {
+          date: expiredString,
+          host: ADDRESS.homeinfo.ghost.host,
+          desid: desid,
+        });
       }
 
-      await kakao.sendTalk(method, "배창규", "010-2747-3403", {
-        date: expiredString,
-        host: ADDRESS.homeinfo.ghost.host,
-        desid: "d1701_aa01s",
-      });
+
 
       */
 
+
+
+
+      //CALENDAR to mongo
+      /*
+      const targetProjects = await back.getProjectsByQuery({ $and: [ { "desid": { $regex: "^d" } }, { "process.status": { $regex: "^[진완]" } }, { "process.contract.meeting.date": { $lte: new Date(2000, 0, 1) } } ] }, { selfMongo: this.MONGOC });
+      let targetProidArr = [];
+      for (let { proid } of targetProjects) {
+        targetProidArr.push(proid);
+      }
 
       const calendar = new GoogleCalendar();
       await calendar.ready();
 
       const allEvents = await calendar.listEvents("designerMeeting");
-      let temp, tempArr, refinedArr;
+      let temp, tempArr, tempObj;
+      let refinedArr;
+      let thisProjects, thisProject;
+      let whereQuery, updateQuery;
+      let tempMeetingDate;
+      let targetObj;
 
-      for (let { title } of allEvents) {
+      tempMeetingDate = new Map();
+
+      for (let { title, date: { start } } of allEvents) {
         temp = title.replace(/[^가-힣]/gi, '_');
         for (let i = 0; i < 30; i++) {
           temp = temp.replace(/__/gi, '_');
@@ -1586,9 +1600,48 @@ class DevContext extends Array {
             refinedArr.push(i);
           }
         }
-        console.log(refinedArr);
+        thisProjects = await back.getProjectsByNames(refinedArr, { selfMongo: this.MONGOC });
+        if (thisProjects.length === 1) {
+          thisProject = thisProjects[0];
+          whereQuery = { proid: thisProject.proid };
+          updateQuery = {};
+          updateQuery["process.contract.meeting.date"] = start;
+          if (targetProidArr.includes(thisProject.proid)) {
+            await back.updateProject([ whereQuery, updateQuery ], { selfMongo: this.MONGOC });
+          }
+        } else if (thisProjects.length > 1) {
+          if (tempMeetingDate.get(thisProjects[0].proid) === undefined || tempMeetingDate.get(thisProjects[0].proid) === null) {
+            tempMeetingDate.set(thisProjects[0].proid, {
+              date: [ start ],
+              projects: thisProjects
+            });
+          } else {
+            tempObj = tempMeetingDate.get(thisProjects[0].proid);
+            tempObj.date.push(start);
+          }
+        }
       }
 
+      for (let i of tempMeetingDate) {
+        targetObj = i[1];
+        targetObj.date.sort((a, b) => {
+          return b.valueOf() - a.valueOf();
+        });
+        targetObj.projects.sort((a, b) => {
+          return b.proposal.date.valueOf() - a.proposal.date.valueOf();
+        });
+
+        for (let j = 0; j < targetObj.projects.length; j++) {
+          whereQuery = { proid: targetObj.projects[j].proid };
+          updateQuery = {};
+          updateQuery["process.contract.meeting.date"] = targetObj.date[j];
+          if (targetProidArr.includes(targetObj.projects[j].proid)) {
+            await back.updateProject([ whereQuery, updateQuery ], { selfMongo: this.MONGOC });
+          }
+        }
+      }
+
+      */
 
 
 

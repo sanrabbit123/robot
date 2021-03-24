@@ -859,7 +859,7 @@ DesignerJs.prototype.infoArea = function (info) {
           }
 
           arr.sort((a, b) => {
-            if (/^[0-9]/.test(a.caseDom.children[z].textContent) && !/\-/g.test(a.caseDom.children[z].textContent)) {
+            if ((/^[0-9]/.test(a.caseDom.children[z].textContent) && !/\-/g.test(a.caseDom.children[z].textContent)) || /d[0-9]+/g.test(a.caseDom.children[z].textContent)) {
               if (toggle) {
                 return Number(a.caseDom.children[z].textContent.replace(/[^0-9\.]/g, '')) - Number(b.caseDom.children[z].textContent.replace(/[^0-9\.]/g, ''));
               } else {

@@ -106,6 +106,7 @@ def searchDir(target, detail=False):
     return tempArr4
 
 try:
+    BUCKETNAMECONST = "homeliaison"
     data = getBridge()
 
     if argv[1] == "fileUpload":
@@ -116,13 +117,36 @@ try:
 
         for i in range(fromListLength):
             with open(fromList[i], "rb") as fileBuffer:
-                s3.Bucket("homeliaison").put_object(Key=toList[i], Body=fileBuffer)
+                s3.Bucket(BUCKETNAMECONST).put_object(Key=toList[i], Body=fileBuffer)
 
         print(dumps({ "message": "upload success" }))
 
     elif argv[1] == "searchDir":
         dirList = searchDir(data["directory"])
         print(dumps(dirList))
+
+    elif argv[1] == "listBucket":
+
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket(BUCKETNAMECONST)
+
+        tong = []
+        for obj in bucket.objects.filter(Prefix=data["search"]):
+            tong.append(obj.key)
+
+        print(dumps({ "message": tong }))
+
+    elif argv[1] == "listBucketAll":
+
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket(BUCKETNAMECONST)
+
+        tong = []
+        for obj in bucket.objects.all():
+            tong.append(obj.key)
+
+        print(dumps({ "message": tong }))
+
 
 except Exception as e:
     print(e)

@@ -2586,30 +2586,47 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
 }
 
 BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null }) {
-  if (Array.isArray(nameArr)) {
-    if (nameArr.length !== 2) {
-      throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
-    }
-  } else if (typeof nameArr === "object") {
-    if (nameArr.client !== undefined && nameArr.designer !== undefined) {
-      nameArr = [ nameArr.client, nameArr.designer ];
-    } else if (nameArr.clientName !== undefined && nameArr.designerName !== undefined) {
-      nameArr = [ nameArr.clientName, nameArr.designerName ];
+  const instance = this;
+  let confirmMode = false;
+  try {
+    if (Array.isArray(nameArr)) {
+      if (nameArr.length < 2) {
+        throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
+      }
+    } else if (typeof nameArr === "object") {
+      if (nameArr.client !== undefined && nameArr.designer !== undefined) {
+        nameArr = [ nameArr.client, nameArr.designer ];
+      } else if (nameArr.clientName !== undefined && nameArr.designerName !== undefined) {
+        nameArr = [ nameArr.clientName, nameArr.designerName ];
+      } else {
+        throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
+      }
+      confirmMode = true;
     } else {
       throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
     }
-  } else {
-    throw new Error("invaild arguments : nameArr must be Array: [ String: client name, String: designer name ]");
-  }
-  const instance = this;
-  try {
-    const [ name, designer ] = nameArr;
+    let searchQuery_client, searchQuery_designer;
     let clients, designers, projects;
     let allCases, tempArr;
     let whereQuery;
 
-    clients = await this.getClientsByQuery({ name }, option);
-    designers = await this.getDesignersByQuery({ designer }, option);
+    searchQuery_client = {};
+    searchQuery_client["$or"] = [];
+    searchQuery_designer = {};
+    searchQuery_designer["$or"] = [];
+
+    if (!confirmMode) {
+      for (let i of nameArr) {
+        searchQuery_client["$or"].push({ name: i });
+        searchQuery_designer["$or"].push({ designer: i });
+      }
+    } else {
+      searchQuery_client = { name: nameArr[0] };
+      searchQuery_designer = { designer: nameArr[1] };
+    }
+
+    clients = await this.getClientsByQuery(searchQuery_client, option);
+    designers = await this.getDesignersByQuery(searchQuery_designer, option);
 
     if (clients.length === 0 || designers.length === 0) {
       return [];
