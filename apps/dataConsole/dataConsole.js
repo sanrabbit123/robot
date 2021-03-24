@@ -406,7 +406,7 @@ DataConsole.prototype.connect = async function () {
     }
 
     //set binary
-    if (!/localhost/gi.test(address.host)) {
+    if (!/localhost/gi.test(address.host) && DataMiddle !== null) {
       await DataMiddle.middleBinary();
     }
 
