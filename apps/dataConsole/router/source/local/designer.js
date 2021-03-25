@@ -763,7 +763,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction = new Function(thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
@@ -2288,7 +2288,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction = new Function(thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";

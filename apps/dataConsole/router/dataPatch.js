@@ -623,25 +623,25 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
     info: [
       { name: "상태", target: "status" },
       { name: "응대", target: "action" },
-      { name: "전화 예정", target: "next" },
-      { name: "연락 기록", target: "callHistory" },
-      { name: "채널 등록", target: "kakao" },
-      { name: "현장 사진", target: "spacePicture" },
-      { name: "선호 사진", target: "preferPicture" },
-      { name: "예상 서비스", target: "service" },
       { name: "문의일", target: "timeline" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
+      { name: "채널 등록", target: "kakao" },
+      { name: "현장 사진", target: "spacePicture" },
+      { name: "선호 사진", target: "preferPicture" },
+      { name: "사전 점검일", target: "precheck" },
+      { name: "집 비는 날", target: "empty" },
+      { name: "입주 예정일", target: "movein" },
+      { name: "거주중", target: "living" },
+      { name: "예상 서비스", target: "service" },
       { name: "예산", target: "budget" },
       { name: "주소", target: "address" },
       { name: "계약 상태", target: "contract" },
       { name: "평수", target: "pyeong" },
-      { name: "거주중", target: "living" },
-      { name: "사전 점검일", target: "precheck" },
-      { name: "집 비는 날", target: "empty" },
-      { name: "입주 예정일", target: "movein" },
+      { name: "방", target: "room" },
+      { name: "화장실", target: "bathroom" },
+      { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
-      { name: "요청 사항", target: "comment" },
     ],
   };
 
@@ -649,7 +649,8 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.clientMap = function () {
-  const statusToObject = function (value, pastValue, vaildMode) {
+  const statusToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -668,7 +669,8 @@ DataPatch.prototype.clientMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function (mother, input, callback) {
+  const statusInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -803,7 +805,8 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const callHistoryToObject = function (value, pastValue, vaildMode) {
+  const callHistoryToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
 
@@ -1029,7 +1032,8 @@ DataPatch.prototype.clientMap = function () {
 
     return arr;
   };
-  const callHistoryInputFunction = function (mother, input, callback) {
+  const callHistoryInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let ea = "px";
     let height, fontSize, top, width;
@@ -1121,7 +1125,7 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       background: "#2fa678",
       width: String(width) + ea,
-      height: (GeneralJs.isMac() ? "96%" : "100%"),
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(0) + ea,
       borderRadius: String(3) + ea,
@@ -1209,7 +1213,8 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const serviceToObject = function (value, pastValue, vaildMode) {
+  const serviceToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj;
     let temp;
     let boo = false;
@@ -1244,7 +1249,8 @@ DataPatch.prototype.clientMap = function () {
 
     return obj;
   };
-  const serviceInputFunction = function (mother, input, callback) {
+  const serviceInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -1401,9 +1407,9 @@ DataPatch.prototype.clientMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
-      top: GeneralJs.isMac() ? "15%" : "22%",
+      top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -1708,7 +1714,8 @@ DataPatch.prototype.designerWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.designerMap = function () {
-  const snsToObject = function (value, pastValue, vaildMode) {
+  const snsToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let arr = [];
     let obj;
     let temp, temp2;
@@ -1757,7 +1764,8 @@ DataPatch.prototype.designerMap = function () {
 
     return arr;
   };
-  const snsInputFunction = function (mother, input, callback) {
+  const snsInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -1891,7 +1899,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2052,7 +2060,8 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const careerToObject = function (value, pastValue, vaildMode) {
+  const careerToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj = {};
     let boo = false;
     let temp;
@@ -2097,7 +2106,8 @@ DataPatch.prototype.designerMap = function () {
 
     return obj;
   };
-  const careerInputFunction = function (mother, input, callback) {
+  const careerInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -2207,7 +2217,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2283,7 +2293,8 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const accountToObject = function (value, pastValue, vaildMode) {
+  const accountToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let arr = [];
     let obj;
     let temp, temp2;
@@ -2333,7 +2344,8 @@ DataPatch.prototype.designerMap = function () {
 
     return arr;
   };
-  const accountInputFunction = function (mother, input, callback) {
+  const accountInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -2471,7 +2483,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2588,7 +2600,8 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const filesToObject = function (value, pastValue, vaildMode) {
+  const filesToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj;
     let temp;
     let boo = false;
@@ -2624,7 +2637,8 @@ DataPatch.prototype.designerMap = function () {
 
     return obj;
   };
-  const filesInputFunction = function (mother, input, callback) {
+  const filesInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -2750,7 +2764,7 @@ DataPatch.prototype.designerMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -2813,7 +2827,8 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const statusToObject = function (value, pastValue, vaildMode) {
+  const statusToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -2832,7 +2847,8 @@ DataPatch.prototype.designerMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function (mother, input, callback) {
+  const statusInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -4676,7 +4692,8 @@ DataPatch.prototype.projectChainingTarget = function () {
 }
 
 DataPatch.prototype.projectMap = function () {
-  const accountToObject = function (value, pastValue, vaildMode) {
+  const accountToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj;
     let temp;
     let boo = false;
@@ -4711,7 +4728,8 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const accountInputFunction = function (mother, input, callback) {
+  const accountInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -4834,7 +4852,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -4897,7 +4915,8 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const methodToObject = function (value, pastValue, vaildMode) {
+  const methodToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj;
     let temp;
     let boo = false;
@@ -4932,7 +4951,8 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const methodInputFunction = function (mother, input, callback) {
+  const methodInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5055,7 +5075,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -5118,7 +5138,8 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const serviceToObject = function (value, pastValue, vaildMode) {
+  const serviceToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let obj;
     let temp;
     let boo = false;
@@ -5153,7 +5174,8 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const serviceInputFunction = function (mother, input, callback) {
+  const serviceInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5310,9 +5332,9 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
-      top: GeneralJs.isMac() ? "15%" : "22%",
+      top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
       border: String(0),
       cursor: "pointer",
@@ -5434,7 +5456,8 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const designerToObject = function (value, pastValue, vaildMode) {
+  const designerToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -5451,7 +5474,8 @@ DataPatch.prototype.projectMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function (mother, input, callback) {
+  const designerInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5576,7 +5600,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
@@ -5619,7 +5643,8 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const statusToObject = function (value, pastValue, vaildMode) {
+  const statusToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -5638,7 +5663,8 @@ DataPatch.prototype.projectMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function (mother, input, callback) {
+  const statusInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -5770,7 +5796,8 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const remainPureToObject = function (value, pastValue, vaildMode) {
+  const remainPureToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let result;
     let boo = false;
     let num;
@@ -5804,7 +5831,8 @@ DataPatch.prototype.projectMap = function () {
     return Number(result + 330000);
   };
 
-  const callHistoryToObject = function (value, pastValue, vaildMode) {
+  const callHistoryToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
 
@@ -6030,7 +6058,8 @@ DataPatch.prototype.projectMap = function () {
 
     return arr;
   };
-  const callHistoryInputFunction = function (mother, input, callback) {
+  const callHistoryInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let ea = "px";
     let height, fontSize, top, width;
@@ -6122,7 +6151,7 @@ DataPatch.prototype.projectMap = function () {
       textAlign: "center",
       background: "#2fa678",
       width: String(width) + ea,
-      height: (GeneralJs.isMac() ? "96%" : "100%"),
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(5) + ea,
       borderRadius: String(3) + ea,
@@ -6426,7 +6455,8 @@ DataPatch.prototype.contentsWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.contentsMap = function () {
-  const designerToObject = function (value, pastValue, vaildMode) {
+  const designerToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -6443,7 +6473,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function (mother, input, callback) {
+  const designerInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -6568,7 +6599,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,
@@ -6611,7 +6642,8 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const colorToObject = function (value, pastValue, vaildMode) {
+  const colorToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -6656,7 +6688,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const colorInputFunction = function (mother, input, callback) {
+  const colorInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -6787,7 +6820,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -6860,7 +6893,8 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const photodaeToObject = function (value, pastValue, vaildMode) {
+  const photodaeToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -6908,7 +6942,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const photodaeInputFunction = function (mother, input, callback) {
+  const photodaeInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -7033,7 +7068,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -7104,7 +7139,8 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const photosgToObject = function (value, pastValue, vaildMode) {
+  const photosgToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7156,7 +7192,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const photosgInputFunction = function (mother, input, callback) {
+  const photosgInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -7281,7 +7318,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -7352,7 +7389,8 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const slideToObject = function (value, pastValue, vaildMode) {
+  const slideToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7393,7 +7431,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const slideInputFunction = function (mother, input, callback) {
+  const slideInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle;
     let ea = "px";
@@ -7499,7 +7538,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -7553,7 +7592,8 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const tagToObject = function (value, pastValue, vaildMode) {
+  const tagToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7583,7 +7623,8 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const tagInputFunction = function (mother, input, callback) {
+  const tagInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -7684,7 +7725,7 @@ DataPatch.prototype.contentsMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: String(GeneralJs.isMac() ? 0 : 2) + ea,
       borderRadius: String(3) + ea,
@@ -8084,7 +8125,8 @@ DataPatch.prototype.photoChainingTarget = function () {
 }
 
 DataPatch.prototype.photoMap = function () {
-  const statusToObject = function (value, pastValue, vaildMode) {
+  const statusToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8103,7 +8145,8 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function (mother, input, callback) {
+  const statusInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8234,7 +8277,8 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const photoBooToObject = function (value, pastValue, vaildMode) {
+  const photoBooToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8253,7 +8297,8 @@ DataPatch.prototype.photoMap = function () {
 
     return Boolean(finalValue);
   };
-  const photoBooInputFunction = function (mother, input, callback) {
+  const photoBooInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8381,7 +8426,8 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const photoStatusToObject = function (value, pastValue, vaildMode) {
+  const photoStatusToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8400,7 +8446,8 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const photoStatusInputFunction = function (mother, input, callback) {
+  const photoStatusInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8531,7 +8578,8 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const designerToObject = function (value, pastValue, vaildMode) {
+  const designerToObject = function () {
+    let [ value, pastValue, vaildMode ] = Array.from(arguments);
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -8548,7 +8596,8 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function (mother, input, callback) {
+  const designerInputFunction = function () {
+    let [ mother, input, callback ] = Array.from(arguments);
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -8673,7 +8722,7 @@ DataPatch.prototype.photoMap = function () {
       textAlign: "center",
       background: "transparent",
       width: "100%",
-      height: "96%",
+      height: (GeneralJs.isMac() ? "95%" : "100%"),
       left: String(0) + ea,
       top: GeneralJs.isMac() ? "19%" : "22%",
       borderRadius: String(3) + ea,

@@ -116,10 +116,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        // finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
-        // finalMinifyString = finalMinifyObj.code;
-        // await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
-        await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
+        finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
+        finalMinifyString = finalMinifyObj.code;
+        await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
+        // await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
       }
 
     }
@@ -244,7 +244,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result = await babelSystem(result);
 
         console.log(`${i} babel compile success`);
-        finalMinifyObj = await minify((polyfillString + "\n\n" + result), { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
+        finalMinifyObj = await minify(polyfillString + "\n\n" + result);
         finalMinifyString = finalMinifyObj.code;
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
       }

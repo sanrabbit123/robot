@@ -1959,7 +1959,7 @@ AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
           cancel_inputBack.style.background = "white";
           cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction = new Function(thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
