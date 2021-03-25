@@ -957,7 +957,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           }
           break;
         case "object":
-          tempFunction = new Function(map[column].objectFunction);
+          tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
           finalValue = tempFunction(value, pastValue, false);
           pastFinalValue = tempFunction(pastValue, pastValue, false);
           break;
