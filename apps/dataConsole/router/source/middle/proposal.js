@@ -203,11 +203,15 @@ ProposalJs.prototype.insertInitBox = function () {
   let titleFont, titleLeft, titleFontWeight;
   let barWidth, barLeft;
   let indexFont, indexFontWeight;
+  let doubleQuote;
+  let quoteTop, quoteLeft, quoteHeight, quoteWidth, quoteMarginBottom;
+  let initWordingSize, initWordingHeight, initWordingWordSpacing, initWordingLineHeight;
+  let factorBox, clientFactor, factorStyle;
 
   blockHeight = this.backHeight - 360;
   bottomMargin = 16;
   margin = 52;
-  leftRatio = 0.3;
+  leftRatio = 0.36;
 
   titleFont = 32;
   titleLeft = 8;
@@ -219,6 +223,16 @@ ProposalJs.prototype.insertInitBox = function () {
 
   indexFont = 20;
   indexFontWeight = 200;
+
+  quoteTop = 8;
+  quoteHeight = 12;
+  quoteMarginBottom = 7;
+  quoteLeft = 2;
+
+  initWordingHeight = 20;
+  initWordingSize = 15.5;
+  initWordingWordSpacing = -1;
+  initWordingLineHeight = 9;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -328,6 +342,84 @@ ProposalJs.prototype.insertInitBox = function () {
   for (let i in style) {
     rightBox.style[i] = style[i];
   }
+
+  //quote
+  doubleQuote = SvgTong.stringParsing(this.mother.returnQuotes(GeneralJs.colorChip.green));
+  quoteWidth = SvgTong.getRatio(doubleQuote) * quoteHeight;
+  style = {
+    position: "absolute",
+    top: String(quoteTop) + ea,
+    left: String(quoteLeft) + ea,
+    width: String(quoteWidth) + ea,
+    height: String(quoteHeight) + ea,
+  };
+  for (let i in style) {
+    doubleQuote.style[i] = style[i];
+  }
+  rightBox.appendChild(doubleQuote);
+
+  //init wording - 0
+  initWordingBox = GeneralJs.nodes.div.cloneNode(true);
+  initWordingBox.textContent = "김연희 고객님께 고객 맞춤 커스터마이징 : 토탈 스타일링 서비스를 제안드립니다.";
+  style = {
+    position: "absolute",
+    top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
+    left: String(0) + ea,
+    width: String(100) + '%',
+    height: String(initWordingHeight) + ea,
+    fontSize: String(initWordingSize) + ea,
+    fontWeight: String(400),
+    wordSpacing: String(initWordingWordSpacing) + ea,
+  };
+  for (let i in style) {
+    initWordingBox.style[i] = style[i];
+  }
+  rightBox.appendChild(initWordingBox);
+
+  //init wording - 1
+  initWordingBox = GeneralJs.nodes.div.cloneNode(true);
+  initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
+  style = {
+    position: "absolute",
+    top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
+    left: String(0) + ea,
+    width: String(100) + '%',
+    height: String(initWordingHeight) + ea,
+    fontSize: String(initWordingSize) + ea,
+    fontWeight: String(400),
+    wordSpacing: String(initWordingWordSpacing) + ea,
+  };
+  for (let i in style) {
+    initWordingBox.style[i] = style[i];
+  }
+  rightBox.appendChild(initWordingBox);
+
+  //client factors
+  factorBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    width: String(100) + ea,
+    height: String(100) + ea,
+    background: "aliceblue",
+  };
+  for (let i in style) {
+    factorBox.style[i] = style[i];
+  }
+
+  factorStyle = {
+    position: "absolute",
+  };
+
+  for (let i = 0; i < 6; i++) {
+    clientFactor = GeneralJs.nodes.div.cloneNode(true);
+    for (let j in factorStyle) {
+      clientFactor.style[j] = factorStyle[j];
+    }
+
+
+    factorBox.appendChild(clientFactor);
+  }
+  rightBox.appendChild(factorBox);
   whiteBlock.appendChild(rightBox);
 
   this.baseTong.appendChild(whiteBlock);

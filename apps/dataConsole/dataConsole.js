@@ -7,7 +7,6 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
-  const { minify } = require("terser");
   const { fileSystem, shell, shellLink } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = address.host;
@@ -116,9 +115,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        // finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
-        // finalMinifyString = finalMinifyObj.code;
-        // await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
         await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
       }
 
@@ -241,14 +237,14 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += code3;
         result += "\n\n";
 
-        // result = await babelSystem(result);
-        // console.log(`${i} babel compile success`);
-        // finalMinifyObj = await minify(polyfillString + "\n\n" + result);
-        // finalMinifyString = finalMinifyObj.code;
-        // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
+        result = await babelSystem(result);
+        console.log(`${i} babel compile success`);
+        finalMinifyObj = await minify(polyfillString + "\n\n" + result);
+        finalMinifyString = finalMinifyObj.code;
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
 
-        console.log(`${i} merge success`);
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
+        // console.log(`${i} merge success`);
+        // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
       }
 
     }

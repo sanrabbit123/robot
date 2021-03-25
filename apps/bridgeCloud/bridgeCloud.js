@@ -861,7 +861,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             upload1: "preferredPhoto"
           };
           let list = [];
-          for (let i = 0; i < filesKeys.length; i++) { list.push(uploadMap[filesKeys[i]]); }
+          for (let i = 0; i < filesKeys.length; i++) {
+            list.push(uploadMap[filesKeys[i]]);
+          }
 
           const binaryFolder = instance.dir + "/binary";
           const binrayFolderTest = new RegExp(cilentFolderName, 'g');

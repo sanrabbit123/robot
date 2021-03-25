@@ -1601,11 +1601,26 @@ class DevContext extends Array {
       */
 
 
+      // const axios = require('axios');
+      // const FormData = require('form-data');
+      // const fs = require('fs');
+      //
+      // let form = new FormData();
+      //
+      // form.append('my_file', fs.createReadStream('/Users/baechang-gyu/Downloads/back.jpg'));
+      //
+      // let formHeaders = form.getHeaders();
+      //
+      // axios.post('http://172.30.1.58:3001/api/upload', form, { headers: { ...formHeaders } }).then(function (response) {
+      //   console.log(response.data);
+      // }).catch(function (error) {
+      //   console.log(error);
+      //   console.log("error");
+      // });
 
 
 
-
-      // TOOLS =========================================================================================================================================
+      // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
       // get sheets

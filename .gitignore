@@ -13,3 +13,4 @@ lib/
 pyvenv.cfg
 apps/dataConsole/log/
 apps/dataConsole/router/dataRouter.js
+ghost2.js

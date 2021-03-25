@@ -41,6 +41,7 @@ const Ghost = function () {
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
   this.pythonApp = process.cwd() + "/ghost.py";
+  this.formidable = require('formidable');
 }
 
 Ghost.prototype.objectToCron = function (obj = {}) {
@@ -225,12 +226,31 @@ Ghost.prototype.requestObject = async function () {
     //   }
     // }
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    return { json, to };
+    let order;
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    order = '';
+    order += "curl"
+    order += " ";
+    order += "-d";
+    order += " ";
+    order += "'";
+    order += JSON.stringify(json);
+    order += "'";
+    order += " ";
+    order += '-H "Content-Type: application/json" -X POST ';
+
+    order += to;
+
+    const { stdout } = shell.exec(order, { silent: true });
+    if (/^[\[\{]/.test(stdout.trim())) {
+      console.log(JSON.parse(stdout.trim()));
+    } else {
+      console.log(stdout);
+    }
 
   } catch (e) {
     console.log(e);
@@ -806,7 +826,54 @@ Ghost.prototype.photorawRouter = function (needs) {
   return resultObj;
 }
 
-Ghost.prototype.launching = async function () {
+Ghost.prototype.fileRouter = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let funcObj = {};
+
+  //POST - file upload
+  funcObj.post_file = {
+    link: [ "/file", "/upload" ],
+    func: function (req, res) {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, function (err, fields, files) {
+        if (err) {
+          throw new Error(err);
+          return;
+        } else {
+          res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
+
+
+          console.log(fields, files);
+
+
+
+
+
+          res.json({ fields, files });
+        }
+      });
+    }
+  };
+
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    for (let j = 0; j < funcObj[i].link.length; j++) {
+      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+    }
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+Ghost.prototype.serverLaunching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const https = require("https");
@@ -827,132 +894,158 @@ Ghost.prototype.launching = async function () {
   try {
     let message = '';
 
-    if (process.argv[2] === "backup") {
+    //set address info
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    let isGhost = (address.isGhost === true);
+    if (name === "unknown") {
+      throw new Error("invalid address");
+    }
+    console.log(``);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+    console.log(``);
 
-      //backup
-      message = '';
-      instance.mongoToJson().then(function (m) {
-        message += m;
-        return instance.ultimateReflection();
-      }).then(function (m) {
-        message += "\n"
-        message += m;
-        console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-        console.log(`\x1b[33m%s\x1b[0m`, `all done\n${message}`);
-        console.log(`\x1b[33m%s\x1b[0m`, `=========================================================================================`);
-      }).catch(function (err) {
-        console.log(err);
-      });
+    //set mongo connetion
+    const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
 
-    } else if (process.argv[2] === "request") {
+    await MONGOC.connect();
+    await MONGOLOCALC.connect();
 
-      const { json, to } = await this.requestObject();
-      let order;
+    //set pem key
+    let pems = {};
+    let pemsLink = process.cwd() + "/pems/" + address.host;
+    let certDir, keyDir, caDir;
+    let routerObj;
+    let routerTargets = [
+      "client",
+      "designer",
+      "photo",
+      "photoraw"
+    ];
 
-      order = '';
-      order += "curl"
-      order += " ";
-      order += "-d";
-      order += " ";
-      order += "'";
-      order += JSON.stringify(json);
-      order += "'";
-      order += " ";
-      order += '-H "Content-Type: application/json" -X POST ';
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
 
-      order += to;
-
-      const { stdout } = shell.exec(order, { silent: true });
-      if (/^[\[\{]/.test(stdout.trim())) {
-        console.log(JSON.parse(stdout.trim()));
-      } else {
-        console.log(stdout);
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
       }
-
-    } else if (process.argv[2] === undefined || process.argv[2] === "server" || process.argv[2] === "ghost") {
-
-      //set address info
-      const { name, rawObj: address } = await this.mother.ipCheck();
-      let isGhost = (address.isGhost === true);
-      if (name === "unknown") {
-        throw new Error("invalid address");
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
       }
-      console.log(``);
-      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
-      console.log(``);
-
-      //set mongo connetion
-      const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-
-      await MONGOC.connect();
-      await MONGOLOCALC.connect();
-
-      //set pem key
-      let pems = {};
-      let pemsLink = process.cwd() + "/pems/" + address.host;
-      let certDir, keyDir, caDir;
-      let routerObj;
-      let routerTargets = [
-        "client",
-        "designer",
-        "photo",
-        "photoraw"
-      ];
-
-      certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-      keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-      caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
-
-      for (let i of certDir) {
-        if (i !== `.DS_Store`) {
-          pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
-        }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
       }
-      for (let i of keyDir) {
-        if (i !== `.DS_Store`) {
-          pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
-        }
-      }
-      pems.ca = [];
-      for (let i of caDir) {
-        if (i !== `.DS_Store`) {
-          pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
-        }
-      }
-      pems.allowHTTP1 = true;
+    }
+    pems.allowHTTP1 = true;
 
-      //set router
-      const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC ]);
-      for (let obj of get) {
+    //set router
+    const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC ]);
+    for (let obj of get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of post) {
+      app.post(obj.link, obj.func);
+    }
+
+    //set sub routers
+    for (let r of routerTargets) {
+      routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC ]);
+      for (let obj of routerObj.get) {
         app.get(obj.link, obj.func);
       }
-      for (let obj of post) {
+      for (let obj of routerObj.post) {
         app.post(obj.link, obj.func);
       }
-
-      //set sub routers
-      for (let r of routerTargets) {
-        routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC ]);
-        for (let obj of routerObj.get) {
-          app.get(obj.link, obj.func);
-        }
-        for (let obj of routerObj.post) {
-          app.post(obj.link, obj.func);
-        }
-      }
-
-      //launching python cron
-      shell.exec(`python3 ${shellLink(this.pythonApp)} cron`, { async: true });
-      console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
-
-      //server on
-      https.createServer(pems, app).listen(3000, address.ip.inner, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-      });
-
     }
+
+    //launching python cron
+    shell.exec(`python3 ${shellLink(this.pythonApp)} cron`, { async: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
+
+    //server on
+    https.createServer(pems, app).listen(3000, address.ip.inner, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Ghost.prototype.fileLaunching = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const https = require("https");
+  const express = require("express");
+  const app = express();
+  try {
+    let message = '';
+
+    //set address info
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    let isGhost = (address.isGhost === true);
+    if (name === "unknown") {
+      throw new Error("invalid address");
+    }
+    console.log(``);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+    console.log(``);
+
+    //set pem key
+    let pems = {};
+    let pemsLink = process.cwd() + "/pems/" + address.host;
+    let certDir, keyDir, caDir;
+    let routerObj;
+    let routerTargets = [
+      "client",
+      "designer",
+      "photo",
+      "photoraw"
+    ];
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+    //set router
+    const { get, post } = this.fileRouter();
+    for (let obj of get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of post) {
+      app.post(obj.link, obj.func);
+    }
+
+    //server on
+    https.createServer(pems, app).listen(3001, address.ip.inner, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+    });
 
   } catch (e) {
     console.log(e);
@@ -962,4 +1055,10 @@ Ghost.prototype.launching = async function () {
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
-app.launching();
+if (process.argv[2] === "request") {
+  app.requestObject();
+} else if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/gi.test(process.argv[2])) {
+  app.serverLaunching();
+} else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
+  app.fileLaunching();
+}

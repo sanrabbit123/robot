@@ -18,6 +18,54 @@ Robot.prototype.consoleQ = function (question) {
   });
 }
 
+Robot.prototype.mongoToJson = async function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+    const today = new Date();
+    const zeroAddition = function (number) {
+      if (number < 10) {
+        return `0${String(number)}`;
+      } else {
+        return String(number);
+      }
+    }
+    const backFolderName = "backup";
+    const mongoTargets = [
+      [ "mongoinfo", "mongo" ],
+      [ "backinfo", "console" ],
+      [ "pythoninfo", "python" ],
+    ];
+    const robotDirArr = process.cwd().split("/");
+    robotDirArr.pop();
+    const robotDirMother = robotDirArr.join("/");
+    const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
+    if (!robotDirMotherDetail.includes(backFolderName)) {
+      shell.exec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
+    }
+    const backDir = robotDirMother + "/" + backFolderName;
+    let tempObj, tempInfo, collections, order, timeString;
+
+    timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
+
+    for (let [ infoName, dbName ] of mongoTargets) {
+      tempObj = {};
+      tempObj[dbName] = true;
+      collections = await back.mongoListCollections(tempObj);
+      tempInfo = this.address[infoName];
+      for (let collection of collections) {
+        order = `mongoexport --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --collection=${collection} --out="${shellLink(backDir)}/${timeString}/${collection}${timeString}.json" --authenticationDatabase admin`;
+        shell.exec(order);
+      }
+    }
+
+    return `mongo exports done`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.dataConsole = function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   let app = new DataConsole();
