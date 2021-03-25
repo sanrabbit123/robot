@@ -459,7 +459,7 @@ DataConsole.prototype.connect = async function () {
     }
 
     //set binary
-    if (!/localhost/gi.test(address.host) && DataMiddle !== null) {
+    if (!/localhost/gi.test(address.host)) {
       await this.setBinary();
       if (DataMiddle !== null) {
         await DataMiddle.middleBinary();
