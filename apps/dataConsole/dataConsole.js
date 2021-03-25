@@ -301,6 +301,17 @@ DataConsole.prototype.setBinary = async function () {
   const staticFolder = process.env.HOME + "/static";
   try {
 
+    //set boto3 key-secret
+    const homeDir = await fileSystem(`readDir`, [ process.env.HOME ]);
+    let awsKeyText;
+    if (!homeDir.includes(`.aws`)) {
+      shell.exec(`mkdir ${shellLink(process.env.HOME)}/.aws`);
+    }
+    awsKeyText = `[default]\n`;
+    awsKeyText += `aws_access_key_id = ${ADDRESS["s3info"]["boto3"]["key"]}\n`;
+    awsKeyText += `aws_secret_access_key = ${ADDRESS["s3info"]["boto3"]["secret"]}`;
+    await fileSystem(`write`, [ `${process.env.HOME}/.aws/credentials`, awsKeyText ]);
+
     //download font
     const sourceFolerConst0 = `designSource`;
     const sourceFolerConst1 = `font`;
