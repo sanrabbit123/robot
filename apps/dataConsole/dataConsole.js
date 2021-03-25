@@ -237,14 +237,14 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += code3;
         result += "\n\n";
 
-        result = await babelSystem(result);
-        console.log(`${i} babel compile success`);
-        finalMinifyObj = await minify(polyfillString + "\n\n" + result);
-        finalMinifyString = finalMinifyObj.code;
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
+        // result = await babelSystem(result);
+        // console.log(`${i} babel compile success`);
+        // finalMinifyObj = await minify(polyfillString + "\n\n" + result);
+        // finalMinifyString = finalMinifyObj.code;
+        // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
 
-        // console.log(`${i} merge success`);
-        // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
+        console.log(`${i} merge success`);
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
       }
 
     }
