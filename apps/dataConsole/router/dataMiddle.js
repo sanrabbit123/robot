@@ -58,6 +58,7 @@ MiddleCommunication.prototype.middleBinary = async function () {
           }
         }
       }
+      console.log(`\x1b[33m%s\x1b[0m`, `binary target :`, binaryTarget);
       for (let b of binaryTarget) {
         tempObject = await binaryRequest(S3HOST + "/" + b);
         await fileSystem(`writeBinary`, [ staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1], tempObject ]);

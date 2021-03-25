@@ -293,7 +293,7 @@ DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
   let ipTong;
-  ipTong = [ 127001, 172301254 ];
+  ipTong = [ 127001, 172301254, 521416367 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));

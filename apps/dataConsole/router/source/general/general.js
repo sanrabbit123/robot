@@ -518,149 +518,149 @@ GeneralJs.prototype.generalCss = function () {
   const css = `
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoB00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoB00.woff') format('woff');
       font-weight: 700;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoR00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoR00.woff') format('woff');
       font-weight: 400;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoM00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoM00.woff') format('woff');
       font-weight: 500;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoEB00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoEB00.woff') format('woff');
       font-weight: 800;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoSB00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoSB00.woff') format('woff');
       font-weight: 600;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoUL00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoUL00.woff') format('woff');
       font-weight: 200;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoT00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoT00.woff') format('woff');
       font-weight: 100;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoH00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoH00.woff') format('woff');
       font-weight: 900;
       font-style: normal;
   }
   @font-face {
       font-family: 'sandoll';
-      src: url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
+      src: url('/designSource/font/sandoll/AppleSDGothicNeoL00.woff2') format('woff2'),
+          url('/designSource/font/sandoll/AppleSDGothicNeoL00.woff') format('woff');
       font-weight: 300;
       font-style: normal;
   }
   @font-face {
       font-family: 'Futura';
-      src: url('${S3HOST}/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/futura/Futura-Medium.woff') format('woff');
+      src: url('/designSource/font/futura/Futura-Medium.woff2') format('woff2'),
+          url('/designSource/font/futura/Futura-Medium.woff') format('woff');
       font-weight: 500;
       font-style: normal;
   }
   @font-face {
       font-family: 'Futura';
-      src: url('${S3HOST}/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/futura/Futura-Bold.woff') format('woff');
+      src: url('/designSource/font/futura/Futura-Bold.woff2') format('woff2'),
+          url('/designSource/font/futura/Futura-Bold.woff') format('woff');
       font-weight: 600;
       font-style: normal;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-Light.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-Light.woff') format('woff');
       font-weight: 200;
       font-style: normal;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-LightItalic.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-LightItalic.woff') format('woff');
       font-weight: 200;
       font-style: italic;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-Regular.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-Regular.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-Regular.woff') format('woff');
       font-weight: 300;
       font-style: normal;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-RegularItalic.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-RegularItalic.woff') format('woff');
       font-weight: 300;
       font-style: italic;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-Medium.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-Medium.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-Medium.woff') format('woff');
       font-weight: 400;
       font-style: normal;
   }
 
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-MediumItalic.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-MediumItalic.woff') format('woff');
       font-weight: 400;
       font-style: italic;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-Semibold.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-Semibold.woff') format('woff');
       font-weight: 500;
       font-style: normal;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-SemiboldItalic.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-SemiboldItalic.woff') format('woff');
       font-weight: 500;
       font-style: italic;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-Bold.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-Bold.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-Bold.woff') format('woff');
       font-weight: 600;
       font-style: normal;
   }
   @font-face {
       font-family: 'graphik';
-      src: url('${S3HOST}/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
-          url('${S3HOST}/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
+      src: url('/designSource/font/graphik/Graphik-BoldItalic.woff2') format('woff2'),
+          url('/designSource/font/graphik/Graphik-BoldItalic.woff') format('woff');
       font-weight: 600;
       font-style: italic;
   }

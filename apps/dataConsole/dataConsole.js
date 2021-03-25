@@ -293,6 +293,57 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
   }
 }
 
+DataConsole.prototype.setBinary = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink, s3FileList, binaryRequest } = this.mother;
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const S3HOST = ADDRESS["s3info"]["host"];
+  const staticFolder = process.env.HOME + "/static";
+  try {
+
+    //download font
+    const sourceFolerConst0 = `designSource`;
+    const sourceFolerConst1 = `font`;
+    const fontList = [
+      "sandoll",
+      "futura",
+      "graphik"
+    ];
+    let targetFonts, binaryTarget, tempObject;
+
+    //set font folder
+    const staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
+    if (!staticFolderDir.includes(sourceFolerConst0)) {
+      shell.exec(`mkdir ${shellLink(staticFolder + "/" + sourceFolerConst0)}`);
+    }
+    const designerSourceDir = await fileSystem(`readDir`, [ `${staticFolder}/${sourceFolerConst0}` ]);
+    if (!designerSourceDir.includes(sourceFolerConst1)) {
+      shell.exec(`mkdir ${shellLink(staticFolder + "/" + sourceFolerConst0 + "/" + sourceFolerConst1)}`);
+    }
+    const designerSourceFontDir = await fileSystem(`readDir`, [ `${staticFolder}/${sourceFolerConst0}/${sourceFolerConst1}` ]);
+    for (let f of fontList) {
+      if (!designerSourceFontDir.includes(f)) {
+        shell.exec(`mkdir ${shellLink(staticFolder + "/" + sourceFolerConst0 + "/" + sourceFolerConst1)}/${f}`);
+      }
+      targetFonts = await s3FileList(`${sourceFolerConst0}/${sourceFolerConst1}/${f}`);
+      binaryTarget = [];
+      for (let t of targetFonts) {
+        if (!/\/$/.test(t)) {
+          binaryTarget.push(t);
+        }
+      }
+      console.log(`\x1b[33m%s\x1b[0m`, `binary target :`, binaryTarget);
+      for (let b of binaryTarget) {
+        tempObject = await binaryRequest(S3HOST + "/" + b);
+        await fileSystem(`writeBinary`, [ staticFolder + "/" + b, tempObject ]);
+        console.log(`binary "${b}" download done`);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DataConsole.prototype.connect = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
@@ -409,7 +460,10 @@ DataConsole.prototype.connect = async function () {
 
     //set binary
     if (!/localhost/gi.test(address.host) && DataMiddle !== null) {
-      await DataMiddle.middleBinary();
+      await this.setBinary();
+      if (DataMiddle !== null) {
+        await DataMiddle.middleBinary();
+      }
     }
 
     //error handle
