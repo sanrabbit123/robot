@@ -35,6 +35,9 @@ const ProposalJs = function () {
   this.ea = "px";
   this.baseTong = null;
   this.backHeight = 0;
+  this.project = null;
+  this.client = null;
+  this.proposal = null;
 }
 
 ProposalJs.binaryPath = "/middle/proposal";
@@ -138,7 +141,7 @@ ProposalJs.prototype.setNavigator = function () {
   naviBase.appendChild(logo);
 
   nameTong = GeneralJs.nodes.div.cloneNode(true);
-  nameTong.textContent = "박시연 고객님 제안서";
+  nameTong.textContent = this.client.name + " 고객님 제안서";
   style = {
     position: "absolute",
     top: String(wordTop) + ea,
@@ -183,18 +186,39 @@ ProposalJs.prototype.setBaseTong = function () {
   }
 
   this.baseTong = baseTong;
-  this.totalContents.append(baseTong);
+  this.totalContents.appendChild(baseTong);
 }
 
 ProposalJs.prototype.insertInitBox = function () {
   const instance = this;
+  const { client, ea } = this;
   let whiteBlock;
   let style;
-  let ea = this.ea;
   let blockHeight, bottomMargin;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let leftRatio;
+  let wordSpacing;
+  let titleFont, titleLeft, titleFontWeight;
+  let barWidth, barLeft;
+  let indexFont, indexFontWeight;
 
   blockHeight = this.backHeight - 360;
   bottomMargin = 16;
+  margin = 52;
+  leftRatio = 0.3;
+
+  titleFont = 32;
+  titleLeft = 8;
+  titleFontWeight = 500;
+  wordSpacing = -3;
+
+  barWidth = 80;
+  barLeft = titleLeft + 244;
+
+  indexFont = 20;
+  indexFontWeight = 200;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -210,7 +234,103 @@ ProposalJs.prototype.insertInitBox = function () {
     whiteBlock.style[i] = style[i];
   }
 
-  this.baseTong.append(whiteBlock);
+  //left area
+  leftBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "inline-block",
+    position: "relative",
+    width: "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(leftRatio) + ")",
+    height: "calc(100% - " + String(margin * 2) + ea + ")",
+    marginTop: String(margin) + ea,
+    marginBottom: String(margin) + ea,
+    marginLeft: String(margin) + ea,
+  };
+  for (let i in style) {
+    leftBox.style[i] = style[i];
+  }
+
+  //main title
+  titleBox = GeneralJs.nodes.div.cloneNode(true);
+  titleBox.textContent = "당신에게 딱 맞는 디자이너,";
+  style = {
+    position: "absolute",
+    fontSize: String(titleFont) + ea,
+    fontWeight: String(titleFontWeight),
+    wordSpacing: String(wordSpacing) + ea,
+    top: String(0) + ea,
+    left: String(titleLeft) + ea,
+    color: GeneralJs.colorChip.black,
+  };
+  for (let i in style) {
+    titleBox.style[i] = style[i];
+  }
+  leftBox.appendChild(titleBox);
+
+  titleBox = GeneralJs.nodes.div.cloneNode(true);
+  titleBox.textContent = "이 곳 홈리에종에서";
+  style = {
+    position: "absolute",
+    fontSize: String(titleFont) + ea,
+    fontWeight: String(titleFontWeight),
+    wordSpacing: String(wordSpacing) + ea,
+    top: String(titleFont * 1.45) + ea,
+    left: String(titleLeft) + ea,
+    color: GeneralJs.colorChip.black,
+  };
+  for (let i in style) {
+    titleBox.style[i] = style[i];
+  }
+  leftBox.appendChild(titleBox);
+
+  barBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    borderBottom: "1px solid #dddddd",
+    top: String(titleFont * (62 / 30)) + ea,
+    left: String(barLeft) + ea,
+    width: String(barWidth) + ea,
+  };
+  for (let i in style) {
+    barBox.style[i] = style[i];
+  }
+  leftBox.appendChild(barBox);
+
+  //index box
+  indexBox = GeneralJs.nodes.div.cloneNode(true);
+  indexBox.textContent = "0";
+  style = {
+    position: "absolute",
+    fontSize: String(indexFont) + ea,
+    fontWeight: String(indexFontWeight),
+    wordSpacing: String(wordSpacing) + ea,
+    bottom: String(0) + ea,
+    left: String(titleLeft) + ea,
+    color: GeneralJs.colorChip.black,
+  };
+  for (let i in style) {
+    indexBox.style[i] = style[i];
+  }
+  leftBox.appendChild(indexBox);
+
+  whiteBlock.appendChild(leftBox);
+
+  //right area
+  rightBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "inline-block",
+    position: "relative",
+    width: "calc(calc(100% - " + String(margin * 2) + ea + ") * " + String(1 - leftRatio) + ")",
+    height: "calc(100% - " + String(margin * 2) + ea + ")",
+    marginTop: String(margin) + ea,
+    marginBottom: String(margin) + ea,
+    marginRight: String(margin) + ea,
+  };
+  for (let i in style) {
+    rightBox.style[i] = style[i];
+  }
+  whiteBlock.appendChild(rightBox);
+
+  this.baseTong.appendChild(whiteBlock);
 }
 
 ProposalJs.prototype.insertDesignerBoxes = function () {
@@ -223,7 +343,10 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   blockHeight = 820;
   bottomMargin = 16;
 
-  for (let z = 0; z < 3; z++) {
+  console.log(this.proposal);
+  console.log(this.proposal.detail);
+
+  for (let z = 0; z < this.proposal.detail.length; z++) {
     whiteBlock = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
@@ -237,7 +360,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
     for (let i in style) {
       whiteBlock.style[i] = style[i];
     }
-    this.baseTong.append(whiteBlock);
+    this.baseTong.appendChild(whiteBlock);
   }
 
 
@@ -262,6 +385,13 @@ ProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();
+    if (getObj.cliid === undefined) {
+      alert("잘못된 접근입니다!");
+      window.location.href = "https://home-liaison.com";
+    }
+    const { cliid } = getObj;
+    let projects, project;
+    let clients, client;
 
     //tablet
     if (window.innerWidth <= 1050 && window.innerWidth > 800) {
@@ -299,6 +429,29 @@ ProposalJs.prototype.launching = async function (loading) {
     this.margin = 20;
     this.margin = this.margin - this.modeMinus;
 
+    //set proposal, client info
+    projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getProjects"));
+    clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"));
+    if (projects.length === 0) {
+      alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
+      window.location.href = "https://home-liaison.com";
+      project = null;
+    } else {
+      projects.sort((a, b) => {
+        return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
+      });
+      project = projects[0];
+    }
+    if (clients.length === 0) {
+      alert("잘못된 접근입니다!");
+      window.location.href = "https://home-liaison.com";
+    }
+    client = clients[0];
+    this.project = project;
+    this.client = client;
+    this.proposal = project.proposal;
+
+    //loading end
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
 

@@ -116,10 +116,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         result += "\n\n";
 
         console.log(`${i} merge success`);
-        finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
-        finalMinifyString = finalMinifyObj.code;
-        await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
-        // await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
+        // finalMinifyObj = await minify(result, { mangle: { eval: true, keep_classnames: true, keep_fnames: true } });
+        // finalMinifyString = finalMinifyObj.code;
+        // await fileSystem(`write`, [ `${staticFolder}/${i}`, finalMinifyString ]);
+        await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
       }
 
     }
