@@ -649,8 +649,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.clientMap = function () {
-  const statusToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const statusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -669,8 +668,7 @@ DataPatch.prototype.clientMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const statusInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -805,8 +803,7 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const callHistoryToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const callHistoryToObject = function (value, pastValue, vaildMode) {
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
 
@@ -1032,8 +1029,7 @@ DataPatch.prototype.clientMap = function () {
 
     return arr;
   };
-  const callHistoryInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const callHistoryInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let ea = "px";
     let height, fontSize, top, width;
@@ -1213,8 +1209,7 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const serviceToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const serviceToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -1249,8 +1244,7 @@ DataPatch.prototype.clientMap = function () {
 
     return obj;
   };
-  const serviceInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const serviceInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -1714,8 +1708,7 @@ DataPatch.prototype.designerWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.designerMap = function () {
-  const snsToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const snsToObject = function (value, pastValue, vaildMode) {
     let arr = [];
     let obj;
     let temp, temp2;
@@ -1764,8 +1757,7 @@ DataPatch.prototype.designerMap = function () {
 
     return arr;
   };
-  const snsInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const snsInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -2060,8 +2052,7 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const careerToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const careerToObject = function (value, pastValue, vaildMode) {
     let obj = {};
     let boo = false;
     let temp;
@@ -2106,8 +2097,7 @@ DataPatch.prototype.designerMap = function () {
 
     return obj;
   };
-  const careerInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const careerInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -2293,8 +2283,7 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const accountToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const accountToObject = function (value, pastValue, vaildMode) {
     let arr = [];
     let obj;
     let temp, temp2;
@@ -2344,8 +2333,7 @@ DataPatch.prototype.designerMap = function () {
 
     return arr;
   };
-  const accountInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const accountInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -2600,8 +2588,7 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const filesToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const filesToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -2637,8 +2624,7 @@ DataPatch.prototype.designerMap = function () {
 
     return obj;
   };
-  const filesInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const filesInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -2827,8 +2813,7 @@ DataPatch.prototype.designerMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const statusToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const statusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -2847,8 +2832,7 @@ DataPatch.prototype.designerMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const statusInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -4692,8 +4676,7 @@ DataPatch.prototype.projectChainingTarget = function () {
 }
 
 DataPatch.prototype.projectMap = function () {
-  const accountToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const accountToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -4728,8 +4711,7 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const accountInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const accountInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -4915,8 +4897,7 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const methodToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const methodToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -4951,8 +4932,7 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const methodInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const methodInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5138,8 +5118,7 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const serviceToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const serviceToObject = function (value, pastValue, vaildMode) {
     let obj;
     let temp;
     let boo = false;
@@ -5174,8 +5153,7 @@ DataPatch.prototype.projectMap = function () {
 
     return obj;
   };
-  const serviceInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const serviceInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5456,8 +5434,7 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const designerToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const designerToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -5474,8 +5451,7 @@ DataPatch.prototype.projectMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const designerInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -5643,8 +5619,7 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const statusToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const statusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -5663,8 +5638,7 @@ DataPatch.prototype.projectMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const statusInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -5796,8 +5770,7 @@ DataPatch.prototype.projectMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const remainPureToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const remainPureToObject = function (value, pastValue, vaildMode) {
     let result;
     let boo = false;
     let num;
@@ -5831,8 +5804,7 @@ DataPatch.prototype.projectMap = function () {
     return Number(result + 330000);
   };
 
-  const callHistoryToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const callHistoryToObject = function (value, pastValue, vaildMode) {
     const filter = function (value) {
       let filteredValue, temp, tempArr, today;
 
@@ -6058,8 +6030,7 @@ DataPatch.prototype.projectMap = function () {
 
     return arr;
   };
-  const callHistoryInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const callHistoryInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let ea = "px";
     let height, fontSize, top, width;
@@ -6455,8 +6426,7 @@ DataPatch.prototype.contentsWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.contentsMap = function () {
-  const designerToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const designerToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -6473,8 +6443,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const designerInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -6642,8 +6611,7 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const colorToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const colorToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -6688,8 +6656,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const colorInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const colorInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -6893,8 +6860,7 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const photodaeToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const photodaeToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -6942,8 +6908,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const photodaeInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const photodaeInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -7139,8 +7104,7 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const photosgToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const photosgToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7192,8 +7156,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const photosgInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const photosgInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -7389,8 +7352,7 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const slideToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const slideToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7431,8 +7393,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const slideInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const slideInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle;
     let ea = "px";
@@ -7592,8 +7553,7 @@ DataPatch.prototype.contentsMap = function () {
     mother.appendChild(div_clone);
   };
 
-  const tagToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const tagToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let selectedValue;
     let temp, tempArr;
@@ -7623,8 +7583,7 @@ DataPatch.prototype.contentsMap = function () {
 
     return finalValue;
   };
-  const tagInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const tagInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyle0, buttonDetailStyle1;
     let ea = "px";
@@ -8125,8 +8084,7 @@ DataPatch.prototype.photoChainingTarget = function () {
 }
 
 DataPatch.prototype.photoMap = function () {
-  const statusToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const statusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8145,8 +8103,7 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const statusInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8277,8 +8234,7 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const photoBooToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const photoBooToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8297,8 +8253,7 @@ DataPatch.prototype.photoMap = function () {
 
     return Boolean(finalValue);
   };
-  const photoBooInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const photoBooInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8426,8 +8381,7 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const photoStatusToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const photoStatusToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValue;
     let targetArr;
@@ -8446,8 +8400,7 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const photoStatusInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const photoStatusInputFunction = function (mother, input, callback) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -8578,8 +8531,7 @@ DataPatch.prototype.photoMap = function () {
 
     mother.appendChild(div_clone);
   };
-  const designerToObject = function () {
-    let [ value, pastValue, vaildMode ] = Array.from(arguments);
+  const designerToObject = function (value, pastValue, vaildMode) {
     let boo = false;
     let finalValueObj, finalValue;
 
@@ -8596,8 +8548,7 @@ DataPatch.prototype.photoMap = function () {
 
     return finalValue;
   };
-  const designerInputFunction = function () {
-    let [ mother, input, callback ] = Array.from(arguments);
+  const designerInputFunction = function (mother, input, callback) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";

@@ -917,7 +917,7 @@ PhotoJs.prototype.infoArea = function (info) {
 
           cancel_inputBack.style.background = "white";
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function(thisMap.inputFunction);
+          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
@@ -3075,7 +3075,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
           cancel_inputBack.style.background = "white";
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function(thisMap.inputFunction);
+          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
