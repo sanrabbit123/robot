@@ -62,7 +62,7 @@ ConsultingJs.postEvent = function (boo) {
           div_clone.firstChild.style.height = String((1 / scaleRatio) * 100) + '%';
         }
       }
-      
+
     } else if (e.target.id === "cancel_back") {
       document.getElementById("cancel_back").parentNode.removeChild(document.getElementById("cancel_back"));
       document.getElementById(list.id).parentNode.removeChild(document.getElementById(list.id));
@@ -394,6 +394,23 @@ ConsultingJs.prototype.submitEvent = function (boo) {
   let flatform = boo === "desktop" ? "consultingbox" : "moconsultingbox";
   let queryId = boo === "desktop" ? "#" : "#mo";
   let queryClass = boo === "desktop" ? "." : ".mo";
+  const yearFilter = function (str) {
+    if (typeof str !== "string") {
+      str = String(str);
+    }
+    const today = new Date();
+    let finalWord;
+    if (str.trim().length !== 4) {
+      if (str.trim().length === 2) {
+        finalWord = String(today.getFullYear()).slice(0, 2) + str.trim();
+      } else {
+        finalWord = String(today.getFullYear());
+      }
+    } else {
+      finalWord = str.trim();
+    }
+    return finalWord;
+  }
   const filter = function (str) {
     let newStr;
     if (str === '') {
@@ -435,7 +452,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
     if (mother.querySelector(queryClass + "blocks_date_resident_checkbox").checked) {
       obj.movingdate = "거주중";
     } else {
-      obj.movingdate = mother.querySelector(queryId + "blocks_date_year > input").value + '-' + filter(mother.querySelector(queryId + "blocks_date_month > input").value) + '-' + filter(mother.querySelector(queryId + "blocks_date_day > input").value);
+      obj.movingdate = yearFilter(mother.querySelector(queryId + "blocks_date_year > input").value) + '-' + filter(mother.querySelector(queryId + "blocks_date_month > input").value) + '-' + filter(mother.querySelector(queryId + "blocks_date_day > input").value);
     }
     if (mother.querySelector(queryClass + "blocks_date_contract_radio").checked) {
       obj.myhomeboo = "자가";

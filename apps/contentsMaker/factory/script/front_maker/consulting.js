@@ -431,7 +431,7 @@ ExecMain.prototype.pendingMaker = function () {
   from = "general";
   to = "pending";
   contents = text;
-  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]);
   temp = temp.createOutline();
@@ -447,7 +447,7 @@ ExecMain.prototype.certificationMaker = function () {
   from = "general";
   to = "certification";
   contents = text;
-  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]);
   temp = temp.createOutline();
@@ -889,7 +889,7 @@ ExecMain.prototype.thankyouFileSend = function (obj) {
     this_ai = app.activeDocument;
     to = "thankyouFileSend_white_" + String(i);
     contents = white[i].title;
-    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#2fa678" } });
+    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#2fa678" } });
     this.setParagraph({ from: contents, to: to });
     temp = this.createElements(this_ai, this.createSetting[to]);
     temp = temp.createOutline();
@@ -944,7 +944,7 @@ ExecMain.prototype.thankyouComplete = function (obj) {
   from = "general";
   to = "thankyouComplete_desktop";
   contents = obj.title.replace(/,/g, '');
-  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]);
   temp = temp.createOutline();
@@ -960,7 +960,7 @@ ExecMain.prototype.thankyouComplete = function (obj) {
 
   to = "thankyouComplete_mobile_" + String(0);
   contents = contentsArr[0];
-  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]);
   temp = temp.createOutline();
@@ -968,7 +968,7 @@ ExecMain.prototype.thankyouComplete = function (obj) {
 
   to = "thankyouComplete_mobile_" + String(1);
   contents = contentsArr[1];
-  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-gBd", color: "#5f5f5f" } });
+  this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-fSm", color: "#5f5f5f" } });
   this.setParagraph({ from: contents, to: to });
   temp = this.createElements(this_ai, this.createSetting[to]);
   temp = temp.createOutline();

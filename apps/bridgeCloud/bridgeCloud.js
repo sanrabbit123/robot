@@ -27,12 +27,21 @@ BridgeCloud.clientFilters = {
     return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
   },
   filterDate: function (som) {
-    if (String(som) === "거주중") {
+    if (String(som).trim() === "거주중") {
       return "거주중";
     }
+    const today = new Date();
+    const zeroAddition = function (num) {
+      if (num < 10) {
+        return '0' + String(num);
+      } else {
+        return String(num);
+      }
+    }
     let str = String(som).replace(/[^0-9]/g, '');
+    let dummyDate;
     if (str.length > 4) {
-      if (/^20[0-9][0-9]/.test(str)) {
+      if (/^2[0-9][0-9][0-9]/.test(str)) {
         if (str.length === 6) {
           return str.slice(0, 4) + '-0' + str.slice(4, 5) + '-0' + str.slice(5);
         } else if (str.length === 7) {
@@ -43,12 +52,17 @@ BridgeCloud.clientFilters = {
           }
         } else if (str.length === 8) {
           return str.slice(0, 4) + '-' + str.slice(4, 6) + '-' + str.slice(6);
+        } else {
+          dummyDate = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+          return dummyDate;
         }
       } else {
-        return String(som);
+        dummyDate = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+        return dummyDate;
       }
     } else {
-      return str.replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, '').replace(/\t/g, '').replace(/  /g, '').replace(/ /g, '').replace(/ /g, '');
+      dummyDate = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
+      return dummyDate;
     }
   },
   filterCont: function (som) {

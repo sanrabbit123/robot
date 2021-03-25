@@ -1450,51 +1450,8 @@ class DevContext extends Array {
 
 
 
+
       /*
-
-      // ASPIRANT TO DESIGNER
-
-      const nameList = [
-        [ "박정훈", "2021-03-03" ],
-        [ "손병준", "2021-03-03" ],
-        [ "윤보라", "2021-03-03" ],
-        [ "이한솔", "2021-03-03" ],
-        [ "이지영", "2021-03-03" ],
-        [ "류상현", "2021-03-03" ],
-        [ "정민재", "2021-03-05" ],
-        [ "최문형", "2021-03-05" ],
-        [ "김현영", "2021-03-08" ],
-        [ "전진화", "2021-03-08" ],
-        [ "이정아", "2021-03-08" ],
-        [ "강주현", "2021-03-08" ],
-        [ "왕지연", "2021-03-08" ],
-        [ "호지희", "2021-03-11" ],
-        [ "한채은", "2021-03-12" ],
-        [ "조원숙", "2021-03-12" ],
-        [ "권미정", "2021-03-12" ],
-        [ "서한수", "2021-03-12" ],
-        [ "김윤진", "2021-03-12" ],
-        [ "김상화", "2021-03-17" ],
-      ];
-      const stringToDate = function (str) {
-        let temp = str.split('-');
-        return new Date(Number(temp[0]), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));
-      }
-
-      let whereQuery, updateQuery;
-      let aspirants, aspirant;
-      let aspidArr;
-
-      aspidArr = [];
-      for (let [ name, contractDay ] of nameList) {
-        whereQuery = { designer: name };
-        aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
-        aspirant = aspirants[0];
-        aspidArr.push({ aspid: aspirant.aspid, contract: stringToDate(contractDay) });
-      }
-      await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
-
-
       // ALIMTALK
 
       const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
@@ -1732,12 +1689,12 @@ class DevContext extends Array {
       //   await MONGOC.db(`miro81`).collection(`contents`).insertOne(c);
       // }
 
-      //addtional photo repair
+      // addtional photo repair
 
       // const filter = new PortfolioFilter();
       // await filter.addtionalRepair("p87", 3);
 
-      //raw photo to raw portfolio
+      // raw photo to raw portfolio
 
       // const filter = new PortfolioFilter();
       // await filter.rawToRaw([
@@ -1750,9 +1707,96 @@ class DevContext extends Array {
       // ]);
 
 
-      //get photo folder
-      const drive = new GoogleDrive();
-      await drive.get_folder("https://drive.google.com/drive/folders/19OyoZ9IULXHF1Cdy2Y2puk0dQF9ruhcs");
+      // get photo folder
+      // const drive = new GoogleDrive();
+      // await drive.get_folder("https://drive.google.com/drive/folders/19OyoZ9IULXHF1Cdy2Y2puk0dQF9ruhcs");
+
+
+      // aspirant to designer
+      // const nameList = [
+      //   [ "박선영", "2021-03-23" ],
+      // ];
+      // const stringToDate = function (str) {
+      //   let temp = str.split('-');
+      //   return new Date(Number(temp[0]), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));
+      // }
+      //
+      // let whereQuery, updateQuery;
+      // let aspirants, aspirant;
+      // let aspidArr;
+      //
+      // aspidArr = [];
+      // for (let [ name, contractDay ] of nameList) {
+      //   whereQuery = { designer: name };
+      //   aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
+      //   aspirant = aspirants[0];
+      //   aspidArr.push({ aspid: aspirant.aspid, contract: stringToDate(contractDay) });
+      // }
+      // await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
+
+
+      //send checklist alimtalk
+      // const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+      // const kakao = new KakaoTalk();
+      // await kakao.ready();
+      // const method = "designerCheckList";
+      // const designers = await back.getDesignersByQuery({ desid: "d2103_aa21s" });
+      //
+      // const today = new Date();
+      // const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
+      // let expiredString = '';
+      // let targetDesigners = [];
+      // let tempObj;
+      // let middleDate, deadDate;
+      // let rows;
+      //
+      // if (today.getDay() !== 0 && today.getDay() !== 6) {
+      //   //pyeong-day
+      //   today.setDate(today.getDate() + 7);
+      // } else {
+      //   if (today.getDay() !== 0) {
+      //     //saturday
+      //     today.setDate(today.getDate() + 9);
+      //   } else {
+      //     //sunday
+      //     today.setDate(today.getDate() + 8);
+      //   }
+      // }
+      //
+      // expiredString += String(today.getMonth() + 1) + "월";
+      // expiredString += " ";
+      // expiredString += String(today.getDate()) + "일";
+      // expiredString += " ";
+      // expiredString += dayArr[today.getDay()] + "요일";
+      // expiredString += " ";
+      // expiredString += String(14) + "시";
+      //
+      // for (let d of designers) {
+      //   if (/완료/gi.test(d.information.contract.status.value)) {
+      //     targetDesigners.push({ desid: d.desid, designer: d.designer, phone: d.information.phone });
+      //   }
+      // }
+      //
+      // middleDate = new Date();
+      // middleDate.setHours(middleDate.getHours() + 8);
+      // deadDate = new Date();
+      // deadDate.setDate(deadDate.getDate() + 9);
+      //
+      // for (let { desid, designer, phone } of targetDesigners) {
+      //   console.log(method, designer, phone);
+      //   console.log(expiredString, ADDRESS.homeinfo.ghost.host, desid);
+      //   rows = await back.mongoRead("deadline", { name: "designerCheckList_" + desid }, { console: true });
+      //   if (rows.length > 0) {
+      //     await back.mongoUpdate("deadline", [ { name: "designerCheckList_" + desid }, { deadline: deadDate, middleline: middleDate } ], { console: true });
+      //   } else {
+      //     await back.mongoCreate("deadline", { deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid }, { console: true });
+      //   }
+      //   await kakao.sendTalk(method, designer, phone, {
+      //     date: expiredString,
+      //     host: ADDRESS.homeinfo.ghost.host,
+      //     desid: desid,
+      //   });
+      // }
 
 
       // etc tools
