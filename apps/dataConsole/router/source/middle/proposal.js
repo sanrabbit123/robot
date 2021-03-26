@@ -24,6 +24,28 @@
   }
 } %/%/g
 
+class Designers extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(i);
+    }
+  }
+  searchDesigner(desid) {
+    let target = null;
+    for (let obj of this) {
+      if (obj.desid === desid) {
+        target = obj;
+        break;
+      }
+    }
+    return target;
+  }
+  search(desid) {
+    return this.searchDesigner(desid);
+  }
+}
+
 const ProposalJs = function () {
   this.mother = new GeneralJs();
   this.margin = 0;
@@ -38,6 +60,10 @@ const ProposalJs = function () {
   this.project = null;
   this.client = null;
   this.proposal = null;
+  this.whiteBoxNumbers = {
+    leftMargin: 0,
+    topMargin: 0
+  };
 }
 
 ProposalJs.binaryPath = "/middle/proposal";
@@ -51,7 +77,7 @@ ProposalJs.prototype.setBackground = function () {
   let backgroundImageName;
 
   ea = this.ea;
-  backHeight = 760;
+  backHeight = 860;
   this.backHeight = backHeight;
   backgroundImageName = "back.jpg";
 
@@ -227,21 +253,27 @@ ProposalJs.prototype.insertInitBox = function () {
   let designerFactor;
   let designerBar;
   let designerFactorTitleSize, designerFactorSize, designerFactorHeight;
+  let topBox;
+  let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
 
-  blockHeight = this.backHeight - 360;
+  blockHeight = this.backHeight - 460;
   bottomMargin = 16;
   margin = 52;
   leftRatio = 0.32;
 
   titleFont = 31;
-  titleLeft = 8;
+  titleLeft = 6;
+
+  this.whiteBoxNumbers.leftMargin = margin + titleLeft;
+  this.whiteBoxNumbers.topMargin = margin;
+
   titleFontWeight = 500;
   wordSpacing = -3;
 
   barWidth = 80;
   barLeft = titleLeft + 234;
 
-  indexFont = 20;
+  indexFont = 19;
   indexFontWeight = 200;
 
   quoteTop = 8;
@@ -256,7 +288,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   factorBoxWidth = 630;
   factorBoxTop = 100;
-  factorBoxTopVisual = 8;
+  factorBoxTopVisual = 6;
 
   factorPaddingLeft = 10;
   factorPaddingTop = 10;
@@ -296,10 +328,16 @@ ProposalJs.prototype.insertInitBox = function () {
   designerFactorSize = 22;
   designerFactorHeight = 20;
 
+  topBoxSize = 14;
+  topBoxWidth = 700;
+  topBoxHeight = 28;
+  topBoxRight = 1;
+
+  //total white box
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    borderRadius: String(5) + ea,
+    borderRadius: String(8) + ea,
     width: String(100) + '%',
     height: String(blockHeight) + ea,
     background: GeneralJs.colorChip.white,
@@ -381,7 +419,7 @@ ProposalJs.prototype.insertInitBox = function () {
     wordSpacing: String(wordSpacing) + ea,
     bottom: String(0) + ea,
     left: String(titleLeft) + ea,
-    color: GeneralJs.colorChip.black,
+    color: GeneralJs.colorChip.gray4,
   };
   for (let i in style) {
     indexBox.style[i] = style[i];
@@ -423,7 +461,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //init wording - 0
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
-  initWordingBox.textContent = "김연희 고객님께 고객 맞춤 커스터마이징 : 토탈 스타일링 서비스를 제안드립니다.";
+  initWordingBox.insertAdjacentHTML("beforeend", "김연희 고객님께 고객 맞춤 커스터마이징 : <b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   style = {
     position: "absolute",
     top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -553,6 +591,7 @@ ProposalJs.prototype.insertInitBox = function () {
     factorBox.appendChild(clientFactor);
   }
 
+  //fix arrow width and head
   GeneralJs.timeouts["factorsValueDoms"] = setTimeout(function () {
     let width;
     for (let i = 0; i < factorsValueDoms.length; i++) {
@@ -566,12 +605,12 @@ ProposalJs.prototype.insertInitBox = function () {
 
   rightBox.appendChild(factorBox);
 
-
+  //designer box
   designerBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
     bottom: String(factorValueBottom - factorBoxTopVisual + 1) + ea,
-    right: String(0) + ea,
+    right: String(titleLeft) + ea,
     width: String(desigerBoxWidth) + ea,
     height: String(desigerBoxHeight) + ea,
   };
@@ -633,14 +672,36 @@ ProposalJs.prototype.insertInitBox = function () {
   }
 
   rightBox.appendChild(designerBox);
-
   whiteBlock.appendChild(rightBox);
 
+  //top white wording
+  topBox = GeneralJs.nodes.div.cloneNode(true);
+  topBox.textContent = "HomeLiaison designer proposal  /  designer A  /  desinger B  /  desinger C";
+  style = {
+    position: "absolute",
+    fontFamily: "graphik",
+    fontWeight: String(200),
+    fontSize: String(topBoxSize) + ea,
+    top: String(-1 * topBoxHeight) + ea,
+    right: String(topBoxRight) + ea,
+    textAlign: "right",
+    width: String(topBoxWidth) + ea,
+    height: String(topBoxHeight) + ea,
+    wordSpacing: String(initWordingWordSpacing) + ea,
+    color: GeneralJs.colorChip.white,
+  };
+  for (let i in style) {
+    topBox.style[i] = style[i];
+  }
+  whiteBlock.appendChild(topBox);
+
+  //end
   this.baseTong.appendChild(whiteBlock);
 }
 
 ProposalJs.prototype.insertDesignerBoxes = function () {
   const instance = this;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
   let whiteBlock;
   let style;
   let ea = this.ea;
@@ -649,14 +710,11 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   blockHeight = 820;
   bottomMargin = 16;
 
-  console.log(this.proposal);
-  console.log(this.proposal.detail);
-
   for (let z = 0; z < this.proposal.detail.length; z++) {
     whiteBlock = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      borderRadius: String(5) + ea,
+      borderRadius: String(8) + ea,
       width: String(100) + '%',
       height: String(blockHeight) + ea,
       background: GeneralJs.colorChip.white,
@@ -666,11 +724,331 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
     for (let i in style) {
       whiteBlock.style[i] = style[i];
     }
+    this.insertDesignerBox(whiteBlock, this.proposal.detail[z], z + 1);
     this.baseTong.appendChild(whiteBlock);
   }
+}
 
+ProposalJs.styleTextParsing = function (text) {
+  const cssArr = text.split(';');
+  let filterArr;
+  let tempArr, finalObj;
+  finalObj = {};
 
+  filterArr = [];
+  for (let i of cssArr) {
+    if (/\:/.test(i)) {
+      filterArr.push(i.trim());
+    }
+  }
 
+  for (let i of filterArr) {
+    tempArr = i.split(':');
+    if (tempArr.length !== 2) {
+      console.log(cssArr, filterArr);
+      throw new Error("invaild css string");
+    }
+    if (/url\(/gi.test(tempArr[1].trim())) {
+      finalObj[tempArr[0].trim()] = "url(\"" + S3HOST + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
+    } else {
+      finalObj[tempArr[0].trim()] = tempArr[1].trim();
+    }
+  }
+
+  return finalObj;
+}
+
+ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
+  const instance = this;
+  const { ea } = this;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const { desid, designer, pictureSettings, description } = info;
+  let bottomMarginVisual;
+  let style;
+  let designerTitle;
+  let designerTitleSize;
+  let titleWordSpacing, wordSpacing;
+  let pictureDescription;
+  let margin;
+  let pictureBox;
+  let pictureBoxHeight, pictureBoxWidth;
+  let pictureStyle;
+  let picture;
+  let descriptionBox, descriptionDetailBox, descriptionPoint;
+  let descriptionPaddingTop, descriptionPaddingBottom, descriptionPaddingLeft, descriptionPaddingRight;
+  let descriptionMargin;
+  let descriptionSize;
+  let pointRadius;
+  let pointLeftIndent, pointTop;
+  let descriptionTitle;
+  let descriptionTitleTop, descriptionTitleLeft, descriptionTitleSize;
+  let designerTitleIndex;
+  let indexFont, indexFontWeight;
+  let analyticsBox;
+  let analyticsBoxHeight, analyticsBoxTopMargin;
+  let analyticsBoxTitle;
+  let portfolioBox, portfolioBoxTitle;
+  let portfolioBoxHeight;
+
+  bottomMarginVisual = <m% 3, 3, 3, 3 %m>;
+
+  designerTitleSize = <m% 20, 20, 20, 20 %m>;
+  titleWordSpacing = <m% -2, -2, -2, -2 %m>;
+  wordSpacing = <m% -1, -1, -1, -1 %m>;
+  margin = <m% 18, 18, 18, 18 %m>;
+
+  pictureBoxWidth = <m% 980, 980, 980, 980 %m>;
+  pictureBoxHeight = pictureBoxWidth * (210 / 297);
+
+  descriptionPaddingTop = <m% 22, 22, 22, 22 %m>;
+  descriptionPaddingBottom = <m% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %m>;
+  descriptionPaddingLeft = <m% 28, 28, 28, 28 %m>;
+  descriptionPaddingRight = <m% 20, 20, 20, 20 %m>;
+  descriptionMargin = <m% 10, 10, 10, 10 %m>;
+  descriptionSize = <m% 14.5, 14.5, 14.5, 14.5 %m>;
+
+  descriptionTitleTop = <m% -30, -30, -30, -30 %m>;
+  descriptionTitleLeft = <m% 1, 1, 1, 1 %m>;
+  descriptionTitleSize = <m% 16, 16, 16, 16 %m>;
+
+  pointRadius = <m% 2, 2, 2, 2 %m>;
+  pointLeftIndent = <m% 5, 5, 5, 5 %m>;
+  pointTop = <m% 9, 9, 9, 9 %m>;
+
+  indexFont = <m% 19, 19, 19, 19 %m>;
+  indexFontWeight = <m% 200, 200, 200, 200 %m>;
+
+  analyticsBoxHeight = <m% 300, 300, 300, 300 %m>;
+  analyticsBoxTopMargin = <m% 50, 50, 50, 50 %m>;
+
+  portfolioBoxHeight = <m% 150, 150, 150, 150 %m>;
+
+  //mother padding
+  mother.style.paddingTop = String(topMargin) + ea;
+  mother.style.paddingBottom = String(leftMargin + bottomMarginVisual) + ea;
+  mother.style.height = "";
+
+  //title
+  designerTitle = GeneralJs.nodes.div.cloneNode(true);
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 A&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    marginRight: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    fontSize: String(designerTitleSize) + ea,
+    fontWeight: String(500),
+    wordSpacing: String(titleWordSpacing) + ea,
+    marginBottom: String(margin) + ea,
+  };
+  for (let i in style) {
+    designerTitle.style[i] = style[i];
+  }
+
+  //index
+  designerTitleIndex = GeneralJs.nodes.div.cloneNode(true);
+  designerTitleIndex.textContent = String(index);
+  style = {
+    position: "absolute",
+    fontSize: String(indexFont) + ea,
+    fontWeight: String(indexFontWeight),
+    wordSpacing: String(wordSpacing) + ea,
+    top: String(0) + ea,
+    right: String(0) + ea,
+    color: GeneralJs.colorChip.gray4,
+  };
+  for (let i in style) {
+    designerTitleIndex.style[i] = style[i];
+  }
+
+  designerTitle.appendChild(designerTitleIndex);
+  mother.appendChild(designerTitle);
+
+  //picture and description
+  pictureDescription = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    height: String(pictureBoxHeight) + ea,
+  };
+  for (let i in style) {
+    pictureDescription.style[i] = style[i];
+  }
+
+  //picture box
+  pictureBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    width: String(pictureBoxWidth) + ea,
+    height: String(pictureBoxHeight) + ea,
+    background: "aliceblue",
+  };
+  for (let i in style) {
+    pictureBox.style[i] = style[i];
+  }
+
+  //pictures
+  for (let i of pictureSettings) {
+    picture = GeneralJs.nodes.div.cloneNode(true);
+    pictureStyle = ProposalJs.styleTextParsing(i.styleText);
+    pictureStyle.position = "absolute";
+    pictureStyle.borderRadius = String(3) + ea;
+    pictureStyle.backgroundSize = "100% 100%";
+    for (let j in pictureStyle) {
+      picture.style[j] = pictureStyle[j];
+    }
+    pictureBox.appendChild(picture);
+  }
+
+  pictureDescription.appendChild(pictureBox);
+
+  //description box
+  descriptionBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: "calc(100% - " + String(pictureBoxWidth + margin) + ea + ")",
+    background: GeneralJs.colorChip.gray1,
+    borderRadius: String(3) + ea,
+    right: String(0) + ea,
+    bottom: String(0) + ea,
+    paddingTop: String(descriptionPaddingTop) + ea,
+    paddingBottom: String(descriptionPaddingBottom) + ea,
+  };
+  for (let i in style) {
+    descriptionBox.style[i] = style[i];
+  }
+
+  //description title
+  descriptionTitle = GeneralJs.nodes.div.cloneNode(true);
+  descriptionTitle.textContent = "디자이너 설명";
+  style = {
+    position: "absolute",
+    top: String(descriptionTitleTop) + ea,
+    left: String(descriptionTitleLeft) + ea,
+    fontSize: String(descriptionTitleSize) + ea,
+    fontWeight: String(600),
+    wordSpacing: String(wordSpacing) + ea,
+  };
+  for (let i in style) {
+    descriptionTitle.style[i] = style[i];
+  }
+  descriptionBox.appendChild(descriptionTitle);
+
+  //description contents
+  for (let i = 0; i < description.length; i++) {
+    descriptionDetailBox = GeneralJs.nodes.div.cloneNode(true);
+    descriptionDetailBox.textContent = description[i];
+    style = {
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      lineHeight: String(1.6),
+      wordSpacing: String(-1) + ea,
+      left: String(descriptionPaddingLeft) + ea,
+      width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
+      marginBottom: String(descriptionMargin) + ea,
+    };
+    if (i === description.length - 1) {
+      style.marginBottom = '';
+    }
+    for (let j in style) {
+      descriptionDetailBox.style[j] = style[j];
+    }
+
+    descriptionPoint = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.black));
+    style = {
+      position: "absolute",
+      width: String(pointRadius * 2) + ea,
+      height: String(pointRadius * 2) + ea,
+      left: String(-1 * ((pointRadius * 2) + pointLeftIndent)) + ea,
+      top: String(pointTop) + ea,
+    };
+    for (let j in style) {
+      descriptionPoint.style[j] = style[j];
+    }
+    descriptionDetailBox.appendChild(descriptionPoint);
+    descriptionBox.appendChild(descriptionDetailBox);
+  }
+  pictureDescription.appendChild(descriptionBox);
+  mother.appendChild(pictureDescription);
+
+  //designer analytics
+  analyticsBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    marginRight: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    height: String(analyticsBoxHeight) + ea,
+    border: "1px solid " + GeneralJs.colorChip.gray3,
+    marginTop: String(analyticsBoxTopMargin) + ea,
+    boxSizing: "border-box",
+    borderRadius: String(3) + ea,
+  };
+  for (let i in style) {
+    analyticsBox.style[i] = style[i];
+  }
+  analyticsBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+  analyticsBoxTitle.textContent = "디자이너 상세 정보";
+  style = {
+    position: "absolute",
+    left: String(0) + ea,
+    top: String(descriptionTitleTop) + ea,
+    fontSize: String(descriptionTitleSize) + ea,
+    fontWeight: String(600),
+  };
+  for (let i in style) {
+    analyticsBoxTitle.style[i] = style[i];
+  }
+  analyticsBox.appendChild(analyticsBoxTitle);
+  this.designerAnalytics(analyticsBox, desid);
+  mother.appendChild(analyticsBox);
+
+  //designer portfolio
+  portfolioBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    marginRight: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    height: String(portfolioBoxHeight) + ea,
+    border: "1px solid " + GeneralJs.colorChip.gray3,
+    marginTop: String(analyticsBoxTopMargin) + ea,
+    boxSizing: "border-box",
+    borderRadius: String(3) + ea,
+  };
+  for (let i in style) {
+    portfolioBox.style[i] = style[i];
+  }
+  portfolioBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+  portfolioBoxTitle.textContent = "디자이너 포트폴리오";
+  style = {
+    position: "absolute",
+    left: String(0) + ea,
+    top: String(descriptionTitleTop) + ea,
+    fontSize: String(descriptionTitleSize) + ea,
+    fontWeight: String(600),
+  };
+  for (let i in style) {
+    portfolioBoxTitle.style[i] = style[i];
+  }
+  portfolioBox.appendChild(portfolioBoxTitle);
+  this.designerPortfolio(portfolioBox, desid);
+  mother.appendChild(portfolioBox);
+}
+
+ProposalJs.prototype.designerAnalytics = function (mother, desid) {
+  const instance = this;
+  const thisDesigner = this.designers.search(desid);
+  const { analytics } = thisDesigner;
+
+  console.log(analytics);
+
+}
+
+ProposalJs.prototype.designerPortfolio = function (mother, desid) {
+  const instance = this;
+  const thisDesigner = this.designers.search(desid);
 
 
 }
@@ -698,6 +1076,8 @@ ProposalJs.prototype.launching = async function (loading) {
     const { cliid } = getObj;
     let projects, project;
     let clients, client;
+    let designers, designer;
+    let whereQuery;
 
     //tablet
     if (window.innerWidth <= 1050 && window.innerWidth > 800) {
@@ -743,6 +1123,16 @@ ProposalJs.prototype.launching = async function (loading) {
       window.location.href = "https://home-liaison.com";
       project = null;
     } else {
+
+      whereQuery = {};
+      whereQuery["$or"] = [];
+      for (let project of projects) {
+        for (let { desid } of project.proposal.detail) {
+          whereQuery["$or"].push({ desid: desid });
+        }
+      }
+      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
+
       projects.sort((a, b) => {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
       });
@@ -753,8 +1143,16 @@ ProposalJs.prototype.launching = async function (loading) {
       window.location.href = "https://home-liaison.com";
     }
     client = clients[0];
+    for (let obj of project.proposal.detail) {
+      for (let { desid, designer } of designers) {
+        if (obj.desid === desid) {
+          obj.designer = designer;
+        }
+      }
+    }
     this.project = project;
     this.client = client;
+    this.designers = new Designers(designers);
     this.proposal = project.proposal;
 
     //loading end

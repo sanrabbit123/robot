@@ -85,6 +85,7 @@ GeneralJs.colorChip = {
   gray1: "#f2f2f2",
   gray2: "#ececec",
   gray3: "#dddddd",
+  gray4: "#cccccc",
   gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
   deactive: "#bbbbbb",
   shadow: "#808080",
@@ -482,6 +483,42 @@ GeneralJs.getUser = function () {
   };
 }
 
+GeneralJs.serviceParsing = function (serviceObj) {
+  if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
+    throw new Error("invaild service object");
+  }
+  const { online, serid, xValue } = serviceObj;
+  let finalWords;
+
+  if (online) {
+    finalWords = "온라인 ";
+  } else {
+    finalWords = "오프라인 ";
+  }
+
+  if (/aa01s/gi.test(serid)) {
+    finalWords += "홈퍼니싱 ";
+  } else if (/aa02s/gi.test(serid)) {
+    finalWords += "홈스타일링 ";
+  } else if (/aa03s/gi.test(serid)) {
+    finalWords += "토탈 스타일링 ";
+  } else {
+    throw new Error("invaild service object");
+  }
+
+  if (/M/gi.test(xValue)) {
+    finalWords += "mini";
+  } else if (/B/gi.test(xValue)) {
+    finalWords += "basic ";
+  } else if (/P/gi.test(xValue)) {
+    finalWords += "premium";
+  } else {
+    throw new Error("invaild service object");
+  }
+
+  return finalWords;
+}
+
 GeneralJs.prototype.belowButtons = {
   arrow: {
     left: null,
@@ -763,6 +800,10 @@ GeneralJs.prototype.generalCss = function () {
 
 GeneralJs.prototype.returnCircle = function (cssString, color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" class="circle" style="${cssString}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
+}
+
+GeneralJs.prototype.returnPoint = function (radius, color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg"><circle cx="${radius}" cy="${radius}" r="${radius}" fill="${color}" /></svg>`;
 }
 
 GeneralJs.prototype.returnBigArrow = function (color) {

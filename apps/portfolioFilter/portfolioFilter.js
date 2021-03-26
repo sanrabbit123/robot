@@ -481,7 +481,7 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
   }
 }
 
-PortfolioFilter.prototype.addtionalRepair = async function (pid, tNumber) {
+PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
   const instance = this;
   const { fileSystem, shell, shellLink, s3FileUpload, todayMaker } = this.mother;
   const home = process.env.HOME;

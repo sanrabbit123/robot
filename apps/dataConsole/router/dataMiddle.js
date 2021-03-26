@@ -11,6 +11,64 @@ const MiddleCommunication = function () {
   this.meta = {};
 }
 
+MiddleCommunication.prototype.mediaQuery = function (code) {
+  const conditions = [
+    "window.innerWidth > 1540",
+    "window.innerWidth <= 1540 && window.innerWidth > 1050",
+    "window.innerWidth <= 1050 && window.innerWidth > 800",
+    "window.innerWidth <= 800"
+  ];
+  let first_mother, first_father;
+  let last_mother, last_father;
+  let first_indexArr, first_stringArr;
+  let last_indexArr, last_stringArr;
+  let refined;
+  let tempValue, tempArr;
+  let tempStr;
+
+  first_stringArr = [];
+  first_indexArr = [];
+  first_mother = [ ...code.matchAll(/[\n;][^\n\;]*\<m\%/g) ];
+  first_father = [ ...code.matchAll(/\<m\%/g) ];
+  last_indexArr = [];
+  last_stringArr = [];
+  last_mother = [ ...code.matchAll(/\<m\%[^\%]+\%m\>/g) ];
+  last_father = [ ...code.matchAll(/\%m\>/g) ];
+  if (first_mother.length !== first_father.length) {
+    if (last_mother.length !== last_father.length) {
+      throw new Error("can not <m% first");
+    }
+  }
+
+  refined = [];
+
+  for (let i = 0; i < first_mother.length; i++) {
+    tempValue = first_mother[i][0].replace(/[\n;]/g, '').replace(/\<m\%/g, '').trim();
+    tempArr = last_mother[i][0].replace(/\<m\%/g, '').replace(/\%m\>/g, '').trim().split(",");
+    first_indexArr.push(first_mother[i].index);
+    first_stringArr.push(tempValue);
+    last_indexArr.push(last_father[i].index);
+    last_stringArr.push(tempArr);
+    tempStr = '';
+    if (tempArr.length > conditions.length) {
+      throw new Error("parse error");
+    }
+    for (let j = 0; j < tempArr.length; j++) {
+      tempStr += " } else if (" + conditions[j] + ") { ";
+      tempStr += tempValue;
+      tempStr += " ";
+      tempStr += tempArr[j];
+      tempStr += ";\n";
+    }
+    tempStr = tempStr.slice(7) + " }";
+    refined.push(tempStr);
+  }
+
+  console.log(first_indexArr, first_stringArr, last_indexArr, last_stringArr, refined);
+
+  return code;
+}
+
 MiddleCommunication.prototype.setMetadata = function (property, value) {
   this.meta[property] = value;
 }

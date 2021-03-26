@@ -371,6 +371,7 @@ DataConsole.prototype.connect = async function () {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.static(staticFolder));
 
+  /*
   try {
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
@@ -491,6 +492,14 @@ DataConsole.prototype.connect = async function () {
   } catch (e) {
     console.log(e);
   }
+  */
+
+
+  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+  const proposalCode = await fileSystem(`readString`, [ `${this.dir}/router/source/middle/proposal.js` ]);
+  DataMiddle.mediaQuery(proposalCode);
+
+
 }
 
 module.exports = DataConsole;
