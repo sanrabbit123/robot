@@ -107,7 +107,7 @@ class ProposalMapGenerator {
 
     console.log(analytics)
 
-    const { styling: { tendency: { style: styleTendency, color: colorTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, construct: { possible: { supervision } }, purchase: { agencies, setting: { install, storage } }, project: { paperWork } } = analytics;
+    const { styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, construct: { possible: { supervision } }, purchase: { agencies, setting: { install, storage } }, project: { paperWork } } = analytics;
     let map = new ProposalMap();
     let career, monthAmount;
 
@@ -210,7 +210,7 @@ class ProposalMapGenerator {
       name: "스타일 경향성",
       type: "tendency",
       standard: [
-        { column: "class", name: "클래식" },
+        { column: "classic", name: "클래식" },
         { column: "exotic", name: "엑조틱" },
         { column: "mixmatch", name: "믹스매치" },
         { column: "modern", name: "모던" },
@@ -220,19 +220,6 @@ class ProposalMapGenerator {
         { column: "vintage", name: "빈티지" }
       ],
       value: styleTendency
-    });
-    map.set("colorTendency", {
-      name: "컬러톤 경향성",
-      type: "tendency",
-      standard: [
-        { column: "bright", name: "밝은 톤" },
-        { column: "dark", name: "어두운 톤" },
-        { column: "highContrast", name: "고대비" },
-        { column: "mono", name: "모노톤" },
-        { column: "vivid", name: "비비드" },
-        { column: "white", name: "화이트톤" },
-      ],
-      value: colorTendency
     });
     return map;
   }
@@ -1236,12 +1223,315 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
 ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
+  const { ea } = this;
   const thisDesigner = this.designers.search(desid);
   const map = this.map.analyticsMap(thisDesigner);
+  let propertyBox;
+  let pointClone;
+  let pointRadius, pointTop;
+  let margin;
+  let top, left, leftIndent, width0, width1, height;
+  let initNumber;
+  let maxNumber;
+  let maxInitNumber;
+  let leftNumber;
+  let titleDom;
+  let titleSize;
+  let titleIndent;
+  let wordSpacing;
+  let valueDom;
+  let titleTop;
+  let valueDomStandard;
+  let valueDomCircle;
+  let pointTopValue, pointIntendValue;
+  let checkboxMarginRight, radioMarginRight;
+  let tendencyTop, tendencyHeight, tendencyMargin;
+  let valueDomText, valueDomBar;
+  let valueDomBarLeft;
+  let valueDomBarFactor;
+  let tendencyVisualLeft;
+  let valueDomValue, valueDomValueWidth, valueDomValueMargin;
+  let checkBoxRadius, checkBoxRadiusTop, checkBoxRadiusIntend;
 
+  initNumber = 2;
+  maxNumber = 6;
+  maxInitNumber = (maxNumber * 2) - initNumber;
+  leftNumber = map.length - maxInitNumber;
 
-  console.log(map);
-  console.log(map[0]);
+  top = <%% 30, 30, 30, 30 %%>;
+  left = <%% 30, 30, 30, 30 %%>;
+  leftIndent = <%% 20, 20, 20, 20 %%>;
+  width1 = <%% 340, 500, 500, 500 %%>;
+  width0 = (width1 * 2) + leftIndent;
+  height = <%% 26, 30, 30, 30 %%>;
+  wordSpacing = <%% -1, -1, -1, -1 %%>;
+
+  margin = <%% 12, 12, 12, 12 %%>;
+
+  pointRadius = <%% 2, 2, 2, 2 %%>;
+  pointTop = <%% 9, 9, 9, 9 %%>;
+  pointTopValue = <%% 8, 9, 9, 9 %%>;
+  pointIntendValue = <%% 4, 4, 4, 4 %%>;
+
+  checkBoxRadius = <%% 4, 5, 5, 5 %%>;
+  checkBoxRadiusTop = <%% 6, 5, 5, 5 %%>;
+  checkBoxRadiusIntend = <%% 5, 5, 5, 5 %%>;
+
+  titleSize = <%% 16, 15, 15, 15 %%>;
+  titleIndent = <%% 4, 2, 2, 2 %%>;
+  titleTop = 0;
+
+  valueIndent = <%% 140, 2, 2, 2 %%>;
+
+  checkboxMarginRight = <%% 24, 24, 24, 24 %%>;
+  radioMarginRight = <%% 27, 32, 32, 32 %%>;
+
+  valueDomBarLeft = <%% 60, 60, 60, 60 %%>;
+  valueDomValueWidth = <%% 13, 60, 60, 60 %%>;
+  valueDomValueMargin = <%% 10, 60, 60, 60 %%>;
+
+  tendencyVisualLeft = <%% 12, 10, 10, 10 %%>;
+  tendencyTop = <%% 33, 33, 33, 33 %%>;
+  tendencyMargin = <%% 3, 3, 3, 3 %%>;
+
+  for (let i = 0; i < map.length; i++) {
+
+    //base
+    propertyBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      top: String(top + ((margin + height) * (i < maxNumber ? i : i - (maxNumber - initNumber)))) + ea,
+      left: String(left + (i < maxNumber ? 0 : (width1 + leftIndent))) + ea,
+      width: String(i < 2 ? width0 : width1) + ea,
+      height: String(height) + ea,
+    };
+    if (i >= maxInitNumber) {
+      style.top = String(top) + ea;
+      style.left = String(left + (leftIndent * 2) + (width1 * 2) - tendencyVisualLeft) + ea;
+      style.height = String((height * maxNumber) + (margin * (maxNumber - 1))) + ea;
+      style.width = "calc(100% - " + String((left * 2) + width0 + leftIndent - tendencyVisualLeft) + ea + ")";
+    }
+    for (let j in style) {
+      propertyBox.style[j] = style[j];
+    }
+
+    //circle
+    pointClone = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.green));
+    style = {
+      position: "absolute",
+      width: String(pointRadius * 2) + ea,
+      height: String(pointRadius * 2) + ea,
+      left: String(0) + ea,
+      top: String(pointTop) + ea,
+    };
+    for (let j in style) {
+      pointClone.style[j] = style[j];
+    }
+    propertyBox.appendChild(pointClone);
+
+    //property title
+    titleDom = GeneralJs.nodes.div.cloneNode(true);
+    titleDom.textContent = map[i].name;
+    style = {
+      position: "absolute",
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(500),
+      wordSpacing: String(wordSpacing) + ea,
+      left: String((pointRadius * 2) + titleIndent) + ea,
+      top: String(titleTop) + ea,
+    };
+    for (let j in style) {
+      titleDom.style[j] = style[j];
+    }
+    propertyBox.appendChild(titleDom);
+
+    //value
+    if (map[i].type === "string") {
+      valueDom = GeneralJs.nodes.div.cloneNode(true);
+      valueDom.textContent = map[i].value;
+      style = {
+        position: "absolute",
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(400),
+        wordSpacing: String(wordSpacing) + ea,
+        left: String((pointRadius * 2) + valueIndent - checkBoxRadiusIntend) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.green
+      };
+      for (let j in style) {
+        valueDom.style[j] = style[j];
+      }
+      propertyBox.appendChild(valueDom);
+    } else if (map[i].type === "checkbox" || map[i].type === "radio") {
+
+      if (map[i].type === "radio") {
+        map[i].value = [ map[i].value ];
+      }
+
+      valueDom = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(400),
+        wordSpacing: String(wordSpacing) + ea,
+        left: String((pointRadius * 2) + valueIndent) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.gray3,
+        width: "calc(100% - " + String((pointRadius * 2) + valueIndent) + ea + ")",
+        height: String(100) + '%',
+      };
+      for (let j in style) {
+        valueDom.style[j] = style[j];
+      }
+
+      for (let z = 0; z < map[i].standard.length; z++) {
+        valueDomStandard = GeneralJs.nodes.div.cloneNode(true);
+        valueDomStandard.textContent = map[i].standard[z];
+        style = {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: (map[i].value.includes(map[i].standard[z]) ? String(400) : "inherit"),
+          color: (map[i].value.includes(map[i].standard[z]) ? GeneralJs.colorChip.green : "inherit"),
+          wordSpacing: String(wordSpacing) + ea,
+          marginRight: String(map[i].type === "checkbox" ? checkboxMarginRight : radioMarginRight) + ea,
+          top: String(0) + ea,
+        };
+        if (z === 0) {
+          style.marginLeft = String(9) + ea;
+        }
+        for (let j in style) {
+          valueDomStandard.style[j] = style[j];
+        }
+
+        if (map[i].value.includes(map[i].standard[z])) {
+          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.green));
+        } else {
+          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray4));
+        }
+        style = {
+          position: "absolute",
+          width: String(checkBoxRadius * 2) + ea,
+          height: String(checkBoxRadius * 2) + ea,
+          left: String(-1 * ((checkBoxRadius * 2) + checkBoxRadiusIntend)) + ea,
+          top: String(checkBoxRadiusTop) + ea,
+        };
+        for (let j in style) {
+          valueDomCircle.style[j] = style[j];
+        }
+        valueDomStandard.appendChild(valueDomCircle);
+        valueDom.appendChild(valueDomStandard);
+      }
+      propertyBox.appendChild(valueDom);
+    } else if (map[i].type === "tendency") {
+
+      tendencyHeight = ((height * maxNumber) + (margin * (maxNumber - 1)) - tendencyTop - (tendencyMargin * (map[i].standard.length - 1))) / map[i].standard.length;
+
+      for (let z = 0; z < map[i].standard.length; z++) {
+        valueDom = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          left: String(0) + ea,
+          top: String(tendencyTop + ((tendencyHeight + tendencyMargin) * z)) + ea,
+          width: String(100) + '%',
+          height: String(tendencyHeight) + ea,
+        };
+        for (let j in style) {
+          valueDom.style[j] = style[j];
+        }
+
+        valueDomText = GeneralJs.nodes.div.cloneNode(true);
+        valueDomText.textContent = map[i].standard[z].name;
+        style = {
+          position: "absolute",
+          fontSize: String(tendencyHeight * 0.65) + ea,
+          fontWeight: String(500),
+          wordSpacing: String(wordSpacing) + ea,
+          left: String(0) + ea,
+          top: String(-1 * (tendencyMargin)) + ea,
+          width: String(valueDomBarLeft) + ea,
+          height: String(tendencyHeight) + ea,
+        };
+        for (let j in style) {
+          valueDomText.style[j] = style[j];
+        }
+        valueDom.appendChild(valueDomText);
+
+        valueDomBar = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          left: String(valueDomBarLeft) + ea,
+          top: String(-1 * (tendencyMargin / 2)) + ea,
+          color: GeneralJs.colorChip.green,
+          width: "calc(100% - " + String(valueDomBarLeft + valueDomValueWidth + valueDomValueMargin) + ea + ")",
+          height: String(tendencyHeight * 0.8) + ea,
+          borderRadius: String(3) + ea,
+          background: GeneralJs.colorChip.gray0,
+          overflow: "hidden",
+        };
+        for (let j in style) {
+          valueDomBar.style[j] = style[j];
+        }
+        for (let y = 0; y < 10; y++) {
+          valueDomBarFactor = GeneralJs.nodes.div.cloneNode(true);
+          style = {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(100% / " + String(10) + ")",
+            height: String(100) + '%',
+            boxSizing: "border-box",
+          };
+          if (y <= map[i].value[map[i].standard[z].column] - 1) {
+            style.background = GeneralJs.colorChip.green;
+            style.borderRight = "1px solid " + GeneralJs.colorChip.green;
+          } else {
+            style.background = GeneralJs.colorChip.gray1;
+            style.borderRight = "1px solid " + GeneralJs.colorChip.white;
+          }
+
+          if (y === map[i].value[map[i].standard[z].column] - 1) {
+            style.borderTopRightRadius = String(3) + ea;
+            style.borderBottomRightRadius = String(3) + ea;
+          }
+
+          if (y === 10 - 1) {
+            delete style.borderRight;
+          }
+          for (let j in style) {
+            valueDomBarFactor.style[j] = style[j];
+          }
+
+          valueDomBar.appendChild(valueDomBarFactor);
+        }
+        valueDom.appendChild(valueDomBar);
+
+        valueDomValue = GeneralJs.nodes.div.cloneNode(true);
+        valueDomValue.textContent = String(map[i].value[map[i].standard[z].column]);
+        style = {
+          position: "absolute",
+          fontSize: String(tendencyHeight * 0.65) + ea,
+          fontWeight: String(200),
+          wordSpacing: String(wordSpacing) + ea,
+          right: String(0) + ea,
+          top: String(-1 * (tendencyMargin)) + ea,
+          color: GeneralJs.colorChip.green,
+          width: String(valueDomValueWidth) + ea,
+          height: String(tendencyHeight) + ea,
+        };
+        for (let j in style) {
+          valueDomValue.style[j] = style[j];
+        }
+        valueDom.appendChild(valueDomValue);
+
+        propertyBox.appendChild(valueDom);
+      }
+
+    }
+
+    mother.appendChild(propertyBox);
+  }
+
+  mother.style.height = String((top * 2) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
 
 }
 
