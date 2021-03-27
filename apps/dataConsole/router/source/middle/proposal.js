@@ -46,8 +46,201 @@ class Designers extends Array {
   }
 }
 
+class ProposalMapFactor {
+  constructor(obj) {
+    if (typeof obj === "object") {
+      if (obj.name !== undefined && obj.type !== undefined && obj.standard !== undefined && obj.value !== undefined) {
+        for (let i in obj) {
+          this[i] = obj[i];
+        }
+      } else {
+        throw new Error("invaild property name");
+      }
+    } else {
+      throw new Error("invaild property name");
+    }
+  }
+}
+
+class ProposalMap extends Array {
+
+  constructor() {
+    super();
+    Object.defineProperty(this, "__properties__", {
+        enumerable: false,
+        value: []
+    });
+  }
+
+  set(property, valueObj) {
+    if (Object.keys(ProposalMap.prototype).includes(property)) {
+      throw new Error("invaild property name");
+    }
+    const value = new ProposalMapFactor(valueObj);
+    this.push(value);
+    this.__properties__.push(property);
+    this[property] = value;
+  }
+
+  get(property) {
+    let result = null;
+    if (this[property] !== undefined) {
+      result = this[property];
+    }
+    return result;
+  }
+
+  getAllProperties() {
+    return this.__properties__;
+  }
+
+  search() {
+
+  }
+
+}
+
+class ProposalMapGenerator {
+  analyticsMap(designer) {
+    const today = new Date();
+    const { information: { business: { career: { startY, startM } } }, analytics } = designer;
+
+    console.log(analytics)
+
+    const { styling: { tendency: { style: styleTendency, color: colorTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, construct: { possible: { supervision } }, purchase: { agencies, setting: { install, storage } }, project: { paperWork } } = analytics;
+    let map = new ProposalMap();
+    let career, monthAmount;
+
+    monthAmount = ((today.getFullYear()) * 12 + (today.getMonth() + 1)) - ((startY * 12) + startM);
+    career = String(Math.floor(monthAmount / 12)) + '년' + ' ' + String(monthAmount % 12) + "개월";
+
+    map.set("career", {
+      name: "경력",
+      type: "string",
+      standard: null,
+      value: career
+    });
+    map.set("paperWork", {
+      name: "페이퍼 워크",
+      type: "checkbox",
+      standard: [
+        "도면",
+        "3D",
+        "컨셉 제안",
+        "마감재 제안",
+        "제품 리스트",
+        "참고 이미지",
+        "드로잉",
+      ],
+      value: paperWork
+    });
+    map.set("method", {
+      name: "제안 방식",
+      type: "radio",
+      standard: [
+        "순차 제안",
+        "한번에 제안"
+      ],
+      value: method
+    });
+    map.set("builtin", {
+      name: "빌트인 가구 제작",
+      type: "radio",
+      standard: [
+        "가능",
+        "불가능"
+      ],
+      value: (builtin ? "가능" : "불가능")
+    });
+    map.set("furniture", {
+      name: "디자인 가구 제작",
+      type: "radio",
+      standard: [
+        "가능",
+        "불가능"
+      ],
+      value: (design ? "가능" : "불가능")
+    });
+    map.set("fabric", {
+      name: "패브릭 직접 제작",
+      type: "radio",
+      standard: [
+        "가능",
+        "불가능"
+      ],
+      value: (manufacture ? "가능" : "불가능")
+    });
+    map.set("supervision", {
+      name: "시공 감리 여부",
+      type: "radio",
+      standard: [
+        "가능",
+        "불가능"
+      ],
+      value: (supervision ? "가능" : "불가능")
+    });
+    map.set("agencies", {
+      name: "구매 대행 여부",
+      type: "radio",
+      standard: [
+        "제공",
+        "미제공"
+      ],
+      value: (agencies ? "제공" : "미제공")
+    });
+    map.set("install", {
+      name: "조립, 설치 서비스",
+      type: "radio",
+      standard: [
+        "제공",
+        "미제공"
+      ],
+      value: (install ? "제공" : "미제공")
+    });
+    map.set("storage", {
+      name: "정리 수납 서비스",
+      type: "radio",
+      standard: [
+        "제공",
+        "미제공"
+      ],
+      value: (storage ? "제공" : "미제공")
+    });
+    map.set("styleTendency", {
+      name: "스타일 경향성",
+      type: "tendency",
+      standard: [
+        { column: "class", name: "클래식" },
+        { column: "exotic", name: "엑조틱" },
+        { column: "mixmatch", name: "믹스매치" },
+        { column: "modern", name: "모던" },
+        { column: "natural", name: "내추럴" },
+        { column: "oriental", name: "동양" },
+        { column: "scandinavian", name: "북유럽" },
+        { column: "vintage", name: "빈티지" }
+      ],
+      value: styleTendency
+    });
+    map.set("colorTendency", {
+      name: "컬러톤 경향성",
+      type: "tendency",
+      standard: [
+        { column: "bright", name: "밝은 톤" },
+        { column: "dark", name: "어두운 톤" },
+        { column: "highContrast", name: "고대비" },
+        { column: "mono", name: "모노톤" },
+        { column: "vivid", name: "비비드" },
+        { column: "white", name: "화이트톤" },
+      ],
+      value: colorTendency
+    });
+    return map;
+  }
+}
+
 const ProposalJs = function () {
   this.mother = new GeneralJs();
+  this.map = new ProposalMapGenerator();
   this.margin = 0;
   this.mode = "desktop";
   this.sero = false;
@@ -66,7 +259,40 @@ const ProposalJs = function () {
   };
 }
 
+//static
+
 ProposalJs.binaryPath = "/middle/proposal";
+
+ProposalJs.styleTextParsing = function (text) {
+  const cssArr = text.split(';');
+  let filterArr;
+  let tempArr, finalObj;
+  finalObj = {};
+
+  filterArr = [];
+  for (let i of cssArr) {
+    if (/\:/.test(i)) {
+      filterArr.push(i.trim());
+    }
+  }
+
+  for (let i of filterArr) {
+    tempArr = i.split(':');
+    if (tempArr.length !== 2) {
+      console.log(cssArr, filterArr);
+      throw new Error("invaild css string");
+    }
+    if (/url\(/gi.test(tempArr[1].trim())) {
+      finalObj[tempArr[0].trim()] = "url(\"" + S3HOST + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
+    } else {
+      finalObj[tempArr[0].trim()] = tempArr[1].trim();
+    }
+  }
+
+  return finalObj;
+}
+
+//method
 
 ProposalJs.prototype.setBackground = function () {
   const instance = this;
@@ -288,7 +514,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   factorBoxWidth = 630;
   factorBoxTop = 100;
-  factorBoxTopVisual = 6;
+  factorBoxTopVisual = <%% 5, 5, 5, 5 %%>;
 
   factorPaddingLeft = 10;
   factorPaddingTop = 10;
@@ -729,35 +955,6 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   }
 }
 
-ProposalJs.styleTextParsing = function (text) {
-  const cssArr = text.split(';');
-  let filterArr;
-  let tempArr, finalObj;
-  finalObj = {};
-
-  filterArr = [];
-  for (let i of cssArr) {
-    if (/\:/.test(i)) {
-      filterArr.push(i.trim());
-    }
-  }
-
-  for (let i of filterArr) {
-    tempArr = i.split(':');
-    if (tempArr.length !== 2) {
-      console.log(cssArr, filterArr);
-      throw new Error("invaild css string");
-    }
-    if (/url\(/gi.test(tempArr[1].trim())) {
-      finalObj[tempArr[0].trim()] = "url(\"" + S3HOST + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
-    } else {
-      finalObj[tempArr[0].trim()] = tempArr[1].trim();
-    }
-  }
-
-  return finalObj;
-}
-
 ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   const instance = this;
   const { ea } = this;
@@ -790,38 +987,38 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   let portfolioBox, portfolioBoxTitle;
   let portfolioBoxHeight;
 
-  bottomMarginVisual = <m% 3, 3, 3, 3 %m>;
+  bottomMarginVisual = <%% 3, 3, 3, 3 %%>;
 
-  designerTitleSize = <m% 20, 20, 20, 20 %m>;
-  titleWordSpacing = <m% -2, -2, -2, -2 %m>;
-  wordSpacing = <m% -1, -1, -1, -1 %m>;
-  margin = <m% 18, 18, 18, 18 %m>;
+  designerTitleSize = <%% 20, 20, 20, 20 %%>;
+  titleWordSpacing = <%% -2, -2, -2, -2 %%>;
+  wordSpacing = <%% -1, -1, -1, -1 %%>;
+  margin = <%% 18, 18, 18, 18 %%>;
 
-  pictureBoxWidth = <m% 980, 980, 980, 980 %m>;
+  pictureBoxWidth = <%% 980, 980, 980, 980 %%>;
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
-  descriptionPaddingTop = <m% 22, 22, 22, 22 %m>;
-  descriptionPaddingBottom = <m% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %m>;
-  descriptionPaddingLeft = <m% 28, 28, 28, 28 %m>;
-  descriptionPaddingRight = <m% 20, 20, 20, 20 %m>;
-  descriptionMargin = <m% 10, 10, 10, 10 %m>;
-  descriptionSize = <m% 14.5, 14.5, 14.5, 14.5 %m>;
+  descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
+  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
+  descriptionPaddingLeft = <%% 28, 28, 28, 28 %%>;
+  descriptionPaddingRight = <%% 20, 20, 20, 20 %%>;
+  descriptionMargin = <%% 10, 10, 10, 10 %%>;
+  descriptionSize = <%% 14.5, 14.5, 14.5, 14.5 %%>;
 
-  descriptionTitleTop = <m% -30, -30, -30, -30 %m>;
-  descriptionTitleLeft = <m% 1, 1, 1, 1 %m>;
-  descriptionTitleSize = <m% 16, 16, 16, 16 %m>;
+  descriptionTitleTop = <%% -30, -30, -30, -30 %%>;
+  descriptionTitleLeft = <%% 1, 1, 1, 1 %%>;
+  descriptionTitleSize = <%% 16, 16, 16, 16 %%>;
 
-  pointRadius = <m% 2, 2, 2, 2 %m>;
-  pointLeftIndent = <m% 5, 5, 5, 5 %m>;
-  pointTop = <m% 9, 9, 9, 9 %m>;
+  pointRadius = <%% 2, 2, 2, 2 %%>;
+  pointLeftIndent = <%% 5, 5, 5, 5 %%>;
+  pointTop = <%% 9, 9, 9, 9 %%>;
 
-  indexFont = <m% 19, 19, 19, 19 %m>;
-  indexFontWeight = <m% 200, 200, 200, 200 %m>;
+  indexFont = <%% 19, 19, 19, 19 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200 %%>;
 
-  analyticsBoxHeight = <m% 300, 300, 300, 300 %m>;
-  analyticsBoxTopMargin = <m% 50, 50, 50, 50 %m>;
+  analyticsBoxHeight = <%% 300, 300, 300, 300 %%>;
+  analyticsBoxTopMargin = <%% 50, 50, 50, 50 %%>;
 
-  portfolioBoxHeight = <m% 150, 150, 150, 150 %m>;
+  portfolioBoxHeight = <%% 150, 150, 150, 150 %%>;
 
   //mother padding
   mother.style.paddingTop = String(topMargin) + ea;
@@ -1040,9 +1237,11 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
   const thisDesigner = this.designers.search(desid);
-  const { analytics } = thisDesigner;
+  const map = this.map.analyticsMap(thisDesigner);
 
-  console.log(analytics);
+
+  console.log(map);
+  console.log(map[0]);
 
 }
 
@@ -1079,35 +1278,11 @@ ProposalJs.prototype.launching = async function (loading) {
     let designers, designer;
     let whereQuery;
 
-    //tablet
-    if (window.innerWidth <= 1050 && window.innerWidth > 800) {
-      this.modeMinus = 1;
-      this.mode = "tablet";
-      this.sero = false;
-      this.standardWidth = 900;
-      this.ea = "px";
-    //small desktop
-    } else if (window.innerWidth <= 1540 && window.innerWidth > 1050) {
-      this.modeMinus = 1;
-      this.mode = "smallDesktop";
-      this.sero = false;
-      this.standardWidth = 1050;
-      this.ea = "px";
-    //mobile
-    } else if (window.innerWidth <= 800) {
-      this.modeMinus = 1;
-      this.mode = "mobile";
-      this.sero = true;
-      this.standardWidth = 100;
-      this.ea = "vw";
-    //desktop
-    } else {
-      this.modeMinus = 0;
-      this.mode = "bigDesktop";
-      this.sero = false;
-      this.standardWidth = 1400;
-      this.ea = "px";
-    }
+    this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "mobile" %%>;
+    this.ea = <%% "px", "px", "px", "vw" %%>;
+    this.standardWidth = <%% 1400, 1050, 900, 100 %%>;
+    this.sero = <%% false, false, false, true %%>;
+    this.modeMinus = <%% 0, 1, 1, 1 %%>;
 
     if (this.modeMinus !== 0) {
       document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");

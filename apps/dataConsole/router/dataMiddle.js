@@ -12,61 +12,35 @@ const MiddleCommunication = function () {
 }
 
 MiddleCommunication.prototype.mediaQuery = function (code) {
-  const conditions = [
-    "window.innerWidth > 1540",
-    "window.innerWidth <= 1540 && window.innerWidth > 1050",
-    "window.innerWidth <= 1050 && window.innerWidth > 800",
-    "window.innerWidth <= 800"
-  ];
-  let first_mother, first_father;
-  let last_mother, last_father;
-  let first_indexArr, first_stringArr;
-  let last_indexArr, last_stringArr;
-  let refined;
-  let tempValue, tempArr;
-  let tempStr;
+  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
+  const replacer = function (match, p1, p2, offset, string) {
+    const conditions = [
+      "window.innerWidth > 1540",
+      "window.innerWidth <= 1540 && window.innerWidth > 1050",
+      "window.innerWidth <= 1050 && window.innerWidth > 800",
+      "window.innerWidth <= 800"
+    ];
+    const safeWall = "\n\n";
+    let tempValue, tempArr, tempStr;
 
-  first_stringArr = [];
-  first_indexArr = [];
-  first_mother = [ ...code.matchAll(/[\n;][^\n\;]*\<m\%/g) ];
-  first_father = [ ...code.matchAll(/\<m\%/g) ];
-  last_indexArr = [];
-  last_stringArr = [];
-  last_mother = [ ...code.matchAll(/\<m\%[^\%]+\%m\>/g) ];
-  last_father = [ ...code.matchAll(/\%m\>/g) ];
-  if (first_mother.length !== first_father.length) {
-    if (last_mother.length !== last_father.length) {
-      throw new Error("can not <m% first");
-    }
-  }
-
-  refined = [];
-
-  for (let i = 0; i < first_mother.length; i++) {
-    tempValue = first_mother[i][0].replace(/[\n;]/g, '').replace(/\<m\%/g, '').trim();
-    tempArr = last_mother[i][0].replace(/\<m\%/g, '').replace(/\%m\>/g, '').trim().split(",");
-    first_indexArr.push(first_mother[i].index);
-    first_stringArr.push(tempValue);
-    last_indexArr.push(last_father[i].index);
-    last_stringArr.push(tempArr);
-    tempStr = '';
+    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
+    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
+    tempStr = "";
     if (tempArr.length > conditions.length) {
       throw new Error("parse error");
     }
     for (let j = 0; j < tempArr.length; j++) {
       tempStr += " } else if (" + conditions[j] + ") { ";
+      tempStr += "\n"
       tempStr += tempValue;
       tempStr += " ";
       tempStr += tempArr[j];
       tempStr += ";\n";
     }
-    tempStr = tempStr.slice(7) + " }";
-    refined.push(tempStr);
+    tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
+    return tempStr;
   }
-
-  console.log(first_indexArr, first_stringArr, last_indexArr, last_stringArr, refined);
-
-  return code;
+  return code.replace(matchReg, replacer);
 }
 
 MiddleCommunication.prototype.setMetadata = function (property, value) {

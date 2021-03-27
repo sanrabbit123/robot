@@ -217,6 +217,11 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
           }
         }
 
+        //set media query
+        if (/<%%/gi.test(fileString)) {
+          fileString = DataMiddle.mediaQuery(fileString);
+        }
+
         //merge
         code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
         code1 = dataPatchScript;
@@ -239,7 +244,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
         // result = await babelSystem(result);
         // console.log(`${i} babel compile success`);
-        // finalMinifyObj = await minify(polyfillString + "\n\n" + result);
+        // finalMinifyObj = await minify(polyfillString + "\n\n" + result, { mangle: { keep_classnames: true, keep_fnames: true } });
         // finalMinifyString = finalMinifyObj.code;
         // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
 
@@ -371,7 +376,6 @@ DataConsole.prototype.connect = async function () {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.static(staticFolder));
 
-  /*
   try {
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
@@ -492,14 +496,6 @@ DataConsole.prototype.connect = async function () {
   } catch (e) {
     console.log(e);
   }
-  */
-
-
-  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-  const proposalCode = await fileSystem(`readString`, [ `${this.dir}/router/source/middle/proposal.js` ]);
-  DataMiddle.mediaQuery(proposalCode);
-
-
 }
 
 module.exports = DataConsole;
