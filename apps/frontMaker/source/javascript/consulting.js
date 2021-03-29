@@ -437,8 +437,8 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       obj[ajaxList[i]] = '';
     }
 
-    obj.pretext = mother.querySelector(queryId + "blocks_name > input").value;
-    obj.cellphone = mother.querySelector(queryId + "blocks_phone > input").value;
+    obj.pretext = GeneralJs.escapeString(mother.querySelector(queryId + "blocks_name > input").value, { hangul: true, noSpace: true });
+    obj.cellphone = GeneralJs.escapeString(mother.querySelector(queryId + "blocks_phone > input").value, { isPhone: true });
     obj.dwelling = mother.querySelector(queryId + "blocks_address0 > input").value + ' ' + mother.querySelector(queryId + "blocks_address1 > input").value;
     obj.folk = mother.querySelector(queryId + "blocks_family > input").value;
     obj.email = mother.querySelector(queryId + "blocks_email > input").value;

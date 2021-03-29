@@ -104,9 +104,6 @@ class ProposalMapGenerator {
   analyticsMap(designer) {
     const today = new Date();
     const { information: { business: { career: { startY, startM } } }, analytics } = designer;
-
-    console.log(analytics)
-
     const { styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, construct: { possible: { supervision } }, purchase: { agencies, setting: { install, storage } }, project: { paperWork } } = analytics;
     let map = new ProposalMap();
     let career, monthAmount;
@@ -225,6 +222,131 @@ class ProposalMapGenerator {
   }
 }
 
+class WordsDictionary {
+  constructor() {
+    class Words extends Array {
+      allChildren() {
+        let arr = [];
+        for (let i of this) {
+          for (let j of i.children) {
+            arr.push(j);
+          }
+        }
+        return arr;
+      }
+    }
+    class WordString extends String {
+      constructor(str) {
+        super(str);
+      }
+      setChildren(arr) {
+        Object.defineProperty(this, "children", {
+            enumerable: false,
+            value: arr
+        });
+      }
+    }
+    let arr = new Words();
+    let targets = [
+      {
+        mother: "커뮤니케이션 & 컨설팅",
+        children: [
+          "디자이너와 카톡(문자) / 전화 / 메일 등의 채널을 통해 커뮤니케이션하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
+          "(오프라인 진행 시) 디자이너와 현장 미팅을 진행하며 집 컨디션 / 취향 / 생활 특징 / 예산을 고려하여 컨설팅해드립니다."
+        ]
+      },
+      {
+        mother: "시공팀 관련",
+        children: [
+          "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다."
+        ]
+      },
+      {
+        mother: "스타일링 범주",
+        children: [
+          "시공 진행 시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
+          "기존에 사용하시는 가구들 중 가져갈 가구와 버릴 가구 선택 및 배치 / 활용 제안드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+          "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
+          "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라 드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4 품목 중에서 셀렉은 가능합니다."
+        ]
+      },
+      {
+        mother: "구매 안내",
+        children: [
+          "디자이너 제안 후 고객 컨펌이 완료된 구매 제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매 시에는 할인 혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다."
+        ]
+      },
+      {
+        mother: "배송 및 설치 안내",
+        children: [
+          "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차 배치는 고객님께서 진행하시게 됩니다.",
+          "구매 및 물품 배치가 완료되면 인터뷰와 촬영을 진행합니다."
+        ]
+      },
+    ];
+    let temp;
+    for (let { mother, children } of targets) {
+      temp = new WordString(mother);
+      temp.setChildren(children);
+      arr.push(temp);
+    }
+    this.words = arr;
+  }
+
+  getWords() {
+    return this.words;
+  }
+
+  getMatrix() {
+    let result, num, past;
+    let temp;
+
+    result = [];
+    num = 1;
+    past = "";
+
+    for (let i = 0; i < this.words.length; i++) {
+      for (let j = 0; j < this.words[i].children.length; j++) {
+        temp = new Array(3);
+        if (past !== String(this.words[i])) {
+          temp[0] = String(this.words[i]);
+        } else {
+          temp[0] = "";
+        }
+        temp[1] = String(num);
+        temp[2] = this.words[i].children[j];
+        result.push(temp);
+        past = String(this.words[i]);
+        num++;
+      }
+    }
+
+    return result;
+  }
+
+  colorMatching(str) {
+    if (/\<b\%/gi.test(str)) {
+      str = str.replace(/(\<b\%[^\%]+\%b\>)/gi, (match, p1, offset, string) => {
+        return `<b style="color:${GeneralJs.colorChip.green}">${p1.slice(3, -3)}</b>`;
+      });
+    }
+    return str;
+  }
+
+  getSubWording() {
+    let arr = [
+      "<b%*%b> 홈리에종의 홈스타일링 서비스는 <b%“인테리어의 완성된 상태”를 가구/패브릭/조명/소품이 다 자리 잡은 상태라고 정의%b>합니다. 따라서 일반 인테리어와는 다르게 디자인적으로 필요한 시공만 하실 수 있도록 컨설팅해드리고, 마감재 선정 / 가구 / 패브릭 / 조명 / 소품 등 전체 스타일링을 중심으로 진행됩니다.",
+      "<b%*%b> 리모델링 업체와 공사 계약을 맺으실 경우, <b%바탕 공사만 진행하고 가구/패브릭/조명/소품 등의 내부 스타일링은 전부 고객님의 몫%b>입니다. 스타일링을 하다 보면 골라야 할 품목은 매우 많고, 각각의 품목들이 어울리도록 하는 것은 어려운 작업입니다. 바탕과 스타일링이 어울리지 않으면 디자인 완성도가 떨어지게 되어 인테리어 하는데 비용을 사용하고도 불만족하게 됩니다. 따라서 전문가의 홈스타일링 컨설팅 및 디자인 서비스를 받으시는 것이 예산을 가장 효율적이고 합리적으로 사용하면서 디자인적 완성도를 높여 결국 공간을 사용하는 고객님의 만족도를 높이는 방법입니다.",
+      "<b%*%b> 홈리에종은 ‘디자인비’를 먼저 받는 방식으로 진행됩니다. 디자인비를 지불하는 것이 낯설 수도 있지만, 제품 구매비의 할인 및 합리적인 시공비를 안내받으시기 때문에 총 금액상 혜택을 받게 됩니다. 또한 꼭 필요한 곳에 예산을 사용하기 때문에 오히려 효율적이고 합리적이죠. <b%선입금하신 디자인비는 프로젝트 완료 시까지 홈리에종에서 보관하기 때문에 걱정하지 않으셔도 됩니다.%b> 긴 프로젝트 기간 동안 디자이너와 함께 애정을 쏟은 만큼, 마음에 쏙 드는 공간을 얻게 되실 거예요!"
+    ];
+    let result = [];
+    for (let i of arr) {
+      result.push(this.colorMatching(i));
+    }
+    return result;
+  }
+}
+
 const ProposalJs = function () {
   this.mother = new GeneralJs();
   this.map = new ProposalMapGenerator();
@@ -243,6 +365,11 @@ const ProposalJs = function () {
   this.whiteBoxNumbers = {
     leftMargin: 0,
     topMargin: 0
+  };
+  this.subBoxMargin = {
+    top: 0,
+    bottom: 0,
+    left: 0
   };
 }
 
@@ -300,7 +427,7 @@ ProposalJs.prototype.setBackground = function () {
     top: String(0),
     left: String(0),
     width: String(100) + '%',
-    height: String(5000) + ea,
+    height: String(100) + '%',
     background: GeneralJs.colorChip.gray2,
     animation: "justfadeinoriginal 0.3s ease forwards",
   };
@@ -417,7 +544,6 @@ ProposalJs.prototype.setBaseTong = function () {
     width: String(this.standardWidth) + ea,
     left: "calc(50% - " + String(this.standardWidth / 2) + ea + ")",
     top: String(baseTop) + ea,
-    height: String(3000) + ea,
     animation: "fadeupdelay 0.5s ease forwards",
   };
   for (let i in style) {
@@ -518,9 +644,9 @@ ProposalJs.prototype.insertInitBox = function () {
   factorsBarDoms = new Array(factors.length);
   factorsBarHeadDoms = new Array(factors.length);
   factorBarWidth = 200;
-  factorBarTop = 42;
+  factorBarTop = 43;
   factorArrowHeadWidth = 8;
-  factorArrowHeadTop = 38;
+  factorArrowHeadTop = 39;
   factorArrowHeadLeft = 188;
 
   factorValueBottom = 11;
@@ -759,7 +885,7 @@ ProposalJs.prototype.insertInitBox = function () {
   factorValueStyle = {
     position: "absolute",
     fontSize: String(factorSize) + ea,
-    fontWeight: String(200),
+    fontWeight: String(300),
     color: GeneralJs.colorChip.green,
     bottom: String(factorValueBottom) + ea,
     right: String(factorValueRight) + ea,
@@ -973,6 +1099,8 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   let analyticsBoxTitle;
   let portfolioBox, portfolioBoxTitle;
   let portfolioBoxHeight;
+  let feeBox;
+  let feeHeight, feeMarginBottom;
 
   bottomMarginVisual = <%% 3, 3, 3, 3 %%>;
 
@@ -1006,6 +1134,9 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   analyticsBoxTopMargin = <%% 50, 50, 50, 50 %%>;
 
   portfolioBoxHeight = <%% 150, 150, 150, 150 %%>;
+
+  feeHeight = <%% 30, 30, 30, 30 %%>;
+  feeMarginBottom = <%% 10, 10, 10, 10 %%>;
 
   //mother padding
   mother.style.paddingTop = String(topMargin) + ea;
@@ -1219,18 +1350,36 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   portfolioBox.appendChild(portfolioBoxTitle);
   this.designerPortfolio(portfolioBox, desid);
   mother.appendChild(portfolioBox);
+
+  //designer fee
+  feeBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    marginRight: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    height: String(feeHeight) + ea,
+    marginTop: String(analyticsBoxTopMargin) + ea,
+    marginBottom: String(feeMarginBottom) + ea,
+  };
+  for (let i in style) {
+    feeBox.style[i] = style[i];
+  }
+  this.designerFee(feeBox, info.fee);
+  mother.appendChild(feeBox);
 }
 
 ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
   const { ea } = this;
+  const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.search(desid);
   const map = this.map.analyticsMap(thisDesigner);
   let propertyBox;
   let pointClone;
   let pointRadius, pointTop;
   let margin;
-  let top, left, leftIndent, width0, width1, height;
+  let leftIndent, width0, width1, height;
   let initNumber;
   let maxNumber;
   let maxInitNumber;
@@ -1258,10 +1407,8 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   maxInitNumber = (maxNumber * 2) - initNumber;
   leftNumber = map.length - maxInitNumber;
 
-  top = <%% 30, 30, 30, 30 %%>;
-  left = <%% 30, 30, 30, 30 %%>;
   leftIndent = <%% 20, 20, 20, 20 %%>;
-  width1 = <%% 340, 500, 500, 500 %%>;
+  width1 = <%% 360, 500, 500, 500 %%>;
   width0 = (width1 * 2) + leftIndent;
   height = <%% 26, 30, 30, 30 %%>;
   wordSpacing = <%% -1, -1, -1, -1 %%>;
@@ -1283,14 +1430,14 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
   valueIndent = <%% 140, 2, 2, 2 %%>;
 
-  checkboxMarginRight = <%% 24, 24, 24, 24 %%>;
-  radioMarginRight = <%% 27, 32, 32, 32 %%>;
+  checkboxMarginRight = <%% 30, 24, 24, 24 %%>;
+  radioMarginRight = <%% 35, 32, 32, 32 %%>;
 
   valueDomBarLeft = <%% 60, 60, 60, 60 %%>;
   valueDomValueWidth = <%% 13, 60, 60, 60 %%>;
   valueDomValueMargin = <%% 10, 60, 60, 60 %%>;
 
-  tendencyVisualLeft = <%% 12, 10, 10, 10 %%>;
+  tendencyVisualLeft = <%% 30, 10, 10, 10 %%>;
   tendencyTop = <%% 33, 33, 33, 33 %%>;
   tendencyMargin = <%% 3, 3, 3, 3 %%>;
 
@@ -1407,7 +1554,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         if (map[i].value.includes(map[i].standard[z])) {
           valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.green));
         } else {
-          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray4));
+          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray3));
         }
         style = {
           position: "absolute",
@@ -1531,23 +1678,466 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
     mother.appendChild(propertyBox);
   }
 
-  mother.style.height = String((top * 2) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
+  mother.style.height = String((top + bottom) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
 
 }
 
 ProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const instance = this;
+  const { ea } = this;
+  const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.search(desid);
+  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
+    const contentsArr = JSON.parse(res);
+    const web = {
+      portfolio: "https://home-liaison.com/portdetail.php?qqq=",
+      review: "https://home-liaison.com/revdetail.php?qqq="
+    };
+    const dateToString = function (dateObject) {
+      const zeroAddition = function (num) {
+        if (num < 10) {
+          return `0${String(num)}`;
+        } else {
+          return String(num);
+        }
+      }
+      return `${String(dateObject.getFullYear())}-${zeroAddition(dateObject.getMonth() + 1)}-${zeroAddition(dateObject.getDate())}`;
+    }
+    let sourceArr;
+    let style;
+    let num;
+    let entireDom;
+    let entireHeight, entireMarginBottom;
+    let titleDom, portfolioDom, reviewDom, barDom, arrowDom;
+    let wordSpacing, fontSize;
+    let marginTop, marginBottom;
+    let portfolioRight, barRight;
+    let webOpenEvent;
 
+    marginTop = <%% left - 6, left - 6, left - 6, left - 6 %%>;
+    marginBottom = <%% left - 3, left - 6, left - 6, left - 6 %%>;
+
+    entireHeight = <%% 20, 30, 30, 30 %%>;
+    entireMarginBottom = <%% 10, 10, 10, 10 %%>;
+
+    fontSize = <%% 15, 15, 15, 15 %%>;
+    wordSpacing = <%% -1, -1, -1, -1 %%>;
+
+    portfolioRight = <%% 80, 76, 76, 76 %%>;
+    barRight = <%% 66, 64, 64, 64 %%>;
+
+    sourceArr = [];
+    for (let { contents } of contentsArr) {
+      sourceArr.push({ date: new Date(contents.portfolio.date), title: { portfolio: contents.portfolio.title.main, review: contents.review.title.main }, link: { portfolio: web.portfolio + contents.portfolio.pid, review: web.review + contents.review.rid } });
+    }
+
+    webOpenEvent = function (e) {
+      let a_clone;
+      a_clone = GeneralJs.nodes.a.cloneNode(true);
+      a_clone.style.display = "none";
+      a_clone.setAttribute("href", this.getAttribute("link"));
+      a_clone.setAttribute("target", "_blank");
+      document.body.appendChild(a_clone);
+      a_clone.click();
+      document.body.removeChild(a_clone);
+    }
+
+    num = 0;
+    for (let { date, title, link } of sourceArr) {
+      entireDom = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+        height: String(entireHeight) + ea,
+        marginLeft: String(left) + ea,
+        width: "calc(100% - " + String(left * 2) + ea + ")",
+        marginBottom: String(entireMarginBottom) + ea,
+      };
+      if (num === 0) {
+        style.marginTop = String(marginTop) + ea;
+      }
+      for (let j in style) {
+        entireDom.style[j] = style[j];
+      }
+
+      titleDom = GeneralJs.nodes.div.cloneNode(true);
+      titleDom.textContent = title.portfolio;
+      style = {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        left: String(0) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.black,
+        wordSpacing: String(wordSpacing) + ea,
+      };
+      for (let j in style) {
+        titleDom.style[j] = style[j];
+      }
+      entireDom.appendChild(titleDom);
+
+      portfolioDom = GeneralJs.nodes.div.cloneNode(true);
+      portfolioDom.textContent = "포트폴리오";
+      portfolioDom.classList.add("hoverDefault");
+      portfolioDom.setAttribute("link", link.portfolio);
+      style = {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        right: String(portfolioRight) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.green,
+        wordSpacing: String(wordSpacing) + ea,
+      };
+      for (let j in style) {
+        portfolioDom.style[j] = style[j];
+      }
+      portfolioDom.addEventListener("click", webOpenEvent);
+      entireDom.appendChild(portfolioDom);
+
+      barDom = GeneralJs.nodes.div.cloneNode(true);
+      barDom.textContent = "|";
+      style = {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        right: String(barRight) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.gray4,
+        wordSpacing: String(wordSpacing) + ea,
+        opacity: String(0.6),
+      };
+      for (let j in style) {
+        barDom.style[j] = style[j];
+      }
+      entireDom.appendChild(barDom);
+
+      reviewDom = GeneralJs.nodes.div.cloneNode(true);
+      reviewDom.textContent = "고객 후기";
+      reviewDom.classList.add("hoverDefault");
+      reviewDom.setAttribute("link", link.review);
+      style = {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        right: String(0) + ea,
+        top: String(0) + ea,
+        color: (/re999/gi.test(link.review) ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.green),
+        wordSpacing: String(wordSpacing) + ea,
+      };
+      if (!/re999/gi.test(link.review)) {
+        reviewDom.addEventListener("click", webOpenEvent);
+      }
+      for (let j in style) {
+        reviewDom.style[j] = style[j];
+      }
+      entireDom.appendChild(reviewDom);
+
+      mother.appendChild(entireDom);
+      num = num + 1;
+    }
+
+    if (sourceArr.length === 0) {
+      mother.parentNode.removeChild(mother);
+    } else {
+      mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+    }
+
+  });
+
+}
+
+ProposalJs.prototype.designerFee = function (mother, fee) {
+  const instance = this;
+  const { ea } = this;
+  const feeToString = function (fee) {
+    const moneyString = function (m) {
+      let target = String(m);
+      let textLength = target.length;
+      let sliceString;
+      let fragments;
+      sliceString = target.slice(textLength % 3);
+      fragments = [];
+      for (let i = 0; i < Math.floor(textLength / 3); i++) {
+        fragments.push(sliceString.slice((3 * i), (3 * (i + 1))));
+      }
+      if (textLength % 3 !== 0) {
+        fragments.unshift(target.slice(0, textLength % 3));
+      }
+      return `${fragments.join(',')}원`;
+    }
+    let moneyText;
+    moneyText = '';
+    for (let { amount, method, partial } of fee) {
+      moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ') + moneyString(amount);
+      moneyText += ", ";
+    }
+    moneyText = moneyText.slice(0, -2);
+    return moneyText;
+  }
+  let arrowBox, arrowHead, moneyBox, vatBox;
+  let style;
+  let wordSpacing;
+  let arrowTop;
+  let headWidth, headTop, headMargin, headVisual;
+  let feeBottom, feeSize, feeRight;
+  let vatBottom, vatSize, vatRight;
+
+  wordSpacing = <%% -1, -1, -1, -1 %%>;
+  arrowTop = <%% 11, 11, 11, 11 %%>;
+
+  headWidth = <%% 10, 10, 10, 10 %%>;
+  headTop = <%% 6, 6, 6, 6 %%>;
+  headMargin = <%% 18, 10, 10, 10 %%>;
+  headVisual = <%% 11, 10, 10, 10 %%>;
+
+  feeBottom = <%% 0, 0, 0, 0 %%>;
+  feeSize = <%% 28, 28, 28, 28 %%>;
+  feeRight = <%% 60, 60, 60, 60 %%>;
+
+  vatBottom = <%% 3, 3, 3, 3 %%>;
+  vatSize = <%% 15, 15, 15, 15 %%>;
+  vatRight = <%% 0, 0, 0, 0 %%>;
+
+  arrowBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+    width: "calc(100% - 340px)",
+    top: String(arrowTop) + ea,
+  };
+  for (let i in style) {
+    arrowBox.style[i] = style[i];
+  }
+  mother.appendChild(arrowBox);
+
+  arrowHead = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    borderRight: "1px solid " + GeneralJs.colorChip.gray3,
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+    width: String(headWidth) + ea,
+    height: String(headWidth) + ea,
+    transform: "rotate(315deg)",
+    top: String(headTop) + ea,
+    left: "calc(100% - 351px)",
+  };
+  for (let i in style) {
+    arrowHead.style[i] = style[i];
+  }
+  mother.appendChild(arrowHead);
+
+  moneyBox = GeneralJs.nodes.div.cloneNode(true);
+  moneyBox.textContent = feeToString(fee);
+  style = {
+    position: "absolute",
+    bottom: String(feeBottom) + ea,
+    right: String(feeRight) + ea,
+    fontSize: String(feeSize) + ea,
+    fontWeight: String(500),
+    color: GeneralJs.colorChip.green
+  };
+  for (let i in style) {
+    moneyBox.style[i] = style[i];
+  }
+  mother.appendChild(moneyBox);
+
+  vatBox = GeneralJs.nodes.div.cloneNode(true);
+  vatBox.textContent = "(vat별도)";
+  style = {
+    position: "absolute",
+    bottom: String(vatBottom) + ea,
+    right: String(vatRight) + ea,
+    fontSize: String(vatSize) + ea,
+    fontWeight: String(200),
+    color: GeneralJs.colorChip.green
+  };
+  for (let i in style) {
+    vatBox.style[i] = style[i];
+  }
+  mother.appendChild(vatBox);
+
+  setTimeout(function () {
+    const standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
+    arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
+    arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
+  }, 0);
 
 }
 
 ProposalJs.prototype.insertWordBox = function () {
   const instance = this;
+  const { ea } = this;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const words = new WordsDictionary();
+  const matrix = words.getMatrix();
+  const subWords = words.getSubWording();
+  let top, bottom;
+  let whiteBlock;
+  let wordsTable;
+  let div_clone, div_clone2;
+  let style;
+  let blockHeight, blockMarginBottom;
+  let wordSpacing;
+  let box0Size, box1Size;
+  let box0Margin, box1Margin;
+  let marginBottom;
+  let wordSize;
+  let grayBar;
+  let wordBlock;
+
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
+  bottom = <%% topMargin - 3, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
+
+  blockMarginBottom = <%% 16, 16, 16, 16 %%>;
+  wordSpacing = <%% -1, -1, -1, -1 %%>;
+
+  box0Size = <%% 140, 50, 50, 50 %%>;
+  box1Size = <%% 25, 30, 30, 30 %%>;
+  box0Margin = <%% 55, 30, 30, 30 %%>;
+  box1Margin = <%% 18, 30, 30, 30 %%>;
+
+  marginBottom = <%% 9, 30, 30, 30 %%>;
+  wordSize = <%% 15, 15, 15, 15 %%>;
+
+  whiteBlock = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    borderRadius: String(8) + ea,
+    width: String(100) + '%',
+    background: GeneralJs.colorChip.white,
+    boxShadow: "0px 5px 12px -10px #aaaaaa",
+    marginBottom: String(blockMarginBottom) + ea,
+    paddingTop: String(top) + ea,
+    paddingBottom: String(bottom) + ea,
+  };
+  for (let i in style) {
+    whiteBlock.style[i] = style[i];
+  }
+  this.baseTong.appendChild(whiteBlock);
+
+  wordsTable = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+  };
+  for (let i in style) {
+    wordsTable.style[i] = style[i];
+  }
+
+  for (let arr of matrix) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    };
+    for (let j in style) {
+      div_clone.style[j] = style[j];
+    }
+
+    for (let z = 0; z < arr.length; z++) {
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + ea,
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+      };
+      if (z === 0) {
+        style.width = String(box0Size) + ea;
+        style.marginRight = String(box0Margin) + ea;
+        style.fontWeight = String(600);
+        style.textAlign = "left";
+      } else if (z === 1) {
+        style.width = String(box1Size) + ea;
+        style.marginRight = String(box1Margin) + ea;
+        style.fontWeight = String(600);
+        style.color = GeneralJs.colorChip.green;
+        style.textAlign = "right";
+      } else {
+        style.width = "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")";
+        style.fontWeight = String(300);
+        style.textAlign = "left";
+      }
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      div_clone2.textContent = arr[z];
+      div_clone.appendChild(div_clone2);
+    }
+
+    wordsTable.appendChild(div_clone);
+  }
+
+  whiteBlock.appendChild(wordsTable);
+
+
+  grayBar = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+    left: String(leftMargin) + ea,
+    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginTop: String(top) + ea,
+    marginBottom: String(top) + ea,
+  };
+  for (let i in style) {
+    grayBar.style[i] = style[i];
+  }
+  whiteBlock.appendChild(grayBar);
+
+  for (let z = 0; z < subWords.length; z++) {
+    wordBlock = GeneralJs.nodes.div.cloneNode(true);
+    wordBlock.insertAdjacentHTML("beforeend", subWords[z]);
+    style = {
+      position: "relative",
+      left: String(leftMargin) + ea,
+      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+      fontSize: String(wordSize) + ea,
+      fontWeight: String(400),
+      wordSpacing: String(wordSpacing) + ea,
+      verticalAlign: "top",
+      lineHeight: String(1.6),
+      marginBottom: String(marginBottom * 1.5) + ea,
+    };
+    for (let i in style) {
+      wordBlock.style[i] = style[i];
+    }
+    whiteBlock.appendChild(wordBlock);
+  }
+
 }
 
 ProposalJs.prototype.insertPannelBox = function () {
   const instance = this;
+  const { ea } = this;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  let whiteBlock;
+  let style;
+  let blockHeight, blockMarginBottom;
+
+  blockHeight = 820;
+  blockMarginBottom = 16;
+
+  whiteBlock = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    borderRadius: String(8) + ea,
+    width: String(100) + '%',
+    height: String(blockHeight) + ea,
+    background: GeneralJs.colorChip.white,
+    boxShadow: "0px 5px 12px -10px #aaaaaa",
+    marginBottom: String(blockMarginBottom) + ea,
+  };
+  for (let i in style) {
+    whiteBlock.style[i] = style[i];
+  }
+  this.baseTong.appendChild(whiteBlock);
+
 }
 
 ProposalJs.prototype.setFooter = function () {
@@ -1573,6 +2163,10 @@ ProposalJs.prototype.launching = async function (loading) {
     this.standardWidth = <%% 1400, 1050, 900, 100 %%>;
     this.sero = <%% false, false, false, true %%>;
     this.modeMinus = <%% 0, 1, 1, 1 %%>;
+
+    this.subBoxMargin.top = <%% 30, 30, 30, 30 %%>;
+    this.subBoxMargin.bottom = <%% 31, 30, 30, 30 %%>;
+    this.subBoxMargin.left = <%% 30, 30, 30, 30 %%>;
 
     if (this.modeMinus !== 0) {
       document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
@@ -1637,6 +2231,8 @@ ProposalJs.prototype.launching = async function (loading) {
 
     //set footer
     this.setFooter();
+
+    this.totalContents.style.height = "auto";
 
   } catch (e) {
     console.log(e);
