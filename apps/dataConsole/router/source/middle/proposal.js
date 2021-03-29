@@ -595,43 +595,43 @@ ProposalJs.prototype.insertInitBox = function () {
   let topBox;
   let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
 
-  blockHeight = this.backHeight - 460;
-  bottomMargin = 16;
-  margin = 52;
-  leftRatio = 0.32;
+  blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 460 %%>;
+  bottomMargin = <%% 16, 16, 16, 16 %%>;
+  margin = <%% 52, 52, 52, 52 %%>;
+  leftRatio = <%% 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = 31;
-  titleLeft = 6;
+  titleFont = <%% 31, 31, 31, 31 %%>;
+  titleLeft = <%% 6, 6, 6, 6 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
   this.whiteBoxNumbers.topMargin = margin;
 
-  titleFontWeight = 500;
-  wordSpacing = -3;
+  titleFontWeight = <%% 500, 500, 500, 500 %%>;
+  wordSpacing = <%% -3, -3, -3, -3 %%>;
 
-  barWidth = 80;
-  barLeft = titleLeft + 234;
+  barWidth = <%% 80, 80, 80, 80 %%>;
+  barLeft = <%% titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
 
-  indexFont = 19;
-  indexFontWeight = 200;
+  indexFont = <%% 19, 19, 19, 19 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200 %%>;
 
-  quoteTop = 8;
-  quoteHeight = 12;
-  quoteMarginBottom = 7;
-  quoteLeft = 2;
+  quoteTop = <%% 8, 8, 8, 8 %%>;
+  quoteHeight = <%% 12, 12, 12, 12 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 7 %%>;
+  quoteLeft = <%% 2, 2, 2, 2 %%>;
 
-  initWordingHeight = 20;
-  initWordingSize = 15.5;
-  initWordingWordSpacing = -1;
-  initWordingLineHeight = 9;
+  initWordingHeight = <%% 20, 20, 20, 20 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 15.5 %%>;
+  initWordingWordSpacing = <%% -1, -1, -1, -1 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = 630;
-  factorBoxTop = 100;
-  factorBoxTopVisual = <%% 5, 5, 5, 5 %%>;
+  factorBoxWidth = <%% 630, 630, 630, 630 %%>;
+  factorBoxTop = <%% 100, 100, 100, 100 %%>;
+  factorBoxTopVisual = <%% 3, 3, 3, 3 %%>;
 
-  factorPaddingLeft = 10;
-  factorPaddingTop = 10;
-  factorSize = 17.5;
+  factorPaddingLeft = <%% 10, 10, 10, 10 %%>;
+  factorPaddingTop = <%% 10, 10, 10, 10 %%>;
+  factorSize = <%% 17.5, 17.5, 17.5, 17.5 %%>;
   factors = [
     { title: "예산", value: "2,500만원" },
     { title: "가족 구성원", value: "부부, 딸 1, 아들 1" },
@@ -643,34 +643,35 @@ ProposalJs.prototype.insertInitBox = function () {
   factorsValueDoms = new Array(factors.length);
   factorsBarDoms = new Array(factors.length);
   factorsBarHeadDoms = new Array(factors.length);
-  factorBarWidth = 200;
-  factorBarTop = 43;
-  factorArrowHeadWidth = 8;
-  factorArrowHeadTop = 39;
-  factorArrowHeadLeft = 188;
 
-  factorValueBottom = 11;
-  factorValueRight = 36;
+  factorBarWidth = <%% 200, 200, 200, 200 %%>;
+  factorBarTop = <%% 43, 43, 43, 43 %%>;
+  factorArrowHeadWidth = <%% 8, 8, 8, 8 %%>;
+  factorArrowHeadTop = <%% 39, 39, 39, 39 %%>;
+  factorArrowHeadLeft = <%% 188, 188, 188, 188 %%>;
 
-  factorValueMargin = 46;
-  factorValueHeadMargin = 10;
+  factorValueBottom = <%% 11, 11, 11, 11 %%>;
+  factorValueRight = <%% 36, 36, 36, 36 %%>;
 
-  desigerBoxWidth = 240;
-  desigerBoxHeight = 52;
+  factorValueMargin = <%% 46, 46, 46, 46 %%>;
+  factorValueHeadMargin = <%% 10, 10, 10, 10 %%>;
+
+  desigerBoxWidth = <%% 240, 240, 240, 240 %%>;
+  desigerBoxHeight = <%% 52, 52, 52, 52 %%>;
 
   targetDesigners = [
     "임은숙",
     "김남희",
     "김지은"
   ];
-  designerFactorTitleSize = 15;
-  designerFactorSize = 22;
-  designerFactorHeight = 20;
+  designerFactorTitleSize = <%% 15, 15, 15, 15 %%>;
+  designerFactorSize = <%% 22, 22, 22, 22 %%>;
+  designerFactorHeight = <%% 20, 20, 20, 20 %%>;
 
-  topBoxSize = 14;
-  topBoxWidth = 700;
-  topBoxHeight = 28;
-  topBoxRight = 1;
+  topBoxSize = <%% 14, 14, 14, 14 %%>;
+  topBoxWidth = <%% 700, 700, 700, 700 %%>;
+  topBoxHeight = <%% 28, 28, 28, 28 %%>;
+  topBoxRight = <%% 1, 1, 1, 1 %%>;
 
   //total white box
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
