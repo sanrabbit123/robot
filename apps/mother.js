@@ -868,7 +868,7 @@ Mother.prototype.ipCheck = function () {
   const keys = Object.keys(ADDRESS);
   const values = Object.values(ADDRESS);
   return new Promise(function(resolve, reject) {
-    axios.get("https://icanhazip.com").then(function (response) {
+    axios.get("http://icanhazip.com").then(function (response) {
       const ip = response.data.replace(/[^0-9\.]/g, '');
       let obj = { ip };
       let target = "unknown", targetNum = 0;
