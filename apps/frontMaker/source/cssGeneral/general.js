@@ -178,7 +178,6 @@ module.exports = function () {
     .f18instagram{width:80px;margin-left:624px;top:95px;height:25px;}
     .f18designersubmit{width:100px;margin-left:604px;top:125px;height:25px;}
     .f18partnershipsubmit{width:60px;margin-left:531px;top:125px;height:25px;}
-
   }
   @media (min-width:901px) and (max-width:1610px) {
     #desknaviframe{width:1050px;left:calc(50% - 525px);}
@@ -197,7 +196,6 @@ module.exports = function () {
     .f18instagram{width:81px;margin-left:448px;top:95px;height:25px;}
     .f18designersubmit{width:100px;margin-left:428px;top:125px;height:25px;}
     .f18partnershipsubmit{width:60px;margin-left:356px;top:125px;height:25px;}
-
   }
   @media (max-width:900px) {
   #maindeskfooter0817,#desknavihome,#footergreenback0817{display:none;}

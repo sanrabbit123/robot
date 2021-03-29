@@ -536,14 +536,14 @@ ProposalJs.prototype.setBaseTong = function () {
   let ea = this.ea;
   let baseTop;
 
-  baseTop = 200;
+  baseTop = <%% 200, 200, 200, 200 %%>;
 
   baseTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
     width: String(this.standardWidth) + ea,
     left: "calc(50% - " + String(this.standardWidth / 2) + ea + ")",
-    top: String(baseTop) + ea,
+    paddingTop: String(baseTop) + ea,
     animation: "fadeupdelay 0.5s ease forwards",
   };
   for (let i in style) {
@@ -2119,9 +2119,35 @@ ProposalJs.prototype.insertPannelBox = function () {
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
+  let designerButtonTong;
+  let designerButtonBar;
+  let designerButtonBarHead;
+  let designerButton;
+  let designerButtonText;
+  let buttonHeight, buttonWidth;
+  let buttonMargin;
+  let buttonTextTop, buttonTextSize;
+  let headWidth, headVisual;
+  let informationArea;
+  let wordSpacing;
+  let finalBottom;
 
-  blockHeight = 820;
-  blockMarginBottom = 16;
+  blockHeight = <%% 820, 820, 820, 820 %%>;
+  blockMarginBottom = <%% 160, 160, 160, 160 %%>;
+
+  buttonHeight = <%% 47, 48, 48, 48 %%>;
+  buttonWidth = <%% 108, 108, 108, 108 %%>;
+  buttonMargin = <%% 8, 8, 8, 8 %%>;
+
+  buttonTextTop = <%% 9, 9, 9, 9 %%>;
+  buttonTextSize = <%% 20, 20, 20, 20 %%>;
+
+  headWidth = <%% 10, 10, 10, 10 %%>;
+  headVisual = <%% 11, 11, 11, 11 %%>;
+
+  wordSpacing = <%% -1, -1, -1, -1 %%>;
+
+  finalBottom = <%% 42, 42, 42, 42 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2131,6 +2157,7 @@ ProposalJs.prototype.insertPannelBox = function () {
     height: String(blockHeight) + ea,
     background: GeneralJs.colorChip.white,
     boxShadow: "0px 5px 12px -10px #aaaaaa",
+    paddingTop: String(topMargin) + ea,
     marginBottom: String(blockMarginBottom) + ea,
   };
   for (let i in style) {
@@ -2138,10 +2165,165 @@ ProposalJs.prototype.insertPannelBox = function () {
   }
   this.baseTong.appendChild(whiteBlock);
 
-}
 
-ProposalJs.prototype.setFooter = function () {
-  const instance = this;
+  designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    height: String(buttonHeight) + ea,
+    textAlign: "center",
+  };
+  for (let i in style) {
+    designerButtonTong.style[i] = style[i];
+  }
+  for (let z = 0; z < this.proposal.detail.length; z++) {
+    designerButton = GeneralJs.nodes.div.cloneNode(true);
+    designerButton.classList.add("hoverDefault");
+    style = {
+      display: "inline-block",
+      position: "relative",
+      width: String(buttonWidth) + ea,
+      height: String(100) + '%',
+      background: GeneralJs.colorChip.gray2,
+      borderRadius: String(3) + ea,
+      marginRight: String(buttonMargin) + ea,
+    };
+    if (z === this.proposal.detail.length - 1) {
+      delete style.marginRight;
+    }
+    for (let i in style) {
+      designerButton.style[i] = style[i];
+    }
+    designerButtonText = GeneralJs.nodes.div.cloneNode(true);
+    designerButtonText.textContent = this.proposal.detail[z].designer;
+    style = {
+      position: "absolute",
+      top: String(buttonTextTop) + ea,
+      fontSize: String(buttonTextSize) + ea,
+      fontWeight: String(400),
+      color: GeneralJs.colorChip.deactive,
+      width: String(100) + '%',
+      textAlign: "center",
+    };
+    for (let i in style) {
+      designerButtonText.style[i] = style[i];
+    }
+    designerButton.appendChild(designerButtonText);
+    designerButtonTong.appendChild(designerButton);
+  }
+  for (let z = 0; z < 2; z++) {
+    designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
+      left: String(leftMargin) + ea,
+      top: String(47) + '%',
+    };
+    if (z === 1) {
+      style.right = style.left;
+      delete style.left;
+    }
+    for (let i in style) {
+      designerButtonBar.style[i] = style[i];
+    }
+    designerButtonTong.appendChild(designerButtonBar);
+
+    designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      width: String(headWidth) + ea,
+      height: String(headWidth) + ea,
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
+      borderRight: "1px solid " + GeneralJs.colorChip.gray2,
+      transform: "rotate(-45deg)",
+      left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
+      top: String(36) + '%',
+    };
+    if (z === 1) {
+      style.right = style.left;
+      style.transform = "rotate(135deg)";
+      delete style.left;
+    }
+    for (let i in style) {
+      designerButtonBarHead.style[i] = style[i];
+    }
+    designerButtonTong.appendChild(designerButtonBarHead);
+  }
+  whiteBlock.appendChild(designerButtonTong);
+
+  designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    height: String(buttonHeight) + ea,
+    textAlign: "center",
+    marginTop: String(buttonMargin * 3) + ea,
+  };
+  for (let i in style) {
+    designerButtonTong.style[i] = style[i];
+  }
+
+  designerButton = GeneralJs.nodes.div.cloneNode(true);
+  designerButton.classList.add("hoverDefault");
+  style = {
+    display: "inline-block",
+    position: "relative",
+    width: String(buttonWidth * 1.5) + ea,
+    height: String(100) + '%',
+    background: GeneralJs.colorChip.green,
+    borderRadius: String(3) + ea,
+  };
+  for (let i in style) {
+    designerButton.style[i] = style[i];
+  }
+  designerButtonText = GeneralJs.nodes.div.cloneNode(true);
+  designerButtonText.textContent = "디자이너 선택";
+  style = {
+    position: "absolute",
+    top: String(buttonTextTop) + ea,
+    fontSize: String(buttonTextSize) + ea,
+    fontWeight: String(400),
+    color: GeneralJs.colorChip.white,
+    width: String(100) + '%',
+    textAlign: "center",
+  };
+  for (let i in style) {
+    designerButtonText.style[i] = style[i];
+  }
+  designerButton.appendChild(designerButtonText);
+  designerButtonTong.appendChild(designerButton);
+
+  whiteBlock.appendChild(designerButtonTong);
+
+
+  designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    height: String(buttonHeight) + ea,
+    textAlign: "center",
+    marginTop: String(buttonMargin * 1.25) + ea,
+  };
+  for (let i in style) {
+    designerButtonTong.style[i] = style[i];
+  }
+
+  informationArea = GeneralJs.nodes.div.cloneNode(true);
+  informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>디자이너 선택 버튼을 눌러주세요!");
+  style = {
+    fontSize: String(13) + ea,
+    color: GeneralJs.colorChip.green,
+    wordSpacing: String(wordSpacing) + ea,
+    lineHeight: String(1.5),
+  };
+  for (let i in style) {
+    informationArea.style[i] = style[i];
+  }
+  designerButtonTong.appendChild(informationArea);
+
+  whiteBlock.appendChild(designerButtonTong);
+
+  whiteBlock.style.paddingBottom = String(finalBottom) + ea;
+  whiteBlock.style.height = "";
+
 }
 
 ProposalJs.prototype.launching = async function (loading) {
@@ -2230,7 +2412,8 @@ ProposalJs.prototype.launching = async function (loading) {
     this.insertPannelBox();
 
     //set footer
-    this.setFooter();
+    this.mother.footerMake();
+    this.mother.homeliaisonTalk();
 
     this.totalContents.style.height = "auto";
 

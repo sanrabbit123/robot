@@ -648,6 +648,32 @@ module.exports = {
             }
           }
         ]
+      },
+      "proposal": {
+        "behaviors": [
+          {
+            "wording": {
+              "desktop": "홈리에종 서비스의 자세한 설명이 필요하다면?",
+              "mobile": "상세한 서비스 설명을 확인해보세요!"
+            },
+            "action": "window.location.href = '/about.php?popup=true';",
+            "src": {
+              "desktop": "g_interaction_review_behaviors_desktop_0_18rspot939_021612.svg",
+              "mobile": "g_interaction_review_behaviors_mobile_0_14rspot823_021612.svg"
+            }
+          },
+          {
+            "wording": {
+              "desktop": "홈리에종을 통해 1:1 상담을 받아보세요!",
+              "mobile": "홈리에종을 통해 1:1 상담을 받아보세요!"
+            },
+            "action": "window.location.href = '/consulting.php';",
+            "src": {
+              "desktop": "g_interaction_review_behaviors_desktop_1_15rspot96_021612.svg",
+              "mobile": "g_interaction_review_behaviors_mobile_1_15rspot96_021612.svg"
+            }
+          }
+        ]
       }
     },
     "login": {

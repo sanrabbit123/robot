@@ -1065,7 +1065,7 @@ GeneralJs.prototype.navigatorMake = function () {
   this.navigator = { desktop: desktopNavigator, mobile: mobileNavigator };
 }
 
-GeneralJs.prototype.footerMake = function (type) {
+GeneralJs.prototype.footerMake = function (type = 'A') {
   let div_clone, div_clone2, a_clone, svg_clone;
   let height, width, top;
   let style = {};
@@ -1079,27 +1079,29 @@ GeneralJs.prototype.footerMake = function (type) {
   let actionTong = [];
   let tempFunc;
 
-  for (let i = 0; i < wordsKey.length; i++) { if (wordsKey[i] !== "mobileCase") {
-    for (let j = 0; j < words[wordsKey[i]].length; j++) {
-      if (Array.isArray(words[wordsKey[i]][j].action)) {
-        for (let k = 0; k < words[wordsKey[i]][j].action.length; k++) {
-          if (words[wordsKey[i]][j].action[k].css !== "") {
+  for (let i = 0; i < wordsKey.length; i++) {
+    if (wordsKey[i] !== "mobileCase") {
+      for (let j = 0; j < words[wordsKey[i]].length; j++) {
+        if (Array.isArray(words[wordsKey[i]][j].action)) {
+          for (let k = 0; k < words[wordsKey[i]][j].action.length; k++) {
+            if (words[wordsKey[i]][j].action[k].css !== "") {
+              actionTong.push({
+                css: words[wordsKey[i]][j].action[k].css,
+                js: words[wordsKey[i]][j].action[k].js
+              });
+            }
+          }
+        } else {
+          if (words[wordsKey[i]][j].action.css !== "") {
             actionTong.push({
-              css: words[wordsKey[i]][j].action[k].css,
-              js: words[wordsKey[i]][j].action[k].js
+              css: words[wordsKey[i]][j].action.css,
+              js: words[wordsKey[i]][j].action.js
             });
           }
         }
-      } else {
-        if (words[wordsKey[i]][j].action.css !== "") {
-          actionTong.push({
-            css: words[wordsKey[i]][j].action.css,
-            js: words[wordsKey[i]][j].action.js
-          });
-        }
       }
     }
-  }}
+  }
 
   //desktop
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1142,7 +1144,9 @@ GeneralJs.prototype.footerMake = function (type) {
   }
 
   //mother append
-  document.getElementById("totalcontents").appendChild(div_clone);
+  if (document.getElementById("totalcontents") !== null) {
+    document.getElementById("totalcontents").appendChild(div_clone);
+  }
 
   //mobile
   const { mobileCase } = words;
@@ -1198,7 +1202,9 @@ GeneralJs.prototype.footerMake = function (type) {
     a_clone.appendChild(div_clone2);
     div_clone.appendChild(a_clone);
   }
-  document.getElementById("mototalcontents").appendChild(div_clone);
+  if (document.getElementById("mototalcontents") !== null) {
+    document.getElementById("mototalcontents").appendChild(div_clone);
+  }
 }
 
 GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
@@ -1708,7 +1714,9 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
 
     //end
     this.talkIcon = { dom: div_clone };
-    mother.appendChild(div_clone);
+    if (mother !== null) {
+      mother.appendChild(div_clone);
+    }
 
   }
 }

@@ -128,6 +128,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, isGhost) {
   const instance = this;
   const { minify } = require("terser");
+  const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
   const { fileSystem, shell, shellLink, babelSystem } = this.mother;
   const S3HOST = this.address.s3info.host;
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
@@ -153,6 +154,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
     let finalMinifyObj, finalMinifyString;
+    let generalSvg;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -160,10 +162,11 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
     ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+    generalSvg = await fileSystem(`readString`, [ `${process.cwd()}/apps/mapMaker/svgTong/general_async.js` ]);
+    generalSvg += "\n\n";
+    generalSvg += await fileSystem(`readString`, [ `${process.cwd()}/apps/mapMaker/svgTong/general.js` ]);
 
     //write local js
     console.log(`set middle target :`, staticDirList);
@@ -172,7 +175,17 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       result = '';
       code0 = '';
       code1 = '';
-      svgTongItemsString = null;
+      svgTongItemsString = '';
+      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+      generalString = generalString.replace(/(\/<%generalMap%>\/)/, function (match, p1, offset, string) {
+        let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
+        for (let j in generalObj_clone.main.interaction) {
+          if (j !== i.replace(/\.js/g, '')) {
+            delete generalObj_clone.main.interaction[j];
+          }
+        }
+        return JSON.stringify(generalObj_clone, null, 2);
+      });
 
       if (i !== `.DS_Store`) {
         execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
@@ -223,7 +236,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         }
 
         //merge
-        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
+        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString + "\n\n" + generalSvg;
         code1 = dataPatchScript;
         code2 = generalString + "\n\n" + consoleGeneralString;
         code3 = fileString + "\n\n" + execString;

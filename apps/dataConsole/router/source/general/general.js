@@ -725,6 +725,47 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes fa{from{opacity:0;}to{opacity:1;}}
   @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
   #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%}
+  #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:#2fa678;}
+  .maindeskfooter{display:block;position:absolute;top:64px;height:170px;left:50%;transition:all 0.5s ease;}
+  .footerbutton{position:absolute;opacity:0;transition:all .5s ease;background-color:#2fa678;left:50%;cursor:pointer;}
+  .footerbutton:hover{opacity:0.5;}
+  @media (min-width:1611px) {
+    .maindeskfooterLeft{margin-left:-700px}
+    .maindeskfooterRight{width:546px;margin-left:154px;}
+    .f18home{width:225px;margin-left:-700px;top:66px;height:73px;}
+    .f18faq{width:80px;margin-left:180px;top:120px;height:18px;}
+    .f18card{width:70px;margin-left:264px;top:120px;height:18px;}
+    .f18terms{width:190px;margin-left:145px;top:153px;height:17px;}
+    .f18about{width:78px;margin-left:392px;top:120px;height:18px;}
+    .f18port{width:72px;margin-left:398px;top:153px;height:17px;}
+    .f18designer{width:62px;margin-left:410px;top:184px;height:17px;}
+    .f18blog{width:64px;margin-left:409px;top:213px;height:17px;}
+    .f18channel{width:163px;margin-left:539px;top:66px;height:25px;}
+    .f18naverblog{width:52px;margin-left:558px;top:95px;height:25px;}
+    .f18instagram{width:80px;margin-left:624px;top:95px;height:25px;}
+    .f18designersubmit{width:100px;margin-left:604px;top:125px;height:25px;}
+    .f18partnershipsubmit{width:60px;margin-left:531px;top:125px;height:25px;}
+  }
+  @media (min-width:901px) and (max-width:1610px) {
+    .maindeskfooterLeft{margin-left:-525px}
+    .maindeskfooterRight{width:546px;margin-left:-20px;}
+    .f18home{width:225px;margin-left:-525px;top:66px;height:73px;}
+    .f18faq{width:74px;margin-left:10px;top:120px;height:18px;}
+    .f18card{width:62px;margin-left:94px;top:120px;height:18px;}
+    .f18terms{width:190px;margin-left:-28px;top:153px;height:17px;}
+    .f18about{width:78px;margin-left:218px;top:120px;height:18px;}
+    .f18port{width:72px;margin-left:224px;top:153px;height:17px;}
+    .f18designer{width:62px;margin-left:235px;top:184px;height:17px;}
+    .f18blog{width:64px;margin-left:234px;top:213px;height:17px;}
+    .f18channel{width:163px;margin-left:365px;top:66px;height:25px;}
+    .f18naverblog{width:50px;margin-left:384px;top:95px;height:25px;}
+    .f18instagram{width:81px;margin-left:448px;top:95px;height:25px;}
+    .f18designersubmit{width:100px;margin-left:428px;top:125px;height:25px;}
+    .f18partnershipsubmit{width:60px;margin-left:356px;top:125px;height:25px;}
+  }
+
+
+
   .hiddenp,.switch{display:none;}
   .circle{position:absolute;cursor:pointer;width:15px;height:15px;opacity:0.95;z-index:101;top:-20px}
   .hoverDefault_lite{cursor:pointer;opacity:1}
