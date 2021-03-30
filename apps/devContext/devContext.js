@@ -333,7 +333,7 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery, binaryRequest } = this.mother;
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
@@ -1640,6 +1640,127 @@ class DevContext extends Array {
 
 
 
+
+      //get files S3
+      // /*
+      const S3HOST = require(`${process.cwd()}/apps/infoObj.js`).s3info.host;
+      const targetDir = process.env.HOME + "/static";
+      let getS3;
+      let temp, tempArr;
+      let listImageTong, originalTong;
+      let tong;
+      let binaryTarget = [];
+      let tempObject;
+      let ghostTong;
+
+      //list image
+      getS3 = await this.mother.s3FileList("corePortfolio/listImage");
+      tong = [];
+      for (let i of getS3) {
+        tempArr = i.split("/");
+        if (tempArr.length > 2) {
+          if (tempArr[2] !== "" && tempArr[2] !== "__delete__") {
+            tong.push(tempArr[2]);
+          }
+        }
+      }
+      listImageTong = Array.from(new Set(tong));
+      console.log(listImageTong);
+
+      //original photo
+      getS3 = await this.mother.s3FileList("corePortfolio/original");
+      tong = [];
+      for (let i of getS3) {
+        tempArr = i.split("/");
+        if (tempArr.length > 2) {
+          if (tempArr[2] !== "" && tempArr[2] !== "__delete__") {
+            tong.push(tempArr[2]);
+          }
+        }
+      }
+      originalTong = Array.from(new Set(tong));
+      console.log(originalTong);
+
+      shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio;`);
+      shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio/listImage;`);
+      shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio/original;`);
+      for (let pid of listImageTong) {
+        shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio/listImage/${pid};`);
+        shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio/listImage/${pid}/mobile;`);
+      }
+      for (let pid of originalTong) {
+        shell.exec(`mkdir ${shellLink(targetDir)}/corePortfolio/original/${pid};`);
+      }
+
+      getS3 = await this.mother.s3FileList("corePortfolio");
+      binaryTarget = [];
+      for (let i of getS3) {
+        if (/\.[^\.]+$/i.test(i) && !/__delete__/gi.test(i) && !/DS_Store/gi.test(i)) {
+          binaryTarget.push(i);
+        }
+      }
+      for (let b of binaryTarget) {
+        tempObject = await binaryRequest(S3HOST + "/" + b);
+        await fileSystem(`writeBinary`, [ targetDir + "/" + b, tempObject ]);
+        console.log(`binary "${b}" download done`);
+      }
+
+      //designer ghost
+      getS3 = await this.mother.s3FileList("rawDesigner/ghost");
+
+      shell.exec(`mkdir ${shellLink(targetDir)}/rawDesigner;`);
+      shell.exec(`mkdir ${shellLink(targetDir)}/rawDesigner/ghost;`);
+
+      tong = [];
+      for (let i of getS3) {
+        tempArr = i.split("/");
+        if (tempArr.length > 2) {
+          if (tempArr[2] !== "" && tempArr[2] !== "__delete__") {
+            tong.push(tempArr[2]);
+          }
+        }
+      }
+      ghostTong = Array.from(new Set(tong));
+      console.log(ghostTong);
+
+      for (let id of ghostTong) {
+        shell.exec(`mkdir ${shellLink(targetDir)}/rawDesigner/ghost/${id};`);
+      }
+
+      getS3 = await this.mother.s3FileList("rawDesigner");
+      binaryTarget = [];
+      for (let i of getS3) {
+        if (/\.[^\.]+$/i.test(i) && !/__delete__/gi.test(i) && !/DS_Store/gi.test(i)) {
+          binaryTarget.push(i);
+        }
+      }
+      for (let b of binaryTarget) {
+        tempObject = await binaryRequest(S3HOST + "/" + b);
+        await fileSystem(`writeBinary`, [ targetDir + "/" + b, tempObject ]);
+        console.log(`binary "${b}" download done`);
+      }
+
+      //profile photos
+      getS3 = await this.mother.s3FileList("etcPhotos/memberProfile");
+      shell.exec(`mkdir ${shellLink(targetDir)}/etcPhotos;`);
+      shell.exec(`mkdir ${shellLink(targetDir)}/etcPhotos/memberProfile;`);
+
+      getS3 = await this.mother.s3FileList("etcPhotos");
+      binaryTarget = [];
+      for (let i of getS3) {
+        if (/\.[^\.]+$/i.test(i) && !/__delete__/gi.test(i) && !/DS_Store/gi.test(i)) {
+          binaryTarget.push(i);
+        }
+      }
+      for (let b of binaryTarget) {
+        tempObject = await binaryRequest(S3HOST + "/" + b);
+        await fileSystem(`writeBinary`, [ targetDir + "/" + b, tempObject ]);
+        console.log(`binary "${b}" download done`);
+      }
+
+
+
+      // */
 
 
 

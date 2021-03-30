@@ -390,6 +390,9 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       console.log(toArr);
       await this.mother.s3FileUpload(fromArr, toArr);
       console.log(`s3 upload done`);
+
+      // shell.exec(`scp -r ${shellLink(this.resultFolder + "/" + this.pid)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original`);
+      // console.log(`ghost upload done`);
     }
 
     //fix dir
