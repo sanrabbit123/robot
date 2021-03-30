@@ -689,6 +689,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let resultArr;
       let obj;
       let searchBoo;
+      let processTong_refined, processTong_past;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -768,11 +769,22 @@ DataRouter.prototype.rou_post_getClientReport = function () {
             searchQuery = { "$or": cliidArr };
             process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
             for (let i of process) {
-              if (i.desid !== "") {
+              if (/^d/.test(i.desid)) {
                 processTong.push(i);
               }
             }
-            obj.process = processTong.length;
+
+            processTong_refined = [];
+            processTong_past = [];
+
+            for (let p of processTong) {
+              if (!processTong_past.includes(p.cliid)) {
+                processTong_refined.push(p);
+              }
+              processTong_past.push(p.cliid);
+            }
+
+            obj.process = processTong_refined.length;
           } else {
             obj.process = 0;
           }

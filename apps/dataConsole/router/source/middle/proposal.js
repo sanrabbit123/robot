@@ -355,6 +355,7 @@ const ProposalJs = function () {
   this.sero = false;
   this.totalContents = document.getElementById("totalcontents");
   this.frontPage = "https://home-liaison.com";
+  this.naviHeight = 72;
   this.standardWidth = 1400;
   this.ea = "px";
   this.baseTong = null;
@@ -366,11 +367,18 @@ const ProposalJs = function () {
     leftMargin: 0,
     topMargin: 0
   };
+  this.whiteBlocks = [];
   this.subBoxMargin = {
     top: 0,
     bottom: 0,
     left: 0
   };
+  this.abc = [];
+  for (let i = 'A'.charCodeAt(); i < 'Z'.charCodeAt() + 1; i++) {
+    this.abc.push(String.fromCharCode(i));
+  }
+  this.abcStatic = 0;
+  this.boxTops = [];
 }
 
 //static
@@ -479,7 +487,7 @@ ProposalJs.prototype.setNavigator = function () {
   style = {
     position: "fixed",
     background: GeneralJs.colorChip.gradientGray,
-    height: String(72) + ea,
+    height: String(this.naviHeight) + ea,
     width: String(100) + '%',
     top: String(0),
     left: String(0),
@@ -589,11 +597,15 @@ ProposalJs.prototype.insertInitBox = function () {
   let designerBox;
   let desigerBoxWidth, desigerBoxHeight;
   let targetDesigners;
+  let targetDesignerBoxTop, targetDesignerBoxIndent;
+  let designerFactorTitleTop;
   let designerFactor;
   let designerBar;
   let designerFactorTitleSize, designerFactorSize, designerFactorHeight;
   let topBox;
   let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
+  let whiteWording;
+  let pastBlocks;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 16 %%>;
@@ -659,12 +671,16 @@ ProposalJs.prototype.insertInitBox = function () {
   desigerBoxWidth = <%% 240, 240, 240, 240 %%>;
   desigerBoxHeight = <%% 52, 52, 52, 52 %%>;
 
-  targetDesigners = [
-    "임은숙",
-    "김남희",
-    "김지은"
-  ];
-  designerFactorTitleSize = <%% 15, 15, 15, 15 %%>;
+  targetDesigners = [];
+  for (let i = 0; i < this.proposal.detail.length; i++) {
+    targetDesigners.push(this.proposal.detail[i].designer);
+  }
+  pastBlocks = [];
+  designerFactorTitleTop = <%% 4, 4, 4, 4 %%>;
+  targetDesignerBoxTop = <%% 24, 24, 24, 24 %%>;
+  targetDesignerBoxIndent = <%% 34, 36, 36, 36 %%>;
+
+  designerFactorTitleSize = <%% 13, 15, 15, 15 %%>;
   designerFactorSize = <%% 22, 22, 22, 22 %%>;
   designerFactorHeight = <%% 20, 20, 20, 20 %%>;
 
@@ -801,7 +817,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //init wording - 0
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
-  initWordingBox.insertAdjacentHTML("beforeend", "김연희 고객님께 고객 맞춤 커스터마이징 : <b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
+  initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께 고객 맞춤 커스터마이징 : <b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   style = {
     position: "absolute",
     top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -962,17 +978,23 @@ ProposalJs.prototype.insertInitBox = function () {
   designerTitle.textContent = "추천 디자이너 :";
   style = {
     position: "absolute",
-    top: String(0) + ea,
+    top: String(designerFactorTitleTop) + ea,
     left: String(1) + ea,
     fontSize: String(designerFactorTitleSize) + ea,
-    fontWeight: String(300),
+    fontWeight: String(400),
   };
   for (let i in style) {
     designerTitle.style[i] = style[i];
   }
   designerBox.appendChild(designerTitle);
+  pastBlocks.push(designerTitle);
 
   for (let i = 0; i < targetDesigners.length; i++) {
+    if (i % 3 === 0) {
+      for (let dom of pastBlocks) {
+        dom.style.top = String(Number(dom.style.top.replace(/[^0-9\.\-]/gi, '')) - (targetDesignerBoxIndent * Math.floor(i / 3))) + ea;
+      }
+    }
     designerFactor = GeneralJs.nodes.div.cloneNode(true);
     designerFactor.textContent = targetDesigners[i];
     style = {
@@ -981,7 +1003,7 @@ ProposalJs.prototype.insertInitBox = function () {
       width: "calc(100% / 3)",
       display: "inline-block",
       position: "absolute",
-      bottom: String(0),
+      top: String(targetDesignerBoxTop) + ea,
       textAlign: ([ "left", "center", "right" ])[i % 3],
       left: "calc(calc(100% / 3) * " + String(i % 3) + ")",
     };
@@ -1009,14 +1031,34 @@ ProposalJs.prototype.insertInitBox = function () {
       designerFactor.appendChild(designerBar);
     }
     designerBox.appendChild(designerFactor);
+    pastBlocks.push(designerFactor);
   }
-
   rightBox.appendChild(designerBox);
   whiteBlock.appendChild(rightBox);
 
   //top white wording
+  whiteWording = "";
+  whiteWording += "HomeLiaison designer proposal";
+  for (let i = 0; i < this.proposal.detail.length; i++) {
+    whiteWording += " / ";
+    whiteWording += "<b index=\"" + String(i) + "\" style=\"color:" + GeneralJs.colorChip.white + "\" class=\"hoverDefault\">";
+    whiteWording += "designer ";
+    whiteWording += this.abc[i];
+    whiteWording += "</b>";
+  }
   topBox = GeneralJs.nodes.div.cloneNode(true);
-  topBox.textContent = "HomeLiaison designer proposal  /  designer A  /  desinger B  /  desinger C";
+  topBox.insertAdjacentHTML("beforeend", whiteWording);
+  for (let i = 0; i < this.proposal.detail.length; i++) {
+    topBox.querySelectorAll("b")[i].addEventListener("click", function () {
+      let z = 0;
+      for (let whiteBlock of instance.whiteBlocks) {
+        instance.boxTops.push(whiteBlock.getBoundingClientRect().top);
+        z++;
+      }
+      const index = Number(this.getAttribute("index"));
+      window.scrollTo(0, instance.boxTops[index] - (instance.naviHeight * 1.5));
+    });
+  }
   style = {
     position: "absolute",
     fontFamily: "graphik",
@@ -1046,10 +1088,12 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   let style;
   let ea = this.ea;
   let blockHeight, bottomMargin;
+  let whiteBlocks;
 
-  blockHeight = 820;
-  bottomMargin = 16;
+  blockHeight = <%% 820, 820, 820, 820 %%>;
+  bottomMargin = <%% 16, 16, 16, 16 %%>;
 
+  whiteBlocks = [];
   for (let z = 0; z < this.proposal.detail.length; z++) {
     whiteBlock = GeneralJs.nodes.div.cloneNode(true);
     style = {
@@ -1066,7 +1110,10 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
     }
     this.insertDesignerBox(whiteBlock, this.proposal.detail[z], z + 1);
     this.baseTong.appendChild(whiteBlock);
+    whiteBlocks.push(whiteBlock);
   }
+
+  this.whiteBlocks = whiteBlocks;
 }
 
 ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
@@ -1146,7 +1193,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   //title
   designerTitle = GeneralJs.nodes.div.cloneNode(true);
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 A&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
   style = {
     position: "relative",
     marginLeft: String(leftMargin) + ea,
@@ -1160,6 +1207,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   for (let i in style) {
     designerTitle.style[i] = style[i];
   }
+  this.abcStatic = this.abcStatic + 1;
 
   //index
   designerTitleIndex = GeneralJs.nodes.div.cloneNode(true);
@@ -1843,7 +1891,6 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     } else {
       mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
     }
-
   });
 
 }
@@ -2176,6 +2223,7 @@ ProposalJs.prototype.insertPannelBox = function () {
   for (let i in style) {
     designerButtonTong.style[i] = style[i];
   }
+
   for (let z = 0; z < this.proposal.detail.length; z++) {
     designerButton = GeneralJs.nodes.div.cloneNode(true);
     designerButton.classList.add("hoverDefault");
@@ -2211,12 +2259,13 @@ ProposalJs.prototype.insertPannelBox = function () {
     designerButton.appendChild(designerButtonText);
     designerButtonTong.appendChild(designerButton);
   }
+
   for (let z = 0; z < 2; z++) {
     designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
       width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
       left: String(leftMargin) + ea,
       top: String(47) + '%',
     };
@@ -2234,8 +2283,8 @@ ProposalJs.prototype.insertPannelBox = function () {
       position: "absolute",
       width: String(headWidth) + ea,
       height: String(headWidth) + ea,
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
-      borderRight: "1px solid " + GeneralJs.colorChip.gray2,
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      borderRight: "1px solid " + GeneralJs.colorChip.gray3,
       transform: "rotate(-45deg)",
       left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
       top: String(36) + '%',
@@ -2295,7 +2344,6 @@ ProposalJs.prototype.insertPannelBox = function () {
 
   whiteBlock.appendChild(designerButtonTong);
 
-
   designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
@@ -2346,6 +2394,7 @@ ProposalJs.prototype.launching = async function (loading) {
     this.standardWidth = <%% 1400, 1050, 900, 100 %%>;
     this.sero = <%% false, false, false, true %%>;
     this.modeMinus = <%% 0, 1, 1, 1 %%>;
+    this.naviHeight = <%% 72, 72, 60, 60 %%>;
 
     this.subBoxMargin.top = <%% 30, 30, 30, 30 %%>;
     this.subBoxMargin.bottom = <%% 31, 30, 30, 30 %%>;

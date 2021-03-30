@@ -1619,6 +1619,53 @@ class DevContext extends Array {
       // });
 
 
+      const clients = await back.getClientsByQuery({}, { withTools: true });
+      const allRequests = clients.getRequestsTong();
+
+      let tong, tempObj;
+      let cliidArr;
+
+      tong = [];
+      cliidArr = [];
+      for (let { cliid, name, request } of allRequests) {
+        if (request.timeline.valueOf() >= (new Date(2021, 2, 1)).valueOf()) {
+          if (request.timeline.valueOf() < (new Date(2021, 3, 1)).valueOf()) {
+            tempObj = { cliid, name, request };
+            cliidArr.push(cliid);
+            tong.push(tempObj);
+          }
+        }
+      }
+
+      const projects = await back.getProjectsByCliidArr(cliidArr);
+      let projectTong, projectTong_refined, cliidPast;
+      let clientCliidTong;
+
+      projectTong = [];
+      clientCliidTong = [];
+      for (let p of projects) {
+        if (/^d/.test(p.desid)) {
+          projectTong.push(p);
+          clientCliidTong.push({ cliid: p.cliid});
+        }
+      }
+
+      projectTong_refined = [];
+      cliidPast = [];
+      for (let p of projectTong) {
+        if (!cliidPast.includes(p.cliid)) {
+          projectTong_refined.push(p);
+        }
+        cliidPast.push(p.cliid);
+      }
+
+
+
+      console.log(projectTong_refined.length);
+
+
+
+
 
       // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

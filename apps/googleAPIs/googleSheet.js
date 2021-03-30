@@ -4,10 +4,23 @@ const GoogleSheet = function (credentials = "default") {
   this.sheets = {};
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.pythonApp = this.dir + "/python/app.py";
-  const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+  let alphabet, temp0, temp1;
+  temp0 = 'A'.charCodeAt();
+  temp1 = 'Z'.charCodeAt();
+  alphabet = [];
+  for (let i = temp0; i < temp1 + 1; i++) {
+    alphabet.push(String.fromCharCode(i));
+  }
   this.abc = [];
-  for (let i of alphabet) { this.abc.push(i); }
-  for (let i of alphabet) { for (let j of alphabet) { this.abc.push(i + j); } }
+  for (let i of alphabet) {
+    this.abc.push(i);
+  }
+  for (let i of alphabet) {
+    for (let j of alphabet) {
+      this.abc.push(i + j);
+    }
+  }
 }
 
 GoogleSheet.prototype.createSheets_promise = function (title) {
