@@ -1256,7 +1256,6 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     position: "relative",
     width: String(pictureBoxWidth) + ea,
     height: String(pictureBoxHeight) + ea,
-    background: "aliceblue",
   };
   for (let i in style) {
     pictureBox.style[i] = style[i];

@@ -1622,20 +1622,25 @@ class DevContext extends Array {
 
       // await work.setProposalToClient("cron", { selfMongo: this.MONGOC });
 
-      const clients = await this.MONGOC.db(`miro81`).collection(`client`).find({}).toArray();
-      let updateQuery, whereQuery;
+      // const clients = await this.MONGOC.db(`miro81`).collection(`client`).find({}).toArray();
+      // let updateQuery, whereQuery;
+      //
+      // for (let client of clients) {
+      //   whereQuery = { cliid: client.cliid };
+      //   for (let i = 0; i < client.requests.length; i++) {
+      //     if (client.requests[i].proposal !== undefined) {
+      //       updateQuery = { "$unset": {} };
+      //       updateQuery["$unset"]["requests." + String(i) + ".proposal"] = "";
+      //       console.log(whereQuery, updateQuery);
+      //       // await this.MONGOC.db(`miro81`).collection(`client`).updateOne(whereQuery, updateQuery);
+      //     }
+      //   }
+      // }
 
-      for (let client of clients) {
-        whereQuery = { cliid: client.cliid };
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.requests[i].proposal !== undefined) {
-            updateQuery = { "$unset": {} };
-            updateQuery["$unset"]["requests." + String(i) + ".proposal"] = "";
-            console.log(whereQuery, updateQuery);
-            // await this.MONGOC.db(`miro81`).collection(`client`).updateOne(whereQuery, updateQuery);
-          }
-        }
-      }
+
+
+
+
 
 
 

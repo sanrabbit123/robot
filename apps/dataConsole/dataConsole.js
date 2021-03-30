@@ -387,7 +387,7 @@ DataConsole.prototype.connect = async function () {
   app.use(bodyParser.json());
   app.use(multiForms.array());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(express.static(staticFolder));
+  // app.use(express.static(staticFolder));
 
   try {
     //set address info
