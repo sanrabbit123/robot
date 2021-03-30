@@ -1642,7 +1642,7 @@ class DevContext extends Array {
 
 
       //get files S3
-      // /*
+      /*
       const S3HOST = require(`${process.cwd()}/apps/infoObj.js`).s3info.host;
       const targetDir = process.env.HOME + "/static";
       let getS3;
@@ -1760,7 +1760,11 @@ class DevContext extends Array {
 
 
 
-      // */
+      */
+
+
+
+
 
 
 

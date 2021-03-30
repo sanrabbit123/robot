@@ -391,8 +391,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       await this.mother.s3FileUpload(fromArr, toArr);
       console.log(`s3 upload done`);
 
-      // shell.exec(`scp -r ${shellLink(this.resultFolder + "/" + this.pid)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original`);
-      // console.log(`ghost upload done`);
+      shell.exec(`scp -r ${shellLink(this.resultFolder + "/" + this.pid)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original`);
+      console.log(`ghost upload done`);
     }
 
     //fix dir
@@ -478,6 +478,9 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
 
     await this.back.updateDesigner([ { desid: target_obj.desid }, { "setting.ghost": ghost_arr } ]);
     await this.mother.s3FileUpload(fromArr, toArr);
+    for (let i = 0; i < fromArr.length; i++) {
+      shell.exec(`scp ${shellLink(fromArr[i])} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/rawDesigner/ghost/${target_obj.desid}`);
+    }
 
   } catch (e) {
     console.log(e.message);
@@ -527,6 +530,9 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
     toArr.push(`corePortfolio/original/${pid}/${targetFile}`);
 
     await s3FileUpload(fromArr, toArr);
+    for (let i = 0; i < fromArr.length; i++) {
+      shell.exec(`scp ${shellLink(fromArr[i])} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original/${pid}`);
+    }
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
 
   } catch (e) {

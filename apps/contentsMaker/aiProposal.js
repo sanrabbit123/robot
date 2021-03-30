@@ -80,7 +80,6 @@ AiProposal.prototype.proposalLaunching = async function () {
     for (let j = 0; j < this.text.proposal.detail.length; j++) {
       for (let i = 0; i < this.text.proposal.detail[j].pictureSettings.length; i++) {
         // await this.saveStatic(ADDRESS.s3info.host + this.text.proposal.detail[j].pictureSettings[i].imgSrc);
-        console.log(ADDRESS.homeinfo.ghost.protocol + "://" + ADDRESS.homeinfo.ghost.host + this.text.proposal.detail[j].pictureSettings[i].imgSrc);
         await this.saveStatic(ADDRESS.homeinfo.ghost.protocol + "://" + ADDRESS.homeinfo.ghost.host + this.text.proposal.detail[j].pictureSettings[i].imgSrc);
       }
     }

@@ -66,7 +66,8 @@ AiContents.prototype.photo_search = async function () {
     targetPathArr = targetContents.toOriginalPath();
     for (let i of targetPathArr) {
       tempName = (i.split('/'))[i.split('/').length - 1];
-      tempObject = await binaryRequest(ADDRESS.s3info.host + i);
+      // tempObject = await binaryRequest(ADDRESS.s3info.host + i);
+      tempObject = await binaryRequest(ADDRESS.homeinfo.ghost.protocol + "://" + ADDRESS.homeinfo.ghost.host + i);
       await fileSystem(`writeBinary`, [ this.options.photo_dir + "/" + tempName, tempObject ]);
       console.log(`download success`);
     }
@@ -507,9 +508,11 @@ AiContents.prototype.to_poo = async function () {
 
     await s3FileUpload(fromArr, toArr);
 
-    //view scp
-    console.log(order);
-    copyToClipboard(order);
+    shell.exec(`mkdir ${this.options.home_dir}/result/s3ghostTarget`);
+    shell.exec(`cp -r ${this.options.home_dir}/result/${p_id}code/portp${p_id} ${this.options.home_dir}/result/s3ghostTarget`);
+    shell.exec(`mv ${this.options.home_dir}/result/s3ghostTarget/portp${p_id} ${this.options.home_dir}/result/s3ghostTarget/${p_id}`);
+    shell.exec(`scp -r ${this.options.home_dir}/result/s3ghostTarget/${p_id} ${ADDRESS.homeinfo.ghost.user}@${ADDRESS.homeinfo.ghost.host}:/home/${ADDRESS.homeinfo.ghost.user}/static/corePortfolio/listImage`);
+    shell.exec(order);
 
   } catch (e) {
     console.log(e.message);
