@@ -689,7 +689,10 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let resultArr;
       let obj;
       let searchBoo;
-      let processTong_refined, processTong_past;
+      let processTong_refined, processTong_past, processTong_double;
+      let doubleObject;
+      let doubleClient;
+      let finalLength;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -776,15 +779,38 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
             processTong_refined = [];
             processTong_past = [];
+            processTong_double = [];
 
             for (let p of processTong) {
-              if (!processTong_past.includes(p.cliid)) {
+              if (processTong_past.includes(p.cliid)) {
+                processTong_double.push(p.cliid);
+              } else {
                 processTong_refined.push(p);
               }
               processTong_past.push(p.cliid);
             }
 
-            obj.process = processTong_refined.length;
+            doubleObject = {};
+            for (let cliid of processTong_double) {
+              if (doubleObject[cliid] === undefined) {
+                doubleObject[cliid] = 1;
+              } else {
+                doubleObject[cliid] = doubleObject[cliid] + 1;
+              }
+            }
+
+            finalLength = processTong_refined.length - Object.keys(doubleObject).length;
+
+            for (let cliid in doubleObject) {
+              doubleClient = await back.getClientById(cliid, { selfMongo: instance.mongo });
+              for (let { request } of doubleClient.requests) {
+                if (request.timeline.valueOf() >= arr[0].valueOf() && request.timeline.valueOf() < arr[2].valueOf()) {
+                  finalLength = finalLength + 1;
+                }
+              }
+            }
+
+            obj.process = finalLength;
           } else {
             obj.process = 0;
           }

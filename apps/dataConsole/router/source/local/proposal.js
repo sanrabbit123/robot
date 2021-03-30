@@ -3306,6 +3306,7 @@ ProposalJs.save_init = async function (update = false) {
     let full_string = '';
     let tempObj_raw, tempObj;
     let tagParsingObj, descriptionObj, descriptionArr;
+    let thisClient, proposalHistory;
 
     if (!update) {
       // 0 make proid
@@ -3434,8 +3435,6 @@ ProposalJs.save_init = async function (update = false) {
       standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
       await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: standard_id }) + "&updateQuery=" + JSON.stringify(result_obj), "/rawUpdateProject");
     }
-
-    await GeneralJs.ajaxPromise("where=" + JSON.stringify({ cliid: result_obj["cliid"] }) + "&updateQuery=" + JSON.stringify({ "requests.0.proposal.proid": standard_id }), "/rawUpdateClient");
 
     if (document.querySelector(".pp_fifth_cancelback") !== null) {
       document.querySelector(".pp_fifth_cancelback").remove();

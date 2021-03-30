@@ -983,22 +983,8 @@ BackMaker.prototype.returnClientDummies = function (subject) {
     case "analytics.proposal":
       dummy = {
         proid: "",
-        generate: {
-          date: new Date(1800, 0, 1),
-          who: "",
-        },
-        complete: {
-          date: new Date(1800, 0, 1),
-          who: "",
-        },
-        send: {
-          date: new Date(1800, 0, 1),
-          who: "",
-        },
-        feedback: {
-          date: new Date(1800, 0, 1),
-          who: "",
-        },
+        date: new Date(1800, 0, 1),
+        contract: false,
       };
       break;
   }

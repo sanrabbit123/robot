@@ -12,6 +12,88 @@ const BackWorker = function () {
   this.idFilterDir = this.dir + "/idFilter";
 }
 
+BackWorker.prototype.setProposalToClient = async function (dateArray = [], option = { selfMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
+  try {
+    if (!Array.isArray(dateArray)) {
+      if (dateArray === null || dateArray === undefined) {
+        dateArray = [];
+      } else {
+        throw new Error("arguments must be array and [ startDate, endDate ]");
+      }
+    }
+    let MONGOC;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    let searchQuery;
+    if (dateArray.length === 0) {
+      searchQuery = {};
+    } else if (dateArray.length === 2) {
+      searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": dateArray[0], "$lt": dateArray[1] } } } };
+    } else {
+      throw new Error("arguments must be array and [ startDate, endDate ]");
+    }
+
+    const clients = await back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: MONGOC });
+    const allRequests = clients.getRequestsTong();
+    let projects, tempArr, tempArr2, matrix, timelines;
+    let whereQuery, updateQuery;
+
+    for (let { cliid, requests } of clients) {
+      projects = await back.getProjectsByQuery({ cliid }, { selfMongo: MONGOC });
+
+      tempArr = [];
+      for (let p of projects) {
+        tempArr.push({ proid: p.proid, date: p.proposal.date, contract: /^d/i.test(p.desid) });
+      }
+      whereQuery = { cliid };
+
+      timelines = [];
+      for (let { request: { timeline } } of requests) {
+        timelines.push(timeline);
+      }
+
+      if (timelines.length === 1) {
+        updateQuery = { "requests.0.analytics.proposal": tempArr };
+      } else {
+        updateQuery = {};
+        matrix = [];
+        for (let i = 0; i < timelines.length; i++) {
+          if (i === 0) {
+            matrix.unshift([]);
+            for (let obj of tempArr) {
+              if (obj.date.valueOf() >= timelines[i].valueOf()) {
+                matrix[0].push(obj);
+              }
+            }
+            updateQuery["requests." + String(i) + ".analytics.proposal"] = matrix[0];
+          } else {
+            matrix.unshift([]);
+            for (let obj of tempArr) {
+              if (obj.date.valueOf() >= timelines[i].valueOf() && obj.date.valueOf() < timelines[i - 1].valueOf()) {
+                matrix[0].push(obj);
+              }
+            }
+            updateQuery["requests." + String(i) + ".analytics.proposal"] = matrix[0];
+          }
+        }
+      }
+
+      await back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+      console.log(`update ${JSON.stringify(whereQuery)} done`);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { selfMongo: null }) {
   /*
   aspidArr = [

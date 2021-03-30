@@ -142,22 +142,8 @@ module.exports = {
           proposal: [
             {
               proid: "",
-              generate: {
-                date: new Date(),
-                who: "",
-              },
-              complete: {
-                date: new Date(),
-                who: "",
-              },
-              send: {
-                date: new Date(),
-                who: "",
-              },
-              feedback: {
-                date: new Date(),
-                who: "",
-              },
+              date: new Date(),
+              contract: false,
             }
           ],
         },
