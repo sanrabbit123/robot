@@ -78,24 +78,6 @@ GeneralJs.idOrderDecode = function (number) {
   return result;
 }
 
-GeneralJs.colorChip = {
-  white: "#ffffff",
-  whiteIcon: "#ffffff",
-  gray0: "#f7f7f7",
-  gray1: "#f2f2f2",
-  gray2: "#ececec",
-  gray3: "#dddddd",
-  gray4: "#cccccc",
-  gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
-  deactive: "#bbbbbb",
-  shadow: "#808080",
-  black: "#404040",
-  green: "#2fa678",
-  gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-  red: "#ff5f57",
-  yellow: "#ffbd3d",
-};
-
 GeneralJs.vaildValue = function (column, value, pastValue) {
   let map;
   let filteredValue;

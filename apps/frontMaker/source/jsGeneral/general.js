@@ -20,6 +20,25 @@ GeneralJs.boos = {
   scroll: true,
 };
 
+GeneralJs.colorChip = {
+  white: "#ffffff",
+  whiteIcon: "#ffffff",
+  gray0: "#f7f7f7",
+  gray1: "#f2f2f2",
+  gray2: "#ececec",
+  gray3: "#dddddd",
+  gray4: "#cccccc",
+  gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
+  gradientSilver: "linear-gradient(256deg, rgba(30, 30, 30, 0.65) 0%, rgba(38, 38, 38, 0.7) 100%)",
+  deactive: "#bbbbbb",
+  shadow: "#808080",
+  black: "#404040",
+  green: "#2fa678",
+  gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+  red: "#ff5f57",
+  yellow: "#ffbd3d",
+};
+
 GeneralJs.ajax = function (data, url, callback) {
   const xhr = new XMLHttpRequest();
   xhr.open("POST", url);
@@ -1065,7 +1084,7 @@ GeneralJs.prototype.navigatorMake = function () {
   this.navigator = { desktop: desktopNavigator, mobile: mobileNavigator };
 }
 
-GeneralJs.prototype.footerMake = function (type = 'A') {
+GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") {
   let div_clone, div_clone2, a_clone, svg_clone;
   let height, width, top;
   let style = {};
@@ -1106,6 +1125,7 @@ GeneralJs.prototype.footerMake = function (type = 'A') {
   //desktop
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.id = "footergreenback0817";
+  div_clone.style.background = GeneralJs.colorChip[color];
 
   //footer left
   ea = "px";

@@ -693,6 +693,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let doubleObject;
       let doubleClient;
       let finalLength;
+      let processNumber;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -763,57 +764,19 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.contract = contracts.length;
 
           //process start
-          cliidArr = [];
-          processTong = [];
-          for (let client of clients) {
-            cliidArr.push({ cliid: client.cliid });
-          }
-          if (cliidArr.length > 0) {
-            searchQuery = { "$or": cliidArr };
-            process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
-            for (let i of process) {
-              if (/^d/.test(i.desid)) {
-                processTong.push(i);
-              }
-            }
-
-            processTong_refined = [];
-            processTong_past = [];
-            processTong_double = [];
-
-            for (let p of processTong) {
-              if (processTong_past.includes(p.cliid)) {
-                processTong_double.push(p.cliid);
-              } else {
-                processTong_refined.push(p);
-              }
-              processTong_past.push(p.cliid);
-            }
-
-            doubleObject = {};
-            for (let cliid of processTong_double) {
-              if (doubleObject[cliid] === undefined) {
-                doubleObject[cliid] = 1;
-              } else {
-                doubleObject[cliid] = doubleObject[cliid] + 1;
-              }
-            }
-
-            finalLength = processTong_refined.length - Object.keys(doubleObject).length;
-
-            for (let cliid in doubleObject) {
-              doubleClient = await back.getClientById(cliid, { selfMongo: instance.mongo });
-              for (let { request } of doubleClient.requests) {
-                if (request.timeline.valueOf() >= arr[0].valueOf() && request.timeline.valueOf() < arr[2].valueOf()) {
-                  finalLength = finalLength + 1;
+          processNumber = 0;
+          for (let c of clients) {
+            for (let { request: { timeline }, analytics: { proposal } } of c.requests) {
+              if (timeline.valueOf() >= arr[0].valueOf() && timeline.valueOf() < arr[2].valueOf()) {
+                for (let { contract } of proposal) {
+                  if (contract) {
+                    processNumber = processNumber + 1;
+                  }
                 }
               }
             }
-
-            obj.process = finalLength;
-          } else {
-            obj.process = 0;
           }
+          obj.process = processNumber;
 
           monthArr.push(obj);
         }

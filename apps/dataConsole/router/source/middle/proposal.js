@@ -11,11 +11,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 제안서');"
+      "return (thisPerson.name !== undefined ? thisPerson.name + ' 고객님 디자이너 추천 제안서 | 홈리에종' : '홈리에종 디자이너 추천 제안서 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 디자이너 제안 페이지입니다.');"
+      "return (thisPerson.name !== undefined ? thisPerson.name + ' 고객님 디자이너 제안 페이지입니다.' : '홈리에종 디자이너 추천 제안 페이지입니다.');"
     ],
     "image": [
       "thisPerson",
@@ -379,6 +379,7 @@ const ProposalJs = function () {
   }
   this.abcStatic = 0;
   this.boxTops = [];
+  this.designerButtons = [];
 }
 
 //static
@@ -606,6 +607,7 @@ ProposalJs.prototype.insertInitBox = function () {
   let topBoxSize, topBoxWidth, topBoxHeight, topBoxRight;
   let whiteWording;
   let pastBlocks;
+  let designerBarBottom, designerBarLeft;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 16 %%>;
@@ -688,6 +690,9 @@ ProposalJs.prototype.insertInitBox = function () {
   topBoxWidth = <%% 700, 700, 700, 700 %%>;
   topBoxHeight = <%% 28, 28, 28, 28 %%>;
   topBoxRight = <%% 1, 1, 1, 1 %%>;
+
+  designerBarBottom = <%% 2, 2, 2, 2 %%>;
+  designerBarLeft = <%% 6, 6, 6, 6 %%>;
 
   //total white box
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
@@ -1004,8 +1009,8 @@ ProposalJs.prototype.insertInitBox = function () {
       display: "inline-block",
       position: "absolute",
       top: String(targetDesignerBoxTop) + ea,
-      textAlign: ([ "left", "center", "right" ])[i % 3],
-      left: "calc(calc(100% / 3) * " + String(i % 3) + ")",
+      textAlign: ([ "left", "center", "right" ])[3 - 1 - (i % 3)],
+      left: "calc(calc(100% / 3) * " + String(3 - 1 - (i % 3)) + ")",
     };
     for (let j in style) {
       designerFactor.style[j] = style[j];
@@ -1014,16 +1019,16 @@ ProposalJs.prototype.insertInitBox = function () {
       designerBar = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "absolute",
-        borderLeft: "1px solid " + GeneralJs.colorChip.green,
+        borderRight: "1px solid " + GeneralJs.colorChip.green,
         height: String(designerFactorHeight) + ea,
-        bottom: String(2) + ea,
-        right: "calc(calc(100% / 3) / " + String(4) + ")",
+        bottom: String(designerBarBottom) + ea,
+        left: String(designerBarLeft) + ea,
       };
       if (i % 3 === 2) {
-        style.borderRight = "1px solid " + GeneralJs.colorChip.green;
-        style.left = "calc(calc(100% / 3) / " + String(4) + ")";
-        delete style.borderLeft;
-        delete style.right;
+        style.borderLeft = style.borderRight;
+        style.right = style.left;
+        delete style.borderRight;
+        delete style.left;
       }
       for (let j in style) {
         designerBar.style[j] = style[j];
@@ -1033,6 +1038,11 @@ ProposalJs.prototype.insertInitBox = function () {
     designerBox.appendChild(designerFactor);
     pastBlocks.push(designerFactor);
   }
+
+  if (targetDesigners.length % 3 === 1) {
+    designerBar.parentNode.removeChild(designerBar);
+  }
+
   rightBox.appendChild(designerBox);
   whiteBlock.appendChild(rightBox);
 
@@ -2224,17 +2234,20 @@ ProposalJs.prototype.insertPannelBox = function () {
     designerButtonTong.style[i] = style[i];
   }
 
+  this.designerButtons = [];
   for (let z = 0; z < this.proposal.detail.length; z++) {
     designerButton = GeneralJs.nodes.div.cloneNode(true);
-    designerButton.classList.add("hoverDefault");
     style = {
       display: "inline-block",
       position: "relative",
       width: String(buttonWidth) + ea,
       height: String(100) + '%',
       background: GeneralJs.colorChip.gray2,
+      color: GeneralJs.colorChip.deactive,
       borderRadius: String(3) + ea,
       marginRight: String(buttonMargin) + ea,
+      transition: "all 0.2s ease",
+      cursor: "pointer",
     };
     if (z === this.proposal.detail.length - 1) {
       delete style.marginRight;
@@ -2249,15 +2262,50 @@ ProposalJs.prototype.insertPannelBox = function () {
       top: String(buttonTextTop) + ea,
       fontSize: String(buttonTextSize) + ea,
       fontWeight: String(400),
-      color: GeneralJs.colorChip.deactive,
+      color: "inherit",
       width: String(100) + '%',
       textAlign: "center",
+      transition: "all 0s ease",
     };
     for (let i in style) {
       designerButtonText.style[i] = style[i];
     }
     designerButton.appendChild(designerButtonText);
+    designerButton.setAttribute("toggle", "off");
+    designerButton.addEventListener("click", function (e) {
+      const toggle = this.getAttribute("toggle");
+      const onStyle = {
+        background: GeneralJs.colorChip.green,
+        color: GeneralJs.colorChip.white
+      };
+      const offStyle = {
+        background: GeneralJs.colorChip.gray2,
+        color: GeneralJs.colorChip.deactive
+      };
+
+      if (toggle === "off") {
+        for (let dom of instance.designerButtons) {
+          if (dom !== this) {
+            for (let i in offStyle) {
+              dom.style[i] = offStyle[i];
+            }
+            dom.setAttribute("toggle", "off");
+          } else {
+            for (let i in onStyle) {
+              dom.style[i] = onStyle[i];
+            }
+            dom.setAttribute("toggle", "on");
+          }
+        }
+      } else {
+        for (let i in offStyle) {
+          this.style[i] = offStyle[i];
+        }
+        this.setAttribute("toggle", "off");
+      }
+    });
     designerButtonTong.appendChild(designerButton);
+    this.designerButtons.push(designerButton);
   }
 
   for (let z = 0; z < 2; z++) {
@@ -2313,7 +2361,6 @@ ProposalJs.prototype.insertPannelBox = function () {
   }
 
   designerButton = GeneralJs.nodes.div.cloneNode(true);
-  designerButton.classList.add("hoverDefault");
   style = {
     display: "inline-block",
     position: "relative",
@@ -2321,6 +2368,7 @@ ProposalJs.prototype.insertPannelBox = function () {
     height: String(100) + '%',
     background: GeneralJs.colorChip.green,
     borderRadius: String(3) + ea,
+    cursor: "pointer",
   };
   for (let i in style) {
     designerButton.style[i] = style[i];
@@ -2340,6 +2388,25 @@ ProposalJs.prototype.insertPannelBox = function () {
     designerButtonText.style[i] = style[i];
   }
   designerButton.appendChild(designerButtonText);
+  designerButton.addEventListener("click", function (e) {
+    let target = null;
+    for (let dom of instance.designerButtons) {
+      if (dom.getAttribute("toggle") === "on") {
+        target = dom;
+        break;
+      }
+    }
+    if (target === null) {
+      window.alert("디자이너를 선택해주세요!");
+      return;
+    } else {
+      if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
+        instance.submitEvent(target.textContent.trim());
+      } else {
+        return;
+      }
+    }
+  });
   designerButtonTong.appendChild(designerButton);
 
   whiteBlock.appendChild(designerButtonTong);
@@ -2356,7 +2423,7 @@ ProposalJs.prototype.insertPannelBox = function () {
   }
 
   informationArea = GeneralJs.nodes.div.cloneNode(true);
-  informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>디자이너 선택 버튼을 눌러주세요!");
+  informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>위 버튼을 눌러주세요!");
   style = {
     fontSize: String(13) + ea,
     color: GeneralJs.colorChip.green,
@@ -2375,19 +2442,44 @@ ProposalJs.prototype.insertPannelBox = function () {
 
 }
 
+ProposalJs.prototype.submitEvent = function () {
+  const instance = this;
+  console.log(this.client.name);
+  console.log(this.client.phone);
+  this.mother.certificationBox("배창규", "010-2747-3403", async function (back, box) {
+    try {
+      await GeneralJs.sleep(3000);
+      document.body.removeChild(box);
+      document.body.removeChild(back);
+      window.alert("전송이 완료되었습니다!");
+      window.location.href = "https://home-liaison.com/about.php";
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
 ProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();
-    if (getObj.cliid === undefined) {
+    if (getObj.cliid === undefined && getObj.proid === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = "https://home-liaison.com";
     }
-    const { cliid } = getObj;
+    let proid, cliid;
     let projects, project;
     let clients, client;
     let designers, designer;
     let whereQuery;
+
+    if (getObj.cliid !== undefined) {
+      cliid = getObj.cliid;
+      proid = null;
+    } else {
+      cliid = null;
+      proid = getObj.proid;
+    }
 
     this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "mobile" %%>;
     this.ea = <%% "px", "px", "px", "vw" %%>;
@@ -2407,8 +2499,23 @@ ProposalJs.prototype.launching = async function (loading) {
     this.margin = this.margin - this.modeMinus;
 
     //set proposal, client info
-    projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getProjects"));
-    clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"));
+    if (cliid !== null) {
+      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getProjects"));
+      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"));
+    } else {
+      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid }), "/getProjects"));
+      projects.sort((a, b) => {
+        return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
+      });
+      project = projects[0];
+      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: project.cliid }), "/getClients"));
+    }
+
+    if (clients.length === 0) {
+      alert("잘못된 접근입니다!");
+      window.location.href = "https://home-liaison.com";
+    }
+
     if (projects.length === 0) {
       alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
       window.location.href = "https://home-liaison.com";
@@ -2428,11 +2535,10 @@ ProposalJs.prototype.launching = async function (loading) {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
       });
       project = projects[0];
+      proid = project.proid;
+
     }
-    if (clients.length === 0) {
-      alert("잘못된 접근입니다!");
-      window.location.href = "https://home-liaison.com";
-    }
+
     client = clients[0];
     for (let obj of project.proposal.detail) {
       for (let { desid, designer } of designers) {
