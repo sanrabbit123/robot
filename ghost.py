@@ -145,6 +145,10 @@ async def clientReport():
 async def fixServerDirectory():
     await run([ 'node', ROBOT, 'fixDir', SAMBA ])
 
+# cron 7
+async def proposalToClient():
+    await run([ 'node', ROBOT, 'proposalToClient' ])
+
 
 # start process ------------------------------------------------------------------------------------------------------------
 
@@ -217,9 +221,10 @@ if sys.argv.__len__() > 1:
 
     elif sys.argv[1] == "cron":
         scheduler = AsyncIOScheduler()
+        scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
         scheduler.add_job(mongoToJson, 'cron', hour='1', minute='30', second='30')
         scheduler.add_job(analyticsParsing, 'cron', hour='2', minute='30', second='30')
-        scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
+        scheduler.add_job(proposalToClient, 'cron', hour='3', minute='10', second='30')
         scheduler.add_job(ultimateReflection, 'cron', hour='3', minute='30', second='30')
         scheduler.add_job(clientReport, 'cron', hour='4', minute='30', second='30')
         scheduler.add_job(fixServerDirectory, 'cron', hour='5', minute='30', second='30')

@@ -20,6 +20,11 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
     if (!Array.isArray(dateArray)) {
       if (dateArray === null || dateArray === undefined) {
         dateArray = [];
+      } else if (dateArray === "cron") {
+        const today = new Date();
+        const agoDay = new Date();
+        agoDay.setMonth(agoDay.getMonth() - 2);
+        dateArray = [ agoDay, today ];
       } else {
         throw new Error("arguments must be array and [ startDate, endDate ]");
       }
@@ -27,6 +32,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
     let MONGOC;
     if (option.selfMongo === undefined || option.selfMongo === null) {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
@@ -44,6 +50,9 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
     const allRequests = clients.getRequestsTong();
     let projects, tempArr, tempArr2, matrix, timelines;
     let whereQuery, updateQuery;
+
+    console.log(`\x1b[33m%s\x1b[0m`, `client-proposal sync start...`);
+    console.log(``);
 
     for (let { cliid, requests } of clients) {
       projects = await back.getProjectsByQuery({ cliid }, { selfMongo: MONGOC });
@@ -86,7 +95,11 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
       }
 
       await back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-      console.log(`update ${JSON.stringify(whereQuery)} done`);
+      console.log(`update ${JSON.stringify(whereQuery)} client-proposal sync done`);
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      MONGOC.close();
     }
 
   } catch (e) {
@@ -235,6 +248,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     let MONGOC;
     if (option.selfMongo === undefined || option.selfMongo === null) {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
@@ -257,6 +271,10 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
         await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
       }
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      MONGOC.close();
     }
 
   } catch (e) {

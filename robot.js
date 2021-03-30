@@ -287,7 +287,17 @@ Robot.prototype.fixDir = async function (target) {
   } catch (e) {
     console.log(e);
   }
-};
+}
+
+Robot.prototype.proposalToClient = async function () {
+  try {
+    const BackWorker = require(process.cwd() + "/apps/backMaker/backWorker.js");
+    const work = new BackWorker();
+    await work.setProposalToClient("cron");
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 Robot.prototype.launching = async function () {
   try {
@@ -369,6 +379,9 @@ Robot.prototype.launching = async function () {
 
     } else if (/fixDir/gi.test(process.argv[2])) {
       await this.fixDir(process.argv[3]);
+
+    } else if (/proposalToClient/gi.test(process.argv[2])) {
+      await this.proposalToClient();
 
     } else {
       re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);

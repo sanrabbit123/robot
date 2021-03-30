@@ -1620,7 +1620,7 @@ class DevContext extends Array {
 
 
 
-      // await work.setProposalToClient(null, { selfMongo: this.MONGOC });
+      await work.setProposalToClient("cron", { selfMongo: this.MONGOC });
 
       // const clients = await this.MONGOC.db(`miro81`).collection(`client`).find({}).toArray();
       // let updateQuery, whereQuery;
