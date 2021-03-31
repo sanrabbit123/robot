@@ -846,6 +846,7 @@ Ghost.prototype.fileRouter = function (static) {
     ipTong = Array.from(new Set(ipTong));
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      console.log(ip);
       if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) || req.body.hash === undefined) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
