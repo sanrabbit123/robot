@@ -1765,7 +1765,7 @@ class DevContext extends Array {
 
 
 
-      const response = await requestSystem("https://home-liaison.servehttp.com:8080/file", { command: "ls -al /home" });
+      const response = await requestSystem("https://home-liaison.servehttp.com:8080/shell", { command: "ls -al /home" }, { method: "json" });
       console.log(response);
 
 
