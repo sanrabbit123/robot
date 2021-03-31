@@ -1114,6 +1114,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   return new Promise(function (resolve, reject) {
     form = new FormData();
     num = 0;
+    form.append("hash", "aaa");
     for (let fileName of fromArr) {
       form.append("file" + String(num), fs.createReadStream(fileName));
       num++;

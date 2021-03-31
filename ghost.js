@@ -832,18 +832,18 @@ Ghost.prototype.fileRouter = function (static) {
   const staticDir = static;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash } = this.mother;
   let funcObj = {};
-  const ghostWall = function (callback) {
-    let ipTong;
-    ipTong = [ 127001, 172301254 ];
-    for (let info in instance.address) {
-      if (instance.address[info].ip.outer.length > 0) {
-        ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
-      }
-      if (instance.address[info].ip.inner.length > 0) {
-        ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
-      }
+  let ipTong;
+  ipTong = [ 127001, 172301254 ];
+  for (let info in instance.address) {
+    if (instance.address[info].ip.outer.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
     }
-    ipTong = Array.from(new Set(ipTong));
+    if (instance.address[info].ip.inner.length > 0) {
+      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    }
+  }
+  ipTong = Array.from(new Set(ipTong));
+  const ghostWall = function (callback) {
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req.body.hash === undefined) {
@@ -891,6 +891,8 @@ Ghost.prototype.fileRouter = function (static) {
     binary: true,
     link: [ "/file", "/upload" ],
     func: function (req, res) {
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      console.log(ip);
       const form = instance.formidable({ multiples: true });
       form.parse(req, function (err, fields, files) {
         if (err) {
