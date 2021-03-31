@@ -826,9 +826,10 @@ Ghost.prototype.photorawRouter = function (needs) {
   return resultObj;
 }
 
-Ghost.prototype.fileRouter = function () {
+Ghost.prototype.fileRouter = function (static) {
   const instance = this;
   const back = this.back;
+  const staticDir = static;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
@@ -849,12 +850,7 @@ Ghost.prototype.fileRouter = function () {
             "Access-Control-Allow-Headers": '*',
           });
 
-
           console.log(fields, files);
-
-
-
-
 
           res.json({ fields, files });
         }
@@ -862,11 +858,28 @@ Ghost.prototype.fileRouter = function () {
     }
   };
 
+  //POST - shell
+  funcObj.post_file = {
+    link: [ "/shell" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      console.log(req.query);
+
+      res.send(JSON.stringify({ message: "done" }));
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
     for (let j = 0; j < funcObj[i].link.length; j++) {
-      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
+      funcObj[i].link[j] = funcObj[i].link[j].slice(1);
     }
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
@@ -995,58 +1008,64 @@ Ghost.prototype.fileLaunching = async function () {
     if (name === "unknown") {
       throw new Error("invalid address");
     }
-    console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
-    console.log(``);
 
-    //set pem key
-    let pems = {};
-    let pemsLink = process.cwd() + "/pems/" + address.host;
-    let certDir, keyDir, caDir;
-    let routerObj;
-    let routerTargets = [
-      "client",
-      "designer",
-      "photo",
-      "photoraw"
-    ];
+    if (isGhost) {
 
-    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+      console.log(``);
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+      console.log(``);
 
-    for (let i of certDir) {
-      if (i !== `.DS_Store`) {
-        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      //set pem key
+      let pems = {};
+      let pemsLink = process.cwd() + "/pems/" + address.host;
+      let certDir, keyDir, caDir;
+      let routerObj;
+      let routerTargets = [
+        "client",
+        "designer",
+        "photo",
+        "photoraw"
+      ];
+
+      certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+      keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+      caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+      for (let i of certDir) {
+        if (i !== `.DS_Store`) {
+          pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+        }
       }
-    }
-    for (let i of keyDir) {
-      if (i !== `.DS_Store`) {
-        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      for (let i of keyDir) {
+        if (i !== `.DS_Store`) {
+          pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+        }
       }
-    }
-    pems.ca = [];
-    for (let i of caDir) {
-      if (i !== `.DS_Store`) {
-        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      pems.ca = [];
+      for (let i of caDir) {
+        if (i !== `.DS_Store`) {
+          pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+        }
       }
-    }
-    pems.allowHTTP1 = true;
+      pems.allowHTTP1 = true;
 
-    //set router
-    const { get, post } = this.fileRouter();
-    for (let obj of get) {
-      app.get(obj.link, obj.func);
-    }
-    for (let obj of post) {
-      app.post(obj.link, obj.func);
-    }
+      //set router
+      const { get, post } = this.fileRouter(address.ghost.file.static);
+      for (let obj of get) {
+        app.get(obj.link, obj.func);
+      }
+      for (let obj of post) {
+        app.post(obj.link, obj.func);
+      }
 
-    //server on
-    https.createServer(pems, app).listen(3001, address.ip.inner, () => {
-      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-    });
+      //server on
+      https.createServer(pems, app).listen(address.ghost.file.port, address.ip.inner, () => {
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      });
 
+    } else {
+      console.log(`file server can work in ghost`);
+    }
   } catch (e) {
     console.log(e);
   }

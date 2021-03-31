@@ -166,7 +166,7 @@ if sys.argv.__len__() > 1:
 
     elif sys.argv[1] == "shell":
         app = web.Application()
-        app.add_routes([ web.get('/shell', illustrator) ])
+        app.add_routes([ web.get('/shell', shell) ])
         web.run_app(app)
 
     elif sys.argv[1] == "backup":
