@@ -1113,7 +1113,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const crypto = require('crypto');
   const algorithm = 'aes-192-cbc';
-  let num, form, formHeaders;
+  let num, form, formHeaders, toList;
   return new Promise(function (resolve, reject) {
     crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
       if (err) {
@@ -1128,7 +1128,13 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         cipher.on('end', function () {
           form = new FormData();
           num = 0;
-          form.append("toArr", JSON.stringify(toArr));
+          for (let i = 0; i < toArr.length; i++) {
+            if (/^\//.test(toArr[i])) {
+              toArr[i] = toArr[i].slice(1);
+            }
+          }
+          toList = toArr;
+          form.append("toArr", JSON.stringify(toList));
           for (let fileName of fromArr) {
             form.append("file" + String(num), fs.createReadStream(fileName));
             num++;

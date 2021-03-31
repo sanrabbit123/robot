@@ -909,8 +909,11 @@ Ghost.prototype.fileRouter = function (static) {
             "Access-Control-Allow-Headers": '*',
           });
 
+          const staticFolder = instance.address.homeinfo.ghost.file.static;
           const toArr = JSON.parse(fields.toArr);
-          let filesKey, fromArr;
+          let staticFolderDir;
+          let filesKey, fromArr, num;
+          let tempArr, tempString, tempDir;
 
           filesKey = Object.keys(files);
           filesKey.sort((a, b) => {
@@ -922,9 +925,26 @@ Ghost.prototype.fileRouter = function (static) {
             fromArr.push(files[key]);
           }
 
+
           console.log(fields, files);
           console.log(toArr, fromArr);
 
+          staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
+          num = 0;
+          for (let { path } of fromArr) {
+            tempArr = toArr[num].split("/");
+            tempString = staticFolder;
+            for (let i = 0; i < tempArr.length; i++) {
+              tempDir = await fileSystem(`readDir`, [ tempString ]);
+              if (!tempDir.includes(tempArr[i])) {
+                shell.exec(`mkdir ${shellLink(tempString)}/${tempArr[i]}`);
+              }
+              tempString += '/';
+              tempString += tempArr[i];
+            }
+            console.log(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+            num++;
+          }
 
           res.json({ fields, files });
         }

@@ -1767,7 +1767,7 @@ class DevContext extends Array {
       // const response = await fileRequest("shell", { command: "ls -al " + this.address.homeinfo.ghost.file.static });
       // console.log(response);
 
-      const response = await this.mother.ghostFileUpload([ process.cwd() + "/temp/IMG_6006.png", process.cwd() + "/temp/IMG_5919.png" ], [ "/test/IMG_6006.png" ]);
+      const response = await this.mother.ghostFileUpload([ process.cwd() + "/temp/IMG_6006.png", process.cwd() + "/temp/IMG_5919.png" ], [ "/test/IMG_6006.png", "/test/IMG_5919.png" ]);
       console.log(response);
 
       // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
