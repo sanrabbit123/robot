@@ -1050,6 +1050,7 @@ Ghost.prototype.fileLaunching = async function () {
       pems.allowHTTP1 = true;
 
       //set router
+      console.log(address);
       const { get, post } = this.fileRouter(address.ghost.file.static);
       for (let obj of get) {
         app.get(obj.link, obj.func);
