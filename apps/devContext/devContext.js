@@ -1768,7 +1768,7 @@ class DevContext extends Array {
       // console.log(response);
 
       const response = await this.mother.ghostFileUpload([ process.cwd() + "/temp/IMG_6006.png" ], []);
-      console.log(response);
+      // console.log(response);
 
       // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

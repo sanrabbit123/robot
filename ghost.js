@@ -1018,7 +1018,7 @@ Ghost.prototype.fileRouter = function (static) {
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
-    funcObj[i].func = ghostWall(funcObj[i].func);
+    // funcObj[i].func = ghostWall(funcObj[i].func);
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
