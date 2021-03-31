@@ -1128,6 +1128,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         cipher.on('end', function () {
           form = new FormData();
           num = 0;
+          form.append("toArr", JSON.stringify(toArr));
           for (let fileName of fromArr) {
             form.append("file" + String(num), fs.createReadStream(fileName));
             num++;

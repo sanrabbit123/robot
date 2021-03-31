@@ -832,24 +832,23 @@ Ghost.prototype.fileRouter = function (static) {
   const staticDir = static;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash } = this.mother;
   let funcObj = {};
-  let ipTong;
-  ipTong = [ 127001, 172301254 ];
-  for (let info in instance.address) {
-    if (instance.address[info].ip.outer.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
-    }
-    if (instance.address[info].ip.inner.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
-    }
-  }
-  ipTong = Array.from(new Set(ipTong));
   const ghostWall = function (callback, binary = false) {
-    let property;
+    let property, ipTong;
     if (binary) {
       property = "query";
     } else {
       property = "body";
     }
+    ipTong = [ 127001, 172301254 ];
+    for (let info in instance.address) {
+      if (instance.address[info].ip.outer.length > 0) {
+        ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+      }
+      if (instance.address[info].ip.inner.length > 0) {
+        ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+      }
+    }
+    ipTong = Array.from(new Set(ipTong));
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req[property].hash === undefined) {
@@ -910,7 +909,22 @@ Ghost.prototype.fileRouter = function (static) {
             "Access-Control-Allow-Headers": '*',
           });
 
+          const toArr = JSON.parse(fields.toArr);
+          let filesKey, fromArr;
+
+          filesKey = Object.keys(files);
+          filesKey.sort((a, b) => {
+            return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+          });
+
+          fromArr = [];
+          for (let key of filesKey) {
+            fromArr.push(files[key]);
+          }
+
           console.log(fields, files);
+          console.log(toArr, fromArr);
+
 
           res.json({ fields, files });
         }
