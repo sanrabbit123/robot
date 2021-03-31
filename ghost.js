@@ -934,7 +934,7 @@ Ghost.prototype.fileRouter = function (static) {
             for (let { path } of fromArr) {
               tempArr = toArr[num].split("/");
               tempString = staticFolder;
-              for (let i = 0; i < tempArr.length; i++) {
+              for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
                 if (!tempDir.includes(tempArr[i])) {
                   shell.exec(`mkdir ${shellLink(tempString)}/${tempArr[i]}`);
