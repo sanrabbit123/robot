@@ -1764,8 +1764,7 @@ class DevContext extends Array {
       */
 
       const fileRequest = ghostRequest().bind("file");
-      const hash = await cryptoString("homeliaison", this.address.s3info.boto3.key);
-      const response = await fileRequest("/shell", { command: "ls -al /home", hash });
+      const response = await fileRequest("/shell", { command: "ls -al /home" });
       console.log(response);
 
 

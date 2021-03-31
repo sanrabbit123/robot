@@ -675,43 +675,66 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
         ddns = address.homeinfo.ghost.ddns;
         port = address.homeinfo.ghost.file.port;
         protocol = address.homeinfo.ghost.protocol;
+        const crypto = require('crypto');
+        const algorithm = 'aes-192-cbc';
+        return new BindPromise(function (resolve, reject) {
+          crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
+            if (err) {
+              reject(err);
+            } else {
+              const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
+              let encrypted = '';
+              cipher.setEncoding('hex');
+              cipher.on('data', function (chunk) {
+                encrypted += chunk;
+              });
+              cipher.on('end', function () {
+                data.hash = encrypted;
+                data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+                url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "") ? bind + "_" : ""}${path.replace(/^\//gi, '')}`;
+                order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
+                shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    if (/^[\[\{]/.test(stdout.trim())) {
+                      resolve(JSON.parse(stdout.trim()));
+                    } else {
+                      resolve(stdout.trim());
+                    }
+                  }
+                });
+              });
+              cipher.write(address.s3info.boto3.key);
+              cipher.end();
+            }
+          });
+        });
       } else {
         ddns = address.officeinfo.ghost.ddns;
         port = address.officeinfo.ghost.port;
         protocol = address.officeinfo.ghost.protocol;
-      }
-
-      url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "" && bind !== "file") ? bind + "_" : ""}${path.replace(/^\//gi, '')}`;
-      order = '';
-      order += "curl";
-      order += " ";
-      order += "-d";
-      order += " ";
-      order += "'";
-      order += JSON.stringify(data);
-      order += "'";
-      order += " ";
-      order += '-H "Content-Type: application/json" -X POST ';
-      order += url;
-
-      promiseObj = new BindPromise(function (resolve, reject) {
-        if (path === "") {
-          resolve("bind");
-        } else {
-          shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
-            if (err) {
-              reject(err);
-            } else {
-              if (/^[\[\{]/.test(stdout.trim())) {
-                resolve(JSON.parse(stdout.trim()));
+        url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "") ? bind + "_" : ""}${path.replace(/^\//gi, '')}`;
+        order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
+        promiseObj = new BindPromise(function (resolve, reject) {
+          if (path === "") {
+            resolve("bind");
+          } else {
+            shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+              if (err) {
+                reject(err);
               } else {
-                resolve(stdout.trim());
+                if (/^[\[\{]/.test(stdout.trim())) {
+                  resolve(JSON.parse(stdout.trim()));
+                } else {
+                  resolve(stdout.trim());
+                }
               }
-            }
-          });
-        }
-      });
-      return promiseObj;
+            });
+          }
+        });
+        return promiseObj;
+      }
     }
   }
   return (requestFunction())(path, data);
