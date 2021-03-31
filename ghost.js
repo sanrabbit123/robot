@@ -1028,14 +1028,14 @@ Ghost.prototype.fileLaunching = async function () {
   const express = require("express");
   const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
-  const multer = require("multer");
-  const multiForms = multer();
+  // const multer = require("multer");
+  // const multiForms = multer();
 
   const app = express();
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(multiForms.array());
+  // app.use(multiForms.array());
 
   try {
     let message = '';
