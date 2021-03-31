@@ -97,6 +97,11 @@ async def illustrator(request):
         asyncio.create_task(runAi(order["type"]))
         return web.Response(text=targetStr + " make pass")
 
+async def shell(request):
+    order = request.rel_url.query
+    print(order)
+    return web.Response(text="done")
+
 
 # cron list ----------------------------------------------------------------------------------------------------------------
 
@@ -157,6 +162,11 @@ if sys.argv.__len__() > 1:
     if sys.argv[1] == "ai":
         app = web.Application()
         app.add_routes([ web.get('/illustrator', illustrator) ])
+        web.run_app(app)
+
+    elif sys.argv[1] == "shell":
+        app = web.Application()
+        app.add_routes([ web.get('/shell', illustrator) ])
         web.run_app(app)
 
     elif sys.argv[1] == "backup":
