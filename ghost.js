@@ -892,25 +892,30 @@ Ghost.prototype.fileRouter = function (static) {
     link: [ "/file", "/upload" ],
     func: function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      console.log(ip);
-      const form = instance.formidable({ multiples: true });
-      form.parse(req, function (err, fields, files) {
-        if (err) {
-          throw new Error(err);
-          return;
-        } else {
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
-          });
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req.body.hash === undefined) {
+        res.set("Content-Type", "text/html");
+        res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+      } else {
+        console.log(req);
+        const form = instance.formidable({ multiples: true });
+        form.parse(req, function (err, fields, files) {
+          if (err) {
+            throw new Error(err);
+            return;
+          } else {
+            res.set({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": '*',
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+              "Access-Control-Allow-Headers": '*',
+            });
 
-          console.log(fields, files);
+            console.log(fields, files);
 
-          res.json({ fields, files });
-        }
-      });
+            res.json({ fields, files });
+          }
+        });
+      }
     }
   };
 
