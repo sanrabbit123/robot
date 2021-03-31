@@ -896,27 +896,46 @@ Ghost.prototype.fileRouter = function (static) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
+        if (req.query.hash === undefined) {
+          res.set("Content-Type", "text/html");
+          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+        } else {
+          decryptoHash("homeliaison", req.query.hash).then(function (string) {
+            if (string === instance.address.s3info.boto3.key) {
+              if (req.query.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
 
-        console.log(req.query);
+                const form = instance.formidable({ multiples: true });
+                form.parse(req, function (err, fields, files) {
+                  if (err) {
+                    throw new Error(err);
+                    return;
+                  } else {
+                    res.set({
+                      "Content-Type": "application/json",
+                      "Access-Control-Allow-Origin": '*',
+                      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                      "Access-Control-Allow-Headers": '*',
+                    });
 
-        const form = instance.formidable({ multiples: true });
-        form.parse(req, function (err, fields, files) {
-          if (err) {
-            throw new Error(err);
-            return;
-          } else {
-            res.set({
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": '*',
-              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers": '*',
-            });
+                    console.log(fields, files);
 
-            console.log(fields, files);
+                    res.json({ fields, files });
+                  }
+                });
 
-            res.json({ fields, files });
-          }
-        });
+              } else {
+                res.set("Content-Type", "text/html");
+                res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+              }
+            } else {
+              res.set("Content-Type", "text/html");
+              res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+            }
+          }).catch(function (err) {
+            res.set("Content-Type", "text/html");
+            res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+          });
+        }
       }
     }
   };

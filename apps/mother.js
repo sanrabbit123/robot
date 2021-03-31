@@ -675,6 +675,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
         ddns = address.homeinfo.ghost.ddns;
         port = address.homeinfo.ghost.file.port;
         protocol = address.homeinfo.ghost.protocol;
+
         const crypto = require('crypto');
         const algorithm = 'aes-192-cbc';
         return new BindPromise(function (resolve, reject) {
@@ -1110,20 +1111,37 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const fs = require('fs');
   const FormData = require('form-data');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const crypto = require('crypto');
+  const algorithm = 'aes-192-cbc';
   let num, form, formHeaders;
   return new Promise(function (resolve, reject) {
-    form = new FormData();
-    num = 0;
-    form.append("hash", "aaa");
-    for (let fileName of fromArr) {
-      form.append("file" + String(num), fs.createReadStream(fileName));
-      num++;
-    }
-    formHeaders = form.getHeaders();
-    axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file`, form, { headers: { ...formHeaders } }).then(function (response) {
-      resolve(response);
-    }).catch(function (error) {
-      reject(error);
+    crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
+      if (err) {
+        reject(err);
+      } else {
+        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
+        let encrypted = '';
+        cipher.setEncoding('hex');
+        cipher.on('data', function (chunk) {
+          encrypted += chunk;
+        });
+        cipher.on('end', function () {
+          form = new FormData();
+          num = 0;
+          for (let fileName of fromArr) {
+            form.append("file" + String(num), fs.createReadStream(fileName));
+            num++;
+          }
+          formHeaders = form.getHeaders();
+          axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file?hash=${encrypted}&uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle=a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs`, form, { headers: { ...formHeaders } }).then(function (response) {
+            resolve(response);
+          }).catch(function (error) {
+            reject(error);
+          });
+        });
+        cipher.write(ADDRESS.s3info.boto3.key);
+        cipher.end();
+      }
     });
   });
 }
