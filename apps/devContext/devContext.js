@@ -334,7 +334,7 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
@@ -1873,7 +1873,7 @@ class DevContext extends Array {
 
       // get photo folder
       // const drive = new GoogleDrive();
-      // await drive.get_folder("https://drive.google.com/drive/folders/19OyoZ9IULXHF1Cdy2Y2puk0dQF9ruhcs");
+      // await drive.get_folder("https://drive.google.com/drive/folders/14YT3OCACvbGJMwHNHpCS8eP-Cd_1wKxe");
 
 
       // aspirant to designer

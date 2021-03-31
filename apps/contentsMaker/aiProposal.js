@@ -53,7 +53,6 @@ AiProposal.prototype.saveStatic = async function (path) {
 AiProposal.prototype.proposalLaunching = async function () {
   const instance = this;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const http = require('http');
   const { shell, shellLink, fileSystem, binaryRequest } = this.mother;
   try {
     await this.general.static_setting();
@@ -64,6 +63,8 @@ AiProposal.prototype.proposalLaunching = async function () {
     let client;
     let serviceWording;
     let intoObj;
+    let fromArr, toArr;
+    let tempArr;
 
     result_dir = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
     for (let i of result_dir) { if (i !== ".DS_Store") {
@@ -110,12 +111,18 @@ AiProposal.prototype.proposalLaunching = async function () {
 
     const gd = this.mother.googleSystem("drive");
 
+    fromArr = [];
+    toArr = [];
     resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "/result" ]);
     for (let i of resultDir) {
       if (i !== `.DS_Store` && i !== `static`) {
+        tempArr = i.split('_');
+        fromArr.push(this.options.home_dir + "/result/" + i);
+        toArr.push("proposalPdf/" + tempArr[0] + '_' + tempArr[1] + '_' + tempArr[tempArr.length - 1]);
         gres = await gd.upload_andView("1ofHfJmGJJ6TCk5qP_VttNvIvHt2IVZ21", this.options.home_dir + "/result/" + i);
       }
     }
+    await this.mother.ghostFileUpload(fromArr, toArr);
 
     await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
     await this.back.updateProject([ { proid: this.text.proid }, { "proposal.status": "발송 대기", "proposal.date": new Date() } ]);

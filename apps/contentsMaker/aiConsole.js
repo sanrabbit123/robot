@@ -143,7 +143,7 @@ AiConsole.prototype.console_maker = async function () {
     //init setting
     this.options.script_dir = `${this.links.factory}/script/console_maker`;
 
-    const mapDir = await fileSystem("readDir", [ this.links.map ]);
+    const mapDir = await fileSystem(`readDir`, [ this.links.map ]);
     for (let i of mapDir) {
       if (i !== `.DS_Store`) {
         await this.renderSvgPng(i.replace(/\.js$/i, ''));

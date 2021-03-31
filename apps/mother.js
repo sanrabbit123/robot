@@ -487,59 +487,6 @@ Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postDa
   });
 }
 
-Mother.prototype.curlSystem = function (url, data = {}, config = {}) {
-  const shell = require(`shelljs`);
-  const shellLink = function (str) {
-    let arr = str.split('/');
-    let newStr = '';
-    for (let i of arr) {
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-        newStr += i + '/';
-      } else if (!/'/g.test(i)) {
-        newStr += "'" + i + "'" + '/';
-      } else if (!/"/g.test(i)) {
-        newStr += '"' + i + '"' + '/';
-      } else {
-        newStr += i + '/';
-      }
-    }
-    newStr = newStr.slice(0, -1);
-    return newStr;
-  }
-  let order, dataKeys, configKeys;
-
-  dataKeys = Object.keys(data);
-  configKeys = Object.keys(config);
-
-  order = '';
-  order += "curl";
-  order += " ";
-  if (dataKeys.length > 0) {
-    order += "-d";
-    order += " ";
-    order += "'";
-    order += JSON.stringify(data);
-    order += "'";
-    order += " ";
-    order += '-H "Content-Type: application/json" -X POST ';
-  }
-  order += url;
-
-  return new Promise(function (resolve, reject) {
-    shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
-      if (err) {
-        reject(err);
-      } else {
-        if (/^[\[\{]/.test(stdout.trim())) {
-          resolve(JSON.parse(stdout.trim()));
-        } else {
-          resolve(stdout.trim());
-        }
-      }
-    });
-  });
-}
-
 Mother.prototype.headRequest = function (to, port = 80, header = {}) {
   let target;
   const http = require("http");
@@ -859,47 +806,6 @@ Mother.prototype.returnUragenPath = function () {
   return uragenPath;
 }
 
-Mother.prototype.ghostPath = function () {
-  let robotPath, robotPathArr;
-  robotPath = process.cwd();
-  robotPathArr = robotPath.split("/");
-  robotPathArr.pop();
-  robotPathArr.push("ghost");
-  return robotPathArr.join("/");
-}
-
-Mother.prototype.sendJandi = function (mode, msg) {
-  if (mode === undefined && msg === undefined) {
-    mode = "request";
-    msg = "default message";
-  } else if (mode !== undefined && msg === undefined) {
-    msg = mode;
-    mode = "request";
-  }
-  const axios = require('axios');
-  let url;
-  switch (mode) {
-    case "request":
-      url = "https://wh.jandi.com/connect-api/webhook/20614472/94b9b85183e946b8faf4623db850bca0";
-      break;
-    case "file":
-      url = "https://wh.jandi.com/connect-api/webhook/20614472/9cc255e8929afaf0f9f0c2643a1e1756";
-      break;
-    case "error":
-      url = "https://wh.jandi.com/connect-api/webhook/20614472/ae10cca5a209a08e6649635d2648255b";
-      break;
-    default:
-      url = "https://wh.jandi.com/connect-api/webhook/20614472/8919ae324cce2fc3616398b5084d9fee";
-  }
-  return new Promise(function (resolve, reject) {
-    axios.post(url, { body: msg }, { headers: { "Accept": "application/vnd.tosslab.jandi-v2+json", "Content-Type": "application/json" } }).then(function (response) {
-      resolve(response);
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-}
-
 Mother.prototype.ipCheck = function () {
   const axios = require(`axios`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
@@ -1149,50 +1055,6 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         cipher.write(ADDRESS.s3info.boto3.key);
         cipher.end();
       }
-    });
-  });
-}
-
-Mother.prototype.searchDir = function (targetDirectory) {
-  const fs = require(`fs`);
-  const shell = require(`shelljs`);
-
-  let target = process.cwd() + "/apps/mother.py";
-  let targetLink, targetArr;
-
-  //shellLink and make target path
-  targetLink = '';
-  targetArr = target.split('/');
-  for (let i of targetArr) {
-    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-      targetLink += i + '/';
-    } else if (!/'/g.test(i)) {
-      targetLink += "'" + i + "'" + '/';
-    } else if (!/"/g.test(i)) {
-      targetLink += '"' + i + '"' + '/';
-    } else {
-      targetLink += i + '/';
-    }
-  }
-  targetLink = targetLink.slice(0, -1);
-
-  //set bridge
-  const bridgeFile = process.cwd() + "/temp/motherPythonBridge.json";
-  const bridgeContents = { directory: targetDirectory };
-
-  return new Promise(function(resolve, reject) {
-    fs.writeFile(bridgeFile, JSON.stringify(bridgeContents, null, 2), "utf8", function (err) {
-      if (err) {
-        reject(err);
-      }
-      let order, child;
-      let result, jsonRaw, json;
-      order = `python3 ${targetLink} searchDir`;
-      child = shell.exec(order, { silent: true });
-      jsonRaw = child.stdout.replace(/\n$/, '');
-      json = JSON.parse(jsonRaw);
-      result = json;
-      resolve(result);
     });
   });
 }

@@ -391,7 +391,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       await this.mother.s3FileUpload(fromArr, toArr);
       console.log(`s3 upload done`);
 
-      shell.exec(`scp -r ${shellLink(this.resultFolder + "/" + this.pid)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original`);
+      await this.mother.ghostFileUpload(fromArr, toArr);
       console.log(`ghost upload done`);
     }
 
@@ -478,9 +478,7 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
 
     await this.back.updateDesigner([ { desid: target_obj.desid }, { "setting.ghost": ghost_arr } ]);
     await this.mother.s3FileUpload(fromArr, toArr);
-    for (let i = 0; i < fromArr.length; i++) {
-      shell.exec(`scp ${shellLink(fromArr[i])} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/rawDesigner/ghost/${target_obj.desid}`);
-    }
+    await this.mother.ghostFileUpload(fromArr, toArr);
 
   } catch (e) {
     console.log(e.message);
@@ -489,7 +487,7 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
 
 PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, todayMaker } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, todayMaker } = this.mother;
   const home = process.env.HOME;
   const tempFolderName = "__PortfolioFilteraddtionalRepairTemp__" + todayMaker("year");
   try {
@@ -530,9 +528,8 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
     toArr.push(`corePortfolio/original/${pid}/${targetFile}`);
 
     await s3FileUpload(fromArr, toArr);
-    for (let i = 0; i < fromArr.length; i++) {
-      shell.exec(`scp ${shellLink(fromArr[i])} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:/home/${this.address.homeinfo.ghost.user}/static/corePortfolio/original/${pid}`);
-    }
+    await ghostFileUpload(fromArr, toArr);
+
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);
 
   } catch (e) {

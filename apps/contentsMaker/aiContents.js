@@ -388,7 +388,7 @@ AiContents.prototype.to_mysql = async function () {
 
 AiContents.prototype.to_poo = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, copyToClipboard } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, copyToClipboard } = this.mother;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   try {
 
@@ -507,11 +507,8 @@ AiContents.prototype.to_poo = async function () {
     console.log(toArr);
 
     await s3FileUpload(fromArr, toArr);
+    await ghostFileUpload(fromArr, toArr);
 
-    shell.exec(`mkdir ${this.options.home_dir}/result/s3ghostTarget`);
-    shell.exec(`cp -r ${this.options.home_dir}/result/${p_id}code/portp${p_id} ${this.options.home_dir}/result/s3ghostTarget`);
-    shell.exec(`mv ${this.options.home_dir}/result/s3ghostTarget/portp${p_id} ${this.options.home_dir}/result/s3ghostTarget/${p_id}`);
-    shell.exec(`scp -r ${this.options.home_dir}/result/s3ghostTarget/${p_id} ${ADDRESS.homeinfo.ghost.user}@${ADDRESS.homeinfo.ghost.host}:/home/${ADDRESS.homeinfo.ghost.user}/static/corePortfolio/listImage`);
     shell.exec(order);
 
   } catch (e) {
