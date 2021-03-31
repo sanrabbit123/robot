@@ -934,9 +934,8 @@ Ghost.prototype.fileRouter = function (static) {
         } else {
           order = command;
         }
-        shell.exec(order, { async: true }).then(function (output) {
-          console.log(output);
-        });
+        const output = shell.exec(order, { silent: true });
+        console.log(output);
         res.send(JSON.stringify({ message: "success" }));
       }
     }
