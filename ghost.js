@@ -1013,7 +1013,14 @@ Ghost.prototype.fileLaunching = async function () {
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const https = require("https");
   const express = require("express");
+  const bodyParser = require("body-parser");
+  const useragent = require("express-useragent");
+
   const app = express();
+  // app.use(useragent.express());
+  // app.use(bodyParser.urlencoded({ extended: false }));
+  // app.use(bodyParser.json());
+
   try {
     let message = '';
 
@@ -1066,6 +1073,7 @@ Ghost.prototype.fileLaunching = async function () {
 
       //set router
       const { get, post } = this.fileRouter(address.file.static);
+      console.log(get, post);
       for (let obj of get) {
         app.get(obj.link, obj.func);
       }
