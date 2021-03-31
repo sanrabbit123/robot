@@ -846,27 +846,31 @@ Ghost.prototype.fileRouter = function (static) {
     ipTong = Array.from(new Set(ipTong));
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      console.log(req.body);
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) || req.body.hash === undefined) {
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
-        decryptoHash("homeliaison", req.body.hash).then(function (string) {
-          if (string === instance.address.s3info.boto3.key) {
-            if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
-              callback(req, res);
+        console.log(req.headers);
+        if (req.body.hash === undefined) {
+          decryptoHash("homeliaison", req.body.hash).then(function (string) {
+            if (string === instance.address.s3info.boto3.key) {
+              if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
+                callback(req, res);
+              } else {
+                res.set("Content-Type", "text/html");
+                res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+              }
             } else {
               res.set("Content-Type", "text/html");
               res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
             }
-          } else {
+          }).catch(function (err) {
             res.set("Content-Type", "text/html");
             res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-          }
-        }).catch(function (err) {
-          res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-        });
+          });
+        } else {
+          callback(req, res);
+        }
       }
     }
   }
