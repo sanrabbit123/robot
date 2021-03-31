@@ -846,37 +846,33 @@ Ghost.prototype.fileRouter = function (static) {
     ipTong = Array.from(new Set(ipTong));
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req.body.hash === undefined) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
-        console.log(req.headers);
-        if (req.body.hash === undefined) {
-          decryptoHash("homeliaison", req.body.hash).then(function (string) {
-            if (string === instance.address.s3info.boto3.key) {
-              if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
-                callback(req, res);
-              } else {
-                res.set("Content-Type", "text/html");
-                res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-              }
+        decryptoHash("homeliaison", req.body.hash).then(function (string) {
+          if (string === instance.address.s3info.boto3.key) {
+            if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
+              callback(req, res);
             } else {
               res.set("Content-Type", "text/html");
               res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
             }
-          }).catch(function (err) {
+          } else {
             res.set("Content-Type", "text/html");
             res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-          });
-        } else {
-          callback(req, res);
-        }
+          }
+        }).catch(function (err) {
+          res.set("Content-Type", "text/html");
+          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+        });
       }
     }
   }
 
   //GET - test
   funcObj.get_test = {
+    binary: false,
     link: [ "/" ],
     func: function (req, res) {
       res.set({
@@ -892,6 +888,7 @@ Ghost.prototype.fileRouter = function (static) {
 
   //POST - file upload
   funcObj.post_file = {
+    binary: true,
     link: [ "/file", "/upload" ],
     func: function (req, res) {
       const form = instance.formidable({ multiples: true });
@@ -917,6 +914,7 @@ Ghost.prototype.fileRouter = function (static) {
 
   //POST - shell
   funcObj.post_shell = {
+    binary: false,
     link: [ "/shell" ],
     func: function (req, res) {
       let order;
@@ -947,6 +945,7 @@ Ghost.prototype.fileRouter = function (static) {
 
   //POST - mkdir
   funcObj.post_mkdir = {
+    binary: false,
     link: [ "/mkdir", "/rm", "/touch" ],
     func: function (req, res) {
       let command;
@@ -987,6 +986,7 @@ Ghost.prototype.fileRouter = function (static) {
 
   //POST - readDir
   funcObj.post_readDir = {
+    binary: false,
     link: [ "/readDir", "/ls" ],
     func: function (req, res) {
       let command;
@@ -1018,7 +1018,9 @@ Ghost.prototype.fileRouter = function (static) {
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
-    // funcObj[i].func = ghostWall(funcObj[i].func);
+    if (!funcObj[i].binary) {
+      funcObj[i].func = ghostWall(funcObj[i].func);
+    }
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
