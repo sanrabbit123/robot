@@ -894,7 +894,7 @@ Ghost.prototype.fileRouter = function (static) {
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
     for (let j = 0; j < funcObj[i].link.length; j++) {
-      funcObj[i].link[j] = funcObj[i].link[j].slice(1);
+      funcObj[i].link[j] = funcObj[i].link[j];
     }
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
@@ -1017,9 +1017,9 @@ Ghost.prototype.fileLaunching = async function () {
   const useragent = require("express-useragent");
 
   const app = express();
-  // app.use(useragent.express());
-  // app.use(bodyParser.urlencoded({ extended: false }));
-  // app.use(bodyParser.json());
+  app.use(useragent.express());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
 
   try {
     let message = '';
@@ -1073,7 +1073,6 @@ Ghost.prototype.fileLaunching = async function () {
 
       //set router
       const { get, post } = this.fileRouter(address.file.static);
-      console.log(get, post);
       for (let obj of get) {
         app.get(obj.link, obj.func);
       }
