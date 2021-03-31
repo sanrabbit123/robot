@@ -1060,7 +1060,7 @@ Ghost.prototype.fileLaunching = async function () {
 
       //server on
       https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(address.file.port)}`);
       });
 
     } else {
