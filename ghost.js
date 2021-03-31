@@ -830,19 +830,40 @@ Ghost.prototype.fileRouter = function (static) {
   const instance = this;
   const back = this.back;
   const staticDir = static;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash } = this.mother;
   let funcObj = {};
-  let ipTong;
-  ipTong = [ 127001, 172301254 ];
-  for (let info in instance.address) {
-    if (instance.address[info].ip.outer.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+  const ghostWall = function (callback) {
+    let ipTong;
+    ipTong = [ 127001, 172301254 ];
+    for (let info in instance.address) {
+      if (instance.address[info].ip.outer.length > 0) {
+        ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
+      }
+      if (instance.address[info].ip.inner.length > 0) {
+        ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+      }
     }
-    if (instance.address[info].ip.inner.length > 0) {
-      ipTong.push(Number(instance.address[info].ip.inner.replace(/[^0-9]/g, '')));
+    ipTong = Array.from(new Set(ipTong));
+    return function (req, res) {
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) || req.body.hash === undefined) {
+        res.set("Content-Type", "text/html");
+        res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+      } else {
+        decryptoHash("homeliaison", req.body.hash).then(function (string) {
+          if (string === instance.address.s3info.boto3.key) {
+            callback(req, res);
+          } else {
+            res.set("Content-Type", "text/html");
+            res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+          }
+        }).catch(function (err) {
+          res.set("Content-Type", "text/html");
+          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+        });
+      }
     }
   }
-  ipTong = Array.from(new Set(ipTong));
 
   //GET - test
   funcObj.get_test = {
@@ -863,37 +884,24 @@ Ghost.prototype.fileRouter = function (static) {
   funcObj.post_file = {
     link: [ "/file", "/upload" ],
     func: function (req, res) {
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, function (err, fields, files) {
+        if (err) {
+          throw new Error(err);
+          return;
+        } else {
+          res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
+          });
 
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          console.log(fields, files);
 
-        res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
-          alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
-          window.location.href = "https://home-liaison.com";</script></body></html>`);
-
-      } else {
-
-        const form = instance.formidable({ multiples: true });
-        form.parse(req, function (err, fields, files) {
-          if (err) {
-            throw new Error(err);
-            return;
-          } else {
-            res.set({
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": '*',
-              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers": '*',
-            });
-
-            console.log(fields, files);
-
-            res.json({ fields, files });
-          }
-        });
-
-      }
+          res.json({ fields, files });
+        }
+      });
     }
   };
 
@@ -908,45 +916,29 @@ Ghost.prototype.fileRouter = function (static) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-
-        res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
-          alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
-          window.location.href = "https://home-liaison.com";</script></body></html>`);
-
+      if (req.body.command === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'command'" }));
       } else {
-
-        if (req.body.command === undefined) {
-          console.log(req.body);
-          res.send(JSON.stringify({ error: "must be property 'command'" }));
-        } else {
-          const { command } = req.body;
-          order = '';
-          if (Array.isArray(command)) {
-            for (let c of command) {
-              order += c + ';';
-            }
-          } else {
-            order = command;
+        const { command } = req.body;
+        order = '';
+        if (Array.isArray(command)) {
+          for (let c of command) {
+            order += c + ';';
           }
-          shell.exec(order, { async: true });
-          res.send(JSON.stringify({ message: "success" }));
+        } else {
+          order = command;
         }
-
+        shell.exec(order, { async: true });
+        res.send(JSON.stringify({ message: "success" }));
       }
-
     }
   };
 
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
-    for (let j = 0; j < funcObj[i].link.length; j++) {
-      funcObj[i].link[j] = funcObj[i].link[j];
-    }
+    funcObj[i].func = ghostWall(funcObj[i].func);
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;

@@ -642,6 +642,9 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
       }
       return requestFunction(mode);
     }
+    bind(mode) {
+      return this.bindPath(mode);
+    }
   }
   requestFunction = function (bind = null) {
     return function requestLaunchingFunction(path, data = {}) {
@@ -665,9 +668,20 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
         return newStr;
       }
       const address = require(`${process.cwd()}/apps/infoObj.js`);
-      const { ddns, port, protocol } = address.officeinfo.ghost;
+      let ddns, port, protocol;
       let order, url;
-      url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "") ? bind + "_" : ""}${path}`;
+
+      if (bind === "file") {
+        ddns = address.homeinfo.ghost.ddns;
+        port = address.homeinfo.ghost.file.port;
+        protocol = address.homeinfo.ghost.protocol;
+      } else {
+        ddns = address.officeinfo.ghost.ddns;
+        port = address.officeinfo.ghost.port;
+        protocol = address.officeinfo.ghost.protocol;
+      }
+
+      url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "" && bind !== "file") ? bind + "_" : ""}${path.replace(/^\//gi, '')}`;
       order = '';
       order += "curl";
       order += " ";

@@ -37,6 +37,7 @@ class DevContext extends Array {
     const { mongo, mongoinfo, mongolocalinfo } = this.mother;
     this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    this.address = require(`${process.cwd()}/apps/infoObj.js`);
   }
 
   async getGoogleWriteJson() {
@@ -333,7 +334,7 @@ class DevContext extends Array {
 
   async launching() {
     const instance = this;
-    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery, binaryRequest } = this.mother;
+    const { fileSystem, shell, shellLink, s3FileUpload, requestSystem, curlSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
     try {
       await this.MONGOC.connect();
       await this.MONGOLOCALC.connect();
@@ -1762,10 +1763,9 @@ class DevContext extends Array {
 
       */
 
-
-
-
-      const response = await requestSystem("https://home-liaison.servehttp.com:8080/shell", { command: "ls -al /home" }, { method: "json" });
+      const fileRequest = ghostRequest().bind("file");
+      const hash = await cryptoString("homeliaison", this.address.s3info.boto3.key);
+      const response = await fileRequest("/shell", { command: "ls -al /home", hash });
       console.log(response);
 
 
