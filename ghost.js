@@ -1050,8 +1050,7 @@ Ghost.prototype.fileLaunching = async function () {
       pems.allowHTTP1 = true;
 
       //set router
-      console.log(address);
-      const { get, post } = this.fileRouter(address.ghost.file.static);
+      const { get, post } = this.fileRouter(address.file.static);
       for (let obj of get) {
         app.get(obj.link, obj.func);
       }
@@ -1060,7 +1059,7 @@ Ghost.prototype.fileLaunching = async function () {
       }
 
       //server on
-      https.createServer(pems, app).listen(address.ghost.file.port, address.ip.inner, () => {
+      https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
         console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       });
 
