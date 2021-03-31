@@ -1043,6 +1043,8 @@ Ghost.prototype.fileRouter = function (static) {
       let target;
       if (req.body.target === undefined) {
         target = instance.address.homeinfo.ghost.file.static;
+      } else {
+        target = req.body.target;
       }
 
       fileSystem(`readDir`, [ target ]).then((list) => {
