@@ -843,16 +843,22 @@ Ghost.prototype.fileRouter = function (static) {
     }
   }
   ipTong = Array.from(new Set(ipTong));
-  const ghostWall = function (callback) {
+  const ghostWall = function (callback, binary = false) {
+    let property;
+    if (binary) {
+      property = "query";
+    } else {
+      property = "body";
+    }
     return function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req.body.hash === undefined) {
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req[property].hash === undefined) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
-        decryptoHash("homeliaison", req.body.hash).then(function (string) {
+        decryptoHash("homeliaison", req[property].hash).then(function (string) {
           if (string === instance.address.s3info.boto3.key) {
-            if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
+            if (req[property].uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
               callback(req, res);
             } else {
               res.set("Content-Type", "text/html");
@@ -891,52 +897,24 @@ Ghost.prototype.fileRouter = function (static) {
     binary: true,
     link: [ "/file", "/upload" ],
     func: function (req, res) {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req.body.hash === undefined) {
-        res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-      } else {
-        if (req.query.hash === undefined) {
-          res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+      const form = instance.formidable({ multiples: true });
+      form.parse(req, function (err, fields, files) {
+        if (err) {
+          throw new Error(err);
+          return;
         } else {
-          decryptoHash("homeliaison", req.query.hash).then(function (string) {
-            if (string === instance.address.s3info.boto3.key) {
-              if (req.query.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
-
-                const form = instance.formidable({ multiples: true });
-                form.parse(req, function (err, fields, files) {
-                  if (err) {
-                    throw new Error(err);
-                    return;
-                  } else {
-                    res.set({
-                      "Content-Type": "application/json",
-                      "Access-Control-Allow-Origin": '*',
-                      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                      "Access-Control-Allow-Headers": '*',
-                    });
-
-                    console.log(fields, files);
-
-                    res.json({ fields, files });
-                  }
-                });
-
-              } else {
-                res.set("Content-Type", "text/html");
-                res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-              }
-            } else {
-              res.set("Content-Type", "text/html");
-              res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
-            }
-          }).catch(function (err) {
-            res.set("Content-Type", "text/html");
-            res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+          res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": '*',
           });
+
+          console.log(fields, files);
+
+          res.json({ fields, files });
         }
-      }
+      });
     }
   };
 
@@ -1046,9 +1024,7 @@ Ghost.prototype.fileRouter = function (static) {
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
-    if (!funcObj[i].binary) {
-      funcObj[i].func = ghostWall(funcObj[i].func);
-    }
+    funcObj[i].func = ghostWall(funcObj[i].func, funcObj[i].binary);
     resultObj[i.split('_')[0]].push(funcObj[i]);
   }
   return resultObj;
