@@ -1764,7 +1764,7 @@ class DevContext extends Array {
       */
 
       const fileRequest = ghostRequest().bind("file");
-      const response = await fileRequest("/shell", { command: "ls -al /home" });
+      const response = await fileRequest("shell", { command: "ls -al " + this.address.homeinfo.ghost.file.static });
       console.log(response);
 
 

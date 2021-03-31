@@ -691,7 +691,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
               cipher.on('end', function () {
                 data.hash = encrypted;
                 data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
-                url = `${protocol}://${ddns}:${String(port)}/${(bind !== null && bind !== "") ? bind + "_" : ""}${path.replace(/^\//gi, '')}`;
+                url = `${protocol}://${ddns}:${String(port)}/${path.replace(/^\//gi, '')}`;
                 order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
                 shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
                   if (err) {
