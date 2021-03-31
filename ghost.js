@@ -833,7 +833,8 @@ Ghost.prototype.fileRouter = function (static) {
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
-  funcObj.get_file = {
+  //GET - test
+  funcObj.get_test = {
     link: [ "/" ],
     func: function (req, res) {
       res.set({
@@ -842,13 +843,10 @@ Ghost.prototype.fileRouter = function (static) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
-      console.log(req.query);
-
+      console.log("test");
       res.send(JSON.stringify({ message: "done" }));
     }
   };
-
 
   //POST - file upload
   funcObj.post_file = {
@@ -876,7 +874,7 @@ Ghost.prototype.fileRouter = function (static) {
   };
 
   //POST - shell
-  funcObj.post_file = {
+  funcObj.post_shell = {
     link: [ "/shell" ],
     func: function (req, res) {
       res.set({
