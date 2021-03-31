@@ -898,54 +898,58 @@ Ghost.prototype.fileRouter = function (static) {
     func: function (req, res) {
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
-        if (err) {
-          throw new Error(err);
-          return;
-        } else {
-          res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
-          });
+        try {
+          if (err) {
+            throw new Error(err);
+            return;
+          } else {
+            res.set({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": '*',
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+              "Access-Control-Allow-Headers": '*',
+            });
 
-          const staticFolder = instance.address.homeinfo.ghost.file.static;
-          const toArr = JSON.parse(fields.toArr);
-          let staticFolderDir;
-          let filesKey, fromArr, num;
-          let tempArr, tempString, tempDir;
+            const staticFolder = instance.address.homeinfo.ghost.file.static;
+            const toArr = JSON.parse(fields.toArr);
+            let staticFolderDir;
+            let filesKey, fromArr, num;
+            let tempArr, tempString, tempDir;
 
-          filesKey = Object.keys(files);
-          filesKey.sort((a, b) => {
-            return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
-          });
+            filesKey = Object.keys(files);
+            filesKey.sort((a, b) => {
+              return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+            });
 
-          fromArr = [];
-          for (let key of filesKey) {
-            fromArr.push(files[key]);
-          }
-
-          console.log(fields, files);
-          console.log(toArr, fromArr);
-
-          staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
-          num = 0;
-          for (let { path } of fromArr) {
-            tempArr = toArr[num].split("/");
-            tempString = staticFolder;
-            for (let i = 0; i < tempArr.length; i++) {
-              tempDir = await fileSystem(`readDir`, [ tempString ]);
-              if (!tempDir.includes(tempArr[i])) {
-                shell.exec(`mkdir ${shellLink(tempString)}/${tempArr[i]}`);
-              }
-              tempString += '/';
-              tempString += tempArr[i];
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
             }
-            console.log(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
-            num++;
-          }
 
-          res.json({ fields, files });
+            console.log(fields, files);
+            console.log(toArr, fromArr);
+
+            staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
+            num = 0;
+            for (let { path } of fromArr) {
+              tempArr = toArr[num].split("/");
+              tempString = staticFolder;
+              for (let i = 0; i < tempArr.length; i++) {
+                tempDir = await fileSystem(`readDir`, [ tempString ]);
+                if (!tempDir.includes(tempArr[i])) {
+                  shell.exec(`mkdir ${shellLink(tempString)}/${tempArr[i]}`);
+                }
+                tempString += '/';
+                tempString += tempArr[i];
+              }
+              console.log(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              num++;
+            }
+
+            res.json({ fields, files });
+          }
+        } catch (e) {
+          console.log(e);
         }
       });
     }
