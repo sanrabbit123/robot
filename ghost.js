@@ -896,7 +896,9 @@ Ghost.prototype.fileRouter = function (static) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
-        console.log(req);
+
+        console.log(req.query);
+
         const form = instance.formidable({ multiples: true });
         form.parse(req, function (err, fields, files) {
           if (err) {
