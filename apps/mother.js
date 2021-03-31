@@ -1105,6 +1105,29 @@ Mother.prototype.s3FileList = function (query = "all") {
   });
 }
 
+Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
+  const axios = require('axios');
+  const fs = require('fs');
+  const FormData = require('form-data');
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  let num, form, formHeaders;
+  return new Promise(function (resolve, reject) {
+    form = new FormData();
+    num = 0;
+    form.append('hash', 'my value');
+    for (let fileName of fromArr) {
+      form.append("file" + String(num), fs.createReadStream(fileName));
+      num++;
+    }
+    formHeaders = form.getHeaders();
+    axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file`, form, { headers: { ...formHeaders } }).then(function (response) {
+      resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+}
+
 Mother.prototype.searchDir = function (targetDirectory) {
   const fs = require(`fs`);
   const shell = require(`shelljs`);

@@ -1763,12 +1763,12 @@ class DevContext extends Array {
 
       */
 
-      const fileRequest = ghostRequest().bind("file");
-      const response = await fileRequest("shell", { command: "ls -al " + this.address.homeinfo.ghost.file.static });
+      // const fileRequest = ghostRequest().bind("file");
+      // const response = await fileRequest("shell", { command: "ls -al " + this.address.homeinfo.ghost.file.static });
+      // console.log(response);
+
+      const response = await this.mother.ghostFileUpload([ process.cwd() + "/temp/IMG_6006.png" ], []);
       console.log(response);
-
-
-
 
       // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

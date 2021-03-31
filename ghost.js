@@ -850,6 +850,7 @@ Ghost.prototype.fileRouter = function (static) {
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
       } else {
+        console.log(req.body);
         decryptoHash("homeliaison", req.body.hash).then(function (string) {
           if (string === instance.address.s3info.boto3.key) {
             if (req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs") {
@@ -937,6 +938,76 @@ Ghost.prototype.fileRouter = function (static) {
         const { stdout } = shell.exec(order, { silent: true });
         res.send(JSON.stringify({ stdout }));
       }
+    }
+  };
+
+  //POST - mkdir
+  funcObj.post_mkdir = {
+    link: [ "/mkdir", "/rm", "/touch" ],
+    func: function (req, res) {
+      let command;
+      let order;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.target === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'target'" }));
+      } else {
+        if (req.url === "/mkdir") {
+          order = "mkdir";
+        } else if (req.url === "/rm") {
+          order = "rm -rf";
+        } else if (req.url === "/touch") {
+          order = "touch";
+        }
+        let { target } = req.body;
+        command = '';
+        if (Array.isArray(target)) {
+          for (let d of target) {
+            d = instance.dirParsing(d);
+            command += `${order} ${shellLink(d)};`;
+          }
+        } else {
+          target = instance.dirParsing(target);
+          command = `${order} ${shellLink(target)}`;
+        }
+        shell.exec(command, { async: true });
+        res.send(JSON.stringify({ message: "success" }));
+      }
+    }
+  };
+
+  //POST - readDir
+  funcObj.post_readDir = {
+    link: [ "/readDir", "/ls" ],
+    func: function (req, res) {
+      let command;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      let target;
+      if (req.body.target === undefined) {
+        target = instance.address.homeinfo.ghost.file.static;
+      }
+
+      fileSystem(`readDir`, [ target ]).then((list) => {
+        let list_refined = [];
+        for (let i of list) {
+          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
+            list_refined.push(i);
+          }
+        }
+        res.send(JSON.stringify(list_refined));
+      }).catch((e) => { throw new Error(e); });
+
     }
   };
 
