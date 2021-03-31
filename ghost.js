@@ -946,7 +946,7 @@ Ghost.prototype.fileRouter = function (static) {
               num++;
             }
 
-            res.json({ fields, files });
+            res.json({ "message": "done" });
           }
         } catch (e) {
           console.log(e);
