@@ -897,7 +897,7 @@ Ghost.prototype.fileRouter = function (static) {
     link: [ "/file", "/upload" ],
     func: function (req, res) {
       const form = instance.formidable({ multiples: true });
-      form.parse(req, function (err, fields, files) {
+      form.parse(req, async function (err, fields, files) {
         if (err) {
           throw new Error(err);
           return;
@@ -924,7 +924,6 @@ Ghost.prototype.fileRouter = function (static) {
           for (let key of filesKey) {
             fromArr.push(files[key]);
           }
-
 
           console.log(fields, files);
           console.log(toArr, fromArr);
