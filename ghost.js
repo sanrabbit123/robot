@@ -926,23 +926,23 @@ Ghost.prototype.fileRouter = function (static) {
               fromArr.push(files[key]);
             }
 
-            console.log(fields, files);
-            console.log(toArr, fromArr);
-
             staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
             num = 0;
             for (let { path } of fromArr) {
               tempArr = toArr[num].split("/");
               tempString = staticFolder;
+              if (tempArr.length === 0) {
+                throw new Error("invaild to array");
+              }
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
                 if (!tempDir.includes(tempArr[i])) {
-                  shell.exec(`mkdir ${shellLink(tempString)}/${tempArr[i]}`);
+                  shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              console.log(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
               num++;
             }
 
