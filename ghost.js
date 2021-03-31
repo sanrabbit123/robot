@@ -877,16 +877,29 @@ Ghost.prototype.fileRouter = function (static) {
   funcObj.post_shell = {
     link: [ "/shell" ],
     func: function (req, res) {
+      let order;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
-      console.log(req.query);
-
-      res.send(JSON.stringify({ message: "done" }));
+      if (req.body.command === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'command'" }));
+      } else {
+        const { command } = req.body;
+        order = '';
+        if (Array.isArray(command)) {
+          for (let c of command) {
+            order += c + ';';
+          }
+        } else {
+          order = command;
+        }
+        shell.exec(order, { async: true });
+        res.send(JSON.stringify({ message: "success" }));
+      }
     }
   };
 
