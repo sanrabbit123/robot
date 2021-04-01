@@ -1046,7 +1046,11 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
             num++;
           }
           formHeaders = form.getHeaders();
-          axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file?hash=${encrypted}&uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle=a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs`, form, { headers: { ...formHeaders } }).then(function (response) {
+          axios.post(`${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}:${String(ADDRESS.homeinfo.ghost.file.port)}/file?hash=${encrypted}&uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle=a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs`, form, {
+            headers: { ...formHeaders },
+            maxContentLength: Infinity,
+            maxBodyLength: Infinity,
+          }).then(function (response) {
             resolve(response);
           }).catch(function (error) {
             reject(error);
