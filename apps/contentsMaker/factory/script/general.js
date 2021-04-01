@@ -1150,12 +1150,12 @@ ExecMain.prototype.setCreateSetting = function (obj) {
       color: "#505050",
       pointColor: "#2fa678",
       fontSize: 22,
-      font: "SDGothicNeoa-gBd",
+      font: "SDGothicNeoa-fSm",
       bold: "SDGothicNeoa-gBd",
       leading: 38,
       horizontalScale: 98,
       tracking: -25,
-      justification: "CENTER",
+      justification: (/left/gi.test(obj.direction) || /left/gi.test(obj.justification) ? "LEFT" : (/right/gi.test(obj.direction) || /right/gi.test(obj.justification) ? "RIGHT" : "CENTER")),
     },
     main: {
       width: this.createDocSetting.width,
@@ -1163,12 +1163,12 @@ ExecMain.prototype.setCreateSetting = function (obj) {
       color: "#505050",
       pointColor: "#2fa678",
       fontSize: 37,
-      font: "SDGothicNeoa-gBd",
+      font: "SDGothicNeoa-fSm",
       bold: "SDGothicNeoa-gBd",
       leading: 58.7,
       horizontalScale: 98,
       tracking: -25,
-      justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
+      justification: (/left/gi.test(obj.direction) || /left/gi.test(obj.justification) ? "LEFT" : (/right/gi.test(obj.direction) || /right/gi.test(obj.justification) ? "RIGHT" : "CENTER")),
     },
     sub: {
       width: this.createDocSetting.width,
@@ -1181,7 +1181,7 @@ ExecMain.prototype.setCreateSetting = function (obj) {
       leading: 38,
       horizontalScale: 98,
       tracking: -25,
-      justification: ((obj.direction === "left") ? "LEFT" : "RIGHT"),
+      justification: (/left/gi.test(obj.direction) || /left/gi.test(obj.justification) ? "LEFT" : (/right/gi.test(obj.direction) || /right/gi.test(obj.justification) ? "RIGHT" : "CENTER")),
     },
   }
   this.createSetting[obj.to] = basicObj[obj.from];
@@ -1216,7 +1216,9 @@ ExecMain.prototype.createElements = function (doc, obj) {
   }
 
   for (let i = 0; i < areaTextRef.paragraphs.length; i++) {
-    areaTextRef.paragraphs[i].paragraphAttributes.justification = Justification[obj.justification];
+    try {
+      areaTextRef.paragraphs[i].paragraphAttributes.justification = Justification[obj.justification];
+    } catch (e) {}
   }
   areaTextRef.textRange.characterAttributes.size = obj.fontSize;
   areaTextRef.textRange.characterAttributes.textFont = textFonts.getByName(this.mother.fontFilter(obj.font));
@@ -1226,6 +1228,8 @@ ExecMain.prototype.createElements = function (doc, obj) {
   areaTextRef.textRange.characterAttributes.horizontalScale = obj.horizontalScale;
   areaTextRef.textRange.characterAttributes.tracking = obj.tracking;
   areaTextRef.selected = true;
+
+
 
   //bold
   let total_arrBold, total_arrColor, numbers;

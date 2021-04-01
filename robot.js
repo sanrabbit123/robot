@@ -459,11 +459,15 @@ Robot.prototype.launching = async function () {
 
 // EXE --------------------------------------------------------------------------------------
 
-if (process.argv[2] !== "dev") {
+if (process.argv[2] !== "dev" && process.argv[2] !== "canvas" && !/canvascheck/gi.test(process.argv[2])) {
   const app = new Robot();
   app.launching();
 } else {
   const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
   const dev = new DevContext();
-  dev.launching();
+  if (process.argv[2] === "dev") {
+    dev.launching();
+  } else {
+    dev.devCanvas(process.argv[2] !== "canvas");
+  }
 }

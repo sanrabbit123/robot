@@ -28,6 +28,8 @@ const ContentsMaker = function () {
 
   this.generator = require(`${this.links.app}/factory/generator.js`);
 
+  this.dir = `${process.cwd()}/apps/contentsMaker`;
+  this.factory = `${this.dir}/factory`;
 }
 
 ContentsMaker.prototype.startAdobe = async function (obj) {
@@ -90,7 +92,7 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
     temp_scriptString += `\n`;
     temp_scriptString += `try {\n`;
     temp_scriptString += `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
-    temp_scriptString += await fileSystem(`readString`, [ `${this.options.home_dir}/factory/script/polyfill.js` ]);
+    temp_scriptString += await fileSystem(`readString`, [ `${this.factory}/script/polyfill.js` ]);
     temp_scriptString += `\n`;
     temp_scriptString += await babelSystem(obj.script);
     temp_scriptString += `} catch (e) { e; }`;
@@ -246,12 +248,27 @@ ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
   }
 }
 
-ContentsMaker.prototype.tempLaunching = async function (file) {
+ContentsMaker.prototype.tempLaunching = async function (file, mainName = "$_$") {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
+    if (mainName === "console" || mainName === "$" || mainName === "_") {
+      mainName = "$_$";
+    }
     const fileString = await fileSystem(`readString`, [ file ]);
-    const scriptString = await this.generator.general_maker.exec(this.options, `ExecMain.prototype.start = function (dayString) { \nthis.dayString = dayString;\n ${fileString} \n };`);
+    const scriptString = await this.generator.general_maker.exec(this.options, `ExecMain.prototype.start = function (dayString) {
+      for (let func in Mother.prototype) {
+        this[func] = this.mother[func];
+      }
+      this.open = app.open;
+      this.doScript = app.doScript;
+      const console = this;
+      const $ = this;
+      const _ = this;
+      const ${mainName} = this;
+      this.dayString = dayString;
+      ${fileString}
+    };`);
     await this.startAdobe({
       name: `tempAi_launching`,
       data: {},

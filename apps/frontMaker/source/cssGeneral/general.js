@@ -75,7 +75,7 @@ module.exports = function () {
   .desknavimenuframe{display:inline-block;position:relative;margin-left:auto;margin-right:auto;top:24px}
 
   .maindeskfooter{display:block;position:absolute;top:64px;height:170px;left:50%;transition:all 0.5s ease;}
-  .footerbutton{position:absolute;opacity:0;transition:all .5s ease;background-color:#2fa678;left:50%;cursor:pointer;}
+  .footerbutton{position:absolute;opacity:0;transition:all .5s ease;left:50%;cursor:pointer;}
   .footerbutton:hover{opacity:0.5;}
   .absolutedefault{
     position: absolute;
