@@ -327,54 +327,21 @@ DevContext.prototype.launching = async function () {
         }
       ]
     };
-
-
-    const flow = [
+    const irFlow = [
       {
-        name: "시장",
+        name: "인트로",
         children: [
-          {
-            name: "인테리어 시장의 변화",
-            children: [
-              {
-                name: "집의 역할과 인식의 변화 - 개념 설명"
-              },
-              {
-                name: "집의 역할과 인식의 변화 - 통계 자료"
-              },
-              {
-                name: "인테리어 니즈의 전체적인 증가"
-              }
-            ]
-          },
           {
             name: "달라진 디자이너 니즈",
             children: [
               {
-                name: "홈스타일링 붐과 스타일링 문화로의 전환"
-              },
-              {
                 name: "디자이너 서비스의 인식 전환"
               },
               {
-                name: "디자이너 니즈 통계 자료"
-              },
-            ]
-          },
-          {
-            name: "인테리어 산업의 문제",
-            children: [
-              {
-                name: "셀프 인테리어의 한계 - 너무 많은 선택지"
-              },
-              {
-                name: "리모델링의 문제 - 인테리어 소외"
-              },
-              {
-                name: "프리랜서의 문제 - 체계 없는 프로세스"
+                name: "디자이너 중심 문화로의 전환"
               }
             ]
-          },
+          }
         ]
       },
       {
@@ -384,13 +351,13 @@ DevContext.prototype.launching = async function () {
             name: "홈리에종 솔루션",
             children: [
               {
-                name: "삶 중심적 기획"
+                name: "셀프 인테리어, 프리랜서의 한계"
+              },
+              {
+                name: "인테리어 업체의 문제 - 인테리어 소외"
               },
               {
                 name: "디자이너 중심 모델로의 재설계"
-              },
-              {
-                name: "서비스 세분화"
               },
             ]
           },
@@ -425,10 +392,10 @@ DevContext.prototype.launching = async function () {
         ]
       },
       {
-        name: "경쟁력과 확장 가능성",
+        name: "경쟁력",
         children: [
           {
-            name: "프로젝트 케어와 퀄리티 보장",
+            name: "퀄리티 보장 연계",
             children: [
               {
                 name: "인테리어의 리스크와 고객 니즈"
@@ -445,7 +412,7 @@ DevContext.prototype.launching = async function () {
             name: "공급자 의존 구조 탈피",
             children: [
               {
-                name: "프로젝트 시스템으로 인한 "
+                name: "프로젝트 클래스"
               },
               {
                 name: "신뢰도 높은 공급자 모객과 유지의 전략"
@@ -459,24 +426,85 @@ DevContext.prototype.launching = async function () {
             name: "다양한 고객층 확보 가능",
             children: [
               {
-                name: ""
+                name: "다양한 서비스 범위별 공급자 확보"
               },
               {
-                name: ""
+                name: "프로젝트 클래스 모듈 기법 생산"
               },
               {
-                name: ""
+                name: "B2B 서비스로의 확대"
               }
             ]
           }
         ]
       },
+      {
+        name: "시장",
+        children: [
+          {
+            name: "인테리어 시장의 전망",
+            children: [
+              {
+                name: "인테리어 시장 확장의 방향"
+              },
+              {
+                name: "홈스타일링 확장 규모 추산"
+              },
+              {
+                name: "홈스타일링 시장 확장과 홈리에종 셰어"
+              }
+            ]
+          },
+          {
+            name: "홈리에종의 성과",
+            children: [
+              {
+                name: "매출 분석과 예상"
+              },
+              {
+                name: "사용자 분석과 증가율"
+              },
+              {
+                name: "마케팅 분석과 지표 분석"
+              }
+            ]
+          },
+          {
+            name: "성장 전략",
+            children: [
+              {
+                name: "홈리에종 2021년 전략"
+              },
+              {
+                name: "홈리에종 2021년 재무 계획"
+              },
+              {
+                name: "홈리에종 3년 로드맵"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: "팀 소개",
+        children: [
+          {
+            name: "팀 홈리에종",
+            children: [
+              {
+                name: "홈리에종 대표자 소개"
+              },
+              {
+                name: "홈리에종 팀원 소개"
+              },
+              {
+                name: "파트너십 디자이너 소개"
+              }
+            ]
+          }
+        ]
+      }
     ];
-
-
-
-    // console.log(ghostMap);
-
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -550,10 +578,16 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김정운",
-    //     designer: "김다래",
-    //     pid: "p106",
-    //     link: "https://drive.google.com/drive/folders/1vN6tDwrT5TttpSQR8lqxat6ZwbhYZMuJ",
+    //     client: "송선옥",
+    //     designer: "전경화",
+    //     pid: "p107",
+    //     link: "https://drive.google.com/drive/folders/1X34pFSR_BWIlpe8gi6gPn3L9Hjlzi4NX",
+    //   },
+    //   {
+    //     client: "박미연",
+    //     designer: "김소영",
+    //     pid: "p108",
+    //     link: "https://drive.google.com/drive/folders/1vFEYrEKCcHQNHi_DCipVWW-MYJTml5kC",
     //   },
     // ]);
 
