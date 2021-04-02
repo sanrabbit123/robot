@@ -40,7 +40,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -329,6 +329,151 @@ DevContext.prototype.launching = async function () {
     };
 
 
+    const flow = [
+      {
+        name: "시장",
+        children: [
+          {
+            name: "인테리어 시장의 변화",
+            children: [
+              {
+                name: "집의 역할과 인식의 변화 - 개념 설명"
+              },
+              {
+                name: "집의 역할과 인식의 변화 - 통계 자료"
+              },
+              {
+                name: "인테리어 니즈의 전체적인 증가"
+              }
+            ]
+          },
+          {
+            name: "달라진 디자이너 니즈",
+            children: [
+              {
+                name: "홈스타일링 붐과 스타일링 문화로의 전환"
+              },
+              {
+                name: "디자이너 서비스의 인식 전환"
+              },
+              {
+                name: "디자이너 니즈 통계 자료"
+              },
+            ]
+          },
+          {
+            name: "인테리어 산업의 문제",
+            children: [
+              {
+                name: "셀프 인테리어의 한계 - 너무 많은 선택지"
+              },
+              {
+                name: "리모델링의 문제 - 인테리어 소외"
+              },
+              {
+                name: "프리랜서의 문제 - 체계 없는 프로세스"
+              }
+            ]
+          },
+        ]
+      },
+      {
+        name: "솔루션",
+        children: [
+          {
+            name: "홈리에종 솔루션",
+            children: [
+              {
+                name: "삶 중심적 기획"
+              },
+              {
+                name: "디자이너 중심 모델로의 재설계"
+              },
+              {
+                name: "서비스 세분화"
+              },
+            ]
+          },
+          {
+            name: "프로세스 제어 시스템",
+            children: [
+              {
+                name: "서비스별 제어 시스템 모델"
+              },
+              {
+                name: "홈리에종 Web / App"
+              },
+              {
+                name: "확장 가능한 설계"
+              },
+            ]
+          },
+          {
+            name: "공급자 제어 세스템",
+            children: [
+              {
+                name: "서비스 맵과 면적 기반 유형화",
+              },
+              {
+                name: "영역별 디자이너 니즈 파악",
+              },
+              {
+                name: "영역별 디자이너 지원 체계"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: "경쟁력과 확장 가능성",
+        children: [
+          {
+            name: "프로젝트 케어와 퀄리티 보장",
+            children: [
+              {
+                name: "인테리어의 리스크와 고객 니즈"
+              },
+              {
+                name: "타 플랫폼 연계 방식의 문제"
+              },
+              {
+                name: "고객 니즈에 맞춘 퀄리티 보장 방식"
+              }
+            ]
+          },
+          {
+            name: "공급자 의존 구조 탈피",
+            children: [
+              {
+                name: "프로젝트 시스템으로 인한 "
+              },
+              {
+                name: "신뢰도 높은 공급자 모객과 유지의 전략"
+              },
+              {
+                name: "홈스타일링 교육 기관으로의 확장"
+              }
+            ]
+          },
+          {
+            name: "다양한 고객층 확보 가능",
+            children: [
+              {
+                name: ""
+              },
+              {
+                name: ""
+              },
+              {
+                name: ""
+              }
+            ]
+          }
+        ]
+      },
+    ];
+
+
 
     // console.log(ghostMap);
 
@@ -361,13 +506,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "김지연";
-    // const pid = "p88";
-    // const rid = "re082";
+    // const client = "전채은";
+    // const pid = "p89";
+    // const rid = "re083";
     // const links = [
-    //   "https://docs.google.com/document/d/1jpDXD3V-ZMO2mLGCIqT_PTB4ADM-0EbPs6-7OFOs9Kk/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1iybVqD90cYLW9eSz-lSSQlGt8lKN4ik3j6_ZOSKcSpI/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1cRFP2P6hEDMYbA-9nvSNefw0ica2akgA?usp=sharing",
+    //   "https://docs.google.com/document/d/1IAiKKrlEjuow5RXeMSrUfBZhdNHpOZ7IWDqk10n10Ug/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1dlA0Og7jXJc6uONBiAUWL66oZlNx5wiM_8fePC_Rxpo/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1JqwA4VDMcayUTl5SA5_utX5U8ZpJrq2j?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -398,7 +543,7 @@ DevContext.prototype.launching = async function () {
 
     // addtional photo repair
     // const filter = new PortfolioFilter();
-    // await filter.additionalRepair("p88", 10);
+    // await filter.additionalRepair("p89", 21);
 
 
     // raw photo to raw portfolio

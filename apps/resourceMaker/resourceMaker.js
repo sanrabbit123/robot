@@ -4,7 +4,7 @@ const ResourceMaker = function (p_id) {
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
-  this.s3Host = ADDRESS.s3info.host;
+  this.s3Host = `${ADDRESS.homeinfo.ghost.protocol}://${ADDRESS.homeinfo.ghost.host}`;
   for (let i = 0; i < 5; i++) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }

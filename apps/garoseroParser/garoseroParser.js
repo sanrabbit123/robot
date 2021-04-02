@@ -1,3 +1,19 @@
+class GaroseroArray extends Array {
+
+  toSimple() {
+    let arr = [];
+    for (let { gs } of this) {
+      arr.push(gs);
+    }
+    return arr;
+  }
+
+  get simple() {
+    return this.toSimple();
+  }
+
+}
+
 const GaroseroParser = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
@@ -74,7 +90,7 @@ GaroseroParser.prototype.queryImages = async function (imageArr) {
   const { fileSystem } = this.mother;
   try {
     let target, width, height, resultObj;
-    let totalTong = [];
+    let totalTong = new GaroseroArray();
     let number = 0;
 
     for (let i of imageArr) {
