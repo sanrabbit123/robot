@@ -1,31 +1,3 @@
-const ROBOT_PATH = process.cwd();
-const APP_PATH = ROBOT_PATH + "/apps";
-const Mother = require(APP_PATH + "/mother.js");
-const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
-const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
-const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
-const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
-const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
-const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
-const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
-const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
-const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
-const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
-const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
-const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
-const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
-const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
-const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
-const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
-const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
-const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
-const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
-const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
-const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
-const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
-const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
-const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
-
 const Ghost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -145,6 +117,7 @@ Ghost.prototype.ultimateReflection = async function () {
 
 Ghost.prototype.analyticsToMongo = async function () {
   try {
+    const GoogleAnalytics = require(process.cwd() + "/apps/googleAPIs/googleAnalytics.js");
     const app = new GoogleAnalytics();
     await app.analyticsToMongo();
 
@@ -156,7 +129,7 @@ Ghost.prototype.analyticsToMongo = async function () {
 
 Ghost.prototype.clientReport = async function () {
   try {
-    const sheets = new GoogleSheet();
+    const sheets = this.sheets;
     const sheetId = "14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM";
     const startPoint = [ 0, 0 ];
     const report = await this.back.getClientReport();
@@ -474,7 +447,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_updateSheets = {
     link: [ "/updateSheets" ],
     func: function (req, res) {
-      const sheets = new GoogleSheet();
+      const sheets = instance.sheets;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -525,7 +498,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_getSheets = {
     link: [ "/getSheets" ],
     func: function (req, res) {
-      const sheets = new GoogleSheet();
+      const sheets = instance.sheets;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -1261,6 +1234,102 @@ Ghost.prototype.fileLaunching = async function () {
   }
 }
 
+Ghost.prototype.robotPassLaunching = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const http = require("http");
+  const express = require("express");
+  const app = express();
+  const bodyParser = require("body-parser");
+  const multer = require("multer");
+  const multiForms = multer();
+  const useragent = require("express-useragent");
+  const staticFolder = process.env.HOME + '/static';
+  const robotPassPort = 8080;
+
+  app.use(useragent.express());
+  app.use(bodyParser.json());
+  app.use(multiForms.array());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.static(staticFolder));
+
+  try {
+    console.log(``);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching robot pass server =====================`);
+    console.log(``);
+
+    const BUTTON_LIST = [
+        "proposal",
+        "request",
+        "contents",
+        "voice"
+    ];
+    let runProcess, runList;
+    runProcess = {};
+    runList = {};
+    for (let b of BUTTON_LIST) {
+      runProcess[b] = 0;
+      runList[b] = [];
+    }
+
+    const runAi = async function (button) {
+      try {
+        runProcess[button] = 1;
+        await instance.mother.sleep(5000);
+        runProcess[button] = 2;
+        for (let i of runList[button]) {
+          shell.exec(`node ${shellLink(instance.robot)} ${button} ${i}`);
+        }
+        runList[button] = [];
+        runProcess[button] = 0;
+        return `${i} done`;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    app.get([ "/", "/ai", "/robot", "/illustrator" ], async function (req, res) {
+      try {
+        res.set({
+          "Content-Type": "text/plain",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+
+        const order = req.query;
+        const id = String(order.id);
+
+        if (runProcess[order.type] === 1) {
+          runList[order.type].push(id);
+          res.send(id + " make pass");
+        } else if (runProcess[order.type] === 2) {
+          res.send(id + " make fail");
+        } else if (runProcess[order.type] === 0) {
+          runList[order.type].push(id);
+          runAi(order.type).then(function (msg) {
+            console.log(msg);
+          }).catch(function (e) {
+            throw new Error(e);
+          });
+          res.send(id + " make pass");
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    //server on
+    http.createServer(pems, app).listen(robotPassPort, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(robotPassPort)}`);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
@@ -1270,4 +1339,6 @@ if (process.argv[2] === "request") {
   app.serverLaunching();
 } else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
   app.fileLaunching();
+} else if (/ai/gi.test(process.argv[2)]) {
+  app.robotPassLaunching();
 }
