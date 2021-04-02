@@ -11,7 +11,7 @@ module.exports = [
     name: "mongoToJson",
     time: {
       hour: 1,
-      minute: 50,
+      minute: 55,
       second: 30,
     }
   },

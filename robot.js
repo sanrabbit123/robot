@@ -57,8 +57,7 @@ Robot.prototype.mongoToJson = async function () {
       tempInfo = this.address[infoName];
       for (let collection of collections) {
         order = `mongoexport --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --collection=${collection} --out="${shellLink(backDir)}/${timeString}/${collection}${timeString}.json" --authenticationDatabase admin`;
-        tempMsg = shell.exec(order, { silent: true });
-        console.log(tempMsg.stderr);
+        tempMsg = shell.exec(order);
       }
     }
 
