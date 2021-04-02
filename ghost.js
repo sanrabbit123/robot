@@ -12,7 +12,6 @@ const Ghost = function () {
   this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
-  this.pythonApp = process.cwd() + "/ghost.py";
   this.formidable = require('formidable');
 }
 
@@ -1053,6 +1052,8 @@ Ghost.prototype.serverLaunching = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
+  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+  const cron = new CronGhost();
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -1086,6 +1087,7 @@ Ghost.prototype.serverLaunching = async function () {
     let pemsLink = process.cwd() + "/pems/" + address.host;
     let certDir, keyDir, caDir;
     let routerObj;
+    let cronScript;
     let routerTargets = [
       "client",
       "designer",
@@ -1136,7 +1138,8 @@ Ghost.prototype.serverLaunching = async function () {
     }
 
     //launching python cron
-    shell.exec(`python3 ${shellLink(this.pythonApp)} cron`, { async: true });
+    cronScript = await cron.scriptReady();
+    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
     console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
     //server on
@@ -1274,15 +1277,20 @@ Ghost.prototype.robotPassLaunching = async function () {
 
     const runAi = async function (button) {
       try {
+        let orders;
+
         runProcess[button] = 1;
         await instance.mother.sleep(5000);
         runProcess[button] = 2;
+        orders = [];
         for (let i of runList[button]) {
           shell.exec(`node ${shellLink(instance.robot)} ${button} ${i}`);
+          orders.push(i);
         }
         runList[button] = [];
         runProcess[button] = 0;
-        return `${i} done`;
+
+        return `${button} ${orders.join(",")} done`;
       } catch (e) {
         console.log(e);
       }
@@ -1321,7 +1329,7 @@ Ghost.prototype.robotPassLaunching = async function () {
     });
 
     //server on
-    http.createServer(pems, app).listen(robotPassPort, () => {
+    http.createServer(app).listen(robotPassPort, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(robotPassPort)}`);
     });
 
@@ -1339,6 +1347,6 @@ if (process.argv[2] === "request") {
   app.serverLaunching();
 } else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
   app.fileLaunching();
-} else if (/ai/gi.test(process.argv[2)]) {
+} else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
   app.robotPassLaunching();
 }

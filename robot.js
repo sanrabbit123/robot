@@ -1,10 +1,10 @@
 const Robot = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+  const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
   this.mother = new Mother();
   this.back = new BackMaker();
-  this.sheets = new GoogleSheet();
+  this.address = ADDRESS;
 }
 
 Robot.prototype.consoleQ = function (question) {
@@ -94,6 +94,10 @@ Robot.prototype.contentsMaker = function (button, arg) {
 Robot.prototype.proposalMaker = function (button, arg) {
   const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
   let app;
+  if (arg === undefined) {
+    throw new Error("proposal must be id");
+    return;
+  }
   if (button === "make" || button === "1") {
     app = new AiProposal(arg);
     app.proposalLaunching();
@@ -105,6 +109,9 @@ Robot.prototype.requestMaker = async function (arg) {
   try {
     let app;
     app = new AiConsole();
+    if (arg === undefined) {
+      throw new Error("must be arguments");
+    }
     await app.cardToRequest(arg);
   } catch (e) {
     console.log(e);
@@ -263,10 +270,12 @@ Robot.prototype.ultimateReflection = async function () {
 
 Robot.prototype.clientReportToSheets = async function () {
   try {
+    const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+    const sheets = new GoogleSheet();
     const sheetId = "14tnBRhwpvrf0h6iYTJzLaxs8UPseNYsznhdhV5kc0UM";
     const startPoint = [ 0, 0 ];
     const report = await this.back.getClientReport();
-    await this.sheets.update_value_inPython(sheetId, "", report.getMatrix(), startPoint);
+    await sheets.update_value_inPython(sheetId, "", report.getMatrix(), startPoint);
     console.log(`\x1b[33m%s\x1b[0m`, `sheets upload done`);
   } catch (e) {
     console.log(e);
@@ -312,159 +321,75 @@ Robot.prototype.imageReady = async function () {
 Robot.prototype.launching = async function () {
   try {
     let re, re2, re3, re4, re5, re6;
-    if (process.argv[2] === "proposal" && process.argv[3] !== undefined) {
-      this.proposalMaker("make", process.argv[3]);
 
-    } else if (process.argv[2] === "back") {
+    re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
+
+    //console server
+    if (re === "back" || re === "1") {
       this.dataConsole();
 
-    } else if (process.argv[2] === "request" && process.argv[3] !== undefined) {
-      await this.requestMaker(process.argv[3]);
+    //contents maker
+    } else if (re === "contents" || re === "2") {
+      re2 = await this.consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
+      if (re2 === "make" || re2 === "1") {
+        re3 = await this.consoleQ(`Porfolio number?\n`);
+      } else if (re2 === "mysql" || re2 === "2") {
+        re3 = ``;
+      } else if (re2 === "poo" || re2 === "3") {
+        re3 = ``;
+      } else if (re2 === "resource" || re2 === "4") {
+        re3 = await this.consoleQ(`Porfolio number?\n`);
+      }
+      this.contentsMaker(re2, re3);
 
-    } else if (process.argv[2] === "front" && process.argv[3] !== "--webpack") {
+    //portfolio filter
+    } else if (re === "portfolio" || re === "3") {
+      re2 = await this.consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
+      if (re2 === "portfolio" || re2 === "1") {
+        re3 = await this.consoleQ(`Client name what?\n`);
+        re4 = await this.consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
+        re5 = await this.consoleQ(`Designer name what?\n`);
+        re6 = await this.consoleQ(`Project number what?\n`);
+        this.portfolioFilter("portfolio", re3, re4, re5, re6);
+      } else if (re2 === "ghost" || re2 === "2") {
+        re3 = await this.consoleQ(`Designer name what?\n`);
+        re4 = await this.consoleQ(`Exception id what? (must be Number, ex : 1, default: 0)\n`);
+        this.portfolioFilter("ghost", re3, "", Number(re4), null);
+      }
+
+    //proposal
+    } else if (re === "proposal" || re === "4") {
+      re3 = await this.consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
+      this.proposalMaker("1", re3);
+
+    //google
+    } else if (re === "google" || re === "5") {
+      re2 = await this.consoleQ(`Choose commands : 1.token 2.analytics\n`);
+      this.googleAPIs(re2);
+
+    //front
+    } else if (re === "front" || re === "6") {
       this.frontMaker(false);
 
-    } else if (process.argv[2] === "front" && process.argv[3] === "--webpack") {
-      this.frontMaker(true);
-
-    } else if (process.argv[2] === "frontsource") {
-
-      if (process.argv[3] !== undefined) {
-        this.frontSource(process.argv[3].replace(/-/g, ''));
-      } else {
-        this.frontSource("general");
-      }
-
-    } else if (process.argv[2] === "frontupdate") {
-
-      if (process.argv[3] !== undefined) {
-        this.frontUpdate(true);
-      } else {
-        this.frontUpdate(false);
-      }
-
-    } else if (process.argv[2] === "consolesource") {
-
-      this.consoleSource();
-
-    } else if (process.argv[2] === "consulting") {
-      if (process.argv[3] !== "pack" && process.argv[3] !== "webpack") {
-        await this.getConsulting(false);
-      } else {
-        await this.getConsulting(true);
-      }
-
-    } else if (/pollingserver/gi.test(process.argv[2])) {
-      await this.officePolling("server", true);
-
-    } else if (/pollingoffice/gi.test(process.argv[2])) {
-      await this.officePolling("server", false);
-
-    } else if (/pollingreceive/gi.test(process.argv[2])) {
-      await this.officePolling("receive");
-
-    } else if (/pollinginjection/gi.test(process.argv[2])) {
-      await this.officePolling("injection");
-
-    } else if (/pythoncloud/gi.test(process.argv[2]) || /pythonserver/gi.test(process.argv[2])) {
-      await this.pythonCloud();
-
-    } else if (/bridgeserver/gi.test(process.argv[2])) {
-      await this.bridgeCloud();
-
-    } else if (/analyticsParsing/gi.test(process.argv[2])) {
-      await this.analyticsParsing();
-
-    } else if (/voice/gi.test(process.argv[2]) && process.argv[3] !== undefined) {
-      await this.tellVoice(process.argv[3]);
-
-    } else if (/sendAspirantPresentation/gi.test(process.argv[2])) {
-      await this.sendAspirantPresentation();
-
-    } else if (/reflect/gi.test(process.argv[2])) {
-      await this.ultimateReflection();
-
-    } else if (/clientReportToSheets/gi.test(process.argv[2])) {
-      await this.clientReportToSheets();
-
-    } else if (/fixDir/gi.test(process.argv[2])) {
-      await this.fixDir(process.argv[3]);
-
-    } else if (/proposalToClient/gi.test(process.argv[2])) {
-      await this.proposalToClient();
-
-    } else if (/imageReady/gi.test(process.argv[2])) {
-      await this.imageReady();
-
-    } else {
-      re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
-
-      //console server
-      if (re === "back" || re === "1") {
-        this.dataConsole();
-
-      //contents maker
-      } else if (re === "contents" || re === "2") {
-        re2 = await this.consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
-        if (re2 === "make" || re2 === "1") {
-          re3 = await this.consoleQ(`Porfolio number?\n`);
-        } else if (re2 === "mysql" || re2 === "2") {
-          re3 = ``;
-        } else if (re2 === "poo" || re2 === "3") {
-          re3 = ``;
-        } else if (re2 === "resource" || re2 === "4") {
-          re3 = await this.consoleQ(`Porfolio number?\n`);
-        }
-        this.contentsMaker(re2, re3);
-
-      //portfolio filter
-      } else if (re === "portfolio" || re === "3") {
-        re2 = await this.consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
-        if (re2 === "portfolio" || re2 === "1") {
-          re3 = await this.consoleQ(`Client name what?\n`);
-          re4 = await this.consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
-          re5 = await this.consoleQ(`Designer name what?\n`);
-          re6 = await this.consoleQ(`Project number what?\n`);
-          this.portfolioFilter("portfolio", re3, re4, re5, re6);
-        } else if (re2 === "ghost" || re2 === "2") {
-          re3 = await this.consoleQ(`Designer name what?\n`);
-          re4 = await this.consoleQ(`Exception id what? (must be Number, ex : 1, default: 0)\n`);
-          this.portfolioFilter("ghost", re3, "", Number(re4), null);
-        }
-
-      //proposal
-      } else if (re === "proposal" || re === "4") {
-        re3 = await this.consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
-        this.proposalMaker("1", re3);
-
-      //google
-      } else if (re === "google" || re === "5") {
-        re2 = await this.consoleQ(`Choose commands : 1.token 2.analytics\n`);
-        this.googleAPIs(re2);
-
-      //front
-      } else if (re === "front" || re === "6") {
-        this.frontMaker(false);
-
-      //consulting
-      } else if (re === "consulting" || re === "7") {
-        re2 = await this.consoleQ(`Choose commands : 1.notion 2.junk\n`);
-        if (re2 === "notion" || re2 === "1") {
-          re3 = await this.consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
-          if (re3 === "none" || re3 === "latest" || re3 === "") {
-            await this.getConsulting(re2, "latest");
-          } else {
-            await this.getConsulting(re2, re3);
-          }
+    //consulting
+    } else if (re === "consulting" || re === "7") {
+      re2 = await this.consoleQ(`Choose commands : 1.notion 2.junk\n`);
+      if (re2 === "notion" || re2 === "1") {
+        re3 = await this.consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
+        if (re3 === "none" || re3 === "latest" || re3 === "") {
+          await this.getConsulting(re2, "latest");
         } else {
-          await this.getConsulting(re2);
+          await this.getConsulting(re2, re3);
         }
-
-      //exit
-      } else if (re === "exit" || re === "10") {
-        process.exit();
+      } else {
+        await this.getConsulting(re2);
       }
+
+    //exit
+    } else if (re === "exit" || re === "10") {
+      process.exit();
     }
+
   } catch (e) {
     console.log(e);
   }
@@ -472,15 +397,236 @@ Robot.prototype.launching = async function () {
 
 // EXE --------------------------------------------------------------------------------------
 
-if (process.argv[2] !== "dev" && process.argv[2] !== "canvas" && !/canvascheck/gi.test(process.argv[2])) {
-  const app = new Robot();
-  app.launching();
+const robot = new Robot();
+const MENU = {
+  proposal: async function () {
+    try {
+      robot.proposalMaker("make", process.argv[3]);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  back: async function () {
+    try {
+      robot.dataConsole();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  request: async function () {
+    try {
+      await robot.requestMaker(process.argv[3]);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  front: async function () {
+    try {
+      robot.frontMaker(process.argv[3] === "--webpack");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontsource: async function () {
+    try {
+      if (process.argv[3] !== undefined) {
+        robot.frontSource(process.argv[3].replace(/-/g, ''));
+      } else {
+        robot.frontSource("general");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontupdate: async function () {
+    try {
+      if (process.argv[3] !== undefined) {
+        robot.frontUpdate(true);
+      } else {
+        robot.frontUpdate(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  consolesource: async function () {
+    try {
+      robot.consoleSource();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  consulting: async function () {
+    try {
+      if (process.argv[3] !== "pack" && process.argv[3] !== "webpack") {
+        await robot.getConsulting(false);
+      } else {
+        await robot.getConsulting(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pollingserver: async function () {
+    try {
+      await robot.officePolling("server", true);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pollingoffice: async function () {
+    try {
+      await robot.officePolling("server", false);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pollingreceive: async function () {
+    try {
+      await robot.officePolling("receive");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pollinginjection: async function () {
+    try {
+      await robot.officePolling("injection");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pythoncloud: async function () {
+    try {
+      await robot.pythonCloud();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pythonserver: async function () {
+    try {
+      await robot.pythonCloud();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  bridgecloud: async function () {
+    try {
+      await robot.bridgeCloud();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  bridgeserver: async function () {
+    try {
+      await robot.bridgeCloud();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  analyticsParsing: async function () {
+    try {
+      await robot.analyticsParsing();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  voice: async function () {
+    try {
+      await robot.tellVoice(process.argv[3]);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  sendAspirantPresentation: async function () {
+    try {
+      await robot.sendAspirantPresentation();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  reflect: async function () {
+    try {
+      await robot.ultimateReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  clientReportToSheets: async function () {
+    try {
+      await robot.clientReportToSheets();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  fixDir: async function () {
+    try {
+      let target;
+      if (process.argv[3] === undefined) {
+        target = process.env.HOME + "/samba/drive/HomeLiaisonServer";
+      } else {
+        target = process.argv[3];
+      }
+      await robot.fixDir(target);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  proposalToClient: async function () {
+    try {
+      await robot.proposalToClient();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  imageReady: async function () {
+    try {
+      await robot.imageReady();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  mongoToJson: async function () {
+    try {
+      await robot.mongoToJson();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  dev: async function () {
+    try {
+      const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
+      const dev = new DevContext();
+      dev.launching();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  canvas: async function () {
+    try {
+      const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
+      const dev = new DevContext();
+      dev.devCanvas(process.argv[2] !== "canvas");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  canvascheck: async function () {
+    try {
+      const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
+      const dev = new DevContext();
+      dev.devCanvas(process.argv[2] !== "canvas");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+};
+let launchingFunc;
+
+if (process.argv[2] === undefined) {
+  robot.launching();
 } else {
-  const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
-  const dev = new DevContext();
-  if (process.argv[2] === "dev") {
-    dev.launching();
-  } else {
-    dev.devCanvas(process.argv[2] !== "canvas");
+  launchingFunc = MENU[process.argv[2]];
+  if (launchingFunc !== undefined) {
+    launchingFunc();
   }
 }

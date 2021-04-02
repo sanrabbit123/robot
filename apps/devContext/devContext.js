@@ -506,6 +506,10 @@ DevContext.prototype.launching = async function () {
       }
     ];
 
+    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+    const app = new CronGhost();
+    console.log(await app.scriptReady());
+
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // get sheets
