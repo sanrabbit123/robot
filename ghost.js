@@ -805,6 +805,7 @@ Ghost.prototype.fileRouter = function (static) {
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash } = this.mother;
   let funcObj = {};
   const ghostWall = function (callback, binary = false) {
+    const banCode = "<html><head><title>error</title></head><body><script>window.close();</script></body></html>"
     let property, ipTong;
     if (binary) {
       property = "query";
@@ -825,7 +826,7 @@ Ghost.prototype.fileRouter = function (static) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, ''))) && req[property].hash === undefined) {
         res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+        res.send(banCode);
       } else {
         decryptoHash("homeliaison", req[property].hash).then(function (string) {
           if (string === instance.address.s3info.boto3.key) {
@@ -833,15 +834,15 @@ Ghost.prototype.fileRouter = function (static) {
               callback(req, res);
             } else {
               res.set("Content-Type", "text/html");
-              res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+              res.send(banCode);
             }
           } else {
             res.set("Content-Type", "text/html");
-            res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+            res.send(banCode);
           }
         }).catch(function (err) {
           res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>알 수 없는 접근</title></head><body><script></script></body></html>`);
+          res.send(banCode);
         });
       }
     }

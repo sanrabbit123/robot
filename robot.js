@@ -269,6 +269,29 @@ Robot.prototype.ultimateReflection = async function () {
   }
 }
 
+Robot.prototype.localReflection = async function (arg = null) {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    let target;
+
+    if (arg === undefined || arg === null) {
+      target = "mongoinfo";
+    } else {
+      if (/mongo/gi.test(arg)) {
+        target = "mongoinfo";
+      } else if (/console/gi.test(arg) || /back/gi.test(arg)) {
+        target = "backinfo";
+      } else {
+        target = "mongoinfo";
+      }
+    }
+    await reflection.mongoMigration("local", target);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.clientReportToSheets = async function () {
   try {
     const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
@@ -548,6 +571,13 @@ const MENU = {
   reflect: async function () {
     try {
       await robot.ultimateReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  localReflect: async function () {
+    try {
+      await robot.localReflection(process.argv[3]);
     } catch (e) {
       console.log(e);
     }

@@ -108,6 +108,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
   const back = this.back;
   const { fileSystem } = this.mother;
   try {
+    const invaildCode = `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
     let html;
     let idArr, id, idMethod;
     let thisPerson;
@@ -135,11 +136,13 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
 
     if (id === null) {
       throw new Error("There is no id, query must include id");
+      return invaildCode;
     }
 
     thisPerson = await (back[idMethod])(id);
     if (thisPerson === null) {
       throw new Error("There is no data, insert vaild id");
+      return invaildCode;
     }
 
     //set meta data
@@ -174,7 +177,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
 
   } catch (e) {
     console.log(target);
-    return `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
+    return invaildCode;
   }
 }
 
