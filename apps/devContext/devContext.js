@@ -612,6 +612,9 @@ DevContext.prototype.launching = async function () {
     // await this.spellCheck("a78");
 
 
+    // get corePortfolio by pid
+    // await this.getCorePortfolio("a78");
+
   } catch (e) {
     console.log(e);
   } finally {
@@ -740,6 +743,25 @@ DevContext.prototype.sendChecklist = async function () {
         desid: desid,
       });
     }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.getCorePortfolio = async function (pid) {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+    if (pid === undefined) {
+      throw new Error("must be pid");
+    }
+    const nameConst = "static";
+    const staticConst = "/home/" + this.address.homeinfo.ghost.user + "/" + nameConst;
+    const portfolioConst = "/corePortfolio/original";
+    let scpFrom, scpTo;
+    scpFrom = this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(staticConst + portfolioConst + "/" + pid);
+    scpTo = shellLink(process.cwd() + "/temp");
+    shell.exec(`scp -r ${scpFrom} ${scpTo}`);
   } catch (e) {
     console.log(e);
   }
