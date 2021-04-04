@@ -506,9 +506,8 @@ DevContext.prototype.launching = async function () {
       }
     ];
 
-    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-    const app = new CronGhost();
-    console.log(await app.scriptReady());
+
+
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -610,7 +609,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p89");
+    // await this.spellCheck("a78");
 
 
   } catch (e) {
@@ -650,7 +649,7 @@ DevContext.prototype.aspirantToDesigner = async function () {
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const nameList = [
-      [ "박선영", "2021-03-23" ],
+      [ "이정아", "2021-03-08" ],
     ];
     const stringToDate = function (str) {
       let temp = str.split('-');

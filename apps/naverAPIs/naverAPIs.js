@@ -176,6 +176,11 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "컨셉를", "컨셉을" ],
     [ "이 사", "이사" ],
     [ "공간 별로", "공간별로" ],
+    [ "토털", "토탈" ],
+    [ "오지희", "호지희" ],
+    [ "황지연", "왕지연" ],
+    [ "레 미안", "레미안" ],
+    [ "아이들 와", "아이들과" ],
   ];
   try {
     let resultArr = [];
