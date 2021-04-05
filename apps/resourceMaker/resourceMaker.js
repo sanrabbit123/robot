@@ -766,7 +766,7 @@ ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const { fileSystem, mongo, mongoinfo, shell, shellLink, headRequest, binaryRequest } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const AppleAPIs = require(`${process.cwd()}/apps/appleAPIs/appleAPIs.js`);
+  const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   try {
     let targetFolder;
     let tempFolderName, homeFolderList, tempHome;
@@ -793,7 +793,7 @@ ResourceMaker.prototype.launching = async function () {
     }
     shell.exec(`mkdir ${shellLink(tempHome)}`);
 
-    note = new AppleAPIs({ folder: "portfolio", subject: this.p_id });
+    note = new AppleNotes({ folder: "portfolio", subject: this.p_id });
     this.arr = await note.readNote();
 
     this.portfolio_verification();
@@ -822,24 +822,30 @@ ResourceMaker.prototype.launching = async function () {
 
     //parsing cliid, proid
     namesArr = this.arr[1].split(" ");
-    clients = await this.back.getClientsByQuery({ name: namesArr[2].trim() });
-    thisProject = null;
-    proid = null;
-    cliid = null;
-    for (let c of clients) {
-      searchQuery = { "$and": [ { desid: this.result.designer }, { cliid: c.cliid } ] };
-      projects = await this.back.getProjectsByQuery(searchQuery);
-      if (projects.length > 0) {
-        thisProject = projects[0];
-        proid = thisProject.proid;
-        cliid = c.cliid;
+
+    if (namesArr.length > 2) {
+      clients = await this.back.getClientsByQuery({ name: namesArr[2].trim() });
+      thisProject = null;
+      proid = null;
+      cliid = null;
+      for (let c of clients) {
+        searchQuery = { "$and": [ { desid: this.result.designer }, { cliid: c.cliid } ] };
+        projects = await this.back.getProjectsByQuery(searchQuery);
+        if (projects.length > 0) {
+          thisProject = projects[0];
+          proid = thisProject.proid;
+          cliid = c.cliid;
+        }
       }
-    }
-    if (cliid === null) {
-      throw new Error("can not find client");
-    }
-    if (proid === null) {
-      throw new Error("can not find project");
+      if (cliid === null) {
+        throw new Error("can not find client");
+      }
+      if (proid === null) {
+        throw new Error("can not find project");
+      }
+    } else {
+      proid = "";
+      cliid = "";
     }
 
     //rendering resource and write file
@@ -858,34 +864,6 @@ ResourceMaker.prototype.launching = async function () {
     input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
-
-      //update raw contents db
-      whereQuery = {};
-      updateQuery = {};
-
-      targetRawContentsArr = await this.back.mongoRead("contentsRaw", { proid: proid }, { python: true });
-      targetRawContents = targetRawContentsArr[0];
-      targetContents = await this.back.getContentsById(this.final.conid);
-
-      whereQuery = { proid: proid };
-      updateQuery = { conid: this.final.conid };
-
-      if (!targetRawContents.portfolio.exist) {
-        updateQuery["portfolio.exist"] = true;
-        updateQuery["portfolio.contents"] = targetContents.getContentsFlatDetail().portfolio;
-      }
-
-      if (targetContents.contents.review.rid !== "re999") {
-        if (!targetRawContents.review.exist) {
-          updateQuery["review.exist"] = true;
-          updateQuery["review.contents"] = targetContents.getContentsFlatDetail().review;
-        }
-      } else {
-        updateQuery["review.exist"] = false;
-      }
-
-      await this.back.mongoUpdate("contentsRaw", [ whereQuery, updateQuery ], { python: true });
-
     }
 
   } catch (e) {

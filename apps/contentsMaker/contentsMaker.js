@@ -11,7 +11,9 @@ const ContentsMaker = function () {
   this.options = {
     os_home_dir: process.env.HOME,
     home_dir: `${process.env.HOME}/contentsMaker`,
+    resource_dir: `${process.env.HOME}/contentsMaker/resource`,
     photo_dir: `${process.env.HOME}/contentsMaker/resource/photo`,
+    result_dir: `${process.env.HOME}/contentsMaker/result`,
     fileSystem: this.mother.fileSystem,
     dayString: (this.mother.todayMaker()),
     etc: {},
@@ -248,20 +250,39 @@ ContentsMaker.prototype.getTextFromAi = async function (fileFullPath) {
   }
 }
 
-ContentsMaker.prototype.tempLaunching = async function (file, mainName = "$_$") {
+ContentsMaker.prototype.generalLaunching = async function (file, mainName = "$_$") {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
     if (mainName === "console" || mainName === "$" || mainName === "_") {
       mainName = "$_$";
     }
-    const fileString = await fileSystem(`readString`, [ file ]);
-    const scriptString = await this.generator.general_maker.exec(this.options, `ExecMain.prototype.start = function (dayString) {
+    let fileString, scriptString, options, resultList;
+
+    await this.static_setting();
+
+    options = { ...this.options };
+    options.etc.template = this.options.home_dir + "/factory/template";
+    fileString = await fileSystem(`readString`, [ file ]);
+    scriptString = await this.generator.general_maker.exec(options, `ExecMain.prototype.start = function (dayString) {
       for (let func in Mother.prototype) {
         this[func] = this.mother[func];
       }
-      this.open = app.open;
-      this.doScript = app.doScript;
+      this.open = function () {
+        let orders = [ ...arguments ];
+        app.open(...orders);
+      };
+      this.doScript = function () {
+        let orders = [ ...arguments ];
+        if (orders.length === 0) {
+          orders = [ "expandall", "contents_maker" ];
+        }
+        app.doScript(...orders);
+      };
+      this.expandAll = this.doScript;
+      this.activeDocument = function () {
+        return app.activeDocument;
+      };
       const console = this;
       const $ = this;
       const _ = this;
@@ -276,6 +297,10 @@ ContentsMaker.prototype.tempLaunching = async function (file, mainName = "$_$") 
       app: "Illustrator",
       end: false,
     });
+
+    resultList = await fileSystem(`readDir`, [ this.options.result_dir ]);
+
+    return { resultFolder: this.options.result_dir, resultList };
 
   } catch (e) {
     console.log(e);

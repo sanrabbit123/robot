@@ -1,4 +1,4 @@
-const AppleAPIs = function (obj) {
+const AppleNotes = function (obj) {
   const Mother = require(process.cwd() + "/apps/mother.js");
   this.mother = new Mother();
   if (obj !== undefined) {
@@ -10,15 +10,15 @@ const AppleAPIs = function (obj) {
   }
 }
 
-AppleAPIs.prototype.setFolder = function (folder) {
+AppleNotes.prototype.setFolder = function (folder) {
   this.folder = folder;
 }
 
-AppleAPIs.prototype.setSubject = function (subject) {
+AppleNotes.prototype.setSubject = function (subject) {
   this.subject = subject;
 }
 
-AppleAPIs.prototype.text_filter_lite = function (str) {
+AppleNotes.prototype.text_filter_lite = function (str) {
   for (let i = 0; i < 5; i++) {
     str = str.trim();
     str = str.replace(/^\n/g, '').replace(/^ /g, '').replace(/ $/g, '').replace(/ /g, ' ').replace(/  /g, ' ').replace(/ /g, ' ').replace(/\t/g, ' ').replace(/​/g, '');
@@ -26,7 +26,7 @@ AppleAPIs.prototype.text_filter_lite = function (str) {
   return str;
 }
 
-AppleAPIs.prototype.readNoteScript = function () {
+AppleNotes.prototype.readNoteScript = function () {
   let text;
   text = 'tell application "Notes"\n';
   text += '\ttell account "iCloud"\n';
@@ -38,7 +38,7 @@ AppleAPIs.prototype.readNoteScript = function () {
   return { name: "readNote", contents: text }
 }
 
-AppleAPIs.prototype.updateNoteScript = function (body = "new") {
+AppleNotes.prototype.updateNoteScript = function (body = "new") {
   let text;
   text = 'tell application "Notes"\n';
   text += '\ttell account "iCloud"\n';
@@ -50,7 +50,7 @@ AppleAPIs.prototype.updateNoteScript = function (body = "new") {
   return { name: "writeNote", contents: text }
 }
 
-AppleAPIs.prototype.createNoteScript = function (body = "new") {
+AppleNotes.prototype.createNoteScript = function (body = "new") {
   let text;
   text = 'tell application "Notes"\n';
   text += '\ttell account "iCloud"\n';
@@ -62,7 +62,7 @@ AppleAPIs.prototype.createNoteScript = function (body = "new") {
   return { name: "createNote", contents: text }
 }
 
-AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
+AppleNotes.prototype.readNote = async function (dir = null, clean = true) {
   try {
     let { name, contents } = this.readNoteScript();
     let output = await this.mother.appleScript(name, contents, dir, clean, true);
@@ -86,7 +86,7 @@ AppleAPIs.prototype.readNote = async function (dir = null, clean = true) {
   }
 }
 
-AppleAPIs.prototype.createNote = async function (newBody = "new", dir = null, clean = true) {
+AppleNotes.prototype.createNote = async function (newBody = "new", dir = null, clean = true) {
   try {
     let { name, contents } = this.createNoteScript(newBody);
     await this.mother.appleScript(name, contents, dir, clean, true);
@@ -96,7 +96,7 @@ AppleAPIs.prototype.createNote = async function (newBody = "new", dir = null, cl
   }
 }
 
-AppleAPIs.prototype.updateNote = async function (newBody = "new", dir = null, clean = true) {
+AppleNotes.prototype.updateNote = async function (newBody = "new", dir = null, clean = true) {
   try {
     let { name, contents } = this.updateNoteScript(newBody);
     await this.mother.appleScript(name, contents, dir, clean, true);
@@ -106,4 +106,4 @@ AppleAPIs.prototype.updateNote = async function (newBody = "new", dir = null, cl
   }
 }
 
-module.exports = AppleAPIs;
+module.exports = AppleNotes;

@@ -11,7 +11,7 @@ const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
-const AppleAPIs = require(APP_PATH + "/appleAPIs/appleAPIs.js");
+const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
@@ -31,6 +31,7 @@ const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 
 const DevContext = function () {
   this.mother = new Mother();
+  this.back = new BackMaker();
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
@@ -44,7 +45,7 @@ DevContext.prototype.launching = async function () {
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
-    const back = new BackMaker();
+    const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
 
@@ -509,6 +510,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // get sheets
@@ -524,6 +532,11 @@ DevContext.prototype.launching = async function () {
     //   values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
     //   cleanView: true
     // }));
+
+
+    // get drive folder
+    // const drive = new GoogleDrive();
+    // await drive.get_folder("https://drive.google.com/drive/folders/1l9pzk9U5uBhYLp0b-lP-bnpUP1E3icC1");
 
 
     // naverBlog to json
@@ -615,6 +628,33 @@ DevContext.prototype.launching = async function () {
     // get corePortfolio by pid
     // await this.getCorePortfolio("a78");
 
+
+    // new designer to front web
+    // await work.newDesignerToFront([ "d2104_aa03s" ]);
+
+
+    // new designer set proposal setting
+    // await this.setProposalSettingForDesigner("d2104_aa03s");
+
+
+    // new designer alarm
+    // let targetArr, channel, desid, designer, pid, webLinks;
+    // channel = "#200_web";
+    // targetArr = [
+    //   { designer: "왕지연", desid: "de048", pid: "a76" },
+    //   { designer: "호지희", desid: "de049", pid: "a77" },
+    //   { designer: "이정아", desid: "de050", pid: "a78" },
+    // ];
+    // for (let { designer, desid, pid } of targetArr) {
+    //   webLinks = [
+    //     "https://home-liaison.com/portdetail.php?qqq=" + pid,
+    //     "https://home-liaison.com/desdetail.php?qqq=" + desid,
+    //   ];
+    //   await this.mother.slack_bot.chat.postMessage({ text: `${designer} 디자이너의 첫 번째 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
+    //   await this.mother.slack_bot.chat.postMessage({ text: `${designer} 디자이너 페이지를 생성하여 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
+    // }
+
+
   } catch (e) {
     console.log(e);
   } finally {
@@ -628,17 +668,21 @@ DevContext.prototype.spellCheck = async function (porlid) {
   const instance = this;
   try {
     const app = new NaverAPIs();
+    const hangul = new ParsingHangul();
     let note, targetArr, temp;
+    let fixString;
     let updateArr = [];
-    note = new AppleAPIs({ folder: "portfolio", subject: porlid });
+    note = new AppleNotes({ folder: "portfolio", subject: porlid });
     targetArr = await note.readNote();
     for (let i of targetArr) {
       temp = await app.paragraphChecker(i);
-      updateArr.push(temp);
+      fixString = hangul.fixString(temp);
+      console.log(fixString)
+      updateArr.push(fixString);
     }
     console.log(updateArr);
     updateArr.shift();
-    await note.updateNote(updateArr.join('<br><br><br>'));
+    await note.updateNote(updateArr.join('<br><br>'));
   } catch (e) {
     console.log(e);
   }
@@ -767,6 +811,72 @@ DevContext.prototype.getCorePortfolio = async function (pid) {
   }
 }
 
+DevContext.prototype.setProposalSettingForDesigner = async function (desid) {
+  const instance = this;
+  try {
+    let proposalArr, dummy;
+    dummy = {
+        "name" : "기본 세팅",
+        "photo" : [
+            {
+                "position" : "0",
+                "sgTrue" : "g",
+                "unionPo" : "union",
+                "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/corePortfolio/listImage/a78/t3a78.jpg\");",
+                "imgSrc" : "/corePortfolio/listImage/a78/t3a78.jpg"
+            },
+            {
+                "position" : "1",
+                "sgTrue" : "s",
+                "unionPo" : "right",
+                "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/corePortfolio/listImage/a78/t4a78.jpg\");",
+                "imgSrc" : "/corePortfolio/listImage/a78/t4a78.jpg"
+            },
+            {
+                "position" : "2",
+                "sgTrue" : "g",
+                "unionPo" : "union",
+                "imgSrc" : "/corePortfolio/listImage/a78/t6a78.jpg",
+                "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t6a78.jpg\");"
+            },
+            {
+                "position" : "3",
+                "sgTrue" : "g",
+                "unionPo" : "union",
+                "imgSrc" : "/corePortfolio/listImage/a78/t9a78.jpg",
+                "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t9a78.jpg\");"
+            },
+            {
+                "position" : "4",
+                "sgTrue" : "s",
+                "unionPo" : "left",
+                "imgSrc" : "/corePortfolio/listImage/a78/t5a78.jpg",
+                "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t5a78.jpg\");"
+            },
+            {
+                "position" : "5",
+                "sgTrue" : "s",
+                "unionPo" : "right",
+                "imgSrc" : "/corePortfolio/listImage/a78/t1a78.jpg",
+                "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t1a78.jpg\");"
+            }
+        ],
+        "description" : [
+            "상황과 예산, 취향에 맞는 스타일링으로 일상을 디자인해드립니다.",
+            "모던한 스타일을 기반으로 세련되고 감각적인 분위기를 연출합니다.",
+            "집에서 실질적으로 어떻게 생활하게 될 지에 대해 초점을 두고 스타일링을 진행합니다."
+        ]
+    };
+    proposalArr = [];
+    for (let i = 0; i < 5; i++) {
+      proposalArr.push(JSON.parse(JSON.stringify(dummy)));
+    }
+    await this.back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.devCanvas = async function (dataCheck = false) {
   const instance = this;
   const { fileSystem } = this.mother;
@@ -810,7 +920,7 @@ DevContext.prototype.devCanvas = async function (dataCheck = false) {
     if (!dataCheck) {
       fileName = "aiCanvasScript.js";
       await fileSystem(`write`, [ `${tempFolder}/${fileName}`, finalString ]);
-      await contents.tempLaunching(`${tempFolder}/${fileName}`);
+      await contents.generalLaunching(`${tempFolder}/${fileName}`);
     } else {
       temp = new Function(finalString);
       temp();

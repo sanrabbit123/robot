@@ -2314,6 +2314,49 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
     await this.updateDesigner([ { desid: dummy.structure.desid }, updateQuery ], option);
 
+    //set setting note
+    const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
+    const thisDesigner = this.getDesignerById(dummy.structure.desid, option);
+    const br = "<br><br>";
+    let note, body, front;
+
+    front = thisDesigner.setting.front;
+    body = '';
+    body += thisDesigner.designer;
+    body += br;
+    body += "_desktop";
+    body += br;
+    for (let i of thisDesigner.setting.front.introduction.desktop) {
+      body += i;
+      body += br;
+    }
+    body += "_mobile";
+    body += br;
+    for (let i of thisDesigner.setting.front.introduction.mobile) {
+      body += i;
+      body += br;
+    }
+    body += "_method";
+    body += br;
+    for (let i of thisDesigner.setting.front.methods) {
+      body += i;
+      body += br;
+    }
+    body += "_porlid";
+    body += br;
+    body += thisDesigner.setting.front.photo.porlid;
+    body += br;
+    body += "_index";
+    body += br;
+    body += thisDesigner.setting.front.photo.index;
+    body += br;
+    body += "_order";
+    body += br;
+    body += String(thisDesigner.setting.front.order);
+
+    note = new AppleNotes({ folder: "designer", subject: thisDesigner.desid });
+    await note.createNote(body);
+
     return dummy.structure.desid;
   } catch (e) {
     console.log(e);
