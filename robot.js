@@ -282,6 +282,8 @@ Robot.prototype.localReflection = async function (arg = null) {
         target = "mongoinfo";
       } else if (/console/gi.test(arg) || /back/gi.test(arg)) {
         target = "backinfo";
+      } else if (/home/gi.test(arg)) {
+        target = "homeinfo";
       } else {
         target = "mongoinfo";
       }

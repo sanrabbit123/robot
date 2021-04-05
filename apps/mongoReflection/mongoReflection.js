@@ -171,12 +171,18 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
     let MONGOC_FROM, MONGOC_TO;
     let fromString, toString;
     let fromDB, toDB;
+    let fromHost;
     let rows;
 
     fromDB = from;
+    if (/home/gi.test(from)) {
+      fromHost = this.address["homeinfo"]["ghost"].host;
+    } else {
+      fromHost = this.address[fromDB].host;
+    }
     toDB = to;
 
-    fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + this.address[fromDB].host + ':' + String(this.address[fromDB].port) + "/admin";
+    fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
     if (toDB === "local") {
       toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + "127.0.0.1" + ':' + String(this.address[fromDB].port) + "/admin";
     } else {
