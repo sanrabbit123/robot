@@ -2949,7 +2949,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else {
 
-          ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
+          ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
 
           for (let j = 0; j < ghost.length; j++) {
             img_clone = GeneralJs.nodes.img.cloneNode(true);
@@ -2969,7 +2969,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               delete style.marginRight;
             }
 
-            if (ghost.sgTrue === 'g') {
+            if (ghost[j].sgTrue === 'g') {
               tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (297 / 210);
               style.width = String(tempNumber) + ea;
             } else {

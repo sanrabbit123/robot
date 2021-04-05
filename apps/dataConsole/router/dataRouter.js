@@ -561,9 +561,11 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             raw_data = await instance.back.getLatestDesigners("all", optionQuery);
           }
         } else {
+          console.log("this!");
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
+          console.log(req.body.where);
           raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), optionQuery);
         }
       } else if (req.url === "/getProjects" || req.url === "/getPhotos") {
