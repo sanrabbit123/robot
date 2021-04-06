@@ -2316,7 +2316,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
     //set setting note
     const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
-    const thisDesigner = this.getDesignerById(dummy.structure.desid, option);
+    const thisDesigner = await this.getDesignerById(dummy.structure.desid, option);
     const br = "<br><br>";
     let note, body, front;
 

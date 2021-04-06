@@ -509,11 +509,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
+    // const desid = "d2104_aa04s";
+    // const fileName = (process.cwd() + "/temp/" + desid + ".json");
+    // const analytics = JSON.parse(await fileSystem(`readString`, [ fileName ]));
+    // let whereQuery, updateQuery;
+    // whereQuery = { desid };
+    // updateQuery = {};
+    // updateQuery["analytics"] = analytics;
+    // await back.updateDesigner([ whereQuery, updateQuery ]);
 
 
 
@@ -594,17 +597,11 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "송선옥",
-    //     designer: "전경화",
-    //     pid: "p107",
-    //     link: "https://drive.google.com/drive/folders/1X34pFSR_BWIlpe8gi6gPn3L9Hjlzi4NX",
-    //   },
-    //   {
-    //     client: "박미연",
-    //     designer: "김소영",
-    //     pid: "p108",
-    //     link: "https://drive.google.com/drive/folders/1vFEYrEKCcHQNHi_DCipVWW-MYJTml5kC",
-    //   },
+    //     client: "서현순",
+    //     designer: "박보영",
+    //     pid: "p109",
+    //     link: "https://drive.google.com/drive/folders/1ExDaFfbXMhk17ZimOXoEn44kjdphDfCN",
+    //   }
     // ]);
 
 
@@ -613,37 +610,36 @@ DevContext.prototype.launching = async function () {
     // await drive.get_folder("https://drive.google.com/drive/folders/14YT3OCACvbGJMwHNHpCS8eP-Cd_1wKxe");
 
 
-    // aspirant to designer
-    // await this.aspirantToDesigner();
-
-
     // send checklist
     // await this.sendChecklist();
 
 
     // spell check
-    // await this.spellCheck("a78");
+    // await this.spellCheck("a79");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a78");
+    // await this.getCorePortfolio("a79");
+
+
+    // aspirant to designer
+    // await this.aspirantToDesigner();
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2104_aa03s" ]);
+    // await work.newDesignerToFront([ "d2104_aa05s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2104_aa03s");
+    // await this.setProposalSettingForDesigner("d2104_aa05s");
 
 
     // new designer alarm
     // let targetArr, channel, desid, designer, pid, webLinks;
     // channel = "#200_web";
     // targetArr = [
-    //   { designer: "왕지연", desid: "de048", pid: "a76" },
-    //   { designer: "호지희", desid: "de049", pid: "a77" },
-    //   { designer: "이정아", desid: "de050", pid: "a78" },
+    //   { designer: "손병준", desid: "de051", pid: "a79" },
+    //   { designer: "이한솔", desid: "de052", pid: "a80" },
     // ];
     // for (let { designer, desid, pid } of targetArr) {
     //   webLinks = [
@@ -696,7 +692,7 @@ DevContext.prototype.aspirantToDesigner = async function () {
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const nameList = [
-      [ "이정아", "2021-03-08" ],
+      [ "이한솔", "2021-03-03" ],
     ];
     const stringToDate = function (str) {
       let temp = str.split('-');
@@ -822,49 +818,49 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid) {
                 "position" : "0",
                 "sgTrue" : "g",
                 "unionPo" : "union",
-                "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/corePortfolio/listImage/a78/t3a78.jpg\");",
-                "imgSrc" : "/corePortfolio/listImage/a78/t3a78.jpg"
+                "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/corePortfolio/listImage/a80/t1a80.jpg\");",
+                "imgSrc" : "/corePortfolio/listImage/a80/t1a80.jpg"
             },
             {
                 "position" : "1",
                 "sgTrue" : "s",
                 "unionPo" : "right",
-                "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/corePortfolio/listImage/a78/t4a78.jpg\");",
-                "imgSrc" : "/corePortfolio/listImage/a78/t4a78.jpg"
+                "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/corePortfolio/listImage/a80/t4a80.jpg\");",
+                "imgSrc" : "/corePortfolio/listImage/a80/t4a80.jpg"
             },
             {
                 "position" : "2",
                 "sgTrue" : "g",
                 "unionPo" : "union",
-                "imgSrc" : "/corePortfolio/listImage/a78/t6a78.jpg",
-                "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t6a78.jpg\");"
+                "imgSrc" : "/corePortfolio/listImage/a80/t6a80.jpg",
+                "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t6a80.jpg\");"
             },
             {
                 "position" : "3",
                 "sgTrue" : "g",
                 "unionPo" : "union",
-                "imgSrc" : "/corePortfolio/listImage/a78/t9a78.jpg",
-                "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t9a78.jpg\");"
+                "imgSrc" : "/corePortfolio/listImage/a80/t11a80.jpg",
+                "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t11a80.jpg\");"
             },
             {
                 "position" : "4",
                 "sgTrue" : "s",
                 "unionPo" : "left",
-                "imgSrc" : "/corePortfolio/listImage/a78/t5a78.jpg",
-                "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t5a78.jpg\");"
+                "imgSrc" : "/corePortfolio/listImage/a80/t8a80.jpg",
+                "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t8a80.jpg\");"
             },
             {
                 "position" : "5",
                 "sgTrue" : "s",
                 "unionPo" : "right",
-                "imgSrc" : "/corePortfolio/listImage/a78/t1a78.jpg",
-                "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a78/t1a78.jpg\");"
+                "imgSrc" : "/corePortfolio/listImage/a80/t9a80.jpg",
+                "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t9a80.jpg\");"
             }
         ],
         "description" : [
-            "상황과 예산, 취향에 맞는 스타일링으로 일상을 디자인해드립니다.",
-            "모던한 스타일을 기반으로 세련되고 감각적인 분위기를 연출합니다.",
-            "집에서 실질적으로 어떻게 생활하게 될 지에 대해 초점을 두고 스타일링을 진행합니다."
+            "고객님의 라이프 스타일과 취향을 반영한 1:1 고객 맞춤 디자인을 제안합니다.",
+            "좁은 공간, 시공이 어려운 공간에도 디자인 제안이 가능합니다.",
+            "디자인에 기반한 가구 및 소품 제안서를 제공해 일일이 찾아볼 시간적 여유를 덜어줍니다."
         ]
     };
     proposalArr = [];

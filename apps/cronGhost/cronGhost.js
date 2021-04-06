@@ -18,20 +18,26 @@ CronGhost.prototype.initialPython = function () {
   import os
   import sys
   import json
+  import re
+  import time
   sys.path.append("${(process.cwd() + "/python_modules").replace(/"/g, "'")}")
   import subprocess
   import asyncio
   from apscheduler.schedulers.asyncio import AsyncIOScheduler
   ROBOT_PATH = "${(process.cwd()).replace(/"/g, "'")}"
   ROBOT = ROBOT_PATH + "/robot.js"
+  THIS_PATH = ROBOT_PATH + "/apps/cronGhost"
+  LOG_PATH = THIS_PATH + "/log"
   async def run(cmdArr):
       cmd = ' '.join(cmdArr)
       proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
       (stdout, stderr) = await proc.communicate()
       if stdout:
           print(stdout.decode())
+          return stdout.decode()
       if stderr:
-          print(stderr.decode())`;
+          print(stderr.decode())
+          return stderr.decode()`;
 
   scriptArr = script.split("\n");
   scriptArrRefined = [];
@@ -102,6 +108,19 @@ CronGhost.prototype.endPython = function () {
 
   return script;
 }
+
+CronGhost.prototype.observerPython = function () {
+  const instance = this;
+
+
+
+
+
+
+
+
+}
+
 
 CronGhost.prototype.scriptReady = async function () {
   const instance = this;
