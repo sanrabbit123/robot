@@ -658,7 +658,7 @@ DataPatch.prototype.clientMap = function () {
       return { boo: !boo, value: null };
     }
 
-    targetArr = [ '드랍', '진행', '응대중', '완료', '장기' ];
+    targetArr = [ '드랍', '진행', '응대중', '장기' ];
 
     if (targetArr.includes(value)) {
       finalValue = value;
@@ -1542,10 +1542,42 @@ DataPatch.prototype.clientMap = function () {
     living: { name: "거주중", position: "requests.0.request.space.resident.living", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
-    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "드랍", "진행", "응대중", "완료", "장기" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    action: { name: "응대", position: "requests.0.analytics.response.action", type: "string", items: [ "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
-    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행', '기타 문제' ], searchBoo: true, },
-    outspot: { name: "유출 시점", position: "requests.0.analytics.response.outspot", type: "string", items: [ "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ], searchBoo: true, },
+    status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "드랍", "진행", "응대중", "장기" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    action: { name: "응대", position: "requests.0.analytics.response.action", type: "string", items: [
+      "1차 응대 예정",
+      "1차 응대 후 대기",
+      "선호 사진 대기",
+      "제안 발송 예정",
+      "제안 피드백 예정",
+      "제안 피드백 완료",
+      "계약금 안내",
+      "연결 안 됨",
+      "응대 종료",
+      "해당 없음",
+    ], searchBoo: true, },
+    outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [
+      '연결 안 됨',
+      '가벼운 문의',
+      '타사 계약',
+      '비용 문제',
+      '의견 조정 안 됨',
+      '직접 진행',
+      '고객 상황 변동',
+      '기간 부적합',
+      '디자인비 문제',
+      '총 예산 문제',
+      '서비스 불일치',
+      '프로세스 문제',
+      '시공 문제',
+      '지역 이슈',
+      '제안서 매력도',
+      '디자이너 부족',
+      '기타 문제'
+    ], searchBoo: true, },
+    outspot: { name: "유출 시점", position: "requests.0.analytics.response.outspot", type: "string", items: [
+      "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명",
+      "잔금 입금", "응대 종료", "해당 없음"
+    ], searchBoo: true, },
     kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
     service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     next: { name: "전화 예정일", position: "requests.0.analytics.date.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
