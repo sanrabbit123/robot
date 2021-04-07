@@ -52,7 +52,6 @@ module.exports = {
         }
       ],
       outreason: [],
-      outspot: "",
       call: {
         next: new Date(),
         history: [

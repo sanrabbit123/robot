@@ -65,7 +65,6 @@ module.exports = {
             status: "응대중",
             action: "해당 없음",
             outreason: [],
-            outspot: "해당 없음",
             kakao: false,
             service: {
               serid: "s2011_aa02s",

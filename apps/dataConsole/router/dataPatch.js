@@ -492,10 +492,6 @@ DataPatch.prototype.clientStandard = function () {
       name: "유출 이유",
       width: 100,
     },
-    outspot: {
-      name: "유출 시점",
-      width: 100,
-    },
     kakao: {
       name: "채널 등록",
       width: 100,
@@ -1584,10 +1580,6 @@ DataPatch.prototype.clientMap = function () {
       '제안서 매력도',
       '디자이너 부족',
       '기타 문제'
-    ], searchBoo: true, },
-    outspot: { name: "유출 시점", position: "requests.0.analytics.response.outspot", type: "string", items: [
-      "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명",
-      "잔금 입금", "응대 종료", "해당 없음"
     ], searchBoo: true, },
     kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
     service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },

@@ -1052,7 +1052,6 @@ BackMaker.prototype.returnClientRequest = function () {
         status: "응대중",
         action: "1차 응대 예정",
         outreason: [],
-        outspot: "해당 없음",
         kakao: false,
         service: {
           serid: "s2011_aa02s",
@@ -2795,7 +2794,6 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
           action: "응대 대기",
           detail: [],
           outreason: [],
-          outspot: "해당 없음",
           call: {
             next: new Date(1800, 0, 1),
             history: [],

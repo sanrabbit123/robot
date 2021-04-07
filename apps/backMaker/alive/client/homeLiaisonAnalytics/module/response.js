@@ -48,7 +48,6 @@ const Response = function (response) {
     '디자이너 부족',
     '기타 문제'
   ], true);
-  this.outspot = new Menu(response.outspot, actionList, false);
   this.kakao = response.kakao;
   this.service = new ProjectService(response.service);
 }
@@ -58,7 +57,6 @@ Response.prototype.toNormal = function () {
   obj.status = this.status.toNormal();
   obj.action = this.action.toNormal();
   obj.outreason = this.outreason.toNormal();
-  obj.outspot = this.outspot.toNormal();
   obj.kakao = this.kakao;
   obj.service = this.service.toNormal();
   return obj;
