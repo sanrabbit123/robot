@@ -180,7 +180,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
 
     file_list.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
     for (let i = 0; i < file_list.length; i++) {
-      shell.exec(`mv ${shellLink(this.options.photo_dir)}/${file_list[i]} ${shellLink(this.options.photo_dir)}/photo${String(i + 1)}.jpg`);
+      shell.exec(`mv ${shellLink(this.options.photo_dir + "/" + file_list[i])} ${shellLink(this.options.photo_dir)}/photo${String(i + 1)}.jpg`);
       file_list[i] = "photo" + String(i + 1) + ".jpg";
     }
     options.photo_list = file_list;
@@ -317,7 +317,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
       process.exit();
     }
 
-    file_list.sort((a, b) => { return Number(a.replace(/^g/g, '').replace(/\.jpg$/, '')) - Number(b.replace(/^g/g, '').replace(/\.jpg$/, '')); });
+    file_list.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')); });
     console.log(file_list);
 
     options.photo_list = file_list;
@@ -468,7 +468,7 @@ PortfolioFilter.prototype.image_ready = async function () {
 
     fileList.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
     for (let i = 0; i < fileList.length; i++) {
-      shell.exec(`mv ${shellLink(resourceFolder)}/${fileList[i]} ${shellLink(resourceFolder)}/photo${String(i + 1)}.jpg`);
+      shell.exec(`mv ${shellLink(resourceFolder + "/" + fileList[i])} ${shellLink(resourceFolder)}/photo${String(i + 1)}.jpg`);
       fileList[i] = "photo" + String(i + 1) + ".jpg";
     }
 
@@ -496,53 +496,48 @@ PortfolioFilter.prototype.image_ready = async function () {
   }
 }
 
-PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
-  //this.clientName => designer
+PortfolioFilter.prototype.ghost_make = async function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
-  const get_num = function (obj) {
-    return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,''));
-  }
+  const back = this.back;
+  const { fileSystem, shell, shellLink, consoleQ, s3FileUpload, ghostFileUpload } = this.mother;
+  const getNumber = (obj) => { return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,'')); };
   try {
-    await this.static_setting();
-
-    //Designer --------------------------------------------------------------------------------------------------
-    let target_obj, ghost_arr, designer_arr;
-
-    //find designer and set designer object
-    designer_arr = await this.back.getDesignersByQuery({ designer: this.clientName });
-    if (designer_arr.length > 1) {
-      if (exceptionId === 0) {
-        console.log(`Exception occur : `);
-        for (let i = 0; i < designer_arr.length; i++) {
-          console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
-        }
-      } else {
-        target_obj = designer_arr[exceptionId - 1].toNormal();
-      }
-    } else {
-      target_obj = designer_arr[0].toNormal();
-    }
-
-    //set ghost array
-    ghost_arr = target_obj.setting.ghost;
-
-    //Save File --------------------------------------------------------------------------------------------------
-    let start_num;
+    const ghostStatic = "/rawDesigner/ghost";
+    let targetDesigner, ghostArray, designers;
+    let consoleInput;
+    let startNumber;
     let result_files, dimensions;
     let fromArr, toArr;
 
-    //find start number of ghost-picture
-    if (ghost_arr.length === 0) {
-      start_num = 0;
+    await this.static_setting();
+
+    //find designer and set designer object
+    designers = await back.getDesignersByQuery({ designer: this.designer });
+    if (designers.length > 1) {
+      console.log(`Exception occur : `);
+      for (let i = 0; i < designers.length; i++) {
+        console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
+      }
+      consoleInput = await consoleQ(`Exception number : `);
+      targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
     } else {
-      ghost_arr.sort((a, b) => { return get_num(b) - get_num(a); });
-      start_num = get_num(ghost_arr[0]);
+      targetDesigner = designers[0].toNormal();
+    }
+
+    //set ghost array
+    ghostArray = targetDesigner.setting.ghost;
+
+    //find start number of ghost-picture
+    if (ghostArray.length === 0) {
+      startNumber = 0;
+    } else {
+      ghostArray.sort((a, b) => { return getNumber(b) - getNumber(a); });
+      startNumber = getNumber(ghostArray[0]);
     }
 
     //run ghost filter
-    const { result_folder, script_folder } = await this.ghost_filter(start_num);
-    result_files = await this.mother.fileSystem(`readDir`, [ result_folder ]);
+    const { result_folder, script_folder } = await this.ghost_filter(startNumber);
+    result_files = await fileSystem(`readDir`, [ result_folder ]);
 
     fromArr = [];
     toArr = [];
@@ -550,22 +545,22 @@ PortfolioFilter.prototype.ghost_make = async function (exceptionId) {
     for (let file of result_files) {
       if (file !== ".DS_Store") {
         fromArr.push(result_folder + "/" + file);
-        toArr.push(`rawDesigner/ghost/${target_obj.desid}/${file}`);
+        toArr.push(`${ghostStatic.slice(1)}/${targetDesigner.desid}/${file}`);
         dimensions = shell.exec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ${shellLink(result_folder)}/${file}`);
-        ghost_arr.unshift({
-          link: `/rawDesigner/ghost/${target_obj.desid}/${file}`,
+        ghostArray.unshift({
+          link: `${ghostStatic}/${targetDesigner.desid}/${file}`,
           sgTrue: dimensions.replace(/[^gs]/g, ''),
         });
       }
     }
 
-    console.log(ghost_arr);
+    console.log(ghostArray);
     console.log(fromArr);
     console.log(toArr);
 
-    await this.back.updateDesigner([ { desid: target_obj.desid }, { "setting.ghost": ghost_arr } ]);
-    await this.mother.s3FileUpload(fromArr, toArr);
-    await this.mother.ghostFileUpload(fromArr, toArr);
+    await back.updateDesigner([ { desid: targetDesigner.desid }, { "setting.ghost": ghostArray } ]);
+    await s3FileUpload(fromArr, toArr);
+    await ghostFileUpload(fromArr, toArr);
 
   } catch (e) {
     console.log(e.message);

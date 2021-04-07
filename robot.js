@@ -7,17 +7,6 @@ const Robot = function () {
   this.address = ADDRESS;
 }
 
-Robot.prototype.consoleQ = function (question) {
-  const readline = require(`readline`);
-  const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
-  return new Promise(function(resolve, reject) {
-    rL.question(question, function (input) {
-      resolve(input);
-      rL.close();
-    });
-  });
-}
-
 Robot.prototype.mongoToJson = async function () {
   const instance = this;
   const back = this.back;
@@ -119,13 +108,13 @@ Robot.prototype.requestMaker = async function (arg) {
   }
 }
 
-Robot.prototype.portfolioFilter = function (boo, clientName, apartName, exceptionId = 0, pid = null) {
+Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designerName, pid = "g0") {
   const PortfolioFilter = require(process.cwd() + "/apps/portfolioFilter/portfolioFilter.js");
-  let app = new PortfolioFilter(clientName, apartName, exceptionId, pid);
+  let app = new PortfolioFilter(clientName, apartName, designerName, pid);
   if (boo === "portfolio") {
     app.total_make();
   } else if (boo === "ghost") {
-    app.ghost_make(exceptionId);
+    app.ghost_make();
   }
 }
 
@@ -345,10 +334,12 @@ Robot.prototype.imageReady = async function () {
 }
 
 Robot.prototype.launching = async function () {
+  const instance = this;
+  const { consoleQ } = this.mother;
   try {
     let re, re2, re3, re4, re5, re6;
 
-    re = await this.consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
+    re = await consoleQ(`Choose commands : 1.back 2.contents 3.portfolio 4.proposal 5.google 6.front 7.consulting 8.aiohttp 9.aiohttpInstall 10.exit\n`);
 
     //console server
     if (re === "back" || re === "1") {
@@ -356,41 +347,40 @@ Robot.prototype.launching = async function () {
 
     //contents maker
     } else if (re === "contents" || re === "2") {
-      re2 = await this.consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
+      re2 = await consoleQ(`Choose commands : 1.make 2.mysql 3.poo 4.resource 5.front\n`);
       if (re2 === "make" || re2 === "1") {
-        re3 = await this.consoleQ(`Porfolio number?\n`);
+        re3 = await consoleQ(`Porfolio number?\n`);
       } else if (re2 === "mysql" || re2 === "2") {
         re3 = ``;
       } else if (re2 === "poo" || re2 === "3") {
         re3 = ``;
       } else if (re2 === "resource" || re2 === "4") {
-        re3 = await this.consoleQ(`Porfolio number?\n`);
+        re3 = await consoleQ(`Porfolio number?\n`);
       }
       this.contentsMaker(re2, re3);
 
     //portfolio filter
     } else if (re === "portfolio" || re === "3") {
-      re2 = await this.consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
+      re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
       if (re2 === "portfolio" || re2 === "1") {
-        re3 = await this.consoleQ(`Client name what?\n`);
-        re4 = await this.consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
-        re5 = await this.consoleQ(`Designer name what?\n`);
-        re6 = await this.consoleQ(`Project number what?\n`);
+        re3 = await consoleQ(`Client name what?\n`);
+        re4 = await consoleQ(`Apart name what? (ex : "강서 크라운 팰리스")\n`);
+        re5 = await consoleQ(`Designer name what?\n`);
+        re6 = await consoleQ(`Project number what?\n`);
         this.portfolioFilter("portfolio", re3, re4, re5, re6);
       } else if (re2 === "ghost" || re2 === "2") {
-        re3 = await this.consoleQ(`Designer name what?\n`);
-        re4 = await this.consoleQ(`Exception id what? (must be Number, ex : 1, default: 0)\n`);
-        this.portfolioFilter("ghost", re3, "", Number(re4), null);
+        re3 = await consoleQ(`Designer name what?\n`);
+        this.portfolioFilter("ghost", "null", "", re3, "g0");
       }
 
     //proposal
     } else if (re === "proposal" || re === "4") {
-      re3 = await this.consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
+      re3 = await consoleQ(`Project number? (default: latest, if you want press 'none')\n`);
       this.proposalMaker("1", re3);
 
     //google
     } else if (re === "google" || re === "5") {
-      re2 = await this.consoleQ(`Choose commands : 1.token 2.analytics\n`);
+      re2 = await consoleQ(`Choose commands : 1.token 2.analytics\n`);
       this.googleAPIs(re2);
 
     //front
@@ -399,9 +389,9 @@ Robot.prototype.launching = async function () {
 
     //consulting
     } else if (re === "consulting" || re === "7") {
-      re2 = await this.consoleQ(`Choose commands : 1.notion 2.junk\n`);
+      re2 = await consoleQ(`Choose commands : 1.notion 2.junk\n`);
       if (re2 === "notion" || re2 === "1") {
-        re3 = await this.consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
+        re3 = await consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
         if (re3 === "none" || re3 === "latest" || re3 === "") {
           await this.getConsulting(re2, "latest");
         } else {

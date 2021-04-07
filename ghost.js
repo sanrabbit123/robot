@@ -848,22 +848,6 @@ Ghost.prototype.fileRouter = function (static) {
     }
   }
 
-  //GET - test
-  funcObj.get_test = {
-    binary: false,
-    link: [ "/" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      console.log("test");
-      res.send(JSON.stringify({ message: "done" }));
-    }
-  };
-
   //POST - file upload
   funcObj.post_file = {
     binary: true,
@@ -925,37 +909,6 @@ Ghost.prototype.fileRouter = function (static) {
           console.log(e);
         }
       });
-    }
-  };
-
-  //POST - shell
-  funcObj.post_shell = {
-    binary: false,
-    link: [ "/shell" ],
-    func: function (req, res) {
-      let order;
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.command === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "must be property 'command'" }));
-      } else {
-        const { command } = req.body;
-        order = '';
-        if (Array.isArray(command)) {
-          for (let c of command) {
-            order += c + ';';
-          }
-        } else {
-          order = command;
-        }
-        const { stdout } = shell.exec(order, { silent: true });
-        res.send(JSON.stringify({ stdout }));
-      }
     }
   };
 

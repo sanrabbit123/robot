@@ -42,6 +42,17 @@ const Mother = function () {
   this.tempDir = `${process.cwd()}/temp`;
 }
 
+Mother.prototype.consoleQ = function (question) {
+  const readline = require(`readline`);
+  const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
+  return new Promise(function(resolve, reject) {
+    rL.question(question, function (input) {
+      resolve(input);
+      rL.close();
+    });
+  });
+}
+
 Mother.prototype.shellLink = function (str) {
   let arr = str.split('/');
   let newStr = '';

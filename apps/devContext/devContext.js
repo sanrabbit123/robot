@@ -509,7 +509,38 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const desid = "d2104_aa04s";
+
+    // const clients = await back.getClientsByQuery({}, { withTools: true, selfMongo: this.MONGOLOCALC });
+    // const requests = clients.getRequestsTong();
+    // let cliidArr = [];
+    // let whereQuery, updateQuery;
+    //
+    // for (let { cliid, analytics: { response: { status, action, outreason, outspot } } } of requests) {
+    //   if (status.toNormal() === "완료") {
+    //     cliidArr.push(cliid);
+    //   }
+    // }
+    //
+    // whereQuery = {};
+    // whereQuery["$or"] = [];
+    // for (let cliid of cliidArr) {
+    //   whereQuery["$or"].push({ cliid });
+    // }
+    //
+    // const targetClients = await back.getClientsByQuery(whereQuery, { withTools: true, selfMongo: this.MONGOLOCALC });
+    //
+    // updateQuery = {};
+    // updateQuery["requests.0.analytics.response.status"] = "진행";
+    // for (let { cliid, requests } of targetClients) {
+    //   whereQuery = { cliid };
+    //   await back.updateClient([ whereQuery, updateQuery ], { selfMongo: this.MONGOLOCALC });
+    //   console.log(`${cliid} done`);
+    // }
+
+
+
+    // designer analytics
+    // const desid = "d2104_aa08s";
     // const fileName = (process.cwd() + "/temp/" + desid + ".json");
     // const analytics = JSON.parse(await fileSystem(`readString`, [ fileName ]));
     // let whereQuery, updateQuery;
@@ -631,7 +662,18 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2104_aa05s");
+    await this.setProposalSettingForDesigner("d2104_aa08s", [
+      { porlid: "ghost", index: 1 },
+      { porlid: "ghost", index: 4 },
+      { porlid: "ghost", index: 2 },
+      { porlid: "ghost", index: 3 },
+      { porlid: "ghost", index: 5 },
+      { porlid: "ghost", index: 6 }
+    ], [
+      "시공 케어를 잘 하고 전체적인 공정 제어에 능한 디자이너입니다.",
+      "모던하고 깔끔한 스타일로 공간을 무게감 있게 연출합니다.",
+      "다양한 고객님들을 케어한 경험이 있어, 능숙하게 스타일링을 리드합니다."
+    ]);
 
 
     // new designer alarm
@@ -692,7 +734,7 @@ DevContext.prototype.aspirantToDesigner = async function () {
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const nameList = [
-      [ "이한솔", "2021-03-03" ],
+      [ "박선영", "2021-03-23" ],
     ];
     const stringToDate = function (str) {
       let temp = str.split('-');
@@ -807,67 +849,87 @@ DevContext.prototype.getCorePortfolio = async function (pid) {
   }
 }
 
-DevContext.prototype.setProposalSettingForDesigner = async function (desid) {
+DevContext.prototype.setProposalSettingForDesigner = async function (desid, files, description) {
+  // files = [ { porlid: "a78", index: 2 } or { porlid: "ghost", index: 2 } ]
   const instance = this;
   try {
-    let proposalArr, dummy;
-    dummy = {
-        "name" : "기본 세팅",
-        "photo" : [
-            {
-                "position" : "0",
-                "sgTrue" : "g",
-                "unionPo" : "union",
-                "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"/corePortfolio/listImage/a80/t1a80.jpg\");",
-                "imgSrc" : "/corePortfolio/listImage/a80/t1a80.jpg"
-            },
-            {
-                "position" : "1",
-                "sgTrue" : "s",
-                "unionPo" : "right",
-                "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"/corePortfolio/listImage/a80/t4a80.jpg\");",
-                "imgSrc" : "/corePortfolio/listImage/a80/t4a80.jpg"
-            },
-            {
-                "position" : "2",
-                "sgTrue" : "g",
-                "unionPo" : "union",
-                "imgSrc" : "/corePortfolio/listImage/a80/t6a80.jpg",
-                "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t6a80.jpg\");"
-            },
-            {
-                "position" : "3",
-                "sgTrue" : "g",
-                "unionPo" : "union",
-                "imgSrc" : "/corePortfolio/listImage/a80/t11a80.jpg",
-                "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t11a80.jpg\");"
-            },
-            {
-                "position" : "4",
-                "sgTrue" : "s",
-                "unionPo" : "left",
-                "imgSrc" : "/corePortfolio/listImage/a80/t8a80.jpg",
-                "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t8a80.jpg\");"
-            },
-            {
-                "position" : "5",
-                "sgTrue" : "s",
-                "unionPo" : "right",
-                "imgSrc" : "/corePortfolio/listImage/a80/t9a80.jpg",
-                "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"/corePortfolio/listImage/a80/t9a80.jpg\");"
-            }
-        ],
-        "description" : [
-            "고객님의 라이프 스타일과 취향을 반영한 1:1 고객 맞춤 디자인을 제안합니다.",
-            "좁은 공간, 시공이 어려운 공간에도 디자인 제안이 가능합니다.",
-            "디자인에 기반한 가구 및 소품 제안서를 제공해 일일이 찾아볼 시간적 여유를 덜어줍니다."
-        ]
-    };
+    if (!Array.isArray(files)) {
+      throw new Error("files must be array");
+    }
+    if (files.length !== 6) {
+      throw new Error("files must be 6 array");
+    }
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].porlid === undefined || files[i].index === undefined) {
+        throw new Error("files must be [ { porlid: \"a78\", index: 2 } or { porlid: \"ghost\", index: 2 } ]");
+      }
+    }
+    let proposalArr, dummy, filesArr;
+    filesArr = [];
+    for (let { porlid, index } of files) {
+      if (porlid !== "ghost") {
+        filesArr.push(`/corePortfolio/listImage/${porlid}/t${String(index)}${porlid}.jpg`);
+      } else {
+        filesArr.push(`/rawDesigner/ghost/${desid}/g${String(index)}.jpg`);
+      }
+    }
+
+    dummy = function (fileArr) {
+      let resultArr = { name: "기본 세팅", photo: [
+        {
+            "position" : "0",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+            "imgSrc" : filesArr[0]
+        },
+        {
+            "position" : "1",
+            "sgTrue" : "s",
+            "unionPo" : "right",
+            "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+            "imgSrc" : filesArr[1]
+        },
+        {
+            "position" : "2",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "imgSrc" : filesArr[2],
+            "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+        },
+        {
+            "position" : "3",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "imgSrc" : filesArr[3],
+            "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+        },
+        {
+            "position" : "4",
+            "sgTrue" : "s",
+            "unionPo" : "left",
+            "imgSrc" : filesArr[4],
+            "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+        },
+        {
+            "position" : "5",
+            "sgTrue" : "s",
+            "unionPo" : "right",
+            "imgSrc" : filesArr[5],
+            "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[5] + "\");"
+        }
+      ], description };
+      return resultArr;
+    }
+
     proposalArr = [];
     for (let i = 0; i < 5; i++) {
-      proposalArr.push(JSON.parse(JSON.stringify(dummy)));
+      proposalArr.push(JSON.parse(JSON.stringify(dummy())));
     }
+
+    console.log(proposalArr[0]);
     await this.back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
+    console.log("injection success");
   } catch (e) {
     console.log(e);
   }
