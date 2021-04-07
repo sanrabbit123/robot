@@ -507,49 +507,45 @@ DevContext.prototype.launching = async function () {
       }
     ];
 
-    const clients = await back.getClientsByQuery({}, { withTools: true, selfMongo: this.MONGOC });
-    const requests = clients.getRequestsTong();
-    let cliidArr = [];
-    let exceptionArr = [];
-    let whereQuery, updateQuery;
 
-    for (let { cliid, analytics: { response: { status, action, outreason, outspot } } } of requests) {
-      if (action.toNormal() === "계약금 입금") {
-        cliidArr.push(cliid);
-      }
-    }
 
-    whereQuery = {};
-    whereQuery["$or"] = [];
-    for (let cliid of cliidArr) {
-      whereQuery["$or"].push({ cliid });
-    }
-
-    if (whereQuery["$or"].length === 0) {
-      console.log("nothing");
-      return;
-    }
-
-    const targetClients = await back.getClientsByQuery(whereQuery, { withTools: true, selfMongo: this.MONGOC });
-
-    exceptionArr = [];
-    for (let client of targetClients) {
-      if (client.requests.length !== 1) {
-        exceptionArr.push(client.cliid);
-      }
-    }
-
-    if (exceptionArr.length > 0) {
-      throw new Error("no one requests : ", exceptionArr);
-    }
-
-    updateQuery = {};
-    updateQuery["requests.0.analytics.response.action"] = "계약금 안내";
-    for (let { cliid } of targetClients) {
-      whereQuery = { cliid };
-      await back.updateClient([ whereQuery, updateQuery ], { selfMongo: this.MONGOC });
-      console.log(`${cliid} done`);
-    }
+    // const clients = await back.getClientsByQuery({}, { withTools: true, selfMongo: this.MONGOC });
+    // const requests = clients.getRequestsTong();
+    // let cliidArr = [];
+    // let exceptionArr = [];
+    // let whereQuery, updateQuery;
+    // for (let { cliid, analytics: { response: { status, action, outreason, outspot } } } of requests) {
+    //   if (action.toNormal() === "계약금 입금") {
+    //     cliidArr.push(cliid);
+    //   }
+    // }
+    // whereQuery = {};
+    // whereQuery["$or"] = [];
+    // for (let cliid of cliidArr) {
+    //   whereQuery["$or"].push({ cliid });
+    // }
+    //
+    // if (whereQuery["$or"].length === 0) {
+    //   console.log("nothing");
+    //   return;
+    // }
+    // const targetClients = await back.getClientsByQuery(whereQuery, { withTools: true, selfMongo: this.MONGOC });
+    // exceptionArr = [];
+    // for (let client of targetClients) {
+    //   if (client.requests.length !== 1) {
+    //     exceptionArr.push(client.cliid);
+    //   }
+    // }
+    // if (exceptionArr.length > 0) {
+    //   throw new Error("no one requests : ", exceptionArr);
+    // }
+    // updateQuery = {};
+    // updateQuery["requests.0.analytics.response.action"] = "계약금 안내";
+    // for (let { cliid } of targetClients) {
+    //   whereQuery = { cliid };
+    //   await back.updateClient([ whereQuery, updateQuery ], { selfMongo: this.MONGOC });
+    //   console.log(`${cliid} done`);
+    // }
 
 
 

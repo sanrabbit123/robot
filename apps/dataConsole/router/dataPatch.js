@@ -431,7 +431,18 @@ DataPatch.prototype.toolsDashboard = function (button) {
     case "client":
       resultObj.standardColumn = [ "status", "action" ];
       resultObj.titleStandard = "응대중";
-      resultObj.buttons = [ "1차 응대 예정", "1차 응대 후 대기", "제안 발송 예정", "제안 피드백 대기", "제안 피드백 완료", "제안 후 대기", "연결 안 됨", "계약금 입금", "계약서 서명", "잔금 입금", "응대 종료", "해당 없음" ];
+      resultObj.buttons = [
+        "1차 응대 예정",
+        "1차 응대 후 대기",
+        "선호 사진 대기",
+        "제안 발송 예정",
+        "제안 피드백 예정",
+        "제안 피드백 완료",
+        "계약금 안내",
+        "연결 안 됨",
+        "응대 종료",
+        "해당 없음"
+      ];
       break;
     case "project":
       resultObj.standardColumn = [ "status", "action" ];
@@ -688,7 +699,7 @@ DataPatch.prototype.clientMap = function () {
       let finalValue;
       let items;
 
-      items = [ '드랍', '진행', '응대중', '완료', '장기' ];
+      items = [ '드랍', '진행', '응대중', '장기' ];
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
@@ -713,7 +724,7 @@ DataPatch.prototype.clientMap = function () {
       }
     };
 
-    inputArr = [ '드랍', '진행', '응대중', '완료', '장기' ];
+    inputArr = [ '드랍', '진행', '응대중', '장기' ];
     length = inputArr.length;
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
