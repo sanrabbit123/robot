@@ -516,11 +516,13 @@ DevContext.prototype.launching = async function () {
     // let whereQuery, updateQuery;
     //
     // for (let { cliid, analytics: { response: { status, action, outreason, outspot } } } of requests) {
-    //   if (status.toNormal() === "완료") {
+    //   if (action.toNormal() === "제안 피드백 대기") {
     //     cliidArr.push(cliid);
     //   }
     // }
     //
+    // console.log(cliidArr)
+
     // whereQuery = {};
     // whereQuery["$or"] = [];
     // for (let cliid of cliidArr) {
@@ -536,6 +538,7 @@ DevContext.prototype.launching = async function () {
     //   await back.updateClient([ whereQuery, updateQuery ], { selfMongo: this.MONGOLOCALC });
     //   console.log(`${cliid} done`);
     // }
+
 
 
 
@@ -650,7 +653,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a79");
+    // await this.getCorePortfolio("a77");
 
 
     // aspirant to designer
@@ -662,18 +665,18 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    await this.setProposalSettingForDesigner("d2104_aa08s", [
-      { porlid: "ghost", index: 1 },
-      { porlid: "ghost", index: 4 },
-      { porlid: "ghost", index: 2 },
-      { porlid: "ghost", index: 3 },
-      { porlid: "ghost", index: 5 },
-      { porlid: "ghost", index: 6 }
-    ], [
-      "시공 케어를 잘 하고 전체적인 공정 제어에 능한 디자이너입니다.",
-      "모던하고 깔끔한 스타일로 공간을 무게감 있게 연출합니다.",
-      "다양한 고객님들을 케어한 경험이 있어, 능숙하게 스타일링을 리드합니다."
-    ]);
+    // await this.setProposalSettingForDesigner("d2104_aa08s", [
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 6 }
+    // ], [
+    //   "시공 케어를 잘 하고 전체적인 공정 제어에 능한 디자이너입니다.",
+    //   "모던하고 깔끔한 스타일로 공간을 무게감 있게 연출합니다.",
+    //   "다양한 고객님들을 케어한 경험이 있어, 능숙하게 스타일링을 리드합니다."
+    // ]);
 
 
     // new designer alarm
