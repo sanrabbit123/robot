@@ -624,7 +624,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a77");
+    // await this.getCorePortfolio("p75");
 
 
     // aspirant to designer
