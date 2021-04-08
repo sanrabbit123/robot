@@ -234,9 +234,11 @@ Mother.prototype.fileSystem = function (sw, arr) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         const { spawn } = require("child_process");
         const du = spawn("du", ["-sk", arr[0]]);
-        du.stdout.on("data", (data) => { resolve(Number((String(data).split("\t"))[0]) * 1000); });
+        let out;
+        out = "";
+        du.stdout.on("data", (data) => { out += String(data); });
         du.stderr.on("data", (data) => { reject(String(data)); });
-        du.on("close", (code) => {});
+        du.on("close", (code) => { resolve(Number((String(out).split("\t"))[0]) * 1000); });
       });
   }
 }
