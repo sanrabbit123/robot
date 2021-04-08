@@ -233,12 +233,35 @@ Mother.prototype.fileSystem = function (sw, arr) {
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         const { spawn } = require("child_process");
-        const du = spawn("du", ["-sk", arr[0]]);
+        const du = spawn("du", [ "-sk", arr[0] ]);
         let out;
         out = "";
         du.stdout.on("data", (data) => { out += String(data); });
         du.stderr.on("data", (data) => { reject(String(data)); });
         du.on("close", (code) => { resolve(Number((String(out).split("\t"))[0]) * 1000); });
+      });
+    case "mkdir":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const { spawn } = require("child_process");
+        const mkdir = spawn("mkdir", [ arr[0] ]);
+        let out;
+        out = "";
+        mkdir.stdout.on("data", (data) => { out += String(data); });
+        mkdir.stderr.on("data", (data) => { reject(String(data)); });
+        mkdir.on("close", (code) => { resolve(arr[0]); });
+      });
+    case "exist":
+      return new Promise(function(resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.access(arr[0], fs.constants.F_OK, function (err) {
+          try {
+            if (!err) { resolve(true); }
+            else { resolve(false); }
+          } catch (e) {
+            resolve(false);
+          }
+        });
       });
   }
 }
@@ -1454,6 +1477,14 @@ Mother.prototype.treeParsing = function (target) {
           result.push(this.returnIndexFlat(i));
         }
         return result;
+      }
+
+      setFromDir(dir) {
+        this.fromDir = dir;
+      }
+
+      setToDir(dir) {
+        this.toDir = dir;
       }
 
     }

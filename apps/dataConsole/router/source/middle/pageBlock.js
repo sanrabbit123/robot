@@ -42,10 +42,9 @@ PageBlockJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
 
-    const thisModules = require("/file2.mjs");
-
-    console.log(thisModules.getUsefulContents);
-
+    const Generator = require("/index.js");
+    const app = new Generator();
+    await app.sayHello();
 
 
 

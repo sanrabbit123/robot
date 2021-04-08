@@ -508,7 +508,8 @@ DevContext.prototype.launching = async function () {
     ];
 
 
-    console.log(await treeParsing(process.cwd() + "/apps/dataConsole/router/source/middle/module/pageBlock"));
+
+
 
 
 

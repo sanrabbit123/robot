@@ -3,6 +3,9 @@ const DataConsole = function () {
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.dir = process.cwd() + "/apps/dataConsole";
+  this.sourceDir = this.dir + "/router/source";
+  this.middleDir = this.sourceDir + "/middle";
+  this.middleModuleDir = this.middleDir + "/module";
 }
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
@@ -135,7 +138,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const instance = this;
   const { minify } = require("terser");
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
-  const { fileSystem, shell, shellLink, babelSystem } = this.mother;
+  const { fileSystem, shell, shellLink, babelSystem, treeParsing } = this.mother;
   // const S3HOST = this.address.s3info.host;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
@@ -149,11 +152,11 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+      await fileSystem(`mkdir`, [ staticFolder ]);
     }
-    const targetStaticFolder = await fileSystem(`readDir`, [ staticFolder ]);;
+    const targetStaticFolder = await fileSystem(`readDir`, [ staticFolder ]);
     if (!targetStaticFolder.includes(`middle`)) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}/middle`);
+      await fileSystem(`mkdir`, [ `${staticFolder}/middle` ]);
     }
     console.log(`set middle static`);
 
@@ -163,7 +166,40 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let prototypes, dataPatchScript, prototypeBoo;
     let finalMinifyObj, finalMinifyString;
     let generalSvg;
-    let metaBoo;
+    let treeArray;
+    let moduleBoo;
+    let moduleTrans;
+
+    //module transform
+    moduleTrans = async function (tree, name) {
+      try {
+        const { flatDeath } = tree;
+        const render = function (code) {
+          code = code.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\"\']+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${name}${p4.replace(/\.js$/i, '.mjs')}`; });
+          code = code.replace(/module\.exports = ([^\=\;\/\n]+)/i, (match, p1, offset, string) => { return "export { " + p1 + " }"; });
+          return code;
+        }
+        const from = tree.fromDir.replace(/\/$/gi, '');
+        const to = tree.toDir.replace(/\/$/gi, '');
+        let fileTargets;
+        let targetPath, targetFolder;
+        flatDeath.sort((a, b) => { return a.length - b.length });
+        for (let { directory, absolute } of flatDeath) {
+          if (!directory) {
+            targetPath = to + '/' + absolute.split('/').slice(from.split('/').length).join('/');
+            targetPath = targetPath.replace(/\.js$/i, ".mjs");
+            targetFolder = targetPath.split('/').slice(0, -1).join('/');
+            if (!(await fileSystem(`exist`, [ targetFolder ]))) {
+              await fileSystem(`mkdir`, [ targetFolder ]);
+            }
+            await fileSystem(`write`, [ targetPath, render(await fileSystem(`readString`, [ absolute ])) ]);
+          }
+        }
+        console.log(`${name} module render done`);
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -185,7 +221,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       code0 = '';
       code1 = '';
       svgTongItemsString = '';
-      metaBoo = false;
+      moduleBoo = false;
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
       generalString = generalString.replace(/(\/<%generalMap%>\/)/, function (match, p1, offset, string) {
         let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
@@ -213,7 +249,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
         //set meta info
         DataMiddle.setMetadata(i.replace(/\.js/gi, ''), meta);
-        metaBoo = meta.module;
+        moduleBoo = meta.module;
 
         //set browser js
         fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
@@ -261,13 +297,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       result += code1;
       result += "\n\n";
       result += code2;
-      if (metaBoo) {
+      if (moduleBoo) {
         //front require function patch
         result += "\n\n";
         result += `GeneralJs.require = (modulePath) => { return new Promise(function (resolve, reject) { import(modulePath).then((m) => { resolve(m); }).catch((e) => { reject(e); }); }); };\n`;
-        result += `const require = GeneralJs.require;`;
         result += "\n\n";
-        result += code3.replace(/\= require\(/g, "= await import(");
+        result += code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\"\']+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js$/i, '.mjs')}`; });
       } else {
         result += "\n\n";
         result += code3;
@@ -280,8 +315,18 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       // finalMinifyString = finalMinifyObj.code;
       // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
 
-      console.log(`${i}${metaBoo ? "(module)": ""} merge success`);
-      if (metaBoo) {
+      console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
+      if (moduleBoo) {
+        treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
+        treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
+        treeArray.setToDir(staticFolder + "/middle/module/" + i.replace(/\.js$/i, ''));
+        if (!(await fileSystem(`exist`, [ staticFolder + "/middle/module" ]))) {
+          await fileSystem(`mkdir`, [ staticFolder + "/middle/module" ]);
+        }
+        if (!(await fileSystem(`exist`, [ treeArray.toDir ]))) {
+          await fileSystem(`mkdir`, [ treeArray.toDir ]);
+        }
+        await moduleTrans(treeArray, i.replace(/\.js$/i, ''));
         await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, result ]);
       } else {
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
