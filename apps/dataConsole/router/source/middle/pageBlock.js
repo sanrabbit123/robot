@@ -2,7 +2,7 @@
   "patch": {
     "entire": false,
     "client": false,
-    "designer": true,
+    "designer": false,
     "project": false,
     "contents": false,
     "service": false,
@@ -11,35 +11,42 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 디자이너님 리포트');"
+      "return ('pageBlock');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 디자이너님 리포트 페이지입니다.');"
+      "return ('pageBlock');"
     ],
     "image": [
       "thisPerson",
       "return ('https://__thisHost__/hlimage.jpg');"
     ],
-    "module": false
+    "module": true
   }
 } %/%/g
 
-const DesignerReportJs = function () {
+const PageBlockJs = function () {
   this.mother = new GeneralJs();
+  this.whiteBox = null;
+  this.contentsBox = null;
   this.margin = 0;
   this.mode = "desktop";
   this.sero = false;
   this.totalContents = document.getElementById("totalcontents");
 }
 
-DesignerReportJs.prototype.launching = async function (loading) {
+PageBlockJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();
-
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
+
+    const thisModules = require("/file2.mjs");
+
+    console.log(thisModules.getUsefulContents);
+
+
 
 
 

@@ -222,7 +222,8 @@ BackMaker.prototype.getMap = function (mode = "id", type = "array") {
         { standard: "proid", method: "getProjectById" },
         { standard: "conid", method: "getContentsById" },
         { standard: "aspid", method: "getAspirantById" },
-        { standard: "serid", method: "getServiceById" }
+        { standard: "serid", method: "getServiceById" },
+        { standard: "nulid", method: "getNothingById" }
       ];
     } else {
       map = {
@@ -231,10 +232,23 @@ BackMaker.prototype.getMap = function (mode = "id", type = "array") {
         project: { standard: "proid", method: "getProjectById" },
         contents: { standard: "conid", method: "getContentsById" },
         aspirant: { standard: "aspid", method: "getAspirantById" },
-        service: { standard: "serid", method: "getServiceById" }
+        service: { standard: "serid", method: "getServiceById" },
+        nothing: { standard: "nulid", method: "getNothingById" }
       };
     }
     return map;
+  }
+}
+
+BackMaker.prototype.getNothingById = async function (nulid) {
+  const instance = this;
+  try {
+    const Nothing = function (id) {
+      this.nulid = id;
+    }
+    return (new Nothing(nulid));
+  } catch (e) {
+    console.log(e);
   }
 }
 

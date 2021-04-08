@@ -14,16 +14,23 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   try {
-
     //set static
     const staticDir = `${this.dir}/router/source/local`;
-    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
+    const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
+    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    let folderSize;
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
     }
     const thisDirList = await fileSystem(`readDir`, [ this.dir ]);
-    if (!thisDirList.includes("log")) {
+    if (thisDirList.includes("log")) {
+      folderSize = await fileSystem("size", [ this.dir + "/log" ]);
+      if (folderSize > 100 * 100 * 100) {
+        shell.exec(`rm -rf ${shellLink(this.dir)}/log`);
+        shell.exec(`mkdir ${shellLink(this.dir)}/log`);
+      }
+    } else {
       shell.exec(`mkdir ${shellLink(this.dir)}/log`);
     }
     const thisLogDirList = await fileSystem(`readDir`, [ this.dir + "/log" ]);
@@ -67,57 +74,55 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       code1 = '';
       svgTongItemsString = null;
 
-      if (i !== `.DS_Store`) {
-        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
-        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-        fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
-        if (/\/<%map%>\//g.test(fileString)) {
-          fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
-            return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
-          });
-          svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
-        }
-
-        //set data patch
-        prototypes = Object.keys(DataPatch.prototype);
-        dataPatchScript = `const DataPatch = new Function();\n`;
-        if (i.trim().replace(/\.js/gi, '') !== "photo") {
-          for (let p of prototypes) {
-            if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
-              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-            }
-          }
-        } else {
-          for (let p of prototypes) {
-            if ((new RegExp("^photo")).test(p) || (new RegExp("^project")).test(p) || /^tools/.test(p)) {
-              dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-            }
-          }
-        }
-
-        //merge
-        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
-        code1 = dataPatchScript;
-        code2 = generalString + "\n\n" + consoleGeneralString;
-        code3 = fileString + "\n\n" + execString;
-
-        result = '';
-        result += code0;
-        result += "\n\n";
-        if (svgTongItemsString === null) {
-          result += svgTongItemsString;
-          result += "\n\n";
-        }
-        result += code1;
-        result += "\n\n";
-        result += code2;
-        result += "\n\n";
-        result += code3;
-        result += "\n\n";
-
-        console.log(`${i} merge success`);
-        await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
+      execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
+      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+      fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+      if (/\/<%map%>\//g.test(fileString)) {
+        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+          return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
+        });
+        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
       }
+
+      //set data patch
+      prototypes = Object.keys(DataPatch.prototype);
+      dataPatchScript = `const DataPatch = new Function();\n`;
+      if (i.trim().replace(/\.js/gi, '') !== "photo") {
+        for (let p of prototypes) {
+          if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
+            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
+          }
+        }
+      } else {
+        for (let p of prototypes) {
+          if ((new RegExp("^photo")).test(p) || (new RegExp("^project")).test(p) || /^tools/.test(p)) {
+            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
+          }
+        }
+      }
+
+      //merge
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
+      code1 = dataPatchScript;
+      code2 = generalString + "\n\n" + consoleGeneralString;
+      code3 = fileString + "\n\n" + execString;
+
+      result = '';
+      result += code0;
+      result += "\n\n";
+      if (svgTongItemsString === null) {
+        result += svgTongItemsString;
+        result += "\n\n";
+      }
+      result += code1;
+      result += "\n\n";
+      result += code2;
+      result += "\n\n";
+      result += code3;
+      result += "\n\n";
+
+      console.log(`${i} merge success`);
+      await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
 
     }
 
@@ -140,7 +145,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
     //set static
     const staticDir = `${this.dir}/router/source/middle`;
-    const staticDirList = await fileSystem(`readDir`, [ staticDir ]);
+    const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
+    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
@@ -157,6 +163,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let prototypes, dataPatchScript, prototypeBoo;
     let finalMinifyObj, finalMinifyString;
     let generalSvg;
+    let metaBoo;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -178,6 +185,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       code0 = '';
       code1 = '';
       svgTongItemsString = '';
+      metaBoo = false;
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
       generalString = generalString.replace(/(\/<%generalMap%>\/)/, function (match, p1, offset, string) {
         let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
@@ -189,81 +197,93 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         return JSON.stringify(generalObj_clone, null, 2);
       });
 
-      if (i !== `.DS_Store`) {
-        execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
-        execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
-        fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
-        if (/\/<%map%>\//g.test(fileString)) {
-          fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
-            return JSON.stringify(require(`${instance.dir}/router/source/svg/middle/map/${i}`), null, 2);
-          });
-          svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/middle/svgTong/${i}` ]);
-        }
+      execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
+      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+      fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
+      if (/\/<%map%>\//g.test(fileString)) {
+        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+          return JSON.stringify(require(`${instance.dir}/router/source/svg/middle/map/${i}`), null, 2);
+        });
+        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/middle/svgTong/${i}` ]);
+      }
+
+      //set data patch
+      if (/\/<%patch%>\//g.test(fileString)) {
+        const { patch: onoffObj, meta } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+
+        //set meta info
+        DataMiddle.setMetadata(i.replace(/\.js/gi, ''), meta);
+        metaBoo = meta.module;
+
+        //set browser js
+        fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
 
         //set data patch
-        if (/\/<%patch%>\//g.test(fileString)) {
-          const { patch: onoffObj, meta } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
-
-          //set meta info
-          DataMiddle.setMetadata(i.replace(/\.js/gi, ''), meta);
-
-          //set browser js
-          fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
-
-          //set data patch
-          prototypes = Object.keys(DataPatch.prototype);
-          dataPatchScript = `const DataPatch = new Function();\n`;
-          if (onoffObj.entire) {
-            for (let i of prototypes) {
-              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+        prototypes = Object.keys(DataPatch.prototype);
+        dataPatchScript = `const DataPatch = new Function();\n`;
+        if (onoffObj.entire) {
+          for (let i of prototypes) {
+            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+          }
+        } else {
+          for (let i of prototypes) {
+            prototypeBoo = /^tools/.test(i);
+            for (let j in onoffObj) {
+              if (onoffObj[j] && !prototypeBoo) {
+                prototypeBoo = (new RegExp("^" + j)).test(i);
+              }
             }
-          } else {
-            for (let i of prototypes) {
-              prototypeBoo = /^tools/.test(i);
-              for (let j in onoffObj) {
-                if (onoffObj[j] && !prototypeBoo) {
-                  prototypeBoo = (new RegExp("^" + j)).test(i);
-                }
-              }
-              if (prototypeBoo) {
-                dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-              }
+            if (prototypeBoo) {
+              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
             }
           }
         }
+      }
 
-        //set media query
-        if (/<%%/gi.test(fileString)) {
-          fileString = DataMiddle.mediaQuery(fileString);
-        }
+      //set media query
+      if (/<%%/gi.test(fileString)) {
+        fileString = DataMiddle.mediaQuery(fileString);
+      }
 
-        //merge
-        code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString + "\n\n" + generalSvg;
-        code1 = dataPatchScript;
-        code2 = generalString + "\n\n" + consoleGeneralString;
-        code3 = fileString + "\n\n" + execString;
+      //merge
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString + "\n\n" + generalSvg;
+      code1 = dataPatchScript;
+      code2 = generalString + "\n\n" + consoleGeneralString;
+      code3 = fileString + "\n\n" + execString;
 
-        result = '';
-        result += code0;
+      result = '';
+      result += code0;
+      result += "\n\n";
+      if (svgTongItemsString === null) {
+        result += svgTongItemsString;
         result += "\n\n";
-        if (svgTongItemsString === null) {
-          result += svgTongItemsString;
-          result += "\n\n";
-        }
-        result += code1;
+      }
+      result += code1;
+      result += "\n\n";
+      result += code2;
+      if (metaBoo) {
+        //front require function patch
         result += "\n\n";
-        result += code2;
+        result += `GeneralJs.require = (modulePath) => { return new Promise(function (resolve, reject) { import(modulePath).then((m) => { resolve(m); }).catch((e) => { reject(e); }); }); };\n`;
+        result += `const require = GeneralJs.require;`;
+        result += "\n\n";
+        result += code3.replace(/\= require\(/g, "= await import(");
+      } else {
         result += "\n\n";
         result += code3;
-        result += "\n\n";
+      }
+      result += "\n\n";
 
-        // result = await babelSystem(result);
-        // console.log(`${i} babel compile success`);
-        // finalMinifyObj = await minify(polyfillString + "\n\n" + result, { mangle: { keep_classnames: true, keep_fnames: true } });
-        // finalMinifyString = finalMinifyObj.code;
-        // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
+      // result = await babelSystem(result);
+      // console.log(`${i} babel compile success`);
+      // finalMinifyObj = await minify(polyfillString + "\n\n" + result, { mangle: { keep_classnames: true, keep_fnames: true } });
+      // finalMinifyString = finalMinifyObj.code;
+      // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
 
-        console.log(`${i} merge success`);
+      console.log(`${i}${metaBoo ? "(module)": ""} merge success`);
+      if (metaBoo) {
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, result ]);
+      } else {
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
       }
 

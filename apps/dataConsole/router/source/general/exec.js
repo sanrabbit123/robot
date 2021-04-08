@@ -5,7 +5,7 @@ const local_funcs = new /<%name%>/Js();
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
     //localStorage clear
-    window.localStorage.clear();
+    // window.localStorage.clear();
 
     local_funcs.mother.generalCss();
     local_funcs.mother.greenBar();

@@ -20,7 +20,8 @@
     "image": [
       "thisPerson",
       "return ('https://__thisHost__/hlimage.jpg');"
-    ]
+    ],
+    "module": false
   }
 } %/%/g
 

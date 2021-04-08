@@ -177,6 +177,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
   switch (sw) {
     case "read":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readFile(arr[0], (err, data) => {
           if (err) { reject(err); }
           else { resolve(data); }
@@ -185,6 +186,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
       break;
     case "readString":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readFile(arr[0], "utf8", (err, data) => {
           if (err) { reject(err); }
           else { resolve(data); }
@@ -193,6 +195,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
       break;
     case "readBinary":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readFile(arr[0], "binary", (err, data) => {
           if (err) { reject(err); }
           else { resolve(data); }
@@ -201,6 +204,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
       break;
     case "readDir":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readdir(arr[0], function (err, filelist) {
           if (err) { reject(err); }
           else { resolve(filelist); }
@@ -209,6 +213,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
       break;
     case "write":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
         fs.writeFile(arr[0], arr[1], "utf8", (err) => {
           if (err) { reject(err); }
           else { resolve("success"); }
@@ -217,12 +222,22 @@ Mother.prototype.fileSystem = function (sw, arr) {
       break;
     case "writeBinary":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
         fs.writeFile(arr[0], arr[1], "binary", (err) => {
           if (err) { reject(err); }
           else { resolve("success"); }
         });
       });
       break;
+    case "size":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const { spawn } = require("child_process");
+        const du = spawn("du", ["-sk", arr[0]]);
+        du.stdout.on("data", (data) => { resolve(Number((String(data).split("\t"))[0]) * 1000); });
+        du.stderr.on("data", (data) => { reject(String(data)); });
+        du.on("close", (code) => {});
+      });
   }
 }
 
@@ -427,74 +442,6 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       }
 
     }
-  });
-}
-
-Mother.prototype.rawRequestSystem = function (to, port = 80, header = {}, postData = {}, customMethod = "GET") {
-  let meth = "GET";
-  let postKeys = Object.keys(postData);
-  if (postKeys.length > 0) {
-    meth = "POST";
-  }
-  let target;
-  const http = require("http");
-  if (/^https:\/\//.test(to)) {
-    target = to.slice(8);
-  } else if (/^http:\/\//.test(to)) {
-    target = to.slice(7);
-  } else {
-    target = to;
-  }
-  let pathArr = target.split('/');
-  let pathString = '/';
-  for (let i = 0; i < pathArr.length; i++) { if (i !== 0) {
-    pathString += pathArr[i] + '/';
-  }}
-  pathString = pathString.slice(0, -1);
-  if (customMethod !== "GET") {
-    meth = customMethod;
-  }
-  let options = {
-    hostname: pathArr[0],
-    port: port,
-    path: pathString,
-    method: meth
-  }
-  options.header = {};
-  let postString = '';
-  if (/POST/gi.test(meth)) {
-    for (let i in postData) {
-      postString += i.replace(/=/g, '').replace(/&/g, '');
-      postString += '=';
-      postString += postData[i].replace(/=/g, '').replace(/&/g, '');
-      postString += '&';
-    }
-    postString = postString.slice(0, -1);
-    options.header['Content-Type'] = 'application/x-www-form-urlencoded';
-    options.header['Content-Length'] = Buffer.byteLength(postString);
-  }
-  for (let i in header) {
-    options.header[i] = header[i];
-  }
-  return new Promise(function (resolve, reject) {
-    let req = http.request(options, function (res) {
-      res.setEncoding('utf8');
-      let resultObj = {}
-      resultObj.headers = res.headers;
-      resultObj.statusCode = res.statusCode;
-      resultObj.body = '';
-      res.on('data', function (chunk) {
-        resultObj.body += chunk.toString();
-      });
-      res.on('end', function () {
-        resolve(resultObj);
-      });
-    });
-    req.on('error', function (e) { reject(e); });
-    if (/POST/gi.test(meth)) {
-      req.write(postString);
-    }
-    req.end();
   });
 }
 

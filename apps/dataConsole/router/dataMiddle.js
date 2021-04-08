@@ -169,7 +169,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
       <body>
         <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
         <div id="totalcontents"></div>
-        <script src="/middle/${target}"></script>
+        <script ${meta.module ? 'type="module" ' : ''}src="/middle/${meta.module ? target.replace(/\.js$/i, '') + ".mjs" : target}"></script>
       </body>
     </html>`;
 
@@ -177,7 +177,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
 
   } catch (e) {
     console.log(target);
-    return invaildCode;
+    return `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
   }
 }
 
