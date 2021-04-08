@@ -173,53 +173,54 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      // if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      //
+      //   res.set("Content-Type", "text/html");
+      //   res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
+      //     alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
+      //     window.location.href = "https://home-liaison.com";</script></body></html>`);
+      //
+      // } else {
+
+      if (instance.isGhost) {
 
         res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
-          alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
+        res.send(`<html><head><title>Permission denied</title></head><body><script>
+          alert("접근할 수 없는 경로입니다!");
           window.location.href = "https://home-liaison.com";</script></body></html>`);
 
       } else {
 
-        if (instance.isGhost) {
-
-          res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>Permission denied</title></head><body><script>
-            alert("접근할 수 없는 경로입니다!");
-            window.location.href = "https://home-liaison.com";</script></body></html>`);
-
+        if (/^cl/i.test(req.params.id)) {
+          target = "client";
+        } else if (/^de/i.test(req.params.id)) {
+          target = "designer";
+        } else if (/^ser/i.test(req.params.id)) {
+          target = "service";
+        } else if (/^proj/i.test(req.params.id)) {
+          target = "project";
+        } else if (/^prop/i.test(req.params.id)) {
+          target = "proposal";
+        } else if (/^ana/i.test(req.params.id)) {
+          target = "analytics";
+        } else if (/^con/i.test(req.params.id)) {
+          target = "contents";
+        } else if (/^pho/i.test(req.params.id)) {
+          target = "photo";
         } else {
-
-          if (/^cl/i.test(req.params.id)) {
-            target = "client";
-          } else if (/^de/i.test(req.params.id)) {
-            target = "designer";
-          } else if (/^ser/i.test(req.params.id)) {
-            target = "service";
-          } else if (/^proj/i.test(req.params.id)) {
-            target = "project";
-          } else if (/^prop/i.test(req.params.id)) {
-            target = "proposal";
-          } else if (/^ana/i.test(req.params.id)) {
-            target = "analytics";
-          } else if (/^con/i.test(req.params.id)) {
-            target = "contents";
-          } else if (/^pho/i.test(req.params.id)) {
-            target = "photo";
-          } else {
-            target = "client";
-          }
-
-          instance.baseMaker(target, "first", null).then(function (html) {
-            res.set("Content-Type", "text/html");
-            res.send(html);
-          }).catch(function (err) {
-            throw new Error(err);
-          });
-
+          target = "client";
         }
+
+        instance.baseMaker(target, "first", null).then(function (html) {
+          res.set("Content-Type", "text/html");
+          res.send(html);
+        }).catch(function (err) {
+          throw new Error(err);
+        });
+
       }
+
+      // }
 
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
