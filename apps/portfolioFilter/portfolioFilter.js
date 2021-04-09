@@ -731,7 +731,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         targetDesigner = designers[0].toNormal();
       }
 
-      folderPath = await drive.get_folder(link, pid);
+      folderPath = await drive.get_folder(link, pid, true);
       folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
       folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 

@@ -59,7 +59,7 @@ GoogleDrive.prototype.get_file = function (file_id) {
   });
 }
 
-GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null) {
+GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null, is_photo = false) {
   const instance = this;
   const { fileSystem, shellLink } = this.general;
   const shell = require("shelljs");
@@ -97,6 +97,8 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
     const tempFolderDir = await fileSystem(`readDir`, [ tempFolder ]);
     const folderPath = tempFolder + "/" + targetFolderNameConst + "/" + folderName.replace(/[\\\/\&\= ]/g, '_');
     let driveFolderDir, index;
+    let folderInside;
+    let thisExec;
 
     //init setting
     if (!tempFolderDir.includes(targetFolderNameConst)) {
@@ -116,6 +118,22 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
       await this.sleep(500);
       console.log(index, await fileSave(drive, id, name, folderPath));
       index = index + 1;
+    }
+
+    if (is_photo) {
+      folderInside = await fileSystem(`readDir`, [ folderPath ]);
+      for (let i = 0; i < folderInside.length; i++) {
+        if (folderInside[i] !== ".DS_Store") {
+          if (/\.(jpg|jpeg)$/i.test(folderInside[i])) {
+            thisExec = ".jpg";
+          } else if (/\.(png)$/i.test(folderInside[i])) {
+            thisExec = ".png";
+          } else {
+            throw new Error("must be photo");
+          }
+          shell.exec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
+        }
+      }
     }
 
     if (folder_name !== null) {
