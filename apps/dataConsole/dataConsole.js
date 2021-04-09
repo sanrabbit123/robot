@@ -173,9 +173,11 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     //module transform
     moduleTrans = async function (tree, name) {
       try {
+        const thisModuleDir = await fileSystem(`readDir`, [ instance.middleModuleDir + "/" + name ]);
         const { flatDeath } = tree;
         const render = function (code) {
-          code = code.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\"\']+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${name}${p4.replace(/\.js$/i, '.mjs')}`; });
+          code = code.replace(/\$CURRENT_DIR_ARRAY/g, JSON.stringify(thisModuleDir));
+          code = code.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\)]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}`; });
           code = code.replace(/module\.exports = ([^\=\;\/\n]+)/i, (match, p1, offset, string) => { return "export { " + p1 + " }"; });
           return code;
         }
@@ -302,7 +304,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         result += "\n\n";
         result += `GeneralJs.require = (modulePath) => { return new Promise(function (resolve, reject) { import(modulePath).then((m) => { resolve(m); }).catch((e) => { reject(e); }); }); };\n`;
         result += "\n\n";
-        result += code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\"\']+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js$/i, '.mjs')}`; });
+        result += code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\)]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, '.mjs')}`; });
       } else {
         result += "\n\n";
         result += code3;

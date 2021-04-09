@@ -99,11 +99,11 @@ GaroseroParser.prototype.queryImages = async function (imageArr) {
       width = resultObj.width;
       height = resultObj.height;
       if (width > height) {
-        totalTong.push({ index: number, gs: 'g' });
+        totalTong.push({ index: number, file: i, gs: 'g' });
       } else if (width < height) {
-        totalTong.push({ index: number, gs: 's' });
+        totalTong.push({ index: number, file: i, gs: 's' });
       } else {
-        totalTong.push({ index: number, gs: 'c' });
+        totalTong.push({ index: number, file: i, gs: 'c' });
       }
       number++;
     }
@@ -114,35 +114,89 @@ GaroseroParser.prototype.queryImages = async function (imageArr) {
   }
 }
 
-GaroseroParser.prototype.queryDirectory = async function (dir) {
+GaroseroParser.prototype.queryDirectory = async function (dir, usePhotoShop = false) {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { shell, shellLink, fileSystem, appleScript } = this.mother;
   try {
-    let tongRaw, tong = [], result;
-    let numberBoo = [];
 
-    const sortFunc = function (str) {
-      return Number(str.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '').replace(/[^0-9]/g, ''));
-    }
-    tongRaw = await fileSystem(`readDir`, [ dir ]);
-    for (let i of tongRaw) {
-      if (i !== `.DS_Store`) {
-        tong.push(dir + "/" + i);
-        if (/[0-9]/g.test(i)) {
-          numberBoo.push("number");
-        } else {
-          numberBoo.push("string");
+    if (!usePhotoShop) {
+
+      let tongRaw, tong = [], result;
+      let numberBoo = [];
+
+      const sortFunc = function (str) {
+        return Number(str.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '').replace(/[^0-9]/g, ''));
+      }
+      tongRaw = await fileSystem(`readDir`, [ dir ]);
+      for (let i of tongRaw) {
+        if (i !== `.DS_Store`) {
+          tong.push(dir + "/" + i);
+          if (/[0-9]/g.test(i)) {
+            numberBoo.push("number");
+          } else {
+            numberBoo.push("string");
+          }
         }
       }
+
+      if (numberBoo.includes("string")) {
+        tong.sort();
+      } else {
+        tong.sort((a, b) => { return sortFunc(a) - sortFunc(b); });
+      }
+      result = await this.queryImages(tong);
+      return result;
+
+    } else {
+
+      let adobe, tempAppList;
+      tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+      for (let i of tempAppList) {
+        if (/Photoshop/gi.test(i)) {
+          adobe = i;
+        }
+      }
+      const photoshopScript = function (argv, app) {
+        let text = '';
+        text += 'tell application "' + app + '"\n';
+        text += '\tactivate\n';
+        text += '\topen file "' + argv + '"\n';
+        text += '\tset docheight to height of document 1\n';
+        text += '\tset docWidth to width of document 1\n';
+        text += '\tclose document 1\n';
+        text += '\tif docheight < docWidth then\n';
+        text += '\t\treturn "g"\n';
+        text += '\telse\n';
+        text += '\t\treturn "s"\n';
+        text += '\tend if\n';
+        text += 'end tell';
+        return text;
+      }
+      let new_item, dimensions;
+      let dirList_raw, dirList;
+      let resultTong, tempObj;
+      let index;
+
+      dirList_raw = await fileSystem(`readDir`, [ dir ]);
+      dirList = dirList_raw.filter((name) => { return (name !== ".DS_Store"); });
+
+      index = 0;
+      resultTong = new GaroseroArray();
+      for (let item of dirList) {
+        dimensions = await appleScript(`photosg_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${dir}/${item}`), adobe), null, false);
+        dimensions = dimensions.replace(/[^gs]/g, '');
+        tempObj = {};
+        tempObj.file = `${dir}/${item}`;
+        tempObj.gs = dimensions;
+        tempObj.index = index;
+        resultTong.push(tempObj);
+        index++;
+      }
+
+      return resultTong;
+
     }
 
-    if (numberBoo.includes("string")) {
-      tong.sort();
-    } else {
-      tong.sort((a, b) => { return sortFunc(a) - sortFunc(b); });
-    }
-    result = await this.queryImages(tong);
-    return result;
   } catch (e) {
     console.log(e);
   }

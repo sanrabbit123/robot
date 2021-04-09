@@ -59,7 +59,7 @@ GoogleDrive.prototype.get_file = function (file_id) {
   });
 }
 
-GoogleDrive.prototype.get_folder = async function (folder_id) {
+GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null) {
   const instance = this;
   const { fileSystem, shellLink } = this.general;
   const shell = require("shelljs");
@@ -118,6 +118,10 @@ GoogleDrive.prototype.get_folder = async function (folder_id) {
       index = index + 1;
     }
 
+    if (folder_name !== null) {
+      shell.exec(`mv ${shellLink(folderPath)} ${shellLink(folderPath.split("/").slice(0, -1).join("/"))}/${shellLink(folder_name)}`);
+    }
+    shell.exec(`open ${shellLink(folderPath.split("/").slice(0, -1).join("/"))}`);
     console.log(`total: ${String(index)}`);
     return folderPath;
   } catch (e) {

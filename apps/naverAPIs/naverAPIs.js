@@ -189,6 +189,12 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "홈 스튜디오", "홈스튜디오" ],
     [ "아이 바리", "아이보리" ],
     [ "선 반잔", "선반장" ],
+    [ "셀릭 해", "선택해" ],
+    [ "셀릭", "선택" ],
+    [ "선택 해", "선택해" ],
+    [ "아일랜드 바", "아일랜드바" ],
+    [ "수납공간", "수납 공간" ],
+    [ "TV 장", "TV장" ],
   ];
   try {
     let resultArr = [];

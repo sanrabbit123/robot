@@ -433,7 +433,9 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }));
     console.log(`ghost request done`);
 
-    await this.mother.sleep(3000);
+    await this.mother.sleep(1000);
+
+    return this.folderName;
 
   } catch (e) {
     console.log(e);
@@ -621,9 +623,12 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const back = this.back;
+  const { fileSystem, shell, shellLink, consoleQ } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", pid: "", link: "" } ... ]`;
+  const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/사진_등록_포트폴리오`;
+  const forecastPath = `${this.address.homeinfo.ghost.file.static}/corePortfolio/forecast`;
   class RawArray extends Array {
     constructor(arr) {
       super();
@@ -645,19 +650,39 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     arr = new RawArray(arr);
     const drive = new GoogleDrive();
     let folderPath;
+    let designers, consoleInput, targetDesigner, googleFolderName;
 
     await this.static_setting();
 
     for (let { client, designer, pid, link } of arr) {
-      folderPath = await drive.get_folder(link);
+
+      designers = await back.getDesignersByQuery({ designer: designer });
+      if (designers.length > 1) {
+        console.log(`Exception occur : `);
+        for (let i = 0; i < designers.length; i++) {
+          console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
+        }
+        consoleInput = await consoleQ(`Exception number : `);
+        targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
+      } else {
+        targetDesigner = designers[0].toNormal();
+      }
+
+      folderPath = await drive.get_folder(link, `${pid}__${targetDesigner.desid}`);
       shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-      shell.exec(`mv ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+      shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+
       this.clientName = client;
       this.designer = designer;
       this.pid = pid;
       this.apartName = "";
-      await this.total_make(true);
+      googleFolderName = await this.total_make(true);
+
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${this.address.officeinfo.ghost.user + sambaPhotoPath}/${googleFolderName}/`);
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${forecastPath}/`);
+
     }
+
   } catch (e) {
     console.log(e);
   }

@@ -41,7 +41,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -512,6 +512,80 @@ DevContext.prototype.launching = async function () {
 
 
 
+    let adobe, tempAppList;
+
+    tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+    for (let i of tempAppList) {
+      if (/Photoshop/gi.test(i)) {
+        adobe = i;
+      }
+    }
+    const photoshopScript = function (argv, app) {
+      let text = '';
+      text += 'tell application "' + app + '"\n';
+      text += '\tactivate\n';
+      text += '\topen file "' + argv + '"\n';
+      text += '\tset docheight to height of document 1\n';
+      text += '\tset docWidth to width of document 1\n';
+      text += '\tif docheight < docWidth then\n';
+      text += '\t\tdo action "fore_garo" from "to_portfolio"\n';
+      text += '\t\tclose document 1\n';
+      text += '\t\treturn "g"\n';
+      text += '\telse\n';
+      text += '\t\tdo action "fore_sero" from "to_portfolio"\n';
+      text += '\t\tclose document 1\n';
+      text += '\t\treturn "s"\n';
+      text += '\tend if\n';
+      text += 'end tell';
+      return text;
+    }
+
+    const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
+    const garoseroParser = new GaroseroParser();
+
+    const foreCastContant = "/corePortfolio/forecast";
+
+    const targetMother = `${process.cwd()}/temp/drive`;
+    const targetMotherList_raw = await fileSystem(`readDir`, [ targetMother ]);
+    const targetMotherList = targetMotherList_raw.filter((name) => { return (name !== ".DS_Store"); });
+
+    let pid, desid;
+    let folderPath, folderPathList_raw, folderPathList;
+    let forecast;
+    let finalObj;
+
+
+    for (let z = 0; z < targetMotherList.length; z++) {
+      pid = targetMotherList[z].split("__")[0];
+      desid = targetMotherList[z].split("__")[1];
+
+      folderPath = `${process.cwd()}/temp/drive/${pid}__${desid}`;
+      folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+      folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+
+      for (let item of folderPathList) {
+        await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
+      }
+
+      forecast = await garoseroParser.queryDirectory(folderPath, true);
+      for (let obj of forecast) {
+        obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
+      }
+
+      finalObj = { pid, desid, forecast };
+
+      await back.mongoCreate("foreContents", finalObj, { console: true });
+    }
+
+
+
+
+
+
+
+
+
+
 
     // designer analytics
     // const desid = "d2104_aa08s";
@@ -558,13 +632,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "전채은";
-    // const pid = "p89";
-    // const rid = "re083";
+    // const client = "서현";
+    // const pid = "p75";
+    // const rid = "re069";
     // const links = [
-    //   "https://docs.google.com/document/d/1IAiKKrlEjuow5RXeMSrUfBZhdNHpOZ7IWDqk10n10Ug/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1dlA0Og7jXJc6uONBiAUWL66oZlNx5wiM_8fePC_Rxpo/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1JqwA4VDMcayUTl5SA5_utX5U8ZpJrq2j?usp=sharing",
+    //   "https://docs.google.com/document/d/17bN6cOmStr9x16FPuui6AZ79PcTFBhE0a4SkKUcNX28/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1hlk59o2D-bDXvz8-FDeIon0vOvfo7syxCF4zc-vvqjU/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1kc_Rn9aMlzg3Gq41g6SZTH51oHSirOvk?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -602,17 +676,17 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "서현순",
-    //     designer: "박보영",
-    //     pid: "p109",
-    //     link: "https://drive.google.com/drive/folders/1ExDaFfbXMhk17ZimOXoEn44kjdphDfCN",
+    //     client: "신정안",
+    //     designer: "김소영",
+    //     pid: "p110",
+    //     link: "https://drive.google.com/drive/folders/1WSNtDJ5MGyLms0AkF4PqJfLje3kcUWjq",
     //   }
     // ]);
 
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/14YT3OCACvbGJMwHNHpCS8eP-Cd_1wKxe");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1WSNtDJ5MGyLms0AkF4PqJfLje3kcUWjq", "p110");
 
 
     // send checklist
@@ -620,7 +694,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("a79");
+    // await this.spellCheck("p75");
 
 
     // get corePortfolio by pid

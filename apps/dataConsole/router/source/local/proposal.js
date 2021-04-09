@@ -1987,7 +1987,7 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_right_totalbox");
 
-  for (let j = 0; j < (contents.length + 1); j++) {
+  for (let j = 0; j < (contents.length + ghost.length); j++) {
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.classList.add("ppw_right_set");
 
@@ -2072,25 +2072,25 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
           }
         } else {
 
-          for (let k = 0; k < ghost.length; k++) {
+          for (let k = 0; k < ghost[j - contents.length].length; k++) {
             div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone4.classList.add("ppw_right_picturebox_" + ghost[k].sgTrue);
+            div_clone4.classList.add("ppw_right_picturebox_" + ghost[j - contents.length][k].sgTrue);
             div_clone4.id = "ppw_right_picturebox_totaldiv" + String(j) + String(k);
             img_clone = GeneralJs.nodes.img.cloneNode(true);
             img_clone.classList.add("ppw_right_picturebox_img");
             img_clone.classList.add("fifth_drag_img");
-            imgSrc = ghost[k].link;
-            sgTrue = ghost[k].sgTrue;
+            imgSrc = ghost[j - contents.length][k].link;
+            sgTrue = ghost[j - contents.length][k].sgTrue;
             img_clone.setAttribute("src", S3HOST + imgSrc);
             img_clone.setAttribute("cus_info", GeneralJs.tagCoverting({ imgSrc: imgSrc, sgTrue: sgTrue }));
             img_clone.setAttribute("draggable", "true");
             div_clone4.appendChild(img_clone);
             scroll_box.appendChild(div_clone4);
 
-            if (ghost[k].sgTrue === 's') {
-              sgTong.s.push(ghost[k].sgTrue);
+            if (ghost[j - contents.length][k].sgTrue === 's') {
+              sgTong.s.push(ghost[j - contents.length][k].sgTrue);
             } else {
-              sgTong.g.push(ghost[k].sgTrue);
+              sgTong.g.push(ghost[j - contents.length][k].sgTrue);
             }
           }
 
@@ -2197,6 +2197,8 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
   popupDom = new Map();
   designer = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
   contents = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: designer[0].desid }), "/getContents"));
+  ghost = JSON.parse(await GeneralJs.ajaxPromise("desid=" + designer[0].desid, "/getDesignerGhost"));
+  ghost.push(designer[0].setting.ghost);
 
   return function () {
     let div_clone;
@@ -2215,7 +2217,7 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     total.appendChild(div_clone);
 
     popupDom.set("whiteBox", div_clone);
-    instance.fifthWhiteup(div_clone, contents, id, designer[0].setting.ghost, designer[0].setting.proposal);
+    instance.fifthWhiteup(div_clone, contents, id, ghost, designer[0].setting.proposal);
     instance.fifthChildren = popupDom;
   }
 }

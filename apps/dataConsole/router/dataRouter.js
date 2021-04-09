@@ -1208,7 +1208,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let dateMatrix;
       let searchQuery, clients, proposals, contracts, process;
       let processTong;
-      let cliidArr;
+      let cliidArr, cliidArr_raw;
       let resultArr;
       let obj;
       let searchBoo;
@@ -1217,6 +1217,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let doubleClient;
       let finalLength;
       let processNumber;
+      let pastTong;
+      let proposalsTong;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1260,16 +1262,25 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.client = clients.length;
 
           //proposal
+          cliidArr_raw = [];
           cliidArr = [];
           processTong = [];
+          pastTong = [];
           for (let client of clients) {
-            cliidArr.push({ cliid: client.cliid });
+            cliidArr_raw.push(client.cliid);
+          }
+          cliidArr_raw = Array.from(new Set(cliidArr_raw));
+          for (let cliid of cliidArr_raw) {
+            cliidArr.push({ cliid });
           }
           if (cliidArr.length > 0) {
             searchQuery = { "$or": cliidArr };
             process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
             for (let i of process) {
-              processTong.push(i);
+              if (!pastTong.includes(i.cliid)) {
+                processTong.push(i);
+              }
+              pastTong.push(i.cliid);
             }
             obj.proposal = processTong.length;
           } else {
@@ -1279,7 +1290,15 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           //recommend
           searchQuery = { "proposal.date": { "$gte": arr[0], "$lt": arr[2] } };
           proposals = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
-          obj.recommend = proposals.length;
+          pastTong = [];
+          proposalsTong = [];
+          for (let i of proposals) {
+            if (!pastTong.includes(i.cliid)) {
+              proposalsTong.push(i);
+            }
+            pastTong.push(i.cliid);
+          }
+          obj.recommend = proposalsTong.length;
 
           //contract
           searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
@@ -2873,6 +2892,49 @@ DataRouter.prototype.rou_post_alimTalk = function () {
         "Access-Control-Allow-Headers": '*',
       });
       res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+
+DataRouter.prototype.rou_post_getDesignerGhost = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/getDesignerGhost";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("must be desid");
+      }
+      const { desid } = req.body;
+      let result, final, tempArr, tempObj;
+
+      result = await back.mongoRead("foreContents", { desid }, { selfMongo: instance.mongolocal });
+
+      final = [];
+      for (let { forecast } of result) {
+        tempArr = [];
+        for (let { file, gs } of forecast) {
+          tempObj = {};
+          tempObj.link = file;
+          tempObj.sgTrue = gs;
+          tempArr.push(tempObj);
+        }
+        final.push(tempArr);
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify(final));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
