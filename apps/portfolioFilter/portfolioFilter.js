@@ -433,7 +433,10 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }));
     console.log(`ghost request done`);
 
-    await this.mother.sleep(1000);
+    for (let z = 0; z < 3; z++) {
+      console.log(`waiting... ${String(3 - z)}s`);
+      await this.mother.sleep(1000);
+    }
 
     return this.folderName;
 
@@ -624,11 +627,14 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, consoleQ } = this.mother;
+  const { fileSystem, shell, shellLink, consoleQ, appleScript, sleep, ghostRequest } = this.mother;
+  const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", pid: "", link: "" } ... ]`;
   const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/사진_등록_포트폴리오`;
-  const forecastPath = `${this.address.homeinfo.ghost.file.static}/corePortfolio/forecast`;
+  const foreCastContant = `/corePortfolio/forecast`;
+  const forecastPath = this.address.homeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
     constructor(arr) {
       super();
@@ -651,7 +657,43 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     const drive = new GoogleDrive();
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
+    let adobe, tempAppList;
+    let folderPathList_raw, folderPathList;
+    let forecast, garoseroParser;
+    let finalObj;
+    let ghostPhotos;
 
+    tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
+    adobe = null;
+    for (let i of tempAppList) {
+      if (/Photoshop/gi.test(i)) {
+        adobe = i;
+      }
+    }
+    if (adobe === null) {
+      throw new Error("There is no photoshop");
+    }
+    const photoshopScript = function (argv, app) {
+      let text = '';
+      text += 'tell application "' + app + '"\n';
+      text += '\tactivate\n';
+      text += '\topen file "' + argv + '"\n';
+      text += '\tset docheight to height of document 1\n';
+      text += '\tset docWidth to width of document 1\n';
+      text += '\tif docheight < docWidth then\n';
+      text += '\t\tdo action "fore_garo" from "to_portfolio"\n';
+      text += '\t\tclose document 1\n';
+      text += '\t\treturn "g"\n';
+      text += '\telse\n';
+      text += '\t\tdo action "fore_sero" from "to_portfolio"\n';
+      text += '\t\tclose document 1\n';
+      text += '\t\treturn "s"\n';
+      text += '\tend if\n';
+      text += 'end tell';
+      return text;
+    }
+
+    garoseroParser = new GaroseroParser();
     await this.static_setting();
 
     for (let { client, designer, pid, link } of arr) {
@@ -669,6 +711,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
 
       folderPath = await drive.get_folder(link, `${pid}__${targetDesigner.desid}`);
+      folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+      folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+
       shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
       shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
@@ -678,9 +723,38 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       this.apartName = "";
       googleFolderName = await this.total_make(true);
 
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${this.address.officeinfo.ghost.user + sambaPhotoPath}/${googleFolderName}/`);
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${forecastPath}/`);
+      ghostPhotos = await photoRequest("ls");
+      while (!ghostPhotos.includes(googleFolderName)) {
+        for (let z = 0; z < 5; z++) {
+          console.log(`insync waiting... ${String(5 - z)}s`);
+          await sleep(1000);
+        }
+        ghostPhotos = await photoRequest("ls");
+      }
 
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${shellLink(this.address.officeinfo.ghost.user + sambaPhotoPath + "/" + googleFolderName)}/`);
+
+      for (let item of folderPathList) {
+        await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
+      }
+      forecast = await garoseroParser.queryDirectory(folderPath, true);
+      for (let obj of forecast) {
+        obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
+      }
+
+      finalObj = { pid, desid: targetDesigner.desid, forecast };
+      await back.mongoCreate("foreContents", finalObj, { console: true });
+
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
+
+      for (let z = 0; z < 3; z++) {
+        console.log(`scp waiting... ${String(3 - z)}s`);
+        await sleep(1000);
+      }
+
+      shell.exec(`rm -rf ${shellLink(folderPath)};`);
+
+      console.log(`${client}C ${designer}D raw to raw done;`)
     }
 
   } catch (e) {
