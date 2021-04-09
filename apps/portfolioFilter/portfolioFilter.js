@@ -333,7 +333,8 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, slack_bot } = this.mother;
+  const { fileSystem, shell, shellLink, slack_bot, s3FileUpload, ghostFileUpload, ghostRequest, sleep } = this.mother;
+  const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
   const idFilterNum = function (past) {
@@ -348,6 +349,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     return String(idFilterNum(past));
   }
   try {
+    const photoFolderConst = "사진_등록_포트폴리오";
+    const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
     const targetFolderIdConst = "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21";
     const aTargetFolderIdConst = "18x4Ym6Sm8PK2PGEglRbxqn5-L7lquVXG";
     await this.static_setting();
@@ -356,10 +359,15 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     let pidFolder, fromArr, toArr;
     let webViewLink;
     let resultFolder;
+    let ghostPhotos;
+    let scpTarget;
 
     resultFolder = await this.to_portfolio(liteMode);
     const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_original, fileList_png);
+    if (fileList_780.length === 0 || fileList_original.length === 0) {
+      throw new Error("no photo error");
+    }
 
     //google drive upload
     if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
@@ -369,30 +377,43 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
     await drive.sleep(500);
     console.log(`make folder ${this.folderName} done`);
-    folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
-    await drive.sleep(500);
-    console.log(`make folder ${this.folderName}/780 done`);
-    if (!liteMode) {
-      folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
-      await drive.sleep(500);
-      console.log(`make folder ${this.folderName}/원본 done`);
+    // folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
+    // await drive.sleep(500);
+    // console.log(`make folder ${this.folderName}/780 done`);
+    // if (!liteMode) {
+    //   folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
+    //   await drive.sleep(500);
+    //   console.log(`make folder ${this.folderName}/원본 done`);
+    // }
+
+    //fix dir
+    console.log(await ghostRequest("fixDir", {
+      await: true,
+      target: "__samba__/" + photoFolderConst
+    }));
+    console.log(`ghost request done`);
+
+    for (let z = 0; z < 3; z++) {
+      console.log(`insync waiting... ${String(3 - z)}s`);
+      await sleep(1000);
     }
 
-    for (let f of fileList_780) {
-      await drive.upload_inPython(folderId_780, f);
-      await drive.sleep(300);
-      console.log(`upload file ${f} done`);
-    }
-    if (!liteMode) {
-      for (let f of fileList_original) {
-        await drive.upload_inPython(folderId_original, f);
-        await drive.sleep(300);
-        console.log(`upload file ${f} done`);
+    ghostPhotos = await photoRequest("ls");
+    while (!ghostPhotos.includes(this.folderName)) {
+      for (let z = 0; z < 5; z++) {
+        console.log(`insync waiting... ${String(5 - z)}s`);
+        await sleep(1000);
       }
+      ghostPhotos = await photoRequest("ls");
+    }
+
+    scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${shellLink(this.address.officeinfo.ghost.user + sambaPhotoPath + "/" + this.folderName)}/`;
+
+    shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
+    if (!liteMode) {
+      shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
       for (let f of fileList_png) {
-        await drive.upload_inPython(thisFolderId, f);
-        await drive.sleep(300);
-        console.log(`upload file ${f} done`);
+        shell.exec(`scp ${shellLink(f)} ${scpTarget}`);
       }
     }
 
@@ -419,24 +440,19 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
       console.log(fromArr);
       console.log(toArr);
-      await this.mother.s3FileUpload(fromArr, toArr);
+      await s3FileUpload(fromArr, toArr);
       console.log(`s3 upload done`);
 
-      await this.mother.ghostFileUpload(fromArr, toArr);
+      await ghostFileUpload(fromArr, toArr);
       console.log(`ghost upload done`);
     }
 
     //fix dir
-    console.log(await this.mother.ghostRequest("fixDir", {
+    console.log(await ghostRequest("fixDir", {
       await: true,
-      target: "__samba__/사진_등록_포트폴리오"
+      target: "__samba__/" + photoFolderConst
     }));
-    console.log(`ghost request done`);
-
-    for (let z = 0; z < 3; z++) {
-      console.log(`waiting... ${String(3 - z)}s`);
-      await this.mother.sleep(1000);
-    }
+    console.log(`second ghost request done`);
 
     return this.folderName;
 
@@ -632,7 +648,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", pid: "", link: "" } ... ]`;
-  const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/사진_등록_포트폴리오`;
+  const photoFolderConst = "사진_등록_포트폴리오";
+  const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
   const forecastPath = this.address.homeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
@@ -725,6 +742,11 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       ghostPhotos = await photoRequest("ls");
       while (!ghostPhotos.includes(googleFolderName)) {
+        console.log(await ghostRequest("fixDir", {
+          await: true,
+          target: "__samba__/" + photoFolderConst
+        }));
+        console.log(`third ghost request done`);
         for (let z = 0; z < 5; z++) {
           console.log(`insync waiting... ${String(5 - z)}s`);
           await sleep(1000);

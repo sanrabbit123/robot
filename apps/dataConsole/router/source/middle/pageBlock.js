@@ -85,7 +85,7 @@ PageBlockJs.prototype.baseMaker = function () {
     position: "relative",
     width: String(width) + ea,
     height: String(height) + ea,
-    background: "aqua",
+    background: "red",
     opacity: String(0.6),
   };
   for (let i in style) {
