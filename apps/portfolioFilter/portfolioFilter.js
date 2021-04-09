@@ -359,7 +359,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     let pidFolder, fromArr, toArr;
     let webViewLink;
     let resultFolder;
-    let ghostPhotos;
+    let ghostPhotos, ghostPhotosTarget;
     let scpTarget;
 
     resultFolder = await this.to_portfolio(liteMode);
@@ -370,56 +370,60 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
 
     //google drive upload
-    if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
-      thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
-    } else {
-      thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, aTargetFolderIdConst);
-    }
-    await drive.sleep(500);
-    console.log(`make folder ${this.folderName} done`);
-    // folderId_780 = await drive.makeFolder_andMove_inPython("780", thisFolderId);
-    // await drive.sleep(500);
-    // console.log(`make folder ${this.folderName}/780 done`);
-    // if (!liteMode) {
-    //   folderId_original = await drive.makeFolder_andMove_inPython("원본", thisFolderId);
-    //   await drive.sleep(500);
-    //   console.log(`make folder ${this.folderName}/원본 done`);
-    // }
-
-    //fix dir
-    console.log(await ghostRequest("fixDir", {
-      await: true,
-      target: "__samba__/" + photoFolderConst
-    }));
-    console.log(`ghost request done`);
-
-    for (let z = 0; z < 3; z++) {
-      console.log(`insync waiting... ${String(3 - z)}s`);
-      await sleep(1000);
-    }
-
-    ghostPhotos = await photoRequest("ls");
-    while (!ghostPhotos.includes(this.folderName)) {
-      for (let z = 0; z < 5; z++) {
-        console.log(`insync waiting... ${String(5 - z)}s`);
+    if (liteMode) {
+      if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
+        thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
+      } else {
+        thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, aTargetFolderIdConst);
+      }
+      console.log(await ghostRequest("fixDir", {
+        await: true,
+        target: "__samba__/" + photoFolderConst
+      }));
+      console.log(`make folder ${this.folderName} done`);
+      for (let z = 0; z < 3; z++) {
+        console.log(`insync waiting... ${String(3 - z)}s`);
         await sleep(1000);
       }
       ghostPhotos = await photoRequest("ls");
+      while (!ghostPhotos.includes(this.folderName)) {
+        for (let z = 0; z < 5; z++) {
+          console.log(`insync waiting... ${String(5 - z)}s`);
+          await sleep(1000);
+        }
+        ghostPhotos = await photoRequest("ls");
+      }
+    } else {
+      ghostPhotos = await photoRequest("ls");
+      ghostPhotosTarget = null;
+      for (let folder of ghostPhotos) {
+        if ((new RegExp("^" + this.pid)).test(folder)) {
+          ghostPhotosTarget = folder;
+        }
+      }
+      if (ghostPhotosTarget === null) {
+        throw new Error("there is no folder in server");
+      } else {
+        this.folderName = ghostPhotosTarget;
+      }
     }
 
     scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${shellLink(this.address.officeinfo.ghost.user + sambaPhotoPath + "/" + this.folderName)}/`;
 
-    shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     if (!liteMode) {
       shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
       for (let f of fileList_png) {
         shell.exec(`scp ${shellLink(f)} ${scpTarget}`);
       }
+    } else {
+      shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
     //slack
-    webViewLink = await drive.read_webView_inPython(thisFolderId);
-    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
+    if (liteMode) {
+      webViewLink = await drive.read_webView_inPython(thisFolderId);
+      await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
+    }
 
     //s3 upload
     if (!liteMode) {
@@ -727,7 +731,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         targetDesigner = designers[0].toNormal();
       }
 
-      folderPath = await drive.get_folder(link, `${pid}__${targetDesigner.desid}`);
+      folderPath = await drive.get_folder(link, pid);
       folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
       folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
