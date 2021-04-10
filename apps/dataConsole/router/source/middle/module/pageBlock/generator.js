@@ -21,7 +21,7 @@ Generator.prototype.generatePages = async function (target) {
       return null;
     }
     const Pages = require("/" + target + "/index.js");
-    if (Pages.prototype.launching === undefined || Pages.prototype.launching === null) {
+    if (Pages.prototype.render === undefined || Pages.prototype.render === null) {
       return null;
     } else {
       const pages = new Pages();

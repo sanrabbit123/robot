@@ -2757,6 +2757,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let tempNumber;
       let ghost;
       let leftArea, rightArea;
+      let notYetContents;
 
       totalTong = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -2771,7 +2772,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize = 15;
       titleHeight = fontSize + 5;
 
-      for (let i = 0; i < contents.length + 1; i++) {
+      ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
+      notYetContents = JSON.parse(await GeneralJs.ajaxPromise("desid=" + thisCase[standard[1]], "/getDesignerGhost"));
+      notYetContents.push(ghost);
+
+      for (let i = 0; i < contents.length + notYetContents.length; i++) {
 
         //unit tong
         div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2853,7 +2858,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         //title
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault");
-        if (i !== contents.length) {
+        if (i < contents.length) {
           div_clone2.textContent = contents[i].contents.portfolio.pid + " : " + contents[i].contents.portfolio.title.main;
         } else {
           div_clone2.textContent = "기타 미등록 포트폴리오";
@@ -2872,7 +2877,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         for (let j in style) {
           div_clone2.style[j] = style[j];
         }
-        if (i !== contents.length) {
+        if (i < contents.length) {
           div_clone2.addEventListener("click", function (e) {
             window.open(window.location.protocol + "//" + window.location.host + "/contents?pid=" + contents[i].contents.portfolio.pid, "_blank");
           });
@@ -2912,7 +2917,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         //pictures
         totalWidth = 0;
-        if (i !== contents.length) {
+        if (i < contents.length) {
 
           for (let j = 0; j < contents[i].photos.detail.length; j++) {
             img_clone = GeneralJs.nodes.img.cloneNode(true);
@@ -2949,14 +2954,12 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else {
 
-          ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
-
-          for (let j = 0; j < ghost.length; j++) {
+          for (let j = 0; j < notYetContents[i - contents.length].length; j++) {
             img_clone = GeneralJs.nodes.img.cloneNode(true);
-            img_clone.src = S3HOST + ghost[j].link;
+            img_clone.src = S3HOST + notYetContents[i - contents.length][j].link;
             img_clone.addEventListener("dblclick", function (e) {
               e.preventDefault();
-              window.open(S3HOST + ghost[j].link, "_blank");
+              window.open(S3HOST + notYetContents[i - contents.length][j].link, "_blank");
             });
             style = {
               display: "inline-block",
@@ -2965,11 +2968,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               marginRight: String(margin / 2) + ea,
               borderRadius: String(3) + ea,
             };
-            if (j === ghost.length - 1) {
+            if (j === notYetContents[i - contents.length].length - 1) {
               delete style.marginRight;
             }
 
-            if (ghost[j].sgTrue === 'g') {
+            if (notYetContents[i - contents.length][j].sgTrue === 'g') {
               tempNumber = (height - (titleHeight + (margin / 2)) - margin) * (297 / 210);
               style.width = String(tempNumber) + ea;
             } else {

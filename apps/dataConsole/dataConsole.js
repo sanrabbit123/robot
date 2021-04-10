@@ -162,7 +162,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
     let code0, code1, code2, code3;
-    let result;
+    let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
     let finalMinifyObj, finalMinifyString;
     let generalSvg;
@@ -300,11 +300,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       result += "\n\n";
       result += code2;
       if (moduleBoo) {
-        //front require function patch
-        result += "\n\n";
-        result += `GeneralJs.require = (modulePath) => { return new Promise(function (resolve, reject) { import(modulePath).then((m) => { resolve(m); }).catch((e) => { reject(e); }); }); };\n`;
-        result += "\n\n";
-        result += code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\)]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, '.mjs')}`; });
+        moduleString = code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\)]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, '.mjs')}`; });
       } else {
         result += "\n\n";
         result += code3;
@@ -329,7 +325,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
           await fileSystem(`mkdir`, [ treeArray.toDir ]);
         }
         await moduleTrans(treeArray, i.replace(/\.js$/i, ''));
-        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, result ]);
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`, result ]);
+        await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, moduleString ]);
       } else {
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
       }

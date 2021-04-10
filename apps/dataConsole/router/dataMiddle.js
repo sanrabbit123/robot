@@ -169,9 +169,14 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
       <body>
         <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
         <div id="totalcontents"></div>
-        <script ${meta.module ? 'type="module" ' : ''}src="/middle/${meta.module ? target.replace(/\.js$/i, '') + ".mjs" : target}"></script>
-      </body>
-    </html>`;
+        <script src="/middle/${target}"></script>`
+
+    if (meta.module) {
+      html += `<script type="module" src="/middle/${target.replace(/\.js$/i, '') + ".mjs"}"></script>`;
+    }
+
+    html += `</body></html>`;
+
 
     return html;
 

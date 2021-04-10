@@ -30,33 +30,26 @@ const PageBlockJs = function () {
   this.totalContents = document.getElementById("totalcontents");
   this.ea = "px";
   this.pages = null;
+  this.base = null;
+  this.index = 0;
 }
 
 PageBlockJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea } = this;
   const ratio = (16 / 9);
-  const minimumSideBarWidth = 300;
   let paddingLeft, paddingTop;
   let width, height;
   let style;
   let totalBase;
-  let isSide;
 
   height = window.innerHeight;
   width = height * ratio;
 
   if (window.innerWidth >= width) {
-    if (window.innerWidth - width > minimumSideBarWidth) {
-      isSide = true;
-      paddingLeft = window.innerWidth - width;
-    } else {
-      isSide = false;
-      paddingLeft = (window.innerWidth - width) / 2;
-    }
+    paddingLeft = (window.innerWidth - width) / 2;
     paddingTop = null;
   } else {
-    isSide = false;
     width = window.innerWidth;
     height = width / ratio;
     paddingLeft = null;
@@ -92,8 +85,19 @@ PageBlockJs.prototype.baseMaker = function () {
     totalBase.style[i] = style[i];
   }
 
+  this.base = totalBase;
   this.totalContents.appendChild(totalBase);
+}
 
+PageBlockJs.prototype.pageRender = function () {
+  const instance = this;
+  const { base, pages } = this;
+  if (pages.length === 0) {
+    window.alert("There is no page!");
+    window.location.href = "https://home-liaison.com";
+  } else {
+    base.appendChild(pages[this.index]);
+  }
 }
 
 
@@ -120,10 +124,10 @@ PageBlockJs.prototype.launching = async function (loading) {
         throw new Error("invaild query string");
       } else {
 
-        this.ea = <%% "px", "px", "px", "vw" %%>;
-        this.pages = await pages.launching();
+        this.ea = <%% "px", "px", "px", "px" %%>;
+        this.pages = await pages.render();
         this.baseMaker();
-
+        this.pageRender();
       }
     }
   } catch (e) {
