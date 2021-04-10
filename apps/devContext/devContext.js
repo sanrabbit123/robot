@@ -509,7 +509,19 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    // console.log(await requestSystem("https://apis.aligo.in/send/", {
+    //   user_id: "hliaison",
+    //   key: "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2",
+    //   msg: "안녕하세요, 테스트입니다!",
+    //   receiver: "01027473403",
+    //   destination: "배창규",
+    //   sender: "0220392252",
+    //   rdate: "",
+    //   rtime: "",
+    //   testmode_yn: "N",
+    //   title: "안녕하세요!",
+    //   msg_type: "LMS",
+    // }));
 
 
 
@@ -666,11 +678,22 @@ DevContext.prototype.launching = async function () {
     // }
 
     // send mail
-    // const { sendMail } = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    // console.log(await sendMail({
+    // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    // const human = new HumanPacket();
+    // console.log(await human.sendEmail({
     //   to: "uragenbooks@gmail.com",
-    //   subject: "hello?",
-    //   contents: "aaaaa",
+    //   subject: "안녕하세요!",
+    //   contents: "안녕하세요.",
+    // }));
+
+    // send sms
+    // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    // const human = new HumanPacket();
+    // console.log(await human.sendSms({
+    //   name: "배창규",
+    //   phone: "01027473403",
+    //   subject: "안녕하세요!",
+    //   contents: "안녕하세요.",
     // }));
 
   } catch (e) {

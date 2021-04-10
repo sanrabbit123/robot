@@ -410,10 +410,8 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   }
 
   if (configBoo) {
-    for (let i in config) {
-      if (/json/gi.test(config[i])) {
-        jsonBoo = true;
-      }
+    if (/json/gi.test(JSON.stringify(config))) {
+      jsonBoo = true;
     }
   }
 
