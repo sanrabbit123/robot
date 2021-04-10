@@ -665,6 +665,13 @@ DevContext.prototype.launching = async function () {
     //   await this.mother.slack_bot.chat.postMessage({ text: `${designer} 디자이너 페이지를 생성하여 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
     // }
 
+    // send mail
+    // const { sendMail } = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    // console.log(await sendMail({
+    //   to: "uragenbooks@gmail.com",
+    //   subject: "hello?",
+    //   contents: "aaaaa",
+    // }));
 
   } catch (e) {
     console.log(e);
