@@ -352,7 +352,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     const photoFolderConst = "사진_등록_포트폴리오";
     const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
     const targetFolderIdConst = "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21";
-    const aTargetFolderIdConst = "18x4Ym6Sm8PK2PGEglRbxqn5-L7lquVXG";
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
@@ -370,12 +369,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
 
     //google drive upload
-    if (liteMode) {
-      if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
-        thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
-      } else {
-        thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, aTargetFolderIdConst);
-      }
+    if (liteMode || this.clientNullATarget.includes(this.clientName)) {
+      thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
       console.log(await ghostRequest("fixDir", {
         await: true,
         target: "__samba__/" + photoFolderConst
