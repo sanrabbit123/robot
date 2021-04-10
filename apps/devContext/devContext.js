@@ -595,7 +595,7 @@ DevContext.prototype.launching = async function () {
 
     // addtional photo repair
     // const filter = new PortfolioFilter();
-    // await filter.additionalRepair("p89", 21);
+    // await filter.additionalRepair("a81", 5);
 
 
     // raw photo to raw portfolio
@@ -620,11 +620,11 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p75");
+    // await this.spellCheck("a81");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p75");
+    // await this.getCorePortfolio("a81");
 
 
     // aspirant to designer
@@ -632,21 +632,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2104_aa05s" ]);
+    // await work.newDesignerToFront([ "d2104_aa09s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2104_aa08s", [
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 6 }
+    // await this.setProposalSettingForDesigner("d2104_aa09s", [
+    //   { porlid: "a81", index: 3 },
+    //   { porlid: "a81", index: 6 },
+    //   { porlid: "a81", index: 14 },
+    //   { porlid: "a81", index: 19 },
+    //   { porlid: "a81", index: 21 },
+    //   { porlid: "a81", index: 1 }
     // ], [
-    //   "시공 케어를 잘 하고 전체적인 공정 제어에 능한 디자이너입니다.",
-    //   "모던하고 깔끔한 스타일로 공간을 무게감 있게 연출합니다.",
-    //   "다양한 고객님들을 케어한 경험이 있어, 능숙하게 스타일링을 리드합니다."
+    //   "공간의 톤앤매너를 중요하게 생각하며 모던하면서 간결한 스타일링을 추구합니다.",
+    //   "보기에만 좋은 디자인이 아니라 유지 보수와 사용자 편의에 맞춘 요소들을 반영합니다.",
+    //   "고객에 맞춰 조정하는 편이지만 전문가 입장에서 적극 리드하는 경우가 있을 수 있습니다."
     // ]);
 
 
@@ -654,8 +654,7 @@ DevContext.prototype.launching = async function () {
     // let targetArr, channel, desid, designer, pid, webLinks;
     // channel = "#200_web";
     // targetArr = [
-    //   { designer: "손병준", desid: "de051", pid: "a79" },
-    //   { designer: "이한솔", desid: "de052", pid: "a80" },
+    //   { designer: "박정훈", desid: "de056", pid: "a81" },
     // ];
     // for (let { designer, desid, pid } of targetArr) {
     //   webLinks = [
@@ -708,7 +707,7 @@ DevContext.prototype.aspirantToDesigner = async function () {
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const nameList = [
-      [ "박선영", "2021-03-23" ],
+      [ "박정훈", "2021-03-05" ],
     ];
     const stringToDate = function (str) {
       let temp = str.split('-');
