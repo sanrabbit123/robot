@@ -184,7 +184,7 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     style: {}
   }
   */
-  let dom_clone, targetStyle, ea, ratio, temp;
+  let dom_clone, targetStyle, ea, ratio, temp, boldObject;
   if (mode === undefined && source === undefined && style === undefined) {
     throw new Error("arguments must be mode(dom node name), style");
     return null;
@@ -247,6 +247,27 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         if ((typeof style.text === "string" || Array.isArray(style.text)) && dom_clone.textContent !== undefined) {
           if (Array.isArray(style.text)) {
             style.text = style.text.join("<br>");
+          }
+          if (/\<b\%/gi.test(style.text)) {
+            if (style.bold === undefined || typeof style.bold !== "object") {
+              throw new Error("bold option needs");
+            } else {
+              boldObject = "";
+              for (let b in style.bold) {
+                if (b === "fontSize") {
+                  boldObject += "font-size";
+                } else if (b === "fontWeight") {
+                  boldObject += "font-weight";
+                } else {
+                  boldObject += b;
+                }
+                boldObject += ':';
+                boldObject += style.bold[b];
+                boldObject += ';';
+              }
+              style.text = style.text.replace(/\<b\%/gi, "<b style=\"" + boldObject + "\">");
+              style.text = style.text.replace(/\%b\>/gi, "</b>");
+            }
           }
           dom_clone.insertAdjacentHTML("beforeend", style.text.replace(/\n/g, "<br>"));
         }
@@ -397,6 +418,28 @@ GeneralJs.withOut = function (percent, num, ea) {
   } else {
     throw new Error("invaild arguments");
   }
+}
+
+GeneralJs.vwConvert = function (num) {
+  if (typeof num !== "number") {
+    throw new Error("argument must be number");
+  } else {
+    return (num / 100) * window.innerWidth;
+  }
+}
+
+GeneralJs.setTimeout = function (callback, time) {
+  let propertyName;
+  propertyName = "tempTimeout_" + String((new Date()).valueOf());
+  GeneralJs.timeouts[propertyName] = setTimeout(function () {
+    callback();
+    clearTimeout(propertyName);
+    GeneralJs.timeouts[propertyName] = null;
+  }, time);
+}
+
+GeneralJs.willDo = function (func) {
+  GeneralJs.setTimeout(func, 0);
 }
 
 GeneralJs.deBounce = function (func, wait, immediate) {
