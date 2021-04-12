@@ -28,7 +28,7 @@
 const PageBlockJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = document.getElementById("totalcontents");
-  this.ea = "px";
+  this.ea = "vw";
   this.pages = null;
   this.base = null;
   this.index = 0;
@@ -36,13 +36,13 @@ const PageBlockJs = function () {
 
 PageBlockJs.prototype.baseMaker = function () {
   const instance = this;
-  const { ea } = this;
   const ratio = (16 / 9);
   let paddingLeft, paddingTop;
   let width, height;
   let style;
-  let totalBase;
+  let ea;
 
+  ea = "px";
   height = window.innerHeight;
   width = height * ratio;
 
@@ -73,20 +73,18 @@ PageBlockJs.prototype.baseMaker = function () {
     this.totalContents.style[i] = style[i];
   }
 
-  totalBase = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: String(width) + ea,
-    height: String(height) + ea,
-    background: "red",
-    opacity: String(0.6),
-  };
-  for (let i in style) {
-    totalBase.style[i] = style[i];
-  }
+  this.base = GeneralJs.createNode({
+    mother: this.totalContents,
+    id: "base",
+    style: {
+      position: "relative",
+      width: String(width) + ea,
+      height: String(height) + ea,
+      overflow: "hidden",
+      background: "white",
+    }
+  });
 
-  this.base = totalBase;
-  this.totalContents.appendChild(totalBase);
 }
 
 PageBlockJs.prototype.pageRender = function () {
@@ -107,26 +105,22 @@ PageBlockJs.prototype.launching = async function (loading) {
     const getObj = GeneralJs.returnGet();
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
-
     if (getObj.type === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = "https://home-liaison.com";
       throw new Error("invaild query string");
     } else {
-
+      this.baseMaker();
       const Generator = require("/generator.js");
       const generator = new Generator();
       const pages = await generator.generatePages(getObj.type);
-
       if (pages === null) {
         alert("잘못된 접근입니다!");
         window.location.href = "https://home-liaison.com";
         throw new Error("invaild query string");
       } else {
-
-        this.ea = <%% "px", "px", "px", "px" %%>;
+        this.ea = <%% "vw", "vw", "vw", "vw" %%>;
         this.pages = await pages.render();
-        this.baseMaker();
         this.pageRender();
       }
     }

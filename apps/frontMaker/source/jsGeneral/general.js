@@ -168,6 +168,237 @@ GeneralJs.nodes = {
   iframe: document.createElement('IFRAME'),
 }
 
+GeneralJs.createNode = function (mode, source, style, mother = null) {
+  /* append style object properties */
+  /*
+  style = {
+    mode: "div",
+    source: "",
+    mother: base,
+    text: "안녕하세요!",
+    class: [ "hoverdefault" ],
+    id: "aaa",
+    attribute: [
+      { index: "b" },
+    ],
+    style: {}
+  }
+  */
+  let dom_clone, targetStyle, ea, ratio, temp;
+  if (mode === undefined && source === undefined && style === undefined) {
+    throw new Error("arguments must be mode(dom node name), style");
+    return null;
+  } else {
+    if (mode !== undefined && typeof mode === "object") {
+      style = mode;
+      mode = "div";
+      if (typeof source === "object" && source.nodeName !== undefined) {
+        mother = source;
+      } else {
+        mother = null;
+      }
+      source = null;
+    } else if (typeof mode === "string" && typeof source === "object") {
+      mode = mode;
+      if (typeof style === "object" && style.nodeName !== undefined) {
+        mother = style;
+        style = source;
+        source = null;
+      } else {
+        style = source;
+        mother = null;
+        source = null;
+      }
+    } else if (typeof mode === "string" && typeof source === "string" && typeof style === "object") {
+      mode = mode;
+      style = style;
+      source = source;
+      mother = mother;
+    } else {
+      throw new Error("arguments must be mode(dom node name), svg source string, style object, dom mother");
+      return null;
+    }
+  }
+  if (style.mode !== undefined) {
+    if (typeof style.mode === "string") {
+      mode = style.mode;
+    }
+    delete style.mode;
+  }
+  if (style.source !== undefined) {
+    if (typeof style.source === "string") {
+      source = style.source;
+    }
+    delete style.source;
+  }
+  if (style.mother !== undefined) {
+    if (typeof style.mother === "object" && style.mother.nodeName !== undefined) {
+      mother = style.mother;
+    }
+    delete style.mother;
+  }
+  if (!/svg/gi.test(mode)) {
+    if (GeneralJs.nodes[mode] === undefined || typeof style !== "object") {
+      throw new Error("invaild arguments");
+      return null;
+    } else {
+      dom_clone = GeneralJs.nodes[mode].cloneNode(true);
+      if (style.text !== undefined) {
+        if ((typeof style.text === "string" || Array.isArray(style.text)) && dom_clone.textContent !== undefined) {
+          if (Array.isArray(style.text)) {
+            style.text = style.text.join("<br>");
+          }
+          dom_clone.insertAdjacentHTML("beforeend", style.text.replace(/\n/g, "<br>"));
+        }
+        delete style.text;
+      }
+      if (style.class !== undefined) {
+        if (Array.isArray(style.class)) {
+          for (let c of style.class) {
+            dom_clone.classList.add(c);
+          }
+        }
+        delete style.class;
+      }
+      if (style.id !== undefined) {
+        if (typeof style.id === "string" && dom_clone.id !== undefined) {
+          dom_clone.id = style.id;
+        }
+        delete style.id;
+      }
+      if (style.attribute !== undefined) {
+        if (Array.isArray(style.attribute)) {
+          for (let a of style.attribute) {
+            if (typeof a === "object") {
+              for (let key in a) {
+                dom_clone.setAttribute(key, a[key]);
+              }
+            }
+          }
+        }
+        delete style.attribute;
+      }
+      if (style.style !== undefined) {
+        if (typeof style.style === "object") {
+          targetStyle = style.style;
+        } else {
+          throw new Error("invaild arguments");
+        }
+      } else {
+        targetStyle = style;
+      }
+      targetStyle.wordSpacing = String(-1) + "px";
+      for (let i in targetStyle) {
+        dom_clone.style[i] = targetStyle[i];
+      }
+      if (mother !== null && mother.appendChild.constructor === Function) {
+        mother.appendChild(dom_clone);
+      }
+      return dom_clone;
+    }
+  } else {
+    if (typeof source === "string" && typeof style === "object") {
+      dom_clone = SvgTong.stringParsing(source);
+      if (style.text !== undefined) {
+        delete style.text;
+      }
+      if (style.class !== undefined) {
+        if (Array.isArray(style.class)) {
+          for (let c of style.class) {
+            dom_clone.classList.add(c);
+          }
+        }
+        delete style.class;
+      }
+      if (style.id !== undefined) {
+        if (typeof style.id === "string" && dom_clone.id !== undefined) {
+          dom_clone.id = style.id;
+        }
+        delete style.id;
+      }
+      if (style.attribute !== undefined) {
+        if (Array.isArray(style.attribute)) {
+          for (let a of style.attribute) {
+            if (typeof a === "object") {
+              for (let key in a) {
+                dom_clone.setAttribute(key, a[key]);
+              }
+            }
+          }
+        }
+        delete style.attribute;
+      }
+      if (style.style !== undefined) {
+        if (typeof style.style === "object") {
+          targetStyle = style.style;
+        } else {
+          throw new Error("invaild arguments");
+        }
+      } else {
+        targetStyle = style;
+      }
+      if ((targetStyle.width === "auto" || targetStyle.width === undefined) && targetStyle.height !== undefined) {
+        ratio = SvgTong.getRatio(dom_clone);
+        ea = targetStyle.height.replace(/[\-\.0-9]/gi, '');
+        temp = Number(targetStyle.height.replace(/[^\-\.0-9]/gi, ''));
+        targetStyle.width = String(temp * ratio) + ea;
+      }
+      if ((targetStyle.height === "auto" || targetStyle.height === undefined) && targetStyle.width !== undefined) {
+        ratio = SvgTong.getRatio(dom_clone);
+        ea = targetStyle.width.replace(/[\-\.0-9]/gi, '');
+        temp = Number(targetStyle.width.replace(/[^\-\.0-9]/gi, ''));
+        targetStyle.height = String(temp / ratio) + ea;
+      }
+      for (let i in targetStyle) {
+        dom_clone.style[i] = targetStyle[i];
+      }
+      if (mother !== null && mother.appendChild.constructor === Function) {
+        mother.appendChild(dom_clone);
+      }
+      return dom_clone;
+    } else {
+      throw new Error("invaild arguments");
+      return null;
+    }
+  }
+}
+
+GeneralJs.createElement = GeneralJs.createNode;
+
+GeneralJs.create = GeneralJs.createNode;
+
+GeneralJs.createFragment = function () {
+  return document.createDocumentFragment();
+}
+
+GeneralJs.createNodes = function (arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error("arguments must be array");
+  } else {
+    let result = [];
+    for (let i of arr) {
+      if (typeof i !== "object") {
+        throw new Error("arguments must be [ object, object, object... ]");
+      } else {
+        result.push(GeneralJs.createNode(i));
+      }
+    }
+    return result;
+  }
+}
+
+GeneralJs.createElements = GeneralJs.createNodes;
+
+GeneralJs.withOut = function (percent, num, ea) {
+  if (typeof percent === "number" && typeof num !== undefined && typeof ea === "string") {
+    return ("calc(" + String(percent) + "% - " + String(num) + ea + ")");
+  } else if (typeof percent !== undefined && typeof num === "string" && ea === undefined) {
+    return ("calc(" + String(100) + "% - " + String(percent) + num + ")");
+  } else {
+    throw new Error("invaild arguments");
+  }
+}
+
 GeneralJs.deBounce = function (func, wait, immediate) {
   let timeout;
   return function() {

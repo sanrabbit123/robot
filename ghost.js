@@ -755,12 +755,12 @@ Ghost.prototype.photoRouter = function (needs) {
   return resultObj;
 }
 
-Ghost.prototype.photorawRouter = function (needs) {
+Ghost.prototype.investRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC ] = needs;
-  const folderName = "사진_미등록_포트폴리오";
-  const pathNameConst = "/photoraw_";
+  const folderName = "IR";
+  const pathNameConst = "/invest_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
@@ -786,6 +786,33 @@ Ghost.prototype.photorawRouter = function (needs) {
       }).catch((e) => { throw new Error(e); });
     }
   };
+
+  //POST - index
+  funcObj.post_index = {
+    link: [ "/index/:id" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+        let list_refined;
+        list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
+        list_refined.sort((a, b) => { return Number(a) - Number(b); });
+        if (Number.isNaN(Number(req.params.id))) {
+          throw new Error("invaild parameter");
+        }
+        return fileSystem(`readDir`, [ `${sambaDir}/${list_refined[Number(req.params.id)]}` ]);
+      }).then((list) => {
+        let list_refined;
+        list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
+        list_refined.sort((a, b) => { return Number(a) - Number(b); });
+        res.send(JSON.stringify(list_refined));
+      }).catch((e) => { throw new Error(e); });
+    }
+  }
 
   //end : set router
   let resultObj = { get: [], post: [] };
@@ -1046,7 +1073,7 @@ Ghost.prototype.serverLaunching = async function () {
       "client",
       "designer",
       "photo",
-      "photoraw"
+      "invest"
     ];
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
@@ -1140,12 +1167,6 @@ Ghost.prototype.fileLaunching = async function () {
       let pemsLink = process.cwd() + "/pems/" + address.host;
       let certDir, keyDir, caDir;
       let routerObj;
-      let routerTargets = [
-        "client",
-        "designer",
-        "photo",
-        "photoraw"
-      ];
 
       certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
       keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);

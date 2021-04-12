@@ -509,24 +509,25 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // console.log(await requestSystem("https://apis.aligo.in/send/", {
-    //   user_id: "hliaison",
-    //   key: "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2",
-    //   msg: "안녕하세요, 테스트입니다!",
-    //   receiver: "01027473403",
-    //   destination: "배창규",
-    //   sender: "0220392252",
-    //   rdate: "",
-    //   rtime: "",
-    //   testmode_yn: "N",
-    //   title: "안녕하세요!",
-    //   msg_type: "LMS",
-    // }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     // designer analytics
-    // const desid = "d2104_aa08s";
+    // const desid = "d2104_aa09s";
     // const fileName = (process.cwd() + "/temp/" + desid + ".json");
     // const analytics = JSON.parse(await fileSystem(`readString`, [ fileName ]));
     // let whereQuery, updateQuery;
@@ -534,8 +535,6 @@ DevContext.prototype.launching = async function () {
     // updateQuery = {};
     // updateQuery["analytics"] = analytics;
     // await back.updateDesigner([ whereQuery, updateQuery ]);
-
-
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
