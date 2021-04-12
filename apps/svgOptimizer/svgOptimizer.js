@@ -834,7 +834,7 @@ SvgOptimizer.prototype.setDcimal = function (number) {
 SvgOptimizer.prototype.loadSVG = async function (file) {
   const { JSDOM } = require("jsdom");
   const { window } = new JSDOM(`<!DOCTYPE html><html></html>`);
-  let svgDoc_raw, svgDoc, svgObj, svgStringNew;
+  let svgDoc_raw, svgDoc, svgObj, svgStringNew, newFilterId;
   const parseXML = function(data) {
     let xml;
     if (!data || typeof data !== "string") { return null; }
@@ -852,6 +852,12 @@ SvgOptimizer.prototype.loadSVG = async function (file) {
     svgStringNew = svgObj.toString();
     if (/xlink/.test(svgStringNew)) {
       svgStringNew = '<svg xmlns:xlink="http://www.w3.org/1999/xlink"' + svgStringNew.slice(4);
+    }
+    if (/\<filter\>\<feGaussianBlur stdDeviation=['"][0-9]+['"]\/\>\<\/filter\>/gi.test(svgStringNew) && /filter:url\(#[^\)]+\)/gi.test(svgStringNew)) {
+      newFilterId = /filter:url\(#([^\)]+)\)/gi.exec(svgStringNew)[1];
+      newFilterId = newFilterId + this.fileToName(file) + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100));
+      svgStringNew = svgStringNew.replace(/filter:url\(#([^\)]+)\)/gi, "filter:url(#" + newFilterId + ")");
+      svgStringNew = svgStringNew.replace(/\<filter\>\<feGaussianBlur stdDeviation=/i, "\<filter id=\"" + newFilterId + "\"\>\<feGaussianBlur stdDeviation=");
     }
     return svgStringNew;
   } catch (e) {
