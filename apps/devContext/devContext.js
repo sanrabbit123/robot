@@ -510,11 +510,31 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
+    // const projects = await back.getProjectsByQuery({ $and: [ { desid: { $regex: "^d" } } ] });
+    // let tempArr;
+    // let target;
+    // let total, num;
+    //
+    // num = 0;
+    // total = 0;
+    // for (let p of projects) {
+    //   if (p.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+    //     tempArr = p.proposal.detail;
+    //     for (let obj of tempArr) {
+    //       if (obj.desid === p.desid) {
+    //         target = obj.fee;
+    //         break;
+    //       }
+    //     }
+    //     if (target[0].amount !== 0) {
+    //       total += (target[0].amount * 1.1);
+    //       num++;
+    //     }
+    //   }
+    // }
+    //
+    // console.log(total, num)
+    // console.log(total / num)
 
 
 
