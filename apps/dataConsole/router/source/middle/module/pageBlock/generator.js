@@ -20,6 +20,7 @@ Generator.prototype.generatePages = async function (target) {
     if (!targets.includes(target)) {
       return null;
     }
+    
     const Pages = require("/" + target + "/index.js");
     if (Pages.prototype.render === undefined || Pages.prototype.render === null) {
       return null;

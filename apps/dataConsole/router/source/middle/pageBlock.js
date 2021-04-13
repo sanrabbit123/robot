@@ -37,6 +37,7 @@ const PageBlockJs = function () {
 PageBlockJs.prototype.baseMaker = function () {
   const instance = this;
   const ratio = (16 / 9);
+  const { colorChip, createNode } = GeneralJs;
   let paddingLeft, paddingTop;
   let width, height;
   let style;
@@ -58,7 +59,7 @@ PageBlockJs.prototype.baseMaker = function () {
 
   style = {
     position: "relative",
-    background: GeneralJs.colorChip.black,
+    background: colorChip.black,
   };
   if (paddingTop === null) {
     style.paddingLeft = String(paddingLeft) + ea;
@@ -73,7 +74,7 @@ PageBlockJs.prototype.baseMaker = function () {
     this.totalContents.style[i] = style[i];
   }
 
-  this.base = GeneralJs.createNode({
+  this.base = createNode({
     mother: this.totalContents,
     id: "base",
     style: {
@@ -98,13 +99,71 @@ PageBlockJs.prototype.pageRender = function () {
   }
 }
 
+PageBlockJs.prototype.injectionAnimation = function () {
+  const instance = this;
+  const style = document.querySelector("style");
+  const animationString = `
+  @keyframes pageAni_up_forwards{
+    from {opacity:0;transform:translateY(10px);}
+    to {opacity:1;transform:translateY(0px);}
+  }
+  @keyframes pageAni_up_noforwards{
+    from {opacity:0;transform:translateY(10px);}
+    16.6% {opacity:1;transform:translateY(0px);}
+    83.4% {opacity:1;transform:translateY(0px);}
+    to {opacity:0;transform:translateY(10px);}
+  }
+
+  @keyframes pageAni_down_forwards{
+    from {opacity:0;transform:translateY(-10px);}
+    to {opacity:1;transform:translateY(0px);}
+  }
+  @keyframes pageAni_down_noforwards{
+    from {opacity:0;transform:translateY(-10px);}
+    16.6% {opacity:1;transform:translateY(0px);}
+    83.4% {opacity:1;transform:translateY(0px);}
+    to {opacity:0;transform:translateY(-10px);}
+  }
+
+  @keyframes pageAni_right_forwards{
+    from {opacity:0;transform:translateX(10px);}
+    to {opacity:1;transform:translateX(0px);}
+  }
+  @keyframes pageAni_right_noforwards{
+    from {opacity:0;transform:translateX(10px);}
+    16.6% {opacity:1;transform:translateX(0px);}
+    83.4% {opacity:1;transform:translateX(0px);}
+    to {opacity:0;transform:translateX(10px);}
+  }
+
+  @keyframes pageAni_left_forwards{
+    from {opacity:0;transform:translateX(-10px);}
+    to {opacity:1;transform:translateX(0px);}
+  }
+  @keyframes pageAni_left_noforwards{
+    from {opacity:0;transform:translateX(-10px);}
+    16.6% {opacity:1;transform:translateX(0px);}
+    83.4% {opacity:1;transform:translateX(0px);}
+    to {opacity:0;transform:translateX(-10px);}
+  }
+
+  @keyframes pageAni_in_forwards{
+    from {opacity:0;}
+    to {opacity:1;}
+  }
+  @keyframes pageAni_in_noforwards{
+    from {opacity:0;}
+    16.6% {opacity:1;}
+    83.4% {opacity:1;}
+    to {opacity:0;}
+  }`;
+  style.insertAdjacentHTML("beforeend", ("*{transition:all 0s ease;}" + "\n\n" + animationString));
+}
 
 PageBlockJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
-
-    document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease;}");
-
+    this.injectionAnimation();
     const getObj = GeneralJs.returnGet();
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
@@ -126,66 +185,11 @@ PageBlockJs.prototype.launching = async function (loading) {
           alert("잘못된 접근입니다!");
           window.location.href = "https://home-liaison.com";
           throw new Error("invaild query string");
+        } else {
+          this.ea = <%% "vw", "vw", "vw", "vw" %%>;
+          this.pages = await pages.render(Number(getObj.index.replace(/[^0-9]/gi, '')));
+          this.pageRender();
         }
-        const animationString = `
-        @keyframes pageAni_up_forwards{
-          from {opacity:0;transform:translateY(10px);}
-          to {opacity:1;transform:translateY(0px);}
-        }
-        @keyframes pageAni_up_noforwards{
-          from {opacity:0;transform:translateY(10px);}
-          16.6% {opacity:1;transform:translateY(0px);}
-          83.4% {opacity:1;transform:translateY(0px);}
-          to {opacity:0;transform:translateY(10px);}
-        }
-
-        @keyframes pageAni_down_forwards{
-          from {opacity:0;transform:translateY(-10px);}
-          to {opacity:1;transform:translateY(0px);}
-        }
-        @keyframes pageAni_down_noforwards{
-          from {opacity:0;transform:translateY(-10px);}
-          16.6% {opacity:1;transform:translateY(0px);}
-          83.4% {opacity:1;transform:translateY(0px);}
-          to {opacity:0;transform:translateY(-10px);}
-        }
-
-        @keyframes pageAni_right_forwards{
-          from {opacity:0;transform:translateX(10px);}
-          to {opacity:1;transform:translateX(0px);}
-        }
-        @keyframes pageAni_right_noforwards{
-          from {opacity:0;transform:translateX(10px);}
-          16.6% {opacity:1;transform:translateX(0px);}
-          83.4% {opacity:1;transform:translateX(0px);}
-          to {opacity:0;transform:translateX(10px);}
-        }
-
-        @keyframes pageAni_left_forwards{
-          from {opacity:0;transform:translateX(-10px);}
-          to {opacity:1;transform:translateX(0px);}
-        }
-        @keyframes pageAni_left_noforwards{
-          from {opacity:0;transform:translateX(-10px);}
-          16.6% {opacity:1;transform:translateX(0px);}
-          83.4% {opacity:1;transform:translateX(0px);}
-          to {opacity:0;transform:translateX(-10px);}
-        }
-
-        @keyframes pageAni_in_forwards{
-          from {opacity:0;}
-          to {opacity:1;}
-        }
-        @keyframes pageAni_in_noforwards{
-          from {opacity:0;}
-          16.6% {opacity:1;}
-          83.4% {opacity:1;}
-          to {opacity:0;}
-        }`;
-        document.querySelector("style").insertAdjacentHTML("beforeend", animationString);
-        this.ea = <%% "vw", "vw", "vw", "vw" %%>;
-        this.pages = await pages.render(Number(getObj.index.replace(/[^0-9]/gi, '')));
-        this.pageRender();
       }
     }
   } catch (e) {

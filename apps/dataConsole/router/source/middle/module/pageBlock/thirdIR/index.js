@@ -23,44 +23,45 @@ Pages.prototype.modeRender = function (obj) {
   let marginVisualRatio;
   let requestArr, frameArr;
   let top1, top2, top3;
-  let titleFontSize, contentsFontSize;
+  let titleFontSize, contentsFontSize, contentsFontWeight;
   let mode23VisualRatio;
 
   height = window.innerHeight;
   width = height * ratio;
 
   marginVisualRatio = 0.9;
+  contentsFontWeight = 400;
 
   if (window.innerWidth >= width) {
 
     ea = "vh";
     margin = 4.8 * ratio;
-    titleHeight = 4.1 * ratio;
+    titleHeight = 4.3 * ratio;
     titleWidth = (10 + (obj.mode < 2 ? 0 : 8)) * ratio;
     indexSize = 0.8 * ratio;
-    hashWidth = 0.92 * ratio;
+    hashWidth = 0.95 * ratio;
     hashMargin = 0.45 * ratio;
-    top1 = 0.2 * ratio;
-    top2 = -0.35 * ratio;
-    titleFontSize = 1.9 * ratio;
-    top3 = -0.3 * ratio;
-    contentsFontSize = 0.9 * ratio;
+    top1 = 0.3 * ratio;
+    top2 = -0.4 * ratio;
+    titleFontSize = 2 * ratio;
+    top3 = -0.4 * ratio;
+    contentsFontSize = 0.95 * ratio;
     mode23VisualRatio = 0.11;
 
   } else {
 
     ea = "vw";
     margin = 4.8;
-    titleHeight = 4.1;
+    titleHeight = 4.3;
     titleWidth = 10 + (obj.mode < 2 ? 0 : 8);
     indexSize = 0.8;
-    hashWidth = 0.92;
+    hashWidth = 0.95;
     hashMargin = 0.45;
-    top1 = 0.2;
-    top2 = -0.35;
-    titleFontSize = 1.9;
-    top3 = -0.3;
-    contentsFontSize = 0.9;
+    top1 = 0.3;
+    top2 = -0.4;
+    titleFontSize = 2;
+    top3 = -0.4;
+    contentsFontSize = 0.95;
     mode23VisualRatio = 0.24;
 
   }
@@ -108,7 +109,7 @@ Pages.prototype.modeRender = function (obj) {
         text: String(obj.index),
         style: {
           position: "absolute",
-          bottom: String(margin * 1.15) + ea,
+          bottom: String(margin * 1.1) + ea,
           right: String(margin) + ea,
           fontSize: String(indexSize) + ea,
           fontWeight: String(300),
@@ -326,8 +327,8 @@ Pages.prototype.modeRender = function (obj) {
         left: String(0) + ea,
         height: "auto",
         fontSize: String(contentsFontSize) + ea,
-        fontWeight: String(300),
-        lineHeight: String(1.72),
+        fontWeight: String(contentsFontWeight),
+        lineHeight: String(1.7),
       }
     }
   ]);
@@ -369,9 +370,8 @@ Pages.prototype.render = async function (target) {
   try {
     let app, result;
 
-    const $TOTAL_MODULEOBJECT = require("/thirdIR/pages/a" + String(target) + ".js");
-    const ThisClass = $TOTAL_MODULEOBJECT[Object.keys($TOTAL_MODULEOBJECT)[0]];
-    app = new ThisClass();
+    const Page = require("/thirdIR/pages/a" + String(target) + ".js");
+    app = new Page();
 
     result = [];
     result.push(this.modeRender({ ...app.render(), index: target }));

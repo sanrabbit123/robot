@@ -14,7 +14,7 @@ const A7 = function () {
 
 A7.prototype.render = function () {
   return {
-    mode: 0,
+    mode: 1,
     title: this.title,
     contents: this.contents,
     diagram: this.diagram,

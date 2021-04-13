@@ -179,9 +179,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
           let totalModuleObjectConst;
           totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
           code = code.replace(/\$CURRENT_DIR_ARRAY/g, JSON.stringify(thisModuleDir));
-          code = code.replace(/(const |let | )(\$TOTAL_MODULEOBJECT) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1}${totalModuleObjectConst} = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}`; });
-          code = code.replace(/\$TOTAL_MODULEOBJECT/g, totalModuleObjectConst);
-          code = code.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1}{ ${p2} } = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}`; });
+          code = code.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => {
+            return `const ${totalModuleObjectConst} = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}; ${p1}${p2} = ${totalModuleObjectConst}[Object.keys(${totalModuleObjectConst})[0]];`;
+          });
           code = code.replace(/module\.exports = ([^\=\;\/\n]+)/i, (match, p1, offset, string) => { return "export { " + p1 + " }"; });
           return code;
         }
