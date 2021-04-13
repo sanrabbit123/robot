@@ -1,4 +1,4 @@
-const A1 = function () {
+const A5 = function () {
   this.title = [
     "서비스",
     "큐레이션",
@@ -12,9 +12,9 @@ const A1 = function () {
   this.animation = [];
 }
 
-A1.prototype.render = function () {
+A5.prototype.render = function () {
   return {
-    mode: 0,
+    mode: 2,
     title: this.title,
     contents: this.contents,
     diagram: this.diagram,
@@ -22,4 +22,4 @@ A1.prototype.render = function () {
   };
 }
 
-module.exports = A1;
+module.exports = A5;

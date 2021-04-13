@@ -605,10 +605,10 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "신정안",
-    //     designer: "김소영",
-    //     pid: "p110",
-    //     link: "https://drive.google.com/drive/folders/1WSNtDJ5MGyLms0AkF4PqJfLje3kcUWjq",
+    //     client: "우지영",
+    //     designer: "박혜인",
+    //     pid: "p111",
+    //     link: "https://drive.google.com/drive/folders/1orAF0euVdh5RPcbKuWsTiXLj5iveBrya",
     //   }
     // ]);
 
@@ -693,6 +693,7 @@ DevContext.prototype.launching = async function () {
     this.MONGOC.close();
     this.MONGOLOCALC.close();
     console.log(`done`);
+    process.exit();
   }
 }
 

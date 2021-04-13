@@ -353,9 +353,56 @@ AiContents.prototype.to_mysql = async function () {
       return obj;
     }
   }
+  const transQueryObj = function (obj) {
+    const insertToUpdateSelect = function (insertQuery) {
+      let tempArr, updateQuery, selectQuery, porlid;
+      let thisTable, columnArr, valueArr;
+
+      if (insertQuery === "") {
+        return { update: "", select: "" };
+      }
+
+      tempArr = insertQuery.split("(");
+      for (let i = 0; i < tempArr.length; i++) {
+        tempArr[i] = tempArr[i].split(")")[0].trim();
+      }
+
+      thisTable = tempArr[0].split(" ")[2].trim();
+      columnArr = tempArr[1].split(',');
+      valueArr = tempArr[2].slice(1, -1).split("','");
+
+      selectQuery = `SELECT * FROM ${thisTable};`;
+
+      updateQuery = `UPDATE ${thisTable} SET `;
+      for (let i = 0; i < columnArr.length; i++) {
+        if (columnArr[i] !== "porlid" && columnArr[i] !== "revid") {
+          updateQuery += columnArr[i];
+          updateQuery += " = '";
+          updateQuery += valueArr[i];
+          updateQuery += "', ";
+        } else if (columnArr[i] === "porlid") {
+          porlid = valueArr[i];
+        }
+      }
+      updateQuery = updateQuery.slice(0, -2);
+      updateQuery += " WHERE porlid = '";
+      updateQuery += porlid;
+      updateQuery += "';";
+
+      return { update: updateQuery, select: selectQuery };
+    }
+    let result;
+    result = {};
+    for (let i in obj) {
+      result[i] = insertToUpdateSelect(obj[i]);
+    }
+    return result;
+  }
 
   try {
     let pidResultarr, p_id, queryObj;
+    let subQueryObj;
+    let tempResult, row;
 
     pidResultarr = await fileSystem(`readDir`, [ `${home_dir}/result` ]);
     for (let i = 0; i < pidResultarr.length; i++) {
@@ -364,17 +411,52 @@ AiContents.prototype.to_mysql = async function () {
       }
     }
     queryObj = JSON.parse(await fileSystem(`readString`, [ `${home_dir}/result/query_${p_id}.js` ]));
+    subQueryObj = transQueryObj(queryObj);
 
     const POOL = this.mother.mysql.createPool(this.mother.frontinfo);
     const PPOOL = POOL.promise();
     console.log(`mysql connect success`);
-    await PPOOL.query(queryObj.pordeta_query);
-    await PPOOL.query(queryObj.porlist_query);
-    if (queryObj.revdeta_query !== '') {
-      await PPOOL.query(queryObj.revdeta_query);
-      await PPOOL.query(queryObj.revlist_query);
+
+    tempResult = await PPOOL.query(subQueryObj.pordeta_query.select);
+    row = tempResult[0];
+    if (row.length === 0) {
+      await PPOOL.query(queryObj.pordeta_query);
+      console.log(`insert pordeta done`);
+    } else {
+      await PPOOL.query(subQueryObj.pordeta_query.update);
+      console.log(`update pordeta done`);
     }
-    console.log("insert success");
+
+    tempResult = await PPOOL.query(subQueryObj.porlist_query.select);
+    row = tempResult[0];
+    if (row.length === 0) {
+      await PPOOL.query(queryObj.porlist_query);
+      console.log(`insert porlist done`);
+    } else {
+      await PPOOL.query(subQueryObj.porlist_query.update);
+      console.log(`update porlist done`);
+    }
+
+    if (queryObj.revdeta_query !== '') {
+      tempResult = await PPOOL.query(subQueryObj.revdeta_query.select);
+      row = tempResult[0];
+      if (row.length === 0) {
+        await PPOOL.query(queryObj.revdeta_query);
+        console.log(`insert revdeta done`);
+      } else {
+        await PPOOL.query(subQueryObj.revdeta_query.update);
+        console.log(`update revdeta done`);
+      }
+      tempResult = await PPOOL.query(subQueryObj.revlist_query.select);
+      row = tempResult[0];
+      if (row.length === 0) {
+        await PPOOL.query(queryObj.revlist_query);
+        console.log(`insert revlist done`);
+      } else {
+        await PPOOL.query(subQueryObj.revlist_query.update);
+        console.log(`update revlist done`);
+      }
+    }
 
   } catch (e) {
     console.log(e.message);

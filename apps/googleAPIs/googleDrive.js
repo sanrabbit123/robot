@@ -141,7 +141,11 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
     }
     shell.exec(`open ${shellLink(folderPath.split("/").slice(0, -1).join("/"))}`);
     console.log(`total: ${String(index)}`);
-    return folderPath;
+    if (folder_name !== null) {
+      return `${folderPath.split("/").slice(0, -1).join("/")}/${folder_name}`;
+    } else {
+      return folderPath;
+    }
   } catch (e) {
     console.log(e);
   }

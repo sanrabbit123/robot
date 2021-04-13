@@ -364,9 +364,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     resultFolder = await this.to_portfolio(liteMode);
     const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_original, fileList_png);
-    if (fileList_780.length === 0 || fileList_original.length === 0) {
-      throw new Error("no photo error");
-    }
 
     //google drive upload
     if (liteMode || this.clientNullATarget.includes(this.clientName)) {

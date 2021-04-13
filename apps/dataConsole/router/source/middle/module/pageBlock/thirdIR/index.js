@@ -1,7 +1,5 @@
 const Pages = function () {
   this.mother = new GeneralJs();
-  this.ea = "vw";
-  this.margin = 4.8;
 }
 
 Pages.prototype.modeRender = function (obj) {
@@ -12,21 +10,60 @@ Pages.prototype.modeRender = function (obj) {
     throw new Error("invaild argument");
   }
   const instance = this;
+  const ratio = (16 / 9);
   const { returnHash } = this.mother;
-  const { ea, margin } = this;
   const { colorChip, createFragment, createNode, createNodes, withOut, vwConvert, willDo } = GeneralJs;
+  let ea, margin;
+  let width, height;
   let base;
   let title, contents, diagram, textArea, order;
   let titleHeight, titleWidth, indexSize;
   let hashWidth, hashMargin;
   let etcDoms;
+  let marginVisualRatio;
+  let requestArr, frameArr;
+  let top1, top2, top3;
+  let titleFontSize, contentsFontSize;
+  let mode23VisualRatio;
 
-  titleHeight = 4.1;
-  titleWidth = 10 + (obj.mode < 2 ? 0 : 8);
-  indexSize = 0.8;
+  height = window.innerHeight;
+  width = height * ratio;
 
-  hashWidth = 0.92;
-  hashMargin = 0.45;
+  marginVisualRatio = 0.9;
+
+  if (window.innerWidth >= width) {
+
+    ea = "vh";
+    margin = 4.8 * ratio;
+    titleHeight = 4.1 * ratio;
+    titleWidth = (10 + (obj.mode < 2 ? 0 : 8)) * ratio;
+    indexSize = 0.8 * ratio;
+    hashWidth = 0.92 * ratio;
+    hashMargin = 0.45 * ratio;
+    top1 = 0.2 * ratio;
+    top2 = -0.35 * ratio;
+    titleFontSize = 1.9 * ratio;
+    top3 = -0.3 * ratio;
+    contentsFontSize = 0.9 * ratio;
+    mode23VisualRatio = 0.11;
+
+  } else {
+
+    ea = "vw";
+    margin = 4.8;
+    titleHeight = 4.1;
+    titleWidth = 10 + (obj.mode < 2 ? 0 : 8);
+    indexSize = 0.8;
+    hashWidth = 0.92;
+    hashMargin = 0.45;
+    top1 = 0.2;
+    top2 = -0.35;
+    titleFontSize = 1.9;
+    top3 = -0.3;
+    contentsFontSize = 0.9;
+    mode23VisualRatio = 0.24;
+
+  }
 
   base = createFragment();
 
@@ -39,8 +76,7 @@ Pages.prototype.modeRender = function (obj) {
           marginTop: String(margin) + ea,
           marginLeft: String(margin) + ea,
           width: withOut(margin * 2, ea),
-          height: withOut((margin * 2.6) + titleHeight, ea),
-          background: "gray",
+          height: withOut((margin * (2 + 1)) + titleHeight, ea),
         }
       },
       {
@@ -48,7 +84,7 @@ Pages.prototype.modeRender = function (obj) {
         style: {
           display: "inline-block",
           position: "relative",
-          marginTop: String(margin * 0.6) + ea,
+          marginTop: String(margin * marginVisualRatio) + ea,
           marginLeft: String(margin) + ea,
           marginRight: String(margin / 2) + ea,
           width: String(titleWidth) + ea,
@@ -60,7 +96,7 @@ Pages.prototype.modeRender = function (obj) {
         style: {
           display: "inline-block",
           position: "relative",
-          marginTop: String(margin * 0.6) + ea,
+          marginTop: String(margin * marginVisualRatio) + ea,
           marginLeft: String(0) + ea,
           marginRight: String(margin) + ea,
           width: withOut((margin * 2.5) + titleWidth, ea),
@@ -72,7 +108,7 @@ Pages.prototype.modeRender = function (obj) {
         text: String(obj.index),
         style: {
           position: "absolute",
-          bottom: String(margin) + ea,
+          bottom: String(margin * 1.15) + ea,
           right: String(margin) + ea,
           fontSize: String(indexSize) + ea,
           fontWeight: String(300),
@@ -87,7 +123,7 @@ Pages.prototype.modeRender = function (obj) {
         style: {
           display: "inline-block",
           position: "relative",
-          marginTop: String(margin) + ea,
+          marginTop: String(margin * 1.05) + ea,
           marginLeft: String(margin) + ea,
           marginRight: String(margin * 0.5) + ea,
           width: String(titleWidth) + ea,
@@ -99,7 +135,7 @@ Pages.prototype.modeRender = function (obj) {
         style: {
           display: "inline-block",
           position: "relative",
-          marginTop: String(margin) + ea,
+          marginTop: String(margin * 1.05) + ea,
           marginLeft: String(0) + ea,
           marginRight: String(margin) + ea,
           width: withOut((margin * 2.5) + titleWidth, ea),
@@ -110,11 +146,10 @@ Pages.prototype.modeRender = function (obj) {
         mother: base,
         style: {
           position: "relative",
-          marginTop: String(margin * 0.6) + ea,
+          marginTop: String(margin * 0.9) + ea,
           marginLeft: String(margin) + ea,
           width: withOut(margin * 2, ea),
-          height: withOut((margin * 2.6) + titleHeight, ea),
-          background: "gray",
+          height: withOut((margin * (2 + 1)) + titleHeight, ea),
         }
       },
       {
@@ -202,6 +237,7 @@ Pages.prototype.modeRender = function (obj) {
           marginRight: String(margin * 0.6) + ea,
           width: String(titleWidth) + ea,
           height: withOut(margin * 2, ea),
+          background: "gray",
         },
       },
       {
@@ -259,7 +295,7 @@ Pages.prototype.modeRender = function (obj) {
       source: returnHash(colorChip.green),
       style: {
         position: "absolute",
-        top: String(0.2) + ea,
+        top: String(top1) + ea,
         left: String(0) + ea,
         width: String(hashWidth) + ea,
       }
@@ -269,10 +305,10 @@ Pages.prototype.modeRender = function (obj) {
       text: obj.title,
       style: {
         position: "absolute",
-        top: String(-0.35) + ea,
+        top: String(top2) + ea,
         left: String(hashWidth + hashMargin) + ea,
         height: "auto",
-        fontSize: String(1.9) + ea,
+        fontSize: String(titleFontSize) + ea,
         fontWeight: String(600),
         lineHeight: String(1.25),
       }
@@ -286,18 +322,43 @@ Pages.prototype.modeRender = function (obj) {
       },
       style: {
         position: "absolute",
-        top: String(-0.3) + ea,
+        top: String(top3) + ea,
         left: String(0) + ea,
         height: "auto",
-        fontSize: String(0.9) + ea,
+        fontSize: String(contentsFontSize) + ea,
         fontWeight: String(300),
         lineHeight: String(1.72),
       }
     }
   ]);
 
+  requestArr = [];
+  for (let i = 0; i < obj.diagram.length; i++) {
+    for (let j = 0; j < obj.diagram[i].length; j++) {
+      requestArr.push({
+        mother: diagram,
+        mode: "svg",
+        source: obj.diagram[i][j],
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          height: String(100) + '%',
+          width: String(100) + '%',
+          opacity: String(i === 0 ? 1 : 0),
+          background: (obj.animation[i][j].white ? "white" : "transparent"),
+          animation: `pageAni_${obj.animation[i][j].mode}_${obj.animation[i][j].forwards ? "forwards" : "noforwards"} ${obj.animation[i][j].forwards ? String(0.4) : String((0.4 * 2) + 2)}s ease ${String(i * 2.4)}s forwards`,
+        }
+      });
+    }
+  }
+
+  if (requestArr.length > 0) {
+    frameArr = createNodes(requestArr);
+  }
+
   if (obj.mode === 2 || obj.mode === 3) {
-    willDo(() => { textArea.style.height = String(etcDoms[1].getBoundingClientRect().height + vwConvert(margin * 0.24) + etcDoms[2].getBoundingClientRect().height) + "px"; });
+    willDo(() => { textArea.style.height = String(etcDoms[1].getBoundingClientRect().height + vwConvert(margin * mode23VisualRatio) + etcDoms[2].getBoundingClientRect().height) + "px"; });
   }
 
   return base;
@@ -306,13 +367,14 @@ Pages.prototype.modeRender = function (obj) {
 Pages.prototype.render = async function (target) {
   const instance = this;
   try {
-    const A1 = require("/thirdIR/pages/a1.js");
     let app, result;
 
-    result = [];
+    const $TOTAL_MODULEOBJECT = require("/thirdIR/pages/a" + String(target) + ".js");
+    const ThisClass = $TOTAL_MODULEOBJECT[Object.keys($TOTAL_MODULEOBJECT)[0]];
+    app = new ThisClass();
 
-    app = new A1();
-    result.push(this.modeRender({ ...app.render(), index: 1 }));
+    result = [];
+    result.push(this.modeRender({ ...app.render(), index: target }));
 
     return result;
   } catch (e) {
