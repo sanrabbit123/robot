@@ -527,8 +527,8 @@ Mother.prototype.binaryRequest = function (to, port = null) {
     port = (port === null) ? 80 : port;
     target = to.slice(7);
   } else {
-    http = require("https");
-    port = (port === null) ? 443 : port;
+    http = require("http");
+    port = (port === null) ? 80 : port;
     target = to;
   }
 
