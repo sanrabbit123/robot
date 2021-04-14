@@ -801,10 +801,10 @@ Ghost.prototype.investRouter = function (needs) {
         let list_refined;
         list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
         list_refined.sort((a, b) => { return Number(a) - Number(b); });
-        if (Number.isNaN(Number(req.params.id))) {
+        if (Number.isNaN(Number(req.params.id.replace(/[^0-9]/g, '')))) {
           throw new Error("invaild parameter");
         }
-        return fileSystem(`readDir`, [ `${sambaDir}/${list_refined[Number(req.params.id)]}` ]);
+        return fileSystem(`readDir`, [ `${sambaDir}/${list_refined[Number(req.params.id.replace(/[^0-9]/g, ''))]}` ]);
       }).then((list) => {
         let list_refined;
         list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
