@@ -15,12 +15,6 @@ document.addEventListener("error", function (e) {
   window.location.href = "https://home-liaison.com";
 });
 
-window.addEventListener("resize", function (e) {
-  if (window.innerWidth > 1200) {
-    window.location.reload();
-  }
-});
-
 document.addEventListener("error", function (e) {
   GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
   window.location.href = "https://home-liaison.com";

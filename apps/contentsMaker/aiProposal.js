@@ -118,7 +118,7 @@ AiProposal.prototype.proposalLaunching = async function () {
       if (i !== `.DS_Store` && i !== `static`) {
         tempArr = i.split('_');
         fromArr.push(this.options.home_dir + "/result/" + i);
-        toArr.push("proposalPdf/" + tempArr[0] + '_' + tempArr[1] + '_' + tempArr[tempArr.length - 1]);
+        toArr.push("proposalPdf/" + tempArr[0] + '_' + tempArr[1]);
         gres = await gd.upload_andView("1ofHfJmGJJ6TCk5qP_VttNvIvHt2IVZ21", this.options.home_dir + "/result/" + i);
       }
     }

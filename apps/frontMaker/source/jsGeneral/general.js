@@ -39,6 +39,8 @@ GeneralJs.colorChip = {
   yellow: "#ffbd3d",
 };
 
+GeneralJs.mimeTypes = { aac: "audio/aac", abw: "application/x-abiword", arc: "application/octet-stream", avi: "video/x-msvideo", azw: "application/vnd.amazon.ebook", bin: "application/octet-stream", bz: "application/x-bzip", bz2: "application/x-bzip2", csh: "application/x-csh", css: "text/css", csv: "text/csv", doc: "application/msword", epub: "application/epub+zip", gif: "image/gif", htm: "text/html", html: "text/html", ico: "image/x-icon", ics: "text/calendar", jar: "application/java-archive", jpeg: "image/jpeg", jpg: "image/jpeg", mjs: "application/js", js: "application/js", json: "application/json", mid: "audio/midi", midi: "audio/midi", mpeg: "video/mpeg", mpkg: "application/vnd.apple.installer+xml", odp: "application/vnd.oasis.opendocument.presentation", ods: "application/vnd.oasis.opendocument.spreadsheet", odt: "application/vnd.oasis.opendocument.text", oga: "audio/ogg", ogv: "video/ogg", ogx: "application/ogg", pdf: "application/pdf", ppt: "application/vnd.ms-powerpoint", rar: "application/x-rar-compressed", rtf: "application/rtf", sh: "application/x-sh", svg: "image/svg+xml", swf: "application/x-shockwave-flash", tar: "application/x-tar", tif: "image/tiff", tiff: "image/tiff", ttf: "application/x-font-ttf", vsd: "application/vnd.visio", wav: "audio/x-wav", weba: "audio/webm", webm: "video/webm", webp: "image/webp", woff: "application/x-font-woff", xhtml: "application/xhtml+xml", xls: "application/vnd.ms-excel", xml: "application/xml", xul: "application/vnd.mozilla.xul+xml", zip: "application/zip", "3gp": "video/3gpp", "3g2": "video/3gpp2", "7z": "application/x-7z-compressed" };
+
 GeneralJs.ajax = function (data, url, callback) {
   const xhr = new XMLHttpRequest();
   xhr.open("POST", url);
@@ -130,6 +132,60 @@ GeneralJs.requestPromise = function (url) {
      if (xhr.readyState !== 4) { return }
      if (xhr.status >= 200 && xhr.status < 300) {
        resolve(xhr.response);
+     } else {
+       reject({
+         status: this.status,
+         statusText: xhr.statusText
+       });
+     }
+    };
+    xhr.onerror = function () {
+     reject({
+       status: this.status,
+       statusText: xhr.statusText
+     });
+    };
+    xhr.send();
+  });
+}
+
+GeneralJs.downloadFile = function (url, forceName = null) {
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function () {
+     if (xhr.readyState !== 4) { return; }
+     if (xhr.status >= 200 && xhr.status < 300) {
+       let fileName, fileType, blob, a, timeoutId;
+       let execSearch;
+       fileName = url.split("/")[url.split("/").length - 1];
+       execSearch = /\.[^\.]+$/.exec(fileName);
+       if (execSearch === null) {
+         reject("invaild url");
+         return;
+       }
+       fileType = GeneralJs.mimeTypes[execSearch[0].replace(/\./g, '').toLowerCase()];
+       if (fileType === undefined) {
+         fileType = "application/octet-stream";
+       }
+       if (forceName !== null && typeof forceName === "string") {
+         fileName = forceName.replace(/\.[^\.]+$/, '') + '.' + execSearch[0].replace(/\./g, '').toLowerCase();
+       }
+       blob = new Blob([ xhr.response ], { type: fileType });
+       a = document.createElement('A');
+       a.download = fileName;
+       a.href = URL.createObjectURL(blob);
+       a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
+       a.style.display = "none";
+       document.body.appendChild(a);
+       a.click();
+       document.body.removeChild(a);
+       resolve(fileName);
+       timeoutId = setTimeout(function() {
+         URL.revokeObjectURL(a.href);
+         clearTimeout(timeoutId);
+       }, 1500);
      } else {
        reject({
          status: this.status,
@@ -1041,7 +1097,7 @@ GeneralJs.downloadString = function (text, fileName, fileType = "plain") {
 
   let blob, a, timeoutId;
 
-  blob = new Blob([text], { type: fileType });
+  blob = new Blob([ text ], { type: fileType });
 
   a = document.createElement('A');
   a.download = fileName;

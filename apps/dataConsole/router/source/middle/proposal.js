@@ -1002,7 +1002,7 @@ ProposalJs.prototype.insertInitBox = function () {
       }
     }
     designerFactor = GeneralJs.nodes.div.cloneNode(true);
-    designerFactor.textContent = targetDesigners[i];
+    designerFactor.textContent = targetDesigners[targetDesigners.length - 1 - i];
     style = {
       fontSize: String(designerFactorSize) + ea,
       fontWeight: String(500),
@@ -2551,6 +2551,10 @@ ProposalJs.prototype.launching = async function (loading) {
     this.client = client;
     this.designers = new Designers(designers);
     this.proposal = project.proposal;
+
+    if (getObj.proid === undefined) {
+      window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
+    }
 
     //loading end
     await GeneralJs.sleep(500);

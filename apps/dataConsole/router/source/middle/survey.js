@@ -1330,6 +1330,12 @@ SurveyJs.prototype.launching = async function (loading) {
       throw new Error("invaild query string");
     } else {
 
+      window.addEventListener("resize", function (e) {
+        if (window.innerWidth > 1200) {
+          window.location.reload();
+        }
+      });
+
       //get this person
       desid = getObj.desid;
       designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners"));

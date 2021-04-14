@@ -77,7 +77,7 @@ Pages.prototype.modeRender = function (obj) {
           marginTop: String(margin) + ea,
           marginLeft: String(margin) + ea,
           width: withOut(margin * 2, ea),
-          height: withOut((margin * (2 + 1)) + titleHeight, ea),
+          height: withOut((margin * (2 + 0.95)) + titleHeight, ea),
         }
       },
       {
