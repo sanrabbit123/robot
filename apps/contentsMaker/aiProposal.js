@@ -16,15 +16,19 @@ AiProposal.prototype.saveStatic = async function (path) {
   const instance = this;
   const { shell, shellLink, fileSystem, binaryRequest } = this.mother;
   try {
+    let protocol;
     let targetHost, targetPath, targetName;
     let tempArr, tempArr2, tempObject, tempString;
 
     if (/^http:/.test(path)) {
       path = path.slice(7);
+      protocol = "http";
     } else if (/^https:/.test(path)) {
       path = path.slice(8);
+      protocol = "https";
     } else {
       path = path;
+      protocol = "https";
     }
 
     tempArr = path.split('/');
@@ -42,7 +46,7 @@ AiProposal.prototype.saveStatic = async function (path) {
       this.operationStacks.push(tempString);
     }
 
-    tempObject = await binaryRequest(path);
+    tempObject = await binaryRequest(protocol + "://" + path);
     await fileSystem(`writeBinary`, [ this.options.static_dir + targetPath, tempObject ]);
 
   } catch (e) {
