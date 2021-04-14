@@ -513,16 +513,22 @@ Mother.prototype.headRequest = function (to, port = 80, header = {}) {
   });
 }
 
-Mother.prototype.binaryRequest = function (to, port = 80) {
-  const http = require("http");
+Mother.prototype.binaryRequest = function (to, port = null) {
+  let http;
   let target, tempArr;
   let targetHost, targetPath;
 
   if (/^https:\/\//.test(to)) {
+    http = require("https");
+    port = (port === null) ? 443 : port;
     target = to.slice(8);
   } else if (/^http:\/\//.test(to)) {
+    http = require("http");
+    port = (port === null) ? 80 : port;
     target = to.slice(7);
   } else {
+    http = require("https");
+    port = (port === null) ? 443 : port;
     target = to;
   }
 
