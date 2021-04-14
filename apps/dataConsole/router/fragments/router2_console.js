@@ -783,6 +783,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.contract = contracts.length;
 
           //process start
+          searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[2] } } } };
+          clients = await instance.back.getClientsByQuery(searchQuery, { selfMongo: instance.mongo });
           processNumber = 0;
           for (let c of clients) {
             for (let { analytics: { proposal } } of c.requests) {
