@@ -786,7 +786,6 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           processNumber = 0;
           for (let c of clients) {
             for (let { analytics: { proposal } } of c.requests) {
-              console.log(c.cliid, proposal);
               for (let obj of proposal) {
                 if (obj.contract) {
                   processNumber = processNumber + 1;

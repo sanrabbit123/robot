@@ -23,7 +23,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
       } else if (dateArray === "cron") {
         const today = new Date();
         const agoDay = new Date();
-        agoDay.setMonth(agoDay.getMonth() - 2);
+        agoDay.setMonth(agoDay.getMonth() - 4);
         dateArray = [ agoDay, today ];
       } else {
         throw new Error("arguments must be array and [ startDate, endDate ]");
