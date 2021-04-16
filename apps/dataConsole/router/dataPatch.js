@@ -4325,10 +4325,6 @@ DataPatch.prototype.projectStandard = function () {
       width: 50,
       left: 30,
     },
-    designer: {
-      name: "디자이너",
-      width: 80,
-    },
     service: {
       name: "서비스",
       width: 180,
@@ -4337,44 +4333,20 @@ DataPatch.prototype.projectStandard = function () {
       name: "응대",
       width: 80,
     },
-    next: {
-      name: "전화 예정",
-      width: 100,
-    },
-    callHistory: {
-      name: "연락 기록",
-      width: 100,
-    },
-    firstDate: {
-      name: "계약금 입금",
-      width: 100,
-    },
-    firstCancel: {
-      name: "계약금 취소",
-      width: 100,
-    },
-    firstAmount: {
-      name: "계약금",
-      width: 100,
-    },
-    firstInfo: {
-      name: "계약금 정보",
-      width: 300,
-    },
-    firstRefund: {
-      name: "계약금 환불액",
-      width: 100,
-    },
     meetingDate: {
       name: "1차 미팅",
       width: 170,
     },
-    remainDate: {
-      name: "잔금 입금",
+    formDateFrom: {
+      name: "시작일",
       width: 100,
     },
-    remainCancel: {
-      name: "잔금 취소",
+    formDateTo: {
+      name: "종료일",
+      width: 100,
+    },
+    contentsPhotoDate: {
+      name: "촬영일",
       width: 100,
     },
     remainSupply: {
@@ -4389,29 +4361,33 @@ DataPatch.prototype.projectStandard = function () {
       name: "소비자가",
       width: 100,
     },
+    firstAmount: {
+      name: "계약금",
+      width: 100,
+    },
+    firstDate: {
+      name: "계약금 입금",
+      width: 100,
+    },
+    firstInfo: {
+      name: "계약금 정보",
+      width: 300,
+    },
     remainPure: {
       name: "잔금",
+      width: 100,
+    },
+    remainDate: {
+      name: "잔금 입금",
       width: 100,
     },
     remainInfo: {
       name: "잔금 정보",
       width: 300,
     },
-    remainRefund: {
-      name: "잔금 환불액",
-      width: 100,
-    },
-    formDateFrom: {
-      name: "시작일",
-      width: 100,
-    },
-    formDateTo: {
-      name: "종료일",
-      width: 100,
-    },
-    formDateCancel: {
-      name: "계약 취소",
-      width: 100,
+    designer: {
+      name: "디자이너",
+      width: 80,
     },
     method: {
       name: "정산 방식",
@@ -4420,10 +4396,6 @@ DataPatch.prototype.projectStandard = function () {
     percentage: {
       name: "수수료",
       width: 80,
-    },
-    calculationInfo: {
-      name: "정산 정보",
-      width: 300,
     },
     paymentsTotalAmount: {
       name: "정산 총금액",
@@ -4437,20 +4409,52 @@ DataPatch.prototype.projectStandard = function () {
       name: "선금 지급일",
       width: 100,
     },
-    paymentsFirstCancel: {
-      name: "선금 환수일",
-      width: 100,
-    },
-    paymentsFirstRefund: {
-      name: "선금 환수액",
-      width: 100,
-    },
     paymentsRemainAmount: {
       name: "디자이너 잔금",
       width: 100,
     },
     paymentsRemainDate: {
       name: "잔금 지급일",
+      width: 100,
+    },
+    calculationInfo: {
+      name: "정산 정보",
+      width: 300,
+    },
+    next: {
+      name: "전화 예정",
+      width: 100,
+    },
+    callHistory: {
+      name: "연락 기록",
+      width: 100,
+    },
+    firstCancel: {
+      name: "계약금 취소",
+      width: 100,
+    },
+    firstRefund: {
+      name: "계약금 환불액",
+      width: 100,
+    },
+    remainCancel: {
+      name: "잔금 취소",
+      width: 100,
+    },
+    remainRefund: {
+      name: "잔금 환불액",
+      width: 100,
+    },
+    formDateCancel: {
+      name: "계약 취소",
+      width: 100,
+    },
+    paymentsFirstCancel: {
+      name: "선금 환수일",
+      width: 100,
+    },
+    paymentsFirstRefund: {
+      name: "선금 환수액",
       width: 100,
     },
     paymentsRemainCancel: {
@@ -4463,10 +4467,6 @@ DataPatch.prototype.projectStandard = function () {
     },
     photoStatus: {
       name: "촬영 상태",
-      width: 100,
-    },
-    contentsPhotoDate: {
-      name: "촬영일",
       width: 100,
     },
   };
