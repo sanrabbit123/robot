@@ -189,11 +189,15 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
       toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
     }
 
+    console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
+
     MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
     MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
 
     await MONGOC_FROM.connect();
     await MONGOC_TO.connect();
+
+    console.log("connection success");
 
     const collections = await MONGOC_FROM.db(dbName).listCollections().toArray();
     const collections_local = await MONGOC_TO.db(dbName).listCollections().toArray();
