@@ -280,7 +280,7 @@ Robot.prototype.localReflection = async function (arg = null) {
       }
     }
 
-    console.log(target);
+    console.log(arg, target);
     await reflection.mongoMigration("local", target);
   } catch (e) {
     console.log(e);
