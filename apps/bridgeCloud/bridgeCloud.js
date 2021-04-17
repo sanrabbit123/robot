@@ -259,7 +259,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
-  const [ MONGOC, KAKAO ] = needs;
+  const [ MONGOC, KAKAO, HUMAN ] = needs;
   const ignorePhone = this.ignorePhone;
   let funcObj = {};
 
@@ -1038,9 +1038,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   funcObj.post_certification = async function (req, res) {
     try {
       const requestObj = req.body;
-      await KAKAO.sendTalk("certification", requestObj["name"], requestObj["phone"], {
-        company: "홈리에종",
-        certification: requestObj["certification"]
+      await HUMAN.sendSms({
+        name: requestObj["name"],
+        phone: requestObj["phone"],
+        subject: "휴대폰 인증",
+        contents: "[홈리에종] 안녕하세요! " + requestObj["name"] + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + requestObj["certification"] + "\n\n인증번호를 팝업창에 입력해주세요!"
       });
       res.set({
         "Content-Type": "text/plain",
@@ -1072,6 +1074,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
 
   //express
   const app = express();
@@ -1082,6 +1085,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   //set needs
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const kakaoInstance = new KakaoTalk();
+  const humanInstance = new HumanPacket();
 
   try {
     await MONGOC.connect();
@@ -1128,7 +1132,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     pems.allowHTTP1 = true;
 
     //set router
-    const { get, post } = this.bridgeServer([ MONGOC, kakaoInstance ]);
+    const { get, post } = this.bridgeServer([ MONGOC, kakaoInstance, humanInstance ]);
     for (let obj of get) { app.get(obj.link, obj.func); }
     for (let obj of post) { app.post(obj.link, obj.func); }
 

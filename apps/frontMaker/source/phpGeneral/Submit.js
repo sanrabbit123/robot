@@ -22,9 +22,7 @@ class Submit extends Generalf {
     $str = '';
     $tempString = '';
     foreach ($arr as $key => $value) {
-      $tempString = $key;
-      $tempString = preg_replace("/[\\=\\&]/i", "", $tempString);
-      $str .= $tempString;
+      $str .= $key;
       $str .= '=';
       $tempString = (string)$value;
       $tempString = preg_replace("/[\\=\\&]/i", "", $tempString);
@@ -113,18 +111,18 @@ $postArr = array(
   "timeline" => $timeline,
 );
 
-$curlArray = array();
-foreach ($_POST as $key => $value) {
-  $curlArray[$key] = $value;
-}
-$curlRequest = curl_init('https://homeliaison-bridgecloud.xyz/submit');
-curl_setopt($curlRequest, CURLOPT_PORT, 3000);
-curl_setopt($curlRequest, CURLOPT_POST, true);
-curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curlRequest, CURLOPT_POSTFIELDS, Submit::arrToString($curlArray));
-curl_setopt($curlRequest, CURLOPT_SSL_VERIFYPEER, FALSE);
-$response = curl_exec($curlRequest);
-curl_close($curlRequest);
+// $curlArray = array();
+// foreach ($_POST as $key => $value) {
+//   $curlArray[$key] = $value;
+// }
+// $curlRequest = curl_init('https://15.165.185.154/submit');
+// curl_setopt($curlRequest, CURLOPT_PORT, 3000);
+// curl_setopt($curlRequest, CURLOPT_POST, 1);
+// curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, 1);
+// curl_setopt($curlRequest, CURLOPT_POSTFIELDS, Submit::arrToString($curlArray));
+// curl_setopt($curlRequest, CURLOPT_SSL_VERIFYPEER, FALSE);
+// $response = curl_exec($curlRequest);
+// curl_close($curlRequest);
 
 $instance = new Submit();
 $instance->setValue($postArr);
