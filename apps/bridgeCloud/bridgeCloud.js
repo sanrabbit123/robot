@@ -263,21 +263,21 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   const ignorePhone = this.ignorePhone;
   let funcObj = {};
 
-  // //GET - ssl test
-  // funcObj.get_ssl = async function (req, res) {
-  //   try {
-  //     res.set({
-  //       "Content-Type": "text/plain",
-  //       "Access-Control-Allow-Origin": '*',
-  //       "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-  //       "Access-Control-Allow-Headers": '*',
-  //     });
-  //     res.send('success');
-  //   } catch (e) {
-  //     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
-  //     console.log(e);
-  //   }
-  // }
+  //GET - ssl test
+  funcObj.get_ssl = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send('this is new bridge cloud');
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
 
   //POST - submit
   funcObj.post_submit = async function (req, res) {

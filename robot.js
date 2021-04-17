@@ -248,6 +248,16 @@ Robot.prototype.sendAspirantPresentation = async function () {
   }
 }
 
+Robot.prototype.kakaoTokenGenerate = async function () {
+  try {
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const app = new KakaoTalk();
+    await app.generateToken();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.ultimateReflection = async function () {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -642,6 +652,13 @@ const MENU = {
       const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
       const dev = new DevContext();
       dev.devCanvas(process.argv[2] !== "canvas");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  kakaoTokenGenerate: async function () {
+    try {
+      await robot.kakaoTokenGenerate();
     } catch (e) {
       console.log(e);
     }
