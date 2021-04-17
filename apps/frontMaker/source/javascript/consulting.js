@@ -544,7 +544,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
           window.gtag('event', 'login');
         }
         //submit
-        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
+        // GeneralJs.ajax(ajaxdata, "https://homeliaison-bridgecloud.xyz:3000/submit", function (data) {});
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
       });
 

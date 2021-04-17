@@ -18,6 +18,23 @@ class Submit extends Generalf {
     return addslashes($newStr);
   }
 
+  public static function arrToString($arr) {
+    $str = '';
+    $tempString = '';
+    foreach ($arr as $key => $value) {
+      $tempString = $key;
+      $tempString = preg_replace("/[\\=\\&]/i", "", $tempString);
+      $str .= $tempString;
+      $str .= '=';
+      $tempString = (string)$value;
+      $tempString = preg_replace("/[\\=\\&]/i", "", $tempString);
+      $str .= $tempString;
+      $str .= '&';
+    }
+    $str = substr($str, 0, -1);
+    return $str;
+  }
+
   public function setValue($arr) {
     $this->values = $arr;
   }
@@ -95,6 +112,19 @@ $postArr = array(
   "channel" => Submit::valueFilter($_POST["wayto"]),
   "timeline" => $timeline,
 );
+
+$curlArray = array();
+foreach ($_POST as $key => $value) {
+  $curlArray[$key] = $value;
+}
+$curlRequest = curl_init('https://homeliaison-bridgecloud.xyz/submit');
+curl_setopt($curlRequest, CURLOPT_PORT, 3000);
+curl_setopt($curlRequest, CURLOPT_POST, true);
+curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curlRequest, CURLOPT_POSTFIELDS, Submit::arrToString($curlArray));
+curl_setopt($curlRequest, CURLOPT_SSL_VERIFYPEER, FALSE);
+$response = curl_exec($curlRequest);
+curl_close($curlRequest);
 
 $instance = new Submit();
 $instance->setValue($postArr);
