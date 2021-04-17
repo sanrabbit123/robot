@@ -145,27 +145,7 @@ if sys.argv[1] == 'local':
     with open(pemsName["token"], 'wb') as tokenFile:
         tokenFile.write(token)
 
-    targetPemKeyInput = input("target pems : 1.database 2.bridge 3.polling 4.password : ")
-    targetPassword = False
-    if targetPemKeyInput == '1':
-        targetPemKey = "database.pem"
-    elif targetPemKeyInput == '2':
-        targetPemKey = "bridge.pem"
-    elif targetPemKeyInput == '3':
-        targetPemKey = "polling.pem"
-    elif targetPemKeyInput == '4':
-        targetPemKey = ""
-        targetPassword = True
-
-    targetIdHost = input("target id, host (type 'id@host') : ")
-    targetRobotPath = input("target robot path (if type 'default' : path is '/home/centos/robot') : ")
-    if targetRobotPath == "default":
-        targetRobotPath = "/home/centos/robot"
-
-    if not targetPassword:
-        print("scp -i ./pems/" + targetPemKey + " -r ./pems " + targetIdHost + ":" + targetRobotPath)
-    else:
-        print("scp -r ./pems " + targetIdHost + ":" + targetRobotPath)
+    print("info update done")
 
 elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
     if sys.argv[1] == 'refresh':
