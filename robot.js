@@ -273,6 +273,8 @@ Robot.prototype.localReflection = async function (arg = null) {
         target = "backinfo";
       } else if (/home/gi.test(arg)) {
         target = "homeinfo";
+      } else if (/bridge/gi.test(arg)) {
+        target = "bridgeinfo";
       } else {
         target = "mongoinfo";
       }
