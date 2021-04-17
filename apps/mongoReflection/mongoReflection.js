@@ -189,6 +189,7 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
       toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
     }
 
+    console.log(from);
     console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
 
     MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
