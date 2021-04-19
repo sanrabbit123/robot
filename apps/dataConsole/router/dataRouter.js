@@ -1308,12 +1308,10 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           //process start
           processNumber = 0;
           for (let c of clients) {
-            for (let { request: { timeline }, analytics: { proposal } } of c.requests) {
-              if (timeline.valueOf() >= arr[0].valueOf() && timeline.valueOf() < arr[2].valueOf()) {
-                for (let { contract } of proposal) {
-                  if (contract) {
-                    processNumber = processNumber + 1;
-                  }
+            for (let { analytics: { proposal } } of c.requests) {
+              for (let obj of proposal) {
+                if (obj.contract) {
+                  processNumber = processNumber + 1;
                 }
               }
             }

@@ -237,6 +237,9 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     attribute: [
       { index: "b" },
     ],
+    events: [
+      { type: "click", event: new Function() }
+    ],
     style: {}
   }
   */
@@ -368,6 +371,11 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       for (let i in targetStyle) {
         dom_clone.style[i] = targetStyle[i];
       }
+      if (style.events !== undefined && Array.isArray(style.events)) {
+        for (let obj of style.events) {
+          dom_clone.addEventListener(obj.type, obj.event);
+        }
+      }
       if (mother !== null && mother.appendChild.constructor === Function) {
         mother.appendChild(dom_clone);
       }
@@ -428,6 +436,11 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       }
       for (let i in targetStyle) {
         dom_clone.style[i] = targetStyle[i];
+      }
+      if (style.events !== undefined && Array.isArray(style.events)) {
+        for (let obj of style.events) {
+          dom_clone.addEventListener(obj.type, obj.event);
+        }
       }
       if (mother !== null && mother.appendChild.constructor === Function) {
         mother.appendChild(dom_clone);

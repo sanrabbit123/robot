@@ -2973,6 +2973,402 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   //dev ===================================================================================
+
+  rInitialBox.addEventListener("click", function (e) {
+    const matrixCheckList = [
+      {
+        name: "row1",
+        children: [
+          {
+            name: "금액별",
+            children: [
+              { name: "500만원 이하" },
+              { name: "1,000만원" },
+              { name: "1,500만원" },
+              { name: "2,000만원" },
+              { name: "3,000만원" },
+              { name: "4,000만원" },
+              { name: "5,000만원 이상" },
+            ],
+            green: (thisCase, name) => {
+              const { budget } = thisCase;
+              return (Number(name.replace(/[^0-9]/gi, '')) === Number(budget.replace(/[^0-9]/gi, '')));
+            }
+          },
+          {
+            name: "지역별",
+            children: [
+              { name: "서울" },
+              { name: "인천" },
+              { name: "경기" },
+              { name: "강원" },
+              { name: "충청" },
+              { name: "대전" },
+              { name: "세종" },
+              { name: "전라" },
+              { name: "경상" },
+              { name: "제주" },
+              { name: "부산" },
+              { name: "대구" },
+              { name: "울산" },
+              { name: "광주" },
+            ],
+            green: (thisCase, name) => {
+              const { address } = thisCase;
+              return (new RegExp(name, "gi")).test(address);
+            }
+          },
+          {
+            name: "평수별",
+            children: [
+              { name: "0 ~ 9" },
+              { name: "10 ~ 24" },
+              { name: "25 ~ 29" },
+              { name: "30 ~ 34" },
+              { name: "35 ~ 39" },
+              { name: "40 ~ 44" },
+              { name: "45 ~ 49" },
+              { name: "50 ~" },
+            ],
+            green: (thisCase, name) => {
+              const { pyeong } = thisCase;
+              let tempArr;
+              let standard0, standard1;
+              tempArr = name.split('~');
+              standard0 = Number(tempArr[0].trim().replace(/[^0-9]/gi, ''));
+              standard1 = tempArr[1] === '' ? 9999 : Number(tempArr[1].trim().replace(/[^0-9]/gi, ''));
+              return (standard0 <= pyeong && standard1 >= pyeong);
+            }
+          },
+          {
+            name: "계약별",
+            children: [
+              { name: "전월세" },
+              { name: "자가" },
+            ],
+            green: (thisCase, name) => {
+              const { contract } = thisCase;
+              return (new RegExp(name, "gi")).test(contract);
+            }
+          },
+          {
+            name: "거주중",
+            children: [
+              { name: "이사 예정" },
+              { name: "거주중" },
+            ],
+            green: (thisCase, name) => {
+              const { movein } = thisCase;
+              if (name === "거주중") {
+                return /거주중/gi.test(movein);
+              } else {
+                return !/거주중/gi.test(movein);
+              }
+            }
+          },
+        ]
+      },
+      {
+        name: "row2",
+        children: [
+          {
+            name: "시공 정도",
+            children: [
+              { name: "홈퍼니싱" },
+              { name: "홈스타일링" },
+              { name: "토탈 스타일링" },
+              { name: "설계 변경" },
+            ],
+            green: (thisCase, name) => {
+              const { service } = thisCase;
+              return (new RegExp(name.split(' ')[0], "gi")).test(service);
+            }
+          },
+          {
+            name: "재사용 정도",
+            children: [
+              { name: "모두 구매" },
+              { name: "50% 이상 재사용" },
+              { name: "50% 이하 재사용" }
+            ],
+            green: (thisCase, name) => {
+              return (name === "50% 이상 재사용");
+            }
+          },
+        ]
+      },
+      {
+        name: "row3",
+        children: [
+          {
+            name: "선호도",
+            children: [
+              { name: "모던" },
+              { name: "클래식" },
+              { name: "스칸디나비안" },
+              { name: "내추럴" },
+              { name: "빈티지" },
+              { name: "믹스 앤 매치" },
+              { name: "글램" },
+              { name: "오리엔탈" },
+              { name: "이그저틱" },
+              { name: "뉴트럴" },
+              { name: "컨템포러리" },
+            ],
+            green: (thisCase, name) => {
+              return (name === "스칸디나비안" || name === "뉴트럴" || name === "모던" || name === "내추럴");
+            }
+          }
+        ]
+      },
+      {
+        name: "row4",
+        children: [
+          {
+            name: "집 비는 날",
+            children: [
+              { name: "30일 이상" },
+              { name: "30일 이하" },
+            ],
+            green: (thisCase, name) => {
+              return (name === "30일 이상");
+            }
+          },
+          {
+            name: "사전 점검일",
+            children: [
+              { name: "30일 이상" },
+              { name: "30일 이하" },
+            ],
+            green: (thisCase, name) => {
+              return (name === "30일 이하");
+            }
+          },
+          {
+            name: "이사일",
+            children: [
+              { name: "30일 이상" },
+              { name: "30일 이하" },
+            ],
+            green: (thisCase, name) => {
+              return (name === "30일 이상");
+            }
+          },
+        ]
+      },
+    ];
+    const { colorChip, createNode, createNodes, withOut } = GeneralJs;
+    let nodeArr, nodeResultArr, tempNode;
+    let matrixBox;
+    let matrixArea, buttonArea;
+    let buttonHeight;
+    let scrollBox;
+    let margin, marginLeft;
+    let titleNode, buttonsNode;
+    let size;
+    let buttonAreaLeft;
+    let boo;
+    let titleTop;
+    let buttons;
+
+    buttonHeight = 50;
+    margin = 20;
+    marginLeft = 24;
+    size = 14;
+    buttonAreaLeft = 90;
+    titleTop = 7;
+
+    matrixBox = historyBox.cloneNode(false);
+    historyBox.parentNode.appendChild(matrixBox);
+    matrixBox.style.opacity = String(0);
+
+    [ matrixArea, buttonArea ] = createNodes([
+      {
+        mother: matrixBox,
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          height: withOut(String(buttonHeight), ea),
+          border: "1px solid " + colorChip.gray3,
+          borderRadius: String(5) + ea,
+          boxSizing: "border-box",
+        }
+      },
+      {
+        mother: matrixBox,
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          height: String(buttonHeight) + ea,
+          textAlign: "right",
+        }
+      }
+    ]);
+
+    scrollBox = createNode({
+      mother: matrixArea,
+      style: {
+        position: "relative",
+        top: String(margin) + ea,
+        left: String(marginLeft) + ea,
+        overflow: "scroll",
+        width: withOut(String(marginLeft * 2), ea),
+        height: withOut(String(margin * 2), ea),
+      }
+    });
+
+    nodeArr = [];
+    for (let i = 0; i < matrixCheckList.length; i++) {
+      nodeArr.push({
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(40) + ea,
+        }
+      });
+    }
+    nodeResultArr = createNodes(nodeArr);
+
+    for (let i = 0; i < matrixCheckList.length; i++) {
+      for (let j = 0; j < matrixCheckList[i].children.length; j++) {
+        tempNode = createNode({
+          mother: nodeResultArr[i],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            marginBottom: String(6) + ea,
+            marginRight: String(matrixCheckList[i].children[j].children.length > 4 ? 0 : buttonAreaLeft) + ea,
+          }
+        });
+        [ titleNode, buttonsNode ] = createNodes([
+          {
+            mother: tempNode,
+            text: matrixCheckList[i].children[j].name,
+            style: {
+              position: "absolute",
+              top: String(titleTop) + ea,
+              height: String(30) + ea,
+              fontSize: String(size) + ea,
+              fontWeight: String(600),
+              wordSpacing: String(-1) + ea,
+            }
+          },
+          {
+            mother: tempNode,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              background: colorChip.gray1,
+              marginLeft: String(buttonAreaLeft) + ea,
+              padding: String(5) + ea,
+              paddingBottom: String(0) + ea,
+              paddingRight: String(0) + ea,
+              borderRadius: String(3) + ea,
+            }
+          }
+        ]);
+        for (let k = 0; k < matrixCheckList[i].children[j].children.length; k++) {
+          boo = matrixCheckList[i].children[j].green(thisCase, matrixCheckList[i].children[j].children[k].name);
+          createNode({
+            mother: buttonsNode,
+            text: matrixCheckList[i].children[j].children[k].name,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              background: boo ? colorChip.green : colorChip.white,
+              color: boo ? colorChip.white : colorChip.green,
+              padding: String(4.5) + ea,
+              paddingBottom: String(5) + ea,
+              paddingLeft: String(11) + ea,
+              paddingRight: String(11) + ea,
+              fontSize: String(size - 1) + ea,
+              fontWeight: String(400),
+              borderRadius: String(3) + ea,
+              marginRight: String(5) + ea,
+              marginBottom: String(5) + ea,
+              cursor: "pointer",
+            }
+          });
+        }
+      }
+      createNode({
+        mother: nodeResultArr[i],
+        style: {
+          position: "absolute",
+          borderBottom: "1px dashed " + colorChip.gray3,
+          bottom: String(-17) + ea,
+          width: String(100) + '%',
+        }
+      });
+    }
+
+    buttons = createNodes([
+      {
+        mother: buttonArea,
+        style: {
+          background: colorChip.gray1,
+          padding: String(5) + ea,
+          paddingLeft: String(15) + ea,
+          width: String(91) + ea,
+          position: "relative",
+          display: "inline-block",
+          borderRadius: String(3) + ea,
+          marginLeft: String(8) + ea,
+          marginTop: String(18) + ea,
+          height: String(22) + ea,
+        }
+      },
+      {
+        mother: buttonArea,
+        style: {
+          background: colorChip.green,
+          padding: String(5) + ea,
+          paddingLeft: String(15) + ea,
+          width: String(78) + ea,
+          position: "relative",
+          display: "inline-block",
+          borderRadius: String(3) + ea,
+          marginLeft: String(8) + ea,
+          marginTop: String(18) + ea,
+          height: String(22) + ea,
+        }
+      },
+    ]);
+
+
+    createNode({
+      mother: buttons[0],
+      text: ([ "프로젝트 보기", "제안서 제작" ])[0],
+      class: [ "hoverDefault" ],
+      style: {
+        top: String(5.5) + ea,
+        fontSize: String(15) + ea,
+        fontWeight: String(400),
+        position: "absolute",
+        color: i === 0 ? colorChip.deactive : colorChip.white,
+        wordSpacing: String(-1) + ea,
+      }
+    });
+
+    createNode({
+      mother: buttons[1],
+      text: ([ "프로젝트 보기", "제안서 제작" ])[1],
+      class: [ "hoverDefault" ],
+      style: {
+        top: String(5.5) + ea,
+        fontSize: String(15) + ea,
+        fontWeight: String(400),
+        position: "absolute",
+        color: i === 0 ? colorChip.deactive : colorChip.white,
+        wordSpacing: String(-1) + ea,
+      }
+    });
+
+    historyBox.style.animation = "fadeout 0.3s ease forwards";
+    matrixBox.style.animation = "fadein 0.3s ease forwards";
+
+  });
+
   //dev ===================================================================================
 
   //get textAreaTong

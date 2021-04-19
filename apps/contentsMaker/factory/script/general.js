@@ -957,6 +957,246 @@ Mother.prototype.abcFilter = function (font, abc, left, width) {
   return [];
 }
 
+Mother.prototype.rectangle = function (top, left, width, height, radius = null) {
+  let stroke = null, fill = null;
+  let upRound = false, downRound = false;
+  let finalReturnObj;
+  if (typeof top === "object" && left === undefined && width === undefined && height === undefined && radius === null) {
+    if (top.top === undefined || top.left === undefined || top.width === undefined || top.height === undefined|| top.stroke === undefined|| top.fill === undefined|| top.radius === undefined) {
+      throw new Error("object argument must be { number: top, number: left, number: width, number: height, NULL or string: stroke, NULL or string: fill, NULL or number: radius }");
+    } else {
+      left = top.left;
+      width = top.width;
+      height = top.height;
+      radius = top.radius;
+      stroke = top.stroke;
+      fill = top.fill;
+      upRound = (top.upRound === true) ? true : false;
+      downRound = (top.downRound === true) ? true : false;
+      top = top.top;
+    }
+  }
+  if (typeof top !== "number" || typeof left !== "number" || typeof width !== "number" || typeof height !== "number") {
+    throw new Error("arguments must be (number: top, number: left, number: width, number: height[, number: radius])");
+  }
+  if (upRound && downRound) {
+    upRound = true;
+    downRound = false;
+  }
+  const this_ai = app.activeDocument;
+  const this_layer = this_ai.layers[0];
+  let rectangle;
+
+  rectangle = this_layer.pathItems.rectangle(top, left, width, height);
+
+  if (!upRound && !downRound) {
+    if (typeof radius === "number") {
+      rectangle.remove();
+      rectangle = this_layer.pathItems.roundedRectangle(top, left, width, height, radius, radius);
+    }
+    finalReturnObj = rectangle;
+  } else {
+
+    const circleRatio = radius * (0.552516041877744);
+    let boo;
+    if (upRound) {
+      boo = (height >= 0);
+    } else {
+      boo = (height < 0);
+    }
+
+    let originalPoints = rectangle.pathPoints;
+    let pointsNum = rectangle.pathPoints.length;
+    let yAnchors = [];
+
+    for (let i = 0; i < pointsNum; i++) {
+      yAnchors.push({ y: rectangle.pathPoints[i].anchor[1], index: i });
+    }
+
+    let targetIndex = [], leftIndex = [], targets = [], left = [];
+    let finalAnchors, leftHandle, rightHandle;
+    let newPath, points;
+
+    yAnchors.sort((a, b) => { return b.y - a.y; });
+
+    if (boo) {
+      targetIndex.push(yAnchors[0].index);
+      targetIndex.push(yAnchors[1].index);
+      leftIndex.push(yAnchors[2].index);
+      leftIndex.push(yAnchors[3].index);
+    } else {
+      targetIndex.push(yAnchors[2].index);
+      targetIndex.push(yAnchors[3].index);
+      leftIndex.push(yAnchors[0].index);
+      leftIndex.push(yAnchors[1].index);
+    }
+
+    for (let i = 0; i < targetIndex.length; i++) {
+      targets.push(originalPoints[targetIndex[i]]);
+    }
+    for (let i = 0; i < leftIndex.length; i++) {
+      left.push(originalPoints[leftIndex[i]]);
+    }
+
+    if (boo) {
+
+      if (height >= 0) {
+
+        finalAnchors = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+          [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+        leftHandle = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+          [ targets[0].anchor[0] + radius - circleRatio, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius + circleRatio ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+        rightHandle = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius + circleRatio ],
+          [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius + circleRatio, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+      } else {
+
+        finalAnchors = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+          [ targets[0].anchor[0] - radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+        leftHandle = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius ],
+          [ targets[0].anchor[0] - radius + circleRatio, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius + circleRatio ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+        rightHandle = [
+          [ targets[0].anchor[0], targets[0].anchor[1] - radius + circleRatio ],
+          [ targets[0].anchor[0] - radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius - circleRatio, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] - radius ],
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+        ];
+
+      }
+
+    } else {
+
+      if (height < 0) {
+
+        finalAnchors = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+          [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+        ];
+
+        leftHandle = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+          [ targets[0].anchor[0] + radius - circleRatio, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius - circleRatio ],
+        ];
+
+        rightHandle = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius - circleRatio ],
+          [ targets[0].anchor[0] + radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] - radius + circleRatio, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+        ];
+
+      } else {
+
+        finalAnchors = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+          [ targets[0].anchor[0] - radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+        ];
+
+        leftHandle = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius ],
+          [ targets[0].anchor[0] - radius + circleRatio, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius - circleRatio ],
+        ];
+
+        rightHandle = [
+          [ left[0].anchor[0], left[0].anchor[1] ],
+          [ left[1].anchor[0], left[1].anchor[1] ],
+          [ targets[0].anchor[0], targets[0].anchor[1] + radius - circleRatio ],
+          [ targets[0].anchor[0] - radius, targets[0].anchor[1] ],
+          [ targets[1].anchor[0] + radius - circleRatio, targets[1].anchor[1] ],
+          [ targets[1].anchor[0], targets[1].anchor[1] + radius ],
+        ];
+
+      }
+
+    }
+
+    rectangle.remove();
+
+    newPath = this_ai.pathItems.add();
+    newPath.setEntirePath(finalAnchors);
+    newPath.closed = true;
+
+    points = newPath.pathPoints;
+    for (let i = 0; i < points.length; i++) {
+      points[i].leftDirection = leftHandle[i];
+      points[i].rightDirection = rightHandle[i];
+    }
+
+    finalReturnObj = newPath;
+  }
+
+  if (stroke === null) {
+    finalReturnObj.strokeColor = new NoColor();
+  } else if (typeof stroke === "string") {
+    finalReturnObj.strokeColor = this.colorpick(stroke);
+  } else {
+    throw new Error("stroke must be null or string");
+  }
+
+  if (fill === null) {
+    finalReturnObj.fillColor = new NoColor();
+  } else if (typeof fill === "string") {
+    finalReturnObj.fillColor = this.colorpick(fill);
+  } else {
+    throw new Error("fill must be null or string");
+  }
+
+  return finalReturnObj;
+}
 
 ExecMain.prototype.mother = new Mother();
 

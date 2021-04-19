@@ -358,6 +358,22 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // designer analytics
     // const desid = "d2104_aa09s";
     // const fileName = (process.cwd() + "/temp/" + desid + ".json");
@@ -445,10 +461,16 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "배상은",
-    //     designer: "임은숙",
-    //     pid: "p112",
-    //     link: "https://drive.google.com/drive/folders/1jqZ7RFfYOf-bBiva0jlVLOf1bN_Mf2GM",
+    //     client: "나원채",
+    //     designer: "김경수",
+    //     pid: "p113",
+    //     link: "https://drive.google.com/drive/folders/1Uw14NDZ9OBgR6DDgwaDhSQBVhaw_19xL",
+    //   },
+    //   {
+    //     client: "이명서",
+    //     designer: "우다미",
+    //     pid: "p114",
+    //     link: "https://drive.google.com/drive/folders/1dNTdLk0p6gt-2aLLCfN7FS0afWo3a-RZ",
     //   }
     // ]);
 
