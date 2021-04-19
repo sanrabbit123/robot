@@ -3014,7 +3014,7 @@ ProposalJs.prototype.list_launching = async function () {
   await this.list_mainArea();
 }
 
-ProposalJs.prototype.load_initevent = function () {
+ProposalJs.prototype.load_initevent = function (noBlink = false) {
   const instance = this;
   return function (e) {
     if (instance.toggleSetting.listCreate === 1) {
@@ -3023,10 +3023,12 @@ ProposalJs.prototype.load_initevent = function () {
       let button1 = document.getElementById("blewpp_button1");
       let mother = instance.createPannel;
       let father = instance.listPannel;
-      father.classList.add("listpp_fadeout");
-      father.classList.remove("listpp_fadein");
-      mother.classList.remove("listpp_fadeout");
-      mother.classList.add("listpp_fadein");
+      if (!noBlink) {
+        father.classList.add("listpp_fadeout");
+        father.classList.remove("listpp_fadein");
+        mother.classList.remove("listpp_fadeout");
+        mother.classList.add("listpp_fadein");
+      }
       father.style.zIndex = "-1";
       instance.toggleSetting.listCreate = 0;
 
@@ -4594,7 +4596,7 @@ ProposalJs.prototype.launching = async function () {
             proposal: proposal_obj.proposal.detail,
           };
 
-          (this.load_initevent()).call({
+          (this.load_initevent(true)).call({
             parentElement: {
               querySelector: function (str) {
                 return {

@@ -2290,6 +2290,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let rightArrowBox, leftArrowBox;
   let rightArrow, leftArrow;
   let hInitial, hInitialBox;
+  let rInitial, rInitialBox;
   let updateEventFunction;
   let contentsBoxHeight, contentsBoxBottom;
   let lineHeightRatio;
@@ -2433,6 +2434,29 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
   hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   div_clone2.appendChild(hInitialBox);
+
+  //r initial icon
+  rInitial = SvgTong.stringParsing(this.mother.returnRinitial("#2fa678"));
+  for (let i in style) {
+    rInitial.style[i] = style[i];
+  }
+  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (GeneralJs.isMac() ? (35.5 / 60) : (36 / 60)))) + ea;
+  rInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (9.7 / 60) : (10.7 / 60))) + ea;
+  div_clone2.appendChild(rInitial);
+
+  //r initial button
+  rInitialBox = GeneralJs.nodes.div.cloneNode(true);
+  rInitialBox.classList.add("hoverdefault_reverse");
+  for (let i in style) {
+    rInitialBox.style[i] = style[i];
+  }
+  rInitialBox.style.opacity = '';
+  rInitialBox.style.right = String(leftMargin + (1.5 * leftMargin * (31 / 60))) + ea;
+  rInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
+  rInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
+  rInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
+  rInitialBox.style.background = "white";
+  div_clone2.appendChild(rInitialBox);
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -3362,6 +3386,34 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
       GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
     }
+  });
+
+  //r initial event
+  rInitialBox.addEventListener("click", function (e) {
+    const { colorChip, createNode, createNodes, withOut } = GeneralJs;
+    let matrixBox;
+    let baseBox;
+
+    matrixBox = historyBox.cloneNode(false);
+    historyBox.parentElement.appendChild(matrixBox);
+
+    baseBox = createNode({
+      mother: matrixBox,
+      style: {
+        position: "relative",
+        boxSizing: "border-box",
+        border: "1px solid " + colorChip.gray3,
+        borderRadius: String(5) + ea,
+        width: String(100) + '%',
+        height: String(100) + '%'
+      }
+    });
+
+
+
+
+    historyBox.style.animation = "fadeout 0.3s ease forwards";
+    matrixBox.style.animation = "fadein 0.3s ease forwards";
   });
 
   //get textAreaTong

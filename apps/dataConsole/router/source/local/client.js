@@ -3223,7 +3223,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         mother: scrollBox,
         style: {
           position: "relative",
-          marginBottom: String(40) + ea,
+          marginTop: String(60) + ea,
         }
       });
     }
@@ -3296,8 +3296,25 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         style: {
           position: "absolute",
           borderBottom: "1px dashed " + colorChip.gray3,
-          bottom: String(-17) + ea,
+          top: String(-35) + ea,
           width: String(100) + '%',
+        }
+      });
+      createNode({
+        mother: nodeResultArr[i],
+        text: "sector" + String(i),
+        style: {
+          position: "absolute",
+          top: String(-47) + ea,
+          width: String(80) + ea,
+          left: "calc(50% - " + String(80 / 2) + ea + ")",
+          textAlign: "center",
+          fontSize: String(15) + ea,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          background: "white",
+          color: colorChip.gray3
         }
       });
     }
@@ -3335,7 +3352,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       },
     ]);
 
-
     createNode({
       mother: buttons[0],
       text: ([ "프로젝트 보기", "제안서 제작" ])[0],
@@ -3345,7 +3361,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         fontSize: String(15) + ea,
         fontWeight: String(400),
         position: "absolute",
-        color: i === 0 ? colorChip.deactive : colorChip.white,
+        color: colorChip.deactive,
         wordSpacing: String(-1) + ea,
       }
     });
@@ -3354,12 +3370,20 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       mother: buttons[1],
       text: ([ "프로젝트 보기", "제안서 제작" ])[1],
       class: [ "hoverDefault" ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            window.location.href = window.location.protocol + "//" + window.location.host + "/proposal?proid=p2104_aa21s";
+          }
+        }
+      ],
       style: {
         top: String(5.5) + ea,
         fontSize: String(15) + ea,
         fontWeight: String(400),
         position: "absolute",
-        color: i === 0 ? colorChip.deactive : colorChip.white,
+        color: colorChip.white,
         wordSpacing: String(-1) + ea,
       }
     });
