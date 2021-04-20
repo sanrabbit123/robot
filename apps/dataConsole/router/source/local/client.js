@@ -3319,11 +3319,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       });
     }
 
-    buttons = createNodes([
+    createNodes([
       {
         mother: buttonArea,
         style: {
-          background: colorChip.gray1,
+          background: colorChip.green,
           padding: String(5) + ea,
           paddingLeft: String(15) + ea,
           width: String(91) + ea,
@@ -3336,9 +3336,30 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
       },
       {
+        mother: -1,
+        text: ([ "프로젝트 보기", "제안서 제작" ])[0],
+        class: [ "hoverDefault" ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=p2104_aa10s";
+            }
+          }
+        ],
+        style: {
+          top: String(5.5) + ea,
+          fontSize: String(15) + ea,
+          fontWeight: String(400),
+          position: "absolute",
+          color: colorChip.white,
+          wordSpacing: String(-1) + ea,
+        }
+      },
+      {
         mother: buttonArea,
         style: {
-          background: colorChip.green,
+          background: colorChip.gray1,
           padding: String(5) + ea,
           paddingLeft: String(15) + ea,
           width: String(78) + ea,
@@ -3350,43 +3371,28 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           height: String(22) + ea,
         }
       },
-    ]);
-
-    createNode({
-      mother: buttons[0],
-      text: ([ "프로젝트 보기", "제안서 제작" ])[0],
-      class: [ "hoverDefault" ],
-      style: {
-        top: String(5.5) + ea,
-        fontSize: String(15) + ea,
-        fontWeight: String(400),
-        position: "absolute",
-        color: colorChip.deactive,
-        wordSpacing: String(-1) + ea,
-      }
-    });
-
-    createNode({
-      mother: buttons[1],
-      text: ([ "프로젝트 보기", "제안서 제작" ])[1],
-      class: [ "hoverDefault" ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            window.location.href = window.location.protocol + "//" + window.location.host + "/proposal?proid=p2104_aa21s";
+      {
+        mother: -1,
+        text: ([ "프로젝트 보기", "제안서 제작" ])[1],
+        class: [ "hoverDefault" ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/proposal?proid=p2104_aa21s";
+            }
           }
+        ],
+        style: {
+          top: String(5.5) + ea,
+          fontSize: String(15) + ea,
+          fontWeight: String(400),
+          position: "absolute",
+          color: colorChip.deactive,
+          wordSpacing: String(-1) + ea,
         }
-      ],
-      style: {
-        top: String(5.5) + ea,
-        fontSize: String(15) + ea,
-        fontWeight: String(400),
-        position: "absolute",
-        color: colorChip.white,
-        wordSpacing: String(-1) + ea,
       }
-    });
+    ]);
 
     historyBox.style.animation = "fadeout 0.3s ease forwards";
     matrixBox.style.animation = "fadein 0.3s ease forwards";
