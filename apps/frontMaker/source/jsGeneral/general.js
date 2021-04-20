@@ -35,6 +35,7 @@ GeneralJs.colorChip = {
   black: "#404040",
   green: "#2fa678",
   gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
+  gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
   red: "#ff5f57",
   yellow: "#ffbd3d",
 };
@@ -278,6 +279,9 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       return null;
     }
   }
+  if (Array.isArray(style)) {
+    throw new Error("argument must be object, not array");
+  }
   if (style.mode !== undefined) {
     if (typeof style.mode === "string") {
       mode = style.mode;
@@ -465,14 +469,48 @@ GeneralJs.createNodes = function (arr) {
   if (!Array.isArray(arr)) {
     throw new Error("arguments must be array");
   } else {
-    let result = [];
-    for (let i of arr) {
-      if (typeof i !== "object") {
+    let result, pastNode;
+
+    pastNode = null;
+    result = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (typeof arr[i] !== "object") {
         throw new Error("arguments must be [ object, object, object... ]");
       } else {
-        result.push(GeneralJs.createNode(i));
+        if (arr[i].mother === undefined) {
+          throw new Error("mother must be exist");
+        } else {
+          if (typeof arr[i].mother === "string") {
+            if (pastNode === null) {
+              throw new Error("first mother can not be chain");
+            }
+            if (/ch/gi.test(arr[i].mother)) {
+              arr[i].mother = pastNode;
+            } else {
+              throw new Error("invaild mother operation");
+            }
+          } else if (typeof arr[i].mother === "number") {
+            if (pastNode === null) {
+              throw new Error("first mother can not be chain");
+            }
+            if (arr[i].mother >= 0) {
+              if (result[arr[i].mother] === undefined) {
+                throw new Error("index out error");
+              }
+              arr[i].mother = result[arr[i].mother];
+            } else {
+              if (result[i + arr[i].mother] === undefined) {
+                throw new Error("index out error");
+              }
+              arr[i].mother = result[i + arr[i].mother];
+            }
+          }
+          pastNode = GeneralJs.createNode(arr[i]);
+          result.push(pastNode);
+        }
       }
     }
+
     return result;
   }
 }

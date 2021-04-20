@@ -3389,10 +3389,32 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //r initial event
+  //dev ===================================================================================
+
   rInitialBox.addEventListener("click", function (e) {
     const { colorChip, createNode, createNodes, withOut } = GeneralJs;
     let matrixBox;
     let baseBox;
+    let margin, marginLeft;
+    let scrollBox;
+    let checkListBlocks;
+    let titleTargets;
+    let processTargets, processTong;
+    let circleMargin;
+    let temp;
+    let processFontSize;
+    let marginBottom, marginBottom2;
+    let clientCheckListTargets, clientCheckList;
+    let whiteCardWidth, whiteCardMargin;
+    let designerCheckList;
+
+    margin = 20;
+    marginLeft = 22;
+    circleMargin = 8;
+    marginBottom = 13;
+    marginBottom2 = 24;
+    whiteCardWidth = 200;
+    whiteCardMargin = 10;
 
     matrixBox = historyBox.cloneNode(false);
     historyBox.parentElement.appendChild(matrixBox);
@@ -3409,12 +3431,688 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       }
     });
 
+    scrollBox = createNode({
+      mother: baseBox,
+      style: {
+        position: "relative",
+        top: String(margin) + ea,
+        left: String(marginLeft) + ea,
+        overflow: "scroll",
+        width: withOut(String(marginLeft * 2), ea),
+        height: withOut(String(margin * 2), ea),
+      }
+    });
 
+    checkListBlocks = createNodes([
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom + 1) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom2) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom2) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom2) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom) + ea,
+        },
+      },
+      {
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom2) + ea,
+        },
+      },
+    ]);
 
+    titleTargets = [
+      {
+        target: checkListBlocks[0],
+        text: [ "current", "process" ]
+      },
+      {
+        target: checkListBlocks[2],
+        text: [ "client", "checklist" ]
+      },
+      {
+        target: checkListBlocks[4],
+        text: [ "designer", "checklist" ]
+      },
+      {
+        target: checkListBlocks[6],
+        text: [ "project", "calendar" ]
+      },
+    ];
+
+    for (let { target, text } of titleTargets) {
+      createNodes([
+        {
+          mother: target,
+          text: text[0],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(18) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(100),
+            marginRight: String(6) + ea,
+            marginLeft: String(2) + ea,
+          }
+        },
+        {
+          mother: target,
+          text: text[1],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(18) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(400),
+            fontStyle: "italic",
+          }
+        }
+      ]);
+    }
+
+    processTong = checkListBlocks[1];
+    processTargets = [
+      {
+        target: processTong,
+        progress: 0,
+        text: "현장 대기",
+        client: [
+          { text: "선호 사진 전송", check: 1 },
+          { text: "현장 사진 전송", check: 1 },
+          { text: "요구 사항 확인", check: 1 },
+          { text: "분양 평수 확인", check: 1 },
+          { text: "시공 가능 여부 확인", check: 1 }
+        ],
+        designer: [
+          { text: "가능 시간대 확인", check: 1 },
+          { text: "가능 일정 확인", check: 1 },
+          { text: "스타일링 의뢰서 전송", check: 1 },
+          { text: "현장 미팅 일자 확인", check: 1 },
+          { text: "미팅 준비 확인", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 0,
+        text: "현장 미팅",
+        client: [
+          { text: "현장 실측 및 촬영", check: 1 },
+          { text: "설비 관련 점검", check: 1 },
+          { text: "가용 예산 확인", check: 1 },
+          { text: "일정 및 요구 사항 점검", check: 1 },
+          { text: "디자인 취향 확인", check: 1 }
+        ],
+        designer: [
+          { text: "현장 실측 및 촬영", check: 1 },
+          { text: "설비 관련 점검", check: 1 },
+          { text: "가용 예산 확인", check: 1 },
+          { text: "일정 및 요구 사항 점검", check: 1 },
+          { text: "디자인 취향 확인", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 0,
+        text: "공간 기획",
+        client: [
+          { text: "고객 생활 패턴 확인", check: 1 },
+          { text: "전체 공간 용도 기획", check: 1 },
+          { text: "예산 사용 기획", check: 1 },
+          { text: "시공 범위 결정", check: 1 },
+          { text: "재사용 범위 결정", check: 1 }
+        ],
+        designer: [
+          { text: "고객 생활 패턴 확인", check: 1 },
+          { text: "전체 공간 용도 기획", check: 1 },
+          { text: "예산 사용 기획", check: 1 },
+          { text: "시공 범위 결정", check: 1 },
+          { text: "재사용 범위 결정", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 0,
+        text: "예산 계획",
+        client: [
+          { text: "전체 예산 한도 설정", check: 1 },
+          { text: "예산 분배 가이드", check: 1 },
+          { text: "영역별 예산 분배", check: 1 },
+          { text: "지불 방법 정리", check: 1 },
+          { text: "예산 총괄표 수령", check: 1 }
+        ],
+        designer: [
+          { text: "전체 예산 한도 설정", check: 1 },
+          { text: "예산 분배 가이드", check: 1 },
+          { text: "영역별 예산 분배", check: 1 },
+          { text: "지불 방법 정리", check: 1 },
+          { text: "예산 총괄표 수령", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 0,
+        text: "1차 제안",
+        client: [
+          { text: "전체 컨샙, 톤 앤 매너", check: 1 },
+          { text: "공간 레이아웃 결정", check: 1 },
+          { text: "시공 마감재 제안", check: 1 },
+          { text: "구매 제품 추천", check: 1 },
+          { text: "제작 가구, 패브릭 추천", check: 1 }
+        ],
+        designer: [
+          { text: "전체 컨샙, 톤 앤 매너", check: 1 },
+          { text: "공간 레이아웃 결정", check: 1 },
+          { text: "시공 마감재 제안", check: 1 },
+          { text: "구매 제품 추천", check: 1 },
+          { text: "제작 가구, 패브릭 추천", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 0,
+        text: "수정 제안",
+        client: [
+          { text: "수정 횟수 확인", check: 1 },
+          { text: "수정 제안 일정 조정", check: 1 },
+          { text: "시공 마감재 제안", check: 1 },
+          { text: "구매 제품 추천", check: 1 },
+          { text: "제작 가구, 패브릭 추천", check: 1 }
+        ],
+        designer: [
+          { text: "수정 횟수 확인", check: 1 },
+          { text: "수정 제안 일정 조정", check: 1 },
+          { text: "시공 마감재 제안", check: 1 },
+          { text: "구매 제품 추천", check: 1 },
+          { text: "제작 가구, 패브릭 추천", check: 1 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 1,
+        text: "시공 진행",
+        client: [
+          { text: "시공 범위 확인", check: 1 },
+          { text: "시공 견적서 제안", check: 1 },
+          { text: "공사 일정표 전달", check: 0 },
+          { text: "세대내 설비 특징 검토", check: 1 },
+          { text: "시공 방법 확인", check: 0 }
+        ],
+        designer: [
+          { text: "시공 범위 확인", check: 1 },
+          { text: "시공 견적서 제안", check: 1 },
+          { text: "공사 일정표 전달", check: 0 },
+          { text: "세대내 설비 특징 검토", check: 1 },
+          { text: "시공 방법 확인", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "제품 구매",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "제작 가구",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "배송중",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "제품 설치",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "제작 패브릭",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "부가 서비스",
+        client: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ],
+        designer: [
+          { text: "각 구매처 리뷰 검토", check: 0 },
+          { text: "배송 기간, 배송료 확인", check: 0 },
+          { text: "최종 배송일 확인", check: 0 },
+          { text: "설치 물량 확인", check: 0 },
+          { text: "설치 특이사항 점검", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "현장 촬영",
+        client: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ],
+        designer: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "고객 인터뷰",
+        client: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ],
+        designer: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ]
+      },
+      {
+        target: processTong,
+        progress: 2,
+        text: "컨텐츠 공유",
+        client: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ],
+        designer: [
+          { text: "시공 상태 확인", check: 0 },
+          { text: "구매 제품 상태 확인", check: 0 },
+          { text: "사진 촬영", check: 0 },
+          { text: "고객 인터뷰", check: 0 },
+          { text: "콘텐츠 공유", check: 0 }
+        ]
+      },
+    ];
+    clientCheckList = [];
+    designerCheckList = [];
+
+    for (let z = 0; z < processTargets.length; z++) {
+      temp = (processTargets[z].target.getBoundingClientRect().width - (circleMargin * ((processTargets.length / 2) - 1))) / (processTargets.length / 2);
+      processFontSize = temp / 7;
+      createNodes([
+        {
+          mother: processTargets[z].target,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(temp) + ea,
+            height: String(temp) + ea,
+            borderRadius: String(temp) + ea,
+            textAlign: "center",
+            marginRight: String((z + 1) % (processTargets.length / 2) === 0 ? 0 : circleMargin) + ea,
+            marginBottom: String(z < (processTargets.length / 2) ? circleMargin : 0) + ea,
+            overflow: "hidden"
+          }
+        },
+        {
+          mother: 0,
+          text: processTargets[z].text,
+          style: {
+            position: "absolute",
+            width: String(120) + '%',
+            height: String(120) + '%',
+            top: String(-10) + '%',
+            left: String(-10) + '%',
+            transformOrigin: "50% 50%",
+            animation: processTargets[z].progress === 1 ? "rotateProgress 1s linear infinite" : "",
+            background: processTargets[z].progress <= 1 ? (processTargets[z].progress === 1 ? colorChip.gradientGreen2 : colorChip.deactive) : colorChip.gray1,
+            opacity: processTargets[z].progress === 0 ? String(1) : String(1),
+          }
+        },
+        {
+          mother: 0,
+          text: processTargets[z].text,
+          style: {
+            position: "absolute",
+            fontSize: String(processFontSize) + ea,
+            fontWeight: String(600),
+            color: processTargets[z].progress <= 1 ? (processTargets[z].progress === 1 ? colorChip.white : colorChip.gray0) : colorChip.deactive,
+            width: String(100) + '%',
+            textAlign: "center",
+            top: String((temp / 2) - (processFontSize / 2) - 3) + ea,
+          }
+        },
+      ]);
+
+      clientCheckList.push({
+        mother: 1,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          background: processTargets[z].progress <= 1 ? colorChip.white : colorChip.gray2,
+          borderRadius: String(3) + ea,
+          width: String(whiteCardWidth) + ea,
+          top: String(whiteCardMargin) + ea,
+          height: withOut(String(whiteCardMargin * 2), ea),
+          marginLeft: String(whiteCardMargin) + ea,
+        },
+      });
+
+      clientCheckList.push({
+        mother: -1,
+        text: "check " + String(z),
+        style: {
+          position: "absolute",
+          fontSize: String(12) + ea,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive,
+          top: String(12) + ea,
+          left: String(14) + ea,
+        },
+      });
+
+      for (let i = 0; i < (processTargets[z].client.length * 2); i++) {
+        if (i % 2 === 0) {
+          clientCheckList.push({
+            mother: -1 * (i + 1 + 1),
+            text: processTargets[z].client[i / 2].text,
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(200),
+              color: processTargets[z].progress <= 1 ? colorChip.black : colorChip.deactive,
+              width: withOut(String(15), ea),
+              left: String(0) + ea,
+              top: String(40 + (24 * (i / 2))) + ea,
+              textAlign: "right",
+            },
+          });
+        } else {
+          clientCheckList.push({
+            mother: -1 * (i + 1 + 1),
+            mode: "svg",
+            source: instance.mother.returnCheckBox(processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive, processTargets[z].progress === 2),
+            style: {
+              position: "absolute",
+              width: String(10) + ea,
+              left: String(15) + ea,
+              top: String(40 + 5.5 + (24 * ((i - 1) / 2))) + ea,
+            },
+          });
+        }
+      }
+
+      designerCheckList.push({
+        mother: 1,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          background: processTargets[z].progress <= 1 ? colorChip.white : colorChip.gray2,
+          borderRadius: String(3) + ea,
+          width: String(whiteCardWidth) + ea,
+          top: String(whiteCardMargin) + ea,
+          height: withOut(String(whiteCardMargin * 2), ea),
+          marginLeft: String(whiteCardMargin) + ea,
+        },
+      });
+
+      designerCheckList.push({
+        mother: -1,
+        text: "check " + String(z),
+        style: {
+          position: "absolute",
+          fontSize: String(12) + ea,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive,
+          top: String(12) + ea,
+          left: String(14) + ea,
+        },
+      });
+
+      for (let i = 0; i < (processTargets[z].designer.length * 2); i++) {
+        if (i % 2 === 0) {
+          designerCheckList.push({
+            mother: -1 * (i + 1 + 1),
+            text: processTargets[z].designer[i / 2].text,
+            style: {
+              position: "absolute",
+              fontSize: String(14) + ea,
+              fontWeight: String(200),
+              color: processTargets[z].progress <= 1 ? colorChip.black : colorChip.deactive,
+              width: withOut(String(15), ea),
+              left: String(0) + ea,
+              top: String(40 + (24 * (i / 2))) + ea,
+              textAlign: "right",
+            },
+          });
+        } else {
+          designerCheckList.push({
+            mother: -1 * (i + 1 + 1),
+            mode: "svg",
+            source: instance.mother.returnCheckBox(processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive, processTargets[z].progress === 2),
+            style: {
+              position: "absolute",
+              width: String(10) + ea,
+              left: String(15) + ea,
+              top: String(40 + 5.5 + (24 * ((i - 1) / 2))) + ea,
+            },
+          });
+        }
+      }
+    }
+
+    createNodes([
+      {
+        mother: checkListBlocks[3],
+        style: {
+          position: "relative",
+          left: String(2) + ea,
+          width: withOut(String(2 * 2), ea),
+          height: String(190) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + ea,
+          overflow: "scroll"
+        }
+      },
+      {
+        mother: -1,
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String((whiteCardWidth + whiteCardMargin) * (processTargets.length + 2)) + ea,
+          height: String(100) + '%',
+        }
+      },
+      ...clientCheckList
+    ]);
+
+    createNodes([
+      {
+        mother: checkListBlocks[5],
+        style: {
+          position: "relative",
+          left: String(2) + ea,
+          width: withOut(String(2 * 2), ea),
+          height: String(190) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + ea,
+          overflow: "scroll"
+        }
+      },
+      {
+        mother: -1,
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String((whiteCardWidth + whiteCardMargin) * (processTargets.length + 2)) + ea,
+          height: String(100) + '%',
+        }
+      },
+      ...designerCheckList
+    ]);
+
+    const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+      let [ year, month, date ] = this.getAttribute("buttonValue").split("-");
+      console.log(year, month, date);
+    }, {
+      bigMode: true,
+      width: withOut(String(2 * 2), ea),
+      height: String(520) + ea,
+      events: [
+        { date: new Date(2021, 3, 6), title: "3차 디자인 제안", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 8), title: "디자인 확정", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 10), title: "시공 견적", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 12), title: "시공사 컨택", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 22), title: "샤시 공정 진행", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 24), title: "도배 공정 진행", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 28), title: "금속 공정 진행", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 29), title: "욕실 공정 진행", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 3, 29), title: "타일 공정 진행", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 4, 10), title: "제품 리스트 발송", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 4, 12), title: "가구 구매 예정일", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 4, 24), title: "제작 가구 완성일", eventFunc: new Function(), hours: false },
+        { date: new Date(2021, 4, 30), title: "촬영 예정", eventFunc: new Function(), hours: false },
+      ],
+    });
+    calendar.calendarBase.style.left = String(2) + ea;
+    checkListBlocks[7].appendChild(calendar.calendarBase);
 
     historyBox.style.animation = "fadeout 0.3s ease forwards";
     matrixBox.style.animation = "fadein 0.3s ease forwards";
   });
+
+  //dev ===================================================================================
 
   //get textAreaTong
   GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {

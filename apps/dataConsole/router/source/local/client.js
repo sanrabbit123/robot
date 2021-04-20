@@ -3173,7 +3173,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     buttonHeight = 50;
     margin = 20;
-    marginLeft = 24;
+    marginLeft = 22;
     size = 14;
     buttonAreaLeft = 90;
     titleTop = 7;

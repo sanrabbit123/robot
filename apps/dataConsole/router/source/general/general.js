@@ -800,6 +800,27 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   @keyframes fadecancel{from{opacity:0}to{opacity:0.2}}
 
+  @keyframes rotateProgress {
+    from {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: rotate(90deg);
+    }
+    50% {
+      transform: rotate(180deg);
+      opacity: 0.92;
+    }
+    75% {
+      transform: rotate(270deg);
+    }
+    to {
+      transform: rotate(360deg);
+      opacity: 1;
+    }
+  }
+
   .justfadeinoriginal{animation:justfadeinoriginal 0.3s ease forwards;}
   .justfadeoutoriginal{animation:justfadeoutoriginal 0.3s ease forwards;}
   .justfadein{animation:justfadein 0.3s ease forwards;}
@@ -3165,9 +3186,9 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
 
     indexNumber = 0;
     circleEventInitTop = 38.5;
-    circleEventLeft = 14;
+    circleEventLeft = 13;
     eventInitTop = 32.5;
-    eventLeft = 21;
+    eventLeft = 20;
 
     circleEventStyle = {
       position: "absolute",
@@ -3375,9 +3396,9 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         } else {
           div_clone3.textContent = (matrix[i - 1][j] !== null) ? String(matrix[i - 1][j].date) : '';
           if (option.bigMode !== undefined) {
-            div_clone3.style.fontSize = String(16) + ea;
-            div_clone3.style.top = String(6.5) + ea;
-            div_clone3.style.textIndent = String(14) + ea;
+            div_clone3.style.fontSize = String(15) + ea;
+            div_clone3.style.top = String(5) + ea;
+            div_clone3.style.textIndent = String(12) + ea;
           }
           if (matrix[i - 1][j] !== null) {
             if (thisDate === matrix[i - 1][j].date) {
