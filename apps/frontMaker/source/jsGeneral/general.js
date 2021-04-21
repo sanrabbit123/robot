@@ -33,6 +33,7 @@ GeneralJs.colorChip = {
   deactive: "#bbbbbb",
   shadow: "#808080",
   black: "#404040",
+  realBlack: "#202020",
   green: "#2fa678",
   gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
