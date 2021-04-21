@@ -15,7 +15,7 @@ const HumanPacket = function () {
     sms: "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2",
   };
   this.sender = {
-    email: "admin@home-liaison.xyz",
+    email: "ergvaegwaeg@home-liaison.xyz",
     sms: "0220392252",
   };
 }
