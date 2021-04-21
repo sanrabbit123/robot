@@ -359,16 +359,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
+    // await this.makeSvgTong();
 
 
 
@@ -471,7 +462,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1WSNtDJ5MGyLms0AkF4PqJfLje3kcUWjq", "p110");
+    // await drive.get_folder("https://drive.google.com/drive/folders/12x-N85Yr_aAq5lSrTdoxi4GILoGJUGcx", "p90");
 
 
     // send checklist
@@ -550,6 +541,38 @@ DevContext.prototype.launching = async function () {
     this.MONGOLOCALC.close();
     console.log(`done`);
     process.exit();
+  }
+}
+
+DevContext.prototype.makeSvgTong = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
+    const target = process.cwd() + "/temp/svg";
+    let targetDir, temp, targetTong, optimizer, optimizeResult;
+    let svgTongString;
+
+    targetDir = await fileSystem(`readDir`, [ target ]);
+    targetDir = targetDir.filter((i) => { return ((i !== `.DS_Store`) && (!/\.js/i.test(i)) && i !== "tong.js"); });
+    targetTong = [];
+
+    for (let svg of targetDir) {
+      targetTong.push(target + "/" + svg);
+    }
+
+    optimizer = new SvgOptimizer(targetTong);
+    optimizeResult = await optimizer.launching();
+
+    svgTongString = '';
+    for (let i in optimizeResult) {
+      svgTongString += "SvgTong." + i + " = " + "'" + optimizeResult[i].replace(/\'/g, '"') + "'";
+      svgTongString += "\n\n";
+    }
+
+    await fileSystem(`write`, [ `${process.cwd()}/temp/svg/tong.js`, svgTongString ]);
+  } catch (e) {
+    console.log(e);
   }
 }
 
