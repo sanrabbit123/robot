@@ -517,7 +517,12 @@ PortfolioFilter.prototype.ghost_make = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, shell, shellLink, consoleQ, s3FileUpload, ghostFileUpload } = this.mother;
-  const getNumber = (obj) => { return Number(obj.link.slice(1).replace(/\.jpg$/g, '').split('/')[2].replace(/^g/g,'')); };
+  const getNumber = function (obj) {
+    let link = obj.link;
+    let tempArr;
+    tempArr = link.split('/');
+    return Number(tempArr[tempArr.length - 1].replace(/[^0-9]/gi, ''));
+  };
   try {
     const ghostStatic = "/rawDesigner/ghost";
     let targetDesigner, ghostArray, designers;

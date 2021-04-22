@@ -467,7 +467,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/12x-N85Yr_aAq5lSrTdoxi4GILoGJUGcx", "p90");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1PLQgy6qMhuq5mK8zGG6_eQVmVirKHn_p", "p116");
 
 
     // send checklist
