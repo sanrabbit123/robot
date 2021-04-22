@@ -224,6 +224,7 @@ GeneralJs.nodes = {
   a: document.createElement('A'),
   label: document.createElement('LABEL'),
   iframe: document.createElement('IFRAME'),
+  aside: document.createElement('ASIDE'),
 }
 
 GeneralJs.createNode = function (mode, source, style, mother = null) {

@@ -28,7 +28,7 @@
 const PageBlockJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = document.getElementById("totalcontents");
-  this.ea = "vw";
+  this.ea = "px";
   this.base = null;
   this.index = 0;
   this.sideBar = null;
@@ -39,8 +39,8 @@ const PageBlockJs = function () {
 PageBlockJs.prototype.scrollMaker = function (thisPage) {
   const instance = this;
   const fileCharacter = 'a';
-  const fileExecCases = [ "png", "svg" ];
-  const { pngIndex, ratio, length, name } = thisPage;
+  const fileCompressCharacter = 'b';
+  const { binaryIndex, ratio, length, name, html } = thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;
   let width, height;
@@ -52,6 +52,10 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
   let sideWidth, sideMargin;
   let marginBottom;
   let tempResult;
+  let htmlKeys;
+
+  htmlKeys = Object.keys(html);
+  htmlKeys = htmlKeys.map((key) => { return Number(key.replace(/[^0-9\.\-]/gi, '')); });
 
   ea = "px";
   margin = 40;
@@ -69,7 +73,8 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
     height = width / ratio;
     paddingLeft = null;
     paddingTop = 0;
-    margin = 30;
+    margin = 15;
+    marginBottom = 15;
   }
 
   style = {
@@ -107,6 +112,11 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
   intoContents = function (where, width, side = false) {
     let nodeArr = [];
     let whiteBase;
+    let finalMotherIndex;
+    let height;
+    let asideArr;
+
+    height = width / ratio;
 
     for (let i = 0; i < length; i++) {
       whiteBase = {
@@ -117,7 +127,7 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
         style: {
           position: "relative",
           width: String(width) + ea,
-          height: String(width / ratio) + ea,
+          height: String(height) + ea,
           background: "white",
           borderRadius: String(3) + ea,
           marginBottom: String(marginBottom) + ea,
@@ -126,6 +136,7 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
           transition: "all 0s ease",
         }
       };
+
       if (side) {
         whiteBase.class = [ "hoverDefault" ];
         whiteBase.events = [
@@ -144,13 +155,14 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
       } else {
         whiteBase.class = [ "scrollPages" ];
       }
+
       nodeArr.push(whiteBase);
-      if (pngIndex.includes(i + 1)) {
+      if (binaryIndex.includes(i + 1)) {
         nodeArr.push({
           mother: -1,
           mode: "img",
           attribute: [
-            { src: S3HOST + "/pageBlock/" + name + "/" + "png" + "/" + fileCharacter + String(i + 1) + "." + "png" }
+            { src: S3HOST + "/pageBlock/" + name + "/" + "jpg" + "/" + (side ? fileCompressCharacter : fileCharacter) + String(i + 1) + "." + "jpg" }
           ],
           style: {
             position: "absolute",
@@ -172,6 +184,7 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
             left: String(-1) + ea,
           }
         });
+        finalMotherIndex = -3;
       } else {
         nodeArr.push({
           mother: -1,
@@ -185,7 +198,16 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
             left: String(-1) + ea,
           }
         });
+        finalMotherIndex = -2;
       }
+
+      if (!side && htmlKeys.includes(i + 1)) {
+        asideArr = html[fileCharacter + String(i + 1)](finalMotherIndex, width, height);
+        for (let obj of asideArr) {
+          nodeArr.push(obj);
+        }
+      }
+
     }
     return nodeArr;
   }
@@ -246,8 +268,8 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
 PageBlockJs.prototype.cardMaker = function (thisPage) {
   const instance = this;
   const fileCharacter = 'a';
-  const fileExecCases = [ "png", "svg" ];
-  const { pngIndex, ratio, length, name } = thisPage;
+  const fileCompressCharacter = 'b';
+  const { binaryIndex, ratio, length, name, html } = thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;
   let width, height;
@@ -259,6 +281,10 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
   let sideWidth, sideMargin;
   let marginBottom;
   let tempResult;
+  let htmlKeys;
+
+  htmlKeys = Object.keys(html);
+  htmlKeys = htmlKeys.map((key) => { return Number(key.replace(/[^0-9\.\-]/gi, '')); });
 
   ea = "px";
   margin = 40;
@@ -276,7 +302,8 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
     height = width / ratio;
     paddingLeft = null;
     paddingTop = 0;
-    margin = 30;
+    margin = 15;
+    marginBottom = 15;
   }
 
   style = {
@@ -314,6 +341,11 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
   intoContents = function (where, width, side = false) {
     let nodeArr = [];
     let whiteBase;
+    let finalMotherIndex;
+    let height;
+    let asideArr;
+
+    height = width / ratio;
 
     for (let i = 0; i < length; i++) {
       whiteBase = {
@@ -324,7 +356,7 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
         style: {
           position: "absolute",
           width: String(width) + ea,
-          height: String(width / ratio) + ea,
+          height: String(height) + ea,
           background: "white",
           top: String(0) + ea,
           overflow: "hidden",
@@ -345,12 +377,9 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
             event: function (e) {
               const index = Number(this.getAttribute("index"));
               for (let i = 0; i < instance.cards.length; i++) {
-                if (i <= index) {
-                  instance.cards[i].style.display = "block";
-                } else {
-                  instance.cards[i].style.display = "none";
-                }
+                instance.cards[i].style.display = "none";
               }
+              instance.cards[index].style.display = "block";
               instance.cardsIndex = index;
             }
           }
@@ -358,13 +387,14 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
       } else {
         whiteBase.class = [ "scrollPages" ];
       }
+
       nodeArr.push(whiteBase);
-      if (pngIndex.includes(i + 1)) {
+      if (binaryIndex.includes(i + 1)) {
         nodeArr.push({
           mother: -1,
           mode: "img",
           attribute: [
-            { src: S3HOST + "/pageBlock/" + name + "/" + "png" + "/" + fileCharacter + String(i + 1) + "." + "png" }
+            { src: S3HOST + "/pageBlock/" + name + "/" + "jpg" + "/" + (side ? fileCompressCharacter : fileCharacter) + String(i + 1) + "." + "jpg" }
           ],
           style: {
             position: "absolute",
@@ -386,6 +416,7 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
             left: String(-1) + ea,
           }
         });
+        finalMotherIndex = -3;
       } else {
         nodeArr.push({
           mother: -1,
@@ -399,7 +430,16 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
             left: String(-1) + ea,
           }
         });
+        finalMotherIndex = -2;
       }
+
+      if (!side && htmlKeys.includes(i + 1)) {
+        asideArr = html[fileCharacter + String(i + 1)](finalMotherIndex, width, height);
+        for (let obj of asideArr) {
+          nodeArr.push(obj);
+        }
+      }
+
     }
     return nodeArr;
   }
@@ -624,7 +664,10 @@ PageBlockJs.prototype.iconMaker = function (cardMode = false) {
               }
             } else {
               if (instance.cards[instance.cardsIndex - 1] !== undefined) {
-                instance.cards[instance.cardsIndex].style.display = "none";
+                for (let dom of instance.cards) {
+                  dom.style.display = "none";
+                }
+                instance.cards[instance.cardsIndex - 1].style.display = "block";
                 instance.cardsIndex = instance.cardsIndex - 1;
               }
             }
@@ -689,6 +732,9 @@ PageBlockJs.prototype.iconMaker = function (cardMode = false) {
               }
             } else {
               if (instance.cards[instance.cardsIndex + 1] !== undefined) {
+                for (let dom of instance.cards) {
+                  dom.style.display = "none";
+                }
                 instance.cards[instance.cardsIndex + 1].style.display = "block";
                 instance.cardsIndex = instance.cardsIndex + 1;
               }
@@ -784,7 +830,7 @@ PageBlockJs.prototype.iconMaker = function (cardMode = false) {
         {
           type: "click",
           event: function (e) {
-            console.log("pdf download");
+            GeneralJs.downloadFile(S3HOST + '/pageBlock/' + instance.thisPage.name + '/pdf/tong.pdf', '홈리에종 IR').catch(function (e) { console.log(e); });
           }
         }
       ],
@@ -814,11 +860,7 @@ PageBlockJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     document.querySelector("style").insertAdjacentHTML("beforeend", "body {transition: all 0s ease}");
-    const svgData = await GeneralJs.requestPromise(S3HOST + "/pageBlock/thirdIR/svg/tong.js");
-    const svgFunction = new Function(svgData);
-    svgFunction();
     const getObj = GeneralJs.returnGet();
-    loading.parentNode.removeChild(loading);
 
     if (getObj.type === undefined) {
       alert("잘못된 접근입니다!");
@@ -826,14 +868,70 @@ PageBlockJs.prototype.launching = async function (loading) {
       throw new Error("invaild query string");
     } else {
 
-      this.ea = "px";
+      const movieMaker = function (link) {
+        return function (mother, width, height) {
+          const ea = "px";
+          const visualSpecific = 1;
+          let resultArr;
+          let leftMargin, bottomMargin, boxHeight;
 
+          leftMargin = width * (0.07);
+          bottomMargin = height * (0.115);
+          boxHeight = height * (0.5973);
+
+          resultArr = [
+            {
+              mother,
+              mode: "aside",
+              style: {
+                position: "absolute",
+                width: String(width - (leftMargin * 2) + (visualSpecific * 2)) + ea,
+                height: String(boxHeight + (visualSpecific * 2)) + ea,
+                bottom: String(bottomMargin - visualSpecific) + ea,
+                left: String(leftMargin - visualSpecific) + ea,
+                background: GeneralJs.colorChip.realBlack,
+                borderRadius: String(5) + ea,
+              }
+            },
+            {
+              mother: mother - 1,
+              mode: "iframe",
+              attribute: [
+                { src: link }
+              ],
+              style: {
+                position: "absolute",
+                width: String((boxHeight + (visualSpecific * 2)) * (1920 / 1080)) + ea,
+                height: String(boxHeight + (visualSpecific * 2)) + ea,
+                bottom: String(bottomMargin - visualSpecific) + ea,
+                left: String(leftMargin - visualSpecific + ((width - (leftMargin * 2) + (visualSpecific * 2) - ((boxHeight + (visualSpecific * 2)) * (1920 / 1080))) / 2)) + ea,
+                border: String(0),
+                outline: String(0),
+              }
+            },
+          ];
+          return resultArr;
+        }
+      }
       const thisPage = {
-        pngIndex: [ 5, 21, 27, 30, 31 ],
+        binaryIndex: [ 5, 21, 27, 30, 31, 43 ],
         ratio: (297 / 210),
         length: 45,
         name: "thirdIR",
+        html: {
+          a38: movieMaker("https://drive.google.com/file/d/1dW3KPjygGgTWdifH_rdafukUKcoBwV1J/preview"),
+          a39: movieMaker("https://drive.google.com/file/d/1InIWrXP9ZcT51g_KMzysOBCiSAhAJC74/preview"),
+          a40: movieMaker("https://drive.google.com/file/d/1ry96-m8IXvq7ChaJcmkCXkh0Eg_DRqY-/preview"),
+        }
       };
+
+      this.thisPage = thisPage;
+
+      const svgConst = "tong.js";
+      const svgData = await GeneralJs.requestPromise(S3HOST + "/pageBlock/" + thisPage.name + "/svg/" + svgConst);
+      const svgFunction = new Function(svgData);
+      svgFunction();
+      loading.parentNode.removeChild(loading);
 
       if (getObj.mode === "card") {
         this.cardMaker(thisPage);

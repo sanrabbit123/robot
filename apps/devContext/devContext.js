@@ -359,7 +359,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await this.makeSvgTong();
+
+
 
 
 
@@ -390,6 +391,10 @@ DevContext.prototype.launching = async function () {
     //   values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
     //   cleanView: true
     // }));
+
+
+    // convert svg to js
+    // await this.makeSvgTong();
 
 
     // get drive folder
