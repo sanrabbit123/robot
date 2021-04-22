@@ -36,11 +36,11 @@ const PageBlockJs = function () {
   this.cardsIndex = 0;
 }
 
-PageBlockJs.prototype.scrollMaker = function (thisPage) {
+PageBlockJs.prototype.scrollMaker = function () {
   const instance = this;
   const fileCharacter = 'a';
   const fileCompressCharacter = 'b';
-  const { binaryIndex, ratio, length, name, html } = thisPage;
+  const { binaryIndex, ratio, length, name, html } = this.thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;
   let width, height;
@@ -265,11 +265,11 @@ PageBlockJs.prototype.scrollMaker = function (thisPage) {
   createNodes(intoContents(sideBar, sideWidth, true));
 }
 
-PageBlockJs.prototype.cardMaker = function (thisPage) {
+PageBlockJs.prototype.cardMaker = function () {
   const instance = this;
   const fileCharacter = 'a';
   const fileCompressCharacter = 'b';
-  const { binaryIndex, ratio, length, name, html } = thisPage;
+  const { binaryIndex, ratio, length, name, html } = this.thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;
   let width, height;
@@ -282,6 +282,7 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
   let marginBottom;
   let tempResult;
   let htmlKeys;
+  let pageView;
 
   htmlKeys = Object.keys(html);
   htmlKeys = htmlKeys.map((key) => { return Number(key.replace(/[^0-9\.\-]/gi, '')); });
@@ -297,13 +298,15 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
   if (window.innerWidth >= width) {
     paddingLeft = (window.innerWidth - width) / 2;
     paddingTop = null;
+    pageView = "garo";
   } else {
     width = window.innerWidth;
     height = width / ratio;
     paddingLeft = null;
     paddingTop = 0;
-    margin = 15;
+    margin = 0;
     marginBottom = 15;
+    pageView = "sero";
   }
 
   style = {
@@ -358,7 +361,7 @@ PageBlockJs.prototype.cardMaker = function (thisPage) {
           width: String(width) + ea,
           height: String(height) + ea,
           background: "white",
-          top: String(0) + ea,
+          top: String(pageView === "garo" ? 0 : ((window.innerHeight - height) / 2)) + ea,
           overflow: "hidden",
           transition: "all 0s ease",
           display: i === 0 ? "block" : "none"
@@ -866,89 +869,106 @@ PageBlockJs.prototype.launching = async function (loading) {
       alert("잘못된 접근입니다!");
       window.location.href = "https://home-liaison.com";
       throw new Error("invaild query string");
+      return;
     } else {
-
-      const movieMaker = function (link) {
-        return function (mother, width, height) {
-          const ea = "px";
-          const visualSpecific = 1;
-          let resultArr;
-          let leftMargin, bottomMargin, boxHeight;
-
-          leftMargin = width * (0.07);
-          bottomMargin = height * (0.115);
-          boxHeight = height * (0.5973);
-
-          resultArr = [
-            {
-              mother,
-              mode: "aside",
-              style: {
-                position: "absolute",
-                width: String(width - (leftMargin * 2) + (visualSpecific * 2)) + ea,
-                height: String(boxHeight + (visualSpecific * 2)) + ea,
-                bottom: String(bottomMargin - visualSpecific) + ea,
-                left: String(leftMargin - visualSpecific) + ea,
-                background: GeneralJs.colorChip.realBlack,
-                borderRadius: String(5) + ea,
-              }
-            },
-            {
-              mother: mother - 1,
-              mode: "iframe",
-              attribute: [
-                { src: link }
-              ],
-              style: {
-                position: "absolute",
-                width: String((boxHeight + (visualSpecific * 2)) * (1920 / 1080)) + ea,
-                height: String(boxHeight + (visualSpecific * 2)) + ea,
-                bottom: String(bottomMargin - visualSpecific) + ea,
-                left: String(leftMargin - visualSpecific + ((width - (leftMargin * 2) + (visualSpecific * 2) - ((boxHeight + (visualSpecific * 2)) * (1920 / 1080))) / 2)) + ea,
-                border: String(0),
-                outline: String(0),
-              }
-            },
-          ];
-          return resultArr;
-        }
-      }
-      const thisPage = {
-        binaryIndex: [ 5, 21, 27, 30, 31, 43 ],
-        ratio: (297 / 210),
-        length: 45,
-        name: "thirdIR",
-        html: {
-          a38: movieMaker("https://drive.google.com/file/d/1dW3KPjygGgTWdifH_rdafukUKcoBwV1J/preview"),
-          a39: movieMaker("https://drive.google.com/file/d/1InIWrXP9ZcT51g_KMzysOBCiSAhAJC74/preview"),
-          a40: movieMaker("https://drive.google.com/file/d/1ry96-m8IXvq7ChaJcmkCXkh0Eg_DRqY-/preview"),
-        }
-      };
-
-      this.thisPage = thisPage;
-
-      const svgConst = "tong.js";
-      const svgData = await GeneralJs.requestPromise(S3HOST + "/pageBlock/" + thisPage.name + "/svg/" + svgConst);
-      const svgFunction = new Function(svgData);
-      svgFunction();
-      loading.parentNode.removeChild(loading);
-
-      if (getObj.mode === "card") {
-        this.cardMaker(thisPage);
-        this.iconMaker(true);
-      } else {
-        this.scrollMaker(thisPage);
-        this.iconMaker(false);
-      }
-
-      window.addEventListener("resize", function (e) {
-        window.location.reload();
-      });
 
       // const Generator = require("/generator.js");
       // const generator = new Generator();
       // const pages = await generator.generatePages(getObj.type);
 
+      let answer;
+      if (window.localStorage.getItem("passwords") !== null) {
+        answer = window.localStorage.getItem("passwords");
+      } else {
+        answer = Number(window.prompt("비밀번호를 입력해주세요!"));
+      }
+
+      if ((String(Math.round(((Number(String((((((5 * ((answer - 30) / 5) * 2)) - 18) / 4) - 998) / 2) + String(13)) % 3) * 500) / 3)) + String(3)) === "3333") {
+
+        window.localStorage.setItem("passwords", String(answer));
+
+        const movieMaker = function (link) {
+          return function (mother, width, height) {
+            const ea = "px";
+            const visualSpecific = 1;
+            let resultArr;
+            let leftMargin, bottomMargin, boxHeight;
+
+            leftMargin = width * (0.07);
+            bottomMargin = height * (0.115);
+            boxHeight = height * (0.5973);
+
+            resultArr = [
+              {
+                mother,
+                mode: "aside",
+                style: {
+                  position: "absolute",
+                  width: String(width - (leftMargin * 2) + (visualSpecific * 2)) + ea,
+                  height: String(boxHeight + (visualSpecific * 2)) + ea,
+                  bottom: String(bottomMargin - visualSpecific) + ea,
+                  left: String(leftMargin - visualSpecific) + ea,
+                  background: GeneralJs.colorChip.realBlack,
+                  borderRadius: String(5) + ea,
+                }
+              },
+              {
+                mother: mother - 1,
+                mode: "iframe",
+                attribute: [
+                  { src: link }
+                ],
+                style: {
+                  position: "absolute",
+                  width: String((boxHeight + (visualSpecific * 2)) * (1920 / 1080)) + ea,
+                  height: String(boxHeight + (visualSpecific * 2)) + ea,
+                  bottom: String(bottomMargin - visualSpecific) + ea,
+                  left: String(leftMargin - visualSpecific + ((width - (leftMargin * 2) + (visualSpecific * 2) - ((boxHeight + (visualSpecific * 2)) * (1920 / 1080))) / 2)) + ea,
+                  border: String(0),
+                  outline: String(0),
+                }
+              },
+            ];
+            return resultArr;
+          }
+        }
+        const thisPage = {
+          binaryIndex: [ 5, 21, 27, 30, 31, 43 ],
+          ratio: (297 / 210),
+          length: 45,
+          name: "thirdIR",
+          html: {
+            a38: movieMaker("https://drive.google.com/file/d/1dW3KPjygGgTWdifH_rdafukUKcoBwV1J/preview"),
+            a39: movieMaker("https://drive.google.com/file/d/1InIWrXP9ZcT51g_KMzysOBCiSAhAJC74/preview"),
+            a40: movieMaker("https://drive.google.com/file/d/1ry96-m8IXvq7ChaJcmkCXkh0Eg_DRqY-/preview"),
+          }
+        };
+        this.thisPage = thisPage;
+
+        const svgConst = "tong.js";
+        const svgData = await GeneralJs.requestPromise(S3HOST + "/pageBlock/" + thisPage.name + "/svg/" + svgConst);
+        const svgFunction = new Function(svgData);
+        svgFunction();
+        loading.parentNode.removeChild(loading);
+
+        if (getObj.mode === "card") {
+          this.cardMaker();
+          this.iconMaker(true);
+        } else {
+          this.scrollMaker();
+          this.iconMaker(false);
+        }
+
+        window.addEventListener("resize", function (e) {
+          window.location.reload();
+        });
+
+      } else {
+        alert("잘못된 접근입니다!");
+        window.location.href = "https://home-liaison.com";
+        throw new Error("invaild query string");
+        return;
+      }
     }
   } catch (e) {
     console.log(e);
