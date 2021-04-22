@@ -872,10 +872,6 @@ PageBlockJs.prototype.launching = async function (loading) {
       return;
     } else {
 
-      // const Generator = require("/generator.js");
-      // const generator = new Generator();
-      // const pages = await generator.generatePages(getObj.type);
-
       let answer;
       if (window.localStorage.getItem("passwords") !== null) {
         answer = window.localStorage.getItem("passwords");
@@ -886,63 +882,11 @@ PageBlockJs.prototype.launching = async function (loading) {
       if ((String(Math.round(((Number(String((((((5 * ((answer - 30) / 5) * 2)) - 18) / 4) - 998) / 2) + String(13)) % 3) * 500) / 3)) + String(3)) === "3333") {
 
         window.localStorage.setItem("passwords", String(answer));
+        window.addEventListener("resize", (e) => { window.location.reload(); });
 
-        const movieMaker = function (link) {
-          return function (mother, width, height) {
-            const ea = "px";
-            const visualSpecific = 1;
-            let resultArr;
-            let leftMargin, bottomMargin, boxHeight;
-
-            leftMargin = width * (0.07);
-            bottomMargin = height * (0.115);
-            boxHeight = height * (0.5973);
-
-            resultArr = [
-              {
-                mother,
-                mode: "aside",
-                style: {
-                  position: "absolute",
-                  width: String(width - (leftMargin * 2) + (visualSpecific * 2)) + ea,
-                  height: String(boxHeight + (visualSpecific * 2)) + ea,
-                  bottom: String(bottomMargin - visualSpecific) + ea,
-                  left: String(leftMargin - visualSpecific) + ea,
-                  background: GeneralJs.colorChip.realBlack,
-                  borderRadius: String(5) + ea,
-                }
-              },
-              {
-                mother: mother - 1,
-                mode: "iframe",
-                attribute: [
-                  { src: link }
-                ],
-                style: {
-                  position: "absolute",
-                  width: String((boxHeight + (visualSpecific * 2)) * (1920 / 1080)) + ea,
-                  height: String(boxHeight + (visualSpecific * 2)) + ea,
-                  bottom: String(bottomMargin - visualSpecific) + ea,
-                  left: String(leftMargin - visualSpecific + ((width - (leftMargin * 2) + (visualSpecific * 2) - ((boxHeight + (visualSpecific * 2)) * (1920 / 1080))) / 2)) + ea,
-                  border: String(0),
-                  outline: String(0),
-                }
-              },
-            ];
-            return resultArr;
-          }
-        }
-        const thisPage = {
-          binaryIndex: [ 5, 21, 27, 30, 31, 43 ],
-          ratio: (297 / 210),
-          length: 45,
-          name: "thirdIR",
-          html: {
-            a38: movieMaker("https://drive.google.com/file/d/1dW3KPjygGgTWdifH_rdafukUKcoBwV1J/preview"),
-            a39: movieMaker("https://drive.google.com/file/d/1InIWrXP9ZcT51g_KMzysOBCiSAhAJC74/preview"),
-            a40: movieMaker("https://drive.google.com/file/d/1ry96-m8IXvq7ChaJcmkCXkh0Eg_DRqY-/preview"),
-          }
-        };
+        const Generator = require("/" + getObj.type + "/index.js");
+        const generator = new Generator();
+        const thisPage = await generator.render();
         this.thisPage = thisPage;
 
         const svgConst = "tong.js";
@@ -958,10 +902,6 @@ PageBlockJs.prototype.launching = async function (loading) {
           this.scrollMaker();
           this.iconMaker(false);
         }
-
-        window.addEventListener("resize", function (e) {
-          window.location.reload();
-        });
 
       } else {
         alert("잘못된 접근입니다!");

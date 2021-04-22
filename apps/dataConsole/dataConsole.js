@@ -169,6 +169,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let treeArray;
     let moduleBoo;
     let moduleTrans;
+    let totalModuleObjectConst;
 
     //module transform
     moduleTrans = async function (tree, name) {
@@ -177,11 +178,13 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         const { flatDeath } = tree;
         const render = function (code) {
           let totalModuleObjectConst;
-          totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
           code = code.replace(/\$CURRENT_DIR_ARRAY/g, JSON.stringify(thisModuleDir));
+
+          totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
           code = code.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => {
             return `const ${totalModuleObjectConst} = await import(${p3}/middle/module/${name}${p4.replace(/\.js/i, ".mjs")}; ${p1}${p2} = ${totalModuleObjectConst}[Object.keys(${totalModuleObjectConst})[0]];`;
           });
+
           code = code.replace(/module\.exports = ([^\=\;\/\n]+)/i, (match, p1, offset, string) => { return "export { " + p1 + " }"; });
           return code;
         }
@@ -304,7 +307,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       result += "\n\n";
       result += code2;
       if (moduleBoo) {
-        moduleString = code3.replace(/(const|let) ([^ ]+) \= require\(([\"\'])([^\)]+)/g, (match, p1, p2, p3, p4, offset, string) => { return `${p1} { ${p2} } = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, '.mjs')}`; });
+        totalModuleObjectConst = "TOTAL_MODULEOBJECT_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
+        moduleString = code3.replace(/(const |let | )([^ ]+) \= require\(([\"\'])([^\n\;]+)/g, (match, p1, p2, p3, p4, offset, string) => {
+          return `const ${totalModuleObjectConst} = await import(${p3}/middle/module/${i.replace(/\.js$/i, '')}${p4.replace(/\.js/i, ".mjs")}; ${p1}${p2} = ${totalModuleObjectConst}[Object.keys(${totalModuleObjectConst})[0]];`;
+        });
       } else {
         result += "\n\n";
         result += code3;
