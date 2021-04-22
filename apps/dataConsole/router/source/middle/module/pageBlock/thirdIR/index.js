@@ -35,9 +35,9 @@ ThirdIR.prototype.render = async function (target) {
           },
           {
             mother: mother - 1,
-            mode: "iframe",
+            mode: "video",
             attribute: [
-              { src: link }
+              { controls: "true" }
             ],
             style: {
               position: "absolute",
@@ -49,6 +49,15 @@ ThirdIR.prototype.render = async function (target) {
               outline: String(0),
             }
           },
+          {
+            mother: -1,
+            mode: "source",
+            attribute: [
+              { src: link },
+              { type: "video/mp4" }
+            ],
+            style: {}
+          }
         ];
         return resultArr;
       }
@@ -59,9 +68,9 @@ ThirdIR.prototype.render = async function (target) {
       length: instance.length,
       name: instance.name,
       html: {
-        a38: movieMaker("https://drive.google.com/file/d/1dW3KPjygGgTWdifH_rdafukUKcoBwV1J/preview"),
-        a39: movieMaker("https://drive.google.com/file/d/1InIWrXP9ZcT51g_KMzysOBCiSAhAJC74/preview"),
-        a40: movieMaker("https://drive.google.com/file/d/1ry96-m8IXvq7ChaJcmkCXkh0Eg_DRqY-/preview"),
+        a38: movieMaker("https://home-liaison.servehttp.com/pageBlock/thirdIR/media/video0.mp4"),
+        a39: movieMaker("https://home-liaison.servehttp.com/pageBlock/thirdIR/media/video1.mp4"),
+        a40: movieMaker("https://home-liaison.servehttp.com/pageBlock/thirdIR/media/video2.mp4"),
       }
     };
     return thisPage;

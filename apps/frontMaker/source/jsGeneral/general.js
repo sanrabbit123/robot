@@ -225,6 +225,8 @@ GeneralJs.nodes = {
   label: document.createElement('LABEL'),
   iframe: document.createElement('IFRAME'),
   aside: document.createElement('ASIDE'),
+  video: document.createElement('VIDEO'),
+  source: document.createElement('SOURCE'),
 }
 
 GeneralJs.createNode = function (mode, source, style, mother = null) {
