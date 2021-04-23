@@ -475,7 +475,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("a81");
+    // await this.spellCheck("p90");
 
 
     // get corePortfolio by pid

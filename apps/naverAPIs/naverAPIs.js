@@ -199,6 +199,8 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "넓어졌어 오", "넓어졌어요" ],
     [ "졌어 요", "졌어요" ],
     [ "타볼", "탑볼" ],
+    [ "아들이사용", "아들이 사용" ],
+    [ "딸이사용", "딸이 사용" ],
   ];
   try {
     let resultArr = [];
