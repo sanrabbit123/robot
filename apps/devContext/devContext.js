@@ -361,6 +361,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // await this.splitAi(process.cwd() + "/temp/target.ai");
+
+
 
 
 
@@ -377,6 +380,7 @@ DevContext.prototype.launching = async function () {
     // await back.updateDesigner([ whereQuery, updateQuery ]);
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
@@ -548,6 +552,59 @@ DevContext.prototype.launching = async function () {
     process.exit();
   }
 }
+
+DevContext.prototype.splitAi = async function splitAi(targetAi) {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
+  const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
+  try {
+    if (!(await fileSystem(`exist`, [ targetAi ]))) {
+      throw new Error("There is no ai file");
+    }
+    const contents = new ContentsMaker();
+    await fileSystem(`write`, [ `${process.cwd()}/temp/aiCanvasScript.js`, `console.splitAi("${targetAi}", true);` ]);
+    await contents.generalLaunching(`${process.cwd()}/temp/aiCanvasScript.js`);
+    let targetAirDir, resultFoler;
+    let target;
+    let targetDir, temp, targetTong, optimizer, optimizeResult;
+    let svgTongString;
+
+    targetAirDir = targetAi.split('/');
+    targetAirDir.pop();
+    targetAirDir = targetAirDir.join('/');
+    resultFoler = targetAirDir + "/split";
+
+    target = resultFoler + "/svg";
+
+    targetDir = await fileSystem(`readDir`, [ target ]);
+    targetDir = targetDir.filter((i) => { return ((i !== `.DS_Store`) && (!/\.js/i.test(i)) && i !== "tong.js"); });
+    targetTong = [];
+
+    for (let svg of targetDir) {
+      targetTong.push(target + "/" + svg);
+    }
+
+    optimizer = new SvgOptimizer(targetTong);
+    optimizeResult = await optimizer.launching();
+
+    svgTongString = '';
+    for (let i in optimizeResult) {
+      svgTongString += "SvgTong." + i + " = " + "'" + optimizeResult[i].replace(/\'/g, '"') + "'";
+      svgTongString += "\n\n";
+    }
+
+    await fileSystem(`write`, [ `${target}/tong.js`, svgTongString ]);
+    for (let svg of targetDir) {
+      shell.exec(`rm -rf ${shellLink(target + "/" + svg)};`);
+    }
+
+    shell.exec(`open ${shellLink(resultFoler)}`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 DevContext.prototype.makeSvgTong = async function () {
   const instance = this;
@@ -850,7 +907,7 @@ DevContext.prototype.devCanvas = async function (dataCheck = false) {
       if (targetFolderList.includes(`${i}.js`)) {
         tempString = await fileSystem(`readString`, [ `${targetFolder}/${i}.js` ]);
         finalString += "\n\n";
-        finalString += tempString;
+        finalString += tempString.replace(/process.cwd\(\)/g, '"' + process.cwd() + '"');
       }
     }
 

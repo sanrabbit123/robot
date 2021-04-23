@@ -1198,6 +1198,34 @@ Mother.prototype.rectangle = function (top, left, width, height, radius = null) 
   return finalReturnObj;
 }
 
+Mother.prototype.artboardIsolate = function (thisAi, index, d = 6) {
+  const dolyeon = d;
+  const artboardIndex = index;
+  let length;
+  let items;
+  let standard_top, standard_left, standard_right, standard_bottom;
+  items = [];
+  for (let i = 0; i < thisAi.pageItems.length; i++) {
+    items.push(thisAi.pageItems[i]);
+  }
+  length = items.length;
+  standard_top = thisAi.artboards[artboardIndex].artboardRect[1];
+  standard_left = thisAi.artboards[artboardIndex].artboardRect[0];
+  standard_bottom = thisAi.artboards[artboardIndex].artboardRect[3];
+  standard_right = thisAi.artboards[artboardIndex].artboardRect[2];
+  for (let i = 0; i < length; i++) {
+    if (items[i].top > standard_top + dolyeon || items[i].top - items[i].height < standard_bottom - dolyeon || items[i].left < standard_left - dolyeon || items[i].left + items[i].width > standard_right + dolyeon) {
+      items[i].remove();
+    }
+  }
+  while (thisAi.artboards.length !== artboardIndex + 1) {
+    thisAi.artboards.remove(thisAi.artboards.length - 1);
+  }
+  while (thisAi.artboards.length !== 1) {
+    thisAi.artboards.remove(0);
+  }
+}
+
 ExecMain.prototype.mother = new Mother();
 
 //execute main only vaild : create and save and excute functions
@@ -1593,6 +1621,134 @@ ExecMain.prototype.savePng = function (ai, name, scale, widthRatio = []) {
   }
   ai.exportFile(new File(this.dir + '/' + fileName), ExportType.PNG24, exportOptions);
   ai.close(SaveOptions.DONOTSAVECHANGES);
+}
+
+ExecMain.prototype.splitAi = function (filePath, fullMode = false) {
+  let thisAi;
+  let filePathArr;
+  let folderPath0, folderPath1, folderPath2, folderPath3;
+  let folder;
+  let artBoardsLength;
+  let saveOptions;
+  let fName;
+  let fList;
+  let binaryBoo;
+  let binaryLayerIndex;
+
+  binaryLayerIndex = null;
+
+  filePathArr = filePath.split("/");
+  filePathArr.pop();
+  filePathArr.push("split");
+  folderPath0 = filePathArr.join("/");
+  filePathArr.push("ai");
+  folderPath1 = filePathArr.join("/");
+  filePathArr.pop();
+  filePathArr.push("svg");
+  folderPath2 = filePathArr.join("/");
+  filePathArr.pop();
+  filePathArr.push("jpg");
+  folderPath3 = filePathArr.join("/");
+
+  folder = new Folder(folderPath0);
+  if (!folder.exists) {
+    folder.create();
+  }
+  folder = new Folder(folderPath1);
+  if (!folder.exists) {
+    folder.create();
+  }
+
+  if (fullMode) {
+    folder = new Folder(folderPath2);
+    if (!folder.exists) {
+      folder.create();
+    }
+    folder = new Folder(folderPath3);
+    if (!folder.exists) {
+      folder.create();
+    }
+  }
+
+  thisAi = app.open(new File(filePath));
+  artBoardsLength = thisAi.artboards.length;
+  thisAi.close(SaveOptions.DONOTSAVECHANGES);
+
+  fList = [];
+  for (let i = 0; i < artBoardsLength; i++) {
+    thisAi = app.open(new File(filePath));
+    fName = folderPath1 + "/" + thisAi.artboards[i].name + ".ai";
+    fList.push(fName);
+    this.mother.artboardIsolate(thisAi, i);
+    saveOptions = new IllustratorSaveOptions();
+    thisAi.saveAs(new File(fName), saveOptions);
+    thisAi.close(SaveOptions.DONOTSAVECHANGES);
+  }
+
+  if (!fullMode) {
+    return fList;
+  } else {
+    for (let i = 0; i < fList.length; i++) {
+      thisAi = app.open(new File(fList[i]));
+      binaryBoo = false;
+      saveOptions = new ExportOptionsSVG();
+      saveOptions.coordinatePrecision = 7;
+      fName = folderPath2 + "/" + thisAi.artboards[0].name + ".svg";
+
+      for (let j = 0; j < thisAi.layers.length; j++) {
+        if (thisAi.layers[j].name !== "svg") {
+          binaryLayerIndex = j;
+        }
+      }
+
+      if (binaryLayerIndex !== null) {
+        binaryBoo = (thisAi.layers[binaryLayerIndex].pageItems.length !== 0);
+        while (thisAi.layers[binaryLayerIndex].pageItems.length !== 0) {
+          thisAi.layers[binaryLayerIndex].pageItems[0].remove();
+        }
+      } else {
+        binaryBoo = false;
+      }
+
+      app.doScript("expandall", "contents_maker");
+      thisAi.exportFile(new File(fName), ExportType.SVG, saveOptions);
+      thisAi.close(SaveOptions.DONOTSAVECHANGES);
+
+      if (binaryBoo) {
+        thisAi = app.open(new File(fList[i]));
+        saveOptions = new ExportOptionsJPEG();
+        saveOptions.artBoardClipping = true;
+        saveOptions.horizontalScale = 190;
+        saveOptions.verticalScale = 190;
+        saveOptions.antiAliasing = true;
+        saveOptions.qualitySetting = 84;
+
+        fName = folderPath3 + "/" + thisAi.artboards[0].name + ".jpg";
+        while (thisAi.layers.getByName("svg").pageItems.length !== 0) {
+          thisAi.layers.getByName("svg").pageItems[0].remove();
+        }
+        thisAi.exportFile(new File(fName), ExportType.JPEG, saveOptions);
+        thisAi.close(SaveOptions.DONOTSAVECHANGES);
+
+        thisAi = app.open(new File(fList[i]));
+        saveOptions = new ExportOptionsJPEG();
+        saveOptions.artBoardClipping = true;
+        saveOptions.horizontalScale = 100;
+        saveOptions.verticalScale = 100;
+        saveOptions.antiAliasing = true;
+        saveOptions.qualitySetting = 60;
+
+        fName = folderPath3 + "/mo" + thisAi.artboards[0].name + ".jpg";
+        while (thisAi.layers.getByName("svg").pageItems.length !== 0) {
+          thisAi.layers.getByName("svg").pageItems[0].remove();
+        }
+        thisAi.exportFile(new File(fName), ExportType.JPEG, saveOptions);
+        thisAi.close(SaveOptions.DONOTSAVECHANGES);
+      }
+
+    }
+  }
+
 }
 
     `;

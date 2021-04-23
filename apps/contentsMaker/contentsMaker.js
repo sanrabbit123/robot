@@ -270,14 +270,23 @@ ContentsMaker.prototype.generalLaunching = async function (file, mainName = "$_$
       }
       this.open = function () {
         let orders = [ ...arguments ];
-        app.open(...orders);
+        let fileObj = arguments[0];
+        let result;
+        if (typeof fileObj === "string") {
+          result = app.open(new File(fileObj));
+        } else {
+          result = app.open(...orders);
+        }
+        return result;
       };
       this.doScript = function () {
         let orders = [ ...arguments ];
+        let result;
         if (orders.length === 0) {
           orders = [ "expandall", "contents_maker" ];
         }
-        app.doScript(...orders);
+        result = app.doScript(...orders);
+        return result;
       };
       this.expandAll = this.doScript;
       this.activeDocument = function () {

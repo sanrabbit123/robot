@@ -1,3 +1,496 @@
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+    if (this.prototype) {
+      fNOP.prototype = this.prototype;
+    }
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
+(function (root, factory) {
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.returnExports = factory();
+    }
+}(this, function () {
+
+    var call = Function.call;
+    var prototypeOfObject = Object.prototype;
+    var owns = call.bind(prototypeOfObject.hasOwnProperty);
+    var isEnumerable = call.bind(prototypeOfObject.propertyIsEnumerable);
+    var toStr = call.bind(prototypeOfObject.toString);
+
+    var defineGetter;
+    var defineSetter;
+    var lookupGetter;
+    var lookupSetter;
+    var supportsAccessors = owns(prototypeOfObject, '__defineGetter__');
+    if (supportsAccessors) {
+        defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+        defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+        lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+        lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+    }
+
+    var isPrimitive = function isPrimitive(o) {
+        return o == null || (typeof o !== 'object' && typeof o !== 'function');
+    };
+
+    if (!Object.getPrototypeOf) {
+        Object.getPrototypeOf = function getPrototypeOf(object) {
+            var proto = object.__proto__;
+            if (proto || proto === null) {
+                return proto;
+            } else if (toStr(object.constructor) === '[object Function]') {
+                return object.constructor.prototype;
+            } else if (object instanceof Object) {
+                return prototypeOfObject;
+            } else {
+                return null;
+            }
+        };
+    }
+
+    var doesGetOwnPropertyDescriptorWork = function doesGetOwnPropertyDescriptorWork(object) {
+        try {
+            object.sentinel = 0;
+            return Object.getOwnPropertyDescriptor(object, 'sentinel').value === 0;
+        } catch (exception) {
+            return false;
+        }
+    };
+
+    if (Object.defineProperty) {
+        var getOwnPropertyDescriptorWorksOnObject = doesGetOwnPropertyDescriptorWork({});
+        var getOwnPropertyDescriptorWorksOnDom = typeof document === 'undefined' ||
+        doesGetOwnPropertyDescriptorWork(document.createElement('div'));
+        if (!getOwnPropertyDescriptorWorksOnDom || !getOwnPropertyDescriptorWorksOnObject) {
+            var getOwnPropertyDescriptorFallback = Object.getOwnPropertyDescriptor;
+        }
+    }
+
+    if (!Object.getOwnPropertyDescriptor || getOwnPropertyDescriptorFallback) {
+        var ERR_NON_OBJECT = 'Object.getOwnPropertyDescriptor called on a non-object: ';
+        Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+            if (isPrimitive(object)) {
+                throw new TypeError(ERR_NON_OBJECT + object);
+            }
+            if (getOwnPropertyDescriptorFallback) {
+                try {
+                    return getOwnPropertyDescriptorFallback.call(Object, object, property);
+                } catch (exception) {
+                }
+            }
+
+            var descriptor;
+            if (!owns(object, property)) {
+                return descriptor;
+            }
+            descriptor = {
+                enumerable: isEnumerable(object, property),
+                configurable: true
+            };
+            if (supportsAccessors) {
+                var prototype = object.__proto__;
+                var notPrototypeOfObject = object !== prototypeOfObject;
+                if (notPrototypeOfObject) {
+                    object.__proto__ = prototypeOfObject;
+                }
+
+                var getter = lookupGetter(object, property);
+                var setter = lookupSetter(object, property);
+
+                if (notPrototypeOfObject) {
+                    object.__proto__ = prototype;
+                }
+
+                if (getter || setter) {
+                    if (getter) {
+                        descriptor.get = getter;
+                    }
+                    if (setter) {
+                        descriptor.set = setter;
+                    }
+                    return descriptor;
+                }
+            }
+            descriptor.value = object[property];
+            descriptor.writable = true;
+            return descriptor;
+        };
+    }
+    if (!Object.getOwnPropertyNames) {
+        Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
+            return Object.keys(object);
+        };
+    }
+    if (!Object.create) {
+        var createEmpty;
+        var supportsProto = !({ __proto__: null } instanceof Object);
+        var shouldUseActiveX = function shouldUseActiveX() {
+            if (!document.domain) {
+                return false;
+            }
+
+            try {
+                return !!new ActiveXObject('htmlfile');
+            } catch (exception) {
+                return false;
+            }
+        };
+        var getEmptyViaActiveX = function getEmptyViaActiveX() {
+            var empty;
+            var xDoc;
+
+            xDoc = new ActiveXObject('htmlfile');
+
+            var script = 'script';
+            xDoc.write('<' + script + '></' + script + '>');
+            xDoc.close();
+
+            empty = xDoc.parentWindow.Object.prototype;
+            xDoc = null;
+
+            return empty;
+        };
+        var getEmptyViaIFrame = function getEmptyViaIFrame() {
+            var iframe = document.createElement('iframe');
+            var parent = document.body || document.documentElement;
+            var empty;
+
+            iframe.style.display = 'none';
+            parent.appendChild(iframe);
+            iframe.src = 'javascript:';
+
+            empty = iframe.contentWindow.Object.prototype;
+            parent.removeChild(iframe);
+            iframe = null;
+
+            return empty;
+        };
+        if (supportsProto || typeof document === 'undefined') {
+            createEmpty = function () {
+                return { __proto__: null };
+            };
+        } else {
+            createEmpty = function () {
+                var empty = shouldUseActiveX() ? getEmptyViaActiveX() : getEmptyViaIFrame();
+
+                delete empty.constructor;
+                delete empty.hasOwnProperty;
+                delete empty.propertyIsEnumerable;
+                delete empty.isPrototypeOf;
+                delete empty.toLocaleString;
+                delete empty.toString;
+                delete empty.valueOf;
+
+                var Empty = function Empty() {};
+                Empty.prototype = empty;
+                createEmpty = function () {
+                    return new Empty();
+                };
+                return new Empty();
+            };
+        }
+
+        Object.create = function create(prototype, properties) {
+
+            var object;
+            var Type = function Type() {}; // An empty constructor.
+
+            if (prototype === null) {
+                object = createEmpty();
+            } else {
+                if (prototype !== null && isPrimitive(prototype)) {
+                    throw new TypeError('Object prototype may only be an Object or null'); // same msg as Chrome
+                }
+                Type.prototype = prototype;
+                object = new Type();
+                object.__proto__ = prototype;
+            }
+
+            if (properties !== void 0) {
+                Object.defineProperties(object, properties);
+            }
+
+            return object;
+        };
+    }
+
+    var doesDefinePropertyWork = function doesDefinePropertyWork(object) {
+        try {
+            Object.defineProperty(object, 'sentinel', {});
+            return 'sentinel' in object;
+        } catch (exception) {
+            return false;
+        }
+    };
+    if (Object.defineProperty) {
+        var definePropertyWorksOnObject = doesDefinePropertyWork({});
+        var definePropertyWorksOnDom = typeof document === 'undefined' ||
+            doesDefinePropertyWork(document.createElement('div'));
+        if (!definePropertyWorksOnObject || !definePropertyWorksOnDom) {
+            var definePropertyFallback = Object.defineProperty,
+                definePropertiesFallback = Object.defineProperties;
+        }
+    }
+
+    if (!Object.defineProperty || definePropertyFallback) {
+        var ERR_NON_OBJECT_DESCRIPTOR = 'Property description must be an object: ';
+        var ERR_NON_OBJECT_TARGET = 'Object.defineProperty called on non-object: ';
+        var ERR_ACCESSORS_NOT_SUPPORTED = 'getters & setters can not be defined on this javascript engine';
+
+        Object.defineProperty = function defineProperty(object, property, descriptor) {
+            if (isPrimitive(object)) {
+                throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+            }
+            if (isPrimitive(descriptor)) {
+                throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+            }
+            if (definePropertyFallback) {
+                try {
+                    return definePropertyFallback.call(Object, object, property, descriptor);
+                } catch (exception) {
+                }
+            }
+
+            if ('value' in descriptor) {
+                if (supportsAccessors && (lookupGetter(object, property) || lookupSetter(object, property))) {
+                    var prototype = object.__proto__;
+                    object.__proto__ = prototypeOfObject;
+                    delete object[property];
+                    object[property] = descriptor.value;
+                    object.__proto__ = prototype;
+                } else {
+                    object[property] = descriptor.value;
+                }
+            } else {
+                var hasGetter = 'get' in descriptor;
+                var hasSetter = 'set' in descriptor;
+                if (!supportsAccessors && (hasGetter || hasSetter)) {
+                    throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+                }
+                if (hasGetter) {
+                    defineGetter(object, property, descriptor.get);
+                }
+                if (hasSetter) {
+                    defineSetter(object, property, descriptor.set);
+                }
+            }
+            return object;
+        };
+    }
+    if (!Object.defineProperties || definePropertiesFallback) {
+        Object.defineProperties = function defineProperties(object, properties) {
+            if (definePropertiesFallback) {
+                try {
+                    return definePropertiesFallback.call(Object, object, properties);
+                } catch (exception) {
+                }
+            }
+
+            Object.keys(properties).forEach(function (property) {
+                if (property !== '__proto__') {
+                    Object.defineProperty(object, property, properties[property]);
+                }
+            });
+            return object;
+        };
+    }
+    if (!Object.seal) {
+        Object.seal = function seal(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.seal can only be called on Objects.');
+            }
+            return object;
+        };
+    }
+
+    if (!Object.freeze) {
+        Object.freeze = function freeze(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.freeze can only be called on Objects.');
+            }
+            return object;
+        };
+    }
+
+    try {
+        Object.freeze(function () {});
+    } catch (exception) {
+        Object.freeze = (function (freezeObject) {
+            return function freeze(object) {
+                if (typeof object === 'function') {
+                    return object;
+                } else {
+                    return freezeObject(object);
+                }
+            };
+        }(Object.freeze));
+    }
+    if (!Object.preventExtensions) {
+        Object.preventExtensions = function preventExtensions(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.preventExtensions can only be called on Objects.');
+            }
+            return object;
+        };
+    }
+    if (!Object.isSealed) {
+        Object.isSealed = function isSealed(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.isSealed can only be called on Objects.');
+            }
+            return false;
+        };
+    }
+    if (!Object.isFrozen) {
+        Object.isFrozen = function isFrozen(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.isFrozen can only be called on Objects.');
+            }
+            return false;
+        };
+    }
+    if (!Object.isExtensible) {
+        Object.isExtensible = function isExtensible(object) {
+            if (Object(object) !== object) {
+                throw new TypeError('Object.isExtensible can only be called on Objects.');
+            }
+            var name = '';
+            while (owns(object, name)) {
+                name += '?';
+            }
+            object[name] = true;
+            var returnValue = owns(object, name);
+            delete object[name];
+            return returnValue;
+        };
+    }
+}));
+
+if (!Object.keys) {
+  Object.keys = (function() {
+    'use strict';
+    var hasOwnProperty = Object.prototype.hasOwnProperty,
+        hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+        dontEnums = [
+          'toString',
+          'toLocaleString',
+          'valueOf',
+          'hasOwnProperty',
+          'isPrototypeOf',
+          'propertyIsEnumerable',
+          'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    return function(obj) {
+      if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
+        throw new TypeError('Object.keys called on non-object');
+      }
+
+      var result = [], prop, i;
+
+      for (prop in obj) {
+        if (hasOwnProperty.call(obj, prop)) {
+          result.push(prop);
+        }
+      }
+
+      if (hasDontEnumBug) {
+        for (i = 0; i < dontEnumsLength; i++) {
+          if (hasOwnProperty.call(obj, dontEnums[i])) {
+            result.push(dontEnums[i]);
+          }
+        }
+      }
+      return result;
+    };
+  }());
+}
+
+if (!Object.defineProperties) {
+  Object.defineProperties = function defineProperties(obj, properties) {
+    function convertToDescriptor(desc) {
+      function hasProperty(obj, prop) {
+        return Object.prototype.hasOwnProperty.call(obj, prop);
+      }
+
+      function isCallable(v) {
+        // NB: 함수가 아닌 값이 호출가능할 경우 필요할 시 수정할 것
+        return typeof v === 'function';
+      }
+
+      if (typeof desc !== 'object' || desc === null)
+        throw new TypeError('bad desc');
+
+      var d = {};
+
+      if (hasProperty(desc, 'enumerable'))
+        d.enumerable = !!desc.enumerable;
+      if (hasProperty(desc, 'configurable'))
+        d.configurable = !!desc.configurable;
+      if (hasProperty(desc, 'value'))
+        d.value = desc.value;
+      if (hasProperty(desc, 'writable'))
+        d.writable = !!desc.writable;
+      if (hasProperty(desc, 'get')) {
+        var g = desc.get;
+
+        if (!isCallable(g) && typeof g !== 'undefined')
+          throw new TypeError('bad get');
+        d.get = g;
+      }
+      if (hasProperty(desc, 'set')) {
+        var s = desc.set;
+        if (!isCallable(s) && typeof s !== 'undefined')
+          throw new TypeError('bad set');
+        d.set = s;
+      }
+
+      if (('get' in d || 'set' in d) && ('value' in d || 'writable' in d))
+        throw new TypeError('identity-confused descriptor');
+
+      return d;
+    }
+
+    if (typeof obj !== 'object' || obj === null)
+      throw new TypeError('bad obj');
+
+    properties = Object(properties);
+
+    var keys = Object.keys(properties);
+    var descs = [];
+
+    for (var i = 0; i < keys.length; i++)
+      descs.push([keys[i], convertToDescriptor(properties[keys[i]])]);
+
+    for (var i = 0; i < descs.length; i++)
+      Object.defineProperty(obj, descs[i][0], descs[i][1]);
+
+    return obj;
+  };
+}
+
 if (typeof Object.create != 'function') {
   Object.create = (function(undefined) {
     var Temp = function() {};
@@ -25,6 +518,57 @@ if (!Array.prototype.forEach) {
             callback.call(thisArg, this[i], i, this);
         }
     };
+}
+
+if (!Array.prototype.includes) {
+  Object.defineProperty(Array.prototype, 'includes', {
+    value: function(searchElement, fromIndex) {
+
+      if (this == null) {
+        throw new TypeError('"this" is null or not defined');
+      }
+
+      // 1. Let O be ? ToObject(this value).
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If len is 0, return false.
+      if (len === 0) {
+        return false;
+      }
+
+      // 4. Let n be ? ToInteger(fromIndex).
+      //    (If fromIndex is undefined, this step produces the value 0.)
+      var n = fromIndex | 0;
+
+      // 5. If n ≥ 0, then
+      //  a. Let k be n.
+      // 6. Else n < 0,
+      //  a. Let k be len + n.
+      //  b. If k < 0, let k be 0.
+      var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+      function sameValueZero(x, y) {
+        return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
+      }
+
+      // 7. Repeat, while k < len
+      while (k < len) {
+        // a. Let elementK be the result of ? Get(O, ! ToString(k)).
+        // b. If SameValueZero(searchElement, elementK) is true, return true.
+        if (sameValueZero(o[k], searchElement)) {
+          return true;
+        }
+        // c. Increase k by 1.
+        k++;
+      }
+
+      // 8. Return false
+      return false;
+    }
+  });
 }
 
 if (!Array.isArray) {
