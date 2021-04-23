@@ -371,8 +371,6 @@ AiContents.prototype.to_mysql = async function () {
       columnArr = tempArr[1].split(',');
       valueArr = tempArr[2].slice(1, -1).split("','");
 
-      selectQuery = `SELECT * FROM ${thisTable};`;
-
       updateQuery = `UPDATE ${thisTable} SET `;
       for (let i = 0; i < columnArr.length; i++) {
         if (columnArr[i] !== "porlid" && columnArr[i] !== "revid") {
@@ -388,6 +386,8 @@ AiContents.prototype.to_mysql = async function () {
       updateQuery += " WHERE porlid = '";
       updateQuery += porlid;
       updateQuery += "';";
+
+      selectQuery = `SELECT * FROM ${thisTable} WHERE porlid = '${porlid}';`;
 
       return { update: updateQuery, select: selectQuery };
     }

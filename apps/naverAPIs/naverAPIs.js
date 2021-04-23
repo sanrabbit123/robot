@@ -201,6 +201,8 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "타볼", "탑볼" ],
     [ "아들이사용", "아들이 사용" ],
     [ "딸이사용", "딸이 사용" ],
+    [ "콘택트", "선택" ],
+    [ "선택 해", "선택해" ],
   ];
   try {
     let resultArr = [];

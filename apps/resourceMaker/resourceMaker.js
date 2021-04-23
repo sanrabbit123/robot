@@ -764,6 +764,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
 
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem, mongo, mongoinfo, shell, shellLink, headRequest, binaryRequest } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -864,6 +865,7 @@ ResourceMaker.prototype.launching = async function () {
     input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+      await back.mongoDelete("foreContents", { pid: this.p_id }, { console: true });
     }
 
   } catch (e) {
