@@ -450,7 +450,7 @@ DevContext.prototype.launching = async function () {
 
     // addtional photo repair
     // const filter = new PortfolioFilter();
-    // await filter.additionalRepair("a81", 5);
+    // await filter.additionalRepair("p90", 13);
 
 
     // raw photo to raw portfolio

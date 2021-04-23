@@ -195,7 +195,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
 
-    photo_sizes = liteMode ? [ "780" ] : [ "780", "원본" ];
+    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -256,7 +256,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
 
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
     if (!liteMode) {
-      fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/원본` ]);
+      fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
       fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
     }
 
@@ -269,7 +269,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     if (!liteMode) {
       for (let i of fileList_original_raw) {
         if (i !== `.DS_Store`) {
-          fileList_original.push(resultFolder + "/원본/" + i);
+          fileList_original.push(resultFolder + "/3508/" + i);
         }
       }
       for (let i of fileList_png_raw) {
@@ -338,12 +338,12 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
   const idFilterNum = function (past) {
-    past = past.replace(/\.jpg$/, '');
-    past = past.replace(/_[0-9][0-9][0-9][0-9][0-9][0-9]$/, '');
+    let newNumber;
+    past = past.split('_')[2];
     past = past.replace(/[^0-9]/g, '');
     past = past.replace(/^0/, '');
-    let newNumber = Number(past);
-    return (newNumber);
+    newNumber = Number(past);
+    return newNumber;
   }
   const idFilter = function (past) {
     return String(idFilterNum(past));
@@ -419,7 +419,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     //s3 upload
     if (!liteMode) {
-      shell.exec(`mv ${shellLink(this.resultFolder)}/원본 ${shellLink(this.resultFolder)}/${this.pid}`);
+      shell.exec(`mv ${shellLink(this.resultFolder)}/3508 ${shellLink(this.resultFolder)}/${this.pid}`);
       pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
       fromArr = [];
       toArr = [];

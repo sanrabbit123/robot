@@ -12,7 +12,7 @@ ExecMain.prototype.start = function () {
     this_photo = fileObj.get_file();
     jpgSaveOptions = new JPEGSaveOptions();
     jpgSaveOptions.quality = 12;
-    if (options.size !== "원본") {
+    if (options.size !== "3508") {
       if (Number(String(this_photo.width).slice(0, -3)) > Number(String(this_photo.height).slice(0, -3))) {
         app.doAction("to" + options.size + "_garo","to_portfolio");
       } else {
