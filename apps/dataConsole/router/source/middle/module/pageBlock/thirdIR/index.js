@@ -1,8 +1,10 @@
 const ThirdIR = function () {
+  this.mother = new GeneralJs();
   this.name = "thirdIR";
   this.binaryIndex = [ 5, 21, 27, 30, 31, 43 ];
   this.ratio = (297 / 210);
   this.length = 45;
+  this.pdfName = "홈리에종 IR";
 }
 
 ThirdIR.prototype.render = async function (target) {
@@ -67,6 +69,7 @@ ThirdIR.prototype.render = async function (target) {
       ratio: instance.ratio,
       length: instance.length,
       name: instance.name,
+      pdfName: instance.pdfName,
       html: {
         a38: movieMaker("https://home-liaison.servehttp.com/pageBlock/thirdIR/media/video0.mp4"),
         a39: movieMaker("https://home-liaison.servehttp.com/pageBlock/thirdIR/media/video1.mp4"),

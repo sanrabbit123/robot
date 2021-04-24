@@ -833,7 +833,7 @@ PageBlockJs.prototype.iconMaker = function (cardMode = false) {
         {
           type: "click",
           event: function (e) {
-            GeneralJs.downloadFile(S3HOST + '/pageBlock/' + instance.thisPage.name + '/pdf/tong.pdf', '홈리에종 IR').catch(function (e) { console.log(e); });
+            GeneralJs.downloadFile(S3HOST + '/pageBlock/' + instance.thisPage.name + '/pdf/tong.pdf', instance.thisPage.pdfName).catch(function (e) { console.log(e); });
           }
         }
       ],

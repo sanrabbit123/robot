@@ -2931,7 +2931,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
   callback(div_clone, cancelBox);
 }
 
-GeneralJs.prototype.greenAlert = async function (message) {
+GeneralJs.prototype.greenAlert = async function (message, blackMode = false) {
   const instance = this;
   try {
     let div_clone, div_clone2;
@@ -2957,11 +2957,11 @@ GeneralJs.prototype.greenAlert = async function (message) {
     GeneralJs.stacks["greenAlert_greenBox"] = div_clone;
     style = {
       position: "fixed",
-      background: GeneralJs.colorChip.gradientGreen,
+      background: blackMode ? GeneralJs.colorChip.gradientGray : GeneralJs.colorChip.gradientGreen,
       borderRadius: String(5) + ea,
       height: String(40) + ea,
       bottom: String((this.belowHeight === undefined ? 0 : this.belowHeight) + 22) + ea,
-      boxShadow: "0px 5px 12px -8px " + GeneralJs.colorChip.green,
+      boxShadow: "0px 5px 12px -8px " + blackMode ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.green,
       opacity: String(0),
       width: String(2000) + ea,
       transition: "all 0s ease",

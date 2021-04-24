@@ -1169,6 +1169,19 @@ GeneralJs.downloadString = function (text, fileName, fileType = "plain") {
   }, 1500);
 }
 
+GeneralJs.blankHref = function (link) {
+  if (link === undefined) {
+    throw new Error("must be link");
+  }
+  let a = document.createElement("A");
+  a.style.display = "none";
+  a.href = link;
+  a.setAttribute("target", "_blank");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
