@@ -360,58 +360,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    let targetAi = process.env.HOME + "/thirdir/thirdIR.ai";
-
-    const resultConst = [ "svg", "jpg", "pdf" ];
-    const mediaConst = "media";
-    const pageBlockConst = "pageBlock";
-    let mediaBoo;
-    let targetFolder, resultFolder;
-    let tempArr;
-    let fromArr, toArr;
-    let dirList;
-    let aiName;
-
-    tempArr = targetAi.split('/');
-    aiName = tempArr.pop();
-    targetFolder = tempArr.join('/');
-
-    // resultFolder = await this.splitAi(targetAi);
-    resultFolder = process.env.HOME + "/thirdir/split";
-
-    if (await fileSystem(`exist`, [ `${targetFolder}/${mediaConst}` ])) {
-      shell.exec(`cp -r ${shellLink(targetFolder + "/" + mediaConst)} ${resultFolder}`);
-      mediaBoo = true;
-    } else {
-      mediaBoo = false;
-    }
-
-    fromArr = [];
-    toArr = [];
-
-    for (let i of resultConst) {
-      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${i}` ]);
-      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
-      for (let j of dirList) {
-        fromArr.push(`${resultFolder}/${i}/${j}`);
-        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${i}/${j}`);
-      }
-    }
-
-    if (mediaBoo) {
-      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${mediaConst}` ]);
-      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
-      for (let j of dirList) {
-        fromArr.push(`${resultFolder}/${mediaConst}/${j}`);
-        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${mediaConst}/${j}`);
-      }
-    }
-
-    await ghostFileUpload(fromArr, toArr);
-
-    // shell.exec(`rm -rf ${shellLink(resultFolder)}`);
-
-
 
 
 
@@ -590,6 +538,9 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
+    //render page block
+    // await this.pageRender(process.env.HOME + "/thirdIR/thirdIR.ai");
+
   } catch (e) {
     console.log(e);
   } finally {
@@ -653,6 +604,65 @@ DevContext.prototype.splitAi = async function splitAi(targetAi) {
   }
 }
 
+DevContext.prototype.pageRender = async function (targetAi) {
+  const instance = this;
+  const { fileSystem, shell, shellLink, ghostFileUpload } = this.mother;
+  try {
+    if (!(await fileSystem(`exist`, [ targetAi ]))) {
+      throw new Error("There is no ai file");
+    }
+
+    const resultConst = [ "svg", "jpg", "pdf" ];
+    const mediaConst = "media";
+    const pageBlockConst = "pageBlock";
+    let mediaBoo;
+    let targetFolder, resultFolder;
+    let tempArr;
+    let fromArr, toArr;
+    let dirList;
+    let aiName;
+
+    tempArr = targetAi.split('/');
+    aiName = tempArr.pop();
+    targetFolder = tempArr.join('/');
+
+    resultFolder = await this.splitAi(targetAi);
+
+    if (await fileSystem(`exist`, [ `${targetFolder}/${mediaConst}` ])) {
+      shell.exec(`cp -r ${shellLink(targetFolder + "/" + mediaConst)} ${resultFolder}`);
+      mediaBoo = true;
+    } else {
+      mediaBoo = false;
+    }
+
+    fromArr = [];
+    toArr = [];
+
+    for (let i of resultConst) {
+      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${i}` ]);
+      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
+      for (let j of dirList) {
+        fromArr.push(`${resultFolder}/${i}/${j}`);
+        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${i}/${j}`);
+      }
+    }
+
+    if (mediaBoo) {
+      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${mediaConst}` ]);
+      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
+      for (let j of dirList) {
+        fromArr.push(`${resultFolder}/${mediaConst}/${j}`);
+        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${mediaConst}/${j}`);
+      }
+    }
+
+    await ghostFileUpload(fromArr, toArr);
+    shell.exec(`rm -rf ${shellLink(resultFolder)}`);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 DevContext.prototype.makeSvgTong = async function () {
   const instance = this;
