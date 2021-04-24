@@ -39,7 +39,7 @@ const PageBlockJs = function () {
 PageBlockJs.prototype.scrollMaker = function () {
   const instance = this;
   const fileCharacter = 'a';
-  const fileCompressCharacter = 'b';
+  const fileCompressCharacter = 'moa';
   const { binaryIndex, ratio, length, name, html } = this.thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;
@@ -268,7 +268,7 @@ PageBlockJs.prototype.scrollMaker = function () {
 PageBlockJs.prototype.cardMaker = function () {
   const instance = this;
   const fileCharacter = 'a';
-  const fileCompressCharacter = 'b';
+  const fileCompressCharacter = 'moa';
   const { binaryIndex, ratio, length, name, html } = this.thisPage;
   const { colorChip, createNode, createNodes } = GeneralJs;
   let paddingLeft, paddingTop;

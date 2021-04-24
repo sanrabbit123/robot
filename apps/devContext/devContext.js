@@ -360,9 +360,56 @@ DevContext.prototype.launching = async function () {
 
 
 
+    let targetAi = process.env.HOME + "/thirdir/thirdIR.ai";
 
-    // await this.splitAi(process.cwd() + "/temp/target.ai");
+    const resultConst = [ "svg", "jpg", "pdf" ];
+    const mediaConst = "media";
+    const pageBlockConst = "pageBlock";
+    let mediaBoo;
+    let targetFolder, resultFolder;
+    let tempArr;
+    let fromArr, toArr;
+    let dirList;
+    let aiName;
 
+    tempArr = targetAi.split('/');
+    aiName = tempArr.pop();
+    targetFolder = tempArr.join('/');
+
+    // resultFolder = await this.splitAi(targetAi);
+    resultFolder = process.env.HOME + "/thirdir/split";
+
+    if (await fileSystem(`exist`, [ `${targetFolder}/${mediaConst}` ])) {
+      shell.exec(`cp -r ${shellLink(targetFolder + "/" + mediaConst)} ${resultFolder}`);
+      mediaBoo = true;
+    } else {
+      mediaBoo = false;
+    }
+
+    fromArr = [];
+    toArr = [];
+
+    for (let i of resultConst) {
+      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${i}` ]);
+      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
+      for (let j of dirList) {
+        fromArr.push(`${resultFolder}/${i}/${j}`);
+        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${i}/${j}`);
+      }
+    }
+
+    if (mediaBoo) {
+      dirList = await fileSystem(`readDir`, [ `${resultFolder}/${mediaConst}` ]);
+      dirList = dirList.filter((f) => { return f !== `.DS_Store`; });
+      for (let j of dirList) {
+        fromArr.push(`${resultFolder}/${mediaConst}/${j}`);
+        toArr.push(`${pageBlockConst}/${aiName.replace(/\.ai$/gi, '')}/${mediaConst}/${j}`);
+      }
+    }
+
+    await ghostFileUpload(fromArr, toArr);
+
+    // shell.exec(`rm -rf ${shellLink(resultFolder)}`);
 
 
 
@@ -565,7 +612,7 @@ DevContext.prototype.splitAi = async function splitAi(targetAi) {
     const contents = new ContentsMaker();
     await fileSystem(`write`, [ `${process.cwd()}/temp/aiCanvasScript.js`, `console.splitAi("${targetAi}", true);` ]);
     await contents.generalLaunching(`${process.cwd()}/temp/aiCanvasScript.js`);
-    let targetAirDir, resultFoler;
+    let targetAirDir, resultFolder;
     let target;
     let targetDir, temp, targetTong, optimizer, optimizeResult;
     let svgTongString;
@@ -573,9 +620,9 @@ DevContext.prototype.splitAi = async function splitAi(targetAi) {
     targetAirDir = targetAi.split('/');
     targetAirDir.pop();
     targetAirDir = targetAirDir.join('/');
-    resultFoler = targetAirDir + "/split";
+    resultFolder = targetAirDir + "/split";
 
-    target = resultFoler + "/svg";
+    target = resultFolder + "/svg";
 
     targetDir = await fileSystem(`readDir`, [ target ]);
     targetDir = targetDir.filter((i) => { return ((i !== `.DS_Store`) && (!/\.js/i.test(i)) && i !== "tong.js"); });
@@ -599,7 +646,8 @@ DevContext.prototype.splitAi = async function splitAi(targetAi) {
       shell.exec(`rm -rf ${shellLink(target + "/" + svg)};`);
     }
 
-    shell.exec(`open ${shellLink(resultFoler)}`);
+    return resultFolder;
+
   } catch (e) {
     console.log(e);
   }

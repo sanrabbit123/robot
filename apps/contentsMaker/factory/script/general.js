@@ -961,6 +961,7 @@ Mother.prototype.rectangle = function (top, left, width, height, radius = null) 
   let stroke = null, fill = null;
   let upRound = false, downRound = false;
   let finalReturnObj;
+  let customLayer = "default";
   if (typeof top === "object" && left === undefined && width === undefined && height === undefined && radius === null) {
     if (top.top === undefined || top.left === undefined || top.width === undefined || top.height === undefined|| top.stroke === undefined|| top.fill === undefined|| top.radius === undefined) {
       throw new Error("object argument must be { number: top, number: left, number: width, number: height, NULL or string: stroke, NULL or string: fill, NULL or number: radius }");
@@ -973,6 +974,7 @@ Mother.prototype.rectangle = function (top, left, width, height, radius = null) 
       fill = top.fill;
       upRound = (top.upRound === true) ? true : false;
       downRound = (top.downRound === true) ? true : false;
+      customLayer = (top.layer !== undefined) ? top.layer : "default";
       top = top.top;
     }
   }
@@ -984,7 +986,7 @@ Mother.prototype.rectangle = function (top, left, width, height, radius = null) 
     downRound = false;
   }
   const this_ai = app.activeDocument;
-  const this_layer = this_ai.layers[0];
+  const this_layer = customLayer === "default" ? this_ai.layers[0] : customLayer;
   let rectangle;
 
   rectangle = this_layer.pathItems.rectangle(top, left, width, height);
@@ -1224,6 +1226,34 @@ Mother.prototype.artboardIsolate = function (thisAi, index, d = 6) {
   while (thisAi.artboards.length !== 1) {
     thisAi.artboards.remove(0);
   }
+}
+
+Mother.prototype.whiteBack = function () {
+  const thisAi = app.activeDocument;
+  const layer = thisAi.layers.add();
+  let artboards, length, tempArr;
+  layer.name = "white";
+  layer.zOrder(ZOrderMethod.SENDTOBACK);
+  length = thisAi.artboards.length;
+  artboards = [];
+  for (let i = 0; i < length; i++) {
+    artboards.push(thisAi.artboards[i]);
+  }
+  for (let i = 0; i < length; i++) {
+    tempArr = artboards[i].artboardRect;
+    this.rectangle({
+      top: tempArr[1],
+      left: tempArr[0],
+      width: Math.abs(tempArr[2] - tempArr[0]),
+      height: Math.abs(tempArr[3] - tempArr[1]),
+      stroke: null,
+      fill: "#ffffff",
+      radius: null,
+      layer: layer
+    });
+  }
+  layer.zOrder(ZOrderMethod.SENDTOBACK);
+  layer.locked = true;
 }
 
 ExecMain.prototype.mother = new Mother();
@@ -1626,7 +1656,7 @@ ExecMain.prototype.savePng = function (ai, name, scale, widthRatio = []) {
 ExecMain.prototype.splitAi = function (filePath, fullMode = false) {
   let thisAi;
   let filePathArr;
-  let folderPath0, folderPath1, folderPath2, folderPath3;
+  let folderPath0, folderPath1, folderPath2, folderPath3, folderPath4;
   let folder;
   let artBoardsLength;
   let saveOptions;
@@ -1649,6 +1679,9 @@ ExecMain.prototype.splitAi = function (filePath, fullMode = false) {
   filePathArr.pop();
   filePathArr.push("jpg");
   folderPath3 = filePathArr.join("/");
+  filePathArr.pop();
+  filePathArr.push("pdf");
+  folderPath4 = filePathArr.join("/");
 
   folder = new Folder(folderPath0);
   if (!folder.exists) {
@@ -1665,6 +1698,10 @@ ExecMain.prototype.splitAi = function (filePath, fullMode = false) {
       folder.create();
     }
     folder = new Folder(folderPath3);
+    if (!folder.exists) {
+      folder.create();
+    }
+    folder = new Folder(folderPath4);
     if (!folder.exists) {
       folder.create();
     }
@@ -1745,8 +1782,15 @@ ExecMain.prototype.splitAi = function (filePath, fullMode = false) {
         thisAi.exportFile(new File(fName), ExportType.JPEG, saveOptions);
         thisAi.close(SaveOptions.DONOTSAVECHANGES);
       }
-
     }
+
+    thisAi = app.open(new File(filePath));
+    this.mother.whiteBack();
+    saveOptions = new PDFSaveOptions();
+    saveOptions.pDFPreset = "uragenpdf";
+    app.activeDocument.saveAs(new File(folderPath4 + "/tong.pdf"), saveOptions);
+    thisAi.close(SaveOptions.DONOTSAVECHANGES);
+
   }
 
 }
