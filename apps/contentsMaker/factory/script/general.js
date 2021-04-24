@@ -1293,6 +1293,8 @@ ExecMain.prototype.createDoc = function () {
   return this_ai;
 }
 
+ExecMain.prototype.createDocument = ExecMain.prototype.createDoc;
+
 ExecMain.prototype.returnMileoPosition = function (arr) {
   let temp, temp2, startNum, endNum, small, big;
 

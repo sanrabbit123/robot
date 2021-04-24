@@ -49,313 +49,6 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
-    const ghostMap = {
-      name: "ghostMap",
-      process: [
-        {
-          name: "프로젝트 시작 전",
-          process: [
-            {
-              client: {
-                name: "서비스 안내서",
-                composition: {
-                  contents: [
-                    "적합한 서비스 명시",
-                    "해당 서비스 프로세스 설명",
-                    "일반적인 홈스타일링 설명",
-                    "리모델링보다 나은 이유",
-                    "셀프 인테리어보다 나은 이유"
-                  ]
-                }
-              },
-              designer: null
-            },
-            {
-              client: {
-                name: "디자이너 제안서",
-                composition: {
-                  contents: [
-                    "서비스 종류",
-                    "고객 기본 정보",
-                    "디자이너 포트폴리오 사진 구성",
-                    "디자이너의 간단 설명글",
-                    "디자이너 기본 사항 (체크리스트)",
-                    "디자이너 스타일링 정보",
-                    "디자이너 금액",
-                    "프로세스 기본 계약 사항"
-                  ]
-                }
-              },
-              designer: null
-            },
-            {
-              client: {
-                name: "계약금 안내",
-                composition: {
-                  contents: [
-                    "홈리에종 정산 방식 안내",
-                    "잔금 및 계약금 구성 안내",
-                    "계약금 입금 방식 안내",
-                    "계약금 주의 사항 안내"
-                  ]
-                }
-              },
-              designer: {
-                name: "홈스타일링 의뢰서",
-                composition: {
-                  contents: [
-                    "현장 미팅 일자",
-                    "현장 미팅 장소 정보",
-                    "해당 서비스 종류 정보",
-                    "고객 기본 정보",
-                    "해당 현장 정보",
-                    "서비스 정보",
-                    "홈리에종 응대 / 요청사항",
-                    "서비스비 안내",
-                    "고객 안내 사항",
-                    "시공 연계수수료 안내",
-                    "정산 안내"
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "현장 미팅 안내서",
-                composition: {
-                  contents: [
-                    "현장 미팅 일자",
-                    "현장 미팅 장소 정보",
-                    "실측 안내",
-                    "현장 체크 안내",
-                    "현장 미팅시 제안 범위 안내",
-                    "디자이너 변경시 안내",
-                  ]
-                }
-              },
-              designer: {
-                name: "현장 미팅 체크리스트",
-                composition: {
-                  contents: [
-                    "현장 미팅 일자",
-                    "현장 미팅 장소 정보",
-                    "실측 체크리스트",
-                    "공정별 현장 체크리스트"
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "잔금 안내 및 스타일링 계약서",
-                composition: {
-                  contents: [
-                    "홈리에종 정산 방식 안내",
-                    "잔금 금액 및 구성 안내",
-                    "잔금 입금 방식 안내",
-                    "잔금 주의 사항 안내",
-                    "인테리어 전체 예산 구성 안내",
-                    "시공사 안내",
-                  ]
-                }
-              },
-              designer: null
-            },
-          ]
-        },
-        {
-          name: "프로젝트 진행 중",
-          process: [
-            {
-              client: {
-                name: "디자인 진행 안내문",
-                composition: {
-                  contents: [
-                    "전체 컨셉",
-                    "각 공간별 활용 계획",
-                    "각 공간별 마감 제안",
-                    "각 공간별 레이아웃",
-                    "각 공정별 시공 운영 계획",
-                    "전체 예산 계획",
-                    "제품 리스트 제공 안내",
-                    "페이퍼 워크 제공 안내",
-                  ]
-                }
-              },
-              designer: {
-                name: "디자인 체크리스트",
-                composition: {
-                  contents: [
-                    "전체 컨셉",
-                    "각 공간별 활용 계획",
-                    "전체 예산 계획",
-                    "전체 예산 계획서 폼, 가이드"
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "시공 안내문",
-                composition: {
-                  contents: [
-                    "해당 현장 필요 시공 리스트",
-                    "각 공정별 절차 안내",
-                    "각 공정별 비용 안내",
-                    "각 공정별 기간 안내",
-                    "시공 스케줄표",
-                  ]
-                }
-              },
-              designer: {
-                name: "시공 체크리스트",
-                composition: {
-                  contents: [
-                    "해당 현장 필요 시공 리스트",
-                    "각 공정별 체크리스트",
-                    "시공 견적서",
-                    "시공 스케줄표",
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "제작 제품 안내문",
-                composition: {
-                  contents: [
-                    "제작 제품 구성 - 빌트인, 가구, 패브릭",
-                    "제작 제품 이점 안내",
-                    "해당 현장 필요 제작 리스트",
-                    "제작 제품 절차 안내",
-                    "제작 제품 비용 안내",
-                    "제작 제품 기간 안내",
-                    "제작 제품 스케줄표",
-                  ]
-                }
-              },
-              designer: {
-                name: "제작 제품 체크리스트",
-                composition: {
-                  contents: [
-                    "해당 현장 필요 제작 리스트",
-                    "제작 제품 종류별 체크리스트",
-                    "제작 제품 견적서",
-                    "제작 제품 스케줄표"
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "구매 및 세팅 안내문",
-                composition: {
-                  contents: [
-                    "해당 현장 구매 목록 링크 리스트",
-                    "설치 및 조립 서비스 제공 안내",
-                    "부가 서비스 제공 안내",
-                    "세팅 가이드 및 세팅 일정 안내",
-                    "구매 및 세팅 전체 스케줄표"
-                  ]
-                }
-              },
-              designer: {
-                name: "구매 및 세팅 체크리스트",
-                composition: {
-                  contents: [
-                    "해당 현장 구매 목록 입력기",
-                    "설치 및 조립 서비스 제공 가이드",
-                    "부가 서비스 제공 가이드",
-                    "구매 및 세팅 스케줄 조정"
-                  ]
-                }
-              }
-            },
-          ]
-        },
-        {
-          name: "프로젝트 마무리",
-          process: [
-            {
-              client: {
-                name: "촬영 안내서",
-                composition: {
-                  contents: [
-                    "촬영 종류 및 범위 안내",
-                    "촬영 범위에 따른 동의 항목 체크",
-                    "촬영 스케줄 조정",
-                    "촬영 스케줄표"
-                  ]
-                }
-              },
-              designer: {
-                name: "촬영 안내서",
-                composition: {
-                  contents: [
-                    "홈리에종 촬영 안내",
-                    "촬영시 세팅 안내",
-                    "촬영 스케줄표",
-                    "원본 사진 구매 및 제공 안내"
-                  ]
-                }
-              }
-            },
-            {
-              client: {
-                name: "프로젝트 마무리",
-                composition: {
-                  contents: [
-                    "디자인 제안 체크",
-                    "시공 체크",
-                    "제작 체크",
-                    "세팅 체크",
-                    "기타 문의 사항",
-                    "마무리 확정"
-                  ]
-                }
-              },
-              designer: {
-                name: "프로세스 정산 안내",
-                composition: {
-                  contents: [
-                    "고객 확정 및 정산 안내",
-                    "정산 금액 안내"
-                  ]
-                }
-              }
-            },
-          ]
-        }
-      ]
-    };
-
-
-    // const projects = await back.getProjectsByQuery({ $and: [ { desid: { $regex: "^d" } } ] });
-    // let tempArr;
-    // let target;
-    // let total, num;
-    //
-    // num = 0;
-    // total = 0;
-    // for (let p of projects) {
-    //   if (p.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
-    //     tempArr = p.proposal.detail;
-    //     for (let obj of tempArr) {
-    //       if (obj.desid === p.desid) {
-    //         target = obj.fee;
-    //         break;
-    //       }
-    //     }
-    //     if (target[0].amount !== 0) {
-    //       total += (target[0].amount * 1.1);
-    //       num++;
-    //     }
-    //   }
-    // }
-    //
-    // console.log(total, num)
-    // console.log(total / num)
-
 
 
 
@@ -538,7 +231,10 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
-    //render page block
+    // ready page block
+    // await this.pageReady("webProposal");
+
+    // render page block
     // await this.pageRender(process.env.HOME + "/thirdIR/thirdIR.ai");
 
   } catch (e) {
@@ -658,6 +354,100 @@ DevContext.prototype.pageRender = async function (targetAi) {
 
     await ghostFileUpload(fromArr, toArr);
     shell.exec(`rm -rf ${shellLink(resultFolder)}`);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.pageReady = async function (name) {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
+  try {
+    const contents = new ContentsMaker();
+    const homeDir = process.env.HOME;
+    const homeDirList = await fileSystem(`readDir`, [ homeDir ]);
+    let aiScriptFunc, aiScript;
+    let resultFolder;
+
+    resultFolder = `${homeDir}/${name}`;
+    if (homeDirList.includes(name)) {
+      shell.exec(`rm -rf ${shellLink(resultFolder)}`);
+    }
+    shell.exec(`mkdir ${shellLink(resultFolder)}`);
+
+    aiScriptFunc = function () {
+      const thisAi = console.createDocument();
+      const rect = thisAi.artboards[0].artboardRect;
+      const rectangle = console.rectangle({
+        top: 0,
+        left: 0,
+        width: console.convertMillimeters(297),
+        height: console.convertMillimeters(210),
+        stroke: null,
+        fill: "#2fa678",
+        radius: null,
+      });
+
+      thisAi.artboards.add(rectangle.geometricBounds);
+      thisAi.artboards.remove(0);
+      rectangle.remove();
+
+      let tempRect, saveOptions;
+
+      thisAi.artboards[0].name = "a1";
+      thisAi.layers[0].name = "svg";
+      tempRect = console.rectangle({
+        top: 0,
+        left: 0,
+        width: console.convertMillimeters(20),
+        height: console.convertMillimeters(210),
+        stroke: null,
+        fill: "#2fa678",
+        radius: null,
+      });
+      tempRect.guides = true;
+      tempRect = console.rectangle({
+        top: 0,
+        left: 0,
+        width: console.convertMillimeters(297),
+        height: console.convertMillimeters(24),
+        stroke: null,
+        fill: "#2fa678",
+        radius: null,
+      });
+      tempRect.guides = true;
+      tempRect = console.rectangle({
+        top: 0,
+        left: console.convertMillimeters(297 - 20),
+        width: console.convertMillimeters(20),
+        height: console.convertMillimeters(210),
+        stroke: null,
+        fill: "#2fa678",
+        radius: null,
+      });
+      tempRect.guides = true;
+      tempRect = console.rectangle({
+        top: console.convertMillimeters(210 - 24) * -1,
+        left: 0,
+        width: console.convertMillimeters(297),
+        height: console.convertMillimeters(24),
+        stroke: null,
+        fill: "#2fa678",
+        radius: null,
+      });
+      tempRect.guides = true;
+
+      saveOptions = new IllustratorSaveOptions();
+      thisAi.saveAs(new File(RESULT_FILE), saveOptions);
+      thisAi.close(SaveOptions.DONOTSAVECHANGES);
+    }
+    aiScript = aiScriptFunc.toString().replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '').replace(/\}$/gi, '').replace(/RESULT_FILE/g, '"' + resultFolder + "/" + name + ".ai" + '"');
+    await fileSystem(`write`, [ `${process.cwd()}/temp/aiCanvasScript.js`, aiScript ]);
+    await contents.generalLaunching(`${process.cwd()}/temp/aiCanvasScript.js`);
+
+    shell.exec(`open ${shellLink(resultFolder)}`);
 
   } catch (e) {
     console.log(e);
