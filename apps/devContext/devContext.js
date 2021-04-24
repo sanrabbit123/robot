@@ -235,7 +235,7 @@ DevContext.prototype.launching = async function () {
     // await this.pageReady("webProposal");
 
     // render page block
-    // await this.pageRender(process.env.HOME + "/thirdIR/thirdIR.ai");
+    // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
   } catch (e) {
     console.log(e);
