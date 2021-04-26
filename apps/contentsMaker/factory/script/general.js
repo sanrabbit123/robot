@@ -1216,6 +1216,9 @@ Mother.prototype.artboardIsolate = function (thisAi, index, d = 6) {
   standard_bottom = thisAi.artboards[artboardIndex].artboardRect[3];
   standard_right = thisAi.artboards[artboardIndex].artboardRect[2];
   for (let i = 0; i < length; i++) {
+    if (items[i].locked) {
+      items[i].locked = false;
+    }
     if (items[i].top > standard_top + dolyeon || items[i].top - items[i].height < standard_bottom - dolyeon || items[i].left < standard_left - dolyeon || items[i].left + items[i].width > standard_right + dolyeon) {
       items[i].remove();
     }

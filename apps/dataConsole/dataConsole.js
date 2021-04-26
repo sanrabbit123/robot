@@ -587,4 +587,54 @@ DataConsole.prototype.connect = async function () {
   }
 }
 
+DataConsole.prototype.staticUpload = async function (to = "ghost") {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const staticName = "static";
+  const staticFolder = process.env.HOME + "/" + staticName;
+  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
+  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
+  try {
+    let address, isGhost;
+    let tempObj, tempValue;
+    let homeDir;
+
+    if (to === "ghost") {
+      tempObj = this.address["homeinfo"]["ghost"];
+      tempObj.ip = {};
+      tempObj.ip.outer = tempObj.outer;
+      tempObj.ip.inner = tempObj.inner;
+      tempObj.isGhost = true;
+      address = tempObj;
+    } else {
+      throw new Error("not yet update");
+    }
+
+    homeDir = await fileSystem(`readDir`, [ process.env.HOME ]);
+    tempValue = String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
+    if (homeDir.includes(staticName)) {
+      shell.exec(`mv ${shellLink(process.env.HOME + "/" + staticName)} ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)};`);
+    }
+    shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + staticName)}`);
+
+    //set static
+    await this.renderStatic(staticFolder, address, DataPatch, isGhost);
+    await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+
+    //set binary
+    await this.setBinary();
+    await DataMiddle.middleBinary();
+
+    //DEV =================================================================================================
+
+    shell.exec(`open ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)}`);
+    shell.exec(`open ${shellLink(process.env.HOME + "/" + staticName)}`);
+
+    //DEV =================================================================================================
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = DataConsole;
