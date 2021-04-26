@@ -707,9 +707,11 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
         if (err) {
           reject(err);
         } else {
-          for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
-            shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
-          }}
+          for (let i = 0; i < filelist.length; i++) {
+            if (filelist[i] !== `.DS_Store`) {
+              shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+            }
+          }
           fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
             if (err) {
               reject(err);
@@ -729,6 +731,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
           reject(err);
         } else {
           let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
+          shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
           resolve(output.stdout.replace(/\n$/, ''));
         }
       });

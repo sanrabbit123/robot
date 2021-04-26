@@ -149,10 +149,10 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김은영",
-    //     designer: "김경수",
-    //     pid: "p115",
-    //     link: "https://drive.google.com/drive/folders/18WAa8ph1PwS-QBTW_zteKMw_BhyuFSDH",
+    //     client: "정학진",
+    //     designer: "우다미",
+    //     pid: "p116",
+    //     link: "https://drive.google.com/drive/folders/1e0cUldRJ_D9SJk_GV41elkRJjMoTxiqH",
     //   }
     // ]);
 
@@ -235,7 +235,7 @@ DevContext.prototype.launching = async function () {
     // await this.pageReady("webProposal");
 
     // render page block
-    // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
+    await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
   } catch (e) {
     console.log(e);

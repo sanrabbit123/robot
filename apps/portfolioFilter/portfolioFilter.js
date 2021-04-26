@@ -777,7 +777,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       shell.exec(`rm -rf ${shellLink(folderPath)};`);
 
-      console.log(`${client}C ${designer}D raw to raw done;`)
+      console.log(`${client}C ${designer}D raw to raw done`);
     }
 
   } catch (e) {

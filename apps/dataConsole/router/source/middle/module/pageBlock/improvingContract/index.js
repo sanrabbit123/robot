@@ -3,7 +3,7 @@ const ImprovingContract = function () {
   this.name = "improvingContract";
   this.binaryIndex = [];
   this.ratio = (297 / 210);
-  this.length = 9;
+  this.length = 10;
   this.pdfName = "큐레이션 계획";
 }
 
