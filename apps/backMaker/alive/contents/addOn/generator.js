@@ -131,6 +131,31 @@ const withTools = function (Contents) {
     return result;
   }
 
+  Contents.prototype.imagePath = function () {
+    const pid = this.contents.portfolio.pid;
+    let result = {};
+    let tempObj;
+
+    result.conid = this.conid;
+    result.pid = pid;
+
+    result.listImage = [];
+    result.original = [];
+
+    for (let i = 0; i < this.photos.detail.length; i++) {
+      tempObj = {};
+      tempObj.path = "/corePortfolio/listImage/" + pid + "/t" + this.photos.detail[i].index + pid + ".jpg";
+      tempObj.gs = this.photos.detail[i].gs;
+      result.listImage.push(tempObj);
+      tempObj = {};
+      tempObj.path = "/corePortfolio/original/" + pid + "/i" + this.photos.detail[i].index + pid + ".jpg";
+      tempObj.gs = this.photos.detail[i].gs;
+      result.original.push(tempObj);
+    }
+
+    return result;
+  }
+
   return Contents;
 }
 
@@ -304,6 +329,47 @@ const withToolsArr = function (ContentsArr) {
     return this.search(conid);
   }
 
+  ContentsArr.prototype.imagePath = function () {
+    class ImageArray extends Array {
+      convertConid() {
+        let result = {};
+        for (let i of this) {
+          result[i.conid] = i;
+        }
+        return result;
+      }
+      convertPid() {
+        let result = {};
+        for (let i of this) {
+          result[i.pid] = i;
+        }
+        return result;
+      }
+      flatListImage() {
+        let result = [];
+        for (let i of this) {
+          for (let j of i.listImage) {
+            result.push(j.path);
+          }
+        }
+        return result;
+      }
+      flatOriginal() {
+        let result = [];
+        for (let i of this) {
+          for (let j of i.original) {
+            result.push(j.path);
+          }
+        }
+        return result;
+      }
+    }
+    let result = new ImageArray();
+    for (let i of this) {
+      result.push(i.imagePath());
+    }
+    return result;
+  }
   return ContentsArr;
 }
 

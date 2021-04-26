@@ -52,6 +52,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    const imagePath = contentsArr.imagePath();
+    console.log(imagePath.flatListImage());
+
 
 
 
@@ -149,10 +153,10 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정학진",
-    //     designer: "우다미",
+    //     client: "전윤정",
+    //     designer: "오정수",
     //     pid: "p116",
-    //     link: "https://drive.google.com/drive/folders/1e0cUldRJ_D9SJk_GV41elkRJjMoTxiqH",
+    //     link: "https://drive.google.com/drive/folders/1SzphoE-htUw03C1CUaD-QG6JeuNkb2mt",
     //   }
     // ]);
 

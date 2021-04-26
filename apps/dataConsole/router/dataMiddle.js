@@ -61,6 +61,7 @@ MiddleCommunication.prototype.middleBinary = async function () {
     let tempArr, refined, targets;
     let binaryTarget;
     let tempObject;
+    let resultFromArr;
 
     //set middle targets
     refined = [];
@@ -77,6 +78,7 @@ MiddleCommunication.prototype.middleBinary = async function () {
       shell.exec(`mkdir ${shellLink(staticFolder)}/middle`);
     }
     staticMiddleDir = await fileSystem(`readDir`, [ staticFolder + "/middle" ]);
+    resultFromArr = [];
     for (let i of targets) {
       binaryTarget = [];
       if (!staticMiddleDir.includes(i)) {
@@ -94,9 +96,12 @@ MiddleCommunication.prototype.middleBinary = async function () {
       for (let b of binaryTarget) {
         tempObject = await binaryRequest(S3HOST + "/" + b);
         await fileSystem(`writeBinary`, [ staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1], tempObject ]);
+        resultFromArr.push(staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1]);
         console.log(`binary "${b}" download done`);
       }
     }
+
+    return resultFromArr;
 
   } catch (e) {
     console.log(e);

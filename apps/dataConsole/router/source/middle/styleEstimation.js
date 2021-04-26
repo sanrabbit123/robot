@@ -2,7 +2,7 @@
   "patch": {
     "entire": false,
     "client": false,
-    "designer": true,
+    "designer": false,
     "project": false,
     "contents": false,
     "service": false,
@@ -11,11 +11,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 디자이너님 리포트');"
+      "return ('styleEstimation');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 디자이너님 리포트 페이지입니다.');"
+      "return ('styleEstimation');"
     ],
     "image": [
       "thisPerson",
@@ -25,23 +25,28 @@
   }
 } %/%/g
 
-const DesignerReportJs = function () {
+const StyleEstimationJs = function () {
   this.mother = new GeneralJs();
-  this.margin = 0;
-  this.mode = "desktop";
-  this.sero = false;
   this.totalContents = document.getElementById("totalcontents");
 }
 
-DesignerReportJs.prototype.launching = async function (loading) {
+StyleEstimationJs.prototype.baseMaker = async function (loading) {
   const instance = this;
   try {
-    const getObj = GeneralJs.returnGet();
 
-    await GeneralJs.sleep(500);
-    loading.parentNode.removeChild(loading);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
+StyleEstimationJs.prototype.launching = async function (loading) {
+  const instance = this;
+  try {
+    const { returnGet, ajaxPromise } = GeneralJs;
+    const getObj = returnGet();
+    const allImages = JSON.parse(await ajaxPromise("/styleEstimation_getImageList"));
 
+    console.log(allImages);
 
 
   } catch (e) {

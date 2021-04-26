@@ -56,6 +56,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
     let finalMinifyObj, finalMinifyString;
+    let resultFromArr;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -70,6 +71,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     //write local js
     console.log(`set target :`, staticDirList);
+    resultFromArr = [];
     for (let i of staticDirList) {
 
       result = '';
@@ -126,8 +128,11 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
       console.log(`${i} merge success`);
       await fileSystem(`write`, [ `${staticFolder}/${i}`, result ]);
+      resultFromArr.push(`${staticFolder}/${i}`);
 
     }
+
+    return resultFromArr;
 
   } catch (e) {
     console.log(e);
@@ -170,6 +175,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let moduleBoo;
     let moduleTrans;
     let totalModuleObjectConst;
+    let resultFromArr;
+    let tempArr;
 
     //module transform
     moduleTrans = async function (tree, name) {
@@ -192,19 +199,25 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         const to = tree.toDir.replace(/\/$/gi, '');
         let fileTargets;
         let targetPath, targetFolder;
+        let resultFromArr;
         flatDeath.sort((a, b) => { return a.length - b.length });
+        resultFromArr = [];
         for (let { directory, absolute } of flatDeath) {
           if (!directory) {
-            targetPath = to + '/' + absolute.split('/').slice(from.split('/').length).join('/');
-            targetPath = targetPath.replace(/\.js$/i, ".mjs");
-            targetFolder = targetPath.split('/').slice(0, -1).join('/');
-            if (!(await fileSystem(`exist`, [ targetFolder ]))) {
-              await fileSystem(`mkdir`, [ targetFolder ]);
+            if (!/\.DS_Store/g.test(absolute)) {
+              targetPath = to + '/' + absolute.split('/').slice(from.split('/').length).join('/');
+              targetPath = targetPath.replace(/\.js$/i, ".mjs");
+              targetFolder = targetPath.split('/').slice(0, -1).join('/');
+              if (!(await fileSystem(`exist`, [ targetFolder ]))) {
+                await fileSystem(`mkdir`, [ targetFolder ]);
+              }
+              await fileSystem(`write`, [ targetPath, render(await fileSystem(`readString`, [ absolute ])) ]);
+              resultFromArr.push(targetPath);
             }
-            await fileSystem(`write`, [ targetPath, render(await fileSystem(`readString`, [ absolute ])) ]);
           }
         }
         console.log(`${name} module render done`);
+        return resultFromArr;
       } catch (e) {
         console.log(e);
       }
@@ -224,6 +237,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
     //write local js
     console.log(`set middle target :`, staticDirList);
+    resultFromArr = [];
     for (let i of staticDirList) {
 
       result = '';
@@ -334,14 +348,20 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         if (!(await fileSystem(`exist`, [ treeArray.toDir ]))) {
           await fileSystem(`mkdir`, [ treeArray.toDir ]);
         }
-        await moduleTrans(treeArray, i.replace(/\.js$/i, ''));
+        tempArr = await moduleTrans(treeArray, i.replace(/\.js$/i, ''));
+        resultFromArr = resultFromArr.concat(tempArr);
         await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`, result ]);
         await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, moduleString ]);
+        resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`);
+        resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`);
       } else {
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
+        resultFromArr.push(`${staticFolder}/middle/${i}`);
       }
 
     }
+
+    return resultFromArr;
 
   } catch (e) {
     console.log(e);
@@ -413,6 +433,7 @@ DataConsole.prototype.setBinary = async function () {
       "graphik"
     ];
     let targetFonts, binaryTarget, tempObject;
+    let resultFromArr;
 
     //set font folder
     const staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
@@ -424,6 +445,7 @@ DataConsole.prototype.setBinary = async function () {
       shell.exec(`mkdir ${shellLink(staticFolder + "/" + sourceFolerConst0 + "/" + sourceFolerConst1)}`);
     }
     const designerSourceFontDir = await fileSystem(`readDir`, [ `${staticFolder}/${sourceFolerConst0}/${sourceFolerConst1}` ]);
+    resultFromArr = [];
     for (let f of fontList) {
       if (!designerSourceFontDir.includes(f)) {
         shell.exec(`mkdir ${shellLink(staticFolder + "/" + sourceFolerConst0 + "/" + sourceFolerConst1)}/${f}`);
@@ -439,9 +461,11 @@ DataConsole.prototype.setBinary = async function () {
       for (let b of binaryTarget) {
         tempObject = await binaryRequest(S3HOST + "/" + b);
         await fileSystem(`writeBinary`, [ staticFolder + "/" + b, tempObject ]);
+        resultFromArr.push(staticFolder + "/" + b);
         console.log(`binary "${b}" download done`);
       }
     }
+    return resultFromArr;
   } catch (e) {
     console.log(e);
   }
@@ -589,7 +613,7 @@ DataConsole.prototype.connect = async function () {
 
 DataConsole.prototype.staticUpload = async function (to = "ghost") {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, sleep } = this.mother;
   const staticName = "static";
   const staticFolder = process.env.HOME + "/" + staticName;
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
@@ -598,6 +622,8 @@ DataConsole.prototype.staticUpload = async function (to = "ghost") {
     let address, isGhost;
     let tempObj, tempValue;
     let homeDir;
+    let tempArr;
+    let fromArr, toArr;
 
     if (to === "ghost") {
       tempObj = this.address["homeinfo"]["ghost"];
@@ -617,20 +643,37 @@ DataConsole.prototype.staticUpload = async function (to = "ghost") {
     }
     shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + staticName)}`);
 
+    fromArr = [];
+
     //set static
-    await this.renderStatic(staticFolder, address, DataPatch, isGhost);
-    await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+    tempArr = await this.renderStatic(staticFolder, address, DataPatch, isGhost);
+    fromArr = fromArr.concat(tempArr);
+    tempArr = await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+    fromArr = fromArr.concat(tempArr);
 
     //set binary
-    await this.setBinary();
-    await DataMiddle.middleBinary();
+    tempArr = await this.setBinary();
+    fromArr = fromArr.concat(tempArr);
+    tempArr = await DataMiddle.middleBinary();
+    fromArr = fromArr.concat(tempArr);
 
-    //DEV =================================================================================================
+    toArr = [];
+    for (let path of fromArr) {
+      toArr.push(path.replace(new RegExp('^' + staticFolder, 'i'), '').replace(/^\//, ''));
+    }
 
-    shell.exec(`open ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)}`);
-    shell.exec(`open ${shellLink(process.env.HOME + "/" + staticName)}`);
+    console.log(fromArr, toArr);
+    await ghostFileUpload(fromArr, toArr);
 
-    //DEV =================================================================================================
+    for (let z = 0; z < 3; z++) {
+      console.log(`static delete waiting... ${String(3 - z)}s`);
+      await sleep(1000);
+    }
+
+    shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + staticName)};`);
+    shell.exec(`mv ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)} ${shellLink(process.env.HOME + "/" + staticName)};`);
+
+    console.log(`static to ghost done`);
 
   } catch (e) {
     console.log(e);
