@@ -113,5 +113,8 @@ Porfolio.prototype.toNormal = function () {
   return obj;
 }
 
+Porfolio.prototype.keyMatrix = function () {
+  return this.contents.keyMatrix();
+}
 
 module.exports = Porfolio;

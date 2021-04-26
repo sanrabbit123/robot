@@ -132,12 +132,59 @@ const withTools = function (Contents) {
   }
 
   Contents.prototype.imagePath = function () {
+    class KeyImages {
+      toArray() {
+        let arr = [];
+        let tempObj;
+        for (let i in this.rooms) {
+          tempObj = {};
+          tempObj.pid = this.pid;
+          tempObj.room = i;
+          tempObj.photos = this.rooms[i];
+          arr.push(tempObj);
+        }
+        return arr;
+      }
+    }
+    class ImagePath {
+      keyListImage() {
+        const { key: { rooms, photos }, listImage: images } = this;
+        let result = new KeyImages();
+        result.conid = this.conid;
+        result.pid = this.pid;
+        result.rooms = {};
+
+        for (let i = 0; i < rooms.length; i++) {
+          result.rooms[rooms[i]] = [];
+          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) {
+            result.rooms[rooms[i]].push(images[j]);
+          }
+        }
+        return result;
+      }
+      keyOriginal() {
+        const { key: { rooms, photos }, original: images } = this;
+        let result = new KeyImages();
+        result.conid = this.conid;
+        result.pid = this.pid;
+        result.rooms = {};
+
+        for (let i = 0; i < rooms.length; i++) {
+          result.rooms[rooms[i]] = [];
+          for (let j = photos[i][0] - 1; j < photos[i][1]; j++) {
+            result.rooms[rooms[i]].push(images[j]);
+          }
+        }
+        return result;
+      }
+    }
     const pid = this.contents.portfolio.pid;
-    let result = {};
+    let result = new ImagePath();
     let tempObj;
 
     result.conid = this.conid;
     result.pid = pid;
+    result.key = this.contents.portfolio.keyMatrix();
 
     result.listImage = [];
     result.original = [];
@@ -360,6 +407,24 @@ const withToolsArr = function (ContentsArr) {
           for (let j of i.original) {
             result.push(j.path);
           }
+        }
+        return result;
+      }
+      keyListImage() {
+        let result = [];
+        let tempArr;
+        for (let i of this) {
+          tempArr = i.keyListImage().toArray();
+          result = result.concat(tempArr);
+        }
+        return result;
+      }
+      keyOriginal() {
+        let result = [];
+        let tempArr;
+        for (let i of this) {
+          tempArr = i.keyOriginal().toArray();
+          result = result.concat(tempArr);
         }
         return result;
       }

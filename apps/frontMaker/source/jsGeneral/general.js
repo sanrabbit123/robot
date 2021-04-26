@@ -28,6 +28,7 @@ GeneralJs.colorChip = {
   gray2: "#ececec",
   gray3: "#dddddd",
   gray4: "#cccccc",
+  gray5: "#aaaaaa",
   gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
   gradientSilver: "linear-gradient(256deg, rgba(30, 30, 30, 0.65) 0%, rgba(38, 38, 38, 0.7) 100%)",
   deactive: "#bbbbbb",
@@ -1199,6 +1200,26 @@ GeneralJs.blankHref = function (link) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+GeneralJs.styleInjection = function (dom, styleObj) {
+  if (dom === undefined || styleObj === undefined) {
+    throw new Error("arguments must be dom, style object");
+  }
+  if (typeof styleObj !== "object") {
+    throw new Error("style object type must be object");
+  }
+  for (let i in styleObj) {
+    dom.style[i] = styleObj[i];
+  }
+}
+
+GeneralJs.cssInjection = function (cssString) {
+  if (typeof cssString !== "string") {
+    throw new Error("invaild argument");
+  }
+  const style = document.querySelector("style");
+  style.insertAdjacentHTML("beforeend", cssString);
 }
 
 GeneralJs.prototype.resizeLaunching = function (callback) {

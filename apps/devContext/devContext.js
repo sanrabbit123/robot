@@ -52,12 +52,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    const imagePath = contentsArr.imagePath();
-    console.log(imagePath.flatListImage());
-
-
-
 
 
 

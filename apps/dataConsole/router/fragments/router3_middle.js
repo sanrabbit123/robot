@@ -8,15 +8,14 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
   obj.func = async function (req, res) {
     try {
       const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.mongo, withTools: true });
-      const imagePath = contentsArr.imagePath();
-      const allImages = imagePath.flatListImage();
+      const imagePath = contentsArr.imagePath().keyListImage();
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      res.send(JSON.stringify(allImages));
+      res.send(JSON.stringify(imagePath));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
