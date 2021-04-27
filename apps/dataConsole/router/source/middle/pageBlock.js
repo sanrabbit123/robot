@@ -872,6 +872,8 @@ PageBlockJs.prototype.launching = async function (loading) {
       return;
     } else {
 
+      window.localStorage.clear();
+
       let answer;
       if (window.localStorage.getItem("passwords") !== null) {
         answer = window.localStorage.getItem("passwords");
