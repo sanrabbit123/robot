@@ -3126,8 +3126,6 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
       id = pid + "_" + room;
       json = { id, date: new Date(), who, index, value };
 
-      console.log(json);
-
       row = await back.mongoRead(collection, { id }, { selfMongo: instance.mongolocal });
       if (row.length === 0) {
         await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
