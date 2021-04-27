@@ -879,7 +879,7 @@ PageBlockJs.prototype.launching = async function (loading) {
         answer = Number(window.prompt("비밀번호를 입력해주세요!"));
       }
 
-      if ((String(Math.round(((Number(String((((((5 * ((answer - 30) / 5) * 2)) - 18) / 4) - 998) / 2) + String(13)) % 3) * 500) / 3)) + String(3)) === "3333") {
+      if ((String(Math.round(((Number(String((((((5 * ((answer - 30) / 5) * 2)) - 18) / 4) - 998) / 2) + String(13)) % 3) * 500) / 3)) + String(3)) === "-423") {
 
         window.localStorage.setItem("passwords", String(answer));
         window.addEventListener("resize", (e) => { window.location.reload(); });
@@ -905,6 +905,7 @@ PageBlockJs.prototype.launching = async function (loading) {
 
       } else {
         alert("잘못된 접근입니다!");
+        window.localStorage.clear();
         window.location.href = "https://home-liaison.com";
         throw new Error("invaild query string");
         return;
