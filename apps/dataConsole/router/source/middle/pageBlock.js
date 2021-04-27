@@ -872,11 +872,13 @@ PageBlockJs.prototype.launching = async function (loading) {
       return;
     } else {
 
-      window.localStorage.clear();
-
       let answer;
       if (window.localStorage.getItem("passwords") !== null) {
-        answer = window.localStorage.getItem("passwords");
+        answer = Number(window.localStorage.getItem("passwords"));
+        if (answer === 2039 || Number.isNaN(answer)) {
+          window.localStorage.clear();
+          answer = Number(window.prompt("비밀번호를 입력해주세요!"));
+        }
       } else {
         answer = Number(window.prompt("비밀번호를 입력해주세요!"));
       }
