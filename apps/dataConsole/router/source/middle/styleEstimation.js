@@ -39,7 +39,7 @@ const StyleEstimationJs = function () {
   };
   this.questions = null;
   this.index = 0;
-  this.who = null;
+  this.who = 0;
 }
 
 StyleEstimationJs.prototype.roomConverting = function (room) {
@@ -311,7 +311,7 @@ StyleEstimationJs.prototype.photoMaker = function (index) {
   createNodes(nodeArr);
 }
 
-StyleEstimationJs.prototype.judgementMaker = function (pid, tong, titleSize = 0, topMargin = 0, indentMargin = 0, titleTop = 0, lineHeight = 0) {
+StyleEstimationJs.prototype.judgementMaker = function (pid, room, tong, titleSize = 0, topMargin = 0, indentMargin = 0, titleTop = 0, lineHeight = 0) {
   const instance = this;
   if (tong === undefined) {
     throw new Error("invaild argument");
@@ -422,10 +422,16 @@ StyleEstimationJs.prototype.judgementMaker = function (pid, tong, titleSize = 0,
             }
 
             if (valueComplete) {
-              console.log({
+              ajaxJson({
                 pid,
+                room,
+                who: instance.who,
+                index: instance.index,
                 value: valueMatrix
+              }, "/styleEstimation_setData").catch(function (e) {
+                console.log(e);
               });
+              window.localStorage.setItem("index", String(instance.index));
               instance.convertCard();
             }
 
@@ -453,7 +459,7 @@ StyleEstimationJs.prototype.judgementMaker = function (pid, tong, titleSize = 0,
         position: "absolute",
         fontWeight: String(300),
         fontSize: String(titleSize - 2) + ea,
-        top: String(titleTop + topMargin + ((lineHeight) * order) - 8) + ea,
+        top: String(titleTop + topMargin + ((lineHeight) * order) - 2) + ea,
         left: String(indentMargin) + ea,
         width: withOut((indentMargin * 2) + (54 * i), ea),
         textAlign: "right",
@@ -481,7 +487,7 @@ StyleEstimationJs.prototype.infoMaker = async function (index) {
     let infoHeight, thisContents;
     let titleSize, indentMargin;
     let titleTop, lineHeight, topMargin;
-    let judgementTong;
+    let judgementTong, judgementTongNull;
 
     thisContents = await ajaxJson({ pid }, "/styleEstimation_getContentsByPid");
     infoHeight = 194;
@@ -682,7 +688,7 @@ StyleEstimationJs.prototype.infoMaker = async function (index) {
       },
     ]);
 
-    [ judgementTong ] = createNodes([
+    [ judgementTongNull, judgementTong ] = createNodes([
       {
         mother: info,
         style: {
@@ -701,10 +707,11 @@ StyleEstimationJs.prototype.infoMaker = async function (index) {
           height: String(100) + '%',
           border: "1px solid " + colorChip.gray4,
           borderRadius: String(5) + ea,
+          overflow: "scroll",
         }
       },
       {
-        mother: -2,
+        mother: -1,
         text: "judgement",
         style: {
           position: "absolute",
@@ -720,7 +727,7 @@ StyleEstimationJs.prototype.infoMaker = async function (index) {
       },
     ]);
 
-    createNodes(this.judgementMaker(pid, judgementTong, titleSize, topMargin, indentMargin, titleTop, lineHeight));
+    createNodes(this.judgementMaker(pid, room, judgementTong, titleSize, topMargin, indentMargin, titleTop, lineHeight));
 
   } catch (e) {
     console.log(e);
@@ -824,17 +831,17 @@ StyleEstimationJs.prototype.arrowMaker = function () {
 StyleEstimationJs.prototype.whoAreYou = async function () {
   const instance = this;
   try {
-    const { createNodes, colorChip, withOut } = GeneralJs;
+    const { createNodes, colorChip, withOut, isMac } = GeneralJs;
     const { ea, totalContents } = this;
     const member = [
-      "박혜연",
-      "강해진",
-      "배창규",
-      "정재은",
-      "임혜령",
-      "서미화",
-      "이큰별",
-      "임지민"
+      { name: "박혜연", value: 0 },
+      { name: "강해진", value: 1 },
+      { name: "배창규", value: 2 },
+      { name: "정재은", value: 3 },
+      { name: "임혜령", value: 4 },
+      { name: "서미화", value: 5 },
+      { name: "이큰별", value: 6 },
+      { name: "임지민", value: 7 }
     ];
     let width, height;
     let memberArr, tempObj;
@@ -844,7 +851,7 @@ StyleEstimationJs.prototype.whoAreYou = async function () {
 
     width = 360;
     height = 280;
-    nameTop = 112;
+    nameTop = isMac() ? 112 : 114;
     nameTopLine = 45;
     nameLeftLine = 90;
     nameWidth = 60;
@@ -869,18 +876,26 @@ StyleEstimationJs.prototype.whoAreYou = async function () {
         },
         {
           type: "click",
-          event: function (e) {
-            const name = this.getAttribute("name");
-            instance.who = name;
-            window.localStorage.setItem("name", instance.who);
-            totalContents.removeChild(totalContents.lastChild);
-            totalContents.removeChild(totalContents.lastChild);
+          event: async function (e) {
+            try {
+              const name = this.getAttribute("name");
+              instance.who = Number(name);
+              window.localStorage.setItem("name", String(instance.who));
+              totalContents.removeChild(totalContents.lastChild);
+              totalContents.removeChild(totalContents.lastChild);
+              instance.index = (await GeneralJs.ajaxJson({ who: instance.who }, "/styleEstimation_getData")).index + 1;
+              instance.initialBase();
+              await instance.judgementRender(instance.index);
+              window.localStorage.setItem("index", String(instance.index - 1));
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
       ];
-      tempObj.text = member[i];
+      tempObj.text = member[i].name;
       tempObj.attribute = [
-        { name: member[i] }
+        { name: member[i].value }
       ];
       tempObj.style = {
         position: "absolute",
@@ -936,7 +951,7 @@ StyleEstimationJs.prototype.whoAreYou = async function () {
           position: "absolute",
           width: String(100) + '%',
           textAlign: "center",
-          top: String(40) + ea,
+          top: String(isMac() ? 40 : 42) + ea,
         }
       },
       {
@@ -945,7 +960,7 @@ StyleEstimationJs.prototype.whoAreYou = async function () {
           position: "absolute",
           width: String(240) + ea,
           borderBottom: "1px solid " + colorChip.deactive,
-          top: String(92) + ea,
+          top: String(isMac() ? 92 : 94) + ea,
           left: String(59) + ea,
         }
       }
@@ -963,7 +978,7 @@ StyleEstimationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     this.images = await ajaxJson("/styleEstimation_getImageList");
     this.questions = await ajaxJson("/styleEstimation_getQuestions");
-    this.index = 3;
+    this.index = (window.localStorage.getItem("index") === null || window.localStorage.getItem("index") === "null" || Number.isNaN(Number(window.localStorage.getItem("index")))) ? 1 : Number(window.localStorage.getItem("index")) + 1;
 
     this.baseMaker();
     await this.judgementRender(this.index);
@@ -976,7 +991,10 @@ StyleEstimationJs.prototype.launching = async function (loading) {
     if (window.localStorage.getItem("name") === null || window.localStorage.getItem("name") === "null") {
       await this.whoAreYou();
     } else {
-      this.who = window.localStorage.getItem("name");
+      this.who = Number(window.localStorage.getItem("name"));
+      this.index = (await ajaxJson({ who: this.who }, "/styleEstimation_getData")).index + 1;
+      this.initialBase();
+      await this.judgementRender(this.index);
     }
 
   } catch (e) {

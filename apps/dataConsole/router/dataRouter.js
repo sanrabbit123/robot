@@ -3106,6 +3106,90 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_styleEstimation_setData = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/styleEstimation_setData";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.pid === undefined || req.body.room === undefined || req.body.index === undefined || req.body.who === undefined || req.body.value === undefined) {
+        throw new Error("invaild request");
+      }
+      const collection = "styleEstimation";
+      const { pid, room } = req.body;
+      const value = JSON.parse(req.body.value);
+      const who = Number(req.body.who);
+      const index = Number(req.body.index);
+      let id, json, row;
+
+      id = pid + "_" + room;
+      json = { id, date: new Date(), who, index, value };
+
+      console.log(json);
+
+      row = await back.mongoRead(collection, { id }, { selfMongo: instance.mongolocal });
+      if (row.length === 0) {
+        await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
+      } else {
+        await back.mongoUpdate(collection, [ { id }, { date: json.date, who, index, value } ], { selfMongo: instance.mongolocal });
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_styleEstimation_getData = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/styleEstimation_getData";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.who === undefined) {
+        throw new Error("invaild request");
+      }
+      const who = Number(req.body.who);
+      if (Number.isNaN(who)) {
+        throw new Error("invaild request");
+      }
+      const collection = "styleEstimation";
+      let row;
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      row = await back.mongoRead(collection, { who }, { selfMongo: instance.mongolocal });
+
+      if (row.length === 0) {
+        res.send(JSON.stringify({ index: -1 }));
+      } else {
+        row.sort((a, b) => { return b.index - a.index; });
+        res.send(JSON.stringify({ index: row[0].index }));
+      }
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
