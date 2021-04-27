@@ -52,6 +52,21 @@ GeneralJs.ajax = function (data, url, callback) {
     url = data;
     data = "";
   }
+  let dataString;
+  if (typeof data === "object") {
+    dataString = "";
+    for (let i in data) {
+      dataString += i.replace(/[\=\&]/g, '');
+      dataString += '=';
+      if (typeof data[i] === "object") {
+        dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+      } else {
+        dataString += String(data[i]).replace(/[\=\&]/g, '');
+      }
+      dataString += '&';
+    }
+    data = dataString.slice(0, -1);
+  }
   const xhr = new XMLHttpRequest();
   xhr.open("POST", url);
   xhr.onload = function () {
@@ -87,6 +102,21 @@ GeneralJs.ajaxPromise = function (data, url) {
     url = data;
     data = "";
   }
+  let dataString;
+  if (typeof data === "object") {
+    dataString = "";
+    for (let i in data) {
+      dataString += i.replace(/[\=\&]/g, '');
+      dataString += '=';
+      if (typeof data[i] === "object") {
+        dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+      } else {
+        dataString += String(data[i]).replace(/[\=\&]/g, '');
+      }
+      dataString += '&';
+    }
+    data = dataString.slice(0, -1);
+  }
   return new Promise(function (resolve, reject) {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url);
@@ -111,6 +141,22 @@ GeneralJs.ajaxPromise = function (data, url) {
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }
     xhr.send(data);
+  });
+}
+
+GeneralJs.ajaxJson = function (data, url) {
+  return new Promise(function (resolve, reject) {
+    GeneralJs.ajaxPromise(data, url).then(function (jsonString) {
+      let json;
+      try {
+        json = JSON.parse(jsonString);
+        resolve(json);
+      } catch (e) {
+        reject(e);
+      }
+    }).catch(function (e) {
+      reject(e);
+    });
   });
 }
 
@@ -1220,6 +1266,31 @@ GeneralJs.cssInjection = function (cssString) {
   }
   const style = document.querySelector("style");
   style.insertAdjacentHTML("beforeend", cssString);
+}
+
+GeneralJs.uniqueValue = function (type = "number") {
+  if (type === "number") {
+    return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));
+  } else {
+    return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  }
+}
+
+GeneralJs.cleanChildren = function (dom) {
+  if (typeof dom !== "object") {
+    throw new Error("argument must be dom");
+  }
+  if (Array.isArray(dom)) {
+    for (let d of dom) {
+      while (d.firstChild !== null && d.firstChild !== undefined) {
+        d.removeChild(d.lastChild);
+      }
+    }
+  } else {
+    while (dom.firstChild !== null && dom.firstChild !== undefined) {
+      dom.removeChild(dom.lastChild);
+    }
+  }
 }
 
 GeneralJs.prototype.resizeLaunching = function (callback) {
