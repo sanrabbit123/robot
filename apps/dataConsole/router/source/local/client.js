@@ -572,6 +572,7 @@ ClientJs.prototype.infoArea = function (info) {
 
       let input_clone;
       let button_clone, button_clone2;
+      let svg_clone = {};
       let cancel_inputBack;
       let style;
       let ea = 'px';
@@ -696,14 +697,14 @@ ClientJs.prototype.infoArea = function (info) {
               width: String(width) + ea,
               paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
               height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-              background: "#2fa678",
+              background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
               textAlign: "center",
               fontSize: "inherit",
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               borderRadius: String(3) + ea,
               animation: "fadeuplite 0.3s ease forwards",
-              boxShadow: "0px 2px 11px -6px #2fa678",
+              boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
             };
             for (let j in style) {
               button_clone.style[j] = style[j];
@@ -715,7 +716,7 @@ ClientJs.prototype.infoArea = function (info) {
               position: "absolute",
               fontSize: "inherit",
               fontWeight: String(400),
-              color: "#ffffff",
+              color: thisMap.multiple === undefined ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
               zIndex: String(3),
               textAlign: "center",
               background: "transparent",
@@ -733,9 +734,66 @@ ClientJs.prototype.infoArea = function (info) {
             button_clone2.textContent = thisMap.items[i];
             button_clone.appendChild(button_clone2);
 
-            button_clone.addEventListener("click", updateValueEvent);
+            if (thisMap.multiple === undefined) {
+              button_clone.addEventListener("click", updateValueEvent);
+            } else {
+              //multiple select
+              if ((new RegExp(thisMap.items[i], "gi")).test(input_clone.value)) {
+                button_clone.setAttribute("selected", "true");
+                button_clone.style.background = GeneralJs.colorChip.green;
+                button_clone.style.boxShadow = GeneralJs.colorChip.green;
+                button_clone.firstChild.style.color = GeneralJs.colorChip.white;
+              } else {
+                button_clone.setAttribute("selected", "false");
+              }
+              button_clone.addEventListener("click", function (e) {
+                if (this.getAttribute("selected") === "false") {
+                  this.style.background = GeneralJs.colorChip.green;
+                  this.style.boxShadow = GeneralJs.colorChip.green;
+                  this.firstChild.style.color = GeneralJs.colorChip.white;
+                  this.setAttribute("selected", "true");
+                } else {
+                  this.style.background = GeneralJs.colorChip.gray2;
+                  this.style.boxShadow = GeneralJs.colorChip.gray1;
+                  this.firstChild.style.color = GeneralJs.colorChip.deactive;
+                  this.setAttribute("selected", "false");
+                }
+                const children = this.parentNode.children;
+                let value;
+                value = '';
+                for (let dom of children) {
+                  if (dom.hasAttribute("selected")) {
+                    if (dom.getAttribute("selected") === "true") {
+                      value += dom.getAttribute("buttonValue");
+                      value += ", ";
+                    }
+                  }
+                }
+                value = value.slice(0, -2);
+                svg_clone.setAttribute("buttonValue", value);
+              });
+            }
             this.appendChild(button_clone);
           }
+
+          if (thisMap.multiple !== undefined) {
+            svg_clone = SvgTong.stringParsing(instance.mother.returnOk(GeneralJs.colorChip.green));
+            svg_clone.classList.add("removeTarget");
+            svg_clone.setAttribute("buttonValue", input_clone.value);
+            style = {
+              position: "absolute",
+              top: String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
+              width: String(18) + ea,
+              left: "calc(50% - " + String(18 / 2) + ea + ")",
+              zIndex: String(3),
+            };
+            for (let j in style) {
+              svg_clone.style[j] = style[j];
+            }
+            svg_clone.addEventListener("click", updateValueEvent);
+            this.appendChild(svg_clone);
+          }
+
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
@@ -2336,6 +2394,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let ea = 'px';
       let paddingBottom;
       let button_clone, button_clone2;
+      let svg_clone = {};
       let height;
       let top;
       let width;
@@ -2455,14 +2514,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               width: String(width) + ea,
               paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
               height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-              background: "#2fa678",
+              background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
               textAlign: "center",
               fontSize: "inherit",
-              color: "#ffffff",
+              color: GeneralJs.colorChip.white,
               zIndex: String(3),
               borderRadius: String(3) + ea,
               animation: "fadeuplite 0.3s ease forwards",
-              boxShadow: "0px 2px 11px -6px #2fa678",
+              boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
               cursor: "pointer",
             };
             for (let j in style) {
@@ -2475,7 +2534,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               position: "absolute",
               fontSize: "inherit",
               fontWeight: String(400),
-              color: "#ffffff",
+              color: thisMap.multiple === undefined ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
               zIndex: String(3),
               textAlign: "center",
               background: "transparent",
@@ -2493,8 +2552,64 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             button_clone2.textContent = thisMap.items[i];
             button_clone.appendChild(button_clone2);
 
-            button_clone.addEventListener("click", updateValueEvent);
+            if (thisMap.multiple === undefined) {
+              button_clone.addEventListener("click", updateValueEvent);
+            } else {
+              //multiple select
+              if ((new RegExp(thisMap.items[i], "gi")).test(input_clone.value)) {
+                button_clone.setAttribute("selected", "true");
+                button_clone.style.background = GeneralJs.colorChip.green;
+                button_clone.style.boxShadow = GeneralJs.colorChip.green;
+                button_clone.firstChild.style.color = GeneralJs.colorChip.white;
+              } else {
+                button_clone.setAttribute("selected", "false");
+              }
+              button_clone.addEventListener("click", function (e) {
+                if (this.getAttribute("selected") === "false") {
+                  this.style.background = GeneralJs.colorChip.green;
+                  this.style.boxShadow = GeneralJs.colorChip.green;
+                  this.firstChild.style.color = GeneralJs.colorChip.white;
+                  this.setAttribute("selected", "true");
+                } else {
+                  this.style.background = GeneralJs.colorChip.gray2;
+                  this.style.boxShadow = GeneralJs.colorChip.gray1;
+                  this.firstChild.style.color = GeneralJs.colorChip.deactive;
+                  this.setAttribute("selected", "false");
+                }
+                const children = this.parentNode.children;
+                let value;
+                value = '';
+                for (let dom of children) {
+                  if (dom.hasAttribute("selected")) {
+                    if (dom.getAttribute("selected") === "true") {
+                      value += dom.getAttribute("buttonValue");
+                      value += ", ";
+                    }
+                  }
+                }
+                value = value.slice(0, -2);
+                svg_clone.setAttribute("buttonValue", value);
+              });
+            }
             this.appendChild(button_clone);
+          }
+
+          if (thisMap.multiple !== undefined) {
+            svg_clone = SvgTong.stringParsing(instance.mother.returnOk(GeneralJs.colorChip.green));
+            svg_clone.classList.add("removeTarget");
+            svg_clone.setAttribute("buttonValue", input_clone.value);
+            style = {
+              position: "absolute",
+              top: String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
+              width: String(18) + ea,
+              left: "calc(50% - " + String(18 / 2) + ea + ")",
+              zIndex: String(3),
+            };
+            for (let j in style) {
+              svg_clone.style[j] = style[j];
+            }
+            svg_clone.addEventListener("click", updateValueEvent);
+            this.appendChild(svg_clone);
           }
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {

@@ -754,7 +754,11 @@ GeneralJs.objectToRawquery = function (dataObj) {
   for (let i in dataObj) {
     dataString += i.replace(/[\=\&]/gi, '');
     dataString += '=';
-    dataString += String(dataObj[i]).replace(/[\=\&]/gi, '');
+    if (typeof dataObj[i] === "object") {
+      dataString += JSON.stringify(dataObj[i]).replace(/[\=\&]/g, '');
+    } else {
+      dataString += String(dataObj[i]).replace(/[\=\&]/g, '');
+    }
     dataString += '&';
   }
   dataString = dataString.slice(0, -1);

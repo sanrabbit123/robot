@@ -381,6 +381,7 @@ const ProposalJs = function () {
   this.abcStatic = 0;
   this.boxTops = [];
   this.designerButtons = [];
+  this.media = null;
 }
 
 //static
@@ -566,7 +567,7 @@ ProposalJs.prototype.setBaseTong = function () {
 
 ProposalJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { client, ea } = this;
+  const { client, ea, media } = this;
   let whiteBlock;
   let style;
   let blockHeight, bottomMargin;
@@ -615,7 +616,7 @@ ProposalJs.prototype.insertInitBox = function () {
   margin = <%% 52, 52, 52, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 31, 31, 31 %%>;
+  titleFont = <%% 31, 30, 31, 31 %%>;
   titleLeft = <%% 6, 6, 6, 6 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
@@ -640,9 +641,9 @@ ProposalJs.prototype.insertInitBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 630, 630, 630, 630 %%>;
+  factorBoxWidth = <%% 630, 672, 630, 630 %%>;
   factorBoxTop = <%% 100, 100, 100, 100 %%>;
-  factorBoxTopVisual = <%% 3, 3, 3, 3 %%>;
+  factorBoxTopVisual = <%% 3, 11, 3, 3 %%>;
 
   factorPaddingLeft = <%% 10, 10, 10, 10 %%>;
   factorPaddingTop = <%% 10, 10, 10, 10 %%>;
@@ -660,12 +661,12 @@ ProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 43, 43, 43 %%>;
+  factorBarTop = <%% 43, 41, 43, 43 %%>;
   factorArrowHeadWidth = <%% 8, 8, 8, 8 %%>;
-  factorArrowHeadTop = <%% 39, 39, 39, 39 %%>;
+  factorArrowHeadTop = <%% 39, 37, 39, 39 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188 %%>;
 
-  factorValueBottom = <%% 11, 11, 11, 11 %%>;
+  factorValueBottom = <%% 11, 13, 11, 11 %%>;
   factorValueRight = <%% 36, 36, 36, 36 %%>;
 
   factorValueMargin = <%% 46, 46, 46, 46 %%>;
@@ -727,13 +728,17 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //main title
   titleBox = GeneralJs.nodes.div.cloneNode(true);
-  titleBox.textContent = "당신에게 딱 맞는 디자이너,";
+  if (media[0]) {
+    titleBox.textContent = "당신에게 딱 맞는 디자이너,";
+  } else if (media[1]) {
+    titleBox.textContent = "당신에게";
+  }
   style = {
     position: "absolute",
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + ea,
-    top: String(0) + ea,
+    top: String((media[0] ? 0 : 1)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -741,6 +746,24 @@ ProposalJs.prototype.insertInitBox = function () {
     titleBox.style[i] = style[i];
   }
   leftBox.appendChild(titleBox);
+
+  if (media[1]) {
+    titleBox = GeneralJs.nodes.div.cloneNode(true);
+    titleBox.textContent = "딱 맞는 디자이너,";
+    style = {
+      position: "absolute",
+      fontSize: String(titleFont) + ea,
+      fontWeight: String(titleFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      top: String((media[0] ? 0 : 1) + (titleFont * (media[0] ? 1.45 : 1.5))) + ea,
+      left: String(titleLeft) + ea,
+      color: GeneralJs.colorChip.black,
+    };
+    for (let i in style) {
+      titleBox.style[i] = style[i];
+    }
+    leftBox.appendChild(titleBox);
+  }
 
   titleBox = GeneralJs.nodes.div.cloneNode(true);
   titleBox.textContent = "이 곳 홈리에종에서";
@@ -749,7 +772,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + ea,
-    top: String(titleFont * 1.45) + ea,
+    top: String((media[0] ? 0 : 1) + (titleFont * (media[0] ? 1.45 : 1.5) * (media[0] ? 1 : 2))) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -758,18 +781,20 @@ ProposalJs.prototype.insertInitBox = function () {
   }
   leftBox.appendChild(titleBox);
 
-  barBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    top: String(titleFont * (63 / 30)) + ea,
-    left: String(barLeft) + ea,
-    width: String(barWidth) + ea,
-  };
-  for (let i in style) {
-    barBox.style[i] = style[i];
+  if (media[0]) {
+    barBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      top: String(titleFont * (63 / 30)) + ea,
+      left: String(barLeft) + ea,
+      width: String(barWidth) + ea,
+    };
+    for (let i in style) {
+      barBox.style[i] = style[i];
+    }
+    leftBox.appendChild(barBox);
   }
-  leftBox.appendChild(barBox);
 
   //index box
   indexBox = GeneralJs.nodes.div.cloneNode(true);
@@ -841,7 +866,11 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //init wording - 1
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
-  initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
+  if (media[0]) {
+    initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
+  } else {
+    initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
+  }
   style = {
     position: "absolute",
     top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
@@ -967,84 +996,87 @@ ProposalJs.prototype.insertInitBox = function () {
 
   rightBox.appendChild(factorBox);
 
-  //designer box
-  designerBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    bottom: String(factorValueBottom - factorBoxTopVisual + 1) + ea,
-    right: String(titleLeft) + ea,
-    width: String(desigerBoxWidth) + ea,
-    height: String(desigerBoxHeight) + ea,
-  };
-  for (let i in style) {
-    designerBox.style[i] = style[i];
-  }
-
-  designerTitle = GeneralJs.nodes.div.cloneNode(true);
-  designerTitle.textContent = "추천 디자이너 :";
-  style = {
-    position: "absolute",
-    top: String(designerFactorTitleTop) + ea,
-    left: String(1) + ea,
-    fontSize: String(designerFactorTitleSize) + ea,
-    fontWeight: String(400),
-  };
-  for (let i in style) {
-    designerTitle.style[i] = style[i];
-  }
-  designerBox.appendChild(designerTitle);
-  pastBlocks.push(designerTitle);
-
-  for (let i = 0; i < targetDesigners.length; i++) {
-    if (i % 3 === 0) {
-      for (let dom of pastBlocks) {
-        dom.style.top = String(Number(dom.style.top.replace(/[^0-9\.\-]/gi, '')) - (targetDesignerBoxIndent * Math.floor(i / 3))) + ea;
-      }
-    }
-    designerFactor = GeneralJs.nodes.div.cloneNode(true);
-    designerFactor.textContent = targetDesigners[targetDesigners.length - 1 - i];
+  if (media[0]) {
+    //designer box
+    designerBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
-      fontSize: String(designerFactorSize) + ea,
-      fontWeight: String(500),
-      width: "calc(100% / 3)",
-      display: "inline-block",
       position: "absolute",
-      top: String(targetDesignerBoxTop) + ea,
-      textAlign: ([ "left", "center", "right" ])[3 - 1 - (i % 3)],
-      left: "calc(calc(100% / 3) * " + String(3 - 1 - (i % 3)) + ")",
+      bottom: String(factorValueBottom - factorBoxTopVisual + 1) + ea,
+      right: String(titleLeft) + ea,
+      width: String(desigerBoxWidth) + ea,
+      height: String(desigerBoxHeight) + ea,
     };
-    for (let j in style) {
-      designerFactor.style[j] = style[j];
+    for (let i in style) {
+      designerBox.style[i] = style[i];
     }
-    if (i % 3 !== 1) {
-      designerBar = GeneralJs.nodes.div.cloneNode(true);
+
+    designerTitle = GeneralJs.nodes.div.cloneNode(true);
+    designerTitle.textContent = "추천 디자이너 :";
+    style = {
+      position: "absolute",
+      top: String(designerFactorTitleTop) + ea,
+      left: String(1) + ea,
+      fontSize: String(designerFactorTitleSize) + ea,
+      fontWeight: String(400),
+    };
+    for (let i in style) {
+      designerTitle.style[i] = style[i];
+    }
+    designerBox.appendChild(designerTitle);
+    pastBlocks.push(designerTitle);
+
+    for (let i = 0; i < targetDesigners.length; i++) {
+      if (i % 3 === 0) {
+        for (let dom of pastBlocks) {
+          dom.style.top = String(Number(dom.style.top.replace(/[^0-9\.\-]/gi, '')) - (targetDesignerBoxIndent * Math.floor(i / 3))) + ea;
+        }
+      }
+      designerFactor = GeneralJs.nodes.div.cloneNode(true);
+      designerFactor.textContent = targetDesigners[targetDesigners.length - 1 - i];
       style = {
+        fontSize: String(designerFactorSize) + ea,
+        fontWeight: String(500),
+        width: "calc(100% / 3)",
+        display: "inline-block",
         position: "absolute",
-        borderRight: "1px solid " + GeneralJs.colorChip.green,
-        height: String(designerFactorHeight) + ea,
-        bottom: String(designerBarBottom) + ea,
-        left: String(designerBarLeft) + ea,
+        top: String(targetDesignerBoxTop) + ea,
+        textAlign: ([ "left", "center", "right" ])[3 - 1 - (i % 3)],
+        left: "calc(calc(100% / 3) * " + String(3 - 1 - (i % 3)) + ")",
       };
-      if (i % 3 === 2) {
-        style.borderLeft = style.borderRight;
-        style.right = style.left;
-        delete style.borderRight;
-        delete style.left;
-      }
       for (let j in style) {
-        designerBar.style[j] = style[j];
+        designerFactor.style[j] = style[j];
       }
-      designerFactor.appendChild(designerBar);
+      if (i % 3 !== 1) {
+        designerBar = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          borderRight: "1px solid " + GeneralJs.colorChip.green,
+          height: String(designerFactorHeight) + ea,
+          bottom: String(designerBarBottom) + ea,
+          left: String(designerBarLeft) + ea,
+        };
+        if (i % 3 === 2) {
+          style.borderLeft = style.borderRight;
+          style.right = style.left;
+          delete style.borderRight;
+          delete style.left;
+        }
+        for (let j in style) {
+          designerBar.style[j] = style[j];
+        }
+        designerFactor.appendChild(designerBar);
+      }
+      designerBox.appendChild(designerFactor);
+      pastBlocks.push(designerFactor);
     }
-    designerBox.appendChild(designerFactor);
-    pastBlocks.push(designerFactor);
+
+    if (targetDesigners.length % 3 === 1) {
+      designerBar.parentNode.removeChild(designerBar);
+    }
+
+    rightBox.appendChild(designerBox);
   }
 
-  if (targetDesigners.length % 3 === 1) {
-    designerBar.parentNode.removeChild(designerBar);
-  }
-
-  rightBox.appendChild(designerBox);
   whiteBlock.appendChild(rightBox);
 
   //top white wording
@@ -1168,7 +1200,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   wordSpacing = <%% -1, -1, -1, -1 %%>;
   margin = <%% 18, 18, 18, 18 %%>;
 
-  pictureBoxWidth = <%% 980, 980, 980, 980 %%>;
+  pictureBoxWidth = <%% 980, 934, 980, 980 %%>;
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
   descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
@@ -2559,6 +2591,7 @@ ProposalJs.prototype.launching = async function (loading) {
     //loading end
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
+    this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 
     //base setting
     this.setBackground();

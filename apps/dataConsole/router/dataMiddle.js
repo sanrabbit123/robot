@@ -12,14 +12,15 @@ const MiddleCommunication = function () {
 }
 
 MiddleCommunication.prototype.mediaQuery = function (code) {
+  const conditions = [
+    "window.innerWidth > 1540",
+    "window.innerWidth <= 1540 && window.innerWidth > 1050",
+    "window.innerWidth <= 1050 && window.innerWidth > 800",
+    "window.innerWidth <= 800"
+  ];
+  const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
   const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
   const replacer = function (match, p1, p2, offset, string) {
-    const conditions = [
-      "window.innerWidth > 1540",
-      "window.innerWidth <= 1540 && window.innerWidth > 1050",
-      "window.innerWidth <= 1050 && window.innerWidth > 800",
-      "window.innerWidth <= 800"
-    ];
     const safeWall = "\n\n";
     let tempValue, tempArr, tempStr;
 
@@ -40,7 +41,20 @@ MiddleCommunication.prototype.mediaQuery = function (code) {
     tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
     return tempStr;
   }
-  return code.replace(matchReg, replacer);
+  let updateProto;
+
+  updateProto = '';
+  updateProto += updateProtoConst;
+  updateProto += " = ";
+  updateProto += "[";
+  for (let i of conditions) {
+    updateProto += "(";
+    updateProto += i;
+    updateProto += "),";
+  }
+  updateProto += "];\n";
+
+  return { conditions: updateProto, code: code.replace(matchReg, replacer) };
 }
 
 MiddleCommunication.prototype.setMetadata = function (property, value) {

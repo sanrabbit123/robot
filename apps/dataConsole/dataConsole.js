@@ -177,6 +177,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let totalModuleObjectConst;
     let resultFromArr;
     let tempArr;
+    let tempMediaResult;
 
     //module transform
     moduleTrans = async function (tree, name) {
@@ -301,7 +302,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       //set media query
       if (/<%%/gi.test(fileString)) {
-        fileString = DataMiddle.mediaQuery(fileString);
+        tempMediaResult = DataMiddle.mediaQuery(fileString);
+        fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 
       //merge
