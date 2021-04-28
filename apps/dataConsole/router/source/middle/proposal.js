@@ -1161,7 +1161,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
 
 ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
   let bottomMarginVisual;
@@ -1205,9 +1205,9 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
   descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
-  descriptionPaddingLeft = <%% 28, 28, 28, 28 %%>;
+  descriptionPaddingLeft = <%% 28, 38, 28, 28 %%>;
   descriptionPaddingRight = <%% 20, 20, 20, 20 %%>;
-  descriptionMargin = <%% 10, 10, 10, 10 %%>;
+  descriptionMargin = <%% 10, 6, 10, 10 %%>;
   descriptionSize = <%% 14.5, 14.5, 14.5, 14.5 %%>;
 
   descriptionTitleTop = <%% -30, -30, -30, -30 %%>;
@@ -1309,74 +1309,149 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   pictureDescription.appendChild(pictureBox);
 
-  //description box
-  descriptionBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    width: "calc(100% - " + String(pictureBoxWidth + margin) + ea + ")",
-    background: GeneralJs.colorChip.gray1,
-    borderRadius: String(3) + ea,
-    right: String(0) + ea,
-    bottom: String(0) + ea,
-    paddingTop: String(descriptionPaddingTop) + ea,
-    paddingBottom: String(descriptionPaddingBottom) + ea,
-  };
-  for (let i in style) {
-    descriptionBox.style[i] = style[i];
-  }
-
-  //description title
-  descriptionTitle = GeneralJs.nodes.div.cloneNode(true);
-  descriptionTitle.textContent = "디자이너 설명";
-  style = {
-    position: "absolute",
-    top: String(descriptionTitleTop) + ea,
-    left: String(descriptionTitleLeft) + ea,
-    fontSize: String(descriptionTitleSize) + ea,
-    fontWeight: String(600),
-    wordSpacing: String(wordSpacing) + ea,
-  };
-  for (let i in style) {
-    descriptionTitle.style[i] = style[i];
-  }
-  descriptionBox.appendChild(descriptionTitle);
-
-  //description contents
-  for (let i = 0; i < description.length; i++) {
-    descriptionDetailBox = GeneralJs.nodes.div.cloneNode(true);
-    descriptionDetailBox.textContent = description[i];
-    style = {
-      position: "relative",
-      fontSize: String(descriptionSize) + ea,
-      lineHeight: String(1.6),
-      wordSpacing: String(-1) + ea,
-      left: String(descriptionPaddingLeft) + ea,
-      width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
-      marginBottom: String(descriptionMargin) + ea,
-    };
-    if (i === description.length - 1) {
-      style.marginBottom = '';
-    }
-    for (let j in style) {
-      descriptionDetailBox.style[j] = style[j];
-    }
-
-    descriptionPoint = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.black));
+  if (media[0]) {
+    //description box
+    descriptionBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      width: String(pointRadius * 2) + ea,
-      height: String(pointRadius * 2) + ea,
-      left: String(-1 * ((pointRadius * 2) + pointLeftIndent)) + ea,
-      top: String(pointTop) + ea,
+      width: "calc(100% - " + String(pictureBoxWidth + margin) + ea + ")",
+      background: GeneralJs.colorChip.gray1,
+      borderRadius: String(3) + ea,
+      right: String(0) + ea,
+      bottom: String(0) + ea,
+      paddingTop: String(descriptionPaddingTop) + ea,
+      paddingBottom: String(descriptionPaddingBottom) + ea,
     };
-    for (let j in style) {
-      descriptionPoint.style[j] = style[j];
+    for (let i in style) {
+      descriptionBox.style[i] = style[i];
     }
-    descriptionDetailBox.appendChild(descriptionPoint);
-    descriptionBox.appendChild(descriptionDetailBox);
+
+    //description title
+    descriptionTitle = GeneralJs.nodes.div.cloneNode(true);
+    descriptionTitle.textContent = "디자이너 설명";
+    style = {
+      position: "absolute",
+      top: String(descriptionTitleTop) + ea,
+      left: String(descriptionTitleLeft) + ea,
+      fontSize: String(descriptionTitleSize) + ea,
+      fontWeight: String(600),
+      wordSpacing: String(wordSpacing) + ea,
+    };
+    for (let i in style) {
+      descriptionTitle.style[i] = style[i];
+    }
+    descriptionBox.appendChild(descriptionTitle);
+
+    //description contents
+    for (let i = 0; i < description.length; i++) {
+      descriptionDetailBox = GeneralJs.nodes.div.cloneNode(true);
+      descriptionDetailBox.textContent = description[i];
+      style = {
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        lineHeight: String(1.6),
+        wordSpacing: String(-1) + ea,
+        left: String(descriptionPaddingLeft) + ea,
+        width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
+        marginBottom: String(descriptionMargin) + ea,
+      };
+      if (i === description.length - 1) {
+        style.marginBottom = '';
+      }
+      for (let j in style) {
+        descriptionDetailBox.style[j] = style[j];
+      }
+
+      descriptionPoint = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.black));
+      style = {
+        position: "absolute",
+        width: String(pointRadius * 2) + ea,
+        height: String(pointRadius * 2) + ea,
+        left: String(-1 * ((pointRadius * 2) + pointLeftIndent)) + ea,
+        top: String(pointTop) + ea,
+      };
+      for (let j in style) {
+        descriptionPoint.style[j] = style[j];
+      }
+      descriptionDetailBox.appendChild(descriptionPoint);
+      descriptionBox.appendChild(descriptionDetailBox);
+    }
+    pictureDescription.appendChild(descriptionBox);
   }
-  pictureDescription.appendChild(descriptionBox);
+
   mother.appendChild(pictureDescription);
+
+  if (media[1]) {
+    //description box
+    descriptionBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      marginLeft: String(leftMargin) + ea,
+      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+      border: "1px solid " + GeneralJs.colorChip.gray3,
+      borderRadius: String(3) + ea,
+      right: String(0) + ea,
+      bottom: String(0) + ea,
+      paddingTop: String(descriptionPaddingTop) + ea,
+      paddingBottom: String(descriptionPaddingBottom) + ea,
+      marginTop: String(51) + ea,
+    };
+    for (let i in style) {
+      descriptionBox.style[i] = style[i];
+    }
+
+    //description title
+    descriptionTitle = GeneralJs.nodes.div.cloneNode(true);
+    descriptionTitle.textContent = "디자이너 설명";
+    style = {
+      position: "absolute",
+      top: String(descriptionTitleTop) + ea,
+      left: String(descriptionTitleLeft) + ea,
+      fontSize: String(descriptionTitleSize) + ea,
+      fontWeight: String(600),
+      wordSpacing: String(wordSpacing) + ea,
+    };
+    for (let i in style) {
+      descriptionTitle.style[i] = style[i];
+    }
+    descriptionBox.appendChild(descriptionTitle);
+
+    //description contents
+    for (let i = 0; i < description.length; i++) {
+      descriptionDetailBox = GeneralJs.nodes.div.cloneNode(true);
+      descriptionDetailBox.textContent = description[i];
+      style = {
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        lineHeight: String(1.6),
+        wordSpacing: String(-1) + ea,
+        left: String(descriptionPaddingLeft) + ea,
+        width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
+        marginBottom: String(descriptionMargin) + ea,
+      };
+      if (i === description.length - 1) {
+        style.marginBottom = '';
+      }
+      for (let j in style) {
+        descriptionDetailBox.style[j] = style[j];
+      }
+
+      descriptionPoint = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.black));
+      style = {
+        position: "absolute",
+        width: String(pointRadius * 2) + ea,
+        height: String(pointRadius * 2) + ea,
+        left: String(-1 * ((pointRadius * 2) + pointLeftIndent)) + ea,
+        top: String(pointTop) + ea,
+      };
+      for (let j in style) {
+        descriptionPoint.style[j] = style[j];
+      }
+      descriptionDetailBox.appendChild(descriptionPoint);
+      descriptionBox.appendChild(descriptionDetailBox);
+    }
+    mother.appendChild(descriptionBox);
+  }
 
   //designer analytics
   analyticsBox = GeneralJs.nodes.div.cloneNode(true);
@@ -1462,7 +1537,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
 ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.search(desid);
   const map = this.map.analyticsMap(thisDesigner);
@@ -1498,37 +1573,37 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   maxInitNumber = (maxNumber * 2) - initNumber;
   leftNumber = map.length - maxInitNumber;
 
-  leftIndent = <%% 20, 20, 20, 20 %%>;
-  width1 = <%% 360, 500, 500, 500 %%>;
+  leftIndent = <%% 20, 6, 20, 20 %%>;
+  width1 = <%% 360, 320, 360, 360 %%>;
   width0 = (width1 * 2) + leftIndent;
-  height = <%% 26, 30, 30, 30 %%>;
+  height = <%% 26, 24, 26, 26 %%>;
   wordSpacing = <%% -1, -1, -1, -1 %%>;
 
   margin = <%% 12, 12, 12, 12 %%>;
 
   pointRadius = <%% 2, 2, 2, 2 %%>;
-  pointTop = <%% 9, 9, 9, 9 %%>;
-  pointTopValue = <%% 8, 9, 9, 9 %%>;
+  pointTop = <%% 9, 8, 9, 9 %%>;
+  pointTopValue = <%% 8, 8, 8, 8 %%>;
   pointIntendValue = <%% 4, 4, 4, 4 %%>;
 
-  checkBoxRadius = <%% 4, 5, 5, 5 %%>;
+  checkBoxRadius = <%% 4, 4, 5, 5 %%>;
   checkBoxRadiusTop = <%% 6, 5, 5, 5 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5 %%>;
 
-  titleSize = <%% 16, 15, 15, 15 %%>;
-  titleIndent = <%% 4, 2, 2, 2 %%>;
+  titleSize = <%% 16, 14, 15, 15 %%>;
+  titleIndent = <%% 4, 3, 2, 2 %%>;
   titleTop = 0;
 
-  valueIndent = <%% 140, 2, 2, 2 %%>;
+  valueIndent = <%% 140, 120, 2, 2 %%>;
 
   checkboxMarginRight = <%% 30, 24, 24, 24 %%>;
   radioMarginRight = <%% 35, 32, 32, 32 %%>;
 
-  valueDomBarLeft = <%% 60, 60, 60, 60 %%>;
-  valueDomValueWidth = <%% 13, 60, 60, 60 %%>;
-  valueDomValueMargin = <%% 10, 60, 60, 60 %%>;
+  valueDomBarLeft = <%% 60, 58, 60, 60 %%>;
+  valueDomValueWidth = <%% 13, 13, 60, 60 %%>;
+  valueDomValueMargin = <%% 10, 10, 60, 60 %%>;
 
-  tendencyVisualLeft = <%% 30, 10, 10, 10 %%>;
+  tendencyVisualLeft = <%% 30, 30, 10, 10 %%>;
   tendencyTop = <%% 33, 33, 33, 33 %%>;
   tendencyMargin = <%% 3, 3, 3, 3 %%>;
 
@@ -1808,7 +1883,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     marginTop = <%% left - 6, left - 6, left - 6, left - 6 %%>;
     marginBottom = <%% left - 3, left - 6, left - 6, left - 6 %%>;
 
-    entireHeight = <%% 20, 30, 30, 30 %%>;
+    entireHeight = <%% 20, 21, 20, 20 %%>;
     entireMarginBottom = <%% 10, 10, 10, 10 %%>;
 
     fontSize = <%% 15, 15, 15, 15 %%>;
@@ -2077,17 +2152,17 @@ ProposalJs.prototype.insertWordBox = function () {
   let wordBlock;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
-  bottom = <%% topMargin - 3, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2 %%>;
 
   blockMarginBottom = <%% 16, 16, 16, 16 %%>;
   wordSpacing = <%% -1, -1, -1, -1 %%>;
 
-  box0Size = <%% 140, 50, 50, 50 %%>;
-  box1Size = <%% 25, 30, 30, 30 %%>;
-  box0Margin = <%% 55, 30, 30, 30 %%>;
-  box1Margin = <%% 18, 30, 30, 30 %%>;
+  box0Size = <%% 140, 140, 50, 50 %%>;
+  box1Size = <%% 25, 25, 30, 30 %%>;
+  box0Margin = <%% 55, 55, 30, 30 %%>;
+  box1Margin = <%% 18, 18, 30, 30 %%>;
 
-  marginBottom = <%% 9, 30, 30, 30 %%>;
+  marginBottom = <%% 9, 9, 30, 30 %%>;
   wordSize = <%% 15, 15, 15, 15 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
