@@ -547,7 +547,7 @@ ProposalJs.prototype.setBaseTong = function () {
   let ea = this.ea;
   let baseTop;
 
-  baseTop = <%% 200, 200, 200, 200 %%>;
+  baseTop = <%% 200, 200, 175, 175 %%>;
 
   baseTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -616,7 +616,7 @@ ProposalJs.prototype.insertInitBox = function () {
   margin = <%% 52, 52, 52, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 31, 31 %%>;
+  titleFont = <%% 31, 30, 27.5, 31 %%>;
   titleLeft = <%% 6, 6, 6, 6 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
@@ -641,9 +641,9 @@ ProposalJs.prototype.insertInitBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 630, 672, 630, 630 %%>;
+  factorBoxWidth = <%% 630, 672, 570, 630 %%>;
   factorBoxTop = <%% 100, 100, 100, 100 %%>;
-  factorBoxTopVisual = <%% 3, 11, 3, 3 %%>;
+  factorBoxTopVisual = <%% 3, 11, 9, 3 %%>;
 
   factorPaddingLeft = <%% 10, 10, 10, 10 %%>;
   factorPaddingTop = <%% 10, 10, 10, 10 %%>;
@@ -684,7 +684,7 @@ ProposalJs.prototype.insertInitBox = function () {
   targetDesignerBoxTop = <%% 24, 24, 24, 24 %%>;
   targetDesignerBoxIndent = <%% 34, 36, 36, 36 %%>;
 
-  designerFactorTitleSize = <%% 13, 15, 15, 15 %%>;
+  designerFactorTitleSize = <%% 13, 13, 13, 13 %%>;
   designerFactorSize = <%% 22, 22, 22, 22 %%>;
   designerFactorHeight = <%% 20, 20, 20, 20 %%>;
 
@@ -730,7 +730,7 @@ ProposalJs.prototype.insertInitBox = function () {
   titleBox = GeneralJs.nodes.div.cloneNode(true);
   if (media[0]) {
     titleBox.textContent = "당신에게 딱 맞는 디자이너,";
-  } else if (media[1]) {
+  } else if (media[1] || media[2]) {
     titleBox.textContent = "당신에게";
   }
   style = {
@@ -738,7 +738,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + ea,
-    top: String((media[0] ? 0 : 1)) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -747,7 +747,7 @@ ProposalJs.prototype.insertInitBox = function () {
   }
   leftBox.appendChild(titleBox);
 
-  if (media[1]) {
+  if (media[1] || media[2]) {
     titleBox = GeneralJs.nodes.div.cloneNode(true);
     titleBox.textContent = "딱 맞는 디자이너,";
     style = {
@@ -755,7 +755,7 @@ ProposalJs.prototype.insertInitBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + ea,
-      top: String((media[0] ? 0 : 1) + (titleFont * (media[0] ? 1.45 : 1.5))) + ea,
+      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47))) + ea,
       left: String(titleLeft) + ea,
       color: GeneralJs.colorChip.black,
     };
@@ -772,7 +772,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + ea,
-    top: String((media[0] ? 0 : 1) + (titleFont * (media[0] ? 1.45 : 1.5) * (media[0] ? 1 : 2))) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2))) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -848,7 +848,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //init wording - 0
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
-  initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께 고객 맞춤 커스터마이징 : <b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
+  initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께" + (!media[2] ? " 고객 맞춤 커스터마이징 : " : " ") + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   style = {
     position: "absolute",
     top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -868,8 +868,10 @@ ProposalJs.prototype.insertInitBox = function () {
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
   if (media[0]) {
     initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.";
-  } else {
+  } else if (media[1]) {
     initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
+  } else {
+    initWordingBox.textContent = "담당 디자이너가 고객님의 전체 예산을 현장 조건에 맞게 분배하여 스타일링을 진행합니다.";
   }
   style = {
     position: "absolute",
@@ -1200,7 +1202,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   wordSpacing = <%% -1, -1, -1, -1 %%>;
   margin = <%% 18, 18, 18, 18 %%>;
 
-  pictureBoxWidth = <%% 980, 934, 980, 980 %%>;
+  pictureBoxWidth = <%% 980, 934, 784, 980 %%>;
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
   descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
@@ -1381,7 +1383,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   mother.appendChild(pictureDescription);
 
-  if (media[1]) {
+  if (media[1] || media[2]) {
     //description box
     descriptionBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
@@ -2053,8 +2055,8 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
 
   headWidth = <%% 10, 10, 10, 10 %%>;
   headTop = <%% 6, 6, 6, 6 %%>;
-  headMargin = <%% 18, 10, 10, 10 %%>;
-  headVisual = <%% 11, 10, 10, 10 %%>;
+  headMargin = <%% 18, 18, 10, 10 %%>;
+  headVisual = <%% 11, 11, 10, 10 %%>;
 
   feeBottom = <%% 0, 0, 0, 0 %%>;
   feeSize = <%% 28, 28, 28, 28 %%>;
@@ -2593,10 +2595,10 @@ ProposalJs.prototype.launching = async function (loading) {
     this.standardWidth = <%% 1400, 1050, 900, 100 %%>;
     this.sero = <%% false, false, false, true %%>;
     this.modeMinus = <%% 0, 1, 1, 1 %%>;
-    this.naviHeight = <%% 72, 72, 60, 60 %%>;
+    this.naviHeight = <%% 72, 72, 72, 60 %%>;
 
     this.subBoxMargin.top = <%% 30, 30, 30, 30 %%>;
-    this.subBoxMargin.bottom = <%% 31, 30, 30, 30 %%>;
+    this.subBoxMargin.bottom = <%% 31, 31, 31, 31 %%>;
     this.subBoxMargin.left = <%% 30, 30, 30, 30 %%>;
 
     if (this.modeMinus !== 0) {
