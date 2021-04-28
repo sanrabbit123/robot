@@ -141,8 +141,8 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           question: "스타일링 요소가 많은 편인가, 적은 편인가?",
           type: 0,
           children: [
-            "그렇다",
-            "아니다",
+            "많은듯",
+            "적은듯",
           ]
         },
         {
