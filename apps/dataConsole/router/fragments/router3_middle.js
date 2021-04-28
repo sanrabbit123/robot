@@ -90,7 +90,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "도장(색면)을 사용하였는가?",
+          question: "도장(가구,벽)을 주로 사용하였는가?",
           type: 0,
           children: [
             "그렇다",
@@ -98,7 +98,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "금속 스타일 요소를 사용하였는가?",
+          question: "금속 재질을 주로 사용하였는가?",
           type: 0,
           children: [
             "그렇다",
@@ -106,7 +106,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "포인트 컬러를 1개 이상 사용하였는가?",
+          question: "전체적으로 모노톤인가?",
           type: 0,
           children: [
             "그렇다",
@@ -114,15 +114,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "색종류 5개 이상을 사용하였는가?",
-          type: 0,
-          children: [
-            "그렇다",
-            "아니다",
-          ]
-        },
-        {
-          question: "클래식 형태를 사용하였는가?",
+          question: "포인트 컬러를 사용했거나, 비비드한가?",
           type: 0,
           children: [
             "그렇다",
@@ -139,6 +131,14 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
         },
         {
           question: "분위기가 전반적으로 어두운 톤인가?",
+          type: 0,
+          children: [
+            "그렇다",
+            "아니다",
+          ]
+        },
+        {
+          question: "스타일링 요소가 많은 편인가, 적은 편인가?",
           type: 0,
           children: [
             "그렇다",
@@ -182,11 +182,11 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
       id = pid + "_" + room;
       json = { id, date: new Date(), who, index, value };
 
-      row = await back.mongoRead(collection, { id }, { selfMongo: instance.mongolocal });
+      row = await back.mongoRead(collection, { id, who }, { selfMongo: instance.mongolocal });
       if (row.length === 0) {
         await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
       } else {
-        await back.mongoUpdate(collection, [ { id }, { date: json.date, who, index, value } ], { selfMongo: instance.mongolocal });
+        await back.mongoUpdate(collection, [ { id, who }, { date: json.date, index, value } ], { selfMongo: instance.mongolocal });
       }
 
       res.set({
@@ -219,7 +219,8 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
         throw new Error("invaild request");
       }
       const collection = "styleEstimation";
-      let row;
+      let row, initialNumber;
+      let assign;
 
       res.set({
         "Content-Type": "application/json",
@@ -228,10 +229,21 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
         "Access-Control-Allow-Headers": '*',
       });
 
+      assign = [
+        0,
+        1,
+        0,
+        321,
+        441,
+        0,
+        121,
+        201
+      ];
       row = await back.mongoRead(collection, { who }, { selfMongo: instance.mongolocal });
+      initialNumber = assign[who];
 
       if (row.length === 0) {
-        res.send(JSON.stringify({ index: -1 }));
+        res.send(JSON.stringify({ index: initialNumber - 1 }));
       } else {
         row.sort((a, b) => { return b.index - a.index; });
         res.send(JSON.stringify({ index: row[0].index }));

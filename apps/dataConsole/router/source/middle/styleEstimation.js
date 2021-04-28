@@ -331,9 +331,6 @@ StyleEstimationJs.prototype.judgementMaker = function (pid, room, tong, titleSiz
   className_button = "button" + random + "_";
   nodeArr = [];
 
-  //set dummy
-  questions.push({ question: "dummy", type: 0, children: [ "dummy", "dummy" ] });
-
   order = 1;
   for (let { question, children } of questions) {
     tempObj = {};
@@ -359,7 +356,7 @@ StyleEstimationJs.prototype.judgementMaker = function (pid, room, tong, titleSiz
       left: String(indentMargin) + ea,
       width: withOut(indentMargin * 2, ea),
       textAlign: "left",
-      color: question !== "dummy" ? colorChip.black : colorChip.white,
+      color: colorChip.black,
     };
     nodeArr.push(tempObj);
     order++;
@@ -467,7 +464,8 @@ StyleEstimationJs.prototype.judgementMaker = function (pid, room, tong, titleSiz
         width: withOut((indentMargin * 2) + (54 * i), ea),
         textAlign: "right",
         cursor: "pointer",
-        color: children[children.length - 1 - i] !== "dummy" ? colorChip.black : colorChip.white,
+        height: (order === (questions.length * 2) ? String(200) + ea : "auto"),
+        color: colorChip.black,
       };
       nodeArr.push(tempObj);
     }
