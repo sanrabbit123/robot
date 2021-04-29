@@ -90,7 +90,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "도장(가구,벽)을 주로 사용하였는가?",
+          question: "도장(가구,벽)을 사용하였는가?",
           type: 0,
           children: [
             "그렇다",
@@ -98,7 +98,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
           ]
         },
         {
-          question: "금속 재질을 주로 사용하였는가?",
+          question: "금속 재질을 사용하였는가?",
           type: 0,
           children: [
             "그렇다",

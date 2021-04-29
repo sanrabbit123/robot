@@ -1207,9 +1207,9 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
   descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
-  descriptionPaddingLeft = <%% 28, 38, 28, 28 %%>;
+  descriptionPaddingLeft = <%% 28, 38, 38, 28 %%>;
   descriptionPaddingRight = <%% 20, 20, 20, 20 %%>;
-  descriptionMargin = <%% 10, 6, 10, 10 %%>;
+  descriptionMargin = <%% 10, 6, 6, 10 %%>;
   descriptionSize = <%% 14.5, 14.5, 14.5, 14.5 %%>;
 
   descriptionTitleTop = <%% -30, -30, -30, -30 %%>;
@@ -1575,39 +1575,43 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   maxInitNumber = (maxNumber * 2) - initNumber;
   leftNumber = map.length - maxInitNumber;
 
-  leftIndent = <%% 20, 6, 20, 20 %%>;
-  width1 = <%% 360, 320, 360, 360 %%>;
+  leftIndent = <%% 20, 6, 6, 6 %%>;
+  width1 = <%% 360, 320, 360, 320 %%>;
   width0 = (width1 * 2) + leftIndent;
-  height = <%% 26, 24, 26, 26 %%>;
+  height = <%% 26, 24, 24, 24 %%>;
   wordSpacing = <%% -1, -1, -1, -1 %%>;
 
   margin = <%% 12, 12, 12, 12 %%>;
 
   pointRadius = <%% 2, 2, 2, 2 %%>;
-  pointTop = <%% 9, 8, 9, 9 %%>;
+  pointTop = <%% 9, 8, 8, 9 %%>;
   pointTopValue = <%% 8, 8, 8, 8 %%>;
   pointIntendValue = <%% 4, 4, 4, 4 %%>;
 
-  checkBoxRadius = <%% 4, 4, 5, 5 %%>;
+  checkBoxRadius = <%% 4, 4, 4, 5 %%>;
   checkBoxRadiusTop = <%% 6, 5, 5, 5 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5 %%>;
 
-  titleSize = <%% 16, 14, 15, 15 %%>;
+  titleSize = <%% 16, 14, 14, 15 %%>;
   titleIndent = <%% 4, 3, 2, 2 %%>;
   titleTop = 0;
 
-  valueIndent = <%% 140, 120, 2, 2 %%>;
+  valueIndent = <%% 140, 120, 100, 100 %%>;
 
   checkboxMarginRight = <%% 30, 24, 24, 24 %%>;
   radioMarginRight = <%% 35, 32, 32, 32 %%>;
 
-  valueDomBarLeft = <%% 60, 58, 60, 60 %%>;
-  valueDomValueWidth = <%% 13, 13, 60, 60 %%>;
-  valueDomValueMargin = <%% 10, 10, 60, 60 %%>;
+  valueDomBarLeft = <%% 60, 58, 58, 60 %%>;
+  valueDomValueWidth = <%% 13, 13, 13, 60 %%>;
+  valueDomValueMargin = <%% 10, 10, 10, 60 %%>;
 
-  tendencyVisualLeft = <%% 30, 30, 10, 10 %%>;
+  tendencyVisualLeft = <%% 30, 30, 30, 10 %%>;
   tendencyTop = <%% 33, 33, 33, 33 %%>;
   tendencyMargin = <%% 3, 3, 3, 3 %%>;
+
+  if (media[2]) {
+    map.pop();
+  }
 
   for (let i = 0; i < map.length; i++) {
 
