@@ -519,7 +519,7 @@ ProposalJs.prototype.setNavigator = function () {
   }
   logo.addEventListener("click", function (e) {
     window.location.href = instance.frontPage;
-  })
+  });
   naviBase.appendChild(logo);
 
   nameTong = GeneralJs.nodes.div.cloneNode(true);
@@ -627,18 +627,18 @@ ProposalJs.prototype.insertInitBox = function () {
   let designerBarBottom, designerBarLeft;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 540, this.backHeight - 460 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 16 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 52, 50, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 31 %%>;
-  titleLeft = <%% 6, 6, 6, 6, 6 %%>;
+  titleFont = <%% 31, 30, 27.5, 23, 5.6 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
   this.whiteBoxNumbers.topMargin = margin;
 
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  wordSpacing = <%% -3, -3, -3, -3, -3 %%>;
+  wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   barWidth = <%% 80, 80, 80, 80, 80 %%>;
   barLeft = <%% titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
@@ -646,10 +646,10 @@ ProposalJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 8, 8, 8, 8, 8 %%>;
-  quoteHeight = <%% 12, 12, 12, 9, 12 %%>;
+  quoteTop = <%% 8, 8, 8, 8, 0 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
   quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 2 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 20 %%>;
   initWordingSize = <%% 15.5, 15.5, 15.5, 14, 15.5 %%>;
@@ -662,7 +662,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   factorPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
   factorPaddingTop = <%% 10, 10, 10, 2, 10 %%>;
-  factorSize = <%% 17.5, 17.5, 17.5, 15.5, 17.5 %%>;
+  factorSize = <%% 17.5, 17.5, 17.5, 15.5, 3.5 %%>;
   factors = [
     { title: "예산", value: "2,500만원" },
     { title: "가족 구성원", value: "부부, 딸 1, 아들 1" },
@@ -737,13 +737,21 @@ ProposalJs.prototype.insertInitBox = function () {
     marginBottom: String(margin) + ea,
     marginLeft: String(margin) + ea,
   };
+  if (mobile) {
+    style = {
+      display: "block",
+      position: "relative",
+      height: String(31) + ea,
+      width: String(100) + '%'
+    };
+  }
   for (let i in style) {
     leftBox.style[i] = style[i];
   }
 
   //main title
   titleBox = GeneralJs.nodes.div.cloneNode(true);
-  if (media[0]) {
+  if (media[0] || media[4]) {
     titleBox.textContent = "당신에게 딱 맞는 디자이너,";
   } else if (media[1] || media[2] || media[3]) {
     titleBox.textContent = "당신에게";
@@ -752,11 +760,16 @@ ProposalJs.prototype.insertInitBox = function () {
     position: "absolute",
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
-    wordSpacing: String(wordSpacing) + ea,
+    wordSpacing: String(wordSpacing) + "px",
     top: String((media[0] ? 0 : media[1] ? 1 : 3)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
+  if (mobile) {
+    style.top = String(10) + ea;
+    style.width = String(100) + '%';
+    style.textAlign = "center";
+  }
   for (let i in style) {
     titleBox.style[i] = style[i];
   }
@@ -786,11 +799,16 @@ ProposalJs.prototype.insertInitBox = function () {
     position: "absolute",
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
-    wordSpacing: String(wordSpacing) + ea,
+    wordSpacing: String(wordSpacing) + "px",
     top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2))) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
+  if (mobile) {
+    style.top = String(18) + ea;
+    style.width = String(100) + '%';
+    style.textAlign = "center";
+  }
   for (let i in style) {
     titleBox.style[i] = style[i];
   }
@@ -812,21 +830,23 @@ ProposalJs.prototype.insertInitBox = function () {
   }
 
   //index box
-  indexBox = GeneralJs.nodes.div.cloneNode(true);
-  indexBox.textContent = "0";
-  style = {
-    position: "absolute",
-    fontSize: String(indexFont) + ea,
-    fontWeight: String(indexFontWeight),
-    wordSpacing: String(wordSpacing) + ea,
-    bottom: String(0) + ea,
-    left: String(titleLeft) + ea,
-    color: GeneralJs.colorChip.gray4,
-  };
-  for (let i in style) {
-    indexBox.style[i] = style[i];
+  if (desktop) {
+    indexBox = GeneralJs.nodes.div.cloneNode(true);
+    indexBox.textContent = "0";
+    style = {
+      position: "absolute",
+      fontSize: String(indexFont) + ea,
+      fontWeight: String(indexFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      bottom: String(0) + ea,
+      left: String(titleLeft) + ea,
+      color: GeneralJs.colorChip.gray4,
+    };
+    for (let i in style) {
+      indexBox.style[i] = style[i];
+    }
+    leftBox.appendChild(indexBox);
   }
-  leftBox.appendChild(indexBox);
 
   whiteBlock.appendChild(leftBox);
 
@@ -842,6 +862,13 @@ ProposalJs.prototype.insertInitBox = function () {
     marginBottom: String(margin) + ea,
     marginRight: String(margin) + ea,
   };
+  if (mobile) {
+    style = {
+      position: "relative",
+      width: String(100) + '%',
+      height: String(69) + ea,
+    };
+  }
   for (let i in style) {
     rightBox.style[i] = style[i];
   }
@@ -856,6 +883,9 @@ ProposalJs.prototype.insertInitBox = function () {
     width: String(quoteWidth) + ea,
     height: String(quoteHeight) + ea,
   };
+  if (mobile) {
+    style.left = "calc(50% - " + String(quoteWidth / 2) + ea + ")";
+  }
   for (let i in style) {
     doubleQuote.style[i] = style[i];
   }
@@ -874,6 +904,20 @@ ProposalJs.prototype.insertInitBox = function () {
     fontWeight: String(400),
     wordSpacing: String(initWordingWordSpacing) + ea,
   };
+  if (mobile) {
+    style = {
+      position: "absolute",
+      top: String(4.5) + ea,
+      left: String(13) + '%',
+      width: String(74) + '%',
+      height: String(9) + ea,
+      fontSize: String(3.2) + ea,
+      fontWeight: String(400),
+      wordSpacing: String(-1) + "px",
+      lineHeight: String(1.6),
+      textAlign: "center",
+    };
+  }
   for (let i in style) {
     initWordingBox.style[i] = style[i];
   }
@@ -898,6 +942,20 @@ ProposalJs.prototype.insertInitBox = function () {
     fontWeight: String(400),
     wordSpacing: String(initWordingWordSpacing) + ea,
   };
+  if (mobile) {
+    style = {
+      position: "absolute",
+      top: String(16) + ea,
+      left: String(11) + '%',
+      width: String(78) + '%',
+      height: String(9) + ea,
+      fontSize: String(3.2) + ea,
+      fontWeight: String(400),
+      lineHeight: String(1.6),
+      wordSpacing: String(-1) + "px",
+      textAlign: "center",
+    };
+  }
   for (let i in style) {
     initWordingBox.style[i] = style[i];
   }
@@ -911,6 +969,15 @@ ProposalJs.prototype.insertInitBox = function () {
     width: String(factorBoxWidth) + ea,
     height: "calc(100% - " + String(factorBoxTop) + ea + ")",
   };
+  if (mobile) {
+    style = {
+      position: "relative",
+      top: String(31) + ea,
+      left: String(8) + '%',
+      width: String(100 - (8 * 2)) + '%',
+      height: String(54) + ea
+    };
+  }
   for (let i in style) {
     factorBox.style[i] = style[i];
   }
@@ -1162,7 +1229,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
     whiteBlock = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      borderRadius: String(8) + ea,
+      borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       height: String(blockHeight) + ea,
       background: GeneralJs.colorChip.white,
