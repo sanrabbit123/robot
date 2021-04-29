@@ -4209,6 +4209,7 @@ DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
                 borderRadius: String(5) + ea,
                 border: "1px solid " + GeneralJs.colorChip.gray3,
                 background: GeneralJs.colorChip.gray1,
+                zIndex: String(4),
               };
               for (let i in style) {
                 memoBox.style[i] = style[i];

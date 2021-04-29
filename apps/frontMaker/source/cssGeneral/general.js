@@ -160,7 +160,6 @@ module.exports = function () {
     backdrop-filter: blur(5px);
   }
 
-
   @media (min-width:1611px) {
     #desknaviframe{width:1400px;left:calc(50% - 700px);}
     .maindeskfooterLeft{margin-left:-700px}
@@ -179,7 +178,7 @@ module.exports = function () {
     .f18designersubmit{width:100px;margin-left:604px;top:125px;height:25px;}
     .f18partnershipsubmit{width:60px;margin-left:531px;top:125px;height:25px;}
   }
-  @media (min-width:901px) and (max-width:1610px) {
+  @media (min-width:1061px) and (max-width:1610px) {
     #desknaviframe{width:1050px;left:calc(50% - 525px);}
     .maindeskfooterLeft{margin-left:-525px}
     .maindeskfooterRight{width:546px;margin-left:-20px;}
@@ -197,6 +196,47 @@ module.exports = function () {
     .f18designersubmit{width:100px;margin-left:428px;top:125px;height:25px;}
     .f18partnershipsubmit{width:60px;margin-left:356px;top:125px;height:25px;}
   }
+  @media (min-width:901px) and (max-width:1060px) {
+    #desknaviframe{width:900px;left:calc(50% - 450px);}
+    .maindeskfooterLeft{margin-left:-450px}
+    .maindeskfooterRight{width:546px;margin-left:-96px;}
+
+    .f18home{width:225px;margin-left:-450px;top:66px;height:73px;}
+    .f18faq{width:74px;margin-left:-65px;top:120px;height:18px;}
+    .f18card{width:62px;margin-left:19px;top:120px;height:18px;}
+    .f18terms{width:190px;margin-left:-103px;top:153px;height:17px;}
+    .f18about{width:78px;margin-left:143px;top:120px;height:18px;}
+    .f18port{width:72px;margin-left:149px;top:153px;height:17px;}
+    .f18designer{width:62px;margin-left:160px;top:184px;height:17px;}
+    .f18blog{width:64px;margin-left:159px;top:213px;height:17px;}
+    .f18channel{width:163px;margin-left:290px;top:66px;height:25px;}
+    .f18naverblog{width:50px;margin-left:309px;top:95px;height:25px;}
+    .f18instagram{width:81px;margin-left:373px;top:95px;height:25px;}
+    .f18designersubmit{width:100px;margin-left:353px;top:125px;height:25px;}
+    .f18partnershipsubmit{width:60px;margin-left:281px;top:125px;height:25px;}
+  }
+
+  @media (min-width:721px) and (max-width:900px) {
+    #desknaviframe{width:720px;left:calc(50% - 360px);}
+    .maindeskfooterLeft{margin-left:-360px}
+    .maindeskfooterRight{width:546px;margin-left:-186px;}
+
+    .f18home{width:225px;margin-left:-360px;top:66px;height:73px;}
+    .f18faq{width:74px;margin-left:-155px;top:120px;height:18px;}
+    .f18card{width:62px;margin-left:-69px;top:120px;height:18px;}
+    .f18terms{width:190px;margin-left:-193px;top:153px;height:17px;}
+    .f18about{width:78px;margin-left:53px;top:120px;height:18px;}
+    .f18port{width:72px;margin-left:59px;top:153px;height:17px;}
+    .f18designer{width:62px;margin-left:70px;top:184px;height:17px;}
+    .f18blog{width:64px;margin-left:69px;top:213px;height:17px;}
+    .f18channel{width:163px;margin-left:200px;top:66px;height:25px;}
+    .f18naverblog{width:50px;margin-left:219px;top:95px;height:25px;}
+    .f18instagram{width:81px;margin-left:283px;top:95px;height:25px;}
+    .f18designersubmit{width:100px;margin-left:263px;top:125px;height:25px;}
+    .f18partnershipsubmit{width:60px;margin-left:191px;top:125px;height:25px;}
+
+  }
+
   @media (max-width:900px) {
   #maindeskfooter0817,#desknavihome,#footergreenback0817{display:none;}
   #hiddentextmain0817{display:block;position:absolute;top:0;left:0;width:100%;height:auto;color:transparent;font-size:12px;line-height:15px;opacity:0;z-index:-1;}

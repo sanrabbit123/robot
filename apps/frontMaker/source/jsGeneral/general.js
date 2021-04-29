@@ -1598,19 +1598,129 @@ GeneralJs.prototype.navigatorMake = function () {
 }
 
 GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") {
+  const instance = this;
+  const { footer } = this.map.main;
+  const { words, src } = footer;
+  const { mobileCase } = words;
+  const wordsKey = Object.keys(words);
+  const media = [
+    (window.innerWidth > 1540),
+    (window.innerWidth <= 1540 && window.innerWidth > 1050),
+    (window.innerWidth <= 1050 && window.innerWidth > 900),
+    (window.innerWidth <= 900 && window.innerWidth > 760),
+    (window.innerWidth <= 760),
+  ];
+  const standardWidths = [ 1400, 1050, 900, 720, 100 ];
+  // css tong => [ width, height, top, margin-left ]
+  const cssTong = {
+    f18home: [
+      255,
+      73,
+      66,
+      -700,
+      "right",
+    ],
+    f18faq: [
+      80,
+      18,
+      120,
+      157,
+      "left"
+    ],
+    f18card: [
+      70,
+      18,
+      120,
+      247,
+      "left"
+    ],
+    f18terms: [
+      190,
+      17,
+      153,
+      126,
+      "left"
+    ],
+    f18about: [
+      78,
+      18,
+      120,
+      380,
+      "left"
+    ],
+    f18port: [
+      72,
+      17,
+      153,
+      386,
+      "left"
+    ],
+    f18designer: [
+      62,
+      17,
+      186,
+      397,
+      "left"
+    ],
+    f18blog: [
+      64,
+      17,
+      216,
+      395,
+      "left"
+    ],
+    f18channel: [
+      163,
+      25,
+      64,
+      539,
+      "left"
+    ],
+    f18naverblog: [
+      52,
+      25,
+      95,
+      549,
+      "left"
+    ],
+    f18instagram: [
+      80,
+      25,
+      95,
+      621,
+      "left"
+    ],
+    f18designersubmit: [
+      100,
+      25,
+      125,
+      601,
+      "left"
+    ],
+    f18partnershipsubmit: [
+      60,
+      25,
+      125,
+      526,
+      "left"
+    ],
+  };
+
   let div_clone, div_clone2, a_clone, svg_clone;
   let height, width, top;
   let style = {};
   let ea;
-
-  const { footer } = this.map.main;
-  const { words, src } = footer;
-  const wordsKey = Object.keys(words);
-
-  //make action tong
   let actionTong = [];
   let tempFunc;
+  let arr = [];
+  let mobileType;
+  let mobileCaseKeys = Object.keys(mobileCase);
+  let mobileCaseTempArr;
+  let mobileCaseTongs = {};
+  let standardWidth;
+  let height_original, top_original;
 
+  //make action tong
   for (let i = 0; i < wordsKey.length; i++) {
     if (wordsKey[i] !== "mobileCase") {
       for (let j = 0; j < words[wordsKey[i]].length; j++) {
@@ -1640,20 +1750,43 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") 
   div_clone.id = "footergreenback0817";
   div_clone.style.background = GeneralJs.colorChip[color];
 
+  standardWidth = 0;
+  if (media[0]) {
+    standardWidth = standardWidths[0];
+  } else if (media[1]) {
+    standardWidth = standardWidths[1];
+  } else if (media[2]) {
+    standardWidth = standardWidths[2];
+  } else if (media[3]) {
+    standardWidth = standardWidths[3];
+  } else if (media[4]) {
+    standardWidth = standardWidths[4];
+  }
+
   //footer left
   ea = "px";
   height = 165;
   top = 67;
-  width = GeneralJs.parseRatio({ source: src.desktop.left, target: height, method: "height", result: "number" });
+  if (media[3] || media[4]) {
+    height_original = height;
+    top_original = top;
+    height = 135;
+    top = 52;
+    div_clone.style.height = String(240) + ea;
+  }
 
   svg_clone = SvgTong.tongMaker();
-  svg_clone.classList.add("maindeskfooter");
-  svg_clone.classList.add("maindeskfooterLeft");
   svg_clone.src = src.desktop.left;
+  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
   style = {
+    display: "block",
+    position: "absolute",
+    left: String(50) + '%',
+    transition: "all 0.5s ease",
     height: String(height) + ea,
     width: String(width) + ea,
     top: String(top) + ea,
+    marginLeft: String(-1 * (standardWidth / 2)) + ea
   };
   for (let i in style) {
     svg_clone.style[i] = style[i];
@@ -1662,16 +1795,47 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") 
 
   //footer right
   svg_clone = SvgTong.tongMaker();
-  svg_clone.classList.add("maindeskfooter");
-  svg_clone.classList.add("maindeskfooterRight");
   svg_clone.src = src.desktop.right;
+  width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+  style = {
+    display: "block",
+    position: "absolute",
+    left: String(50) + '%',
+    transition: "all 0.5s ease",
+    height: String(height) + ea,
+    width: String(width) + ea,
+    top: String(top) + ea,
+    marginLeft: String((standardWidth / 2) - width) + ea
+  };
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
   div_clone.appendChild(SvgTong.parsing(svg_clone));
 
   for (let i = 0; i < actionTong.length; i++) {
     tempFunc = new Function("instance", "return function (e) { " + actionTong[i].js + " }");
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("footerbutton");
-    div_clone2.classList.add(actionTong[i].css);
+    style = {
+      position: "absolute",
+      opacity: String(0),
+      left: String(50) + '%',
+      cursor: "pointer",
+      width: String(cssTong[actionTong[i].css][0]) + ea,
+      height: String(cssTong[actionTong[i].css][1]) + ea,
+      top: String(cssTong[actionTong[i].css][2]) + ea,
+      marginLeft: String(cssTong[actionTong[i].css][4] === "right" ? -1 * (standardWidth / 2) : cssTong[actionTong[i].css][3] - ((standardWidths[0] / 2) - (standardWidth / 2))) + ea,
+    };
+    if (media[3]) {
+      style.width = String(cssTong[actionTong[i].css][0] * (height / height_original)) + ea;
+      style.height = String(cssTong[actionTong[i].css][1] * (height / height_original)) + ea;
+      style.top = String(((cssTong[actionTong[i].css][2] - top_original) * (height / height_original)) + top) + ea;
+      if (cssTong[actionTong[i].css][4] === "left") {
+        style.marginLeft = String(((cssTong[actionTong[i].css][3] - ((standardWidths[0] / 2) - (standardWidth / 2))) * (height / height_original)) + 65) + ea;
+      }
+    }
+    for (let j in style) {
+      div_clone2.style[j] = style[j];
+    }
     div_clone2.addEventListener("click", tempFunc(this));
     div_clone.appendChild(div_clone2);
   }
@@ -1682,14 +1846,6 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") 
   }
 
   //mobile
-  const { mobileCase } = words;
-
-  let arr = [];
-  let mobileType;
-  let mobileCaseKeys = Object.keys(mobileCase);
-  let mobileCaseTempArr;
-  let mobileCaseTongs = {};
-
   for (let i in mobileCase) {
     mobileCaseTongs[i] = [];
     mobileCaseTongs[i].push(i);

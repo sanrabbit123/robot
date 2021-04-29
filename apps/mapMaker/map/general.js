@@ -179,11 +179,11 @@ module.exports = {
             "action": [
               {
                 "css": "f18partnershipsubmit",
-                "js": "window.location.href = '/desevent.php?mode=presentation';"
+                "js": "window.location.href = 'https://home-liaison.com/desevent.php?mode=presentation';"
               },
               {
                 "css": "f18designersubmit",
-                "js": "window.location.href = '/desevent.php?mode=partnership';"
+                "js": "window.location.href = 'https://home-liaison.com/desevent.php?mode=partnership';"
               }
             ]
           }

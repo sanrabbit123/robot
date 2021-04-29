@@ -15,8 +15,9 @@ MiddleCommunication.prototype.mediaQuery = function (code) {
   const conditions = [
     "window.innerWidth > 1540",
     "window.innerWidth <= 1540 && window.innerWidth > 1050",
-    "window.innerWidth <= 1050 && window.innerWidth > 800",
-    "window.innerWidth <= 800"
+    "window.innerWidth <= 1050 && window.innerWidth > 900",
+    "window.innerWidth <= 900 && window.innerWidth > 760",
+    "window.innerWidth <= 760"
   ];
   const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
   const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;

@@ -421,14 +421,15 @@ ProposalJs.styleTextParsing = function (text) {
 
 ProposalJs.prototype.setBackground = function () {
   const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   let backGray, backImage;
   let style;
-  let ea;
   let backHeight;
   let backgroundImageName;
 
-  ea = this.ea;
-  backHeight = 860;
+  backHeight = <%% 860, 860, 860, 800, 120 %%>;
   this.backHeight = backHeight;
   backgroundImageName = "back.jpg";
 
@@ -455,7 +456,7 @@ ProposalJs.prototype.setBackground = function () {
     width: String(100) + '%',
     height: String(backHeight) + ea,
     backgroundImage: "url('" + ProposalJs.binaryPath + "/" + backgroundImageName + "')",
-    backgroundSize: "100% auto",
+    backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
     backgroundPosition: "top",
     animation: "justfadeinoriginal 0.3s ease forwards",
   };
@@ -467,23 +468,24 @@ ProposalJs.prototype.setBackground = function () {
 
 ProposalJs.prototype.setNavigator = function () {
   const instance = this;
+  let { ea, standardWidth, media } = this;
+  let mobile = media[4];
+  let desktop = !mobile;
   let naviBase, logo;
   let style;
-  let ea;
-  let standardWidth;
-  let iconHeight, iconWidth, iconTop;
+  let iconHeight, iconTop;
   let wordHeight, wordSize, wordTop;
   let height, width;
   let nameTong;
+  let mobileMargin;
 
-  ea = this.ea;
-  standardWidth = this.standardWidth;
-  iconHeight = 23;
-  iconWidth = 165;
-  iconTop = 21;
-  wordHeight = 20;
-  wordSize = 15;
-  wordTop = 24;
+  iconHeight = <%% 22, 22, 20, 18, 17 %%>;
+  iconTop = <%% 21, 21, 20, 18, 18 %%>;
+  wordHeight = <%% 20, 20, 20, 20, 20 %%>;
+  wordSize = <%% 15, 15, 15, 14, 14 %%>;
+  wordTop = <%% 24, 24, 21, 19, 19 %%>;
+  ea = desktop ? ea : "px";
+  mobileMargin = 28;
 
   naviBase = GeneralJs.nodes.div.cloneNode(true);
   naviBase.classList.add("backblurdefault_lite");
@@ -507,8 +509,11 @@ ProposalJs.prototype.setNavigator = function () {
     top: String(iconTop) + ea,
     left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
     height: String(iconHeight) + ea,
-    width: String(iconWidth) + ea,
+    width: String(iconHeight * SvgTong.getRatio(logo)) + ea,
   };
+  if (mobile) {
+    style.left = String(mobileMargin) + ea;
+  }
   for (let i in style) {
     logo.style[i] = style[i];
   }
@@ -531,6 +536,9 @@ ProposalJs.prototype.setNavigator = function () {
     wordSpacing: String(-1) + ea,
     color: GeneralJs.colorChip.white,
   };
+  if (mobile) {
+    style.right = String(mobileMargin) + ea;
+  }
   for (let i in style) {
     nameTong.style[i] = style[i];
   }
@@ -542,12 +550,14 @@ ProposalJs.prototype.setNavigator = function () {
 
 ProposalJs.prototype.setBaseTong = function () {
   const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   let baseTong;
   let style;
-  let ea = this.ea;
   let baseTop;
 
-  baseTop = <%% 200, 200, 175, 175 %%>;
+  baseTop = <%% 200, 200, 170, 140, 10 %%>;
 
   baseTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -557,6 +567,9 @@ ProposalJs.prototype.setBaseTong = function () {
     paddingTop: String(baseTop) + ea,
     animation: "fadeupdelay 0.5s ease forwards",
   };
+  if (mobile) {
+    style.paddingTop = "calc(" + String(this.naviHeight) + "px" + " + " + String(baseTop) + ea + ")";
+  }
   for (let i in style) {
     baseTong.style[i] = style[i];
   }
@@ -568,6 +581,8 @@ ProposalJs.prototype.setBaseTong = function () {
 ProposalJs.prototype.insertInitBox = function () {
   const instance = this;
   const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   let whiteBlock;
   let style;
   let blockHeight, bottomMargin;
@@ -611,43 +626,43 @@ ProposalJs.prototype.insertInitBox = function () {
   let pastBlocks;
   let designerBarBottom, designerBarLeft;
 
-  blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 460 %%>;
-  bottomMargin = <%% 16, 16, 16, 16 %%>;
-  margin = <%% 52, 52, 52, 52 %%>;
-  leftRatio = <%% 0.32, 0.32, 0.32, 0.32 %%>;
+  blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 540, this.backHeight - 460 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 16 %%>;
+  margin = <%% 52, 52, 50, 32, 52 %%>;
+  leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 31 %%>;
-  titleLeft = <%% 6, 6, 6, 6 %%>;
+  titleFont = <%% 31, 30, 27.5, 23, 31 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 6 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
   this.whiteBoxNumbers.topMargin = margin;
 
-  titleFontWeight = <%% 500, 500, 500, 500 %%>;
-  wordSpacing = <%% -3, -3, -3, -3 %%>;
+  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  wordSpacing = <%% -3, -3, -3, -3, -3 %%>;
 
-  barWidth = <%% 80, 80, 80, 80 %%>;
-  barLeft = <%% titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
+  barWidth = <%% 80, 80, 80, 80, 80 %%>;
+  barLeft = <%% titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
 
-  indexFont = <%% 19, 19, 19, 19 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200 %%>;
+  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 8, 8, 8, 8 %%>;
-  quoteHeight = <%% 12, 12, 12, 12 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2 %%>;
+  quoteTop = <%% 8, 8, 8, 8, 8 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 12 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 2 %%>;
 
-  initWordingHeight = <%% 20, 20, 20, 20 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 15.5 %%>;
-  initWordingWordSpacing = <%% -1, -1, -1, -1 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9 %%>;
+  initWordingHeight = <%% 20, 20, 20, 20, 20 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 14, 15.5 %%>;
+  initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 630, 672, 570, 630 %%>;
-  factorBoxTop = <%% 100, 100, 100, 100 %%>;
-  factorBoxTopVisual = <%% 3, 11, 9, 3 %%>;
+  factorBoxWidth = <%% 630, 672, 570, 478, 630 %%>;
+  factorBoxTop = <%% 100, 100, 100, 89, 100 %%>;
+  factorBoxTopVisual = <%% 3, 11, 9, 3, 3 %%>;
 
-  factorPaddingLeft = <%% 10, 10, 10, 10 %%>;
-  factorPaddingTop = <%% 10, 10, 10, 10 %%>;
-  factorSize = <%% 17.5, 17.5, 17.5, 17.5 %%>;
+  factorPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
+  factorPaddingTop = <%% 10, 10, 10, 2, 10 %%>;
+  factorSize = <%% 17.5, 17.5, 17.5, 15.5, 17.5 %%>;
   factors = [
     { title: "예산", value: "2,500만원" },
     { title: "가족 구성원", value: "부부, 딸 1, 아들 1" },
@@ -660,47 +675,47 @@ ProposalJs.prototype.insertInitBox = function () {
   factorsBarDoms = new Array(factors.length);
   factorsBarHeadDoms = new Array(factors.length);
 
-  factorBarWidth = <%% 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 41, 43, 43 %%>;
-  factorArrowHeadWidth = <%% 8, 8, 8, 8 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 39 %%>;
-  factorArrowHeadLeft = <%% 188, 188, 188, 188 %%>;
+  factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
+  factorBarTop = <%% 43, 41, 43, 33, 43 %%>;
+  factorArrowHeadWidth = <%% 8, 8, 8, 8, 8 %%>;
+  factorArrowHeadTop = <%% 39, 37, 39, 29, 39 %%>;
+  factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
-  factorValueBottom = <%% 11, 13, 11, 11 %%>;
-  factorValueRight = <%% 36, 36, 36, 36 %%>;
+  factorValueBottom = <%% 11, 13, 13, 12, 11 %%>;
+  factorValueRight = <%% 36, 36, 36, 36, 36 %%>;
 
-  factorValueMargin = <%% 46, 46, 46, 46 %%>;
-  factorValueHeadMargin = <%% 10, 10, 10, 10 %%>;
+  factorValueMargin = <%% 46, 46, 46, 46, 46 %%>;
+  factorValueHeadMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-  desigerBoxWidth = <%% 240, 240, 240, 240 %%>;
-  desigerBoxHeight = <%% 52, 52, 52, 52 %%>;
+  desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
+  desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
 
   targetDesigners = [];
   for (let i = 0; i < this.proposal.detail.length; i++) {
     targetDesigners.push(this.proposal.detail[i].designer);
   }
   pastBlocks = [];
-  designerFactorTitleTop = <%% 4, 4, 4, 4 %%>;
-  targetDesignerBoxTop = <%% 24, 24, 24, 24 %%>;
-  targetDesignerBoxIndent = <%% 34, 36, 36, 36 %%>;
+  designerFactorTitleTop = <%% 4, 4, 4, 4, 4 %%>;
+  targetDesignerBoxTop = <%% 24, 24, 24, 24, 24 %%>;
+  targetDesignerBoxIndent = <%% 34, 36, 36, 36, 36 %%>;
 
-  designerFactorTitleSize = <%% 13, 13, 13, 13 %%>;
-  designerFactorSize = <%% 22, 22, 22, 22 %%>;
-  designerFactorHeight = <%% 20, 20, 20, 20 %%>;
+  designerFactorTitleSize = <%% 13, 13, 13, 13, 13 %%>;
+  designerFactorSize = <%% 22, 22, 22, 22, 22 %%>;
+  designerFactorHeight = <%% 20, 20, 20, 20, 20 %%>;
 
-  topBoxSize = <%% 14, 14, 14, 14 %%>;
-  topBoxWidth = <%% 700, 700, 700, 700 %%>;
-  topBoxHeight = <%% 28, 28, 28, 28 %%>;
-  topBoxRight = <%% 1, 1, 1, 1 %%>;
+  topBoxSize = <%% 14, 14, 14, 14, 14 %%>;
+  topBoxWidth = <%% 700, 700, 700, 700, 700 %%>;
+  topBoxHeight = <%% 28, 28, 28, 28, 28 %%>;
+  topBoxRight = <%% 1, 1, 1, 1, 1 %%>;
 
-  designerBarBottom = <%% 2, 2, 2, 2 %%>;
-  designerBarLeft = <%% 6, 6, 6, 6 %%>;
+  designerBarBottom = <%% 2, 2, 2, 2, 2 %%>;
+  designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
 
   //total white box
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    borderRadius: String(8) + ea,
+    borderRadius: String(desktop ? 8 : 1) + ea,
     width: String(100) + '%',
     height: String(blockHeight) + ea,
     background: GeneralJs.colorChip.white,
@@ -730,7 +745,7 @@ ProposalJs.prototype.insertInitBox = function () {
   titleBox = GeneralJs.nodes.div.cloneNode(true);
   if (media[0]) {
     titleBox.textContent = "당신에게 딱 맞는 디자이너,";
-  } else if (media[1] || media[2]) {
+  } else if (media[1] || media[2] || media[3]) {
     titleBox.textContent = "당신에게";
   }
   style = {
@@ -747,7 +762,7 @@ ProposalJs.prototype.insertInitBox = function () {
   }
   leftBox.appendChild(titleBox);
 
-  if (media[1] || media[2]) {
+  if (media[1] || media[2] || media[3]) {
     titleBox = GeneralJs.nodes.div.cloneNode(true);
     titleBox.textContent = "딱 맞는 디자이너,";
     style = {
@@ -848,7 +863,7 @@ ProposalJs.prototype.insertInitBox = function () {
 
   //init wording - 0
   initWordingBox = GeneralJs.nodes.div.cloneNode(true);
-  initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께" + (!media[2] ? " 고객 맞춤 커스터마이징 : " : " ") + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
+  initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께" + ((!media[2] && !media[3]) ? " 고객 맞춤 커스터마이징 : " : " ") + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   style = {
     position: "absolute",
     top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -871,7 +886,7 @@ ProposalJs.prototype.insertInitBox = function () {
   } else if (media[1]) {
     initWordingBox.textContent = "담당 디자이너가 고객님의 전체 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
   } else {
-    initWordingBox.textContent = "담당 디자이너가 고객님의 전체 예산을 현장 조건에 맞게 분배하여 스타일링을 진행합니다.";
+    initWordingBox.textContent = "담당 디자이너가 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
   }
   style = {
     position: "absolute",
@@ -1082,45 +1097,47 @@ ProposalJs.prototype.insertInitBox = function () {
   whiteBlock.appendChild(rightBox);
 
   //top white wording
-  whiteWording = "";
-  whiteWording += "HomeLiaison designer proposal";
-  for (let i = 0; i < this.proposal.detail.length; i++) {
-    whiteWording += " / ";
-    whiteWording += "<b index=\"" + String(i) + "\" style=\"color:" + GeneralJs.colorChip.white + "\" class=\"hoverDefault\">";
-    whiteWording += "designer ";
-    whiteWording += this.abc[i];
-    whiteWording += "</b>";
+  if (!media[3] && !media[4]) {
+    whiteWording = "";
+    whiteWording += "HomeLiaison designer proposal";
+    for (let i = 0; i < this.proposal.detail.length; i++) {
+      whiteWording += " / ";
+      whiteWording += "<b index=\"" + String(i) + "\" style=\"color:" + GeneralJs.colorChip.white + "\" class=\"hoverDefault\">";
+      whiteWording += "designer ";
+      whiteWording += this.abc[i];
+      whiteWording += "</b>";
+    }
+    topBox = GeneralJs.nodes.div.cloneNode(true);
+    topBox.insertAdjacentHTML("beforeend", whiteWording);
+    for (let i = 0; i < this.proposal.detail.length; i++) {
+      topBox.querySelectorAll("b")[i].addEventListener("click", function () {
+        let z = 0;
+        for (let whiteBlock of instance.whiteBlocks) {
+          instance.boxTops.push(whiteBlock.getBoundingClientRect().top);
+          z++;
+        }
+        const index = Number(this.getAttribute("index"));
+        window.scrollTo(0, instance.boxTops[index] - (instance.naviHeight * 1.5));
+      });
+    }
+    style = {
+      position: "absolute",
+      fontFamily: "graphik",
+      fontWeight: String(200),
+      fontSize: String(topBoxSize) + ea,
+      top: String(-1 * topBoxHeight) + ea,
+      right: String(topBoxRight) + ea,
+      textAlign: "right",
+      width: String(topBoxWidth) + ea,
+      height: String(topBoxHeight) + ea,
+      wordSpacing: String(initWordingWordSpacing) + ea,
+      color: GeneralJs.colorChip.white,
+    };
+    for (let i in style) {
+      topBox.style[i] = style[i];
+    }
+    whiteBlock.appendChild(topBox);
   }
-  topBox = GeneralJs.nodes.div.cloneNode(true);
-  topBox.insertAdjacentHTML("beforeend", whiteWording);
-  for (let i = 0; i < this.proposal.detail.length; i++) {
-    topBox.querySelectorAll("b")[i].addEventListener("click", function () {
-      let z = 0;
-      for (let whiteBlock of instance.whiteBlocks) {
-        instance.boxTops.push(whiteBlock.getBoundingClientRect().top);
-        z++;
-      }
-      const index = Number(this.getAttribute("index"));
-      window.scrollTo(0, instance.boxTops[index] - (instance.naviHeight * 1.5));
-    });
-  }
-  style = {
-    position: "absolute",
-    fontFamily: "graphik",
-    fontWeight: String(200),
-    fontSize: String(topBoxSize) + ea,
-    top: String(-1 * topBoxHeight) + ea,
-    right: String(topBoxRight) + ea,
-    textAlign: "right",
-    width: String(topBoxWidth) + ea,
-    height: String(topBoxHeight) + ea,
-    wordSpacing: String(initWordingWordSpacing) + ea,
-    color: GeneralJs.colorChip.white,
-  };
-  for (let i in style) {
-    topBox.style[i] = style[i];
-  }
-  whiteBlock.appendChild(topBox);
 
   //end
   this.baseTong.appendChild(whiteBlock);
@@ -1129,14 +1146,16 @@ ProposalJs.prototype.insertInitBox = function () {
 ProposalJs.prototype.insertDesignerBoxes = function () {
   const instance = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   let whiteBlock;
   let style;
-  let ea = this.ea;
   let blockHeight, bottomMargin;
   let whiteBlocks;
 
-  blockHeight = <%% 820, 820, 820, 820 %%>;
-  bottomMargin = <%% 16, 16, 16, 16 %%>;
+  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
+  bottomMargin = <%% 16, 16, 16, 16, 16 %%>;
 
   whiteBlocks = [];
   for (let z = 0; z < this.proposal.detail.length; z++) {
@@ -1166,6 +1185,8 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   const { ea, media } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
+  const mobile = media[4];
+  const desktop = !mobile;
   let bottomMarginVisual;
   let style;
   let designerTitle;
@@ -1195,41 +1216,41 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   let feeBox;
   let feeHeight, feeMarginBottom;
 
-  bottomMarginVisual = <%% 3, 3, 3, 3 %%>;
+  bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
-  designerTitleSize = <%% 20, 20, 20, 20 %%>;
-  titleWordSpacing = <%% -2, -2, -2, -2 %%>;
-  wordSpacing = <%% -1, -1, -1, -1 %%>;
-  margin = <%% 18, 18, 18, 18 %%>;
+  designerTitleSize = <%% 20, 20, 20, 18, 20 %%>;
+  titleWordSpacing = <%% -2, -2, -2, -2, -2 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  margin = <%% 18, 18, 18, 14, 18 %%>;
 
-  pictureBoxWidth = <%% 980, 934, 784, 980 %%>;
+  pictureBoxWidth = <%% 980, 934, 784, 644, 980 %%>;
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
-  descriptionPaddingTop = <%% 22, 22, 22, 22 %%>;
-  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
-  descriptionPaddingLeft = <%% 28, 38, 38, 28 %%>;
-  descriptionPaddingRight = <%% 20, 20, 20, 20 %%>;
-  descriptionMargin = <%% 10, 6, 6, 10 %%>;
-  descriptionSize = <%% 14.5, 14.5, 14.5, 14.5 %%>;
+  descriptionPaddingTop = <%% 22, 22, 22, 17, 22 %%>;
+  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
+  descriptionPaddingLeft = <%% 28, 38, 38, 32, 28 %%>;
+  descriptionPaddingRight = <%% 20, 20, 20, 20, 20 %%>;
+  descriptionMargin = <%% 10, 6, 6, 6, 10 %%>;
+  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 14.5 %%>;
 
-  descriptionTitleTop = <%% -30, -30, -30, -30 %%>;
-  descriptionTitleLeft = <%% 1, 1, 1, 1 %%>;
-  descriptionTitleSize = <%% 16, 16, 16, 16 %%>;
+  descriptionTitleTop = <%% -30, -30, -30, -30, -30 %%>;
+  descriptionTitleLeft = <%% 1, 1, 1, 1, 1 %%>;
+  descriptionTitleSize = <%% 16, 16, 16, 14, 16 %%>;
 
-  pointRadius = <%% 2, 2, 2, 2 %%>;
-  pointLeftIndent = <%% 5, 5, 5, 5 %%>;
-  pointTop = <%% 9, 9, 9, 9 %%>;
+  pointRadius = <%% 2, 2, 2, 2, 2 %%>;
+  pointLeftIndent = <%% 5, 5, 5, 5, 5 %%>;
+  pointTop = <%% 9, 9, 9, 9, 9 %%>;
 
-  indexFont = <%% 19, 19, 19, 19 %%>;
-  indexFontWeight = <%% 200, 200, 200, 200 %%>;
+  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  analyticsBoxHeight = <%% 300, 300, 300, 300 %%>;
-  analyticsBoxTopMargin = <%% 50, 50, 50, 50 %%>;
+  analyticsBoxHeight = <%% 300, 300, 300, 300, 300 %%>;
+  analyticsBoxTopMargin = <%% 50, 50, 50, 50, 50 %%>;
 
-  portfolioBoxHeight = <%% 150, 150, 150, 150 %%>;
+  portfolioBoxHeight = <%% 150, 150, 150, 150, 150 %%>;
 
-  feeHeight = <%% 30, 30, 30, 30 %%>;
-  feeMarginBottom = <%% 10, 10, 10, 10 %%>;
+  feeHeight = <%% 30, 30, 30, 30, 30 %%>;
+  feeMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
   //mother padding
   mother.style.paddingTop = String(topMargin) + ea;
@@ -1383,7 +1404,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   mother.appendChild(pictureDescription);
 
-  if (media[1] || media[2]) {
+  if (media[1] || media[2] || media[3]) {
     //description box
     descriptionBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
@@ -1527,7 +1548,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     marginRight: String(leftMargin) + ea,
     width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
     height: String(feeHeight) + ea,
-    marginTop: String(analyticsBoxTopMargin) + ea,
+    marginTop: String((!media[2] && !media[3]) ? analyticsBoxTopMargin : (media[2] ? 30 : 20)) + ea,
     marginBottom: String(feeMarginBottom) + ea,
   };
   for (let i in style) {
@@ -1575,41 +1596,41 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   maxInitNumber = (maxNumber * 2) - initNumber;
   leftNumber = map.length - maxInitNumber;
 
-  leftIndent = <%% 20, 6, 6, 6 %%>;
-  width1 = <%% 360, 320, 360, 320 %%>;
-  width0 = (width1 * 2) + leftIndent;
-  height = <%% 26, 24, 24, 24 %%>;
-  wordSpacing = <%% -1, -1, -1, -1 %%>;
+  leftIndent = <%% 20, 6, 6, 6, 6 %%>;
+  width1 = <%% 360, 320, 450, 360, 320 %%>;
+  width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
+  height = <%% 26, 24, 19, 16, 24 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  margin = <%% 12, 12, 12, 12 %%>;
+  margin = <%% 12, 12, 12, 12, 12 %%>;
 
-  pointRadius = <%% 2, 2, 2, 2 %%>;
-  pointTop = <%% 9, 8, 8, 9 %%>;
-  pointTopValue = <%% 8, 8, 8, 8 %%>;
-  pointIntendValue = <%% 4, 4, 4, 4 %%>;
+  pointRadius = <%% 2, 2, 2, 2, 2 %%>;
+  pointTop = <%% 9, 7.5, 7.5, 7, 9 %%>;
+  pointTopValue = <%% 8, 8, 8, 8, 8 %%>;
+  pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
-  checkBoxRadius = <%% 4, 4, 4, 5 %%>;
-  checkBoxRadiusTop = <%% 6, 5, 5, 5 %%>;
-  checkBoxRadiusIntend = <%% 5, 5, 5, 5 %%>;
+  checkBoxRadius = <%% 4, 4, 4, 4, 5 %%>;
+  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 5 %%>;
+  checkBoxRadiusIntend = <%% 5, 5, 5, 5, 5 %%>;
 
-  titleSize = <%% 16, 14, 14, 15 %%>;
-  titleIndent = <%% 4, 3, 2, 2 %%>;
+  titleSize = <%% 16, 14, 15, 13.5, 15 %%>;
+  titleIndent = <%% 4, 3, 4, 4, 2 %%>;
   titleTop = 0;
 
-  valueIndent = <%% 140, 120, 100, 100 %%>;
+  valueIndent = <%% 140, 120, 150, 130, 100 %%>;
 
-  checkboxMarginRight = <%% 30, 24, 24, 24 %%>;
-  radioMarginRight = <%% 35, 32, 32, 32 %%>;
+  checkboxMarginRight = <%% 30, 24, 24, 24, 24 %%>;
+  radioMarginRight = <%% 35, 32, 32, 32, 32 %%>;
 
-  valueDomBarLeft = <%% 60, 58, 58, 60 %%>;
-  valueDomValueWidth = <%% 13, 13, 13, 60 %%>;
-  valueDomValueMargin = <%% 10, 10, 10, 60 %%>;
+  valueDomBarLeft = <%% 60, 58, 58, 60, 60 %%>;
+  valueDomValueWidth = <%% 13, 13, 13, 60, 60 %%>;
+  valueDomValueMargin = <%% 10, 10, 10, 60, 60 %%>;
 
-  tendencyVisualLeft = <%% 30, 30, 30, 10 %%>;
-  tendencyTop = <%% 33, 33, 33, 33 %%>;
-  tendencyMargin = <%% 3, 3, 3, 3 %%>;
+  tendencyVisualLeft = <%% 30, 30, 30, 10, 10 %%>;
+  tendencyTop = <%% 33, 33, 33, 33, 33 %%>;
+  tendencyMargin = <%% 3, 3, 3, 3, 3 %%>;
 
-  if (media[2]) {
+  if (media[2] || media[3]) {
     map.pop();
   }
 
@@ -1624,6 +1645,15 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
       width: String(i < 2 ? width0 : width1) + ea,
       height: String(height) + ea,
     };
+    if (media[2] || media[3]) {
+      if (i >= maxNumber) {
+        if (media[2]) {
+          style.width = String(297) + ea;
+        } else if (media[3]) {
+          style.width = String(267) + ea;
+        }
+      }
+    }
     if (i >= maxInitNumber) {
       style.top = String(top) + ea;
       style.left = String(left + (leftIndent * 2) + (width1 * 2) - tendencyVisualLeft) + ea;
@@ -1666,6 +1696,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
     //value
     if (map[i].type === "string") {
+
       valueDom = GeneralJs.nodes.div.cloneNode(true);
       valueDom.textContent = map[i].value;
       style = {
@@ -1681,6 +1712,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         valueDom.style[j] = style[j];
       }
       propertyBox.appendChild(valueDom);
+
     } else if (map[i].type === "checkbox" || map[i].type === "radio") {
 
       if (map[i].type === "radio") {
@@ -1742,6 +1774,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         valueDom.appendChild(valueDomStandard);
       }
       propertyBox.appendChild(valueDom);
+
     } else if (map[i].type === "tendency") {
 
       tendencyHeight = ((height * maxNumber) + (margin * (maxNumber - 1)) - tendencyTop - (tendencyMargin * (map[i].standard.length - 1))) / map[i].standard.length;
@@ -1886,17 +1919,17 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     let portfolioRight, barRight;
     let webOpenEvent;
 
-    marginTop = <%% left - 6, left - 6, left - 6, left - 6 %%>;
-    marginBottom = <%% left - 3, left - 6, left - 6, left - 6 %%>;
+    marginTop = <%% left - 6, left - 6, top, top, top %%>;
+    marginBottom = <%% left - 3, left - 3, bottom, bottom, bottom %%>;
 
-    entireHeight = <%% 20, 21, 20, 20 %%>;
-    entireMarginBottom = <%% 10, 10, 10, 10 %%>;
+    entireHeight = <%% 20, 21, 20, 18, 20 %%>;
+    entireMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    fontSize = <%% 15, 15, 15, 15 %%>;
-    wordSpacing = <%% -1, -1, -1, -1 %%>;
+    fontSize = <%% 15, 15, 15, 13.5, 15 %%>;
+    wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-    portfolioRight = <%% 80, 76, 76, 76 %%>;
-    barRight = <%% 66, 64, 64, 64 %%>;
+    portfolioRight = <%% 80, 76, 76, 76, 76 %%>;
+    barRight = <%% 66, 64, 64, 64, 64 %%>;
 
     sourceArr = [];
     for (let { contents } of contentsArr) {
@@ -2054,21 +2087,21 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   let feeBottom, feeSize, feeRight;
   let vatBottom, vatSize, vatRight;
 
-  wordSpacing = <%% -1, -1, -1, -1 %%>;
-  arrowTop = <%% 11, 11, 11, 11 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  arrowTop = <%% 11, 11, 13, 15, 11 %%>;
 
-  headWidth = <%% 10, 10, 10, 10 %%>;
-  headTop = <%% 6, 6, 6, 6 %%>;
-  headMargin = <%% 18, 18, 10, 10 %%>;
-  headVisual = <%% 11, 11, 10, 10 %%>;
+  headWidth = <%% 10, 10, 10, 10, 10 %%>;
+  headTop = <%% 6, 6, 8, 10, 6 %%>;
+  headMargin = <%% 18, 18, 18, 18, 18 %%>;
+  headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
-  feeBottom = <%% 0, 0, 0, 0 %%>;
-  feeSize = <%% 28, 28, 28, 28 %%>;
-  feeRight = <%% 60, 60, 60, 60 %%>;
+  feeBottom = <%% 0, 0, 0, 0, 0 %%>;
+  feeSize = <%% 28, 28, 26, 22, 28 %%>;
+  feeRight = <%% 60, 60, 60, 60, 60 %%>;
 
-  vatBottom = <%% 3, 3, 3, 3 %%>;
-  vatSize = <%% 15, 15, 15, 15 %%>;
-  vatRight = <%% 0, 0, 0, 0 %%>;
+  vatBottom = <%% 3, 3, 3, 3, 3 %%>;
+  vatSize = <%% 15, 15, 15, 15, 15 %%>;
+  vatRight = <%% 0, 0, 0, 0, 0 %%>;
 
   arrowBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2157,19 +2190,19 @@ ProposalJs.prototype.insertWordBox = function () {
   let grayBar;
   let wordBlock;
 
-  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
-  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2 %%>;
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
 
-  blockMarginBottom = <%% 16, 16, 16, 16 %%>;
-  wordSpacing = <%% -1, -1, -1, -1 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  box0Size = <%% 140, 140, 50, 50 %%>;
-  box1Size = <%% 25, 25, 30, 30 %%>;
-  box0Margin = <%% 55, 55, 30, 30 %%>;
-  box1Margin = <%% 18, 18, 30, 30 %%>;
+  box0Size = <%% 140, 140, 140, 110, 50 %%>;
+  box1Size = <%% 25, 25, 25, 25, 30 %%>;
+  box0Margin = <%% 55, 55, 55, 55, 30 %%>;
+  box1Margin = <%% 18, 18, 18, 18, 30 %%>;
 
-  marginBottom = <%% 9, 9, 30, 30 %%>;
-  wordSize = <%% 15, 15, 15, 15 %%>;
+  marginBottom = <%% 9, 9, 9, 9, 30 %%>;
+  wordSize = <%% 15, 15, 15, 13.5, 15 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2303,22 +2336,22 @@ ProposalJs.prototype.insertPannelBox = function () {
   let wordSpacing;
   let finalBottom;
 
-  blockHeight = <%% 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 160 %%>;
+  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
+  blockMarginBottom = <%% 160, 160, 160, 80, 160 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 48 %%>;
-  buttonWidth = <%% 108, 108, 108, 108 %%>;
-  buttonMargin = <%% 8, 8, 8, 8 %%>;
+  buttonHeight = <%% 47, 48, 48, 48, 48 %%>;
+  buttonWidth = <%% 108, 108, 108, 108, 108 %%>;
+  buttonMargin = <%% 8, 8, 8, 8, 8 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9 %%>;
-  buttonTextSize = <%% 20, 20, 20, 20 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 9 %%>;
+  buttonTextSize = <%% 20, 20, 20, 20, 20 %%>;
 
-  headWidth = <%% 10, 10, 10, 10 %%>;
-  headVisual = <%% 11, 11, 11, 11 %%>;
+  headWidth = <%% 10, 10, 10, 10, 10 %%>;
+  headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
-  wordSpacing = <%% -1, -1, -1, -1 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  finalBottom = <%% 42, 42, 42, 42 %%>;
+  finalBottom = <%% 42, 42, 42, 20, 42 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2594,16 +2627,16 @@ ProposalJs.prototype.launching = async function (loading) {
       proid = getObj.proid;
     }
 
-    this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "mobile" %%>;
-    this.ea = <%% "px", "px", "px", "vw" %%>;
-    this.standardWidth = <%% 1400, 1050, 900, 100 %%>;
-    this.sero = <%% false, false, false, true %%>;
-    this.modeMinus = <%% 0, 1, 1, 1 %%>;
-    this.naviHeight = <%% 72, 72, 72, 60 %%>;
+    this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "tablet", "mobile" %%>;
+    this.ea = <%% "px", "px", "px", "px", "vw" %%>;
+    this.standardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
+    this.sero = <%% false, false, false, false, true %%>;
+    this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
+    this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
 
-    this.subBoxMargin.top = <%% 30, 30, 30, 30 %%>;
-    this.subBoxMargin.bottom = <%% 31, 31, 31, 31 %%>;
-    this.subBoxMargin.left = <%% 30, 30, 30, 30 %%>;
+    this.subBoxMargin.top = <%% 30, 30, 26, 20, 30 %%>;
+    this.subBoxMargin.bottom = <%% 31, 31, 27, 26, 31 %%>;
+    this.subBoxMargin.left = <%% 30, 30, 30, 24, 30 %%>;
 
     if (this.modeMinus !== 0) {
       document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
