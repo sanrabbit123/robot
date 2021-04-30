@@ -1,20 +1,22 @@
+const path = require("path");
+const { sep, normalize } = path;
 const shell = require(`shelljs`);
 const shellLink = function (str) {
-  let arr = str.split('/');
+  let arr = str.split(sep);
   let newStr = '';
   for (let i of arr) {
     if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-      newStr += i + '/';
+      newStr += i + sep;
     } else if (!/'/g.test(i)) {
-      newStr += "'" + i + "'" + '/';
+      newStr += "'" + i + "'" + sep;
     } else if (!/"/g.test(i)) {
-      newStr += '"' + i + '"' + '/';
+      newStr += '"' + i + '"' + sep;
     } else {
-      newStr += i + '/';
+      newStr += i + sep;
     }
   }
   newStr = newStr.slice(0, -1);
-  return newStr;
+  return normalize(newStr);
 }
 const fileSystem = function (sw, arr) {
   const fs = require('fs');
@@ -162,7 +164,7 @@ const mysqlQuery = function (query, mysqlStandard) {
 async function main() {
   try {
     const current = process.cwd();
-    const currentDir = current.split("/");
+    const currentDir = current.split(sep);
     if (currentDir[currentDir.length - 1] === "apps") {
       currentDir.pop();
       currentDir.push("jsondata");
@@ -171,13 +173,20 @@ async function main() {
     } else {
       throw new Error("invalid cwd");
     }
-    const targetDir = currentDir.join("/");
+    const targetDir = normalize(currentDir.join(sep));
     const targetDirArr = await fileSystem("readDir", [ targetDir ]);
-    const { mysql: { password, hash } } = JSON.parse(await fileSystem("readString", [ `${targetDir}/mongoKey.json` ]));
+    const { mysql: { password, hash } } = JSON.parse(await fileSystem("readString", [ normalize(`${targetDir}${sep}mongoKey.json`) ]));
     const mysqlInfoObj = JSON.parse(await decryptoHash(password, hash));
+    let query, response;
 
-    const response = await mysqlQuery(process.argv[2], mysqlInfoObj);
-    await fileSystem(`write`, [ `${targetDir}/mysqlQueryResult.json`, JSON.stringify(response, null, 2) ]);
+    if (/^file_/i.test(process.argv[2].trim())) {
+      query = await fileSystem(`readString`, [ normalize(targetDir + sep + process.argv[2].trim().split("_")[1] + ".sql") ]);
+      response = await mysqlQuery(query, mysqlInfoObj);
+    } else {
+      response = await mysqlQuery(process.argv[2], mysqlInfoObj);
+    }
+    await fileSystem(`write`, [ normalize(`${targetDir}${sep}mysqlQueryResult.json`), JSON.stringify(response, null, 2) ]);
+
   } catch (e) {
     console.log(e);
   }

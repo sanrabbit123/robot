@@ -51,8 +51,41 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
+    // const clients = await back.getClientsByQuery({}, { withTools: true });
+    // const requests = clients.getRequestsTong();
+    // const startDate = new Date(2021, 3, 1);
+    // const endDate = new Date(2021, 4, 1);
+    // let target;
+    // let cliidArr;
+    //
+    //
+    // target = [];
+    // cliidArr = [];
+    // for (let request of requests) {
+    //   if (request[0].timeline.valueOf() >= startDate.valueOf()) {
+    //     if (request[0].timeline.valueOf() <= endDate.valueOf()) {
+    //       target.push(request);
+    //       cliidArr.push({ cliid: request.cliid });
+    //     }
+    //   }
+    // }
+    //
+    // console.log(target);
+    // console.log(target.length);
+    // console.log(cliidArr);
+    //
+    // const projects = await back.getProjectsByQuery({ $or: cliidArr });
+    // let projectTarget;
+    //
+    // projectTarget = [];
+    // for (let obj of projects) {
+    //   if (obj.desid !== '') {
+    //     projectTarget.push(obj);
+    //   }
+    // }
+    //
+    // console.log(projectTarget);
+    // console.log(projectTarget.length);
 
 
 
@@ -102,8 +135,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    // const app = new SpawnCatfish();
-    // await app.spawnLaunching(false);
+    const app = new SpawnCatfish();
+    await app.spawnLaunching(true);
 
 
     // contents upload
