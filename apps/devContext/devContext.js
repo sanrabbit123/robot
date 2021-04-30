@@ -51,6 +51,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     // const clients = await back.getClientsByQuery({}, { withTools: true });
     // const requests = clients.getRequestsTong();
     // const startDate = new Date(2021, 3, 1);
@@ -135,8 +137,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    const app = new SpawnCatfish();
-    await app.spawnLaunching(true);
+    // const app = new SpawnCatfish();
+    // await app.spawnLaunching(true);
 
 
     // contents upload
