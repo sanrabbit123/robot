@@ -631,7 +631,7 @@ ProposalJs.prototype.insertInitBox = function () {
   margin = <%% 52, 52, 50, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 5.6 %%>;
+  titleFont = <%% 31, 30, 27.5, 23, 5.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
@@ -720,7 +720,7 @@ ProposalJs.prototype.insertInitBox = function () {
     height: String(blockHeight) + ea,
     background: GeneralJs.colorChip.white,
     marginBottom: String(bottomMargin) + ea,
-    boxShadow: "0px 5px 12px -10px #aaaaaa",
+    boxShadow: "0px 5px 12px -10px " + GeneralJs.colorChip.gray5,
   };
   for (let i in style) {
     whiteBlock.style[i] = style[i];
@@ -741,7 +741,7 @@ ProposalJs.prototype.insertInitBox = function () {
     style = {
       display: "block",
       position: "relative",
-      height: String(31) + ea,
+      height: String(29) + ea,
       width: String(100) + '%'
     };
   }
@@ -766,7 +766,7 @@ ProposalJs.prototype.insertInitBox = function () {
     color: GeneralJs.colorChip.black,
   };
   if (mobile) {
-    style.top = String(10) + ea;
+    style.top = String(9) + ea;
     style.width = String(100) + '%';
     style.textAlign = "center";
   }
@@ -805,7 +805,7 @@ ProposalJs.prototype.insertInitBox = function () {
     color: GeneralJs.colorChip.black,
   };
   if (mobile) {
-    style.top = String(18) + ea;
+    style.top = String(17) + ea;
     style.width = String(100) + '%';
     style.textAlign = "center";
   }
@@ -866,7 +866,7 @@ ProposalJs.prototype.insertInitBox = function () {
     style = {
       position: "relative",
       width: String(100) + '%',
-      height: String(81) + ea,
+      height: String(80) + ea,
     };
   }
   for (let i in style) {
@@ -1234,7 +1234,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
       height: String(blockHeight) + ea,
       background: desktop ? GeneralJs.colorChip.white : "transparent",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px #aaaaaa" : "",
+      boxShadow: desktop ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
     };
     for (let i in style) {
       whiteBlock.style[i] = style[i];
@@ -1294,7 +1294,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
   descriptionPaddingTop = <%% 22, 22, 22, 17, 10 %%>;
-  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop - 5.5 %%>;
+  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop - 5 %%>;
   descriptionPaddingLeft = <%% 28, 38, 38, 32, 7 %%>;
   descriptionPaddingRight = <%% 20, 20, 20, 20, 5 %%>;
   descriptionMargin = <%% 10, 6, 6, 6, 1 %%>;
@@ -1488,7 +1488,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
       paddingBottom: String(descriptionPaddingBottom) + ea,
       marginTop: String(desktop ? 51 : 2) + ea,
       background: mobile ? GeneralJs.colorChip.white : "transparent",
-      boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
+      boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
     };
     for (let i in style) {
       descriptionBox.style[i] = style[i];
@@ -1560,7 +1560,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     borderRadius: String(3) + "px",
     border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
     background: mobile ? GeneralJs.colorChip.white : "transparent",
-    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
+    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
   };
   for (let i in style) {
     analyticsBox.style[i] = style[i];
@@ -1594,7 +1594,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     borderRadius: String(3) + "px",
     border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
     background: mobile ? GeneralJs.colorChip.white : "transparent",
-    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
+    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
   };
   for (let i in style) {
     portfolioBox.style[i] = style[i];
@@ -1627,7 +1627,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     marginBottom: String(feeMarginBottom) + ea,
     borderRadius: mobile ? String(3) + "px" : "",
     background: mobile ? GeneralJs.colorChip.white : "transparent",
-    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
+    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
   };
   for (let i in style) {
     feeBox.style[i] = style[i];
@@ -2009,7 +2009,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   if (desktop) {
     mother.style.height = String((top + bottom) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
   } else {
-    mother.style.height = String(117) + ea;
+    mother.style.height = String(117.5) + ea;
   }
 
 }
@@ -2369,7 +2369,7 @@ ProposalJs.prototype.insertWordBox = function () {
     borderRadius: String(desktop ? 8 : 3) + "px",
     width: String(100) + '%',
     background: GeneralJs.colorChip.white,
-    boxShadow: "0px 5px 12px -10px #aaaaaa",
+    boxShadow: "0px 5px 12px -10px " + GeneralJs.colorChip.gray5,
     marginBottom: String(blockMarginBottom) + ea,
     paddingTop: String(top) + ea,
     paddingBottom: String(bottom) + ea,
@@ -2537,38 +2537,39 @@ ProposalJs.prototype.insertPannelBox = function () {
   let finalBottom;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 80, 160 %%>;
+  blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 48, 10 %%>;
-  buttonWidth = <%% 108, 108, 108, 108, 30 %%>;
-  buttonMargin = <%% 8, 8, 8, 8, 8 %%>;
+  buttonHeight = <%% 47, 48, 48, 48, 8.4 %%>;
+  buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
+  buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 9 %%>;
-  buttonTextSize = <%% 20, 20, 20, 20, 3 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.8 %%>;
+  buttonTextSize = <%% 20, 20, 20, 20, 3.5 %%>;
 
-  headWidth = <%% 10, 10, 10, 10, 10 %%>;
+  headWidth = <%% 10, 10, 10, 10, 2 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  finalBottom = <%% 42, 42, 42, 20, 42 %%>;
+  finalBottom = <%% 42, 42, 42, 20, 5.1 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
     borderRadius: String(desktop ? 8 : 3) + "px",
-    width: String(100) + '%',
+    paddingTop: String(desktop ? topMargin : 5.8) + ea,
+    paddingLeft: String(this.subBoxMargin.left) + ea,
+    paddingRight: String(this.subBoxMargin.left) + ea,
+    width: GeneralJs.withOut(this.subBoxMargin.left * 2, ea),
     height: String(blockHeight) + ea,
-    background: desktop ? GeneralJs.colorChip.white : "transparent",
-    boxShadow: desktop ? "0px 5px 12px -10px #aaaaaa" : "",
-    paddingTop: String(desktop ? topMargin : 0) + ea,
+    background: GeneralJs.colorChip.white,
+    boxShadow: "0px 5px 12px -10px " + GeneralJs.colorChip.gray5,
     marginBottom: String(blockMarginBottom) + ea,
   };
   for (let i in style) {
     whiteBlock.style[i] = style[i];
   }
   this.baseTong.appendChild(whiteBlock);
-
 
   designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2588,9 +2589,9 @@ ProposalJs.prototype.insertPannelBox = function () {
       position: "relative",
       width: String(buttonWidth) + ea,
       height: String(100) + '%',
-      background: desktop ? GeneralJs.colorChip.gray2 : GeneralJs.colorChip.white,
+      background: GeneralJs.colorChip.gray2,
       color: GeneralJs.colorChip.deactive,
-      borderRadius: String(3) + ea,
+      borderRadius: String(3) + "px",
       marginRight: String(buttonMargin) + ea,
       transition: "all 0.2s ease",
       cursor: "pointer",
@@ -2654,44 +2655,46 @@ ProposalJs.prototype.insertPannelBox = function () {
     this.designerButtons.push(designerButton);
   }
 
-  for (let z = 0; z < 2; z++) {
-    designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-      left: String(leftMargin) + ea,
-      top: String(47) + '%',
-    };
-    if (z === 1) {
-      style.right = style.left;
-      delete style.left;
-    }
-    for (let i in style) {
-      designerButtonBar.style[i] = style[i];
-    }
-    designerButtonTong.appendChild(designerButtonBar);
+  if (desktop) {
+    for (let z = 0; z < 2; z++) {
+      designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
+        borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+        left: String(leftMargin) + ea,
+        top: String(47) + '%',
+      };
+      if (z === 1) {
+        style.right = style.left;
+        delete style.left;
+      }
+      for (let i in style) {
+        designerButtonBar.style[i] = style[i];
+      }
+      designerButtonTong.appendChild(designerButtonBar);
 
-    designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(headWidth) + ea,
-      height: String(headWidth) + ea,
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-      borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-      transform: "rotate(-45deg)",
-      left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
-      top: String(36) + '%',
-    };
-    if (z === 1) {
-      style.right = style.left;
-      style.transform = "rotate(135deg)";
-      delete style.left;
+      designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "absolute",
+        width: String(headWidth) + ea,
+        height: String(headWidth) + ea,
+        borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+        borderRight: "1px solid " + GeneralJs.colorChip.gray3,
+        transform: "rotate(-45deg)",
+        left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
+        top: String(36) + '%',
+      };
+      if (z === 1) {
+        style.right = style.left;
+        style.transform = "rotate(135deg)";
+        delete style.left;
+      }
+      for (let i in style) {
+        designerButtonBarHead.style[i] = style[i];
+      }
+      designerButtonTong.appendChild(designerButtonBarHead);
     }
-    for (let i in style) {
-      designerButtonBarHead.style[i] = style[i];
-    }
-    designerButtonTong.appendChild(designerButtonBarHead);
   }
   whiteBlock.appendChild(designerButtonTong);
 
@@ -2700,7 +2703,7 @@ ProposalJs.prototype.insertPannelBox = function () {
     position: "relative",
     height: String(buttonHeight) + ea,
     textAlign: "center",
-    marginTop: String(buttonMargin * 3) + ea,
+    marginTop: String(buttonMargin * 3 * (desktop ? 1 : 0.5)) + ea,
   };
   for (let i in style) {
     designerButtonTong.style[i] = style[i];
@@ -2713,7 +2716,7 @@ ProposalJs.prototype.insertPannelBox = function () {
     width: String(buttonWidth * 1.5) + ea,
     height: String(100) + '%',
     background: GeneralJs.colorChip.green,
-    borderRadius: String(3) + ea,
+    borderRadius: String(3) + "px",
     cursor: "pointer",
   };
   for (let i in style) {
@@ -2771,9 +2774,9 @@ ProposalJs.prototype.insertPannelBox = function () {
   informationArea = GeneralJs.nodes.div.cloneNode(true);
   informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>위 버튼을 눌러주세요!");
   style = {
-    fontSize: String(13) + ea,
+    fontSize: String(desktop ? 13 : 2.5) + ea,
     color: GeneralJs.colorChip.green,
-    wordSpacing: String(wordSpacing) + ea,
+    wordSpacing: String(wordSpacing) + "px",
     lineHeight: String(1.5),
   };
   for (let i in style) {
@@ -2818,6 +2821,7 @@ ProposalJs.prototype.launching = async function (loading) {
     let clients, client;
     let designers, designer;
     let whereQuery;
+    let belowTarget, removeTargets;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -2919,8 +2923,15 @@ ProposalJs.prototype.launching = async function (loading) {
     this.insertPannelBox();
 
     //set footer
-    this.mother.footerMake();
+    this.mother.footerMake('A', "gradientGreen", true);
     this.mother.homeliaisonTalk();
+
+    belowTarget = document.querySelector(".mofooterbelow");
+    belowTarget.removeChild(belowTarget.firstChild);
+    removeTargets = belowTarget.querySelectorAll("a");
+    for (let dom of removeTargets) {
+      belowTarget.removeChild(dom);
+    }
 
     this.totalContents.style.height = "auto";
 

@@ -1597,7 +1597,7 @@ GeneralJs.prototype.navigatorMake = function () {
   this.navigator = { desktop: desktopNavigator, mobile: mobileNavigator };
 }
 
-GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") {
+GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen", mobileForce = false) {
   const instance = this;
   const { footer } = this.map.main;
   const { words, src } = footer;
@@ -1842,7 +1842,9 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") 
 
   //mother append
   if (document.getElementById("totalcontents") !== null) {
-    document.getElementById("totalcontents").appendChild(div_clone);
+    if (!mobileForce) {
+      document.getElementById("totalcontents").appendChild(div_clone);
+    }
   }
 
   //mobile
@@ -1893,6 +1895,9 @@ GeneralJs.prototype.footerMake = function (type = 'A', color = "gradientGreen") 
   }
   if (document.getElementById("mototalcontents") !== null) {
     document.getElementById("mototalcontents").appendChild(div_clone);
+  }
+  if (mobileForce) {
+    document.getElementById("totalcontents").appendChild(div_clone);
   }
 }
 

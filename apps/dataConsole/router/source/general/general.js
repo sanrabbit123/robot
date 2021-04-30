@@ -810,6 +810,15 @@ GeneralJs.prototype.generalCss = function () {
   .noScrollBar::-webkit-scrollbar{display:none;}
   .font0{font-size:0}
   .font24{font-size:24px}
+
+  .mofooterbelow,.momafooter{display:block;position:relative;width:100%}
+  .mfbelbutton{position:absolute;height:10vw;top:8vw;}
+  .mfbelbu1{left:17vw;width:20vw;}
+  .mfbelbu2{left:41vw;width:20vw;}
+  .mfbelbu3{left:64vw;width:20vw;}
+  .moblockrela{display:block;position:relative;}
+  .mocenter{margin-left:auto;margin-right:auto;}
+
   `;
   styleTag.insertAdjacentHTML(`beforeend`, css);
 }
