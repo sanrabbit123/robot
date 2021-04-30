@@ -183,11 +183,13 @@ const withToolsArr = function (Designers) {
       }
 
       getCreateSql() {
-        let sql = "CREATE TABLE " + this.getName() + " (";
+        let sql = "CREATE TABLE \`" + this.getName() + "\` (";
         sql += "id INT(11) NOT NULL AUTO_INCREMENT,";
         sql += " ";
         for (let i in this) {
+          sql += "\`";
           sql += i;
+          sql += "\`";
           sql += " ";
           sql += this[i];
           sql += ", ";
@@ -240,9 +242,11 @@ const withToolsArr = function (Designers) {
       }
 
       getInsertSql() {
-        let sql = "INSERT INTO " + this.getName() + " (";
+        let sql = "INSERT INTO \`" + this.getName() + "\` (";
         for (let i in this) {
+          sql += "\`";
           sql += i;
+          sql += "\`";
           sql += ",";
         }
 
