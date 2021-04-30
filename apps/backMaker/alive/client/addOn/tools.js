@@ -320,6 +320,8 @@ const withTools = function (Client) {
         serviceWording = "홈스타일링";
       } else if (serviceObj.serid === "s2011_aa03s") {
         serviceWording = "토탈 스타일링";
+      } else {
+        serviceWording = "설계 변경";
       }
 
       if (serviceObj.xValue === 'M') {

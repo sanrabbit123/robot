@@ -2580,6 +2580,7 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
     serviceMap.set("s2011_aa01s", "홈퍼니싱");
     serviceMap.set("s2011_aa02s", "홈스타일링");
     serviceMap.set("s2011_aa03s", "토탈 스타일링");
+    serviceMap.set("s2011_aa04s", "설계 변경");
 
     xValueMap.set("M", "mini");
     xValueMap.set("B", "basic");
@@ -2847,6 +2848,8 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
             serid = "s2011_aa02s";
           } else if (/토탈/g.test(serviceRaw)) {
             serid = "s2011_aa03s";
+          } else {
+            serid = "s2011_aa04s";
           }
 
           if (/mini/gi.test(serviceRaw)) {
@@ -3338,12 +3341,14 @@ ProposalJs.save_init = async function (update = false) {
       tempObj_raw = target.getAttribute("cus_id");
       tempObj = tempObj_raw.split(' ');
 
-      if (/^홈스/.test(tempObj[0])) {
+      if (/^홈스/g.test(tempObj[0])) {
         result_obj["service.serid"] = "s2011_aa02s";
-      } else if (/^홈퍼/.test(tempObj[0])) {
+      } else if (/^홈퍼/g.test(tempObj[0])) {
         result_obj["service.serid"] = "s2011_aa01s";
-      } else {
+      } else if (/^토탈/g.test(tempObj[0])) {
         result_obj["service.serid"] = "s2011_aa03s";
+      } else {
+        result_obj["service.serid"] = "s2011_aa04s";
       }
 
       if (/mini/gi.test(tempObj[1])) {
@@ -4574,6 +4579,7 @@ ProposalJs.prototype.launching = async function () {
         serviceMap.set("s2011_aa01s", "홈퍼니싱");
         serviceMap.set("s2011_aa02s", "홈스타일링");
         serviceMap.set("s2011_aa03s", "토탈 스타일링");
+        serviceMap.set("s2011_aa04s", "설계 변경");
 
         xValueMap.set("M", "mini");
         xValueMap.set("B", "basic");

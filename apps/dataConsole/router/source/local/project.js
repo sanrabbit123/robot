@@ -1555,6 +1555,8 @@ ProjectJs.prototype.spreadData = async function (search = null) {
         serviceWording = "홈스타일링";
       } else if (p.middle.serid === "s2011_aa03s") {
         serviceWording = "토탈 스타일링";
+      } else if (p.middle.serid === "s2011_aa04s") {
+        serviceWording = "설계 변경";
       }
 
       if (p.middle.xValue === 'M') {

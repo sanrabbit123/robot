@@ -498,7 +498,7 @@ DataPatch.prototype.clientStandard = function () {
     },
     service: {
       name: "예상 서비스",
-      width: 180,
+      width: 200,
     },
     next: {
       name: "전화 예정",
@@ -1233,6 +1233,8 @@ DataPatch.prototype.clientMap = function () {
       obj.serid = "s2011_aa02s";
     } else if (/토탈/g.test(value)) {
       obj.serid = "s2011_aa03s";
+    } else if (/설계/g.test(value)) {
+      obj.serid = "s2011_aa04s";
     }
 
     if (/mini/gi.test(value)) {
@@ -1276,6 +1278,7 @@ DataPatch.prototype.clientMap = function () {
       [ online, "홈퍼니싱", "mini" ],
       [ online, "홈스타일링", "basic" ],
       [ online, "토탈 스타일링", "premium" ],
+      [ online, "설계 변경", "premium" ],
     ];
 
     endEvent = function (e) {
@@ -4327,7 +4330,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     service: {
       name: "서비스",
-      width: 180,
+      width: 200,
     },
     action: {
       name: "응대",
@@ -5170,6 +5173,8 @@ DataPatch.prototype.projectMap = function () {
       obj.serid = "s2011_aa02s";
     } else if (/토탈/g.test(value)) {
       obj.serid = "s2011_aa03s";
+    } else if (/설계/g.test(value)) {
+      obj.serid = "s2011_aa04s";
     }
 
     if (/mini/gi.test(value)) {
@@ -5213,6 +5218,7 @@ DataPatch.prototype.projectMap = function () {
       [ online, "홈퍼니싱", "mini" ],
       [ online, "홈스타일링", "basic" ],
       [ online, "토탈 스타일링", "premium" ],
+      [ online, "설계 변경", "premium" ],
     ];
 
     endEvent = function (e) {

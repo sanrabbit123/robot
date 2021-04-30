@@ -203,6 +203,11 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "딸이사용", "딸이 사용" ],
     [ "콘택트", "선택" ],
     [ "선택 해", "선택해" ],
+    [ "안 미친", "안미진" ],
+    [ "많이사용", "많이 사용" ],
+    [ "컬러 콘", "컬러톤" ],
+    [ "칸 키톤", "카키톤" ],
+    [ "칸 키", "카키" ],
   ];
   try {
     let resultArr = [];

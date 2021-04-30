@@ -103,13 +103,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "이순주";
-    // const pid = "p90";
-    // const rid = "re084";
+    // const client = "안미진";
+    // const pid = "p92";
+    // const rid = "re086";
     // const links = [
-    //   "https://docs.google.com/document/d/1iEx_pkNaWDsRa7buqiBxHiinhuCFntOpsxX1uU9o4OY/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1F0_pRTzbffm8kCpe9niUckhAfidSen8n0B10B5dKGzU/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1NIqB0HZkD6dFRd-y446xKMxP2h8PeZN1?usp=sharing",
+    //   "https://docs.google.com/document/d/1E6LbRPLq5JveSI_9SiukKnq2wKCIYyACAjXcppxNWQk/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1oAFvLQXVL7cgtF3mS4ykD6u3ClenFxuoA9hnrTyivqI/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1GggVe3Wo4XTK1vWrLmKc6pT1BizbnpHn?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -165,7 +165,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p90");
+    // await this.spellCheck("p92");
 
 
     // get corePortfolio by pid
