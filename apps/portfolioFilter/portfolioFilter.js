@@ -648,7 +648,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
-  const errorMessage = `argument must be => [ { client: "", designer: "", pid: "", link: "" } ... ]`;
+  const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
+  const errorMessage = `argument must be => [ { client: "", designer: "", link: "" } ... ]`;
   const photoFolderConst = "사진_등록_포트폴리오";
   const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
@@ -660,7 +661,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         throw new Error(errorMessage);
       }
       for (let i of arr) {
-        if (i.client === undefined || i.designer === undefined || i.pid === undefined || i.link === undefined) {
+        if (i.client === undefined || i.designer === undefined || i.link === undefined) {
           throw new Error(errorMessage);
         }
         this.push(i);
@@ -680,6 +681,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let forecast, garoseroParser;
     let finalObj;
     let ghostPhotos;
+    let foreRows;
+    let nextPid;
+    let note;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -714,7 +718,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     garoseroParser = new GaroseroParser();
     await this.static_setting();
 
-    for (let { client, designer, pid, link } of arr) {
+    for (let { client, designer, link } of arr) {
 
       designers = await back.getDesignersByQuery({ designer: designer });
       if (designers.length > 1) {
@@ -728,7 +732,22 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         targetDesigner = designers[0].toNormal();
       }
 
-      folderPath = await drive.get_folder(link, pid, true);
+      nextPid = null;
+      foreRows = await back.mongoRead("foreContents", finalObj, { console: true });
+      foreRows.sort((a, b) => {
+        return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
+      });
+      if (foreRows.length === 0) {
+        throw new Error("invaild foreRows");
+      }
+      nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
+      if (nextPid === null) {
+        throw new Error("invaild pid");
+      }
+      note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
+      await note.createNote(`${designer} 실장님 ${client} 고객님`);
+
+      folderPath = await drive.get_folder(link, nextPid, true);
       folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
       folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
@@ -737,7 +756,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       this.clientName = client;
       this.designer = designer;
-      this.pid = pid;
+      this.pid = nextPid;
       this.apartName = "";
       googleFolderName = await this.total_make(true);
 
@@ -765,7 +784,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
       }
 
-      finalObj = { pid, desid: targetDesigner.desid, forecast };
+      finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
       await back.mongoCreate("foreContents", finalObj, { console: true });
 
       shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);

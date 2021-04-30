@@ -429,7 +429,7 @@ ProposalJs.prototype.setBackground = function () {
   let backHeight;
   let backgroundImageName;
 
-  backHeight = <%% 860, 860, 860, 800, 120 %%>;
+  backHeight = <%% 860, 860, 860, 800, 80 %%>;
   this.backHeight = backHeight;
   backgroundImageName = "back.jpg";
 
@@ -440,7 +440,7 @@ ProposalJs.prototype.setBackground = function () {
     left: String(0),
     width: String(100) + '%',
     height: String(100) + '%',
-    background: GeneralJs.colorChip.gray2,
+    background: desktop ? GeneralJs.colorChip.gray2 : GeneralJs.colorChip.gray1,
     animation: "justfadeinoriginal 0.3s ease forwards",
   };
   for (let i in style) {
@@ -657,11 +657,11 @@ ProposalJs.prototype.insertInitBox = function () {
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
   factorBoxWidth = <%% 630, 672, 570, 478, 630 %%>;
-  factorBoxTop = <%% 100, 100, 100, 89, 100 %%>;
+  factorBoxTop = <%% 100, 100, 100, 89, 9 %%>;
   factorBoxTopVisual = <%% 3, 11, 9, 3, 3 %%>;
 
-  factorPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
-  factorPaddingTop = <%% 10, 10, 10, 2, 10 %%>;
+  factorPaddingLeft = <%% 10, 10, 10, 10, 16 %%>;
+  factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
   factorSize = <%% 17.5, 17.5, 17.5, 15.5, 3.5 %%>;
   factors = [
     { title: "예산", value: "2,500만원" },
@@ -676,15 +676,15 @@ ProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 41, 43, 33, 43 %%>;
-  factorArrowHeadWidth = <%% 8, 8, 8, 8, 8 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 29, 39 %%>;
+  factorBarTop = <%% 43, 41, 43, 33, 8.5 %%>;
+  factorArrowHeadWidth = <%% 8, 8, 8, 8, 0 %%>;
+  factorArrowHeadTop = <%% 39, 37, 39, 29, 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
-  factorValueBottom = <%% 11, 13, 13, 12, 11 %%>;
-  factorValueRight = <%% 36, 36, 36, 36, 36 %%>;
+  factorValueBottom = <%% 11, 13, 13, 12, 2.5 %%>;
+  factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
 
-  factorValueMargin = <%% 46, 46, 46, 46, 46 %%>;
+  factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
   factorValueHeadMargin = <%% 10, 10, 10, 10, 10 %%>;
 
   desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
@@ -866,7 +866,7 @@ ProposalJs.prototype.insertInitBox = function () {
     style = {
       position: "relative",
       width: String(100) + '%',
-      height: String(69) + ea,
+      height: String(81) + ea,
     };
   }
   for (let i in style) {
@@ -972,10 +972,10 @@ ProposalJs.prototype.insertInitBox = function () {
   if (mobile) {
     style = {
       position: "relative",
-      top: String(31) + ea,
-      left: String(8) + '%',
-      width: String(100 - (8 * 2)) + '%',
-      height: String(54) + ea
+      top: String(32) + ea,
+      left: String(6 + 3) + '%',
+      width: String(100 - (6 * 2)) + '%',
+      height: String(40) + ea
     };
   }
   for (let i in style) {
@@ -1071,8 +1071,8 @@ ProposalJs.prototype.insertInitBox = function () {
     let width;
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
-      factorsBarDoms[i].style.width = String(width) + ea;
-      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin) + ea;
+      factorsBarDoms[i].style.width = String(width) + "px";
+      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin) + "px";
     }
     clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
     GeneralJs.timeouts["factorsValueDoms"] = null;
@@ -1222,7 +1222,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   let whiteBlocks;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  bottomMargin = <%% 16, 16, 16, 16, 16 %%>;
+  bottomMargin = <%% 16, 16, 16, 16, 5 %%>;
 
   whiteBlocks = [];
   for (let z = 0; z < this.proposal.detail.length; z++) {
@@ -1232,9 +1232,9 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       height: String(blockHeight) + ea,
-      background: GeneralJs.colorChip.white,
+      background: desktop ? GeneralJs.colorChip.white : "transparent",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px #aaaaaa",
+      boxShadow: desktop ? "0px 5px 12px -10px #aaaaaa" : "",
     };
     for (let i in style) {
       whiteBlock.style[i] = style[i];
@@ -1285,43 +1285,43 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
-  designerTitleSize = <%% 20, 20, 20, 18, 20 %%>;
+  designerTitleSize = <%% 20, 20, 20, 18, 3.5 %%>;
   titleWordSpacing = <%% -2, -2, -2, -2, -2 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  margin = <%% 18, 18, 18, 14, 18 %%>;
+  margin = <%% 18, 18, 18, 14, 2 %%>;
 
-  pictureBoxWidth = <%% 980, 934, 784, 644, 980 %%>;
+  pictureBoxWidth = <%% 980, 934, 784, 644, this.standardWidth %%>;
   pictureBoxHeight = pictureBoxWidth * (210 / 297);
 
-  descriptionPaddingTop = <%% 22, 22, 22, 17, 22 %%>;
-  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2 %%>;
-  descriptionPaddingLeft = <%% 28, 38, 38, 32, 28 %%>;
-  descriptionPaddingRight = <%% 20, 20, 20, 20, 20 %%>;
-  descriptionMargin = <%% 10, 6, 6, 6, 10 %%>;
-  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 14.5 %%>;
+  descriptionPaddingTop = <%% 22, 22, 22, 17, 10 %%>;
+  descriptionPaddingBottom = <%% descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop + 2, descriptionPaddingTop - 5.5 %%>;
+  descriptionPaddingLeft = <%% 28, 38, 38, 32, 7 %%>;
+  descriptionPaddingRight = <%% 20, 20, 20, 20, 5 %%>;
+  descriptionMargin = <%% 10, 6, 6, 6, 1 %%>;
+  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 3 %%>;
 
-  descriptionTitleTop = <%% -30, -30, -30, -30, -30 %%>;
-  descriptionTitleLeft = <%% 1, 1, 1, 1, 1 %%>;
-  descriptionTitleSize = <%% 16, 16, 16, 14, 16 %%>;
+  descriptionTitleTop = <%% -30, -30, -30, -30, 4 %%>;
+  descriptionTitleLeft = <%% 1, 1, 1, 1, this.subBoxMargin.left %%>;
+  descriptionTitleSize = <%% 16, 16, 16, 14, 3.2 %%>;
 
-  pointRadius = <%% 2, 2, 2, 2, 2 %%>;
-  pointLeftIndent = <%% 5, 5, 5, 5, 5 %%>;
-  pointTop = <%% 9, 9, 9, 9, 9 %%>;
+  pointRadius = <%% 2, 2, 2, 2, 0.6 %%>;
+  pointLeftIndent = <%% 5, 5, 5, 5, 1.2 %%>;
+  pointTop = <%% 9, 9, 9, 9, 1.8 %%>;
 
-  indexFont = <%% 19, 19, 19, 19, 19 %%>;
+  indexFont = <%% 19, 19, 19, 19, 3 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  analyticsBoxHeight = <%% 300, 300, 300, 300, 300 %%>;
-  analyticsBoxTopMargin = <%% 50, 50, 50, 50, 50 %%>;
+  analyticsBoxHeight = <%% 300, 300, 300, 300, 40 %%>;
+  analyticsBoxTopMargin = <%% 50, 50, 50, 50, 2 %%>;
 
   portfolioBoxHeight = <%% 150, 150, 150, 150, 150 %%>;
 
-  feeHeight = <%% 30, 30, 30, 30, 30 %%>;
-  feeMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
+  feeHeight = <%% 30, 30, 30, 30, 18 %%>;
+  feeMarginBottom = <%% 10, 10, 10, 10, 0 %%>;
 
   //mother padding
-  mother.style.paddingTop = String(topMargin) + ea;
-  mother.style.paddingBottom = String(leftMargin + bottomMarginVisual) + ea;
+  mother.style.paddingTop = String(desktop ? topMargin : 3) + ea;
+  mother.style.paddingBottom = String(desktop ? leftMargin + bottomMarginVisual : 0) + ea;
   mother.style.height = "";
 
   //title
@@ -1329,12 +1329,12 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    marginRight: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
     fontSize: String(designerTitleSize) + ea,
     fontWeight: String(500),
-    wordSpacing: String(titleWordSpacing) + ea,
+    wordSpacing: String(titleWordSpacing) + "px",
     marginBottom: String(margin) + ea,
   };
   for (let i in style) {
@@ -1343,30 +1343,32 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   this.abcStatic = this.abcStatic + 1;
 
   //index
-  designerTitleIndex = GeneralJs.nodes.div.cloneNode(true);
-  designerTitleIndex.textContent = String(index);
-  style = {
-    position: "absolute",
-    fontSize: String(indexFont) + ea,
-    fontWeight: String(indexFontWeight),
-    wordSpacing: String(wordSpacing) + ea,
-    top: String(0) + ea,
-    right: String(0) + ea,
-    color: GeneralJs.colorChip.gray4,
-  };
-  for (let i in style) {
-    designerTitleIndex.style[i] = style[i];
+  if (desktop) {
+    designerTitleIndex = GeneralJs.nodes.div.cloneNode(true);
+    designerTitleIndex.textContent = String(index);
+    style = {
+      position: "absolute",
+      fontSize: String(indexFont) + ea,
+      fontWeight: String(indexFontWeight),
+      wordSpacing: String(wordSpacing) + ea,
+      top: String(0) + ea,
+      right: String(0) + ea,
+      color: GeneralJs.colorChip.gray4,
+    };
+    for (let i in style) {
+      designerTitleIndex.style[i] = style[i];
+    }
+    designerTitle.appendChild(designerTitleIndex);
   }
 
-  designerTitle.appendChild(designerTitleIndex);
   mother.appendChild(designerTitle);
 
   //picture and description
   pictureDescription = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
     height: String(pictureBoxHeight) + ea,
   };
   for (let i in style) {
@@ -1389,7 +1391,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     picture = GeneralJs.nodes.div.cloneNode(true);
     pictureStyle = ProposalJs.styleTextParsing(i.styleText);
     pictureStyle.position = "absolute";
-    pictureStyle.borderRadius = String(3) + ea;
+    pictureStyle.borderRadius = String(3) + "px";
     pictureStyle.backgroundSize = "100% 100%";
     for (let j in pictureStyle) {
       picture.style[j] = pictureStyle[j];
@@ -1406,7 +1408,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
       position: "absolute",
       width: "calc(100% - " + String(pictureBoxWidth + margin) + ea + ")",
       background: GeneralJs.colorChip.gray1,
-      borderRadius: String(3) + ea,
+      borderRadius: String(3) + "px",
       right: String(0) + ea,
       bottom: String(0) + ea,
       paddingTop: String(descriptionPaddingTop) + ea,
@@ -1471,20 +1473,22 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   mother.appendChild(pictureDescription);
 
-  if (media[1] || media[2] || media[3]) {
+  if (media[1] || media[2] || media[3] || media[4]) {
     //description box
     descriptionBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      marginLeft: String(leftMargin) + ea,
-      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
-      border: "1px solid " + GeneralJs.colorChip.gray3,
-      borderRadius: String(3) + ea,
+      marginLeft: String(desktop ? leftMargin : 0) + ea,
+      width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
+      border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+      borderRadius: String(3) + "px",
       right: String(0) + ea,
       bottom: String(0) + ea,
       paddingTop: String(descriptionPaddingTop) + ea,
       paddingBottom: String(descriptionPaddingBottom) + ea,
-      marginTop: String(51) + ea,
+      marginTop: String(desktop ? 51 : 2) + ea,
+      background: mobile ? GeneralJs.colorChip.white : "transparent",
+      boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
     };
     for (let i in style) {
       descriptionBox.style[i] = style[i];
@@ -1499,7 +1503,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
       left: String(descriptionTitleLeft) + ea,
       fontSize: String(descriptionTitleSize) + ea,
       fontWeight: String(600),
-      wordSpacing: String(wordSpacing) + ea,
+      wordSpacing: String(wordSpacing) + "px",
     };
     for (let i in style) {
       descriptionTitle.style[i] = style[i];
@@ -1514,7 +1518,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
         position: "relative",
         fontSize: String(descriptionSize) + ea,
         lineHeight: String(1.6),
-        wordSpacing: String(-1) + ea,
+        wordSpacing: String(-1) + "px",
         left: String(descriptionPaddingLeft) + ea,
         width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
         marginBottom: String(descriptionMargin) + ea,
@@ -1547,14 +1551,16 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   analyticsBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    marginRight: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
     height: String(analyticsBoxHeight) + ea,
-    border: "1px solid " + GeneralJs.colorChip.gray3,
     marginTop: String(analyticsBoxTopMargin) + ea,
     boxSizing: "border-box",
-    borderRadius: String(3) + ea,
+    borderRadius: String(3) + "px",
+    border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+    background: mobile ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
   };
   for (let i in style) {
     analyticsBox.style[i] = style[i];
@@ -1563,7 +1569,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   analyticsBoxTitle.textContent = "디자이너 상세 정보";
   style = {
     position: "absolute",
-    left: String(0) + ea,
+    left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
     top: String(descriptionTitleTop) + ea,
     fontSize: String(descriptionTitleSize) + ea,
     fontWeight: String(600),
@@ -1579,14 +1585,16 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   portfolioBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    marginRight: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
     height: String(portfolioBoxHeight) + ea,
-    border: "1px solid " + GeneralJs.colorChip.gray3,
     marginTop: String(analyticsBoxTopMargin) + ea,
     boxSizing: "border-box",
-    borderRadius: String(3) + ea,
+    borderRadius: String(3) + "px",
+    border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+    background: mobile ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
   };
   for (let i in style) {
     portfolioBox.style[i] = style[i];
@@ -1595,7 +1603,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   portfolioBoxTitle.textContent = "디자이너 포트폴리오";
   style = {
     position: "absolute",
-    left: String(0) + ea,
+    left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
     top: String(descriptionTitleTop) + ea,
     fontSize: String(descriptionTitleSize) + ea,
     fontWeight: String(600),
@@ -1611,12 +1619,15 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   feeBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    marginRight: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
     height: String(feeHeight) + ea,
     marginTop: String((!media[2] && !media[3]) ? analyticsBoxTopMargin : (media[2] ? 30 : 20)) + ea,
     marginBottom: String(feeMarginBottom) + ea,
+    borderRadius: mobile ? String(3) + "px" : "",
+    background: mobile ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: mobile ? "0px 5px 12px -10px #aaaaaa" : "",
   };
   for (let i in style) {
     feeBox.style[i] = style[i];
@@ -1628,6 +1639,8 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
   const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.search(desid);
   const map = this.map.analyticsMap(thisDesigner);
@@ -1657,45 +1670,48 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   let tendencyVisualLeft;
   let valueDomValue, valueDomValueWidth, valueDomValueMargin;
   let checkBoxRadius, checkBoxRadiusTop, checkBoxRadiusIntend;
+  let heightException;
 
   initNumber = 2;
   maxNumber = 6;
   maxInitNumber = (maxNumber * 2) - initNumber;
   leftNumber = map.length - maxInitNumber;
 
-  leftIndent = <%% 20, 6, 6, 6, 6 %%>;
-  width1 = <%% 360, 320, 450, 360, 320 %%>;
+  leftIndent = <%% 20, 6, 6, 6, 0 %%>;
+  width1 = <%% 360, 320, 450, 360, 60 %%>;
   width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
-  height = <%% 26, 24, 19, 16, 24 %%>;
+  height = <%% 26, 24, 19, 16, 4.5 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  margin = <%% 12, 12, 12, 12, 12 %%>;
+  margin = <%% 12, 12, 12, 12, 1 %%>;
 
-  pointRadius = <%% 2, 2, 2, 2, 2 %%>;
-  pointTop = <%% 9, 7.5, 7.5, 7, 9 %%>;
+  pointRadius = <%% 2, 2, 2, 2, 0 %%>;
+  pointTop = <%% 9, 7.5, 7.5, 7, 1 %%>;
   pointTopValue = <%% 8, 8, 8, 8, 8 %%>;
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
-  checkBoxRadius = <%% 4, 4, 4, 4, 5 %%>;
-  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 5 %%>;
-  checkBoxRadiusIntend = <%% 5, 5, 5, 5, 5 %%>;
+  checkBoxRadius = <%% 4, 4, 4, 4, 1 %%>;
+  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 0.9 %%>;
+  checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
-  titleSize = <%% 16, 14, 15, 13.5, 15 %%>;
-  titleIndent = <%% 4, 3, 4, 4, 2 %%>;
+  titleSize = <%% 16, 14, 15, 13.5, 2.9 %%>;
+  titleIndent = <%% 4, 3, 4, 4, 0 %%>;
   titleTop = 0;
 
-  valueIndent = <%% 140, 120, 150, 130, 100 %%>;
+  valueIndent = <%% 140, 120, 150, 130, 30 %%>;
 
-  checkboxMarginRight = <%% 30, 24, 24, 24, 24 %%>;
-  radioMarginRight = <%% 35, 32, 32, 32, 32 %%>;
+  checkboxMarginRight = <%% 30, 24, 24, 24, 5 %%>;
+  radioMarginRight = <%% 35, 32, 32, 32, 5 %%>;
 
-  valueDomBarLeft = <%% 60, 58, 58, 60, 60 %%>;
-  valueDomValueWidth = <%% 13, 13, 13, 60, 60 %%>;
-  valueDomValueMargin = <%% 10, 10, 10, 60, 60 %%>;
+  valueDomBarLeft = <%% 60, 58, 58, 60, 11.5 %%>;
+  valueDomValueWidth = <%% 13, 13, 13, 60, 3.8 %%>;
+  valueDomValueMargin = <%% 10, 10, 10, 60, 0 %%>;
 
   tendencyVisualLeft = <%% 30, 30, 30, 10, 10 %%>;
-  tendencyTop = <%% 33, 33, 33, 33, 33 %%>;
-  tendencyMargin = <%% 3, 3, 3, 3, 3 %%>;
+  tendencyTop = <%% 33, 33, 33, 33, 6.5 %%>;
+  tendencyMargin = <%% 3, 3, 3, 3, 0.5 %%>;
+
+  heightException = 0;
 
   if (media[2] || media[3]) {
     map.pop();
@@ -1727,23 +1743,36 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
       style.height = String((height * maxNumber) + (margin * (maxNumber - 1))) + ea;
       style.width = "calc(100% - " + String((left * 2) + width0 + leftIndent - tendencyVisualLeft) + ea + ")";
     }
+    if (mobile) {
+      style.top = String(top + ((margin + height) * (i + heightException))) + ea;
+      style.left = String(left) + ea;
+      style.width = "calc(100% - " + String(left * 2) + ea + ")";
+      if (map[i].standard !== null) {
+        if (map[i].standard.length >= 4) {
+          heightException = heightException + 0.9;
+          style.height = String(height * 2) + ea;
+        }
+      }
+    }
     for (let j in style) {
       propertyBox.style[j] = style[j];
     }
 
     //circle
-    pointClone = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.green));
-    style = {
-      position: "absolute",
-      width: String(pointRadius * 2) + ea,
-      height: String(pointRadius * 2) + ea,
-      left: String(0) + ea,
-      top: String(pointTop) + ea,
-    };
-    for (let j in style) {
-      pointClone.style[j] = style[j];
+    if (desktop) {
+      pointClone = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.green));
+      style = {
+        position: "absolute",
+        width: String(pointRadius * 2) + ea,
+        height: String(pointRadius * 2) + ea,
+        left: String(0) + ea,
+        top: String(pointTop) + ea,
+      };
+      for (let j in style) {
+        pointClone.style[j] = style[j];
+      }
+      propertyBox.appendChild(pointClone);
     }
-    propertyBox.appendChild(pointClone);
 
     //property title
     titleDom = GeneralJs.nodes.div.cloneNode(true);
@@ -1752,9 +1781,9 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
       position: "absolute",
       fontSize: String(titleSize) + ea,
       fontWeight: String(500),
-      wordSpacing: String(wordSpacing) + ea,
+      wordSpacing: String(wordSpacing) + "px",
       left: String((pointRadius * 2) + titleIndent) + ea,
-      top: String(titleTop) + ea,
+      top: String(desktop ? 0 : 0.3) + ea,
     };
     for (let j in style) {
       titleDom.style[j] = style[j];
@@ -1770,11 +1799,15 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         position: "absolute",
         fontSize: String(titleSize) + ea,
         fontWeight: String(400),
-        wordSpacing: String(wordSpacing) + ea,
+        wordSpacing: String(wordSpacing) + "px",
         left: String((pointRadius * 2) + valueIndent - checkBoxRadiusIntend) + ea,
         top: String(0) + ea,
         color: GeneralJs.colorChip.green
       };
+      if (mobile) {
+        delete style.left;
+        style.right = String(0) + ea;
+      }
       for (let j in style) {
         valueDom.style[j] = style[j];
       }
@@ -1791,13 +1824,19 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         position: "absolute",
         fontSize: String(titleSize) + ea,
         fontWeight: String(400),
-        wordSpacing: String(wordSpacing) + ea,
+        wordSpacing: String(wordSpacing) + "px",
         left: String((pointRadius * 2) + valueIndent) + ea,
         top: String(0) + ea,
         color: GeneralJs.colorChip.gray3,
         width: "calc(100% - " + String((pointRadius * 2) + valueIndent) + ea + ")",
         height: String(100) + '%',
       };
+      if (mobile) {
+        delete style.left;
+        style.right = String(0) + ea;
+        style.width = String(74) + '%';
+        style.textAlign = "right";
+      }
       for (let j in style) {
         valueDom.style[j] = style[j];
       }
@@ -1811,11 +1850,17 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
           fontSize: "inherit",
           fontWeight: (map[i].value.includes(map[i].standard[z]) ? String(400) : "inherit"),
           color: (map[i].value.includes(map[i].standard[z]) ? GeneralJs.colorChip.green : "inherit"),
-          wordSpacing: String(wordSpacing) + ea,
+          wordSpacing: String(wordSpacing) + "px",
           marginRight: String(map[i].type === "checkbox" ? checkboxMarginRight : radioMarginRight) + ea,
           top: String(0) + ea,
         };
-        if (z === 0) {
+        if (mobile) {
+          style.marginLeft = style.marginRight;
+          delete style.marginRight;
+          style.textAlign = "right";
+          style.marginBottom = String(1.2) + ea;
+        }
+        if (z === 0 && desktop) {
           style.marginLeft = String(9) + ea;
         }
         for (let j in style) {
@@ -1844,7 +1889,12 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
     } else if (map[i].type === "tendency") {
 
-      tendencyHeight = ((height * maxNumber) + (margin * (maxNumber - 1)) - tendencyTop - (tendencyMargin * (map[i].standard.length - 1))) / map[i].standard.length;
+      propertyBox.style.height = String(50) + ea;
+      if (desktop) {
+        tendencyHeight = ((height * maxNumber) + (margin * (maxNumber - 1)) - tendencyTop - (tendencyMargin * (map[i].standard.length - 1))) / map[i].standard.length;
+      } else {
+        tendencyHeight = 4;
+      }
 
       for (let z = 0; z < map[i].standard.length; z++) {
         valueDom = GeneralJs.nodes.div.cloneNode(true);
@@ -1868,9 +1918,12 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
           wordSpacing: String(wordSpacing) + ea,
           left: String(0) + ea,
           top: String(-1 * (tendencyMargin)) + ea,
-          width: String(valueDomBarLeft) + ea,
+          width: String(valueDomBarLeft) + (desktop ? ea : "%"),
           height: String(tendencyHeight) + ea,
         };
+        if (mobile) {
+          style.color = GeneralJs.colorChip.green;
+        }
         for (let j in style) {
           valueDomText.style[j] = style[j];
         }
@@ -1880,11 +1933,11 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
         style = {
           position: "absolute",
           left: String(valueDomBarLeft) + ea,
-          top: String(-1 * (tendencyMargin / 2)) + ea,
+          top: String(desktop ? -1 * (tendencyMargin / 2) : 0) + ea,
           color: GeneralJs.colorChip.green,
           width: "calc(100% - " + String(valueDomBarLeft + valueDomValueWidth + valueDomValueMargin) + ea + ")",
-          height: String(tendencyHeight * 0.8) + ea,
-          borderRadius: String(3) + ea,
+          height: String(tendencyHeight * (desktop ? 0.8 : 0.7)) + ea,
+          borderRadius: String(3) + "px",
           background: GeneralJs.colorChip.gray0,
           overflow: "hidden",
         };
@@ -1909,8 +1962,8 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
           }
 
           if (y === map[i].value[map[i].standard[z].column] - 1) {
-            style.borderTopRightRadius = String(3) + ea;
-            style.borderBottomRightRadius = String(3) + ea;
+            style.borderTopRightRadius = String(3) + "px";
+            style.borderBottomRightRadius = String(3) + "px";
           }
 
           if (y === 10 - 1) {
@@ -1937,6 +1990,9 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
           width: String(valueDomValueWidth) + ea,
           height: String(tendencyHeight) + ea,
         };
+        if (mobile) {
+          delete style.width;
+        }
         for (let j in style) {
           valueDomValue.style[j] = style[j];
         }
@@ -1950,13 +2006,19 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
     mother.appendChild(propertyBox);
   }
 
-  mother.style.height = String((top + bottom) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
+  if (desktop) {
+    mother.style.height = String((top + bottom) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
+  } else {
+    mother.style.height = String(117) + ea;
+  }
 
 }
 
 ProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.search(desid);
   GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
@@ -1985,18 +2047,19 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     let marginTop, marginBottom;
     let portfolioRight, barRight;
     let webOpenEvent;
+    let mobilePaddingTop;
 
-    marginTop = <%% left - 6, left - 6, top, top, top %%>;
-    marginBottom = <%% left - 3, left - 3, bottom, bottom, bottom %%>;
+    marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
+    marginBottom = <%% left - 3, left - 3, bottom, bottom, 5.1 %%>;
 
-    entireHeight = <%% 20, 21, 20, 18, 20 %%>;
-    entireMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
+    entireHeight = <%% 20, 21, 20, 18, 4 %%>;
+    entireMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
 
-    fontSize = <%% 15, 15, 15, 13.5, 15 %%>;
-    wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+    fontSize = <%% 15, 15, 15, 13.5, 2.7 %%>;
+    wordSpacing = <%% -1, -1, -1, -1, -2 %%>;
 
-    portfolioRight = <%% 80, 76, 76, 76, 76 %%>;
-    barRight = <%% 66, 64, 64, 64, 64 %%>;
+    portfolioRight = <%% 80, 76, 76, 76, 0 %%>;
+    barRight = <%% 66, 64, 64, 64, 0 %%>;
 
     sourceArr = [];
     for (let { contents } of contentsArr) {
@@ -2041,7 +2104,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
         left: String(0) + ea,
         top: String(0) + ea,
         color: GeneralJs.colorChip.black,
-        wordSpacing: String(wordSpacing) + ea,
+        wordSpacing: String(wordSpacing) + "px",
       };
       for (let j in style) {
         titleDom.style[j] = style[j];
@@ -2049,7 +2112,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
       entireDom.appendChild(titleDom);
 
       portfolioDom = GeneralJs.nodes.div.cloneNode(true);
-      portfolioDom.textContent = "포트폴리오";
+      portfolioDom.textContent = desktop ? "포트폴리오" : "H";
       portfolioDom.classList.add("hoverDefault");
       portfolioDom.setAttribute("link", link.portfolio);
       style = {
@@ -2059,7 +2122,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
         right: String(portfolioRight) + ea,
         top: String(0) + ea,
         color: GeneralJs.colorChip.green,
-        wordSpacing: String(wordSpacing) + ea,
+        wordSpacing: String(wordSpacing) + "px",
       };
       for (let j in style) {
         portfolioDom.style[j] = style[j];
@@ -2067,43 +2130,46 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
       portfolioDom.addEventListener("click", webOpenEvent);
       entireDom.appendChild(portfolioDom);
 
-      barDom = GeneralJs.nodes.div.cloneNode(true);
-      barDom.textContent = "|";
-      style = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(400),
-        right: String(barRight) + ea,
-        top: String(0) + ea,
-        color: GeneralJs.colorChip.gray4,
-        wordSpacing: String(wordSpacing) + ea,
-        opacity: String(0.6),
-      };
-      for (let j in style) {
-        barDom.style[j] = style[j];
-      }
-      entireDom.appendChild(barDom);
+      if (desktop) {
 
-      reviewDom = GeneralJs.nodes.div.cloneNode(true);
-      reviewDom.textContent = "고객 후기";
-      reviewDom.classList.add("hoverDefault");
-      reviewDom.setAttribute("link", link.review);
-      style = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(400),
-        right: String(0) + ea,
-        top: String(0) + ea,
-        color: (/re999/gi.test(link.review) ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.green),
-        wordSpacing: String(wordSpacing) + ea,
-      };
-      if (!/re999/gi.test(link.review)) {
-        reviewDom.addEventListener("click", webOpenEvent);
+        barDom = GeneralJs.nodes.div.cloneNode(true);
+        barDom.textContent = "|";
+        style = {
+          position: "absolute",
+          fontSize: String(fontSize) + ea,
+          fontWeight: String(400),
+          right: String(barRight) + ea,
+          top: String(0) + ea,
+          color: GeneralJs.colorChip.gray4,
+          wordSpacing: String(wordSpacing) + "px",
+          opacity: String(0.6),
+        };
+        for (let j in style) {
+          barDom.style[j] = style[j];
+        }
+        entireDom.appendChild(barDom);
+
+        reviewDom = GeneralJs.nodes.div.cloneNode(true);
+        reviewDom.textContent = "고객 후기";
+        reviewDom.classList.add("hoverDefault");
+        reviewDom.setAttribute("link", link.review);
+        style = {
+          position: "absolute",
+          fontSize: String(fontSize) + ea,
+          fontWeight: String(400),
+          right: String(0) + ea,
+          top: String(0) + ea,
+          color: (/re999/gi.test(link.review) ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.green),
+          wordSpacing: String(wordSpacing) + "px",
+        };
+        if (!/re999/gi.test(link.review)) {
+          reviewDom.addEventListener("click", webOpenEvent);
+        }
+        for (let j in style) {
+          reviewDom.style[j] = style[j];
+        }
+        entireDom.appendChild(reviewDom);
       }
-      for (let j in style) {
-        reviewDom.style[j] = style[j];
-      }
-      entireDom.appendChild(reviewDom);
 
       mother.appendChild(entireDom);
       num = num + 1;
@@ -2112,7 +2178,13 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     if (sourceArr.length === 0) {
       mother.parentNode.removeChild(mother);
     } else {
-      mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+      if (desktop) {
+        mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+      } else {
+        mobilePaddingTop = 8.6;
+        mother.style.height = String(mobilePaddingTop + marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+        mother.style.paddingTop = String(mobilePaddingTop) + ea;
+      }
     }
   });
 
@@ -2120,7 +2192,9 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
 ProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const feeToString = function (fee) {
     const moneyString = function (m) {
       let target = String(m);
@@ -2163,40 +2237,42 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
   feeBottom = <%% 0, 0, 0, 0, 0 %%>;
-  feeSize = <%% 28, 28, 26, 22, 28 %%>;
-  feeRight = <%% 60, 60, 60, 60, 60 %%>;
+  feeSize = <%% 28, 28, 26, 22, 5 %%>;
+  feeRight = <%% 60, 60, 60, 60, 0 %%>;
 
   vatBottom = <%% 3, 3, 3, 3, 3 %%>;
-  vatSize = <%% 15, 15, 15, 15, 15 %%>;
+  vatSize = <%% 15, 15, 15, 15, 3 %%>;
   vatRight = <%% 0, 0, 0, 0, 0 %%>;
 
-  arrowBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    width: "calc(100% - 340px)",
-    top: String(arrowTop) + ea,
-  };
-  for (let i in style) {
-    arrowBox.style[i] = style[i];
-  }
-  mother.appendChild(arrowBox);
+  if (desktop) {
+    arrowBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      width: "calc(100% - 340px)",
+      top: String(arrowTop) + ea,
+    };
+    for (let i in style) {
+      arrowBox.style[i] = style[i];
+    }
+    mother.appendChild(arrowBox);
 
-  arrowHead = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    width: String(headWidth) + ea,
-    height: String(headWidth) + ea,
-    transform: "rotate(315deg)",
-    top: String(headTop) + ea,
-    left: "calc(100% - 351px)",
-  };
-  for (let i in style) {
-    arrowHead.style[i] = style[i];
+    arrowHead = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "absolute",
+      borderRight: "1px solid " + GeneralJs.colorChip.gray3,
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      width: String(headWidth) + ea,
+      height: String(headWidth) + ea,
+      transform: "rotate(315deg)",
+      top: String(headTop) + ea,
+      left: "calc(100% - 351px)",
+    };
+    for (let i in style) {
+      arrowHead.style[i] = style[i];
+    }
+    mother.appendChild(arrowHead);
   }
-  mother.appendChild(arrowHead);
 
   moneyBox = GeneralJs.nodes.div.cloneNode(true);
   moneyBox.textContent = feeToString(fee);
@@ -2208,6 +2284,12 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
     fontWeight: String(500),
     color: GeneralJs.colorChip.green
   };
+  if (mobile) {
+    delete style.bottom;
+    style.top = String(3) + ea;
+    style.width = String(100) + '%';
+    style.textAlign = "center";
+  }
   for (let i in style) {
     moneyBox.style[i] = style[i];
   }
@@ -2223,22 +2305,32 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
     fontWeight: String(200),
     color: GeneralJs.colorChip.green
   };
+  if (mobile) {
+    delete style.bottom;
+    style.top = String(9.5) + ea;
+    style.width = String(100) + '%';
+    style.textAlign = "center";
+  }
   for (let i in style) {
     vatBox.style[i] = style[i];
   }
   mother.appendChild(vatBox);
 
-  setTimeout(function () {
-    const standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
-    arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
-    arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
-  }, 0);
+  if (desktop) {
+    setTimeout(function () {
+      const standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
+      arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
+      arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
+    }, 0);
+  }
 
 }
 
 ProposalJs.prototype.insertWordBox = function () {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const words = new WordsDictionary();
   const matrix = words.getMatrix();
@@ -2257,24 +2349,24 @@ ProposalJs.prototype.insertWordBox = function () {
   let grayBar;
   let wordBlock;
 
-  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
-  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, topMargin - 2 %%>;
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
 
-  blockMarginBottom = <%% 16, 16, 16, 16, 16 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  box0Size = <%% 140, 140, 140, 110, 50 %%>;
-  box1Size = <%% 25, 25, 25, 25, 30 %%>;
-  box0Margin = <%% 55, 55, 55, 55, 30 %%>;
-  box1Margin = <%% 18, 18, 18, 18, 30 %%>;
+  box0Size = <%% 140, 140, 140, 110, 4.5 %%>;
+  box1Size = <%% 25, 25, 25, 25, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
+  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
 
-  marginBottom = <%% 9, 9, 9, 9, 30 %%>;
-  wordSize = <%% 15, 15, 15, 13.5, 15 %%>;
+  marginBottom = <%% 9, 9, 9, 9, 2 %%>;
+  wordSize = <%% 15, 15, 15, 13.5, 2.8 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    borderRadius: String(8) + ea,
+    borderRadius: String(desktop ? 8 : 3) + "px",
     width: String(100) + '%',
     background: GeneralJs.colorChip.white,
     boxShadow: "0px 5px 12px -10px #aaaaaa",
@@ -2290,8 +2382,8 @@ ProposalJs.prototype.insertWordBox = function () {
   wordsTable = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    marginLeft: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
   };
   for (let i in style) {
     wordsTable.style[i] = style[i];
@@ -2312,7 +2404,7 @@ ProposalJs.prototype.insertWordBox = function () {
       style = {
         display: "inline-block",
         fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + ea,
+        wordSpacing: String(wordSpacing) + "px",
         position: "relative",
         top: String(0) + ea,
         verticalAlign: "top",
@@ -2334,6 +2426,30 @@ ProposalJs.prototype.insertWordBox = function () {
         style.fontWeight = String(300);
         style.textAlign = "left";
       }
+      if (mobile) {
+        style = {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String((this.subBoxMargin.left + 0.2)) + ea,
+          width: GeneralJs.withOut((this.subBoxMargin.left + 0.2) * 2, ea),
+        };
+        if (z === 0) {
+          continue;
+        }
+        if (z === 1) {
+          style.width = String(box0Size) + ea;
+          style.color = GeneralJs.colorChip.green;
+        }
+        if (z === 2) {
+          style.width = GeneralJs.withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size, ea);
+          style.left = String(box0Size) + ea;
+        }
+      }
       for (let j in style) {
         div_clone2.style[j] = style[j];
       }
@@ -2346,46 +2462,63 @@ ProposalJs.prototype.insertWordBox = function () {
 
   whiteBlock.appendChild(wordsTable);
 
-
-  grayBar = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    left: String(leftMargin) + ea,
-    width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
-    marginTop: String(top) + ea,
-    marginBottom: String(top) + ea,
-  };
-  for (let i in style) {
-    grayBar.style[i] = style[i];
-  }
-  whiteBlock.appendChild(grayBar);
-
-  for (let z = 0; z < subWords.length; z++) {
-    wordBlock = GeneralJs.nodes.div.cloneNode(true);
-    wordBlock.insertAdjacentHTML("beforeend", subWords[z]);
+  if (desktop) {
+    grayBar = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "relative",
-      left: String(leftMargin) + ea,
-      width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
-      fontSize: String(wordSize) + ea,
-      fontWeight: String(400),
-      wordSpacing: String(wordSpacing) + ea,
-      verticalAlign: "top",
-      lineHeight: String(1.6),
-      marginBottom: String(marginBottom * 1.5) + ea,
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      left: String(desktop ? leftMargin : 0) + ea,
+      width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + ea,
+      marginTop: String(desktop ? top : 0) + ea,
+      marginBottom: String(desktop ? top : 0) + ea,
     };
     for (let i in style) {
-      wordBlock.style[i] = style[i];
+      grayBar.style[i] = style[i];
     }
-    whiteBlock.appendChild(wordBlock);
+    whiteBlock.appendChild(grayBar);
+
+    for (let z = 0; z < subWords.length; z++) {
+      wordBlock = GeneralJs.nodes.div.cloneNode(true);
+      wordBlock.insertAdjacentHTML("beforeend", subWords[z]);
+      style = {
+        position: "relative",
+        left: String(leftMargin) + ea,
+        width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+        fontSize: String(wordSize) + ea,
+        fontWeight: String(400),
+        wordSpacing: String(wordSpacing) + "px",
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        marginBottom: String(marginBottom * 1.5) + ea,
+      };
+      if (mobile) {
+        style = {
+          position: "relative",
+          left: String(0) + ea,
+          width: String(100) + '%',
+          fontSize: String(wordSize) + ea,
+          fontWeight: String(400),
+          wordSpacing: String(wordSpacing) + "px",
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          marginBottom: String(marginBottom * 1.5) + ea,
+        };
+      }
+      for (let i in style) {
+        wordBlock.style[i] = style[i];
+      }
+      whiteBlock.appendChild(wordBlock);
+    }
+
   }
 
 }
 
 ProposalJs.prototype.insertPannelBox = function () {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   let whiteBlock;
   let style;
@@ -2406,12 +2539,12 @@ ProposalJs.prototype.insertPannelBox = function () {
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 160 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 48, 48 %%>;
-  buttonWidth = <%% 108, 108, 108, 108, 108 %%>;
+  buttonHeight = <%% 47, 48, 48, 48, 10 %%>;
+  buttonWidth = <%% 108, 108, 108, 108, 30 %%>;
   buttonMargin = <%% 8, 8, 8, 8, 8 %%>;
 
   buttonTextTop = <%% 9, 9, 9, 9, 9 %%>;
-  buttonTextSize = <%% 20, 20, 20, 20, 20 %%>;
+  buttonTextSize = <%% 20, 20, 20, 20, 3 %%>;
 
   headWidth = <%% 10, 10, 10, 10, 10 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
@@ -2423,12 +2556,12 @@ ProposalJs.prototype.insertPannelBox = function () {
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    borderRadius: String(8) + ea,
+    borderRadius: String(desktop ? 8 : 3) + "px",
     width: String(100) + '%',
     height: String(blockHeight) + ea,
-    background: GeneralJs.colorChip.white,
-    boxShadow: "0px 5px 12px -10px #aaaaaa",
-    paddingTop: String(topMargin) + ea,
+    background: desktop ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: desktop ? "0px 5px 12px -10px #aaaaaa" : "",
+    paddingTop: String(desktop ? topMargin : 0) + ea,
     marginBottom: String(blockMarginBottom) + ea,
   };
   for (let i in style) {
@@ -2455,7 +2588,7 @@ ProposalJs.prototype.insertPannelBox = function () {
       position: "relative",
       width: String(buttonWidth) + ea,
       height: String(100) + '%',
-      background: GeneralJs.colorChip.gray2,
+      background: desktop ? GeneralJs.colorChip.gray2 : GeneralJs.colorChip.white,
       color: GeneralJs.colorChip.deactive,
       borderRadius: String(3) + ea,
       marginRight: String(buttonMargin) + ea,
@@ -2701,9 +2834,9 @@ ProposalJs.prototype.launching = async function (loading) {
     this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
     this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
 
-    this.subBoxMargin.top = <%% 30, 30, 26, 20, 30 %%>;
+    this.subBoxMargin.top = <%% 30, 30, 26, 20, 10.5 %%>;
     this.subBoxMargin.bottom = <%% 31, 31, 27, 26, 31 %%>;
-    this.subBoxMargin.left = <%% 30, 30, 30, 24, 30 %%>;
+    this.subBoxMargin.left = <%% 30, 30, 30, 24, 4.5 %%>;
 
     if (this.modeMinus !== 0) {
       document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
