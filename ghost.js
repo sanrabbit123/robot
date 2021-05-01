@@ -1119,7 +1119,7 @@ Ghost.prototype.serverLaunching = async function () {
     }
 
     //launching python cron
-    cronScript = await cron.scriptReady();
+    cronScript = await cron.scriptReady(0);
     shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
     console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
@@ -1313,6 +1313,35 @@ Ghost.prototype.robotPassLaunching = async function () {
   }
 }
 
+Ghost.prototype.staticSyncLaunching = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const http = require("http");
+  const express = require("express");
+  const app = express();
+  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+  const cron = new CronGhost();
+  try {
+
+    app.get("/", function (req, res) {
+      res.send("test");
+    });
+
+    //launching python cron
+    cronScript = await cron.scriptReady(1);
+    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
+
+    //server on
+    http.createServer(app).listen(3000, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
@@ -1324,4 +1353,6 @@ if (process.argv[2] === "request") {
   app.fileLaunching();
 } else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
   app.robotPassLaunching();
+} else if (/static/gi.test(process.argv[2])) {
+  app.staticSyncLaunching();
 }

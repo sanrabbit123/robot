@@ -353,6 +353,33 @@ Robot.prototype.imageReady = async function () {
   }
 }
 
+Robot.prototype.staticInSync = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+    const home = process.env.HOME;
+    const homeDir = await fileSystem("readDir", [ home ]);
+    const driveName = "drive";
+    let order = '';
+
+    if (!homeDir.includes(driveName)) {
+      shell.exec(`mkdir ${shellLink(home + "/" + driveName)}`);
+    }
+
+    order = "scp -r ";
+    order += shellLink(this.address.homeinfo.ghost.file.static);
+    order += " ";
+    order += shellLink(home + "/" + driveName);
+
+    shell.exec(order);
+
+    return home + "/" + driveName;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -672,6 +699,13 @@ const MENU = {
   staticUpload: async function () {
     try {
       await robot.staticUpload();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  staticInSync: async function () {
+    try {
+      await robot.staticInSync();
     } catch (e) {
       console.log(e);
     }

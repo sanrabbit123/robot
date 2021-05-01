@@ -49,6 +49,10 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
+    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+    const cron = new CronGhost();
+
+    await cron.scriptReady(0);
 
 
 

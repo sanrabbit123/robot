@@ -1,20 +1,26 @@
 import os
 import sys
 import json
-sys.path.append("/Users/baechang-gyu/uragen/homeRobot/robot/python_modules")
+import re
+import time
+sys.path.append("/Users/uragen/uragen/homeRobot/robot/python_modules")
 import subprocess
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-ROBOT_PATH = "/Users/baechang-gyu/uragen/homeRobot/robot"
+ROBOT_PATH = "/Users/uragen/uragen/homeRobot/robot"
 ROBOT = ROBOT_PATH + "/robot.js"
+THIS_PATH = ROBOT_PATH + "/apps/cronGhost"
+LOG_PATH = THIS_PATH + "/log"
 async def run(cmdArr):
     cmd = ' '.join(cmdArr)
     proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     (stdout, stderr) = await proc.communicate()
     if stdout:
         print(stdout.decode())
+        return stdout.decode()
     if stderr:
         print(stderr.decode())
+        return stderr.decode()
 
 async def sendAspirantPresentation():
     await run([ 'node', ROBOT, 'sendAspirantPresentation' ])

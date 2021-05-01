@@ -6,7 +6,7 @@ const CronGhost = function () {
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
-  this.list = require(`${this.dir}/cronList.js`);
+  this.list = [];
 }
 
 CronGhost.prototype.initialPython = function () {
@@ -50,8 +50,9 @@ CronGhost.prototype.initialPython = function () {
   return scriptArrRefined.join("\n");
 }
 
-CronGhost.prototype.middlePython = function () {
+CronGhost.prototype.middlePython = function (listNum) {
   const instance = this;
+  const targetList = this.list[listNum];
   let script, scriptString;
 
   script = function (name) {
@@ -59,7 +60,7 @@ CronGhost.prototype.middlePython = function () {
   }
 
   scriptString = '';
-  for (let { name } of this.list) {
+  for (let { name } of targetList) {
     scriptString += script(name);
     scriptString += "\n\n";
   }
@@ -67,8 +68,9 @@ CronGhost.prototype.middlePython = function () {
   return scriptString;
 }
 
-CronGhost.prototype.endPython = function () {
+CronGhost.prototype.endPython = function (listNum) {
   const instance = this;
+  const targetList = this.list[listNum];
   let script;
   let addJopMaker;
 
@@ -91,7 +93,7 @@ CronGhost.prototype.endPython = function () {
   }
 
   script = `scheduler = AsyncIOScheduler()`;
-  for (let { name, time } of this.list) {
+  for (let { name, time } of targetList) {
     script += `\n`;
     script += addJopMaker(name, time);
   }
@@ -112,27 +114,32 @@ CronGhost.prototype.endPython = function () {
 CronGhost.prototype.observerPython = function () {
   const instance = this;
 
-
-
-
-
-
-
-
 }
 
-
-CronGhost.prototype.scriptReady = async function () {
+CronGhost.prototype.scriptReady = async function (listNum = 0) {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
-    let totalScript;
+    let totalScript, targetList;
+
+    targetList = await fileSystem(`readDir`, [ `${this.dir}/list` ]);
+    targetList = targetList.filter((a) => {
+      return a !== `.DS_Store`;
+    });
+    targetList.sort((a, b) => {
+      return Number(a.split('_')[0]) - Number(b.split('_')[0]);
+    });
+
+    this.list = [];
+    for (let i of targetList) {
+      this.list.push(require(`${this.dir}/list/${i}`));
+    }
 
     totalScript = this.initialPython();
     totalScript += "\n\n";
-    totalScript += this.middlePython();
+    totalScript += this.middlePython(listNum);
     totalScript += "\n\n";
-    totalScript += this.endPython();
+    totalScript += this.endPython(listNum);
 
     await fileSystem(`write`, [ `${this.dir}/cronGhost.py`, totalScript ]);
 
