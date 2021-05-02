@@ -49,10 +49,6 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
-    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-    const cron = new CronGhost();
-
-    await cron.scriptReady(0);
 
 
 
@@ -132,7 +128,7 @@ DevContext.prototype.launching = async function () {
 
     // get drive folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/12x-N85Yr_aAq5lSrTdoxi4GILoGJUGcx");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1EPqtpQeY_JOeKN4gtskh9sm6H8eOdSKd");
 
 
     // naverBlog to json
