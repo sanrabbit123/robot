@@ -1140,8 +1140,10 @@ Ghost.prototype.fileLaunching = async function () {
   const express = require("express");
   const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
-
   const app = express();
+  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+  const cron = new CronGhost();
+
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -1167,6 +1169,7 @@ Ghost.prototype.fileLaunching = async function () {
       let pemsLink = process.cwd() + "/pems/" + address.host;
       let certDir, keyDir, caDir;
       let routerObj;
+      let cronScript;
 
       certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
       keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -1198,6 +1201,11 @@ Ghost.prototype.fileLaunching = async function () {
       for (let obj of post) {
         app.post(obj.link, obj.func);
       }
+
+      //launching python cron
+      cronScript = await cron.scriptReady(0);
+      shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
+      console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
       //server on
       https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
