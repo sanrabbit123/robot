@@ -173,10 +173,8 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao token
-    const app = new KakaoTalk();
+    // const app = new KakaoTalk();
     // await app.generateToken();
-    await app.ready();
-    await app.sendTalk("complete", "배창규", "010-2747-3403");
 
 
     // addtional photo repair

@@ -402,10 +402,10 @@ MongoReflection.prototype.ultimateReflection = async function (to = "local") {
   const os = require("os");
   try {
     await this.mongoReflection(to);
-    if (os.type() !== 'Darwin') {
-      await this.mysqlReflection(to);
-      await this.frontReflection(to);
-    }
+    // if (os.type() !== 'Darwin') {
+    //   await this.mysqlReflection(to);
+    //   await this.frontReflection(to);
+    // }
   } catch (e) {
     console.log(e);
   }
