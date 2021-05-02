@@ -412,7 +412,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
 
     //slack
-    if (liteMode) {
+    if (liteMode || this.clientNullATarget.includes(this.clientName)) {
       webViewLink = await drive.read_webView_inPython(thisFolderId);
       await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
     }
