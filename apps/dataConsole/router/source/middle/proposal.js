@@ -2345,11 +2345,11 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   if (desktop) {
     setTimeout(function () {
       let standardWidth, spaceException, visualException;
-      visualException = 2;
+      visualException = 3;
       standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin + visualException;
       if (desktop && !GeneralJs.isMac()) {
-        spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
-        spaceException = (8 * spaceException);
+        spaceException = ([ ...moneyBox.textContent.matchAll(/[ 1]/g) ]).length;
+        spaceException = (10 * spaceException);
         standardWidth = standardWidth - visualException - spaceException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
