@@ -1503,6 +1503,9 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
         left: String(-1 * ((pointRadius * 2) + pointLeftIndent)) + ea,
         top: String(pointTop) + ea,
       };
+      if (desktop) {
+        style.top = String(GeneralJs.isMac() ? pointTop : pointTop - 0.5) + ea;
+      }
       for (let j in style) {
         descriptionPoint.style[j] = style[j];
       }
@@ -1807,7 +1810,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         width: String(pointRadius * 2) + ea,
         height: String(pointRadius * 2) + ea,
         left: String(0) + ea,
-        top: String(pointTop + (GeneralJs.isMac() ? 0 : -0.5)) + ea,
+        top: String(pointTop) + ea,
       };
       for (let j in style) {
         pointClone.style[j] = style[j];
@@ -2380,8 +2383,8 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
         oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
-        spaceException = (10 * spaceException);
-        oneException = (6 * oneException);
+        spaceException = (8 * spaceException);
+        oneException = (4 * oneException);
         standardWidth = standardWidth - visualException - spaceException - oneException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
