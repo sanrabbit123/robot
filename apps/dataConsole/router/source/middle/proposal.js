@@ -2923,15 +2923,18 @@ ProposalJs.prototype.launching = async function (loading) {
     this.insertPannelBox();
 
     //set footer
-    this.mother.footerMake('A', "gradientGreen", true);
-    this.mother.homeliaisonTalk();
-
-    belowTarget = document.querySelector(".mofooterbelow");
-    belowTarget.removeChild(belowTarget.firstChild);
-    removeTargets = belowTarget.querySelectorAll("a");
-    for (let dom of removeTargets) {
-      belowTarget.removeChild(dom);
+    if (this.media[4]) {
+      this.mother.footerMake('A', "gradientGreen", true);
+      belowTarget = document.querySelector(".mofooterbelow");
+      belowTarget.removeChild(belowTarget.firstChild);
+      removeTargets = belowTarget.querySelectorAll("a");
+      for (let dom of removeTargets) {
+        belowTarget.removeChild(dom);
+      }
+    } else {
+      this.mother.footerMake();
     }
+    this.mother.homeliaisonTalk();
 
     this.totalContents.style.height = "auto";
 
