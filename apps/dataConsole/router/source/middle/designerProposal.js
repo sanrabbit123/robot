@@ -1848,6 +1848,8 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (mobile) {
         delete style.left;
         style.right = String(0) + ea;
+      } else {
+        style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
       }
       for (let j in style) {
         valueDom.style[j] = style[j];
@@ -1877,6 +1879,8 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         style.right = String(0) + ea;
         style.width = String(76) + '%';
         style.textAlign = "right";
+      } else {
+        style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
       }
       for (let j in style) {
         valueDom.style[j] = style[j];
@@ -1900,6 +1904,8 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           delete style.marginRight;
           style.textAlign = "right";
           style.marginBottom = String(1.2) + ea;
+        } else {
+          style.top = GeneralJs.isMac() ? String(0) + ea : String(1) + ea;
         }
         if (z === 0 && desktop) {
           style.marginLeft = String(9) + ea;
