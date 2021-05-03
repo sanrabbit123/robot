@@ -1347,7 +1347,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   pointRadius = <%% 2, 2, 2, 2, 0.6 %%>;
   pointLeftIndent = <%% 5, 5, 5, 5, 1.2 %%>;
-  pointTop = <%% 9, 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 2.1 %%>;
+  pointTop = <%% 9, 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 8.5 + (GeneralJs.isMac() ? 0 : -1.5), 2.1 %%>;
 
   indexFont = <%% 19, 19, 19, 19, 3 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1725,7 +1725,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   leftNumber = map.length - maxInitNumber;
 
   leftIndent = <%% 20, 6, 6, 6, 0 %%>;
-  width1 = <%% 360, 320, 450, 360, 60 %%>;
+  width1 = <%% 360, 320, 450, 353, 60 %%>;
   width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
   height = <%% 26, 24, 19, 16, 4.8 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
@@ -1733,12 +1733,12 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   margin = <%% 12, 12, 12, 12, 1 %%>;
 
   pointRadius = <%% 2, 2, 2, 2, 0 %%>;
-  pointTop = <%% 9, 7.5, 7.5, 7, 1 %%>;
+  pointTop = <%% 9, 7.5, 7.5, 6.5, 1 %%>;
   pointTopValue = <%% 8, 8, 8, 8, 8 %%>;
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
   checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
-  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 5), 1.2 %%>;
+  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 4), 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
   titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;
@@ -2112,7 +2112,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
     wordSpacing = <%% -1, -1, -1, -1, -2 %%>;
 
     portfolioRight = <%% 80, 76, 76, 76, 0 %%>;
-    barRight = <%% 66, 64, 64, 64, 0 %%>;
+    barRight = <%% 66, 64, 64, 61, 0 %%>;
 
     sourceArr = [];
     for (let { contents } of contentsArr) {
