@@ -1361,7 +1361,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     marginBottom: String(margin + (GeneralJs.isMac() ? 0 : -2)) + ea,
   };
   if (mobile) {
-    style.marginBottom = String(2.5) + ea;
+    style.marginBottom = String(2) + ea;
   }
   for (let i in style) {
     designerTitle.style[i] = style[i];
@@ -2587,7 +2587,7 @@ ProposalJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
   buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.5 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1 %%>;
   buttonTextSize = <%% 20, 20, 20, 20, 3.8 %%>;
 
   if (desktop) {
