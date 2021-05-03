@@ -771,7 +771,7 @@ Ghost.prototype.photoRouter = function (needs) {
             targetDir += '/';
             targetDir += i;
             if (!(await fileSystem(`exist`, [ targetDir ]))) {
-              await fileSystem(`mkdir`, targetDir);
+              await fileSystem(`mkdir`, [ targetDir ]);
             }
           }
 

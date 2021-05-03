@@ -92,6 +92,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const photoRequest = ghostRequest().bind("photo");
+
+    await photoRequest("mkdir", { path: "/test" });
+
+
+
+
 
 
     // designer analytics
