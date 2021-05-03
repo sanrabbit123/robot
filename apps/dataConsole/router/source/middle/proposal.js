@@ -382,7 +382,6 @@ const ProposalJs = function () {
   this.boxTops = [];
   this.designerButtons = [];
   this.media = null;
-  this.osException = 0;
 }
 
 //static
@@ -682,8 +681,10 @@ ProposalJs.prototype.insertInitBox = function () {
   factorArrowHeadTop = <%% 39, 37, 39, 29, 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
-  factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -3);
-  factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
+  if (desktop) {
+    factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -3);
+    factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
+  }
 
   factorValueBottom = <%% 11, 13, 13, 12, 2.5 %%>;
   factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
@@ -701,7 +702,9 @@ ProposalJs.prototype.insertInitBox = function () {
   pastBlocks = [];
   designerFactorTitleTop = <%% 4, 4, 4, 4, 4 %%>;
   targetDesignerBoxTop = <%% 24, 24, 24, 24, 24 %%>;
-  targetDesignerBoxTop = targetDesignerBoxTop + (GeneralJs.isMac() ? 0 : 2);
+  if (desktop) {
+    targetDesignerBoxTop = targetDesignerBoxTop + (GeneralJs.isMac() ? 0 : 2);
+  }
   targetDesignerBoxIndent = <%% 34, 36, 36, 36, 36 %%>;
 
   designerFactorTitleSize = <%% 13, 13, 13, 13, 13 %%>;
@@ -714,7 +717,9 @@ ProposalJs.prototype.insertInitBox = function () {
   topBoxRight = <%% 1, 1, 1, 1, 1 %%>;
 
   designerBarBottom = <%% 2, 2, 2, 2, 2 %%>;
-  designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
+  if (desktop) {
+    designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
+  }
   designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
 
   //total white box
@@ -767,7 +772,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (GeneralJs.isMac() ? 0 : 4)) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (GeneralJs.isMac() || mobile ? 0 : 4)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -789,7 +794,7 @@ ProposalJs.prototype.insertInitBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + ea,
-      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (GeneralJs.isMac() ? 0 : 4)) + ea,
+      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (GeneralJs.isMac() || mobile ? 0 : 4)) + ea,
       left: String(titleLeft) + ea,
       color: GeneralJs.colorChip.black,
     };
@@ -806,7 +811,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (GeneralJs.isMac() ? 0 : 4)) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (GeneralJs.isMac() || mobile ? 0 : 4)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -1077,8 +1082,8 @@ ProposalJs.prototype.insertInitBox = function () {
     let width;
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
-      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() ? 0 : 2)) + "px";
-      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() ? 0 : 2)) + "px";
+      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
+      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
     }
     clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
     GeneralJs.timeouts["factorsValueDoms"] = null;
@@ -1341,7 +1346,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     fontSize: String(designerTitleSize) + ea,
     fontWeight: String(500),
     wordSpacing: String(titleWordSpacing) + "px",
-    marginBottom: String(margin + (GeneralJs.isMac() ? 0 : -2)) + ea,
+    marginBottom: String(margin + (GeneralJs.isMac() || mobile ? 0 : -2)) + ea,
   };
   for (let i in style) {
     designerTitle.style[i] = style[i];
@@ -2243,14 +2248,17 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
   feeBottom = <%% 0, 0, 0, 0, 0 %%>;
-  feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
   feeSize = <%% 28, 28, 26, 22, 5 %%>;
   feeRight = <%% 60, 60, 60, 60, 0 %%>;
 
   vatBottom = <%% 3, 3, 3, 3, 3 %%>;
-  vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
   vatSize = <%% 15, 15, 15, 15, 3 %%>;
   vatRight = <%% 0, 0, 0, 0, 0 %%>;
+
+  if (desktop) {
+    feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
+    vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
+  }
 
   if (desktop) {
     arrowBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2553,6 +2561,10 @@ ProposalJs.prototype.insertPannelBox = function () {
 
   buttonTextTop = <%% 9, 9, 9, 9, 1.8 %%>;
   buttonTextSize = <%% 20, 20, 20, 20, 3.5 %%>;
+
+  if (desktop) {
+    buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
+  }
 
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
@@ -2918,7 +2930,6 @@ ProposalJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
     this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
-    this.osException = (GeneralJs.isMac() ? 0 : 2);
 
     //base setting
     this.setBackground();
