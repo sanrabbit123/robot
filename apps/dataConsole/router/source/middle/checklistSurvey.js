@@ -22,10 +22,15 @@
       "return ('https://__thisHost__/hlimage.jpg');"
     ],
     "module": false
-  }
+  },
+  "name": "checklistSurvey",
+  "route": [
+    "survey",
+    "CS"
+  ]
 } %/%/g
 
-const SurveyJs = function () {
+const ChecklistSurveyJs = function () {
   this.mother = new GeneralJs();
   this.whiteBox = null;
   this.contentsBox = null;
@@ -35,7 +40,7 @@ const SurveyJs = function () {
   this.totalContents = document.getElementById("totalcontents");
 }
 
-SurveyJs.prototype.baseMaker = function () {
+ChecklistSurveyJs.prototype.baseMaker = function () {
   const instance = this;
   let div_clone;
   let whiteBox, contentsBox;
@@ -112,7 +117,7 @@ SurveyJs.prototype.baseMaker = function () {
   return this;
 }
 
-SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, leftMargin, thisCase) {
+ChecklistSurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, leftMargin, thisCase) {
   const instance = this;
   const { designer, desid } = thisCase;
   const modeMinus = this.modeMinus;
@@ -1224,7 +1229,7 @@ SurveyJs.prototype.convertWhiteContents = function (motherArea, contentsArea, le
   }
 }
 
-SurveyJs.checkListSseEvent = function (e) {
+ChecklistSurveyJs.checkListSseEvent = function (e) {
   const { desid, column, type, order } = JSON.parse(e.data);
   const idName = desid + "_" + column;
   const targetDom = document.getElementById(idName);
@@ -1278,13 +1283,13 @@ SurveyJs.checkListSseEvent = function (e) {
   }
 }
 
-SurveyJs.prototype.confirmLaunching = function (desid, designer) {
+ChecklistSurveyJs.prototype.confirmLaunching = function (desid, designer) {
   const instance = this;
   let ea;
 
   //set sse
   es = new EventSource("https://" + SSEHOST + ":3000/specificsse/get_checklist/" + desid);
-  es.addEventListener("updateTong", SurveyJs.checkListSseEvent);
+  es.addEventListener("updateTong", ChecklistSurveyJs.checkListSseEvent);
 
   //tablet
   if (window.innerWidth < 1400 && window.innerWidth > 1000) {
@@ -1315,7 +1320,7 @@ SurveyJs.prototype.confirmLaunching = function (desid, designer) {
 
 }
 
-SurveyJs.prototype.launching = async function (loading) {
+ChecklistSurveyJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();

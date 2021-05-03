@@ -22,7 +22,13 @@
       "return ('https://__thisHost__/hlimage.jpg');"
     ],
     "module": true
-  }
+  },
+  "name": "pageBlock",
+  "route": [
+    "pageBlocks",
+    "blocks",
+    "PB"
+  ]
 } %/%/g
 
 const PageBlockJs = function () {

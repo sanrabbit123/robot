@@ -2375,6 +2375,48 @@ DataRouter.prototype.rou_post_alimTalk = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_humanPacket = function () {
+  const instance = this;
+  const back = this.back;
+  const human = this.human;
+  let obj = {};
+  obj.link = [ "/sendSms", "/sendEmail", "/sendMail" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.url === "/sendSms") {
+        if (req.body.subject === undefined || req.body.contents === undefined || req.body.name === undefined || req.body.phone === undefined) {
+          throw new Error("must be subject, contents, name, phone");
+        }
+        await human.sendSms({
+          name: req.body.name,
+          phone: req.body.phone,
+          subject: req.body.subject,
+          contents: req.body.contents
+        });
+      } else if (req.url === "/sendEmail" || req.url === "/sendMail") {
+        if (req.body.subject === undefined || req.body.contents === undefined || req.body.to === undefined) {
+          throw new Error("must be subject, contents, to");
+        }
+        await human.sendEmail({
+          to: req.body.to,
+          subject: req.body.subject,
+          contents: req.body.contents
+        });
+      }
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 DataRouter.prototype.rou_post_getDesignerGhost = function () {
   const instance = this;

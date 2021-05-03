@@ -255,3 +255,25 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_designerProposal_submit = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/designerProposal_submit";
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ index: 0 }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}

@@ -22,7 +22,13 @@
       "return ('https://__thisHost__/hlimage.jpg');"
     ],
     "module": false
-  }
+  },
+  "name": "styleEstimation",
+  "route": [
+    "styleEstimate",
+    "estimation",
+    "SE"
+  ]
 } %/%/g
 
 const StyleEstimationJs = function () {

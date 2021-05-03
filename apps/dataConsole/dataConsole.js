@@ -246,19 +246,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       code1 = '';
       svgTongItemsString = '';
       moduleBoo = false;
-      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-      generalString = generalString.replace(/(\/<%generalMap%>\/)/, function (match, p1, offset, string) {
-        let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
-        for (let j in generalObj_clone.main.interaction) {
-          if (j !== i.replace(/\.js/g, '')) {
-            delete generalObj_clone.main.interaction[j];
-          }
-        }
-        return JSON.stringify(generalObj_clone, null, 2);
-      });
 
-      execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
-      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
       fileString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
       if (/\/<%map%>\//g.test(fileString)) {
         fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
@@ -267,35 +255,56 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/middle/svgTong/${i}` ]);
       }
 
+      if (!/\/<%patch%>\//g.test(fileString)) {
+        throw new Error("There is no patch, impossible");
+      }
+
       //set data patch
-      if (/\/<%patch%>\//g.test(fileString)) {
-        const { patch: onoffObj, meta } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+      const { patch: onoffObj, meta, name, route } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
 
-        //set meta info
-        DataMiddle.setMetadata(i.replace(/\.js/gi, ''), meta);
-        moduleBoo = meta.module;
+      //set meta info
+      route.unshift(name);
+      for (let routeName of route) {
+        DataMiddle.setMetadata(routeName, meta);
+        DataMiddle.setNamedata(routeName, name);
+        DataMiddle.setNamedata(routeName + ".js", name);
+      }
+      moduleBoo = meta.module;
 
-        //set browser js
-        fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
-
-        //set data patch
-        prototypes = Object.keys(DataPatch.prototype);
-        dataPatchScript = `const DataPatch = new Function();\n`;
-        if (onoffObj.entire) {
-          for (let i of prototypes) {
-            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+      //set browser js
+      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+      generalString = generalString.replace(/(\/<%generalMap%>\/)/, function (match, p1, offset, string) {
+        let generalObj_clone = JSON.parse(JSON.stringify(generalMap));
+        for (let j in generalObj_clone.main.interaction) {
+          if (!route.includes(j)) {
+            delete generalObj_clone.main.interaction[j];
           }
-        } else {
-          for (let i of prototypes) {
-            prototypeBoo = /^tools/.test(i);
-            for (let j in onoffObj) {
-              if (onoffObj[j] && !prototypeBoo) {
-                prototypeBoo = (new RegExp("^" + j)).test(i);
-              }
+        }
+        return JSON.stringify(generalObj_clone, null, 2);
+      });
+
+      execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
+      execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.slice(1)));
+
+      fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
+
+      //set data patch
+      prototypes = Object.keys(DataPatch.prototype);
+      dataPatchScript = `const DataPatch = new Function();\n`;
+      if (onoffObj.entire) {
+        for (let i of prototypes) {
+          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+        }
+      } else {
+        for (let i of prototypes) {
+          prototypeBoo = /^tools/.test(i);
+          for (let j in onoffObj) {
+            if (onoffObj[j] && !prototypeBoo) {
+              prototypeBoo = (new RegExp("^" + j)).test(i);
             }
-            if (prototypeBoo) {
-              dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
-            }
+          }
+          if (prototypeBoo) {
+            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
           }
         }
       }
@@ -532,6 +541,10 @@ DataConsole.prototype.connect = async function () {
     const kakaoInstance = new KakaoTalk();
     await kakaoInstance.ready();
 
+    //set human
+    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    const humanInstance = new HumanPacket();
+
     //set dataMiddle
     let DataMiddle;
     if (isLocal || isGhost) {
@@ -570,7 +583,7 @@ DataConsole.prototype.connect = async function () {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, isGhost);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

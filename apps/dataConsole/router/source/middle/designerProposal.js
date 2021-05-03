@@ -22,7 +22,12 @@
       "return ('https://__thisHost__/hlimage.jpg');"
     ],
     "module": false
-  }
+  },
+  "name": "designerProposal",
+  "route": [
+    "proposal",
+    "DP"
+  ]
 } %/%/g
 
 class Designers extends Array {
@@ -348,7 +353,7 @@ class WordsDictionary {
   }
 }
 
-const ProposalJs = function () {
+const DesignerProposalJs = function () {
   this.mother = new GeneralJs();
   this.map = new ProposalMapGenerator();
   this.margin = 0;
@@ -386,9 +391,9 @@ const ProposalJs = function () {
 
 //static
 
-ProposalJs.binaryPath = "/middle/proposal";
+DesignerProposalJs.binaryPath = "/middle/proposal";
 
-ProposalJs.styleTextParsing = function (text) {
+DesignerProposalJs.styleTextParsing = function (text) {
   const cssArr = text.split(';');
   let filterArr;
   let tempArr, finalObj;
@@ -419,7 +424,7 @@ ProposalJs.styleTextParsing = function (text) {
 
 //method
 
-ProposalJs.prototype.setBackground = function () {
+DesignerProposalJs.prototype.setBackground = function () {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -455,7 +460,7 @@ ProposalJs.prototype.setBackground = function () {
     left: String(0),
     width: String(100) + '%',
     height: String(backHeight) + ea,
-    backgroundImage: "url('" + ProposalJs.binaryPath + "/" + backgroundImageName + "')",
+    backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + backgroundImageName + "')",
     backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
     backgroundPosition: "top",
     animation: "justfadeinoriginal 0.3s ease forwards",
@@ -466,7 +471,7 @@ ProposalJs.prototype.setBackground = function () {
   this.totalContents.appendChild(backImage);
 }
 
-ProposalJs.prototype.setNavigator = function () {
+DesignerProposalJs.prototype.setNavigator = function () {
   const instance = this;
   let { ea, standardWidth, media } = this;
   let mobile = media[4];
@@ -552,7 +557,7 @@ ProposalJs.prototype.setNavigator = function () {
 
 }
 
-ProposalJs.prototype.setBaseTong = function () {
+DesignerProposalJs.prototype.setBaseTong = function () {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -582,11 +587,21 @@ ProposalJs.prototype.setBaseTong = function () {
   this.totalContents.appendChild(baseTong);
 }
 
-ProposalJs.prototype.insertInitBox = function () {
+DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
   const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const { requests } = this.client;
+  const { request } = requests[0];
+  const expectedToString = function (str) {
+    const expected = new Date(str);
+    return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+  }
+  const spaceToString = function (obj) {
+    const { bathroom, room, valcony } = obj;
+    return `${String(room)} / ${String(bathroom)} / 확장${valcony ? "" : " 없음"}`;
+  }
   let whiteBlock;
   let style;
   let blockHeight, bottomMargin;
@@ -668,12 +683,12 @@ ProposalJs.prototype.insertInitBox = function () {
   factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
   factorSize = <%% 17.5, 17.5, 17.5, 15.5, 3.5 %%>;
   factors = [
-    { title: "예산", value: "2,500만원" },
-    { title: "가족 구성원", value: "부부, 딸 1, 아들 1" },
-    { title: "면적", value: "47평" },
-    { title: "계약 형태", value: "자가" },
-    { title: "입주 예정일", value: "21년 3월 20일" },
-    { title: "공간 상태", value: "방 3, 화장실 1, 확장" }
+    { title: "예산", value: request.budget },
+    { title: "가족 구성원", value: request.family },
+    { title: "면적", value: String(request.space.pyeong) + "평" },
+    { title: "계약 형태", value: request.space.contract },
+    { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
+    { title: "공간 상태", value: spaceToString(request.space.spec) }
   ];
   factorsValueDoms = new Array(factors.length);
   factorsBarDoms = new Array(factors.length);
@@ -1233,7 +1248,7 @@ ProposalJs.prototype.insertInitBox = function () {
   this.baseTong.appendChild(whiteBlock);
 }
 
-ProposalJs.prototype.insertDesignerBoxes = function () {
+DesignerProposalJs.prototype.insertDesignerBoxes = function () {
   const instance = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { ea, media } = this;
@@ -1270,7 +1285,7 @@ ProposalJs.prototype.insertDesignerBoxes = function () {
   this.whiteBlocks = whiteBlocks;
 }
 
-ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
+DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   const instance = this;
   const { ea, media } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
@@ -1415,7 +1430,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   //pictures
   for (let i of pictureSettings) {
     picture = GeneralJs.nodes.div.cloneNode(true);
-    pictureStyle = ProposalJs.styleTextParsing(i.styleText);
+    pictureStyle = DesignerProposalJs.styleTextParsing(i.styleText);
     pictureStyle.position = "absolute";
     pictureStyle.borderRadius = String(3) + "px";
     pictureStyle.backgroundSize = "100% 100%";
@@ -1662,7 +1677,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   mother.appendChild(feeBox);
 }
 
-ProposalJs.prototype.designerAnalytics = function (mother, desid) {
+DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -2040,7 +2055,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
 }
 
-ProposalJs.prototype.designerPortfolio = function (mother, desid) {
+DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -2220,7 +2235,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
 }
 
-ProposalJs.prototype.designerFee = function (mother, fee) {
+DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -2370,7 +2385,7 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
 
 }
 
-ProposalJs.prototype.insertWordBox = function () {
+DesignerProposalJs.prototype.insertWordBox = function () {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -2558,7 +2573,7 @@ ProposalJs.prototype.insertWordBox = function () {
 
 }
 
-ProposalJs.prototype.insertPannelBox = function () {
+DesignerProposalJs.prototype.insertPannelBox = function () {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -2587,7 +2602,7 @@ ProposalJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
   buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.1 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
   buttonTextSize = <%% 20, 20, 20, 20, 3.8 %%>;
 
   if (desktop) {
@@ -2858,24 +2873,28 @@ ProposalJs.prototype.insertPannelBox = function () {
 
 }
 
-ProposalJs.prototype.submitEvent = function () {
+DesignerProposalJs.prototype.submitEvent = function () {
   const instance = this;
-  console.log(this.client.name);
-  console.log(this.client.phone);
+  console.log(this.client);
   this.mother.certificationBox("배창규", "010-2747-3403", async function (back, box) {
     try {
+
+      await GeneralJs.ajaxJson({
+
+      }, "/");
+
       await GeneralJs.sleep(3000);
       document.body.removeChild(box);
       document.body.removeChild(back);
       window.alert("전송이 완료되었습니다!");
-      window.location.href = "https://home-liaison.com/about.php";
+      window.location.href = "https://home-liaison.com/payment.php?card=true";
     } catch (e) {
       console.log(e);
     }
   });
 }
 
-ProposalJs.prototype.launching = async function (loading) {
+DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     const getObj = GeneralJs.returnGet();

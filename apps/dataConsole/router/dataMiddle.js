@@ -9,6 +9,7 @@ const MiddleCommunication = function () {
   this.generalJs = `${process.env.HOME}/static/general.js`;
   this.patchClass = DataPatch;
   this.meta = {};
+  this.name = {};
 }
 
 MiddleCommunication.prototype.mediaQuery = function (code) {
@@ -60,6 +61,10 @@ MiddleCommunication.prototype.mediaQuery = function (code) {
 
 MiddleCommunication.prototype.setMetadata = function (property, value) {
   this.meta[property] = value;
+}
+
+MiddleCommunication.prototype.setNamedata = function (property, value) {
+  this.name[property] = value;
 }
 
 MiddleCommunication.prototype.middleBinary = async function () {
@@ -136,10 +141,8 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
     let descriptionString, metaDescription;
     let imageString, metaImage;
 
-    if (!/\.js$/.test(target)) {
-      target = target + ".js";
-    }
-    const meta = this.meta[target.replace(/\.js/gi, '')];
+    const name = this.name[target.trim().replace(/\.js/gi, '')];
+    const meta = this.meta[target.trim().replace(/\.js/gi, '')];
 
     idArr = back.getMap("id", "array");
     id = null, idMethod = null, thisPerson = null;
@@ -189,14 +192,13 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
       <body>
         <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
         <div id="totalcontents"></div>
-        <script src="/middle/${target}"></script>`
+        <script src="/middle/${name}.js"></script>`
 
     if (meta.module) {
-      html += `<script type="module" src="/middle/${target.replace(/\.js$/i, '') + ".mjs"}"></script>`;
+      html += `<script type="module" src="/middle/${name}.mjs"></script>`;
     }
 
     html += `</body></html>`;
-
 
     return html;
 

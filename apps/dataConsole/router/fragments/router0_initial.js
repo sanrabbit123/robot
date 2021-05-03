@@ -1,4 +1,4 @@
-const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, isGhost = false) {
+const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost = false) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -24,6 +24,7 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
   this.members = {};
   this.isGhost = isGhost;
   this.kakao = kakaoInstance;
+  this.human = humanInstance;
 }
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
