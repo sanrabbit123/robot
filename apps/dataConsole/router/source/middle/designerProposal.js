@@ -695,9 +695,9 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 41, 43, 26, 8.5 %%>;
+  factorBarTop = <%% 43, 41, 43, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
   factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 23, 7 %%>;
+  factorArrowHeadTop = <%% 39, 37, 39, 23 + (GeneralJs.isMac() ? 0 : 1), 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
   if (desktop) {
@@ -2286,10 +2286,10 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   let vatBottom, vatSize, vatRight;
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  arrowTop = <%% 11, 11, 13, 15, 11 %%>;
+  arrowTop = <%% 11, 11, 13, 16, 11 %%>;
 
-  headWidth = <%% 10, 10, 10, 10, 10 %%>;
-  headTop = <%% 6, 6, 8, 10, 6 %%>;
+  headWidth = <%% 10, 10, 10, 8, 10 %%>;
+  headTop = <%% 6, 6, 8, 12, 6 %%>;
   headMargin = <%% 18, 18, 18, 18, 18 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
