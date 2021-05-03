@@ -2587,7 +2587,7 @@ ProposalJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
   buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.1 %%>;
   buttonTextSize = <%% 20, 20, 20, 20, 3.8 %%>;
 
   if (desktop) {
@@ -2599,7 +2599,7 @@ ProposalJs.prototype.insertPannelBox = function () {
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  finalBottom = <%% 42, 42, 42, 20, 5.1 %%>;
+  finalBottom = <%% 42, 42, 42, 20, 5 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2841,10 +2841,10 @@ ProposalJs.prototype.insertPannelBox = function () {
   informationArea = GeneralJs.nodes.div.cloneNode(true);
   informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>위 버튼을 눌러주세요!");
   style = {
-    fontSize: String(desktop ? 13 : 2.5) + ea,
+    fontSize: String(desktop ? 13 : 3) + ea,
     color: GeneralJs.colorChip.green,
     wordSpacing: String(wordSpacing) + "px",
-    lineHeight: String(1.5),
+    lineHeight: String(desktop ? 1.5 : 1.4),
   };
   for (let i in style) {
     informationArea.style[i] = style[i];
