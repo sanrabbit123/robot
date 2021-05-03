@@ -482,8 +482,8 @@ ProposalJs.prototype.setNavigator = function () {
   iconHeight = <%% 22, 22, 20, 18, 16 %%>;
   iconTop = <%% 21, 21, 20, 18, 19 %%>;
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
-  wordSize = <%% 15, 15, 15, 14, 14 %%>;
-  wordTop = <%% 24, 24, 21, 19, 19 %%>;
+  wordSize = <%% 15, 15, 15, 14, 13 %%>;
+  wordTop = <%% 24, 24, 21, 19, 18 %%>;
   ea = desktop ? ea : "px";
   mobileMargin = 28;
 
