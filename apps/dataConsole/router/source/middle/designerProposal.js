@@ -1732,7 +1732,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
   checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
-  checkBoxRadiusTop = <%% 6, (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 5), 1.2 %%>;
+  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 5), 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
   titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;
@@ -1807,7 +1807,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         width: String(pointRadius * 2) + ea,
         height: String(pointRadius * 2) + ea,
         left: String(0) + ea,
-        top: String(pointTop) + ea,
+        top: String(pointTop + (GeneralJs.isMac() ? 0 : -0.5)) + ea,
       };
       for (let j in style) {
         pointClone.style[j] = style[j];
