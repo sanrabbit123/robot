@@ -744,6 +744,45 @@ Ghost.prototype.photoRouter = function (needs) {
     }
   };
 
+  //POST - mkdir
+  funcObj.post_mkdir = {
+    link: [ "/mkdir", "/create", "/createDir" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.path === undefined) {
+          res.send(JSON.stringify({ message: "invaild body : must be 'path'" }));
+        } else {
+
+          let path, pathArr;
+          let targetDir;
+
+          path = (/^\//.test(req.body.path) ? req.body.path : '/' + req.body.path).replace(/\/\//g, '/');
+          pathArr = path.split('/');
+          pathArr.shift();
+
+          targetDir = sambaDir;
+          for (let i of pathArr) {
+            targetDir += '/';
+            targetDir += i;
+            if (!(await fileSystem(`exist`, [ targetDir ]))) {
+              await fileSystem(`mkdir`, targetDir);
+            }
+          }
+
+          res.send(JSON.stringify({ message: "success" }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
