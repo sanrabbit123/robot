@@ -589,10 +589,7 @@ DataConsole.prototype.connect = async function () {
 
     //set binary
     if (!/localhost/gi.test(address.host)) {
-      await this.setBinary();
-      if (DataMiddle !== null) {
-        await DataMiddle.middleBinary();
-      }
+      // await this.setBinary();
     }
 
     //error handle
@@ -655,8 +652,6 @@ DataConsole.prototype.staticUpload = async function (to = "ghost") {
 
     //set binary
     tempArr = await this.setBinary();
-    fromArr = fromArr.concat(tempArr);
-    tempArr = await DataMiddle.middleBinary();
     fromArr = fromArr.concat(tempArr);
 
     toArr = [];
