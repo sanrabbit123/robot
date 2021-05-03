@@ -1103,14 +1103,14 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
-        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/ /g) ]).length;
+        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ \/]/g) ]).length;
         spaceException = (2 * spaceException);
         width = width + spaceException;
       } else if (mobile) {
         width = width + 4;
       }
-      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
-      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
+      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
+      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
     }
     clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
     GeneralJs.timeouts["factorsValueDoms"] = null;
@@ -2384,7 +2384,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
         spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
         oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
         spaceException = (2 * spaceException);
-        oneException = (1 * oneException);
+        oneException = (0 * oneException);
         standardWidth = standardWidth - visualException - spaceException - oneException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
