@@ -1347,7 +1347,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   pointRadius = <%% 2, 2, 2, 2, 0.6 %%>;
   pointLeftIndent = <%% 5, 5, 5, 5, 1.2 %%>;
-  pointTop = <%% 9, 9 + (GeneralJs.isMac() 0 : -0.5), 9 + (GeneralJs.isMac() 0 : -0.5), 9 + (GeneralJs.isMac() 0 : -0.5), 2.1 %%>;
+  pointTop = <%% 9, 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 2.1 %%>;
 
   indexFont = <%% 19, 19, 19, 19, 3 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
