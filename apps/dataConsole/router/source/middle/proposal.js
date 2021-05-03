@@ -1087,7 +1087,7 @@ ProposalJs.prototype.insertInitBox = function () {
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
-        console.log(([ ...factorsValueDoms[i].matchAll(/,/g) ]).length)
+        console.log(([ ...factorsValueDoms[i].textContent.matchAll(/,/g) ]).length)
 
       }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
