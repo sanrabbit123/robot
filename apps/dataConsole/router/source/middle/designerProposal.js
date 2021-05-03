@@ -1826,6 +1826,10 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       left: String((pointRadius * 2) + titleIndent) + ea,
       top: String(desktop ? 0 : 0) + ea,
     };
+    if (desktop) {
+      style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
+    }
+
     for (let j in style) {
       titleDom.style[j] = style[j];
     }
@@ -1848,8 +1852,6 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (mobile) {
         delete style.left;
         style.right = String(0) + ea;
-      } else {
-        style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
       }
       for (let j in style) {
         valueDom.style[j] = style[j];
@@ -1879,8 +1881,6 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         style.right = String(0) + ea;
         style.width = String(76) + '%';
         style.textAlign = "right";
-      } else {
-        style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
       }
       for (let j in style) {
         valueDom.style[j] = style[j];
