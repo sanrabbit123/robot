@@ -1089,7 +1089,7 @@ ProposalJs.prototype.insertInitBox = function () {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/ /g) ]).length;
-        spaceException = (2.5 * spaceException);
+        spaceException = (3 * spaceException);
         width = width + spaceException;
       }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
@@ -2348,7 +2348,7 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
       standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
-        spaceException = (2.5 * spaceException);
+        spaceException = (6 * spaceException);
         standardWidth = standardWidth - spaceException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
