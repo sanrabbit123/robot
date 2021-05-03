@@ -2303,6 +2303,9 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
 
   if (desktop) {
     feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
+    if (media[2]) {
+      feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -4);
+    }
     vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
   }
 
