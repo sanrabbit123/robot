@@ -2383,8 +2383,8 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
         oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
-        spaceException = (5 * spaceException);
-        oneException = (2 * oneException);
+        spaceException = (2 * spaceException);
+        oneException = (1 * oneException);
         standardWidth = standardWidth - visualException - spaceException - oneException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
