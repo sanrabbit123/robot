@@ -682,11 +682,16 @@ ProposalJs.prototype.insertInitBox = function () {
   factorArrowHeadTop = <%% 39, 37, 39, 29, 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
+  factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -2);
+  factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -2);
+
   factorValueBottom = <%% 11, 13, 13, 12, 2.5 %%>;
   factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
 
   factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
   factorValueHeadMargin = <%% 10, 10, 10, 10, 10 %%>;
+
+  factorValueHeadMargin = factorValueHeadMargin + (GeneralJs.isMac() ? 0 : -4);
 
   desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
   desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
@@ -1338,7 +1343,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     fontSize: String(designerTitleSize) + ea,
     fontWeight: String(500),
     wordSpacing: String(titleWordSpacing) + "px",
-    marginBottom: String(margin) + ea,
+    marginBottom: String(margin + (GeneralJs.isMac() ? 0 : -2)) + ea,
   };
   for (let i in style) {
     designerTitle.style[i] = style[i];
@@ -2240,10 +2245,12 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
   feeBottom = <%% 0, 0, 0, 0, 0 %%>;
+  feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
   feeSize = <%% 28, 28, 26, 22, 5 %%>;
   feeRight = <%% 60, 60, 60, 60, 0 %%>;
 
   vatBottom = <%% 3, 3, 3, 3, 3 %%>;
+  vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
   vatSize = <%% 15, 15, 15, 15, 3 %%>;
   vatRight = <%% 0, 0, 0, 0, 0 %%>;
 
