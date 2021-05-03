@@ -1103,7 +1103,10 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
-        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ \/]/g) ]).length;
+        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ ]/g) ]).length;
+        if (spaceException > 2) {
+          spaceException = spaceException / 2;
+        }
         spaceException = (2 * spaceException);
         width = width + spaceException;
       } else if (mobile) {
