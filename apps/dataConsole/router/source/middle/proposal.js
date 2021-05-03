@@ -2694,47 +2694,47 @@ ProposalJs.prototype.insertPannelBox = function () {
     this.designerButtons.push(designerButton);
   }
 
-  if (desktop) {
-    for (let z = 0; z < 2; z++) {
-      designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
-        borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-        left: String(leftMargin) + ea,
-        top: String(47) + '%',
-      };
-      if (z === 1) {
-        style.right = style.left;
-        delete style.left;
-      }
-      for (let i in style) {
-        designerButtonBar.style[i] = style[i];
-      }
-      designerButtonTong.appendChild(designerButtonBar);
-
-      designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        width: String(headWidth) + ea,
-        height: String(headWidth) + ea,
-        borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-        borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-        transform: "rotate(-45deg)",
-        left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
-        top: String(36) + '%',
-      };
-      if (z === 1) {
-        style.right = style.left;
-        style.transform = "rotate(135deg)";
-        delete style.left;
-      }
-      for (let i in style) {
-        designerButtonBarHead.style[i] = style[i];
-      }
-      designerButtonTong.appendChild(designerButtonBarHead);
-    }
-  }
+  // if (desktop) {
+  //   for (let z = 0; z < 2; z++) {
+  //     designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
+  //     style = {
+  //       position: "absolute",
+  //       width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
+  //       borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+  //       left: String(leftMargin) + ea,
+  //       top: String(47) + '%',
+  //     };
+  //     if (z === 1) {
+  //       style.right = style.left;
+  //       delete style.left;
+  //     }
+  //     for (let i in style) {
+  //       designerButtonBar.style[i] = style[i];
+  //     }
+  //     designerButtonTong.appendChild(designerButtonBar);
+  //
+  //     designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
+  //     style = {
+  //       position: "absolute",
+  //       width: String(headWidth) + ea,
+  //       height: String(headWidth) + ea,
+  //       borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+  //       borderRight: "1px solid " + GeneralJs.colorChip.gray3,
+  //       transform: "rotate(-45deg)",
+  //       left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
+  //       top: String(36) + '%',
+  //     };
+  //     if (z === 1) {
+  //       style.right = style.left;
+  //       style.transform = "rotate(135deg)";
+  //       delete style.left;
+  //     }
+  //     for (let i in style) {
+  //       designerButtonBarHead.style[i] = style[i];
+  //     }
+  //     designerButtonTong.appendChild(designerButtonBarHead);
+  //   }
+  // }
   whiteBlock.appendChild(designerButtonTong);
 
   designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
