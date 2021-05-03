@@ -755,25 +755,34 @@ Ghost.prototype.photoRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       try {
-        if (req.body.path === undefined) {
-          res.send(JSON.stringify({ message: "invaild body : must be 'path'" }));
+        if (req.body.name === undefined) {
+          res.send(JSON.stringify({ message: "invaild body : must be 'name'" }));
         } else {
 
-          let path, pathArr;
-          let targetDir;
+          let tempFolder;
+          let folderList;
+          let name;
 
-          path = (/^\//.test(req.body.path) ? req.body.path : '/' + req.body.path).replace(/\/\//g, '/');
-          pathArr = path.split('/');
-          pathArr.shift();
+          name = req.body.name.trim().replace(/^\//, '');
 
-          targetDir = sambaDir;
-          for (let i of pathArr) {
-            targetDir += '/';
-            targetDir += i;
-            if (!(await fileSystem(`exist`, [ targetDir ]))) {
-              await fileSystem(`mkdir`, [ targetDir ]);
-            }
+          tempFolder = `newFolder_${String((new Date()).valueOf())}`;
+
+          if (await fileSystem(`exist`, [ `${sambaDir}/${tempFolder}` ])) {
+            shell.exec(`rm -rf ${shellLink(sambaDir + '/' + tempFolder)};`);
           }
+          await fileSystem(`mkdir`, [ `${sambaDir}/${tempFolder}` ]);
+          await fileSystem(`mkdir`, [ `${sambaDir}/${tempFolder}/${name}` ]);
+
+          shell.exec(`node ${shellLink(process.cwd() + '/' + "robot.js")} fixDir ${shellLink(sambaDir + '/' + tempFolder)}`);
+
+          folderList = await fileSystem(`readDir`, [ `${sambaDir}/${tempFolder}` ]);
+          folderList = folderList.filter((f) => { return f !== `.DS_Store` });
+
+          if (folderList.length === 0) {
+            throw new Error("error");
+          }
+
+          shell.exec(`mv ${shellLink(sambaDir + '/' + tempFolder + '/' + folderList[0])} ${shellLink(sambaDir + '/' + folderList[0])}`);
 
           res.send(JSON.stringify({ message: "success" }));
         }

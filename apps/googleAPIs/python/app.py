@@ -164,6 +164,11 @@ try:
         result = driveApp.webPublish(data["targetId"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'searchId':
+        driveApp = GoogleDrive()
+        result = driveApp.searchId(data["name"])
+        print(result)
+
     elif argv[1] == 'docs' and argv[2] == 'readDocs':
         docsApp = GoogleDocs()
         result = docsApp.readDocs(data["id"])

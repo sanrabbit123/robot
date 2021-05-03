@@ -95,3 +95,11 @@ class GoogleDrive:
         revision['publishAuto'] = True
         self.app.revisions().update(fileId=file_id, revisionId='1', body=revision).execute()
         return dumps({ "link": "https://docs.google.com/spreadsheets/d/" + file_id + "/pubhtml?widget=true&headers=false&embedded=true" })
+
+    def searchId(self, name):
+        response = self.app.files().list(q=f"name contains '{name}'", spaces='drive').execute()
+        id = None
+        for file in response.get('files', []):
+            id = file.get('id')
+            break
+        return dumps({ "id": id })

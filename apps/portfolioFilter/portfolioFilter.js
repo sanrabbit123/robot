@@ -351,7 +351,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
     const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
-    const targetFolderIdConst = "1KUt6DHSVtHBsknsKcIo8Woc2t1vyPd21";
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
@@ -367,24 +366,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     //google drive upload
     if (liteMode || this.clientNullATarget.includes(this.clientName)) {
-      thisFolderId = await drive.makeFolder_andMove_inPython(this.folderName, targetFolderIdConst);
-      console.log(await ghostRequest("fixDir", {
-        await: true,
-        target: "__samba__/" + photoFolderConst
-      }));
+      await photoRequest("mkdir", { name: this.folderName });
       console.log(`make folder ${this.folderName} done`);
-      for (let z = 0; z < 3; z++) {
-        console.log(`insync waiting... ${String(3 - z)}s`);
-        await sleep(1000);
-      }
-      ghostPhotos = await photoRequest("ls");
-      while (!ghostPhotos.includes(this.folderName)) {
-        for (let z = 0; z < 5; z++) {
-          console.log(`insync waiting... ${String(5 - z)}s`);
-          await sleep(1000);
-        }
-        ghostPhotos = await photoRequest("ls");
-      }
     } else {
       ghostPhotos = await photoRequest("ls");
       ghostPhotosTarget = null;
@@ -411,11 +394,18 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
-    //slack
-    if (liteMode || this.clientNullATarget.includes(this.clientName)) {
-      webViewLink = await drive.read_webView_inPython(thisFolderId);
-      await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
+    thisFolderId = await drive.searchId_inPython(this.folderName);
+    while (thisFolderId === null) {
+      for (let z = 0; z < 5; z++) {
+        console.log(`insync waiting... ${String(5 - z)}s`);
+        await sleep(1000);
+      }
+      thisFolderId = await drive.searchId_inPython(this.folderName);
     }
+
+    //slack
+    webViewLink = await drive.read_webView_inPython(thisFolderId);
+    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
 
     //s3 upload
     if (!liteMode) {
@@ -442,13 +432,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       await ghostFileUpload(fromArr, toArr);
       console.log(`ghost upload done`);
     }
-
-    //fix dir
-    console.log(await ghostRequest("fixDir", {
-      await: true,
-      target: "__samba__/" + photoFolderConst
-    }));
-    console.log(`second ghost request done`);
 
     return this.folderName;
 
@@ -762,11 +745,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       ghostPhotos = await photoRequest("ls");
       while (!ghostPhotos.includes(googleFolderName)) {
-        console.log(await ghostRequest("fixDir", {
-          await: true,
-          target: "__samba__/" + photoFolderConst
-        }));
-        console.log(`third ghost request done`);
         for (let z = 0; z < 5; z++) {
           console.log(`insync waiting... ${String(5 - z)}s`);
           await sleep(1000);

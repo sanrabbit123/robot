@@ -271,6 +271,37 @@ GoogleDrive.prototype.makeFolder_andMove = async function (folderName, parent) {
   }
 }
 
+GoogleDrive.prototype.searchId = async function (name) {
+  const instance = this;
+  try {
+    this.drive = await this.general.get_app("drive");
+    const drive = this.drive;
+    const response = await drive.files.list({ q: `name contains '${name}'` });
+    if (response.status < 200 || response.status >= 300) {
+      throw new Error("response error");
+    }
+    const { data: { files } } = response;
+    if (files.length === 0) {
+      return null;
+    } else {
+      return files[0].id;
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+GoogleDrive.prototype.searchId_inPython = async function (name) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "searchId" ], { name });
+    return result.id;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
   const instance = this;
   const mother = this.general;
@@ -346,5 +377,6 @@ GoogleDrive.prototype.sleep = function (time) {
     }, time);
   });
 }
+
 
 module.exports = GoogleDrive;
