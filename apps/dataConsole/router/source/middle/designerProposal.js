@@ -1732,7 +1732,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
   checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
-  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 1.2 %%>;
+  checkBoxRadiusTop = <%% 6, (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 5), 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
   titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;

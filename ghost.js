@@ -812,7 +812,7 @@ Ghost.prototype.photoRouter = function (needs) {
       }
 
       if (req.body.await === true) {
-        console.log(`waiting 10 minutes...`);
+        console.log(`waiting 1 minutes...`);
         setTimeout(function () {
           console.log(`fix start`);
           shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
@@ -822,7 +822,7 @@ Ghost.prototype.photoRouter = function (needs) {
               console.log(`fix done`);
             }
           });
-        }, (10 * 60 * 1000));
+        }, (60 * 1000));
       } else {
         shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
           if (err) {
