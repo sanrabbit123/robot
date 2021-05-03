@@ -635,7 +635,7 @@ ProposalJs.prototype.insertInitBox = function () {
   margin = <%% 52, 52, 50, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 31, 30, 27.5, 23, 5.5 %%>;
+  titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
 
   this.whiteBoxNumbers.leftMargin = margin + titleLeft;
@@ -650,7 +650,7 @@ ProposalJs.prototype.insertInitBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  quoteTop = <%% 8, 8, 8, 8, 0 %%>;
+  quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
   quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
   quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
@@ -922,11 +922,11 @@ ProposalJs.prototype.insertInitBox = function () {
   if (mobile) {
     style = {
       position: "absolute",
-      top: String(4.5) + ea,
+      top: String(3.7) + ea,
       left: String(13) + '%',
       width: String(74) + '%',
       height: String(9) + ea,
-      fontSize: String(3.2) + ea,
+      fontSize: String(3.5) + ea,
       fontWeight: String(400),
       wordSpacing: String(-1) + "px",
       lineHeight: String(1.6),
@@ -960,11 +960,11 @@ ProposalJs.prototype.insertInitBox = function () {
   if (mobile) {
     style = {
       position: "absolute",
-      top: String(16) + ea,
+      top: String(15.5) + ea,
       left: String(11) + '%',
       width: String(78) + '%',
       height: String(9) + ea,
-      fontSize: String(3.2) + ea,
+      fontSize: String(3.5) + ea,
       fontWeight: String(400),
       lineHeight: String(1.6),
       wordSpacing: String(-1) + "px",
@@ -1012,7 +1012,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontWeight: String(600),
     top: String(0),
     left: String(0),
-    wordSpacing: String(initWordingWordSpacing) + ea,
+    wordSpacing: String(initWordingWordSpacing) + "px",
   };
 
   factorBarStyle = {
@@ -1040,7 +1040,7 @@ ProposalJs.prototype.insertInitBox = function () {
     color: GeneralJs.colorChip.green,
     bottom: String(factorValueBottom) + ea,
     right: String(factorValueRight) + ea,
-    wordSpacing: String(initWordingWordSpacing) + ea,
+    wordSpacing: String(initWordingWordSpacing) + "px",
   };
 
   for (let i = 0; i < factors.length; i++) {
@@ -1091,6 +1091,8 @@ ProposalJs.prototype.insertInitBox = function () {
         spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/ /g) ]).length;
         spaceException = (2 * spaceException);
         width = width + spaceException;
+      } else if (mobile) {
+        width = width + 4;
       }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
       factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
@@ -1306,7 +1308,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
-  designerTitleSize = <%% 20, 20, 20, 18, 3.5 %%>;
+  designerTitleSize = <%% 20, 20, 20, 18, 4 %%>;
   titleWordSpacing = <%% -2, -2, -2, -2, -2 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   margin = <%% 18, 18, 18, 14, 2 %%>;
@@ -1319,15 +1321,15 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   descriptionPaddingLeft = <%% 28, 38, 38, 32, 7 %%>;
   descriptionPaddingRight = <%% 20, 20, 20, 20, 5 %%>;
   descriptionMargin = <%% 10, 6, 6, 6, 1 %%>;
-  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 3 %%>;
+  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 3.4 %%>;
 
   descriptionTitleTop = <%% -30, -30, -30, -30, 4 %%>;
   descriptionTitleLeft = <%% 1, 1, 1, 1, this.subBoxMargin.left %%>;
-  descriptionTitleSize = <%% 16, 16, 16, 14, 3.2 %%>;
+  descriptionTitleSize = <%% 16, 16, 16, 14, 3.5 %%>;
 
   pointRadius = <%% 2, 2, 2, 2, 0.6 %%>;
   pointLeftIndent = <%% 5, 5, 5, 5, 1.2 %%>;
-  pointTop = <%% 9, 9, 9, 9, 1.8 %%>;
+  pointTop = <%% 9, 9, 9, 9, 2.1 %%>;
 
   indexFont = <%% 19, 19, 19, 19, 3 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1356,8 +1358,11 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     fontSize: String(designerTitleSize) + ea,
     fontWeight: String(500),
     wordSpacing: String(titleWordSpacing) + "px",
-    marginBottom: String(margin + (GeneralJs.isMac() || mobile ? 0 : -2)) + ea,
+    marginBottom: String(margin + (GeneralJs.isMac() ? 0 : -2)) + ea,
   };
+  if (mobile) {
+    style.marginBottom = String(2.5) + ea;
+  }
   for (let i in style) {
     designerTitle.style[i] = style[i];
   }
@@ -1701,7 +1706,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   leftIndent = <%% 20, 6, 6, 6, 0 %%>;
   width1 = <%% 360, 320, 450, 360, 60 %%>;
   width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
-  height = <%% 26, 24, 19, 16, 4.5 %%>;
+  height = <%% 26, 24, 19, 16, 4.8 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
   margin = <%% 12, 12, 12, 12, 1 %%>;
@@ -1711,18 +1716,18 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   pointTopValue = <%% 8, 8, 8, 8, 8 %%>;
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
-  checkBoxRadius = <%% 4, 4, 4, 4, 1 %%>;
-  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 0.9 %%>;
+  checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
+  checkBoxRadiusTop = <%% 6, 4.5, 5, 4.5, 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
-  titleSize = <%% 16, 14, 15, 13.5, 2.9 %%>;
+  titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;
   titleIndent = <%% 4, 3, 4, 4, 0 %%>;
   titleTop = 0;
 
   valueIndent = <%% 140, 120, 150, 130, 30 %%>;
 
-  checkboxMarginRight = <%% 30, 24, 24, 24, 5 %%>;
-  radioMarginRight = <%% 35, 32, 32, 32, 5 %%>;
+  checkboxMarginRight = <%% 30, 24, 24, 24, 5.6 %%>;
+  radioMarginRight = <%% 35, 32, 32, 32, 5.6 %%>;
 
   valueDomBarLeft = <%% 60, 58, 58, 60, 13 %%>;
   valueDomValueWidth = <%% 13, 13, 13, 60, 3.8 %%>;
@@ -1804,7 +1809,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
       fontWeight: String(500),
       wordSpacing: String(wordSpacing) + "px",
       left: String((pointRadius * 2) + titleIndent) + ea,
-      top: String(desktop ? 0 : 0.3) + ea,
+      top: String(desktop ? 0 : 0) + ea,
     };
     for (let j in style) {
       titleDom.style[j] = style[j];
@@ -1855,7 +1860,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (mobile) {
         delete style.left;
         style.right = String(0) + ea;
-        style.width = String(74) + '%';
+        style.width = String(76) + '%';
         style.textAlign = "right";
       }
       for (let j in style) {
@@ -2030,7 +2035,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   if (desktop) {
     mother.style.height = String((top + bottom) + (height * maxNumber) + (margin * (maxNumber - 1))) + ea;
   } else {
-    mother.style.height = String(117.5) + ea;
+    mother.style.height = String(121) + ea;
   }
 
 }
@@ -2076,7 +2081,7 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
     entireHeight = <%% 20, 21, 20, 18, 4 %%>;
     entireMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
 
-    fontSize = <%% 15, 15, 15, 13.5, 2.7 %%>;
+    fontSize = <%% 15, 15, 15, 13.5, 2.9 %%>;
     wordSpacing = <%% -1, -1, -1, -1, -2 %%>;
 
     portfolioRight = <%% 80, 76, 76, 76, 0 %%>;
@@ -2145,6 +2150,10 @@ ProposalJs.prototype.designerPortfolio = function (mother, desid) {
         color: GeneralJs.colorChip.green,
         wordSpacing: String(wordSpacing) + "px",
       };
+      if (mobile) {
+        style.fontSize = String(fontSize + 0.3) + ea;
+        style.top = String(-0.15) + ea;
+      }
       for (let j in style) {
         portfolioDom.style[j] = style[j];
       }
@@ -2578,8 +2587,8 @@ ProposalJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
   buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.8 %%>;
-  buttonTextSize = <%% 20, 20, 20, 20, 3.5 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.5 %%>;
+  buttonTextSize = <%% 20, 20, 20, 20, 3.8 %%>;
 
   if (desktop) {
     buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
@@ -2646,7 +2655,7 @@ ProposalJs.prototype.insertPannelBox = function () {
     };
     if (mobile) {
       if (this.proposal.detail.length > 3) {
-        if (z < Math.floor(this.proposal.detail.length / 3) * 3) {
+        if (z < Math.floor((this.proposal.detail.length - 1) / 3) * 3) {
           style.marginBottom = String(buttonMargin) + ea;
         }
       }
