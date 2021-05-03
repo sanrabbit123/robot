@@ -382,6 +382,7 @@ const ProposalJs = function () {
   this.boxTops = [];
   this.designerButtons = [];
   this.media = null;
+  this.osException = 0;
 }
 
 //static
@@ -580,7 +581,7 @@ ProposalJs.prototype.setBaseTong = function () {
 
 ProposalJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { client, ea, media } = this;
+  const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -761,7 +762,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3)) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + osException) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -783,7 +784,7 @@ ProposalJs.prototype.insertInitBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + ea,
-      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47))) + ea,
+      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + osException) + ea,
       left: String(titleLeft) + ea,
       color: GeneralJs.colorChip.black,
     };
@@ -800,7 +801,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2))) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + osException) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -2910,6 +2911,7 @@ ProposalJs.prototype.launching = async function (loading) {
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
     this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
+    this.osException = (GeneralJs.isMac() ? 0 : 2);
 
     //base setting
     this.setBackground();
