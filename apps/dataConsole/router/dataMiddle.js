@@ -67,7 +67,7 @@ MiddleCommunication.prototype.middleBinary = async function () {
   const { fileSystem, shell, shellLink, s3FileList, binaryRequest } = this.mother;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const S3HOST = ADDRESS["s3info"]["host"];
-  const binaryPathConst = "dataConsole/middle";
+  const binaryPathConst = "middle";
   const staticFolder = process.env.HOME + "/static";
   try {
     const middleBinaries = await s3FileList(binaryPathConst);

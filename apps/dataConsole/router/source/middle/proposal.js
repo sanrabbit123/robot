@@ -480,7 +480,7 @@ ProposalJs.prototype.setNavigator = function () {
   let mobileMargin;
 
   iconHeight = <%% 22, 22, 20, 18, 16 %%>;
-  iconTop = <%% 21, 21, 20, 18, 19 %%>;
+  iconTop = <%% 21, 21, 20, 18, 20 %%>;
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 19, 18 %%>;
@@ -2613,9 +2613,18 @@ ProposalJs.prototype.insertPannelBox = function () {
   designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "relative",
-    height: String(buttonHeight) + ea,
+    height: desktop ? String(buttonHeight) + ea : "auto",
     textAlign: "center",
   };
+  if (mobile) {
+    if (this.proposal.detail.length >= 3) {
+      style.width = (buttonWidth * 3) + (buttonMargin * 2);
+    } else {
+      style.width = (buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1));
+    }
+    style.left = "calc(50% - " + String(style.width / 2) + ea + ")";
+    style.width = String(style.width) + ea;
+  }
   for (let i in style) {
     designerButtonTong.style[i] = style[i];
   }
@@ -2627,7 +2636,7 @@ ProposalJs.prototype.insertPannelBox = function () {
       display: "inline-block",
       position: "relative",
       width: String(buttonWidth) + ea,
-      height: String(100) + '%',
+      height: desktop ? String(100) + '%' : String(buttonHeight) + ea,
       background: GeneralJs.colorChip.gray2,
       color: GeneralJs.colorChip.deactive,
       borderRadius: String(3) + "px",
@@ -2635,6 +2644,16 @@ ProposalJs.prototype.insertPannelBox = function () {
       transition: "all 0.2s ease",
       cursor: "pointer",
     };
+    if (mobile) {
+      if (this.proposal.detail.length > 3) {
+        if (z < Math.floor(this.proposal.detail.length / 3) * 3) {
+          style.marginBottom = String(buttonMargin) + ea;
+        }
+      }
+      if (z % 3 === 2) {
+        delete style.marginRight;
+      }
+    }
     if (z === this.proposal.detail.length - 1) {
       delete style.marginRight;
     }
