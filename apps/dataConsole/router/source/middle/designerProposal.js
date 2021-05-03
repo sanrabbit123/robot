@@ -1738,7 +1738,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
   checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
-  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 3.5), 1.2 %%>;
+  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 3), 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
   titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;
@@ -2426,13 +2426,13 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  box0Size = <%% 140, 140, 140, 110, 4.5 %%>;
+  box0Size = <%% 140, 140, 140, 120, 4.5 %%>;
   box1Size = <%% 25, 25, 25, 25, 3 %%>;
   box0Margin = <%% 55, 55, 55, 55, 3 %%>;
   box1Margin = <%% 18, 18, 18, 18, 3 %%>;
 
   marginBottom = <%% 9, 9, 9, 9, 2 %%>;
-  wordSize = <%% 15, 15, 15, 13.5, 2.8 %%>;
+  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2610,12 +2610,12 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 48, 8.4 %%>;
-  buttonWidth = <%% 108, 108, 108, 108, 20 %%>;
-  buttonMargin = <%% 8, 8, 8, 8, 2 %%>;
+  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
+  buttonWidth = <%% 108, 108, 108, 84, 20 %%>;
+  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
   buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
-  buttonTextSize = <%% 20, 20, 20, 20, 3.8 %%>;
+  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
     buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
@@ -2868,10 +2868,10 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   informationArea = GeneralJs.nodes.div.cloneNode(true);
   informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>위 버튼을 눌러주세요!");
   style = {
-    fontSize: String(desktop ? 13 : 3) + ea,
+    fontSize: String(desktop ? (!media[3] ? 13 : 11) : 3) + ea,
     color: GeneralJs.colorChip.green,
     wordSpacing: String(wordSpacing) + "px",
-    lineHeight: String(desktop ? 1.5 : 1.4),
+    lineHeight: String(desktop && !media[3] ? 1.5 : 1.4),
   };
   for (let i in style) {
     informationArea.style[i] = style[i];
