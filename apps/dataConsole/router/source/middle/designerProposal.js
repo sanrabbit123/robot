@@ -671,17 +671,17 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 20 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 14, 15.5 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 15.5 %%>;
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
   factorBoxWidth = <%% 630, 672, 570, 478, 630 %%>;
-  factorBoxTop = <%% 100, 100, 100, 89, 9 %%>;
-  factorBoxTopVisual = <%% 3, 11, 9, 3, 3 %%>;
+  factorBoxTop = <%% 100, 100, 100, 82, 9 %%>;
+  factorBoxTopVisual = <%% 3, 11, 9, 1, 3 %%>;
 
   factorPaddingLeft = <%% 10, 10, 10, 10, 16 %%>;
   factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
-  factorSize = <%% 17.5, 17.5, 17.5, 15.5, 3.5 %%>;
+  factorSize = <%% 17.5, 17.5, 17.5, 14, 3.5 %%>;
   factors = [
     { title: "예산", value: request.budget },
     { title: "가족 구성원", value: request.family },
@@ -695,9 +695,9 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 41, 43, 33, 8.5 %%>;
-  factorArrowHeadWidth = <%% 8, 8, 8, 8, 0 %%>;
-  factorArrowHeadTop = <%% 39, 37, 39, 29, 7 %%>;
+  factorBarTop = <%% 43, 41, 43, 26, 8.5 %%>;
+  factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
+  factorArrowHeadTop = <%% 39, 37, 39, 23, 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
   if (desktop) {
@@ -705,11 +705,11 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
   }
 
-  factorValueBottom = <%% 11, 13, 13, 12, 2.5 %%>;
+  factorValueBottom = <%% 11, 13, 13, 3, 2.5 %%>;
   factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
 
   factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
-  factorValueHeadMargin = <%% 10, 10, 10, 10, 10 %%>;
+  factorValueHeadMargin = <%% 10, 10, 10, 7, 10 %%>;
 
   desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
   desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
@@ -2303,9 +2303,6 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
 
   if (desktop) {
     feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
-    if (media[2]) {
-      feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -4);
-    }
     vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
   }
 
