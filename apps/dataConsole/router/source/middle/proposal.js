@@ -487,6 +487,10 @@ ProposalJs.prototype.setNavigator = function () {
   ea = desktop ? ea : "px";
   mobileMargin = 28;
 
+  if (desktop) {
+    wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
+  }
+
   naviBase = GeneralJs.nodes.div.cloneNode(true);
   naviBase.classList.add("backblurdefault_lite");
   style = {
@@ -1082,6 +1086,10 @@ ProposalJs.prototype.insertInitBox = function () {
     let width;
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
+      if (desktop && !GeneralJs.isMac()) {
+        console.log(([ ...factorsValueDoms[i].matchAll(/,/g) ]).length)
+
+      }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
       factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
     }
