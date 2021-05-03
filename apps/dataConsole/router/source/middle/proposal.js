@@ -698,6 +698,7 @@ ProposalJs.prototype.insertInitBox = function () {
   pastBlocks = [];
   designerFactorTitleTop = <%% 4, 4, 4, 4, 4 %%>;
   targetDesignerBoxTop = <%% 24, 24, 24, 24, 24 %%>;
+  targetDesignerBoxTop = targetDesignerBoxTop + (GeneralJs.isMac() ? 0 : 2);
   targetDesignerBoxIndent = <%% 34, 36, 36, 36, 36 %%>;
 
   designerFactorTitleSize = <%% 13, 13, 13, 13, 13 %%>;
@@ -710,6 +711,7 @@ ProposalJs.prototype.insertInitBox = function () {
   topBoxRight = <%% 1, 1, 1, 1, 1 %%>;
 
   designerBarBottom = <%% 2, 2, 2, 2, 2 %%>;
+  designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
   designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
 
   //total white box
@@ -762,7 +764,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3) + osException) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (GeneralJs.isMac() ? 0 : 4)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
@@ -784,7 +786,7 @@ ProposalJs.prototype.insertInitBox = function () {
       fontSize: String(titleFont) + ea,
       fontWeight: String(titleFontWeight),
       wordSpacing: String(wordSpacing) + ea,
-      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + osException) + ea,
+      top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47)) + (GeneralJs.isMac() ? 0 : 4)) + ea,
       left: String(titleLeft) + ea,
       color: GeneralJs.colorChip.black,
     };
@@ -801,7 +803,7 @@ ProposalJs.prototype.insertInitBox = function () {
     fontSize: String(titleFont) + ea,
     fontWeight: String(titleFontWeight),
     wordSpacing: String(wordSpacing) + "px",
-    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + osException) + ea,
+    top: String((media[0] ? 0 : media[1] ? 1 : 3) + (titleFont * (media[0] ? 1.45 : 1.47) * (media[0] ? 1 : 2)) + (GeneralJs.isMac() ? 0 : 4)) + ea,
     left: String(titleLeft) + ea,
     color: GeneralJs.colorChip.black,
   };
