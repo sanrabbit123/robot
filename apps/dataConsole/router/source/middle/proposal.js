@@ -479,8 +479,8 @@ ProposalJs.prototype.setNavigator = function () {
   let nameTong;
   let mobileMargin;
 
-  iconHeight = <%% 22, 22, 20, 18, 17 %%>;
-  iconTop = <%% 21, 21, 20, 18, 18 %%>;
+  iconHeight = <%% 22, 22, 20, 18, 16 %%>;
+  iconTop = <%% 21, 21, 20, 18, 19 %%>;
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 14 %%>;
   wordTop = <%% 24, 24, 21, 19, 19 %%>;
@@ -1724,7 +1724,7 @@ ProposalJs.prototype.designerAnalytics = function (mother, desid) {
   checkboxMarginRight = <%% 30, 24, 24, 24, 5 %%>;
   radioMarginRight = <%% 35, 32, 32, 32, 5 %%>;
 
-  valueDomBarLeft = <%% 60, 58, 58, 60, 11.5 %%>;
+  valueDomBarLeft = <%% 60, 58, 58, 60, 13 %%>;
   valueDomValueWidth = <%% 13, 13, 13, 60, 3.8 %%>;
   valueDomValueMargin = <%% 10, 10, 10, 60, 0 %%>;
 
