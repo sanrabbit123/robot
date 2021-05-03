@@ -2343,18 +2343,17 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   mother.appendChild(vatBox);
 
   if (desktop) {
-    GeneralJs.timeouts["designerFeeArrow"] = setTimeout(function () {
-      let standardWidth, spaceException;
-      standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
+    setTimeout(function () {
+      let standardWidth, spaceException, visualException;
+      visualException = 2;
+      standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin + visualException;
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
         spaceException = (8 * spaceException);
-        standardWidth = standardWidth - spaceException;
+        standardWidth = standardWidth - visualException - spaceException;
       }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
       arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
-      clearTimeout(GeneralJs.timeouts["designerFeeArrow"]);
-      GeneralJs.timeouts["designerFeeArrow"] = null;
     }, 0);
   }
 
