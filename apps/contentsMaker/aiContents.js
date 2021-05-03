@@ -475,7 +475,6 @@ AiContents.prototype.to_poo = async function () {
   try {
 
     const front_www = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
-    const office_www = `${ADDRESS["officeinfo"]["ghost"]["user"]}@${ADDRESS["officeinfo"]["ghost"]["host"]}:/home/${ADDRESS["officeinfo"]["ghost"]["user"]}/samba/drive/front/www`;
     const image = `list_image`;
     const porporpor = `list_svg/porporpor`;
     const revrevrev = `list_svg/revrevrev`;
@@ -502,20 +501,15 @@ AiContents.prototype.to_poo = async function () {
 
     //move svgs and ai delete
     p_path = `${this.options.home_dir}/result/${p_id}code`;
-    p_path_server = [
-      `${front_www}/${porporpor}`,
-      `${office_www}/${porporpor}`
-    ];
+    p_path_server = `${front_www}/${porporpor}`;
 
     order = ``;
-    for (let path of p_path_server) {
-      order += `scp ${shellLink(p_path)}/moportivecgaro${p_id}.svg ${path}/mobile/motitlegaro/;`;
-      order += `scp ${shellLink(p_path)}/portivecgaro${p_id}.svg ${path}/titlegaro/;`;
-      order += `scp ${shellLink(p_path)}/porhovecgaro${p_id}.svg ${path}/titlehovergaro/;`;
-      order += `scp ${shellLink(p_path)}/moportivec${p_id}.svg ${path}/mobile/motitlesero/;`;
-      order += `scp ${shellLink(p_path)}/portivec${p_id}.svg ${path}/titlesero/;`;
-      order += `scp ${shellLink(p_path)}/porhovec${p_id}.svg ${path}/titlehoversero/;`;
-    }
+    order += `scp ${shellLink(p_path)}/moportivecgaro${p_id}.svg ${p_path_server}/mobile/motitlegaro/;`;
+    order += `scp ${shellLink(p_path)}/portivecgaro${p_id}.svg ${p_path_server}/titlegaro/;`;
+    order += `scp ${shellLink(p_path)}/porhovecgaro${p_id}.svg ${p_path_server}/titlehovergaro/;`;
+    order += `scp ${shellLink(p_path)}/moportivec${p_id}.svg ${p_path_server}/mobile/motitlesero/;`;
+    order += `scp ${shellLink(p_path)}/portivec${p_id}.svg ${p_path_server}/titlesero/;`;
+    order += `scp ${shellLink(p_path)}/porhovec${p_id}.svg ${p_path_server}/titlehoversero/;`;
 
     svgAis = await fileSystem(`readDir`, [ `${p_path}/portp${p_id}/svg` ]);
     delete_arr = [];
@@ -531,18 +525,13 @@ AiContents.prototype.to_poo = async function () {
     //review version
     if (r_id !== `none`) {
       r_path = `${this.options.home_dir}/result/${r_id}code`;
-      r_path_server = [
-        `${front_www}/${revrevrev}`,
-        `${office_www}/${revrevrev}`
-      ];
+      r_path_server = `${front_www}/${revrevrev}`;
 
-      for (let path of r_path_server) {
-        order += `scp ${shellLink(r_path)}/morevtivec${r_id}.svg ${path}/morevivector/;`;
-        order += `scp ${shellLink(r_path)}/revhovec${r_id}.svg ${path}/revhovector/;`;
-        order += `scp ${shellLink(r_path)}/revtivec${r_id}.svg ${path}/revivector/;`;
-        order += `scp ${shellLink(r_path)}/nu${r_id}.svg ${path}/detail/number;`;
-        order += `scp -r ${shellLink(r_path)}/${r_id} ${path}/detail/;`;
-      }
+      order += `scp ${shellLink(r_path)}/morevtivec${r_id}.svg ${r_path_server}/morevivector/;`;
+      order += `scp ${shellLink(r_path)}/revhovec${r_id}.svg ${r_path_server}/revhovector/;`;
+      order += `scp ${shellLink(r_path)}/revtivec${r_id}.svg ${r_path_server}/revivector/;`;
+      order += `scp ${shellLink(r_path)}/nu${r_id}.svg ${r_path_server}/detail/number;`;
+      order += `scp -r ${shellLink(r_path)}/${r_id} ${r_path_server}/detail/;`;
 
       revAis = await fileSystem(`readDir`, [ `${r_path}/${r_id}` ]);
       for (let i of revAis) {
@@ -557,7 +546,6 @@ AiContents.prototype.to_poo = async function () {
     }
 
     order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
-    order += `scp -r ${shellLink(p_path)}/portp${p_id} ${office_www}/${image}/;`;
 
     //to S3
     let s3TargetDir, s3TargetDirList;

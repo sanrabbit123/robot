@@ -1119,9 +1119,9 @@ Ghost.prototype.serverLaunching = async function () {
     }
 
     //launching python cron
-    // cronScript = await cron.scriptReady(0);
-    // shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    // console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
+    cronScript = await cron.scriptReady(2);
+    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {
