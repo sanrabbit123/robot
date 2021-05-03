@@ -1084,11 +1084,13 @@ ProposalJs.prototype.insertInitBox = function () {
   //fix arrow width and head
   GeneralJs.timeouts["factorsValueDoms"] = setTimeout(function () {
     let width;
+    let spaceException;
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
-        console.log(([ ...factorsValueDoms[i].textContent.matchAll(/,/g) ]).length)
-
+        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/ /g) ]).length;
+        spaceException = (3 * spaceException);
+        width = width + spaceException;
       }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
       factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
