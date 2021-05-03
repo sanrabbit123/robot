@@ -1361,7 +1361,7 @@ ProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
     marginBottom: String(margin + (GeneralJs.isMac() ? 0 : -2)) + ea,
   };
   if (mobile) {
-    style.marginBottom = String(2) + ea;
+    style.marginBottom = String(2.2) + ea;
   }
   for (let i in style) {
     designerTitle.style[i] = style[i];
@@ -3000,8 +3000,8 @@ ProposalJs.prototype.launching = async function (loading) {
       }
     } else {
       this.mother.footerMake();
+      this.mother.homeliaisonTalk();
     }
-    this.mother.homeliaisonTalk();
 
     this.totalContents.style.height = "auto";
 
