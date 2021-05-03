@@ -682,16 +682,14 @@ ProposalJs.prototype.insertInitBox = function () {
   factorArrowHeadTop = <%% 39, 37, 39, 29, 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
 
-  factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -2);
-  factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -2);
+  factorBarTop = factorBarTop + (GeneralJs.isMac() ? 0 : -3);
+  factorArrowHeadTop = factorArrowHeadTop + (GeneralJs.isMac() ? 0 : -3);
 
   factorValueBottom = <%% 11, 13, 13, 12, 2.5 %%>;
   factorValueRight = <%% 36, 36, 36, 36, 4.5 %%>;
 
   factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
   factorValueHeadMargin = <%% 10, 10, 10, 10, 10 %%>;
-
-  factorValueHeadMargin = factorValueHeadMargin + (GeneralJs.isMac() ? 0 : -4);
 
   desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
   desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
@@ -1079,8 +1077,8 @@ ProposalJs.prototype.insertInitBox = function () {
     let width;
     for (let i = 0; i < factorsValueDoms.length; i++) {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
-      factorsBarDoms[i].style.width = String(width) + "px";
-      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin) + "px";
+      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() ? 0 : 2)) + "px";
+      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() ? 0 : 2)) + "px";
     }
     clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
     GeneralJs.timeouts["factorsValueDoms"] = null;
