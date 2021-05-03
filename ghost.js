@@ -773,7 +773,7 @@ Ghost.prototype.photoRouter = function (needs) {
           await fileSystem(`mkdir`, [ `${sambaDir}/${tempFolder}` ]);
           await fileSystem(`mkdir`, [ `${sambaDir}/${tempFolder}/${name}` ]);
 
-          shell.exec(`node ${shellLink(process.cwd() + '/' + "robot.js")} fixDir ${shellLink(sambaDir + '/' + tempFolder)}`);
+          shell.exec(`node ${shellLink(process.cwd() + '/' + "robot.js")} fixDir ${shellLink(sambaDir + '/' + tempFolder)};`);
 
           folderList = await fileSystem(`readDir`, [ `${sambaDir}/${tempFolder}` ]);
           folderList = folderList.filter((f) => { return f !== `.DS_Store` });
@@ -782,13 +782,58 @@ Ghost.prototype.photoRouter = function (needs) {
             throw new Error("error");
           }
 
-          shell.exec(`mv ${shellLink(sambaDir + '/' + tempFolder + '/' + folderList[0])} ${shellLink(sambaDir + '/' + folderList[0])}`);
+          shell.exec(`mv ${shellLink(sambaDir + '/' + tempFolder + '/' + folderList[0])} ${shellLink(sambaDir + '/' + folderList[0])};`);
+          shell.exec(`rm -rf ${shellLink(sambaDir + '/' + tempFolder)};`);
 
-          res.send(JSON.stringify({ message: "success" }));
+          res.send(JSON.stringify({ message: "make folder : " + (sambaDir + '/' + folderList[0]) }));
         }
       } catch (e) {
         console.log(e);
       }
+    }
+  };
+
+  //POST - fixDir
+  funcObj.post_fixDir = {
+    link: [ "/fixDir" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      let target;
+      if (req.body.target === undefined) {
+        res.send(JSON.stringify({ message: "invaild body : must be 'target'" }));
+      } else {
+        target = sambaDir + "/" + req.body.target;
+      }
+
+      if (req.body.await === true) {
+        console.log(`waiting 10 minutes...`);
+        setTimeout(function () {
+          console.log(`fix start`);
+          shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(`fix done`);
+            }
+          });
+        }, (10 * 60 * 1000));
+      } else {
+        shell.exec(`node ${shellLink(process.cwd())}/robot.js fixDir ${shellLink(target)}`, { async: true }, function (err, stdout, stderr) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(`fix done`);
+          }
+        });
+      }
+
+      res.send(JSON.stringify({ message: "will do" }));
     }
   };
 

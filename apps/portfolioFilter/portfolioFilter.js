@@ -366,8 +366,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     //google drive upload
     if (liteMode || this.clientNullATarget.includes(this.clientName)) {
-      await photoRequest("mkdir", { name: this.folderName });
-      console.log(`make folder ${this.folderName} done`);
+      console.log(await photoRequest("mkdir", { name: this.folderName }));
     } else {
       ghostPhotos = await photoRequest("ls");
       ghostPhotosTarget = null;
@@ -393,6 +392,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     } else {
       shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
+
+    console.log(await photoRequest("fixDir", { target: this.folderName }));
 
     thisFolderId = await drive.searchId_inPython(this.folderName);
     while (thisFolderId === null) {

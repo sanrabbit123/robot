@@ -92,12 +92,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const photoRequest = ghostRequest().bind("photo");
-
-    await photoRequest("mkdir", { name: "가나다라마바사" });
-
-
-
 
 
 
