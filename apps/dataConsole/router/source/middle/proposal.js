@@ -1089,7 +1089,7 @@ ProposalJs.prototype.insertInitBox = function () {
       width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
       if (desktop && !GeneralJs.isMac()) {
         spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/ /g) ]).length;
-        spaceException = (3 * spaceException);
+        spaceException = (2.5 * spaceException);
         width = width + spaceException;
       }
       factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 2)) + "px";
@@ -2343,10 +2343,18 @@ ProposalJs.prototype.designerFee = function (mother, fee) {
   mother.appendChild(vatBox);
 
   if (desktop) {
-    setTimeout(function () {
-      const standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
+    GeneralJs.timeouts["designerFeeArrow"] = setTimeout(function () {
+      let standardWidth, spaceException;
+      standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin;
+      if (desktop && !GeneralJs.isMac()) {
+        spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
+        spaceException = (2.5 * spaceException);
+        standardWidth = standardWidth - spaceException;
+      }
       arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
       arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
+      clearTimeout(GeneralJs.timeouts["designerFeeArrow"]);
+      GeneralJs.timeouts["designerFeeArrow"] = null;
     }, 0);
   }
 
