@@ -91,10 +91,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    const coreRequest = ghostRequest().bind("core");
 
 
-
+    console.log(await coreRequest("robotWill"))
 
 
 

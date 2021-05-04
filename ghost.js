@@ -1187,6 +1187,8 @@ Ghost.prototype.fileRouter = function (static) {
         "Access-Control-Allow-Headers": '*',
       });
 
+      console.log(req.body);
+
       res.send(JSON.stringify({}));
 
       // if (req.body.command === undefined) {
