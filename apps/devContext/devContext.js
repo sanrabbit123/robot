@@ -120,7 +120,7 @@ DevContext.prototype.launching = async function () {
 
     // update sheets
     // console.log(await ghostRequest(`updateSheets`, {
-    //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
+    //   id: "1z6QgrhFKbKnrMCdiuyQwSOnytCA0yRZ5pXdVjPr0YsM",
     //   values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
     //   cleanView: true
     // }));
