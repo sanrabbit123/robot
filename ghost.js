@@ -432,6 +432,38 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - robot will do
+  funcObj.post_robotWillDo = {
+    link: [ "/robotWill", "/robotWillDo", "/robotTimer", "/timer" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.command === undefined || req.body.time === undefined || typeof req.body.time !== "object") {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'String or Array: command, Object: time'" }));
+      } else {
+        let { command, time } = req.body;
+        if (Array.isArray(command)) {
+          command = command.join(" ");
+        }
+        instance.setTimer(function () {
+          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(stdout);
+            }
+          });
+        }, time);
+        res.send(JSON.stringify({ message: "will do" }));
+      }
+    }
+  };
+
   //POST - fixDir
   funcObj.post_fixDir = {
     link: [ "/fixDir" ],
@@ -1178,7 +1210,7 @@ Ghost.prototype.fileRouter = function (static) {
   //POST - robot will do
   funcObj.post_robotWillDo = {
     binary: false,
-    link: [ "/robotWill", "/robotWillDo" ],
+    link: [ "/robotWill", "/robotWillDo", "/robotTimer", "/timer" ],
     func: function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -1186,33 +1218,25 @@ Ghost.prototype.fileRouter = function (static) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
-      console.log(req.body);
-      console.log(req.body.test.aaa);
-      res.send(JSON.stringify({}));
-
-      // if (req.body.command === undefined) {
-      //   console.log(req.body);
-      //   res.send(JSON.stringify({ error: "must be property 'command'" }));
-      // } else {
-      //   let { command } = req.body;
-      //   if (Array.isArray(command)) {
-      //     command = command.join(" ");
-      //   }
-      //
-      //
-      //
-      //   shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
-      //     if (err) {
-      //       console.log(err);
-      //     } else {
-      //       console.log(stdout);
-      //     }
-      //   });
-      //   res.send(JSON.stringify({ message: "will do" }));
-      // }
-
-
+      if (req.body.command === undefined || req.body.time === undefined || typeof req.body.time !== "object") {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'String or Array: command, Object: time'" }));
+      } else {
+        let { command, time } = req.body;
+        if (Array.isArray(command)) {
+          command = command.join(" ");
+        }
+        instance.setTimer(function () {
+          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(stdout);
+            }
+          });
+        }, time);
+        res.send(JSON.stringify({ message: "will do" }));
+      }
     }
   }
 
