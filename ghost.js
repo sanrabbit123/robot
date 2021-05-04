@@ -1188,7 +1188,7 @@ Ghost.prototype.fileRouter = function (static) {
       });
 
       console.log(req.body);
-
+      console.log(req.body.test.aaa);
       res.send(JSON.stringify({}));
 
       // if (req.body.command === undefined) {

@@ -94,7 +94,7 @@ DevContext.prototype.launching = async function () {
     const coreRequest = ghostRequest().bind("core");
 
 
-    console.log(await coreRequest("robotWill"))
+    console.log(await coreRequest("robotWill", { hello: "hi", test: { aaa: 24, eff: "abd", ett: [ 1, 2, { d: "aa" } ], bb: { a: 33 } } }))
 
 
 
