@@ -415,7 +415,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (Array.isArray(command)) {
           command = command.join(" ");
         }
-        if (req.body.async === true) {
+        if (req.body.await === true) {
+          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
+          res.send(JSON.stringify({ stdout }));
+        } else {
           shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
             if (err) {
               console.log(err);
@@ -424,9 +427,6 @@ Ghost.prototype.ghostRouter = function (needs) {
             }
           });
           res.send(JSON.stringify({ message: "will do" }));
-        } else {
-          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
-          res.send(JSON.stringify({ stdout }));
         }
       }
     }
@@ -1190,7 +1190,10 @@ Ghost.prototype.fileRouter = function (static) {
         if (Array.isArray(command)) {
           command = command.join(" ");
         }
-        if (req.body.async === true) {
+        if (req.body.await === true) {
+          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
+          res.send(JSON.stringify({ stdout }));
+        } else {
           shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
             if (err) {
               console.log(err);
@@ -1199,9 +1202,6 @@ Ghost.prototype.fileRouter = function (static) {
             }
           });
           res.send(JSON.stringify({ message: "will do" }));
-        } else {
-          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
-          res.send(JSON.stringify({ stdout }));
         }
       }
     }
