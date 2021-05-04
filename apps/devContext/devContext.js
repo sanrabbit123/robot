@@ -212,7 +212,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("a82");
+    // await this.spellCheck("a83");
 
 
     // get corePortfolio by pid
@@ -224,21 +224,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2105_aa01s" ]);
+    // await work.newDesignerToFront([ "d2104_aa06s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2105_aa01s", [
-    //   { porlid: "a82", index: 1 },
-    //   { porlid: "a82", index: 6 },
-    //   { porlid: "a82", index: 13 },
-    //   { porlid: "a82", index: 10 },
-    //   { porlid: "a82", index: 5 },
-    //   { porlid: "a82", index: 17 }
+    // await this.setProposalSettingForDesigner("d2104_aa06s", [
+    //   { porlid: "a83", index: 1 },
+    //   { porlid: "a83", index: 4 },
+    //   { porlid: "a83", index: 11 },
+    //   { porlid: "a83", index: 16 },
+    //   { porlid: "a83", index: 14 },
+    //   { porlid: "a83", index: 15 }
     // ], [
-    //   "홈스타일링부터 구조 변경까지 폭넓은 역량으로 공간의 장점 살려냅니다.",
-    //   "고객님의 라이프 스타일을 최대한 고려해, 필요한 시공과 스타일링을 다채롭게 진행합니다.",
-    //   "갤러리 또는 호텔과 같은 고급스러운 공간 연출에 능하고, 관련 경험 또한 많습니다."
+    //   "고객님의 취향을 존중하여 항상 스타일링 작업 전에 충분한 소통을 합니다.",
+    //   "너무 화려기보다는 깔끔하고 심플하며, 내추럴한 스타일을 지향합니다.",
+    //   "고객님이 원래 사용하시던 제품들의 리폼과 재활용을 통해 쓰임을 새롭게 합니다."
     // ]);
 
 
@@ -246,7 +246,7 @@ DevContext.prototype.launching = async function () {
     // let targetArr, channel, desid, designer, pid, webLinks;
     // channel = "#200_web";
     // targetArr = [
-    //   { designer: "권미정", desid: "de057", pid: "a82" },
+    //   { designer: "김윤진", desid: "de053", pid: "a83" },
     // ];
     // for (let { designer, desid, pid } of targetArr) {
     //   webLinks = [
