@@ -581,6 +581,10 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
     }
   }
   requestFunction = function (bind = null) {
+    const homeGhostNames = [ "ghost", "home", "original", "core" ];
+    if (homeGhostNames.includes(bind)) {
+      bind = "file";
+    }
     return function requestLaunchingFunction(path, data = {}) {
       let promiseObj;
       const shell = require(`shelljs`);

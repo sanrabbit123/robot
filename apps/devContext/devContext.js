@@ -91,6 +91,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+
+
+
+
+
+
 
 
 
@@ -209,7 +216,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p92");
+    // await this.spellCheck("a82");
 
 
     // get corePortfolio by pid
@@ -221,21 +228,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2104_aa09s" ]);
+    // await work.newDesignerToFront([ "d2105_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2104_aa09s", [
-    //   { porlid: "a81", index: 3 },
-    //   { porlid: "a81", index: 6 },
-    //   { porlid: "a81", index: 14 },
-    //   { porlid: "a81", index: 19 },
-    //   { porlid: "a81", index: 21 },
-    //   { porlid: "a81", index: 1 }
+    // await this.setProposalSettingForDesigner("d2105_aa01s", [
+    //   { porlid: "a82", index: 1 },
+    //   { porlid: "a82", index: 6 },
+    //   { porlid: "a82", index: 13 },
+    //   { porlid: "a82", index: 10 },
+    //   { porlid: "a82", index: 5 },
+    //   { porlid: "a82", index: 17 }
     // ], [
-    //   "공간의 톤앤매너를 중요하게 생각하며 모던하면서 간결한 스타일링을 추구합니다.",
-    //   "보기에만 좋은 디자인이 아니라 유지 보수와 사용자 편의에 맞춘 요소들을 반영합니다.",
-    //   "고객에 맞춰 조정하는 편이지만 전문가 입장에서 적극 리드하는 경우가 있을 수 있습니다."
+    //   "홈스타일링부터 구조 변경까지 폭넓은 역량으로 공간의 장점 살려냅니다.",
+    //   "고객님의 라이프 스타일을 최대한 고려해, 필요한 시공과 스타일링을 다채롭게 진행합니다.",
+    //   "갤러리 또는 호텔과 같은 고급스러운 공간 연출에 능하고, 관련 경험 또한 많습니다."
     // ]);
 
 
@@ -243,7 +250,7 @@ DevContext.prototype.launching = async function () {
     // let targetArr, channel, desid, designer, pid, webLinks;
     // channel = "#200_web";
     // targetArr = [
-    //   { designer: "박정훈", desid: "de056", pid: "a81" },
+    //   { designer: "권미정", desid: "de057", pid: "a82" },
     // ];
     // for (let { designer, desid, pid } of targetArr) {
     //   webLinks = [
@@ -285,7 +292,6 @@ DevContext.prototype.launching = async function () {
     this.MONGOC.close();
     this.MONGOLOCALC.close();
     console.log(`done`);
-    process.exit();
   }
 }
 
@@ -560,7 +566,7 @@ DevContext.prototype.aspirantToDesigner = async function () {
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const nameList = [
-      [ "박정훈", "2021-03-05" ],
+      [ "권미정", "2021-03-12" ],
     ];
     const stringToDate = function (str) {
       let temp = str.split('-');

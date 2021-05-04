@@ -136,7 +136,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
   const toUpdateQuery = function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
@@ -276,6 +276,76 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     if (option.selfMongo === undefined || option.selfMongo === null) {
       MONGOC.close();
     }
+
+    //front desid
+    const compileFrontDesidScript = async function (newDesid) {
+      try {
+        const target = `${process.cwd()}/apps/backMaker/idFilter/designer.js`;
+        const hundredString = function (number) {
+          if (number > 99) {
+            return String(number);
+          } else if (number < 10) {
+            return `00${String(number)}`;
+          } else {
+            return `0${String(number)}`;
+          }
+        }
+        let code, func;
+        let tempArr, tempArr2;
+        let tong;
+        let newFrontDesid;
+        let latestFrontDesid;
+        let latestDesid;
+        let tempReg;
+        let index;
+        let result;
+        let newCode;
+        let margin, margin2;
+
+        code = await fileSystem(`readString`, [ target ]);
+        func = require(target);
+        tempArr = code.split("function");
+
+        tong = [];
+        for (let i of tempArr) {
+          tempArr2 = [ ...i.matchAll(/de[0-9][0-9][0-9]/g) ];
+          for (let j of tempArr2) {
+            tong.push(j[0])
+          }
+        }
+        tong = Array.from(new Set(tong));
+        tong.sort((a, b) => {
+          return Number(b.replace(/[^0-9]/gi, '').replace(/^0/, '')) - Number(a.replace(/[^0-9]/gi, '').replace(/^0/, ''));
+        });
+
+        latestFrontDesid = tong[0];
+        latestDesid = func.pastToNew(latestFrontDesid);
+        newFrontDesid = "de" + hundredString(Number(tong[0].replace(/[^0-9]/gi, '').replace(/^0/, '')) + 1);
+
+        tempReg = new RegExp(`[ ]+case [\\"\\']${latestFrontDesid}[\\"\\']\\:[^;]+;[^;]+;`);
+        result = code.match(tempReg);
+        margin = result[0].split("case")[0];
+        margin2 = result[0].split("return")[0].split("\n")[1];
+
+        newCode = code.slice(0, result.index + result[0].length) + `\n${margin}case "${newFrontDesid}":\n${margin2}return "${newDesid}";\n${margin2}break;` + code.slice(result.index + result[0].length);
+        code = newCode;
+
+        tempReg = new RegExp(`[ ]+case [\\"\\']${latestDesid}[\\"\\']\\:[^;]+;[^;]+;`);
+        result = code.match(tempReg);
+        margin = result[0].split("case")[0];
+        margin2 = result[0].split("return")[0].split("\n")[1];
+
+        newCode = code.slice(0, result.index + result[0].length) + `\n${margin}case "${newDesid}":\n${margin2}return "${newFrontDesid}";\n${margin2}break;` + code.slice(result.index + result[0].length);
+        code = newCode;
+
+        await fileSystem(`write`, [ target, code ]);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    await compileFrontDesidScript(newDesid);
 
   } catch (e) {
     console.log(e);

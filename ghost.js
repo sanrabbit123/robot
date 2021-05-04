@@ -3,44 +3,66 @@ const Ghost = function () {
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-  const schedule = require('node-schedule');
   this.mother = new Mother();
   this.back = new BackMaker();
   this.sheets = new GoogleSheet();
   this.address = ADDRESS;
-  this.schedule = schedule;
   this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
+  this.alien = process.cwd() + "/alien.js";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
   this.formidable = require('formidable');
 }
 
-Ghost.prototype.objectToCron = function (obj = {}) {
-  let properties, target, cron;
+Ghost.prototype.setTimer = function (callback, timeObj) {
+  if (typeof timeObj !== "object" || typeof callback !== "function") {
+    throw new Error("arguments must be Object: timeObj, Function: callback");
+  }
+  const nowDate = new Date();
+  let targetDate;
+  let result, time;
+  let timeoutObj;
 
-  properties = [ "seconds", "minutes", "hours", "date", "month", "day" ];
-  target = {};
-
-  for (let i of properties) {
-    if (obj[i] !== undefined) {
-      if (typeof obj[i] !== "number" && typeof obj[i] !== "string") {
-        throw new Error("invaild input");
-      } else {
-        target[i] = String(obj[i]);
-      }
-    } else {
-      target[i] = '*';
+  if (timeObj instanceof Date) {
+    targetDate = timeObj;
+  } else {
+    if (timeObj.year === undefined || typeof timeObj.year !== "number") {
+      timeObj.year = nowDate.getFullYear();
     }
+    if (timeObj.month === undefined || typeof timeObj.month !== "number") {
+      timeObj.month = nowDate.getMonth() + 1;
+    }
+    if (timeObj.date === undefined || typeof timeObj.date !== "number") {
+      timeObj.date = nowDate.getDate();
+    }
+    if (timeObj.hour === undefined || typeof timeObj.hour !== "number") {
+      timeObj.hour = nowDate.getHours();
+    }
+    if (timeObj.minute === undefined || typeof timeObj.minute !== "number") {
+      timeObj.minute = nowDate.getMinutes();
+    }
+    if (timeObj.second === undefined || typeof timeObj.second !== "number") {
+      timeObj.second = nowDate.getSeconds();
+    }
+    const { year, month, date, hour, minute, second } = timeObj;
+    targetDate = new Date(year, month - 1, date, hour, minute, second);
   }
 
-  cron = '';
-  for (let i of properties) {
-    cron += target[i];
-    cron += ' ';
+  result = targetDate.valueOf() - nowDate.valueOf();
+  if (result < 0) {
+    time = 0;
+  } else {
+    time = result;
   }
-  cron = cron.slice(0, -1);
 
-  return cron;
+  return new Promise(function (resolve, reject) {
+    timeoutObj = setTimeout(function () {
+      callback();
+      resolve(time);
+      clearTimeout(timeoutObj);
+      timeoutObj = null;
+    }, time);
+  });
 }
 
 Ghost.prototype.consoleQ = function (question) {
@@ -379,7 +401,6 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_robot = {
     link: [ "/robot" ],
     func: function (req, res) {
-      let command;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -391,8 +412,22 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify({ error: "must be property 'command'" }));
       } else {
         let { command } = req.body;
-        const { stdout } = shell.exec("node " + instance.robot + " " + command);
-        res.send(JSON.stringify({ stdout }));
+        if (Array.isArray(command)) {
+          command = command.join(" ");
+        }
+        if (req.body.async === true) {
+          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(stdout);
+            }
+          });
+          res.send(JSON.stringify({ message: "will do" }));
+        } else {
+          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
+          res.send(JSON.stringify({ stdout }));
+        }
       }
     }
   };
@@ -1078,7 +1113,6 @@ Ghost.prototype.fileRouter = function (static) {
     binary: false,
     link: [ "/readDir", "/ls" ],
     func: function (req, res) {
-      let command;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -1102,9 +1136,83 @@ Ghost.prototype.fileRouter = function (static) {
         }
         res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
-
     }
   };
+
+  //POST - robot do
+  funcObj.post_robotDo = {
+    binary: false,
+    link: [ "/robot" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.command === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'command'" }));
+      } else {
+        let { command } = req.body;
+        if (Array.isArray(command)) {
+          command = command.join(" ");
+        }
+        if (req.body.async === true) {
+          shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(stdout);
+            }
+          });
+          res.send(JSON.stringify({ message: "will do" }));
+        } else {
+          const { stdout } = shell.exec(`node ${shellLink(instance.robot)} ${command}`);
+          res.send(JSON.stringify({ stdout }));
+        }
+      }
+    }
+  }
+
+  //POST - robot will do
+  funcObj.post_robotWillDo = {
+    binary: false,
+    link: [ "/robotWill", "/robotWillDo" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      res.send(JSON.stringify({}));
+
+      // if (req.body.command === undefined) {
+      //   console.log(req.body);
+      //   res.send(JSON.stringify({ error: "must be property 'command'" }));
+      // } else {
+      //   let { command } = req.body;
+      //   if (Array.isArray(command)) {
+      //     command = command.join(" ");
+      //   }
+      //
+      //
+      //
+      //   shell.exec(`node ${shellLink(instance.robot)} ${command}`, { async: true }, function (err, stdout, stderr) {
+      //     if (err) {
+      //       console.log(err);
+      //     } else {
+      //       console.log(stdout);
+      //     }
+      //   });
+      //   res.send(JSON.stringify({ message: "will do" }));
+      // }
+
+
+    }
+  }
 
   //end : set router
   let resultObj = { get: [], post: [] };
@@ -1126,8 +1234,6 @@ Ghost.prototype.serverLaunching = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
-  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-  const cron = new CronGhost();
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -1161,7 +1267,6 @@ Ghost.prototype.serverLaunching = async function () {
     let pemsLink = process.cwd() + "/pems/" + address.host;
     let certDir, keyDir, caDir;
     let routerObj;
-    let cronScript;
     let routerTargets = [
       "client",
       "designer",
@@ -1211,11 +1316,6 @@ Ghost.prototype.serverLaunching = async function () {
       }
     }
 
-    //launching python cron
-    // cronScript = await cron.scriptReady(2);
-    // shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    // console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
-
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
@@ -1234,8 +1334,6 @@ Ghost.prototype.fileLaunching = async function () {
   const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
   const app = express();
-  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-  const cron = new CronGhost();
 
   app.use(useragent.express());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -1262,7 +1360,6 @@ Ghost.prototype.fileLaunching = async function () {
       let pemsLink = process.cwd() + "/pems/" + address.host;
       let certDir, keyDir, caDir;
       let routerObj;
-      let cronScript;
 
       certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
       keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -1294,11 +1391,6 @@ Ghost.prototype.fileLaunching = async function () {
       for (let obj of post) {
         app.post(obj.link, obj.func);
       }
-
-      //launching python cron
-      cronScript = await cron.scriptReady(0);
-      shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-      console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
 
       //server on
       https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
@@ -1414,35 +1506,6 @@ Ghost.prototype.robotPassLaunching = async function () {
   }
 }
 
-Ghost.prototype.staticSyncLaunching = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  const http = require("http");
-  const express = require("express");
-  const app = express();
-  const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
-  const cron = new CronGhost();
-  try {
-
-    app.get("/", function (req, res) {
-      res.send("test");
-    });
-
-    //launching python cron
-    cronScript = await cron.scriptReady(1);
-    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
-
-    //server on
-    http.createServer(app).listen(3000, () => {
-      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-    });
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
@@ -1454,6 +1517,4 @@ if (process.argv[2] === "request") {
   app.fileLaunching();
 } else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
   app.robotPassLaunching();
-} else if (/static/gi.test(process.argv[2])) {
-  app.staticSyncLaunching();
 }

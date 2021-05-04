@@ -6,6 +6,13 @@ module.exports = {
       instances: 1,
       exec_mode: "cluster",
       args: [ "server" ]
+    },
+    {
+      name: "alien",
+      script: "./alien.js",
+      instances: 1,
+      exec_mode: "cluster",
+      args: [ "office" ]
     }
   ]
 };

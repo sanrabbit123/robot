@@ -3,11 +3,11 @@ import sys
 import json
 import re
 import time
-sys.path.append("/Users/uragen/uragen/homeRobot/robot/python_modules")
+sys.path.append("/Users/baechang-gyu/uragen/homeRobot/robot/python_modules")
 import subprocess
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-ROBOT_PATH = "/Users/uragen/uragen/homeRobot/robot"
+ROBOT_PATH = "/Users/baechang-gyu/uragen/homeRobot/robot"
 ROBOT = ROBOT_PATH + "/robot.js"
 THIS_PATH = ROBOT_PATH + "/apps/cronGhost"
 LOG_PATH = THIS_PATH + "/log"
@@ -40,9 +40,6 @@ async def reflect():
 async def clientReportToSheets():
     await run([ 'node', ROBOT, 'clientReportToSheets' ])
 
-async def fixDir():
-    await run([ 'node', ROBOT, 'fixDir' ])
-
 
 
 scheduler = AsyncIOScheduler()
@@ -52,7 +49,6 @@ scheduler.add_job(analyticsParsing, 'cron', hour='2', minute='30', second='30')
 scheduler.add_job(proposalToClient, 'cron', hour='3', minute='10', second='30')
 scheduler.add_job(reflect, 'cron', hour='3', minute='40', second='30')
 scheduler.add_job(clientReportToSheets, 'cron', hour='4', minute='30', second='30')
-scheduler.add_job(fixDir, 'cron', hour='5', minute='30', second='30')
 scheduler.start()
 try:
     asyncio.get_event_loop().run_forever()
