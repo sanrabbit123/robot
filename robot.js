@@ -380,6 +380,22 @@ Robot.prototype.staticInSync = async function () {
   }
 }
 
+Robot.prototype.sayHello = async function (message = null) {
+  const instance = this;
+  try {
+    let text, channel;
+    channel = "#error_log";
+    if (message === null || typeof message !== "string") {
+      text = "안녕?";
+    } else {
+      text = message;
+    }
+    await this.mother.slack_bot.chat.postMessage({ text, channel });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -706,6 +722,13 @@ const MENU = {
   staticInSync: async function () {
     try {
       await robot.staticInSync();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  sayHello: async function () {
+    try {
+      await robot.sayHello(process.argv[3] !== undefined ? process.argv[3] : null);
     } catch (e) {
       console.log(e);
     }
