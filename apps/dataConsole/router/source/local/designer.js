@@ -1466,7 +1466,7 @@ DesignerJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-DesignerJs.prototype.cardViewMaker = function () {
+DesignerJs.prototype.cardViewMaker = function (force = false) {
   const instance = this;
 
   return async function (e) {
@@ -1490,305 +1490,154 @@ DesignerJs.prototype.cardViewMaker = function () {
 
       totalMother.classList.add("justfadeoutoriginal");
 
-      let temp;
-      let totalFather;
-      let nameStyle, proidStyle, barStyle;
-      let style, infoStyle;
-      let areaStyle, areaNameStyle, areaTongStyle;
-      let areaNumberStyle;
-      let div_clone, div_clone2;
-      let size, margin;
-      let ea = "px";
-      let num;
-      let cardWidthConstant;
-      let intend, totalWidth;
-      let lineHeight, titleTop, startTop;
-      let divideNumber;
-      let fontSize, nameFontSize;
-      let fixedHeightSize;
-      let whereQuery;
-      let tempResult, tempResult2, tempInfo, tempTarget, tempArr;
-      let division, divisionName;
-      let numbers;
-
-      //total father div
-      totalFather = GeneralJs.nodes.div.cloneNode(true);
-      totalFather.classList.add("totalFather");
-
-      margin = 12;
-      lineHeight = 20;
-      cardWidthConstant = 170;
-      divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
-      size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
-      fixedHeightSize = 107;
-      intend = 22;
-      titleTop = 13;
-      startTop = titleTop + 16;
-      fontSize = 13;
-      nameFontSize = fontSize + 4;
-      totalWidth = size - (intend * 2) - 1;
-
-      //style maker
-      style = {
-        display: "inline-block",
-        position: "relative",
-        width: String(size) + ea,
-        height: String(fixedHeightSize) + ea,
-        marginLeft: String(margin) + ea,
-        marginTop: String(margin) + ea,
-        background: GeneralJs.colorChip.white,
-        borderRadius: String(5) + ea,
-        cursor: "pointer",
-      };
-
-      nameStyle = {
-        position: "absolute",
-        fontSize: String(nameFontSize) + ea,
-        fontWeight: String(500),
-        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
-        left: String(intend) + ea,
-        color: "#404040",
-        cursor: "pointer",
-      };
-
-      proidStyle = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        color: "#2fa678",
-        cursor: "pointer",
-      };
-
-      barStyle = {
-        position: "absolute",
-        background: "#ececec",
-        top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(intend) + ea,
-        width: String(totalWidth) + ea,
-        height: String(1) + ea,
-      };
-
-      //info style
-      infoStyle = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(500),
-        top: String(startTop + lineHeight + (GeneralJs.isMac() ? 0 : 3)) + ea,
-        left: String(intend) + ea,
-        width: String(totalWidth) + ea,
-        color: "#404040",
-        lineHeight: String(1.5),
-      }
-
-      //area style
-      areaStyle = {
-        position: "relative",
-        marginLeft: String(margin) + ea,
-        marginRight: String(margin) + ea,
-        marginTop: String(margin * 1.75) + ea,
-        paddingTop: String(margin * 1.2) + ea,
-        paddingBottom: String(margin * 1.2) + ea,
-        paddingRight: String(margin * 1.2) + ea,
-        paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed #cccccc",
-        borderRadius: String(5) + ea,
-      };
-
-      areaNameStyle = {
-        position: "absolute",
-        top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 6) + ea,
-        fontWeight: String(600),
-        color: "#404040",
-      };
-
-      areaNumberStyle = {
-        position: "absolute",
-        top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 4) + ea,
-        fontWeight: String(200),
-        color: "#aaaaaa",
-      };
-
-      areaTongStyle = {
-        position: "relative",
-        paddingBottom: String(margin) + ea,
-        minHeight: String(fixedHeightSize + margin) + ea,
-        background: "#f2f2f2",
-        borderRadius: String(5) + ea,
-      };
-
-      //make division
-      division = new Map();
-      numbers = new Map();
-      divisionName = [];
-      for (let i = 1; i < cases.length; i++) {
-        divisionName.push({ desid: cases[i].desid, designer: cases[i].designer });
-      }
-
-      for (let i = 0; i < divisionName.length; i++) {
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaStyle) {
-          div_clone.style[i] = areaStyle[i];
-        }
-
-        //title
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = divisionName[i].designer;
-        for (let i in areaNameStyle) {
-          div_clone2.style[i] = areaNameStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
-
-        //number
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = String(0) + "명";
-        for (let i in areaNumberStyle) {
-          div_clone2.style[i] = areaNumberStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "number");
-        numbers.set(divisionName[i].desid, div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        //tong
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaTongStyle) {
-          div_clone2.style[i] = areaTongStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "area");
-        div_clone2.setAttribute("name", divisionName[i].designer);
-        div_clone2.setAttribute("desid", divisionName[i].desid);
-        division.set(divisionName[i].desid, div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        totalFather.appendChild(div_clone);
-      }
-
-      //make card
-      instance.totalFatherChildren = [];
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let i = 1; i < cases.length; i++) {
-        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "대기" });
-        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "진행중" });
-        // whereQuery["$or"].push({ desid: cases[i].desid, "process.status": "홀딩" });
-        whereQuery["$or"].push({ desid: cases[i].desid });
-      }
-      tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let i = 0; i < tempResult.length; i++) {
-        whereQuery["$or"].push({ cliid: tempResult[i].cliid });
-      }
-      tempResult2 = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getClients"));
-
-      for (let i of tempResult) {
-        for (let j of tempResult2) {
-          if (i.cliid === j.cliid) {
-            i.name = j.name;
-            i.phone = j.phone;
+      const ea = "px";
+      const { createNodes, colorChip, withOut } = GeneralJs;
+      const cards = [
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: function (e) {
+            console.log("this!");
           }
-        }
-      }
-
-      tempInfo = [
-        "process.status",
-        "phone"
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: function (e) {
+            (instance.rowViewMaker())(null);
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: function (e) {
+            console.log("this!");
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: function (e) {
+            console.log("this!");
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 정보", event: function (e) {
+            console.log("this!");
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>큐레이션 정보", event: function (e) {
+            console.log("this!");
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>상세 정보", event: function (e) {
+            console.log("this!");
+          }
+        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: function (e) {
+            console.log("this!");
+          }
+        },
       ];
+      let totalFather, tong, nodeArr;
+      let tempObj;
+      let topMargin, leftMargin;
+      let margin;
+      let width, height;
+      let sqrt;
 
-      num = 0;
-      for (let obj of tempResult) {
+      topMargin = 42;
+      leftMargin = 42;
+      margin = 12;
 
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in style) {
-          div_clone.style[i] = style[i];
+      [ totalFather, tong ] = createNodes([
+        {
+          mother: totalContents,
+          class: !force ? [ "totalFather", "fadein" ] : [ "totalFather" ],
+          style: {
+            zIndex: String(1),
+            background: colorChip.gradientGreen3,
+            overflow: "hidden",
+          }
+        },
+        {
+          mother: -1,
+          style: {
+            position: "relative",
+            top: String(topMargin) + ea,
+            left: String(leftMargin) + ea,
+            width: withOut(leftMargin * 2, ea),
+            height: withOut(topMargin * 2, ea)
+          }
         }
+      ]);
 
-        //name
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = obj.name;
-        for (let i in nameStyle) {
-          div_clone2.style[i] = nameStyle[i];
-        }
-        div_clone2.addEventListener("click", function (e) {
-          window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
-        });
-        div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
-        div_clone.appendChild(div_clone2);
-
-        //proid
-        proidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = obj.proid;
-        for (let i in proidStyle) {
-          div_clone2.style[i] = proidStyle[i];
-        }
-        div_clone2.addEventListener("click", function (e) {
-          window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + obj.proid, "_blank");
-        });
-        div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
-        div_clone.appendChild(div_clone2);
-
-        //bar
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in barStyle) {
-          div_clone2.style[i] = barStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
-
-        //sub info
-        for (let j = 0; j < tempInfo.length; j++) {
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          tempArr = tempInfo[j].split(".");
-          tempTarget = obj[tempArr[0]];
-          if (tempArr.length > 1) {
-            for (let z = 1; z < tempArr.length; z++) {
-              tempTarget = tempTarget[tempArr[z]];
+      for (let i = 0; i < cards.length; i++) {
+        nodeArr = createNodes([
+          {
+            mother: tong,
+            text: cards[i].name,
+            class: [ "hoverDefault_lite" ],
+            events: [
+              {
+                type: "click",
+                event: cards[i].event
+              },
+            ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: "calc(calc(100% - " + String(margin * ((cards.length / 2) - 1)) + ea + ") / " + String(cards.length / 2) + ")",
+              height: "calc(50% - " + String(margin) + ea + ")",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              marginRight: ((i % (cards.length / 2)) === (cards.length / 2) - 1) ? String(0) + ea : String(margin) + ea,
+              cursor: "pointer",
+              boxShadow: "0px 3px 12px -9px " + colorChip.deactive,
+              marginBottom: (i < (cards.length / 2)) ? String(margin) + ea : String(0) + ea,
             }
-          }
-          div_clone2.textContent = tempTarget;
-          for (let i in infoStyle) {
-            div_clone2.style[i] = infoStyle[i];
-          }
-          div_clone2.style.top = String(startTop + (lineHeight * (j + 1)) + (GeneralJs.isMac() ? 0 : 3)) + ea;
-          div_clone.appendChild(div_clone2);
-        }
+          },
+          {
+            mother: -1,
+            text: String(i + 1),
+            style: {
+              position: "absolute",
+              fontSize: String(25) + ea,
+              fontWeight: String(100),
+              top: String(16) + ea,
+              left: String(29) + ea,
+              color: colorChip.green,
+            }
+          },
+          {
+            mother: -2,
+            text: cards[i].name,
+            style: {
+              position: "absolute",
+              fontSize: String(30) + ea,
+              fontWeight: String(500),
+              bottom: String(31) + ea,
+              right: String(32) + ea,
+              color: colorChip.black,
+              textAlign: "right",
+              lineHeight: String(1.25),
+            }
+          },
+          {
+            mother: -3,
+            style: {
+              position: "absolute",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(50) + '%',
+              borderBottom: "1px solid " + colorChip.green,
+              transformOrigin: "50% 100%",
+              transition: "all 0s ease",
+              opacity: String(0.15)
+            }
+          },
+        ]);
 
-        div_clone.setAttribute("kinds", "card");
-        div_clone.setAttribute("proid", obj.proid);
-        div_clone.setAttribute("cliid", obj.cliid);
+        width = nodeArr[0].getBoundingClientRect().width;
+        height = nodeArr[0].getBoundingClientRect().height;
+        sqrt = Math.sqrt((width * width) + (height * height));
+        sqrt = sqrt - (2 * (31 / width) * sqrt);
+        nodeArr[3].style.width = String(sqrt) + ea;
+        nodeArr[3].style.left = String((width - sqrt) / 2) + ea;
+        nodeArr[3].style.transform = "rotate(" + String(90 + (1 * (Math.atan(width / height) * (180 / Math.PI)))) + "deg)";
 
-        division.get(obj.desid).appendChild(div_clone);
-
-        instance.totalFatherChildren.push(div_clone);
-
-        num++;
       }
 
-      numbers.forEach((value, key, map) => {
-        numbers.get(key).textContent = String(division.get(key).children.length) + "명";
-        numbers.get(key).setAttribute("number", String(division.get(key).children.length));
-      });
-
-      totalFather.style.paddingLeft = String(margin * 0.75) + ea;
-      totalFather.style.paddingRight = String(margin * 0.75) + ea;
-      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px)";
-      totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
-      totalFather.style.zIndex = String(1);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.style.height = String(margin * 2) + ea;
-      totalFather.appendChild(div_clone);
-
-      totalFather.classList.add("fadein");
-
-      totalContents.appendChild(totalFather);
       instance.totalFather = totalFather;
+      window.addEventListener("resize", (e) => { window.location.reload(); });
     }
     instance.onView = "father";
   }
@@ -7281,10 +7130,19 @@ DesignerJs.prototype.launching = async function () {
       }
     } else if (getObj.mode === "aspirant") {
 
-      tempFunction = this.cardViewMaker();
-      tempFunction().then(() => {
-        const temp = instance.reportViewMaker();
-        temp();
+      // tempFunction = this.cardViewMaker();
+      // tempFunction().then(() => {
+      //   const temp = instance.reportViewMaker();
+      //   temp();
+      // }).catch(function (e) {
+      //   throw new Error(e);
+      // });
+
+    } else {
+
+      tempFunction = this.cardViewMaker(true);
+      tempFunction().catch(function (e) {
+        throw new Error(e);
       });
 
     }
