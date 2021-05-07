@@ -163,6 +163,42 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    designerProposal: {
+      name: "제안서 발송",
+      id: "TE_4038",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "proid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
+    designerSelect: {
+      name: "고객 디자이너 선택",
+      id: "TE_4039",
+      needs: [
+        "client",
+        "designer",
+        "host",
+        "path"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+        ];
+      },
+    },
   };
   return tong[target];
 }
