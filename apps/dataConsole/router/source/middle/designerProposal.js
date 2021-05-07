@@ -283,6 +283,14 @@ class WordsDictionary {
           "구매 및 물품 배치가 완료되면 인터뷰와 촬영을 진행합니다."
         ]
       },
+      {
+        mother: "*주의 사항",
+        children: [
+          "기존에 사용하시는 가구들 중 가져갈 가구와 버릴 가구 선택 및 배치 / 활용 제안드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+          "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
+          "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라 드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4 품목 중에서 셀렉은 가능합니다."
+        ]
+      }
     ];
     let temp;
     for (let { mother, children } of targets) {
@@ -300,27 +308,59 @@ class WordsDictionary {
   getMatrix() {
     let result, num, past;
     let temp;
+    let target;
+
+    target = this.words;
+    target.pop();
 
     result = [];
     num = 1;
     past = "";
 
-    for (let i = 0; i < this.words.length; i++) {
-      for (let j = 0; j < this.words[i].children.length; j++) {
+    for (let i = 0; i < target.length; i++) {
+      for (let j = 0; j < target[i].children.length; j++) {
         temp = new Array(3);
-        if (past !== String(this.words[i])) {
-          temp[0] = String(this.words[i]);
+        if (past !== String(target[i])) {
+          temp[0] = String(target[i]);
         } else {
           temp[0] = "";
         }
         temp[1] = String(num);
-        temp[2] = this.words[i].children[j];
+        temp[2] = target[i].children[j];
         result.push(temp);
-        past = String(this.words[i]);
+        past = String(target[i]);
         num++;
       }
     }
+    return result;
+  }
 
+  getCaution() {
+    let result, num, past;
+    let temp;
+    let target;
+
+    target = this.words;
+    target = [ target.pop() ];
+    result = [];
+    num = 1;
+    past = "";
+
+    for (let i = 0; i < target.length; i++) {
+      for (let j = 0; j < target[i].children.length; j++) {
+        temp = new Array(3);
+        if (past !== String(target[i])) {
+          temp[0] = String(target[i]);
+        } else {
+          temp[0] = "";
+        }
+        temp[1] = String(num);
+        temp[2] = target[i].children[j];
+        result.push(temp);
+        past = String(target[i]);
+        num++;
+      }
+    }
     return result;
   }
 
@@ -2592,6 +2632,187 @@ DesignerProposalJs.prototype.insertWordBox = function () {
 
 }
 
+DesignerProposalJs.prototype.insertCautionBox = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const baseTong = this.baseTong;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNodes, colorChip, withOut } = GeneralJs;
+  const words = new WordsDictionary();
+  const matrix = words.getCaution();
+  let whiteBlock;
+  let blockHeight, blockMarginBottom;
+  let wordsTable;
+  let marginBottom;
+  let nodeArr;
+  let wordSize, wordSpacing;
+  let box0Size, box1Size, box0Margin, box1Margin;
+  let top, bottom;
+  let grayHeight, grayTop;
+
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
+
+  blockHeight = <%% 400, 400, 400, 400, 400 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
+  marginBottom = <%% 9, 9, 9, 9, 2 %%>;
+
+  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+  box0Size = <%% 140, 140, 140, 120, 12 %%>;
+  box1Size = <%% 25, 25, 25, 25, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
+  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 12 %%>;
+  grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 5 %%>;
+
+  [ whiteBlock, wordsTable ] = createNodes([
+    {
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 3) + "px",
+        width: String(100) + '%',
+        background: colorChip.white,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        marginBottom: String(blockMarginBottom) + ea,
+        paddingTop: String(top) + ea,
+        paddingBottom: String(bottom) + ea,
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(desktop ? leftMargin : 0) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + '%',
+      }
+    }
+  ]);
+
+  for (let arr of matrix) {
+    nodeArr = [
+      {
+        mother: wordsTable,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom) + ea,
+        }
+      }
+    ];
+
+    if (desktop) {
+      nodeArr.push({
+        mother: -1,
+        text: arr[0],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: String(box0Size) + ea,
+          marginRight: String(box0Margin) + ea,
+          fontWeight: String(600),
+          textAlign: "left",
+          color: colorChip.green,
+        }
+      });
+      nodeArr.push({
+        mother: -2,
+        text: arr[1],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: String(box1Size) + ea,
+          marginRight: String(box1Margin) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+          textAlign: "right",
+        }
+      });
+      nodeArr.push({
+        mother: -3,
+        text: arr[2],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")",
+          fontWeight: String(300),
+          textAlign: "left"
+        }
+      });
+    } else {
+      nodeArr.push({
+        mother: -1,
+        text: arr[0],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String((this.subBoxMargin.left + 0.2)) + ea,
+          width: String(box0Size) + ea,
+          color: colorChip.green,
+        }
+      });
+      nodeArr.push({
+        mother: -2,
+        text: arr[2],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String(box0Size - 3) + ea,
+          width: withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size + 4.5, ea),
+        }
+      });
+    }
+
+    createNodes(nodeArr);
+  }
+
+  createNodes([
+    {
+      mother: whiteBlock,
+      style: {
+        position: "relative",
+        left: String(desktop ? leftMargin : 0) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + ea,
+        marginTop: String(desktop ? grayTop : 0) + ea,
+        marginBottom: String(desktop ? top : 0) + ea,
+        height: String(grayHeight) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(3) + "px",
+      }
+    }
+  ]);
+
+}
+
 DesignerProposalJs.prototype.insertPannelBox = function () {
   const instance = this;
   const { ea, media } = this;
@@ -2675,6 +2896,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   this.designerButtons = [];
   for (let z = 0; z < this.proposal.detail.length; z++) {
     designerButton = GeneralJs.nodes.div.cloneNode(true);
+    designerButton.setAttribute("desid", this.proposal.detail[z].desid);
     style = {
       display: "inline-block",
       position: "relative",
@@ -2840,18 +3062,20 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   designerButton.appendChild(designerButtonText);
   designerButton.addEventListener("click", function (e) {
     let target = null;
+    let desid = null;
     for (let dom of instance.designerButtons) {
       if (dom.getAttribute("toggle") === "on") {
         target = dom;
+        desid = dom.getAttribute("desid");
         break;
       }
     }
-    if (target === null) {
+    if (target === null || desid === null) {
       window.alert("디자이너를 선택해주세요!");
       return;
     } else {
       if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
-        instance.submitEvent(target.textContent.trim());
+        instance.submitEvent(desid, target.textContent.trim());
       } else {
         return;
       }
@@ -2892,20 +3116,21 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
 }
 
-DesignerProposalJs.prototype.submitEvent = function () {
+DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   const instance = this;
-  console.log(this.client);
   this.mother.certificationBox("배창규", "010-2747-3403", async function (back, box) {
     try {
-
       await GeneralJs.ajaxJson({
-
-      }, "/");
-
-      await GeneralJs.sleep(3000);
+        cliid: instance.client.cliid,
+        proid: instance.project.proid,
+        desid: desid,
+        name: instance.client.name,
+        phone: instance.client.phone,
+        designer: designer,
+      }, "/designerProposal_submit");
+      await GeneralJs.sleep(2000);
       document.body.removeChild(box);
       document.body.removeChild(back);
-      window.alert("전송이 완료되었습니다!");
       window.location.href = "https://home-liaison.com/payment.php?card=true";
     } catch (e) {
       console.log(e);
@@ -3025,6 +3250,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.insertInitBox();
     this.insertDesignerBoxes();
     this.insertWordBox();
+    this.insertCautionBox();
     this.insertPannelBox();
 
     //set footer

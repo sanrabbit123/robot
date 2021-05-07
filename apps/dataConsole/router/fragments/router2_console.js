@@ -1712,23 +1712,23 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         res.send(JSON.stringify(resultObj));
 
       } else if (req.url === "/createProposalDocument") {
-        let { year, month, date, hour, minute, second, proid } = req.body;
-        let message;
+        const { year, month, date, hour, minute, second, proid } = req.body;
+        let message, command, time;
 
-        year = Number(year);
-        month = Number(month);
-        date = Number(date);
-        hour = Number(hour);
-        minute = Number(minute);
-        second = Number(second);
-
-        message = await coreRequest("timer", { proid, time: { year, month, date, hour, minute, second } });
+        time = {
+          year: Number(year),
+          month: Number(month),
+          date: Number(date),
+          hour: Number(hour),
+          minute: Number(minute),
+          second: Number(second),
+        };
+        command = [ "webProposal", proid ];
+        message = await coreRequest("timer", { command, time });
         // await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
 
-        console.log(message);
-
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "done" }));
+        res.send(JSON.stringify(message));
       }
 
     } catch (e) {

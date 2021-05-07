@@ -2193,7 +2193,9 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
 
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const back = this.back;
+  const { shell, shellLink, requestSystem, ghostRequest } = this.mother;
+  const coreRequest = ghostRequest().bind("core");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
   let obj = {};
   obj.link = [ "/createRequestDocument", "/createProposalDocument" ];
@@ -2206,11 +2208,11 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         let projects, project;
         let resultObj = { "alert": "요청에 문제가 있습니다!" };
 
-        clientOriginal = await instance.back.getClientById(req.body.id);
+        clientOriginal = await back.getClientById(req.body.id);
         if (clientOriginal === null) {
           resultObj = { "alert": "확인되는 고객이 없습니다!" };
         } else {
-          projects = await instance.back.getProjectsByQuery({ cliid: req.body.id });
+          projects = await back.getProjectsByQuery({ cliid: req.body.id });
           project = null;
           for (let p of projects) {
             if (p.desid !== '') {
@@ -2224,7 +2226,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
             if (project.process.contract.meeting.date.getFullYear() < 1900) {
               resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
             } else {
-              await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
+              await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
               resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
             }
           }
@@ -2234,19 +2236,23 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         res.send(JSON.stringify(resultObj));
 
       } else if (req.url === "/createProposalDocument") {
-        console.log(req.body);
-        let { year, month, date, hour, minute, second, proid } = req.body;
-        year = Number(year);
-        month = Number(month);
-        date = Number(date);
-        hour = Number(hour);
-        minute = Number(minute);
-        second = Number(second);
-        console.log(year, month, date, hour, minute, second, proid);
+        const { year, month, date, hour, minute, second, proid } = req.body;
+        let message, command, time;
 
-        // await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
+        time = {
+          year: Number(year),
+          month: Number(month),
+          date: Number(date),
+          hour: Number(hour),
+          minute: Number(minute),
+          second: Number(second),
+        };
+        command = [ "webProposal", proid ];
+        message = await coreRequest("timer", { command, time });
+        // await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
+
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "done" }));
+        res.send(JSON.stringify(message));
       }
 
     } catch (e) {
@@ -3255,7 +3261,9 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
 
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
+  const { slack_bot } = this.mother;
   const back = this.back;
+  const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res) {
@@ -3265,6 +3273,14 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
+      });
+      const { cliid, proid, desid, name, phone, designer } = req.body;
+      slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
+      await instance.kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
+        client: name,
+        designer: designer,
+        host: address.frontinfo.host,
+        path: "payment.php",
       });
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
