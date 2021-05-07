@@ -2234,7 +2234,17 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         res.send(JSON.stringify(resultObj));
 
       } else if (req.url === "/createProposalDocument") {
-        await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: req.body.id });
+        console.log(req.body);
+        let { year, month, date, hour, minute, second, proid } = req.body;
+        year = Number(year);
+        month = Number(month);
+        date = Number(date);
+        hour = Number(hour);
+        minute = Number(minute);
+        second = Number(second);
+        console.log(year, month, date, hour, minute, second, proid);
+
+        // await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "done" }));
       }

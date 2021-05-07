@@ -88,15 +88,43 @@ Robot.prototype.contentsMaker = function (button, arg) {
 }
 
 Robot.prototype.proposalMaker = function (button, arg) {
-  const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
-  let app;
   if (arg === undefined) {
     throw new Error("proposal must be id");
     return;
   }
   if (button === "make" || button === "1") {
+    const AiProposal = require(process.cwd() + "/apps/contentsMaker/aiProposal.js");
+    let app;
     app = new AiProposal(arg);
     app.proposalLaunching();
+  } else if (button === "web") {
+    const instance = this;
+    const back = this.back;
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const path = "designerProposal";
+    const { host } = this.address.homeinfo.ghost;
+    const proid = arg;
+    let kakaoInstance, cliid, name, phone;
+    return new Promise(function (resolve, reject) {
+      back.getProjectById(proid).then(function (project) {
+        if (project === null) {
+          reject("There is no project");
+        }
+        cliid = project.cliid;
+        return back.getClientById(cliid);
+      }).then(function (client) {
+        name = client.name;
+        phone = client.phone;
+        kakaoInstance = new KakaoTalk();
+        return kakaoInstance.ready();
+      }).then(function () {
+        return kakaoInstance.sendTalk("designerProposal", "배창규", "010-2747-3403", { client: name, host, path, proid });
+      }).then(function () {
+        console.log("web proposal done", name, phone, proid);
+      }).catch(function (err) {
+        reject(err);
+      });
+    });
   }
 }
 
@@ -480,7 +508,20 @@ const robot = new Robot();
 const MENU = {
   proposal: async function () {
     try {
+      if (process.argv[3] === undefined) {
+        throw new Error("must be proid");
+      }
       robot.proposalMaker("make", process.argv[3]);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  webProposal: async function () {
+    try {
+      if (process.argv[3] === undefined) {
+        throw new Error("must be proid");
+      }
+      console.log(await robot.proposalMaker("web", process.argv[3]));
     } catch (e) {
       console.log(e);
     }

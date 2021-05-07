@@ -2748,7 +2748,7 @@ ProposalJs.prototype.list_menu = function () {
       { key: "delete", name: "삭제", }
     ];
     // style
-    this.style.color = "#2fa678";
+    this.style.color = GeneralJs.colorChip.green;
 
     // cancel
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2805,11 +2805,430 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "make":
       return_func = async function (e) {
-        let message = "제안서의 제작을 요청드립니다! link: ";
-        // await GeneralJs.ajaxPromise("linkmake=true&link=/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: proid } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
-        await GeneralJs.ajaxPromise("id=" + proid, "/createProposalDocument");
-        await mother_name(obj);
-        reset_event(this);
+        const recommendDate = function () {
+          let dateObj = new Date();
+          let day;
+          day = dateObj.getDay();
+          if (day === 5) {
+            dateObj.setDate(dateObj.getDate() + 3);
+          } else if (day === 6) {
+            dateObj.setDate(dateObj.getDate() + 2);
+          } else {
+            dateObj.setDate(dateObj.getDate() + 1);
+          }
+          dateObj.setHours(17);
+          dateObj.setMinutes(30);
+          return dateObj;
+        }
+        const that = this;
+        const today = recommendDate();
+        const ea = "px";
+        const { createNodes, colorChip } = GeneralJs;
+        const totalContents = document.getElementById("totalcontents");
+        let nodeArr;
+        let cancelBack, whiteBox;
+        let title0, title1;
+        let arrowBar, arrowHead, arrowWidth;
+        let dateDom0, dateDom1, dateDom2;
+        let width, height;
+        let calendar;
+        let paddingTop, paddingLeft, paddingBottom;
+        let size0, size1, size2;
+        let lineHeight;
+        let top, left;
+        let calendarBox;
+        let calendarWidth, calendarHeight;
+        let valueTop, valueLineHeight, valueRight;
+        let lineWidth;
+        let removeTargets;
+
+        width = 558;
+        height = 300;
+        paddingTop = 10;
+        paddingLeft = 17;
+        paddingBottom = 5;
+
+        calendarWidth = 260;
+        calendarHeight = 295.058;
+
+        top = 28;
+        left = 290;
+        size0 = 21;
+        size1 = 31;
+        size2 = 14;
+        lineHeight = 10;
+
+        valueTop = 102;
+        valueLineHeight = 40;
+        valueRight = 34;
+        lineWidth = 121;
+        arrowWidth = 10;
+
+        removeTargets = [];
+
+        [ cancelBack, whiteBox, calendarBox, title0, title1 ] = createNodes([
+          {
+            mother: totalContents,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  reset_event(that);
+                  totalContents.removeChild(removeTargets[0]);
+                  totalContents.removeChild(removeTargets[1]);
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              zIndex: String(4),
+              width: String(100) + '%',
+              height: String(100) + '%',
+            }
+          },
+          {
+            mother: totalContents,
+            style: {
+              position: "fixed",
+              width: String(width - paddingLeft) + ea,
+              height: String(height) + ea,
+              left: "calc(50% - " + String(width / 2) + ea + ")",
+              top: "calc(calc(calc(100% - " + String(instance.mother.belowHeight) + ea + ") / 2) - " + String(height / 2) + ea + ")",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              zIndex: String(4),
+              animation: "fadeup 0.3s ease forwards",
+              boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+              transition: "all 0s ease",
+              paddingTop: String(paddingTop) + ea,
+              paddingLeft: String(paddingLeft) + ea,
+            },
+          },
+          {
+            mother: -1,
+            style: {
+              position: "absolute",
+              top: String(paddingTop) + ea,
+              left: String(paddingLeft) + ea,
+              width: String(calendarWidth) + ea,
+              height: String(calendarHeight) + ea,
+            },
+          },
+          {
+            mother: -2,
+            text: "제안서가 고객님께 발송될",
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(left) + ea,
+              fontSize: String(size0) + ea,
+              fontWeight: String(500),
+              color: colorChip.black
+            }
+          },
+          {
+            mother: -3,
+            text: "정확한 시간을 설정해주세요!",
+            style: {
+              position: "absolute",
+              top: String(top + size0 + lineHeight) + ea,
+              left: String(left) + ea,
+              fontSize: String(size0) + ea,
+              fontWeight: String(500),
+              color: colorChip.black
+            }
+          }
+        ]);
+
+        removeTargets.push(whiteBox);
+        removeTargets.push(cancelBack);
+
+        [ arrowBar, arrowHead ] = createNodes([
+          {
+            mother: whiteBox,
+            style: {
+              position: "absolute",
+              borderBottom: "1px solid " + colorChip.gray4,
+              width: String(lineWidth) + ea,
+              top: String(valueTop + (size1 / 2) + 5) + ea,
+              right: String(145) + ea,
+            }
+          },
+          {
+            mother: whiteBox,
+            style: {
+              position: "absolute",
+              borderRight: "1px solid " + colorChip.gray4,
+              borderBottom: "1px solid " + colorChip.gray4,
+              width: String(arrowWidth) + ea,
+              height: String(arrowWidth) + ea,
+              top: String(valueTop + (size1 / 2)) + ea,
+              right: String(146) + ea,
+              transform: "rotate(-45deg)",
+            }
+          },
+        ]);
+
+        [ dateDom0, dateDom1, dateDom2 ] = createNodes([
+          {
+            mother: whiteBox,
+            mode: "input",
+            attribute: [
+              { type: "text" },
+              { value: String(today.getFullYear()) + "년" },
+              { year: String(today.getFullYear()) }
+            ],
+            events: [
+              {
+                type: "blur",
+                event: function (e) {
+                  let matchObj, year;
+                  if (!/^[0-9]+년$/.test(this.value.trim())) {
+                    this.value = String(today.getFullYear()) + "년";
+                  }
+                  matchObj = this.value.trim().match(/^([0-9]+)년$/);
+                  year = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getFullYear();
+                  this.setAttribute("year", String(year));
+                  this.setAttribute("value", String(year) + "년");
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              fontSize: String(size1) + ea,
+              fontWeight: String(100),
+              color: colorChip.green,
+              top: String(valueTop) + ea,
+              right: String(valueRight) + ea,
+              width: String(110) + ea,
+              textAlign: "right",
+              border: String(0),
+              outline: String(0),
+            }
+          },
+          {
+            mother: whiteBox,
+            mode: "input",
+            attribute: [
+              { type: "text" },
+              { value: String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일" },
+              { month: String(today.getMonth() + 1) },
+              { date: String(today.getDate()) },
+            ],
+            events: [
+              {
+                type: "blur",
+                event: function (e) {
+                  let matchObj, month, date, booMonth, booDate;
+                  if (!/^[0-9]+월 [0-9]+일$/.test(this.value.trim())) {
+                    this.value = String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일";
+                  }
+                  booMonth = false;
+                  booDate = false;
+                  matchObj = this.value.trim().match(/^([0-9]+)월 ([0-9]+)일$/);
+                  month = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getMonth() + 1;
+                  date = !Number.isNaN(Number(matchObj[2].replace(/[^0-9]/g, ''))) ? Number(matchObj[2].replace(/[^0-9]/g, '')) : today.getDate();
+                  if (month < 1 || 12 < month) {
+                    month = today.getMonth() + 1;
+                    booMonth = true;
+                  }
+                  if (date < 1 || 31 < date) {
+                    date = today.getDate();
+                    booDate = true;
+                  }
+                  if (booMonth && !booDate) {
+                    this.value = String(today.getMonth() + 1) + "월" + " " + String(date) + "일";
+                  } else if (!booMonth && booDate) {
+                    this.value = String(month) + "월" + " " + String(today.getDate()) + "일";
+                  } else if (booMonth && booDate) {
+                    this.value = String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일";
+                  }
+                  this.setAttribute("month", String(month));
+                  this.setAttribute("date", String(date));
+                  this.setAttribute("value", String(month) + "월" + " " + String(date) + "일");
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              fontSize: String(size1) + ea,
+              fontWeight: String(100),
+              color: colorChip.green,
+              top: String(valueTop + valueLineHeight) + ea,
+              right: String(valueRight) + ea,
+              width: String(200) + ea,
+              textAlign: "right",
+              border: String(0),
+              outline: String(0),
+            }
+          },
+          {
+            mother: whiteBox,
+            mode: "input",
+            attribute: [
+              { type: "text" },
+              { value: String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분" },
+              { hour: String(today.getHours()) },
+              { minute: String(today.getMinutes()) },
+            ],
+            events: [
+              {
+                type: "blur",
+                event: function (e) {
+                  let matchObj, hour, minute, booHour, booMinute;
+                  if (!/^[0-9]+시 [0-9]+분$/.test(this.value.trim())) {
+                    this.value = String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분";
+                  }
+                  booHour = false;
+                  booMinute = false;
+                  matchObj = this.value.trim().match(/^([0-9]+)시 ([0-9]+)분$/);
+                  hour = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getHours();
+                  minute = !Number.isNaN(Number(matchObj[2].replace(/[^0-9]/g, ''))) ? Number(matchObj[2].replace(/[^0-9]/g, '')) : today.getMinutes();
+                  if (hour < 8 || 23 < hour) {
+                    hour = today.getHours();
+                    booHour = true;
+                  }
+                  if (minute < 1 || 60 < minute) {
+                    minute = today.getMinutes();
+                    booMinute = true;
+                  }
+                  if (booHour && !booMinute) {
+                    this.value = String(today.getHours()) + "시" + " " + String(minute) + "분";
+                  } else if (!booHour && booMinute) {
+                    this.value = String(hour) + "시" + " " + String(today.getMinutes()) + "분";
+                  } else if (booHour && booMinute) {
+                    this.value = String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분";
+                  }
+                  this.setAttribute("hour", String(hour));
+                  this.setAttribute("minute", String(minute));
+                  this.setAttribute("value", String(hour) + "시" + " " + String(minute) + "분");
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              fontSize: String(size1) + ea,
+              fontWeight: String(100),
+              color: colorChip.green,
+              top: String(valueTop + valueLineHeight + valueLineHeight) + ea,
+              right: String(valueRight) + ea,
+              width: String(200) + ea,
+              textAlign: "right",
+              border: String(0),
+              outline: String(0),
+            }
+          },
+        ]);
+
+        createNodes([
+          {
+            mother: whiteBox,
+            events: [
+              {
+                type: "click",
+                event: async function (e) {
+                  try {
+                    let timeObj;
+                    timeObj = {
+                      year: Number(dateDom0.getAttribute("year")),
+                      month: Number(dateDom1.getAttribute("month")),
+                      date: Number(dateDom1.getAttribute("date")),
+                      hour: Number(dateDom2.getAttribute("hour")),
+                      minute: Number(dateDom2.getAttribute("minute")),
+                      second: (new Date()).getSeconds(),
+                      proid,
+                    };
+                    await GeneralJs.ajaxJson(timeObj, "/createProposalDocument");
+                    await mother_name(obj);
+                    reset_event(that);
+                    totalContents.removeChild(removeTargets[0]);
+                    totalContents.removeChild(removeTargets[1]);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(50) + ea,
+              height: String(27) + ea,
+              borderRadius: String(3) + ea,
+              background: colorChip.green,
+              bottom: String(34) + ea,
+              right: String(92) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: -1,
+            text: "확인",
+            style: {
+              position: "absolute",
+              fontSize: String(size2) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(2.5) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: whiteBox,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  reset_event(that);
+                  totalContents.removeChild(removeTargets[0]);
+                  totalContents.removeChild(removeTargets[1]);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(50) + ea,
+              height: String(27) + ea,
+              borderRadius: String(3) + ea,
+              background: colorChip.green,
+              bottom: String(34) + ea,
+              right: String(37) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: -1,
+            text: "취소",
+            style: {
+              position: "absolute",
+              fontSize: String(size2) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(2.5) + ea,
+              cursor: "pointer",
+            }
+          }
+        ]);
+
+        calendar = instance.mother.makeCalendar(today, function (e) {
+          let [ year, month, date ] = this.getAttribute("buttonValue").split('-');
+          year = Number(year);
+          month = Number(month.replace(/^0/, ''));
+          date = Number(date.replace(/^0/, ''));
+          dateDom0.value = String(year) + "년";
+          dateDom0.setAttribute("year", String(year));
+          dateDom0.setAttribute("value", String(year) + "년");
+          dateDom1.value = String(month) + "월 " + String(date) + "일";
+          dateDom1.setAttribute("month", String(month));
+          dateDom1.setAttribute("date", String(date));
+          dateDom1.setAttribute("value", String(month) + "월 " + String(date) + "일");
+        });
+        calendarBox.appendChild(calendar.calendarBase);
       }
       break;
     case "send":

@@ -1669,7 +1669,9 @@ DataRouter.prototype.rou_post_notionUpdate = function () {
 
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const back = this.back;
+  const { shell, shellLink, requestSystem, ghostRequest } = this.mother;
+  const coreRequest = ghostRequest().bind("core");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
   let obj = {};
   obj.link = [ "/createRequestDocument", "/createProposalDocument" ];
@@ -1682,11 +1684,11 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         let projects, project;
         let resultObj = { "alert": "요청에 문제가 있습니다!" };
 
-        clientOriginal = await instance.back.getClientById(req.body.id);
+        clientOriginal = await back.getClientById(req.body.id);
         if (clientOriginal === null) {
           resultObj = { "alert": "확인되는 고객이 없습니다!" };
         } else {
-          projects = await instance.back.getProjectsByQuery({ cliid: req.body.id });
+          projects = await back.getProjectsByQuery({ cliid: req.body.id });
           project = null;
           for (let p of projects) {
             if (p.desid !== '') {
@@ -1700,7 +1702,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
             if (project.process.contract.meeting.date.getFullYear() < 1900) {
               resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
             } else {
-              await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
+              await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
               resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
             }
           }
@@ -1710,7 +1712,21 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         res.send(JSON.stringify(resultObj));
 
       } else if (req.url === "/createProposalDocument") {
-        await instance.mother.requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: req.body.id });
+        let { year, month, date, hour, minute, second, proid } = req.body;
+        let message;
+
+        year = Number(year);
+        month = Number(month);
+        date = Number(date);
+        hour = Number(hour);
+        minute = Number(minute);
+        second = Number(second);
+
+        message = await coreRequest("timer", { proid, time: { year, month, date, hour, minute, second } });
+        // await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
+
+        console.log(message);
+
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "done" }));
       }

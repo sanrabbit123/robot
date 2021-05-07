@@ -110,7 +110,7 @@ class ProposalMapGenerator {
   analyticsMap(designer) {
     const today = new Date();
     const { information: { business: { career: { startY, startM } } }, analytics } = designer;
-    const { styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, construct: { possible: { supervision } }, purchase: { agencies, setting: { install, storage } }, project: { paperWork } } = analytics;
+    const { styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, purchase: { setting: { install, storage } }, project: { time: { first, entire }, paperWork } } = analytics;
     let map = new ProposalMap();
     let career, monthAmount;
 
@@ -173,23 +173,17 @@ class ProposalMapGenerator {
       ],
       value: (manufacture ? "가능" : "불가능")
     });
-    map.set("supervision", {
-      name: "시공 감리 여부",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (supervision ? "가능" : "불가능")
+    map.set("first", {
+      name: "1차 제안 시간",
+      type: "string",
+      standard: null,
+      value: String(Math.floor(first / 7)) + "주 이내",
     });
-    map.set("agencies", {
-      name: "구매 대행 여부",
-      type: "radio",
-      standard: [
-        "제공",
-        "미제공"
-      ],
-      value: (agencies ? "제공" : "미제공")
+    map.set("entire", {
+      name: "전체 제안 시간",
+      type: "string",
+      standard: null,
+      value: String(Math.floor(entire / 7)) + "주 이내",
     });
     map.set("install", {
       name: "조립, 설치 서비스",
@@ -589,6 +583,7 @@ DesignerProposalJs.prototype.setBaseTong = function () {
 
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
+  const { withOut } = GeneralJs;
   const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -644,6 +639,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   let whiteWording;
   let pastBlocks;
   let designerBarBottom, designerBarLeft;
+  let factorBarWhiteMargin;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -710,6 +706,8 @@ DesignerProposalJs.prototype.insertInitBox = function () {
 
   factorValueMargin = <%% 46, 46, 46, 46, 30 %%>;
   factorValueHeadMargin = <%% 10, 10, 10, 7, 10 %%>;
+
+  factorBarWhiteMargin = <%% 11, 11, 10, 8, 2 %%>;
 
   desigerBoxWidth = <%% 240, 240, 240, 240, 240 %%>;
   desigerBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
@@ -1033,7 +1031,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorBarStyle = {
     position: "absolute",
     borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    width: String(100) + '%',
+    width: withOut(factorValueRight, ea),
     top: String(factorBarTop) + ea,
   };
 
@@ -1056,6 +1054,8 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     bottom: String(factorValueBottom) + ea,
     right: String(factorValueRight) + ea,
     wordSpacing: String(initWordingWordSpacing) + "px",
+    background: GeneralJs.colorChip.white,
+    paddingLeft: String(factorBarWhiteMargin) + ea,
   };
 
   for (let i = 0; i < factors.length; i++) {
@@ -1078,12 +1078,12 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     clientFactor.appendChild(factorBar);
     factorsBarDoms[i] = factorBar;
 
-    factorArrowHead = GeneralJs.nodes.div.cloneNode(true);
-    for (let j in factorArrowHeadStyle) {
-      factorArrowHead.style[j] = factorArrowHeadStyle[j];
-    }
-    clientFactor.appendChild(factorArrowHead);
-    factorsBarHeadDoms[i] = factorArrowHead;
+    // factorArrowHead = GeneralJs.nodes.div.cloneNode(true);
+    // for (let j in factorArrowHeadStyle) {
+    //   factorArrowHead.style[j] = factorArrowHeadStyle[j];
+    // }
+    // clientFactor.appendChild(factorArrowHead);
+    // factorsBarHeadDoms[i] = factorArrowHead;
 
     factorValue = GeneralJs.nodes.div.cloneNode(true);
     factorValue.textContent = factors[i].value;
@@ -1097,27 +1097,27 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   }
 
   //fix arrow width and head
-  GeneralJs.timeouts["factorsValueDoms"] = setTimeout(function () {
-    let width;
-    let spaceException;
-    for (let i = 0; i < factorsValueDoms.length; i++) {
-      width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
-      if (desktop && !GeneralJs.isMac()) {
-        spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ ]/g) ]).length;
-        if (spaceException > 2) {
-          spaceException = spaceException / 2;
-        }
-        spaceException = (2 * spaceException);
-        width = width + spaceException;
-      } else if (mobile) {
-        width = width + 4;
-      }
-      factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
-      factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
-    }
-    clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
-    GeneralJs.timeouts["factorsValueDoms"] = null;
-  }, 0);
+  // GeneralJs.timeouts["factorsValueDoms"] = setTimeout(function () {
+  //   let width;
+  //   let spaceException;
+  //   for (let i = 0; i < factorsValueDoms.length; i++) {
+  //     width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
+  //     if (desktop && !GeneralJs.isMac()) {
+  //       spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ ]/g) ]).length;
+  //       if (spaceException > 2) {
+  //         spaceException = spaceException / 2;
+  //       }
+  //       spaceException = (2 * spaceException);
+  //       width = width + spaceException;
+  //     } else if (mobile) {
+  //       width = width + 4;
+  //     }
+  //     factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
+  //     factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
+  //   }
+  //   clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
+  //   GeneralJs.timeouts["factorsValueDoms"] = null;
+  // }, 0);
 
   rightBox.appendChild(factorBox);
 
@@ -2250,6 +2250,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
 DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
   const { ea, media } = this;
+  const { withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const feeToString = function (fee) {
@@ -2284,6 +2285,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   let headWidth, headTop, headMargin, headVisual;
   let feeBottom, feeSize, feeRight;
   let vatBottom, vatSize, vatRight;
+  let barMargin;
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   arrowTop = <%% 11, 11, 13, 16, 11 %%>;
@@ -2301,6 +2303,8 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   vatSize = <%% 15, 15, 15, 15, 3 %%>;
   vatRight = <%% 0, 0, 0, 0, 0 %%>;
 
+  barMargin = <%% 15, 15, 15, 15, 3 %%>;
+
   if (desktop) {
     feeBottom = feeBottom + (GeneralJs.isMac() ? 0 : -3);
     vatBottom = vatBottom + (GeneralJs.isMac() ? 0 : -3);
@@ -2311,7 +2315,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
     style = {
       position: "absolute",
       borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-      width: "calc(100% - 340px)",
+      width: withOut(feeRight + 10, ea),
       top: String(arrowTop) + ea,
     };
     for (let i in style) {
@@ -2319,21 +2323,21 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
     }
     mother.appendChild(arrowBox);
 
-    arrowHead = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-      width: String(headWidth) + ea,
-      height: String(headWidth) + ea,
-      transform: "rotate(315deg)",
-      top: String(headTop) + ea,
-      left: "calc(100% - 351px)",
-    };
-    for (let i in style) {
-      arrowHead.style[i] = style[i];
-    }
-    mother.appendChild(arrowHead);
+    // arrowHead = GeneralJs.nodes.div.cloneNode(true);
+    // style = {
+    //   position: "absolute",
+    //   borderRight: "1px solid " + GeneralJs.colorChip.gray3,
+    //   borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+    //   width: String(headWidth) + ea,
+    //   height: String(headWidth) + ea,
+    //   transform: "rotate(315deg)",
+    //   top: String(headTop) + ea,
+    //   left: "calc(100% - 351px)",
+    // };
+    // for (let i in style) {
+    //   arrowHead.style[i] = style[i];
+    // }
+    // mother.appendChild(arrowHead);
   }
 
   moneyBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2344,13 +2348,16 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
     right: String(feeRight) + ea,
     fontSize: String(feeSize) + ea,
     fontWeight: String(500),
-    color: GeneralJs.colorChip.green
+    color: GeneralJs.colorChip.green,
+    background: GeneralJs.colorChip.white,
   };
   if (mobile) {
     delete style.bottom;
     style.top = String(3) + ea;
     style.width = String(100) + '%';
     style.textAlign = "center";
+  } else if (desktop) {
+    style.paddingLeft = String(barMargin) + ea;
   }
   for (let i in style) {
     moneyBox.style[i] = style[i];
@@ -2378,22 +2385,22 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   }
   mother.appendChild(vatBox);
 
-  if (desktop) {
-    setTimeout(function () {
-      let standardWidth, spaceException, oneException, visualException;
-      visualException = 3;
-      standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin + visualException;
-      if (desktop && !GeneralJs.isMac()) {
-        spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
-        oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
-        spaceException = (2 * spaceException);
-        oneException = (0 * oneException);
-        standardWidth = standardWidth - visualException - spaceException - oneException;
-      }
-      arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
-      arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
-    }, 0);
-  }
+  // if (desktop) {
+  //   setTimeout(function () {
+  //     let standardWidth, spaceException, oneException, visualException;
+  //     visualException = 3;
+  //     standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin + visualException;
+  //     if (desktop && !GeneralJs.isMac()) {
+  //       spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
+  //       oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
+  //       spaceException = (2 * spaceException);
+  //       oneException = (0 * oneException);
+  //       standardWidth = standardWidth - visualException - spaceException - oneException;
+  //     }
+  //     arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
+  //     arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
+  //   }, 0);
+  // }
 
 }
 

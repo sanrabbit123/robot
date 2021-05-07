@@ -350,6 +350,12 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
       if (moduleBoo) {
+
+        // finalMinifyObj = await minify(result, { mangle: { keep_classnames: true, keep_fnames: true } });
+        // result = finalMinifyObj.code;
+        // finalMinifyObj = await minify(moduleString, { mangle: { keep_classnames: true, keep_fnames: true } });
+        // moduleString = finalMinifyObj.code;
+
         treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setToDir(staticFolder + "/middle/module/" + i.replace(/\.js$/i, ''));
@@ -365,9 +371,15 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         await fileSystem(`write`, [ `${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`, moduleString ]);
         resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.js`);
         resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`);
+
       } else {
+
+        // finalMinifyObj = await minify(result, { mangle: { keep_classnames: true, keep_fnames: true } });
+        // result = finalMinifyObj.code;
+
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
         resultFromArr.push(`${staticFolder}/middle/${i}`);
+
       }
 
     }
