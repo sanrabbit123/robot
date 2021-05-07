@@ -2650,7 +2650,10 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
   let wordSize, wordSpacing;
   let box0Size, box1Size, box0Margin, box1Margin;
   let top, bottom;
-  let grayHeight, grayTop;
+  let grayHeight, grayTop, grayTong, grayTextScroll, grayTextTong, grayTextTop, grayTextLeft, grayTextSize;
+  let buttonTong, buttonHeight, buttonTongHeight;
+  let buttonOff = {}, buttonOn = {};
+  let finalBottom;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
   bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
@@ -2669,6 +2672,14 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
 
   grayHeight = <%% 180, 180, 180, 180, 12 %%>;
   grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 5 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 12 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2 %%>;
+
+  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -2795,7 +2806,7 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
     createNodes(nodeArr);
   }
 
-  createNodes([
+  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
     {
       mother: whiteBlock,
       style: {
@@ -2803,18 +2814,111 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
         left: String(desktop ? leftMargin : 0) + ea,
         width: desktop ? withOut(leftMargin * 2, ea) : String(100) + ea,
         marginTop: String(desktop ? grayTop : 0) + ea,
-        marginBottom: String(desktop ? top : 0) + ea,
+        marginBottom: String(desktop ? 15 : 0) + ea,
         height: String(grayHeight) + ea,
         background: colorChip.gray1,
         borderRadius: String(3) + "px",
       }
-    }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(grayTextTop) + ea,
+        left: String(grayTextLeft) + ea,
+        width: withOut(grayTextLeft * 2, ea),
+        height: withOut(grayTextTop * 2, ea),
+        overflow: "scroll",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: "auto",
+        fontSize: String(grayTextSize) + ea,
+        fontWeight: String(300),
+        lineHeight: String(1.6),
+      }
+    },
+  ]);
+
+  [ buttonTong ] = createNodes([
+    {
+      mother: whiteBlock,
+      attribute: [
+        { toggle: "on" }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            if (buttonOn.style !== undefined) {
+              if (this.getAttribute("toggle") === "on") {
+                buttonOn.style.opacity = String(0);
+                this.setAttribute("toggle", "off");
+              } else {
+                buttonOn.style.opacity = String(1);
+                this.setAttribute("toggle", "on");
+              }
+            }
+          }
+        }
+      ],
+      style: {
+        position: "relative",
+        left: String(desktop ? leftMargin : 0) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + ea,
+        marginBottom: String(finalBottom) + ea,
+        height: String(buttonTongHeight) + ea,
+        cursor: "pointer",
+      }
+    },
   ]);
 
   ajaxJson("/designerProposal_policy").then(function (res) {
     const { policy, button } = res;
+    let bTags;
 
-    console.log(policy, button);
+    grayTextTong.insertAdjacentHTML("beforeend", policy);
+    bTags = grayTextTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+
+    [ buttonOff, buttonOn ] = createNodes([
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button[desktop ? "desktop" : "mobile"].off,
+        style: {
+          position: "absolute",
+          height: String(buttonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+        }
+      },
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button[desktop ? "desktop" : "mobile"].on,
+        style: {
+          position: "absolute",
+          height: String(buttonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+          background: colorChip.white,
+        }
+      },
+    ]);
+
+
+
+
 
   }).catch(function (err) {
     throw new Error(err);
