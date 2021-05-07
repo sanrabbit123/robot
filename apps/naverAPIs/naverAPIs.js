@@ -216,6 +216,8 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "키 큰장", "키큰장" ],
     [ "시프트 업", "시프트업" ],
     [ "프라이빗 한", "프라이빗한" ],
+    [ "디피 할", "디피할" ],
+    [ "예 전집", "예전 집" ],
   ];
   try {
     let resultArr = [];

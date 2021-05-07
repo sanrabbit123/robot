@@ -146,13 +146,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "안미진";
-    // const pid = "p92";
-    // const rid = "re086";
+    // const client = "김지은";
+    // const pid = "p91";
+    // const rid = "re085";
     // const links = [
-    //   "https://docs.google.com/document/d/1E6LbRPLq5JveSI_9SiukKnq2wKCIYyACAjXcppxNWQk/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1oAFvLQXVL7cgtF3mS4ykD6u3ClenFxuoA9hnrTyivqI/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1GggVe3Wo4XTK1vWrLmKc6pT1BizbnpHn?usp=sharing",
+    //   "https://docs.google.com/document/d/13jZyU3dyBQLOHKtJZYDjQNknCP1mwWLsk_EPXAQJUb0/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/11zGWgTtjfTJcR46He05DVqHeX8UFlpY0NaTDM4Ogo5U/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1NNBCBPggupfs0zx87cZLLlENS_URHA41?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -187,19 +187,14 @@ DevContext.prototype.launching = async function () {
 
 
     // raw photo to raw portfolio
-    // const filter = new PortfolioFilter();
-    // await filter.rawToRaw([
-    //   {
-    //     client: "전윤정",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/1SzphoE-htUw03C1CUaD-QG6JeuNkb2mt",
-    //   },
-    //   {
-    //     client: "이승례",
-    //     designer: "김경수",
-    //     link: "https://drive.google.com/drive/folders/1QlB6uFU0_11bGQQtkmnq2UbtbvC5TcRr",
-    //   }
-    // ]);
+    const filter = new PortfolioFilter();
+    await filter.rawToRaw([
+      {
+        client: "김미향",
+        designer: "오정수",
+        link: "https://drive.google.com/drive/folders/1KADiLXfDb_eBp4qIb7cZsonvnKGcl6qi",
+      }
+    ]);
 
 
     // get photo folder
@@ -212,7 +207,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("a83");
+    // await this.spellCheck("p91");
 
 
     // get corePortfolio by pid
@@ -224,7 +219,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2104_aa06s" ]);
+    // await work.newDesignerToFront([ "d2008_aa01s" ]);
 
 
     // new designer set proposal setting
