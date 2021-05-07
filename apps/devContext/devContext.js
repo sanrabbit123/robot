@@ -187,14 +187,14 @@ DevContext.prototype.launching = async function () {
 
 
     // raw photo to raw portfolio
-    const filter = new PortfolioFilter();
-    await filter.rawToRaw([
-      {
-        client: "김미향",
-        designer: "오정수",
-        link: "https://drive.google.com/drive/folders/1KADiLXfDb_eBp4qIb7cZsonvnKGcl6qi",
-      }
-    ]);
+    // const filter = new PortfolioFilter();
+    // await filter.rawToRaw([
+    //   {
+    //     client: "김미향",
+    //     designer: "오정수",
+    //     link: "https://drive.google.com/drive/folders/1KADiLXfDb_eBp4qIb7cZsonvnKGcl6qi",
+    //   }
+    // ]);
 
 
     // get photo folder
