@@ -2639,7 +2639,7 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNodes, colorChip, withOut } = GeneralJs;
+  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   const words = new WordsDictionary();
   const matrix = words.getCaution();
   let whiteBlock;
@@ -2810,6 +2810,15 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       }
     }
   ]);
+
+  ajaxJson("/designerProposal_policy").then(function (res) {
+    const { policy, button } = res;
+
+    console.log(policy, button);
+
+  }).catch(function (err) {
+    throw new Error(err);
+  });
 
 }
 
