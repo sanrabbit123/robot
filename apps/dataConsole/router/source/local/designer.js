@@ -24,6 +24,7 @@ const DesignerJs = function () {
   this.aspirants = [];
   this.aspirants_searchInput = null;
   this.whiteSse = null;
+  this.ea = "px";
 }
 
 DesignerJs.prototype.standardBar = function (standard) {
@@ -1498,39 +1499,16 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
 
       const ea = "px";
       const { createNodes, colorChip, withOut } = GeneralJs;
+      const modeHref = (mode) => { window.location.href = `${window.location.protocol}//${window.location.host}${window.location.pathname}?mode=${mode}`; }
       const cards = [
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: function (e) {
-            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general";
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 정보", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>큐레이션 정보", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>상세 정보", event: function (e) {
-            console.log("this!");
-          }
-        },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: function (e) {
-            console.log("this!");
-          }
-        },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: (e) => { modeHref("aspirant"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("general"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: (e) => { modeHref("calculation"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 정보", event: (e) => { modeHref("calendar"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>큐레이션 정보", event: (e) => { modeHref("checklist"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>상세 정보", event: (e) => { modeHref("detail"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
       ];
       let totalFather, tong, nodeArr;
       let tempObj;
@@ -7100,6 +7078,111 @@ DesignerJs.prototype.whiteResize = function () {
 DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
+    const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
+    const { totalMother, ea, grayBarWidth } = this;
+    const designers = await ajaxJson({ noFlat: true }, "/getDesigners");
+    const length = designers.length;
+    let boxTong;
+    let nodeArr;
+    let tempObj;
+    let minWidth;
+    let margin;
+    let width, height;
+    let boxNumber;
+    let status;
+
+    minWidth = 240;
+    margin = 8;
+
+    boxNumber = Math.floor((window.innerWidth - grayBarWidth) / (minWidth + margin));
+    width = (window.innerWidth - grayBarWidth - ((boxNumber + 1 + 4) * margin)) / boxNumber;
+
+    boxTong = createNode({
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        paddingLeft: String(margin * 3) + ea,
+        paddingTop: String(margin * 3) + ea,
+        paddingBottom: String(margin * 3) + ea,
+        width: withOut(grayBarWidth + (margin * 3), ea),
+        height: "auto",
+      }
+    });
+
+    nodeArr = [];
+    for (let i = 0; i < length; i++) {
+
+      status = /완료/g.test(designers[i].information.contract.status);
+
+      tempObj = {
+        mother: boxTong,
+        class: [ "hoverDefault" ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(width) + ea,
+          height: String(width) + ea,
+          marginRight: String(margin) + ea,
+          marginBottom: String(margin) + ea,
+          borderRadius: String(5) + "px",
+          background: status ? colorChip.gray2 : colorChip.gray3,
+        }
+      };
+      nodeArr.push(tempObj);
+
+      for (let j = 0; j < 9; j++) {
+        tempObj = {
+          mother: -1 * (j + 1),
+          style: {
+            position: "absolute",
+            top: String(1 + (32 * Math.floor(j / 3)) + (1 * Math.floor(j / 3))) + '%',
+            left: String(1 + (32 * (j % 3)) + (1 * (j % 3))) + '%',
+            width: String(32) + '%',
+            height: String(32) + '%',
+            borderRadius: String(3) + "px",
+            background: status ? colorChip.gray1 : colorChip.gray3,
+            opacity: String(0.5 + Math.random())
+          }
+        };
+        nodeArr.push(tempObj);
+      }
+
+      tempObj = {
+        mother: -10,
+        text: `checkList&nbsp;<b style="font-style:normal;font-family:'graphik';font-weight:100;color:${status ? colorChip.black : colorChip.deactive}">${designers[i].information.did}</b>`,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: "calc(50% + " + String(9) + ea + ")",
+          fontSize: String(16) + ea,
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: status ? colorChip.black : colorChip.deactive,
+        }
+      };
+      nodeArr.push(tempObj);
+      tempObj = {
+        mother: -1,
+        text: designers[i].designer,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(-47) + ea,
+          fontSize: String(36) + ea,
+          textAlign: "center",
+          fontWeight: String(500),
+          fontStyle: "normal",
+          color: status ? colorChip.black : colorChip.deactive,
+        }
+      };
+      nodeArr.push(tempObj);
+    }
+
+    createNodes(nodeArr);
 
   } catch (e) {
     console.log(e);
@@ -7163,7 +7246,7 @@ DesignerJs.prototype.launching = async function () {
       //   throw new Error(e);
       // });
 
-    } else if (getObj.mode === "checkList" || getObj.mode === '6') {
+    } else if (getObj.mode === "checklist" || getObj.mode === '6') {
 
       document.getElementById("grayLeftOpenButton").remove();
       await this.spreadData(null, true);
