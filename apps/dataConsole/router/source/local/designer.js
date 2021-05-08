@@ -1410,7 +1410,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
 }
 
-DesignerJs.prototype.spreadData = async function (search = null) {
+DesignerJs.prototype.spreadData = async function (search = null, standardMode = false) {
   const instance = this;
   try {
     let designers, totalMother;
@@ -1458,7 +1458,9 @@ DesignerJs.prototype.spreadData = async function (search = null) {
     }
 
     this.standardBar({ standard: standard.standard, data: standardDataTong, search: search });
-    this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
+    if (!standardMode) {
+      this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
+    }
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
@@ -1481,14 +1483,18 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
     if (instance.totalFather !== null) {
 
       instance.totalFather.style.zIndex = String(1);
-      instance.totalMother.classList.remove("justfadeinoriginal");
-      instance.totalMother.classList.add("justfadeoutoriginal");
+      if (instance.totalMother !== null && instance.totalMother !== undefined) {
+        instance.totalMother.classList.remove("justfadeinoriginal");
+        instance.totalMother.classList.add("justfadeoutoriginal");
+      }
       instance.totalFather.classList.remove("fadeout");
       instance.totalFather.classList.add("fadein");
 
     } else {
 
-      totalMother.classList.add("justfadeoutoriginal");
+      if (instance.totalMother !== null && instance.totalMother !== undefined) {
+        instance.totalMother.classList.add("justfadeoutoriginal");
+      }
 
       const ea = "px";
       const { createNodes, colorChip, withOut } = GeneralJs;
@@ -1498,7 +1504,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
           }
         },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: function (e) {
-            (instance.rowViewMaker())(null);
+            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general";
           }
         },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: function (e) {
@@ -7091,44 +7097,63 @@ DesignerJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
+DesignerJs.prototype.checkListView = async function () {
+  const instance = this;
+  try {
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.launching = async function () {
   const instance = this;
   try {
-    this.belowHeight = this.mother.belowHeight;
-    this.searchInput = this.mother.searchInput;
-    this.backGrayBar();
-    await this.spreadData();
-    this.addTransFormEvent();
-    this.addSearchEvent();
-    this.addExtractEvent();
-    this.whiteResize();
-
-    this.user = GeneralJs.getUser();
-
     const getObj = GeneralJs.returnGet();
     let getTarget;
     let tempFunction;
 
+    this.user = GeneralJs.getUser();
+
+    this.belowHeight = this.mother.belowHeight;
+    this.searchInput = this.mother.searchInput;
+    this.backGrayBar();
+    // await this.spreadData();
+    // this.addTransFormEvent();
+    // this.addSearchEvent();
+    // this.addExtractEvent();
+    // this.whiteResize();
+
     getTarget = null;
-    if (getObj.desid !== undefined) {
-      for (let dom of this.standardDoms) {
-        if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
-          getTarget = dom;
-        }
-      }
-      if (getTarget === null) {
-        tempFunction = this.makeSearchEvent(getObj.desid);
-        await tempFunction({ keyCode: 13 });
+    if (getObj.mode === "general" || getObj.mode === '2') {
+
+      await this.spreadData();
+      this.addTransFormEvent();
+      this.addSearchEvent();
+      this.addExtractEvent();
+      this.whiteResize();
+
+      if (getObj.desid !== undefined) {
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
           }
         }
+        if (getTarget === null) {
+          tempFunction = this.makeSearchEvent(getObj.desid);
+          await tempFunction({ keyCode: 13 });
+          for (let dom of this.standardDoms) {
+            if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
+              getTarget = dom;
+            }
+          }
+        }
+        if (getTarget !== null) {
+          getTarget.click();
+        }
       }
-      if (getTarget !== null) {
-        getTarget.click();
-      }
-    } else if (getObj.mode === "aspirant") {
+
+    } else if (getObj.mode === "aspirant" || getObj.mode === '1') {
 
       // tempFunction = this.cardViewMaker();
       // tempFunction().then(() => {
@@ -7137,6 +7162,16 @@ DesignerJs.prototype.launching = async function () {
       // }).catch(function (e) {
       //   throw new Error(e);
       // });
+
+    } else if (getObj.mode === "checkList" || getObj.mode === '6') {
+
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.spreadData(null, true);
+      this.addTransFormEvent();
+      this.addSearchEvent();
+      this.addExtractEvent();
+      this.whiteResize();
+      await this.checkListView();
 
     } else {
 

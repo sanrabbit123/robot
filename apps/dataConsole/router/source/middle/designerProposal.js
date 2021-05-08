@@ -2670,14 +2670,14 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
   box0Margin = <%% 55, 55, 55, 55, 3 %%>;
   box1Margin = <%% 18, 18, 18, 18, 3 %%>;
 
-  grayHeight = <%% 180, 180, 180, 180, 12 %%>;
-  grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 5 %%>;
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 4.5 %%>;
   grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
   grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
   grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
 
-  buttonTongHeight = <%% 30, 30, 30, 30, 12 %%>;
-  buttonHeight = <%% 13, 13, 12, 11, 2 %%>;
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
 
   finalBottom = <%% -3, -4, -7, -9, 0 %%>;
 
@@ -2811,10 +2811,10 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       mother: whiteBlock,
       style: {
         position: "relative",
-        left: String(desktop ? leftMargin : 0) + ea,
-        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + ea,
-        marginTop: String(desktop ? grayTop : 0) + ea,
-        marginBottom: String(desktop ? 15 : 0) + ea,
+        left: String(desktop ? leftMargin : 4.5) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : withOut(4.5 * 2, ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 15 : 2.5) + ea,
         height: String(grayHeight) + ea,
         background: colorChip.gray1,
         borderRadius: String(3) + "px",
@@ -2870,8 +2870,8 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       ],
       style: {
         position: "relative",
-        left: String(desktop ? leftMargin : 0) + ea,
-        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + ea,
+        left: String(desktop ? leftMargin : 4.5) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : withOut(4.5 * 2, ea),
         marginBottom: String(finalBottom) + ea,
         height: String(buttonTongHeight) + ea,
         cursor: "pointer",
@@ -2894,7 +2894,7 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       {
         mother: buttonTong,
         mode: "svg",
-        source: button[desktop ? "desktop" : "mobile"].off,
+        source: button.off,
         style: {
           position: "absolute",
           height: String(buttonHeight) + ea,
@@ -2905,7 +2905,7 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       {
         mother: buttonTong,
         mode: "svg",
-        source: button[desktop ? "desktop" : "mobile"].on,
+        source: button.on,
         style: {
           position: "absolute",
           height: String(buttonHeight) + ea,
@@ -2915,10 +2915,6 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
         }
       },
     ]);
-
-
-
-
 
   }).catch(function (err) {
     throw new Error(err);
