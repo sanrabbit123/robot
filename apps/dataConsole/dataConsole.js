@@ -595,7 +595,7 @@ DataConsole.prototype.connect = async function () {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

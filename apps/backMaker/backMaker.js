@@ -213,6 +213,14 @@ BackMaker.filters = {
 
 // METHOD ------------------------------------------------------------------------------------
 
+BackMaker.prototype.bindDev = function () {
+  this.aliveDir = this.devAliveDir;
+}
+
+BackMaker.prototype.releaseDev = function () {
+  this.aliveDir = this.dir + "/alive";
+}
+
 BackMaker.prototype.getMap = function (mode = "id", type = "array") {
   let map;
   if (mode === "id") {

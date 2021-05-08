@@ -7158,6 +7158,7 @@ DesignerJs.prototype.checkListView = async function () {
             type: "click",
             event: function (e) {
               boxTong.style.animation = "fadeout 0.3s ease forwards";
+              totalMother.scrollTo({ top: 0, behavior: "smooth" });
               instance.checkListDetail(this.getAttribute("desid"), margin);
             }
           }
@@ -7186,7 +7187,7 @@ DesignerJs.prototype.checkListView = async function () {
             height: String(32) + '%',
             borderRadius: String(3) + "px",
             background: status ? colorChip.gray0 : colorChip.gray3,
-            opacity: String(0.5 + Math.random())
+            opacity: String(0.2 + Math.random())
           }
         };
         nodeArr.push(tempObj);
