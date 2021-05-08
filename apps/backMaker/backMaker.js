@@ -7,6 +7,7 @@ const BackMaker = function () {
   this.tempDir = process.cwd() + "/temp";
   this.resourceDir = this.dir + "/resource";
   this.aliveDir = this.dir + "/alive";
+  this.devAliveDir = this.dir + "/devAlive";
   this.idFilterDir = this.dir + "/idFilter";
 }
 
@@ -703,12 +704,12 @@ BackMaker.prototype.pastToMongo = async function () {
 
 // GET Client --------------------------------------------------------------------------------
 
-BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "client";
-  let { Client, Clients } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -721,7 +722,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
     }
 
     if (option.withTools) {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/tools.js`);
       Client = Tools.withTools(Client);
     }
 
@@ -737,7 +738,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
   }
 }
 
-BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
+BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -747,7 +748,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
   const button = "client";
-  let { Client, Clients } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
     let sortQuery;
@@ -780,7 +781,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
         clientsArr.push(new Client(i));
       }
     } else {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/tools.js`);
       Client = Tools.withTools(Client);
       Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
@@ -795,12 +796,12 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
   }
 }
 
-BackMaker.prototype.getClientsAll = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getClientsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "client";
-  let { Client, Clients } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 
@@ -818,7 +819,7 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
         clientsArr.push(new Client(i));
       }
     } else {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/tools.js`);
       Client = Tools.withTools(Client);
       Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
@@ -833,12 +834,12 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
   }
 }
 
-BackMaker.prototype.getLatestClient = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestClient = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "client";
-  let { Client, Clients } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -851,7 +852,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
     }
 
     if (option.withTools) {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/tools.js`);
       Client = Tools.withTools(Client);
     }
 
@@ -867,12 +868,12 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
   }
 }
 
-BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestClients = async function (number = 1, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "client";
-  let { Client, Clients } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Client, Clients } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, clientsArr;
 
@@ -900,7 +901,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
         clientsArr.push(new Client(i));
       }
     } else {
-      const { Tools } = require(`${this.aliveDir}/${button}/addOn/tools.js`);
+      const { Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/tools.js`);
       Client = Tools.withTools(Client);
       Clients = Tools.withToolsArr(Clients);
       clientsArr = new Clients();
@@ -915,7 +916,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
   }
 }
 
-BackMaker.prototype.updateClient = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateClient = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
@@ -940,7 +941,7 @@ BackMaker.prototype.updateClient = async function (queryArr, option = { selfMong
   }
 }
 
-BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -1118,7 +1119,7 @@ BackMaker.prototype.returnClientRequest = function () {
   return request;
 }
 
-BackMaker.prototype.createClient = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createClient = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -1359,7 +1360,7 @@ BackMaker.prototype.getClientReport = async function () {
   }
 }
 
-BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo: null }) {
+BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   try {
     if (typeof option !== "object" || Array.isArray(option)) {
@@ -1387,12 +1388,12 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
 
 // GET Contents --------------------------------------------------------------------------------
 
-BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1420,12 +1421,12 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
   }
 }
 
-BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1453,7 +1454,7 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
   }
 }
 
-BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
+BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1463,7 +1464,7 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let tong, contentsArr;
     let sortQuery;
@@ -1510,12 +1511,12 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
   }
 }
 
-BackMaker.prototype.getContentsArrAll = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getContentsArrAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let tong, projectsArr;
 
@@ -1547,12 +1548,12 @@ BackMaker.prototype.getContentsArrAll = async function (option = { withTools: fa
   }
 }
 
-BackMaker.prototype.getLatestContents = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestContents = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1580,12 +1581,12 @@ BackMaker.prototype.getLatestContents = async function (option = { withTools: fa
   }
 }
 
-BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
-  let { Contents, ContentsArr, Tools } = require(`${this.aliveDir}/contents/addOn/generator.js`);
+  let { Contents, ContentsArr, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/contents/addOn/generator.js`);
   try {
     let tong, projectsArr;
 
@@ -1627,7 +1628,7 @@ BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = 
   }
 }
 
-BackMaker.prototype.updateContents = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateContents = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
@@ -1652,7 +1653,7 @@ BackMaker.prototype.updateContents = async function (queryArr, option = { selfMo
   }
 }
 
-BackMaker.prototype.deleteContents = async function (conid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteContents = async function (conid, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -1671,7 +1672,7 @@ BackMaker.prototype.deleteContents = async function (conid, option = { selfMongo
   }
 }
 
-BackMaker.prototype.createContents = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createContents = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -1776,12 +1777,12 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
 
 // GET Service --------------------------------------------------------------------------------
 
-BackMaker.prototype.getServiceById = async function (serid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getServiceById = async function (serid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "service";
-  const { Service } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  const { Service } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1807,12 +1808,12 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
 
 // GET Designer --------------------------------------------------------------------------------
 
-BackMaker.prototype.getDesignerById = async function (desid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getDesignerById = async function (desid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "designer";
-  let { Designer, Designers, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Designer, Designers, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1840,7 +1841,7 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
   }
 }
 
-BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
+BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1850,7 +1851,7 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
   const button = "designer";
-  let { Designer, Designers, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Designer, Designers, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, designersArr;
     let sortQuery;
@@ -1897,12 +1898,12 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
   }
 }
 
-BackMaker.prototype.getDesignersAll = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getDesignersAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "designer";
-  let { Designer, Designers, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Designer, Designers, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, designersArr;
 
@@ -1934,12 +1935,12 @@ BackMaker.prototype.getDesignersAll = async function (option = { withTools: fals
   }
 }
 
-BackMaker.prototype.getLatestDesigner = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestDesigner = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "designer";
-  let { Designer, Designers, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Designer, Designers, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1967,12 +1968,12 @@ BackMaker.prototype.getLatestDesigner = async function (option = { withTools: fa
   }
 }
 
-BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "designer";
-  let { Designer, Designers, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Designer, Designers, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, designersArr;
 
@@ -2014,7 +2015,7 @@ BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { 
   }
 }
 
-BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
@@ -2039,7 +2040,7 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
   }
 }
 
-BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2058,7 +2059,7 @@ BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo
   }
 }
 
-BackMaker.prototype.createDesigner = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createDesigner = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2378,12 +2379,12 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
 // GET Project --------------------------------------------------------------------------------
 
-BackMaker.prototype.getProjectById = async function (proid, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getProjectById = async function (proid, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -2411,7 +2412,7 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
   }
 }
 
-BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null }) {
+BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -2421,7 +2422,7 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, projectsArr;
     let sortQuery;
@@ -2468,12 +2469,12 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
   }
 }
 
-BackMaker.prototype.getProjectsAll = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getProjectsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, projectsArr;
 
@@ -2505,12 +2506,12 @@ BackMaker.prototype.getProjectsAll = async function (option = { withTools: false
   }
 }
 
-BackMaker.prototype.getLatestProject = async function (option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestProject = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -2538,12 +2539,12 @@ BackMaker.prototype.getLatestProject = async function (option = { withTools: fal
   }
 }
 
-BackMaker.prototype.getLatestProjects = async function (number = 1, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getLatestProjects = async function (number = 1, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, projectsArr;
 
@@ -2585,10 +2586,10 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
   }
 }
 
-BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null }) {
+BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null, devAlive: false }) {
   const instance = this;
   const button = "project";
-  let { Project, Projects, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   let projects;
 
   if (option.recycle !== undefined && option.recycle !== null) {
@@ -2627,7 +2628,7 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
 
 }
 
-BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null }) {
+BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null, devAlive: false }) {
   const instance = this;
   let confirmMode = false;
   try {
@@ -2704,7 +2705,7 @@ BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { wit
   }
 }
 
-BackMaker.prototype.updateProject = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateProject = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
@@ -2729,7 +2730,7 @@ BackMaker.prototype.updateProject = async function (queryArr, option = { selfMon
   }
 }
 
-BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2768,7 +2769,7 @@ BackMaker.prototype.returnProjectDummies = function (subject) {
   return dummy;
 }
 
-BackMaker.prototype.createProject = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createProject = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -2957,12 +2958,12 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
 // GET Aspirant -------------------------------------------------------------------------------
 
-BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null }) {
+BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "aspirant";
-  let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Aspirant, Aspirants, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -2990,7 +2991,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
   }
 }
 
-BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null }) {
+BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -3000,7 +3001,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   }
   const button = "aspirant";
-  let { Aspirant, Aspirants, Tools } = require(`${this.aliveDir}/${button}/addOn/generator.js`);
+  let { Aspirant, Aspirants, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let tong, aspirantsArr;
     let sortQuery;
@@ -3077,7 +3078,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
   }
 }
 
-BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMongo: null }) {
+BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
   if (queryArr.length !== 2) {
     throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
   }
@@ -3102,7 +3103,7 @@ BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMo
   }
 }
 
-BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo: null }) {
+BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -3121,7 +3122,7 @@ BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo
   }
 }
 
-BackMaker.prototype.createAspirant = async function (updateQuery, option = { selfMongo: null }) {
+BackMaker.prototype.createAspirant = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -3223,7 +3224,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
   }
 }
 
-BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery, position, date, who, option = { selfMongo: null }) {
+BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery, position, date, who, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   try {
     if (whereQuery === undefined) {

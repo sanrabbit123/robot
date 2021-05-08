@@ -1,3 +1,31 @@
+class Designers extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(i);
+    }
+  }
+  pick(desid) {
+    if (desid === undefined) {
+      throw new Error("invaild input");
+    }
+    let target = null;
+    for (let i of this) {
+      if (i.desid === desid) {
+        target = i;
+        break;
+      }
+    }
+    return target;
+  }
+  getById(desid) {
+    return this.pick(desid);
+  }
+  getByDesid(desid) {
+    return this.pick(desid);
+  }
+}
+
 const DesignerJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
@@ -25,6 +53,7 @@ const DesignerJs = function () {
   this.aspirants_searchInput = null;
   this.whiteSse = null;
   this.ea = "px";
+  this.designers = [];
 }
 
 DesignerJs.prototype.standardBar = function (standard) {
@@ -7091,6 +7120,8 @@ DesignerJs.prototype.checkListView = async function () {
     let boxNumber;
     let status;
 
+    this.designers = new Designers(designers);
+
     minWidth = 240;
     margin = 8;
 
@@ -7119,6 +7150,18 @@ DesignerJs.prototype.checkListView = async function () {
       tempObj = {
         mother: boxTong,
         class: [ "hoverDefault" ],
+        attribute: [
+          { desid: designers[i].desid }
+        ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              boxTong.style.animation = "fadeout 0.3s ease forwards";
+              instance.checkListDetail(this.getAttribute("desid"), margin);
+            }
+          }
+        ],
         style: {
           display: "inline-block",
           position: "relative",
@@ -7127,7 +7170,7 @@ DesignerJs.prototype.checkListView = async function () {
           marginRight: String(margin) + ea,
           marginBottom: String(margin) + ea,
           borderRadius: String(5) + "px",
-          background: status ? colorChip.gray2 : colorChip.gray3,
+          background: status ? colorChip.gray1 : colorChip.gray3,
         }
       };
       nodeArr.push(tempObj);
@@ -7142,7 +7185,7 @@ DesignerJs.prototype.checkListView = async function () {
             width: String(32) + '%',
             height: String(32) + '%',
             borderRadius: String(3) + "px",
-            background: status ? colorChip.gray1 : colorChip.gray3,
+            background: status ? colorChip.gray0 : colorChip.gray3,
             opacity: String(0.5 + Math.random())
           }
         };
@@ -7187,6 +7230,41 @@ DesignerJs.prototype.checkListView = async function () {
   } catch (e) {
     console.log(e);
   }
+}
+
+DesignerJs.prototype.checkListDetail = function (desid, margin) {
+  if (desid === undefined || margin === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
+  const { totalMother, ea, grayBarWidth } = this;
+  const designer = this.designers.pick(desid);
+  const { analytics } = designer;
+  let baseTong;
+
+  baseTong = createNode({
+    mother: totalMother,
+    style: {
+      position: "absolute",
+      top: String(margin * 3) + ea,
+      left: String(grayBarWidth + (margin * 3)) + ea,
+      width: withOut(grayBarWidth + (margin * 6), ea),
+      height: String(1500) + ea,
+      borderRadius: String(5) + ea,
+      border: "1px solid " + colorChip.gray4,
+      background: colorChip.white,
+      animation: "fadeup 0.3 ease forwards",
+    }
+  });
+
+
+
+
+  console.log(designer);
+  console.log(analytics)
+
+
 }
 
 DesignerJs.prototype.launching = async function () {
