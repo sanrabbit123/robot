@@ -3,7 +3,7 @@ const BackMaker = function () {
   this.mother = new Mother();
   this.dir = process.cwd() + "/apps/backMaker";
   this.mapDir = this.dir + "/map";
-  this.pastDir = this.dir + "/intoMap";
+  this.devMapDir = this.dir + "/devMap";
   this.tempDir = process.cwd() + "/temp";
   this.resourceDir = this.dir + "/resource";
   this.aliveDir = this.dir + "/alive";
@@ -16,7 +16,6 @@ const BackMaker = function () {
 BackMaker.allDatabaseNames = [
   "mongoinfo",
   "backinfo",
-  "pythoninfo",
 ];
 
 BackMaker.flatDeathCollections = [
@@ -215,10 +214,12 @@ BackMaker.filters = {
 
 BackMaker.prototype.bindDev = function () {
   this.aliveDir = this.devAliveDir;
+  this.mapDir = this.devMapDir;
 }
 
 BackMaker.prototype.releaseDev = function () {
   this.aliveDir = this.dir + "/alive";
+  this.mapDir = this.dir + "/map";
 }
 
 BackMaker.prototype.getMap = function (mode = "id", type = "array") {
@@ -300,413 +301,6 @@ BackMaker.prototype.idFilter = function (button) {
     return Filter;
   } catch (e) {
     console.log(e);
-  }
-}
-
-BackMaker.prototype.updateDesid = async function () {
-  const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const button = "designer";
-  const Filter = this.idFilter(button);
-  try {
-    await MONGOC.connect();
-    let temp;
-    let pastDesid, newDesid;
-    let newString;
-
-    // 1
-    let designers = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-    for (let d of designers) {
-      await MONGOC.db(`miro81`).collection(button).updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
-      console.log("success");
-    }
-
-
-    // 2
-    // const contents = await MONGOC.db(`miro81`).collection("contents").find({}).toArray();
-    // for (let d of contents) {
-    //   await MONGOC.db(`miro81`).collection("contents").updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
-    //   console.log("success");
-    // }
-
-
-    // 3
-    designers = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-    for (let { desid, setting: { proposal, ghost } } of designers) {
-
-      for (let { photo } of proposal) {
-        for (let photoObj of photo) {
-          if (photoObj.styleText !== undefined) {
-            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText) !== null) {
-              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText)[0];
-              pastDesid = temp.split("/")[2];
-              newDesid = Filter.pastToNew(pastDesid);
-              newString = "/rawDesigner/ghost/" + newDesid;
-              photoObj.styleText = photoObj.styleText.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
-            }
-            if ((/\/list_image\/portp/g).exec(photoObj.styleText) !== null) {
-              temp = (/\/list_image\/portp/g).exec(photoObj.styleText)[0];
-              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
-              photoObj.styleText = photoObj.styleText.replace(/\/list_image\/portp/g, newString);
-            }
-          }
-          if (photoObj.imgSrc !== undefined) {
-            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc) !== null) {
-              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc)[0];
-              pastDesid = temp.split("/")[2];
-              newDesid = Filter.pastToNew(pastDesid);
-              newString = "/rawDesigner/ghost/" + newDesid;
-              photoObj.imgSrc = photoObj.imgSrc.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
-            }
-            if ((/\/list_image\/portp/g).exec(photoObj.imgSrc) !== null) {
-              temp = (/\/list_image\/portp/g).exec(photoObj.imgSrc)[0];
-              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
-              photoObj.imgSrc = photoObj.imgSrc.replace(/\/list_image\/portp/g, newString);
-            }
-          }
-        }
-      }
-
-      for (let ghostObj of ghost) {
-        if ((/\/ghost\/de0[0-9][0-9]/g).exec(ghostObj.link) !== null) {
-          temp = (/\/ghost\/de0[0-9][0-9]/g).exec(ghostObj.link)[0];
-          pastDesid = temp.split("/")[2];
-          newDesid = Filter.pastToNew(pastDesid);
-          newString = "/rawDesigner/ghost/" + newDesid;
-          ghostObj.link = ghostObj.link.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
-        }
-      }
-
-      await MONGOC.db(`miro81`).collection("designer").updateOne({ desid }, { $set: { "setting.proposal": proposal, "setting.ghost": ghost } });
-      console.log("success");
-    }
-
-
-    // 4
-    let project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
-    for (let d of project) {
-      await MONGOC.db(`miro81`).collection("project").updateOne({ desid: d.desid }, { $set: { desid: Filter.pastToNew(d.desid) } });
-      console.log("success");
-    }
-    project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
-    for (let d of project) {
-      if (d.desid === null) {
-        await MONGOC.db(`miro81`).collection("project").updateOne({ proid: d.proid }, { $set: { desid: '' } });
-        console.log("success");
-      }
-    }
-
-
-    // 5
-    project = await MONGOC.db(`miro81`).collection("project").find({}).toArray();
-    for (let { proposal: { detail } } of project) {
-      for (let detailObj of detail) {
-        detailObj.desid = Filter.pastToNew(detailObj.desid);
-        for (let photoObj of detailObj.pictureSettings) {
-          if (photoObj.styleText !== undefined) {
-            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText) !== null) {
-              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.styleText)[0];
-              pastDesid = temp.split("/")[2];
-              newDesid = Filter.pastToNew(pastDesid);
-              newString = "/rawDesigner/ghost/" + newDesid;
-              photoObj.styleText = photoObj.styleText.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
-            }
-            if ((/\/list_image\/portp/g).exec(photoObj.styleText) !== null) {
-              temp = (/\/list_image\/portp/g).exec(photoObj.styleText)[0];
-              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
-              photoObj.styleText = photoObj.styleText.replace(/\/list_image\/portp/g, newString);
-            }
-          }
-          if (photoObj.imgSrc !== undefined) {
-            if ((/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc) !== null) {
-              temp = (/\/ghost\/de0[0-9][0-9]/g).exec(photoObj.imgSrc)[0];
-              pastDesid = temp.split("/")[2];
-              newDesid = Filter.pastToNew(pastDesid);
-              newString = "/rawDesigner/ghost/" + newDesid;
-              photoObj.imgSrc = photoObj.imgSrc.replace(/\/ghost\/de0[0-9][0-9]/g, newString);
-            }
-            if ((/\/list_image\/portp/g).exec(photoObj.imgSrc) !== null) {
-              temp = (/\/list_image\/portp/g).exec(photoObj.imgSrc)[0];
-              newString = "/corePortfolio/listImage/" + temp.replace(/\/list_image\/portp/g, '');
-              photoObj.imgSrc = photoObj.imgSrc.replace(/\/list_image\/portp/g, newString);
-            }
-          }
-        }
-      }
-    }
-    for (let { proid, proposal } of project) {
-      await MONGOC.db(`miro81`).collection("project").updateOne({ proid }, { $set: { "proposal": proposal } });
-      console.log("success");
-    }
-
-  } catch (e) {
-    console.log(e);
-  } finally {
-    MONGOC.close();
-  }
-}
-
-BackMaker.prototype.historyParsing = async function () {
-  const instance = this;
-  const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-  try {
-
-    //client history
-
-    let targets, targets2;
-    let pastTong;
-    let historyTong;
-    let tempTong;
-    let projectHistories;
-    let tempArr;
-
-    targets = [
-      "a12_history",
-      "a31_aboutsite",
-      "a32_aboutcom",
-      "a33_aboutsty",
-      "a34_aboutmon",
-      "a35_aboutetc",
-    ];
-
-    targets2 = [
-      "history",
-      "space",
-      "construct",
-      "styling",
-      "budget",
-      "progress",
-    ];
-
-    await MONGOC.connect();
-    await MONGOLOCALC.connect();
-
-    pastTong = await MONGOC.db(`miro81`).collection(`BC1_conlist`).find({}).toArray();
-
-    historyTong = [];
-    await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).deleteMany({});
-
-    for (let p of pastTong) {
-      tempTong = {};
-      tempTong.cliid = p.a4_customernumber;
-      tempTong.history = "";
-      tempTong.space = "";
-      tempTong.construct = "";
-      tempTong.styling = "";
-      tempTong.budget = "";
-      tempTong.progress = "";
-
-      if (p.a12_history !== "" && p.a12_history !== "-") {
-        tempTong.history += p.a12_history;
-      }
-      if (p.a31_aboutsite !== "" && p.a31_aboutsite !== "-") {
-        tempTong.space = p.a31_aboutsite;
-      }
-      if (p.a32_aboutcom !== "" && p.a32_aboutcom !== "-") {
-        tempTong.construct = p.a32_aboutcom;
-      }
-      if (p.a33_aboutsty !== "" && p.a33_aboutsty !== "-") {
-        tempTong.styling += p.a33_aboutsty;
-      }
-      if (p.a34_aboutmon !== "" && p.a34_aboutmon !== "-") {
-        tempTong.budget = p.a34_aboutmon;
-      }
-      if (p.a35_aboutetc !== "" && p.a35_aboutetc !== "-") {
-        tempTong.progress = p.a35_aboutetc;
-      }
-
-      historyTong.push(tempTong);
-      await MONGOLOCALC.db(`miro81`).collection(`clientHistory`).insertOne(tempTong);
-    }
-
-    //project history
-    pastTong = await MONGOC.db(`miro81`).collection(`BP1_process`).find({}).toArray();
-
-    projectHistories = [];
-    await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).deleteMany({});
-
-    for (let p of pastTong) {
-      tempArr = await MONGOC.db(`miro81`).collection(`project`).find({ cliid: p.a4_customernumber }).toArray();
-      if (tempArr.length > 0) {
-        tempTong = {};
-        tempTong.proid = "";
-        tempTong.history = "";
-        tempTong.designer = "";
-        tempTong.client = "";
-        tempTong.photo = "";
-
-        tempTong.proid = tempArr[0].proid;
-
-        if (p.z1_history1 !== "" && p.z1_history1 !== "-") {
-          tempTong.history += p.z1_history1;
-        }
-        if (p.z2_history2 !== "" && p.z2_history2 !== "-") {
-          tempTong.history += "\n\n";
-          tempTong.history += p.z2_history2;
-        }
-        if (p.z3_history3 !== "" && p.z3_history3 !== "-") {
-          tempTong.history += "\n\n";
-          tempTong.history += p.z3_history3;
-        }
-
-        projectHistories.push(tempTong);
-        await MONGOLOCALC.db(`miro81`).collection(`projectHistory`).insertOne(tempTong);
-      }
-    }
-
-  } catch (e) {
-    console.log(e);
-  } finally {
-    MONGOC.close();
-    MONGOLOCALC.close();
-  }
-}
-
-BackMaker.prototype.pastMap = function () {
-  switch (this.button) {
-    case "client":
-      return { collection: "BC1_conlist", id: "a4_customernumber", time: "a18_timeline" };
-      break;
-    case "project":
-      return { collection: "Project", id: "proid", time: "proid" };
-      break;
-    case "designer":
-      return { collection: "BD2_deslist", id: "a4_desid", time: "a4_desid" };
-      break;
-  }
-}
-
-BackMaker.prototype.jsonStructure = function () {
-  const instance = this;
-  const map = require(`${this.mapDir}/${this.button}.js`);
-  return function () {
-    return JSON.parse(JSON.stringify(map));
-  }
-}
-
-BackMaker.prototype.pastToJson = async function (cliid = "entire") {
-  const instance = this;
-  const { fileSystem, mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const map = require(`${this.pastDir}/${this.button}/${this.button}.js`);
-  const filter = map({ map: this.jsonStructure(this.button), Mother: this.mother, Notion: {}, Filters: BackMaker.filters });
-  try {
-    let row, tempArr, queryObj;
-
-    if (this.button !== "contents") {
-
-      const { collection, id, time } = this.pastMap();
-      queryObj = {};
-
-      await MONGOC.connect();
-
-      if (cliid === "entire") {
-        row = await MONGOC.db("miro81").collection(collection).find({}).toArray();
-      } else if (/^latest/.test(cliid)) {
-        tempArr = cliid.split("_");
-        queryObj[time] = -1;
-        row = await MONGOC.db("miro81").collection(collection).find({}).sort(queryObj).limit(Number(tempArr[1].replace(/[^0-9]/g, ''))).toArray();
-      } else {
-        queryObj[id] = cliid;
-        row = await MONGOC.db("miro81").collection(collection).find(queryObj).limit(1).toArray();
-      }
-
-    } else if (this.button === "contents") {
-
-      let contentsResourceDir, contentsResourceDirRaw, contentsResourceArr;
-      let contentsJson;
-
-      contentsResourceDir = `${process.cwd()}/apps/contentsMaker/resource`;
-      contentsResourceDirRaw = await fileSystem(`readDir`, [ contentsResourceDir ]);
-
-      contentsResourceArr = [];
-      for (let i of contentsResourceDirRaw) { if (i !== `.DS_Store`) {
-        contentsResourceArr.push(i);
-      }}
-
-      row = [];
-      for (let i of contentsResourceArr) {
-        contentsJson = require(`${contentsResourceDir}/${i}`);
-        row.push(contentsJson);
-      }
-
-    }
-
-    return (await filter(row));
-  } catch (e) {
-    console.log(e);
-  } finally {
-    await MONGOC.close();
-  }
-}
-
-BackMaker.prototype.subLogicToJson = async function (tong) {
-  const instance = this;
-  const { fileSystem } = this.mother;
-  try {
-    const targetDir = `${this.pastDir}/${this.button}/subLogic`;
-    const targetDirArr = await fileSystem(`readDir`, [ targetDir ]);
-    let tempFunc, funcs;
-
-    funcs = [];
-    for (let i of targetDirArr) { if (i !== `.DS_Store`) {
-      funcs.push(require(targetDir + "/" + i));
-    }}
-
-    for (let i = 0; i < funcs.length; i++) {
-      tempFunc = (funcs[i])({ Mother: this.mother, Notion: {}, Filters: BackMaker.filters });
-      tong = await tempFunc(tong);
-    }
-
-    return tong;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-BackMaker.prototype.getTong = async function (cliid = "entire") {
-  const instance = this;
-  try {
-    const tong = await this.pastToJson(cliid);
-    const finalTong = await this.subLogicToJson(tong);
-    return finalTong;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-BackMaker.prototype.pastToMongo = async function () {
-  const instance = this;
-  const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  try {
-    let tong, resultTong, finalTong;
-
-    await MONGOC.connect();
-    const target = [
-      "client",
-      "designer",
-      "project",
-    ];
-
-    for (let t of target) {
-      this.button = t;
-      tong = await this.pastToJson("entire");
-      resultTong = await this.subLogicToJson(tong);
-      await MONGOC.db(`miro81`).collection(t).deleteMany({});
-      for (let i of resultTong) {
-        await MONGOC.db(`miro81`).collection(t).insertOne(i);
-      }
-      console.log(`${t} update success`);
-    }
-
-  } catch (e) {
-    console.log(e);
-  } finally {
-    MONGOC.close();
   }
 }
 
@@ -969,161 +563,18 @@ BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: 
 }
 
 BackMaker.prototype.returnClientDummies = function (subject) {
+  const instance = this;
+  const map = require(`${this.mapDir}/client.js`);
   let dummy;
-  switch (subject) {
-    case "analytics.date.history":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        who: "",
-      };
-      break;
-    case "analytics.picture.space.file":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        confirm: [],
-        folderId: ""
-      };
-      break;
-    case "analytics.picture.prefer.file":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        confirm: [],
-        folderId: ""
-      };
-      break;
-    case "analytics.picture.space.file.confirm":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        who: "",
-      };
-      break;
-    case "analytics.picture.prefer.file.confirm":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        who: "",
-      };
-      break;
-    case "analytics.proposal":
-      dummy = {
-        proid: "",
-        date: new Date(1800, 0, 1),
-        contract: false,
-      };
-      break;
-  }
-
+  dummy = map.sub(subject);
   return dummy;
 }
 
 BackMaker.prototype.returnClientRequest = function () {
+  const instance = this;
+  const map = require(`${this.mapDir}/client.js`);
   let request;
-  request = {
-    request: {
-      timeline: new Date(1800, 0, 1),
-      notionId: "",
-      budget: "알 수 없음",
-      family: "",
-      space: {
-        address: "",
-        contract: "알 수 없음",
-        pyeong: 0,
-        spec: {
-          room: 0,
-          bathroom: 0,
-          valcony: false
-        },
-        resident: {
-          living: false,
-          expected: new Date(1800, 0, 1),
-        },
-      },
-      etc: {
-        comment: "",
-        channel: "",
-      },
-    },
-    analytics: {
-      googleAnalytics: {
-        timeline: new Date(1800, 0, 1),
-        userType: "",
-        referrer: {
-          name: "",
-          detail: {
-            host: null,
-            queryString: {},
-          },
-        },
-        device: {
-          type: "",
-          os: "",
-          mobileDevice: "",
-        },
-        region: {
-          country: "",
-          city: "",
-          latitude: 0,
-          longitude: 0,
-        },
-        personalInfo: {
-          age: null,
-          gender: null
-        },
-        campaign: "",
-        history: [],
-      },
-      response: {
-        status: "응대중",
-        action: "1차 응대 예정",
-        outreason: [],
-        kakao: false,
-        service: {
-          serid: "s2011_aa02s",
-          xValue: "B",
-          online: false,
-        },
-      },
-      date: {
-        call: {
-          next: new Date(1800, 0, 1),
-          history: [],
-        },
-        space: {
-          precheck: new Date(1800, 0, 1),
-          empty: new Date(1800, 0, 1),
-          movein: new Date(1800, 0, 1),
-        },
-        calendar: {
-          call: {
-            mother: "clientCalendar",
-            id: "",
-          },
-          precheck: {
-            mother: "clientCalendar",
-            id: "",
-          },
-          empty: {
-            mother: "clientCalendar",
-            id: "",
-          },
-          movein: {
-            mother: "clientCalendar",
-            id: "",
-          }
-        },
-      },
-      picture: {
-        space: {
-          boo: false,
-          file: [],
-        },
-        prefer: {
-          boo: false,
-          file: [],
-        },
-      },
-      proposal: [],
-    },
-  };
+  request = map.sub("requests");
   return request;
 }
 
@@ -1132,6 +583,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "client";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/client.js`);
   try {
     let dummy, latestClient, latestClientArr;
     let newOption = {};
@@ -1146,16 +598,8 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
 
     latestClientArr = await this.getClientsByQuery({}, newOption);
     latestClient = latestClientArr[0];
-    dummy = {
-      structure: {
-        name: "",
-        phone: "",
-        email: "",
-        cliid: "",
-        requests: [],
-      },
-    };
-    requestDummy = this.returnClientRequest();
+    dummy = map.main();
+    requestDummy = map.sub("requests");
     dummy.structure.requests.unshift(requestDummy);
     dummy.structure.cliid = this.idMaker(latestClient.cliid);
 
@@ -1685,6 +1129,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "contents";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/contents.js`);
   try {
     let dummy, latestContents, latestContentsArr;
     let newOption = {};
@@ -1698,73 +1143,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
 
     latestContentsArr = await this.getContentsArrByQuery({}, newOption);
     latestContents = latestContentsArr[0];
-    dummy = {
-      structure: {
-        conid: "",
-        desid: "",
-        cliid: "",
-        proid: "",
-        contents: {
-          portfolio: {
-            pid: "",
-            date: new Date(1800, 0, 1),
-            spaceInfo: {
-              space: "",
-              pyeong: 0,
-              region: "",
-              method: "",
-            },
-            title: {
-              main: "",
-              sub: "",
-            },
-            color: {
-              main: "",
-              sub: "",
-              title: "",
-            },
-            detailInfo: {
-              photodae: [],
-              photosg: {
-                first: 0,
-                last: 0,
-              },
-              slide: [],
-              tag: [],
-              service: "",
-              sort: {
-                key8: 0,
-                key9: 0,
-              },
-            },
-            contents: {
-              suggestion: "Designer's\nSuggestion",
-              detail: [],
-            }
-          },
-          review: {
-            rid: "",
-            date: new Date(1800, 0, 1),
-            title: {
-              main: "",
-              sub: "",
-            },
-            detailInfo: {
-              photodae: [],
-              order: 0,
-            },
-            contents: {
-              detail: [],
-            }
-          }
-        },
-        photos: {
-          first: 0,
-          last: 0,
-          detail: [],
-        }
-      }
-    };
+    dummy = map.main();
     dummy.structure.conid = this.idMaker(latestContents.conid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -2072,6 +1451,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "designer";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/designer.js`);
   try {
     let dummy, dummySetting, latestDesigner, latestDesignerArr;
     let newOption = {};
@@ -2089,219 +1469,11 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     latestDesignerArr = await this.getDesignersByQuery({}, newOption);
     latestDesigner = latestDesignerArr[0];
 
-    dummy = {
-      structure: {
-        designer: "",
-        desid: "",
-        information: {
-          contract: {
-            status: "협약 완료",
-            date: new Date(1800, 0, 1),
-          },
-          phone: "",
-          email: "",
-          did: "",
-          address: [],
-          personalSystem: {
-            showRoom: false,
-            webPage: [],
-            sns: [],
-          },
-          business: {
-            career: {
-              startY: 0,
-              startM: 0,
-            },
-            account: [],
-            businessInfo: {
-              classification: "",
-              businessNumber: "",
-              files: {
-                businessRegistration: false,
-                bankBook: false,
-                registrationCard: false
-              },
-            },
-            service: {
-              cost: {
-                matrix: {
-                  service: [
-                    {
-                      serid: "s2011_aa01s",
-                      case: 9
-                    },
-                    {
-                      serid: "s2011_aa02s",
-                      case: 11
-                    },
-                    {
-                      serid: "s2011_aa03s",
-                      case: 9
-                    }
-                  ],
-                  online: true
-                },
-                percentage: 30,
-                percentageHistory: []
-              },
-              construct: {
-                partner: "",
-                method: "",
-              },
-            },
-          }
-        },
-        analytics: {
-          region: {
-            available: [ "서울", "경기" ],
-            transportation: "자동차",
-          },
-          project: {
-            time: {
-              first: 7,
-              entire: 30,
-            },
-            paperWork: [],
-          },
-          construct: {
-            level: 1,
-            possible: {
-              supervision: true,
-              others: true
-            },
-            contract: [ "협업사 계약" ],
-          },
-          styling: {
-            level: 1,
-            method: "순차 제안",
-            tendency: {
-              style: {
-                modern: 0,
-                classic: 0,
-                natural: 0,
-                mixmatch: 0,
-                scandinavian: 0,
-                vintage: 0,
-                oriental: 0,
-                exotic: 0,
-              },
-              texture: {
-                darkWood: 0,
-                whiteWood: 0,
-                coating: 0,
-                metal: 0
-              },
-              color: {
-                darkWood: 0,
-                whiteWood: 0,
-                highContrast: 0,
-                vivid: 0,
-                white: 0,
-                mono: 0,
-                bright: 0,
-                dark: 0,
-              },
-              density: {
-                maximun: 0,
-                minimum: 0,
-              }
-            },
-            furniture: {
-              builtin: false,
-              design: false
-            },
-            fabric: {
-              manufacture: false,
-              method: "업체 연결",
-            }
-          },
-          purchase: {
-            agencies: false,
-            setting: {
-              install: false,
-              storage: false,
-            },
-          },
-          etc: {
-            matrix: [],
-            operationBudget: {
-              min: 5000000,
-              max: 10000000
-            },
-            personality: [
-              { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
-              { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },
-              { name: "디자인 제안 속도가 상대적으로 빠른 편", value: false },
-              { name: "3D 요청시 유료 제공", value: false },
-              { name: "디자인 기획을 리드하는 편", value: false },
-              { name: "디자인 기획시 고객에게 맞추는 편", value: false },
-              { name: "조립 및 설치 서비스 무료 제공", value: false },
-            ],
-            relation: "확인중"
-          }
-        },
-        realTime: {
-          availableDate: [],
-        },
-        setting: {
-          front: {
-            introduction: {
-              desktop: [],
-              mobile: [],
-            },
-            methods: [],
-            photo: {
-              porlid: "",
-              index: "",
-            },
-            order: 0,
-          },
-          proposal: [],
-          ghost: [],
-        },
-      },
-    };
+    dummy = map.main();
     dummySetting = function (num) {
-      let settingObj = {
-          name : "기본 세팅 " + String(num),
-          photo : [
-            {
-              position: "0",
-              sgTrue: "g",
-              unionPo: "union",
-              styleText: "width: 66.5%;height: 66%;top: 0%;left: 0%;"
-            },
-            {
-              position: "1",
-              sgTrue: "s",
-              unionPo: "right",
-              styleText: "width: 32.8%;height: 66%;top: 0%;left: 67.2%;"
-            },
-            {
-              position: "2",
-              sgTrue: "g",
-              unionPo: "union",
-              styleText: "width: 32.8%;height: 33%;top: 67%;left: 0%;"
-            },
-            {
-              position: "3",
-              sgTrue: "g",
-              unionPo: "union",
-              styleText: "width: 33%;height: 33%;top: 67%;left: 33.5%;"
-            },
-            {
-              position: "4",
-              sgTrue: "g",
-              unionPo: "union",
-              styleText: "width: 32.8%;height: 33%;top: 67%;left: 67.2%;"
-            }
-          ],
-          description : [
-            "NULL",
-            "NULL",
-            "NULL"
-          ]
-      };
+      let settingObj;
+      settingObj = map.sub("setting.proposal");
+      settingObj.name = "기본 세팅 " + String(num);
       return JSON.parse(JSON.stringify(settingObj));
     }
     dummy.structure.desid = this.idMaker(latestDesigner.desid);
@@ -2758,22 +1930,10 @@ BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo:
 }
 
 BackMaker.prototype.returnProjectDummies = function (subject) {
+  const instance = this;
+  const map = require(`${this.mapDir}/project.js`);
   let dummy;
-  switch (subject) {
-    case "process.call.history":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        who: "",
-      };
-      break;
-    case "process.contract.meeting.pastDesigners":
-      dummy = {
-        date: new Date(1800, 0, 1),
-        desid: "",
-      };
-      break;
-  }
-
+  dummy = map.sub(subject);
   return dummy;
 }
 
@@ -2782,6 +1942,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "project";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/project.js`);
   try {
     let dummy, latestProject, latestProjectArr;
     let newOption = {};
@@ -2797,155 +1958,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
     latestProjectArr = await this.getProjectsByQuery({}, newOption);
     latestProject = latestProjectArr[0];
 
-    dummy = {
-      structure: {
-        proid: "",
-        cliid: "",
-        desid: "",
-        service: {
-          serid: "",
-          xValue: "",
-          online: false,
-        },
-        proposal: {
-          status: "",
-          date: new Date(1800, 0, 1),
-          detail: [],
-        },
-        process: {
-          status: "드랍",
-          action: "응대 대기",
-          detail: [],
-          outreason: [],
-          call: {
-            next: new Date(1800, 0, 1),
-            history: [],
-          },
-          contract: {
-            first: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(1800, 0, 1),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: 0,
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            remain: {
-              guide: new Date(1800, 0, 1),
-              date: new Date(1800, 0, 1),
-              cancel: new Date(1800, 0, 1),
-              calculation: {
-                amount: {
-                  supply: 0,
-                  vat: 0,
-                  consumer: 0,
-                },
-                info: {
-                  method: "",
-                  proof: "",
-                  to: "",
-                },
-                refund: 0,
-              },
-            },
-            form: {
-              id: "",
-              guide: new Date(1800, 0, 1),
-              date: {
-                from: new Date(1800, 0, 1),
-                to: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-              }
-            },
-            meeting: {
-              date: new Date(1800, 0, 1),
-              pastDesigners: []
-            },
-          },
-          design: {
-            proposal: {
-              provided: false,
-              limit: null,
-              detail: []
-            },
-            construct: {
-              provided: false,
-              detail: [],
-            },
-            purchase: {
-              provided: false,
-              detail: [],
-            },
-          },
-          calculation: {
-            method: "",
-            percentage: 0,
-            info: {
-              account: "",
-              proof: "",
-              to: "",
-            },
-            payments: {
-              totalAmount: 0,
-              first: {
-                amount: 0,
-                date: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              },
-              remain: {
-                amount: 0,
-                date: new Date(1800, 0, 1),
-                cancel: new Date(1800, 0, 1),
-                refund: 0,
-              }
-            }
-          },
-        },
-        contents: {
-          conid: "",
-          photo: {
-            boo: true,
-            status: "세팅 대기",
-            date: new Date(3800, 0, 1),
-            info: {
-              photographer: "미정",
-              interviewer: "미정",
-            }
-          },
-          raw: {
-            portfolio: {
-              status: "해당 없음",
-              link: "",
-            },
-            interview: {
-              status: "해당 없음",
-              link: "",
-            },
-            photo: {
-              status: "해당 없음",
-              link: "",
-            },
-          },
-          share: {
-            client: {
-              photo: new Date(1800, 0, 1),
-              contents: new Date(1800, 0, 1),
-            },
-            designer: {
-              photo: new Date(1800, 0, 1),
-              contents: new Date(1800, 0, 1),
-            }
-          }
-        },
-      }
-    };
+    dummy = map.main();
     dummy.structure.proid = this.idMaker(latestProject.proid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -3135,6 +2148,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "aspirant";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/aspirant.js`);
   try {
     let dummy, latestAspirant, latestAspirantArr;
     let newOption = {};
@@ -3150,70 +2164,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
     latestAspirantArr = await this.getAspirantsByQuery({}, newOption);
     latestAspirant = latestAspirantArr[0];
 
-    dummy = {
-      structure: {
-        aspid: "",
-        designer: "",
-        phone: "",
-        address: "",
-        email: "",
-        meeting: {
-          date: new Date(1800, 0, 1),
-          status: "",
-        },
-        calendar: {
-          mother: "designerMeeting",
-          id: "",
-        },
-        portfolio: [],
-        submit: {
-          presentation: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          partnership: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          firstRequest: {
-            date: new Date(1800, 0, 1),
-            method: "",
-          },
-          comeFrom: "",
-        },
-        information: {
-          company: {
-            name: "",
-            classification: "",
-            businessNumber: "",
-            representative: "",
-            start: new Date(1800, 0, 1),
-          },
-          account: {
-            bank: "",
-            number: "",
-            to: "",
-            etc: "",
-          },
-          career: {
-            interior: {
-              year: 0,
-              month: 0
-            },
-            styling: {
-              year: 0,
-              month: 0
-            },
-            detail: "",
-          },
-          channel: {
-            web: [],
-            sns: [],
-            cloud: []
-          }
-        }
-      }
-    };
+    dummy = map.main();
     dummy.structure.aspid = this.idMaker(latestAspirant.aspid);
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
