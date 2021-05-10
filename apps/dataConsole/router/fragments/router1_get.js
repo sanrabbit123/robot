@@ -182,14 +182,14 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (instance.isGhost) {
-
-          res.set("Content-Type", "text/html");
-          res.send(`<html><head><title>Permission denied</title></head><body><script>
-            alert("접근할 수 없는 경로입니다!");
-            window.location.href = "https://home-liaison.com";</script></body></html>`);
-
-        } else {
+        // if (instance.isGhost) {
+        //
+        //   res.set("Content-Type", "text/html");
+        //   res.send(`<html><head><title>Permission denied</title></head><body><script>
+        //     alert("접근할 수 없는 경로입니다!");
+        //     window.location.href = "https://home-liaison.com";</script></body></html>`);
+        //
+        // } else {
 
           if (/^cl/i.test(req.params.id)) {
             target = "client";
@@ -218,7 +218,7 @@ DataRouter.prototype.rou_get_First = function () {
             throw new Error(err);
           });
 
-        }
+        // }
 
       }
 
