@@ -43,51 +43,11 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep } = this.mother;
   try {
-    await this.MONGOC.connect();
+    // await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
     const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
-
-
-
-
-
-    // const clients = await back.getClientsByQuery({}, { withTools: true });
-    // const requests = clients.getRequestsTong();
-    // const startDate = new Date(2021, 3, 1);
-    // const endDate = new Date(2021, 4, 1);
-    // let target;
-    // let cliidArr;
-    //
-    //
-    // target = [];
-    // cliidArr = [];
-    // for (let request of requests) {
-    //   if (request[0].timeline.valueOf() >= startDate.valueOf()) {
-    //     if (request[0].timeline.valueOf() <= endDate.valueOf()) {
-    //       target.push(request);
-    //       cliidArr.push({ cliid: request.cliid });
-    //     }
-    //   }
-    // }
-    //
-    // console.log(target);
-    // console.log(target.length);
-    // console.log(cliidArr);
-    //
-    // const projects = await back.getProjectsByQuery({ $or: cliidArr });
-    // let projectTarget;
-    //
-    // projectTarget = [];
-    // for (let obj of projects) {
-    //   if (obj.desid !== '') {
-    //     projectTarget.push(obj);
-    //   }
-    // }
-    //
-    // console.log(projectTarget);
-    // console.log(projectTarget.length);
 
 
     
@@ -103,6 +63,7 @@ DevContext.prototype.launching = async function () {
     // updateQuery = {};
     // updateQuery["analytics"] = analytics;
     // await back.updateDesigner([ whereQuery, updateQuery ]);
+
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -186,9 +147,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김미향",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/1KADiLXfDb_eBp4qIb7cZsonvnKGcl6qi",
+    //     client: "김지혜",
+    //     designer: "우다미",
+    //     link: "https://drive.google.com/drive/folders/1Z5cNcOh5jywyhkpsZXU5Sd9H92Z5wWwB",
     //   }
     // ]);
 
@@ -211,7 +172,9 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    // await this.aspirantToDesigner();
+    // await this.aspirantToDesigner([
+    //   [ "박주령", "2021-04-28" ],
+    // ]);
 
 
     // new designer to front web
@@ -273,12 +236,208 @@ DevContext.prototype.launching = async function () {
     // render page block
     // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
+    // cook json property
+    // await this.cookProperty([
+    //   {
+    //     mongoConnection: this.MONGOLOCALC,
+    //     collection: "designer",
+    //     standard: "desid",
+    //     mode: "add",
+    //     position: "information.business.career.relatedY",
+    //     value: 0
+    //   },
+    //   {
+    //     mode: "add",
+    //     position: "information.business.career.relatedM",
+    //     value: 0
+    //   },
+    //   {
+    //     mode: "remove",
+    //     position: "analytics.region.available",
+    //     value: ""
+    //   },
+    //   {
+    //     mode: "add",
+    //     position: "analytics.project.online",
+    //     value: true
+    //   },
+    //   {
+    //     node: "add",
+    //     position: "analytics.project.living",
+    //     value: true
+    //   },
+    //   {
+    //     mode: "remove",
+    //     position: "analytics.construct.possible.others",
+    //     value: ""
+    //   },
+    //   {
+    //     mode: "add",
+    //     position: "analytics.construct.case",
+    //     value: [
+    //       {
+    //         name: "homeStyling",
+    //         contract: [],
+    //         possible: [],
+    //       },
+    //       {
+    //         name: "totalStyling",
+    //         contract: [],
+    //         possible: [],
+    //       },
+    //       {
+    //         name: "architecture",
+    //         contract: [],
+    //         possible: [],
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     mode: "copy",
+    //     position: "analytics.construct.case.0.contract",
+    //     value: "analytics.construct.contract"
+    //   },
+    //   {
+    //     mode: "copy",
+    //     position: "analytics.construct.case.1.contract",
+    //     value: "analytics.construct.contract"
+    //   },
+    //   {
+    //     mode: "move",
+    //     position: "analytics.construct.case.2.contract",
+    //     value: "analytics.construct.contract"
+    //   },
+    //   {
+    //     mode: "copy",
+    //     position: "analytics.styling.fabric.curtain",
+    //     value: "analytics.styling.fabric.manufacture"
+    //   },
+    //   {
+    //     mode: "move",
+    //     position: "analytics.styling.fabric.bedding",
+    //     value: "analytics.styling.fabric.manufacture"
+    //   },
+    // ]);
+
+
   } catch (e) {
     console.log(e);
   } finally {
-    this.MONGOC.close();
+    // this.MONGOC.close();
     this.MONGOLOCALC.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.cookProperty = async function (obj) {
+  /*
+    example:
+    await instance.cookProperty([
+      {
+        mongoConnection: this.MONGOLOCALC,
+        collection: "designer",
+        standard: "desid",
+        mode: "add", // add or remove
+        position: "information.test",
+        value: "this is test"
+      },
+      {
+        mode: "add", // add or remove
+        position: "information.test2",
+        value: "this is test2"
+      },
+      {
+        mode: "remove", // add or remove
+        position: "information.contract.test3",
+        value: "this is test3"
+      }
+    ]);
+  */
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const dbName = "miro81";
+  const modes = [ "add", "remove", "move", "copy" ];
+  const findValue = function (json, order) {
+    const orderArr = order.split(".");
+    let target;
+    target = json;
+    for (let i = 0; i < orderArr.length; i++) {
+      target = target[orderArr[i]];
+    }
+    return target;
+  }
+  try {
+    if (obj === null || typeof obj !== "object") {
+      throw new Error("argument must be Object: { mode, mongoConnection, collection, standard, position, value }");
+    }
+    if (!Array.isArray(obj)) {
+      obj = [ obj ];
+    }
+    if (obj.length === 0) {
+      throw new Error("invaild argument");
+    }
+    if (obj[0].mode === undefined || obj[0].mongoConnection === undefined || obj[0].collection === undefined || obj[0].standard === undefined || obj[0].position === undefined || obj[0].value === undefined) {
+      throw new Error("arguments must be [ { mode, mongoConnection, collection, standard, position, value }... ]");
+    }
+    if (!(modes.includes(obj[0].mode))) {
+      throw new Error("mode must be ", modes);
+    }
+    if (typeof obj[0].position !== "string") {
+      throw new Error("position must be string");
+    }
+
+    let { mode, mongoConnection, collection, standard, position, value } = obj[0];
+    let MONGOC = mongoConnection;
+    let whereQuery, updateQuery, updateMotherQuery;
+    let rows;
+
+    rows = await MONGOC.db(dbName).collection(collection).find({}).toArray();
+
+    for (let i = 0; i < obj.length; i++) {
+      mode = modes.includes(obj[i].mode) ? obj[i].mode : mode;
+      position = typeof obj[i].position === "string" ? obj[i].position : position;
+      value = obj[i].value !== undefined ? obj[i].value : value;
+      if (mode === "remove") {
+        value = "";
+      }
+      for (let json of rows) {
+
+        whereQuery = {};
+        updateQuery = {};
+        updateMotherQuery = {};
+
+        whereQuery[standard] = findValue(json, standard);
+
+        if (mode === "add") {
+          updateQuery[position] = value;
+          updateMotherQuery["$set"] = updateQuery;
+          await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, updateMotherQuery);
+        } else if (mode === "remove") {
+          updateQuery[position] = value;
+          updateMotherQuery["$unset"] = updateQuery;
+          await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, updateMotherQuery);
+        } else if (mode === "move") {
+          updateQuery[position] = findValue(json, value);
+          updateMotherQuery["$set"] = updateQuery;
+          await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, updateMotherQuery);
+          updateQuery = {};
+          updateMotherQuery = {};
+          updateQuery[value] = "";
+          updateMotherQuery["$unset"] = updateQuery;
+          await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, updateMotherQuery);
+        } else if (mode === "copy") {
+          updateQuery[position] = findValue(json, value);
+          updateMotherQuery["$set"] = updateQuery;
+          await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, updateMotherQuery);
+        }
+
+        console.log(`${collection} ${mode} "${position}"`, whereQuery);
+      }
+    }
+
+    console.log(`${collection} ${mode} all done`);
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -545,16 +704,16 @@ DevContext.prototype.spellCheck = async function (porlid) {
   }
 }
 
-DevContext.prototype.aspirantToDesigner = async function () {
+DevContext.prototype.aspirantToDesigner = async function (nameList) {
+  if (!Array.isArray(nameList)) {
+    throw new Error("input must be array => [ [], [], []... ]");
+  }
   const instance = this;
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
-    const nameList = [
-      [ "권미정", "2021-03-12" ],
-    ];
     const stringToDate = function (str) {
       let temp = str.split('-');
       return new Date(Number(temp[0]), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));

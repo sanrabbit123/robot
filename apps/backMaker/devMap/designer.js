@@ -21,6 +21,8 @@ module.exports = {
           },
           business: {
             career: {
+              relatedY: 0,
+              relatedM: 0,
               startY: 0,
               startM: 0,
             },
@@ -65,7 +67,6 @@ module.exports = {
         },
         analytics: {
           region: {
-            available: [ "서울", "경기" ],
             transportation: "자동차",
           },
           project: {
@@ -74,14 +75,31 @@ module.exports = {
               entire: 30,
             },
             paperWork: [],
+            online: true,
+            living: true
           },
           construct: {
             level: 1,
             possible: {
               supervision: true,
-              others: true
             },
-            contract: [ "협업사 계약" ],
+            case: [
+              {
+                name: "homeStyling",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              },
+              {
+                name: "totalStyling",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              },
+              {
+                name: "architecture",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              }
+            ]
           },
           styling: {
             level: 1,
@@ -123,7 +141,8 @@ module.exports = {
               design: false
             },
             fabric: {
-              manufacture: false,
+              curtain: false,
+              bedding: false,
               method: "업체 연결",
             }
           },
