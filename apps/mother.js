@@ -36,7 +36,7 @@ const Mother = function () {
 
   //slack
   const { WebClient } = require('@slack/web-api');
-  this.slack_bot = new WebClient(`xoxb-717757271335-1044856512278-hQ42lRO25cRLHQ3Pd7HjMP6v`);
+  this.slack_bot = new WebClient(`xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv`);
 
   //temp
   this.tempDir = `${process.cwd()}/temp`;

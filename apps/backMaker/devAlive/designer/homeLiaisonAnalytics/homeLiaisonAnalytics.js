@@ -123,8 +123,6 @@ OperationBudget.prototype.toNormal = function () {
 }
 
 const EtcAnalytics = function (json) {
-  this.matrix = new AreaMatrix(json.matrix);
-  this.operationBudget = new OperationBudget(json.operationBudget);
   this.personality = new Personality(json.personality);
   this.relation = new Menu(json.relation, [
     "지속가능성 높음",
@@ -136,8 +134,6 @@ const EtcAnalytics = function (json) {
 
 EtcAnalytics.prototype.toNormal = function () {
   let obj = {};
-  obj.matrix = this.matrix.toNormal();
-  obj.operationBudget = this.operationBudget.toNormal();
   obj.personality = this.personality.toNormal();
   obj.relation = this.relation.toNormal();
   return obj;
@@ -413,6 +409,8 @@ const ProjectAnalytics = function (json) {
   ], true);
   this.online = json.online;
   this.living = json.living;
+  this.matrix = new AreaMatrix(json.matrix);
+  this.operationBudget = new OperationBudget(json.operationBudget);
 }
 
 ProjectAnalytics.prototype.toNormal = function () {
@@ -421,6 +419,8 @@ ProjectAnalytics.prototype.toNormal = function () {
   obj.paperWork = this.paperWork.toNormal();
   obj.online = this.online;
   obj.living = this.living;
+  obj.matrix = this.matrix.toNormal();
+  obj.operationBudget = this.operationBudget.toNormal();
   return obj;
 }
 

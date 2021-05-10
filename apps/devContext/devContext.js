@@ -50,7 +50,10 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
 
 
-    
+
+
+
+
 
 
 
@@ -316,6 +319,16 @@ DevContext.prototype.launching = async function () {
     //     mode: "move",
     //     position: "analytics.styling.fabric.bedding",
     //     value: "analytics.styling.fabric.manufacture"
+    //   },
+    //   {
+    //     mode: "move",
+    //     position: "analytics.project.matrix",
+    //     value: "analytics.etc.matrix"
+    //   },
+    //   {
+    //     mode: "move",
+    //     position: "analytics.project.operationBudget",
+    //     value: "analytics.etc.operationBudget"
     //   },
     // ]);
 

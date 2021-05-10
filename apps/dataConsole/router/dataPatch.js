@@ -3347,39 +3347,6 @@ DataPatch.prototype.designerCheckList = function (valueObj = {}) {
       items: [
         {
           type: "string",
-          multiple: true,
-          name: "서비스 가능 지역",
-          column: "available",
-          position: function (items, reverse = false) {
-            if (!reverse) {
-              let updateQuery = {};
-              updateQuery["analytics.region.available"] = items;
-              return updateQuery;
-            } else {
-              return items.region.available;
-            }
-          },
-          dependency: null,
-          survey: true,
-          items: [
-            "서울",
-            "인천",
-            "경기",
-            "강원",
-            "충청",
-            "대전",
-            "세종",
-            "전라",
-            "경상",
-            "제주",
-            "부산",
-            "대구",
-            "울산",
-            "광주"
-          ]
-        },
-        {
-          type: "string",
           multiple: false,
           name: "이동 수단",
           column: "transportation",

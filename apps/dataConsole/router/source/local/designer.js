@@ -7122,7 +7122,7 @@ DesignerJs.prototype.checkListView = async function () {
 
     this.designers = new Designers(designers);
 
-    minWidth = 240;
+    minWidth = 210;
     margin = 8;
 
     boxNumber = Math.floor((window.innerWidth - grayBarWidth) / (minWidth + margin));
@@ -7199,7 +7199,7 @@ DesignerJs.prototype.checkListView = async function () {
         style: {
           position: "absolute",
           width: String(100) + '%',
-          top: "calc(50% + " + String(9) + ea + ")",
+          top: "calc(50% + " + String(8) + ea + ")",
           fontSize: String(16) + ea,
           textAlign: "center",
           fontFamily: "graphik",
@@ -7215,8 +7215,8 @@ DesignerJs.prototype.checkListView = async function () {
         style: {
           position: "absolute",
           width: String(100) + '%',
-          top: String(-47) + ea,
-          fontSize: String(36) + ea,
+          top: String(-43) + ea,
+          fontSize: String(32) + ea,
           textAlign: "center",
           fontWeight: String(500),
           fontStyle: "normal",
@@ -7241,8 +7241,23 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const designer = this.designers.pick(desid);
-  const { analytics } = designer;
+  const { information, analytics } = designer;
   let baseTong;
+  let matrix;
+  let tempArr;
+  let tempObj, nodeArr;
+  let level0, level1;
+  let eachTotalTong, eachNameTong, eachValueTong;
+  let level1Width, level1Left;
+  let topMargin, leftMargin, bottomMargin;
+  let size;
+
+  level1Width = 160;
+  level1Left = 120;
+  topMargin = 30;
+  leftMargin = 34;
+  bottomMargin = 15;
+  size = 18;
 
   baseTong = createNode({
     mother: totalMother,
@@ -7251,19 +7266,307 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
       top: String(margin * 3) + ea,
       left: String(grayBarWidth + (margin * 3)) + ea,
       width: withOut(grayBarWidth + (margin * 6), ea),
-      height: String(1500) + ea,
       borderRadius: String(5) + ea,
       border: "1px solid " + colorChip.gray4,
       background: colorChip.white,
-      animation: "fadeup 0.3 ease forwards",
+      animation: "fadeup 0.3s ease forwards",
     }
   });
 
+  level0 = [
+    {
+      name: "일반",
+      children: [
+        {
+          name: "성함",
+          value: function (designer) {
+            return designer.designer;
+          },
+          height: 50,
+        },
+        {
+          name: "연락처",
+          value: function (designer) {
+            return designer.information.phone;
+          },
+          height: 50,
+        },
+        {
+          name: "경력",
+          value: function (designer) {
+            const { information } = designer;
+            const { relatedY, relatedM, startY, startM } = information.business.career;
+            return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
+          },
+          height: 50,
+        }
+      ]
+    },
+    {
+      name: "공간",
+      children: [
+
+      ]
+    },
+    {
+      name: "작업",
+      children: [
+
+      ]
+    },
+    {
+      name: "시공",
+      children: [
+
+      ]
+    },
+    {
+      name: "스타일링",
+      children: [
+
+      ]
+    },
+    {
+      name: "구매",
+      children: [
+
+      ]
+    },
+    {
+      name: "성격",
+      children: [
+
+      ]
+    }
+  ];
+
+  /*
+  totalInfo = [
+    {
+      name: "기본",
+      children: [
+        {
+          name: "이름",
+          value: designer.designer,
+          type: "string",
+          line: 1,
+        },
+        {
+          name: "연락처",
+          value: information.phone,
+          type: "string",
+          line: 1,
+        },
+        {
+          name: "경력",
+          value: information.business.career,
+          type: "string",
+          line: 1
+        },
+      ]
+    },
+    {
+      name: "공간",
+      children: [
+        {
+          name: "주소",
+          value: (information.address.length === 0) ? "주소 없음" : information.address[0],
+          type: "string",
+          line: 1,
+        },
+        {
+          name: "이동 수단",
+          value: analytics.region.transportation,
+          type: "radio",
+          items: [ "대중교통", "자동차" ],
+          line: 1,
+        }
+      ]
+    },
+    {
+      name: "작업",
+      children: [
+        {
+          name: "활동 범위",
+          value: analytics.project.matrix,
+          type: "matrix",
+          line: 5
+        },
+        {
+          name: "거주중 진행",
+          value: analytics.project.living,
+          type: "boolean",
+          line: 1,
+        },
+        {
+          name: "온라인 진행",
+          value: analytics.project.online,
+          type: "boolean",
+          line: 1,
+        },
+        {
+          name: "예산 운영 범위",
+          value: analytics.project.operationBudget,
+          type: "radio",
+          line: 1,
+          items: [
+            "0 - 500",
+            "500 - 1000",
+            "1000 - 2000",
+            "2000 - 5000",
+            "5000 -",
+          ]
+        },
+        {
+          name: "1차 제안 소요",
+          value: analytics.project.time.first,
+          type: "radio",
+          line: 1,
+          items: [
+            "1주일 이내",
+            "2주일 이내",
+            "3주일 이내",
+            "3주 이상"
+          ]
+        },
+        {
+          name: "페이퍼 워크",
+          value: analytics.project.paperWork,
+          type: "checkbox",
+          line: 2,
+          items: [
+            "도면",
+            "3D",
+            "컨셉 제안",
+            "마감재 제안",
+            "제품 리스트",
+            "참고 이미지",
+            "드로잉",
+          ]
+        }
+      ]
+    },
+    {
+      name: "시공",
+      children: [
+        {
+          name: "시공 레벨",
+          value: analytics.construct.level,
+          type: "radio",
+          items: [ "1단계", "2단계", "3단계" ],
+          line: 1,
+        },
+        {
+          name: "시공 감리",
+          value: analytics.construct.possible.supervision,
+          type: "boolean",
+          line: 1,
+        }
+      ]
+    },
+    {
+      name: "스타일링",
+      children: []
+    },
+    {
+      name: "구매",
+      children: []
+    },
+    {
+      name: "성격",
+      children: []
+    },
+  ];
+  */
+
+
+  for (let i = 0; i < level0.length; i++) {
+    nodeArr = createNodes([
+      {
+        mother: baseTong,
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          borderBottom: i !== level0.length - 1 ? "1px solid " + colorChip.gray4 : "",
+        }
+      },
+      {
+        mother: -1,
+        text: level0[i].name,
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          top: String(topMargin) + ea,
+          left: String(leftMargin) + ea,
+        }
+      },
+      {
+        mother: -2,
+        style: {
+          position: "absolute",
+          width: String(level1Width) + ea,
+          top: String(0) + ea,
+          left: String(level1Left) + ea,
+          paddingTop: String(topMargin) + ea,
+        }
+      },
+      {
+        mother: -3,
+        style: {
+          position: "relative",
+          width: withOut(level1Width + level1Left, ea),
+          top: String(0) + ea,
+          left: String(level1Width + level1Left) + ea,
+          height: String(100) + '%',
+          paddingTop: String(topMargin) + ea,
+          paddingBottom: String(bottomMargin) + ea,
+          background: "aliceblue"
+        }
+      },
+    ]);
+
+    eachTotalTong = nodeArr[0];
+    eachNameTong = nodeArr[2];
+    eachValueTong = nodeArr[3];
+
+    for (let j = 0; j < level0[i].children.length; j++) {
+
+      createNodes([
+        {
+          mother: eachNameTong,
+          text: level0[i].children[j].name,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(200),
+            color: colorChip.black,
+            height: String(level0[i].children[j].height) + ea,
+          }
+        },
+        {
+          mother: eachValueTong,
+          text: (typeof level0[i].children[j].value === "function") ? level0[i].children[j].value(designer) : "NULL",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(200),
+            color: colorChip.black,
+            height: String(level0[i].children[j].height) + ea,
+          }
+        }
+      ]);
+
+    }
+
+  }
 
 
 
-  console.log(designer);
-  console.log(analytics)
+
 
 
 }

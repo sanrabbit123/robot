@@ -76,7 +76,12 @@ module.exports = {
             },
             paperWork: [],
             online: true,
-            living: true
+            living: true,
+            matrix: [],
+            operationBudget: {
+              min: 5000000,
+              max: 10000000
+            }
           },
           construct: {
             level: 1,
@@ -154,11 +159,6 @@ module.exports = {
             },
           },
           etc: {
-            matrix: [],
-            operationBudget: {
-              min: 5000000,
-              max: 10000000
-            },
             personality: [
               { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
               { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },

@@ -2095,8 +2095,8 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
         thisObjs = await back.getDesignersByQuery({ desid }, { selfMongo: instance.mongo });
         if (thisObjs.length > 0) {
           thisObj = thisObjs[0];
-          responseObj[req.body.target] = thisObj.analytics.etc.matrix;
-          responseObj["values"] = thisObj.analytics.etc.matrix.getStandards();
+          responseObj[req.body.target] = thisObj.analytics.project.matrix;
+          responseObj["values"] = thisObj.analytics.project.matrix.getStandards();
           responseObj["analytics"] = thisObj.analytics.toNormal();
         } else {
           responseObj["error"] = "There is no designer";
@@ -2111,7 +2111,7 @@ DataRouter.prototype.rou_post_designerMatrix = function () {
         whereQuery = { desid };
         updateQuery = {};
         if (req.body.matrixA !== undefined) {
-          updateQuery["analytics.etc.matrix"] = JSON.parse(req.body.matrixA);
+          updateQuery["analytics.project.matrix"] = JSON.parse(req.body.matrixA);
         } else {
           updateQuery = JSON.parse(req.body.update);
         }
