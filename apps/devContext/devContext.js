@@ -53,6 +53,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, devAlive: true });
+    // console.log(designers[6].analytics.project);
+    // console.log(designers[6].analytics.project.toNormal());
+
 
 
 
@@ -214,6 +218,7 @@ DevContext.prototype.launching = async function () {
     //   await this.mother.slack_bot.chat.postMessage({ text: `${designer} 디자이너 페이지를 생성하여 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
     // }
 
+
     // send mail
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
@@ -222,6 +227,7 @@ DevContext.prototype.launching = async function () {
     //   subject: "안녕하세요!",
     //   contents: "안녕하세요.",
     // }));
+
 
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
@@ -233,105 +239,133 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
+
     // ready page block
     // await this.pageReady("webProposal");
+
 
     // render page block
     // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
-    // cook json property
-    // await this.cookProperty([
-    //   {
-    //     mongoConnection: this.MONGOLOCALC,
-    //     collection: "designer",
-    //     standard: "desid",
-    //     mode: "add",
-    //     position: "information.business.career.relatedY",
-    //     value: 0
-    //   },
-    //   {
-    //     mode: "add",
-    //     position: "information.business.career.relatedM",
-    //     value: 0
-    //   },
-    //   {
-    //     mode: "remove",
-    //     position: "analytics.region.available",
-    //     value: ""
-    //   },
-    //   {
-    //     mode: "add",
-    //     position: "analytics.project.online",
-    //     value: true
-    //   },
-    //   {
-    //     node: "add",
-    //     position: "analytics.project.living",
-    //     value: true
-    //   },
-    //   {
-    //     mode: "remove",
-    //     position: "analytics.construct.possible.others",
-    //     value: ""
-    //   },
-    //   {
-    //     mode: "add",
-    //     position: "analytics.construct.case",
-    //     value: [
-    //       {
-    //         name: "homeStyling",
-    //         contract: [],
-    //         possible: [],
-    //       },
-    //       {
-    //         name: "totalStyling",
-    //         contract: [],
-    //         possible: [],
-    //       },
-    //       {
-    //         name: "architecture",
-    //         contract: [],
-    //         possible: [],
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     mode: "copy",
-    //     position: "analytics.construct.case.0.contract",
-    //     value: "analytics.construct.contract"
-    //   },
-    //   {
-    //     mode: "copy",
-    //     position: "analytics.construct.case.1.contract",
-    //     value: "analytics.construct.contract"
-    //   },
-    //   {
-    //     mode: "move",
-    //     position: "analytics.construct.case.2.contract",
-    //     value: "analytics.construct.contract"
-    //   },
-    //   {
-    //     mode: "copy",
-    //     position: "analytics.styling.fabric.curtain",
-    //     value: "analytics.styling.fabric.manufacture"
-    //   },
-    //   {
-    //     mode: "move",
-    //     position: "analytics.styling.fabric.bedding",
-    //     value: "analytics.styling.fabric.manufacture"
-    //   },
-    //   {
-    //     mode: "move",
-    //     position: "analytics.project.matrix",
-    //     value: "analytics.etc.matrix"
-    //   },
-    //   {
-    //     mode: "move",
-    //     position: "analytics.project.operationBudget",
-    //     value: "analytics.etc.operationBudget"
-    //   },
-    // ]);
 
+    // cook json property
+    /*
+    await this.cookProperty([
+      {
+        mongoConnection: this.MONGOLOCALC,
+        collection: "designer",
+        standard: "desid",
+        mode: "add",
+        position: "information.business.career.relatedY",
+        value: 0
+      },
+      {
+        mode: "add",
+        position: "information.business.career.relatedM",
+        value: 0
+      },
+      {
+        mode: "remove",
+        position: "analytics.region.available",
+        value: ""
+      },
+      {
+        mode: "add",
+        position: "analytics.project.online",
+        value: true
+      },
+      {
+        node: "add",
+        position: "analytics.project.living",
+        value: true
+      },
+      {
+        mode: "remove",
+        position: "analytics.construct.possible.others",
+        value: ""
+      },
+      {
+        mode: "add",
+        position: "analytics.construct.case",
+        value: [
+          {
+            name: "homeStyling",
+            contract: [],
+            possible: [],
+          },
+          {
+            name: "totalStyling",
+            contract: [],
+            possible: [],
+          },
+          {
+            name: "architecture",
+            contract: [],
+            possible: [],
+          }
+        ]
+      },
+      {
+        mode: "copy",
+        position: "analytics.construct.case.0.contract",
+        value: "analytics.construct.contract"
+      },
+      {
+        mode: "copy",
+        position: "analytics.construct.case.1.contract",
+        value: "analytics.construct.contract"
+      },
+      {
+        mode: "move",
+        position: "analytics.construct.case.2.contract",
+        value: "analytics.construct.contract"
+      },
+      {
+        mode: "copy",
+        position: "analytics.styling.fabric.curtain",
+        value: "analytics.styling.fabric.manufacture"
+      },
+      {
+        mode: "move",
+        position: "analytics.styling.fabric.bedding",
+        value: "analytics.styling.fabric.manufacture"
+      },
+      {
+        mode: "move",
+        position: "analytics.project.matrix",
+        value: "analytics.etc.matrix"
+      },
+      {
+        mode: "move",
+        position: "analytics.project.operationBudget",
+        value: "analytics.etc.operationBudget"
+      },
+    ]);
+
+    const dbName = "miro81";
+    const collection = "designer";
+    const MONGOC = this.MONGOLOCALC;
+    let whereQuery, updateQuery, updateMotherQuery;
+    let rows, matrix, newMatrix;
+
+    rows = await MONGOC.db(dbName).collection(collection).find({}).toArray();
+
+    for (let json of rows) {
+      matrix = json.analytics.project.matrix;
+      newMatrix = [
+        [ (matrix[0][1][0] || matrix[0][1][1]), (matrix[0][0][1] || matrix[0][1][1]), (matrix[0][0][0] || matrix[0][1][0]) ],
+        [ (matrix[1][1][0] || matrix[1][1][1]), (matrix[1][0][1] || matrix[1][1][1]), (matrix[1][0][0] || matrix[1][1][0]) ],
+        [ (matrix[2][1][0] || matrix[2][1][1]), (matrix[2][0][1] || matrix[2][1][1]), (matrix[2][0][0] || matrix[2][1][0]) ],
+        [ (matrix[3][1][0] || matrix[3][1][1]), (matrix[3][0][1] || matrix[3][1][1]), (matrix[3][0][0] || matrix[3][1][0]) ],
+      ];
+      whereQuery = { desid: json.desid };
+      updateQuery = {};
+      updateQuery["analytics.project.matrix"] = newMatrix;
+      await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, { "$set": updateQuery });
+      console.log(`${collection} add "analytics.project.matrix"`, whereQuery);
+    }
+
+    */
 
   } catch (e) {
     console.log(e);

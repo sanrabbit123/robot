@@ -7251,13 +7251,18 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
   let size;
+  let tempMatrix;
+  let factorHeight, factorWidth;
 
-  level1Width = 160;
-  level1Left = 120;
+  level1Width = 180;
+  level1Left = 160;
   topMargin = 30;
   leftMargin = 34;
   bottomMargin = 15;
   size = 18;
+
+  factorHeight = 40;
+  factorWidth = 210;
 
   baseTong = createNode({
     mother: totalMother,
@@ -7282,14 +7287,16 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
           value: function (designer) {
             return designer.designer;
           },
-          height: 50,
+          height: factorHeight,
+          type: "string",
         },
         {
           name: "연락처",
           value: function (designer) {
             return designer.information.phone;
           },
-          height: 50,
+          height: factorHeight,
+          type: "string",
         },
         {
           name: "경력",
@@ -7298,20 +7305,133 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
             const { relatedY, relatedM, startY, startM } = information.business.career;
             return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
           },
-          height: 50,
+          height: factorHeight,
+          type: "string",
         }
       ]
     },
     {
       name: "공간",
       children: [
-
+        {
+          name: "주소",
+          value: function (designer) {
+            return (information.address.length === 0) ? "주소 없음" : information.address[0];
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "이동 수단",
+          value: function (designer) {
+            return designer.analytics.region.transportation;
+          },
+          height: factorHeight,
+          type: "string",
+        },
       ]
     },
     {
       name: "작업",
       children: [
-
+        {
+          name: "활동 범위",
+          value: function (designer) {
+            const { matrix } = designer.analytics.project;
+            let contents, value;
+            contents = [
+              "홈퍼니싱 프리미엄",
+              "홈스타일링 프리미엄",
+              "토탈 스타일링 프리미엄",
+              "설계 변경 프리미엄",
+              "홈퍼니싱 일반",
+              "홈스타일링 일반",
+              "토탈 스타일링 일반",
+              "설계 변경 일반",
+            ];
+            value = [
+              matrix[0][2],
+              matrix[1][2],
+              matrix[2][2],
+              matrix[3][2],
+              matrix[0][1],
+              matrix[1][1],
+              matrix[2][1],
+              matrix[3][1],
+            ];
+            return { contents, value };
+          },
+          height: factorHeight * 2,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "부분 공간",
+          value: function (designer) {
+            const { matrix } = designer.analytics.project;
+            let contents, value;
+            contents = [
+              "홈퍼니싱 부분 공간",
+              "홈스타일링 부분 공간",
+              "토탈 스타일링 부분 공간",
+              "설계 변경 부분 공간",
+            ];
+            value = [
+              matrix[0][0],
+              matrix[1][0],
+              matrix[2][0],
+              matrix[3][0],
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "온라인",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.project.online ? 1 : 0,
+              designer.analytics.project.online ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "고객 예산 범위",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.project.online ? 1 : 0,
+              designer.analytics.project.online ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
       ]
     },
     {
@@ -7496,7 +7616,7 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
         style: {
           position: "absolute",
           fontSize: String(size) + ea,
-          fontWeight: String(600),
+          fontWeight: String(700),
           color: colorChip.black,
           top: String(topMargin) + ea,
           left: String(leftMargin) + ea,
@@ -7522,7 +7642,6 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
           height: String(100) + '%',
           paddingTop: String(topMargin) + ea,
           paddingBottom: String(bottomMargin) + ea,
-          background: "aliceblue"
         }
       },
     ]);
@@ -7532,34 +7651,64 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
     eachValueTong = nodeArr[3];
 
     for (let j = 0; j < level0[i].children.length; j++) {
-
-      createNodes([
-        {
-          mother: eachNameTong,
-          text: level0[i].children[j].name,
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(200),
-            color: colorChip.black,
-            height: String(level0[i].children[j].height) + ea,
-          }
-        },
-        {
-          mother: eachValueTong,
-          text: (typeof level0[i].children[j].value === "function") ? level0[i].children[j].value(designer) : "NULL",
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(200),
-            color: colorChip.black,
-            height: String(level0[i].children[j].height) + ea,
-          }
+      tempArr = [];
+      tempObj = {
+        mother: eachNameTong,
+        text: level0[i].children[j].name,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
+          height: String(level0[i].children[j].height) + ea,
         }
-      ]);
+      };
+      tempArr.push(tempObj);
+      tempObj = {
+        mother: eachValueTong,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(size) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          height: String(level0[i].children[j].height) + ea,
+        }
+      };
+      if (level0[i].children[j].type === "string") {
+        tempObj.text = (typeof level0[i].children[j].value === "function") ? level0[i].children[j].value(designer) : "NULL";
+        tempArr.push(tempObj);
+      } else if (level0[i].children[j].type === "matrix") {
+        tempMatrix = level0[i].children[j].value(designer);
+        tempObj.style = {
+          display: "block",
+          position: "relative",
+          width: String(level0[i].children[j].totalWidth) + ea,
+          height: String(level0[i].children[j].height) + ea,
+        };
+        tempArr.push(tempObj);
 
+        for (let k = 0; k < tempMatrix.contents.length; k++) {
+          tempObj = {
+            mother: -1 + (k * -1),
+            text: tempMatrix.contents[k],
+            class: [ "hoverDefault_lite" ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              width: String(level0[i].children[j].width) + ea,
+              color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
+              height: String(level0[i].children[j].factorHeight) + ea,
+            }
+          };
+          tempArr.push(tempObj);
+        }
+
+      }
+      createNodes(tempArr);
     }
 
   }

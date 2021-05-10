@@ -5,7 +5,7 @@ const { Menu } = require(GENERAL_DIR + "/generator.js");
 
 //etc
 
-class AreaMatrixFactorY extends Array {
+class AreaMatrixFactor extends Array {
 
   constructor(json) {
     super();
@@ -24,31 +24,12 @@ class AreaMatrixFactorY extends Array {
 
 }
 
-class AreaMatrixFactorX extends Array {
-
-  constructor(json) {
-    super();
-    for (let arr of json) {
-      this.push(new AreaMatrixFactorY(arr));
-    }
-  }
-
-  toNormal() {
-    let arr = [];
-    for (let i of this) {
-      arr.push(i.toNormal());
-    }
-    return arr;
-  }
-
-}
-
 class AreaMatrix extends Array {
 
   constructor(json) {
     super();
     for (let arr of json) {
-      this.push(new AreaMatrixFactorX(arr));
+      this.push(new AreaMatrixFactor(arr));
     }
   }
 
@@ -61,12 +42,9 @@ class AreaMatrix extends Array {
         "XT"
       ],
       yValues: [
-        "B",
-        "N"
-      ],
-      zValues: [
+        "partial",
+        "normal",
         "premium",
-        "normal"
       ]
     };
   }
