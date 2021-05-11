@@ -7157,9 +7157,28 @@ DesignerJs.prototype.checkListView = async function () {
           {
             type: "click",
             event: function (e) {
+              const desid = this.getAttribute("desid");
+              const standardBar = document.querySelector(".totalMother").firstChild;
+              let target = null;
+              for (let i = 0; i < instance.standardDoms.length; i++) {
+                if (instance.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+                  if (desid === instance.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+                    target = i;
+                  }
+                }
+              }
+              for (let i = 1; i < instance.standardDoms.length; i++) {
+                if (i !== target) {
+                  instance.standardDoms[i].style.display = "none";
+                } else {
+                  instance.standardDoms[i].style.display = "block";
+                }
+              }
+              standardBar.style.position = "fixed";
               boxTong.style.animation = "fadeout 0.3s ease forwards";
               totalMother.scrollTo({ top: 0, behavior: "smooth" });
-              instance.checkListDetail(this.getAttribute("desid"), margin);
+              instance.checkListDetail(desid, margin);
+              instance.checkListIconSet(desid);
             }
           }
         ],
@@ -7242,7 +7261,7 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   const { totalMother, ea, grayBarWidth } = this;
   const designer = this.designers.pick(desid);
   const { information, analytics } = designer;
-  let baseTong;
+  let baseTong0, baseTong;
   let matrix;
   let tempArr;
   let tempObj, nodeArr;
@@ -7253,28 +7272,50 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   let size;
   let tempMatrix;
   let factorHeight, factorWidth;
+  let temp;
+  let tendencyTop, tendencyHeight;
+  let tendencyIndent, tendencyWidthIndent;
+  let alphabetWidth;
 
-  level1Width = 180;
+  level1Width = 210;
   level1Left = 160;
   topMargin = 30;
   leftMargin = 34;
   bottomMargin = 15;
-  size = 18;
-
-  factorHeight = 40;
+  size = 17;
+  factorHeight = 38;
   factorWidth = 210;
+  tendencyTop = 3;
+  tendencyHeight = 16;
+  tendencyFactorHeight = 30;
+  tendencyIndent = 105;
+  tendencyWidthIndent = -135;
+  alphabetWidth = 30;
 
-  baseTong = createNode({
+  baseTong0 = createNode({
     mother: totalMother,
     style: {
       position: "absolute",
       top: String(margin * 3) + ea,
       left: String(grayBarWidth + (margin * 3)) + ea,
       width: withOut(grayBarWidth + (margin * 6), ea),
+      height: "auto",
+      animation: "fadeup 0.3s ease forwards",
+    }
+  });
+  baseTong = createNode({
+    mother: baseTong0,
+    style: {
+      position: "relative",
+      top: String(0) + ea,
+      left: String(0) + ea,
+      width: String(100) + '%',
       borderRadius: String(5) + ea,
       border: "1px solid " + colorChip.gray4,
       background: colorChip.white,
-      animation: "fadeup 0.3s ease forwards",
+      height: "auto",
+      overflow: "hidden",
+      marginBottom: String(80) + ea,
     }
   });
 
@@ -7415,18 +7456,94 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
         {
           name: "고객 예산 범위",
           value: function (designer) {
+            let { min, max } = designer.analytics.project.operationBudget;
+            let contentsValues;
+            let tempArr;
             let contents, value;
+
+            min = min / 10000;
+            max = max / 10000;
+
             contents = [
-              "가능",
-              "불가능"
+              "0 - 500",
+              "500 - 1000",
+              "1000 - 2000",
+              "2000 - 5000",
+              "5000 -",
             ];
-            value = [
-              designer.analytics.project.online ? 1 : 0,
-              designer.analytics.project.online ? 0 : 1,
-            ];
+
+            contentsValues = [];
+            for (let i = 0; i < contents.length; i++) {
+              tempArr = contents[i].split(' - ');
+              if (tempArr.length === 1) {
+                tempArr.push("10000");
+              }
+              for (let j = 0; j < tempArr.length; j++) {
+                tempArr[j] = Number(tempArr[j].replace(/[^0-9]/g, ''));
+              }
+              if (tempArr.length !== 2) {
+                throw new Error("range error");
+              }
+              contentsValues.push(tempArr);
+            }
+            value = [];
+            for (let i = 0; i < contents.length; i++) {
+              value.push((min <= contentsValues[i][0] && contentsValues[i][1] <= max) ? 1 : 0);
+            }
             return { contents, value };
           },
           height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 5,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "1차 제안 시간",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "1주일 이내",
+              "2주일 이내",
+              "3주일 이내",
+              "3주 이상"
+            ];
+            value = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (designer.analytics.project.time.first === ((i + 1) * 7)) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "페이퍼 워크",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "도면",
+              "3D",
+              "컨셉 제안",
+              "마감재 제안",
+              "제품 리스트",
+              "참고 이미지",
+              "드로잉",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.analytics.project.paperWork.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight * 2.1,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -7437,168 +7554,680 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
     {
       name: "시공",
       children: [
-
-      ]
-    },
-    {
-      name: "스타일링",
-      children: [
-
-      ]
-    },
-    {
-      name: "구매",
-      children: [
-
-      ]
-    },
-    {
-      name: "성격",
-      children: [
-
-      ]
-    }
-  ];
-
-  /*
-  totalInfo = [
-    {
-      name: "기본",
-      children: [
         {
-          name: "이름",
-          value: designer.designer,
-          type: "string",
-          line: 1,
-        },
-        {
-          name: "연락처",
-          value: information.phone,
-          type: "string",
-          line: 1,
-        },
-        {
-          name: "경력",
-          value: information.business.career,
-          type: "string",
-          line: 1
-        },
-      ]
-    },
-    {
-      name: "공간",
-      children: [
-        {
-          name: "주소",
-          value: (information.address.length === 0) ? "주소 없음" : information.address[0],
-          type: "string",
-          line: 1,
-        },
-        {
-          name: "이동 수단",
-          value: analytics.region.transportation,
-          type: "radio",
-          items: [ "대중교통", "자동차" ],
-          line: 1,
-        }
-      ]
-    },
-    {
-      name: "작업",
-      children: [
-        {
-          name: "활동 범위",
-          value: analytics.project.matrix,
+          name: "시공 능력",
+          value: function (designer) {
+            let contents, value;
+            contents = [ "1단계", "2단계", "3단계" ];
+            value = [ 0, 0, 0 ];
+            if (value[designer.analytics.construct.level - 1] === undefined) {
+              throw new Error("level error");
+            }
+            value[designer.analytics.construct.level - 1] = 1;
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
           type: "matrix",
-          line: 5
-        },
-        {
-          name: "거주중 진행",
-          value: analytics.project.living,
-          type: "boolean",
-          line: 1,
-        },
-        {
-          name: "온라인 진행",
-          value: analytics.project.online,
-          type: "boolean",
-          line: 1,
-        },
-        {
-          name: "예산 운영 범위",
-          value: analytics.project.operationBudget,
-          type: "radio",
-          line: 1,
-          items: [
-            "0 - 500",
-            "500 - 1000",
-            "1000 - 2000",
-            "2000 - 5000",
-            "5000 -",
-          ]
-        },
-        {
-          name: "1차 제안 소요",
-          value: analytics.project.time.first,
-          type: "radio",
-          line: 1,
-          items: [
-            "1주일 이내",
-            "2주일 이내",
-            "3주일 이내",
-            "3주 이상"
-          ]
-        },
-        {
-          name: "페이퍼 워크",
-          value: analytics.project.paperWork,
-          type: "checkbox",
-          line: 2,
-          items: [
-            "도면",
-            "3D",
-            "컨셉 제안",
-            "마감재 제안",
-            "제품 리스트",
-            "참고 이미지",
-            "드로잉",
-          ]
-        }
-      ]
-    },
-    {
-      name: "시공",
-      children: [
-        {
-          name: "시공 레벨",
-          value: analytics.construct.level,
-          type: "radio",
-          items: [ "1단계", "2단계", "3단계" ],
-          line: 1,
         },
         {
           name: "시공 감리",
-          value: analytics.construct.possible.supervision,
-          type: "boolean",
-          line: 1,
-        }
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.construct.possible.supervision ? 1 : 0,
+              designer.analytics.construct.possible.supervision ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 방식 (S)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[0].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 가능 (S)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[0].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 방식 (T)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[1].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 가능 (T)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[1].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 방식 (XT)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[2].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 가능 (XT)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[2].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
       ]
     },
     {
       name: "스타일링",
-      children: []
+      children: [
+        {
+          name: "스타일링 능력",
+          value: function (designer) {
+            let contents, value;
+            contents = [ "1단계", "2단계", "3단계" ];
+            value = [ 0, 0, 0 ];
+            if (value[designer.analytics.styling.level - 1] === undefined) {
+              throw new Error("level error");
+            }
+            value[designer.analytics.styling.level - 1] = 1;
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "제안 방식",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "순차 제안",
+              "한번에 제안"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.analytics.styling.method) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "빌트인 가구 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.furniture.builtin ? 1 : 0,
+              designer.analytics.styling.furniture.builtin ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "디자인 가구 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.furniture.design ? 1 : 0,
+              designer.analytics.styling.furniture.design ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "커튼 패브릭 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.fabric.curtain ? 1 : 0,
+              designer.analytics.styling.fabric.curtain ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "베딩 패브릭 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.fabric.bedding ? 1 : 0,
+              designer.analytics.styling.fabric.bedding ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "패브릭 발주 방식",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (designer.analytics.styling.fabric.method === i) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          height: factorHeight * 1.5,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "스타일 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsMother = {
+              modern: "모던",
+              classic: "클래식",
+              natural: "내추럴",
+              mixmatch: "믹스매치",
+              scandinavian: "북유럽",
+              vintage: "빈티지",
+              oriental: "오리엔탈",
+              exotic: "이그저틱",
+            };
+            contentsKey = Object.keys(contentsMother);
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.style[i]);
+            }
+            return { contents, value };
+          },
+          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "텍스처 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsMother = {
+              darkWood: "진한 우드",
+              whiteWood: "연한 우드",
+              coating: "도장",
+              metal: "금속",
+            };
+            contentsKey = Object.keys(contentsMother);
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.texture[i]);
+            }
+            return { contents, value };
+          },
+          height: (tendencyFactorHeight * 4) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "컬러톤 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsMother = {
+              darkWood: "다크 우드",
+              whiteWood: "화이트 우드",
+              highContrast: "고대비",
+              vivid: "비비드",
+              white: "화이트",
+              mono: "모노톤",
+              bright: "밝은톤",
+              dark: "어두운톤",
+            };
+            contentsKey = Object.keys(contentsMother);
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.color[i]);
+            }
+            return { contents, value };
+          },
+          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "밀도 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsMother = {
+              modern: "맥시멈",
+              classic: "미니멈",
+            };
+            contentsKey = Object.keys(contentsMother);
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.density[i]);
+            }
+            return { contents, value };
+          },
+          height: (tendencyFactorHeight * 2) + (factorHeight * 0.5),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+      ]
     },
     {
       name: "구매",
-      children: []
+      children: [
+        {
+          name: "구매 대행",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.purchase.agencies ? 1 : 0,
+              designer.analytics.purchase.agencies ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "조립 설치 서비스",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "제공",
+              "미제공"
+            ];
+            value = [
+              designer.analytics.purchase.setting.install ? 1 : 0,
+              designer.analytics.purchase.setting.install ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "정리 수납 상담",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.purchase.setting.storage ? 1 : 0,
+              designer.analytics.purchase.setting.storage ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+      ]
     },
     {
       name: "성격",
-      children: []
-    },
+      children: [
+        {
+          name: "미팅 적극성",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "높음",
+              "낮음"
+            ];
+            value = [
+              designer.analytics.etc.personality[0].value ? 1 : 0,
+              designer.analytics.etc.personality[0].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "미팅 준비성",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "높음",
+              "낮음"
+            ];
+            value = [
+              designer.analytics.etc.personality[1].value ? 1 : 0,
+              designer.analytics.etc.personality[1].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "작업 속도",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "빠름",
+              "느림"
+            ];
+            value = [
+              designer.analytics.etc.personality[2].value ? 1 : 0,
+              designer.analytics.etc.personality[2].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "진행 스타일",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "리드",
+              "순응"
+            ];
+            value = [
+              designer.analytics.etc.personality[3].value ? 1 : 0,
+              designer.analytics.etc.personality[3].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "고객 맞춤",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "적극",
+              "소극"
+            ];
+            value = [
+              designer.analytics.etc.personality[4].value ? 1 : 0,
+              designer.analytics.etc.personality[4].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "홈리에종 관계",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "지속가능성 높음",
+              "그냥 평범",
+              "확인중",
+              "좋지 않음"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.analytics.etc.relation) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+      ]
+    }
   ];
-  */
-
 
   for (let i = 0; i < level0.length; i++) {
     nodeArr = createNodes([
@@ -7644,6 +8273,18 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
           paddingBottom: String(bottomMargin) + ea,
         }
       },
+      {
+        mother: -4,
+        text: String.fromCharCode(65 + i),
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          bottom: String(topMargin) + ea,
+          right: String(leftMargin) + ea,
+        }
+      },
     ]);
 
     eachTotalTong = nodeArr[0];
@@ -7654,14 +8295,29 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
       tempArr = [];
       tempObj = {
         mother: eachNameTong,
+        text: String.fromCharCode(65 + i) + String(j + 1),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(size) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          height: String(level0[i].children[j].height) + ea,
+          width: String(alphabetWidth) + ea,
+        }
+      };
+      tempArr.push(tempObj);
+      tempObj = {
+        mother: eachNameTong,
         text: level0[i].children[j].name,
         style: {
-          display: "block",
+          display: "inline-block",
           position: "relative",
           fontSize: String(size) + ea,
           fontWeight: String(500),
           color: colorChip.black,
           height: String(level0[i].children[j].height) + ea,
+          width: withOut(alphabetWidth, ea),
         }
       };
       tempArr.push(tempObj);
@@ -7688,7 +8344,6 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
           height: String(level0[i].children[j].height) + ea,
         };
         tempArr.push(tempObj);
-
         for (let k = 0; k < tempMatrix.contents.length; k++) {
           tempObj = {
             mother: -1 + (k * -1),
@@ -7706,14 +8361,85 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
           };
           tempArr.push(tempObj);
         }
-
+      } else if (level0[i].children[j].type === "tendency") {
+        tempMatrix = level0[i].children[j].value(designer);
+        tempObj.style = {
+          display: "block",
+          position: "relative",
+          width: String(level0[i].children[j].totalWidth) + ea,
+          height: String(level0[i].children[j].height) + ea,
+        };
+        tempArr.push(tempObj);
+        for (let k = 0; k < tempMatrix.contents.length; k++) {
+          tempObj = {
+            mother: -1 + (k * -11),
+            text: tempMatrix.contents[k],
+            class: [ "hoverDefault_lite" ],
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              width: String(level0[i].children[j].totalWidth) + ea,
+              color: colorChip.black,
+              height: String(level0[i].children[j].factorHeight) + ea,
+            }
+          };
+          tempArr.push(tempObj);
+          for (let l = 0; l < 10; l++) {
+            temp = (level0[i].children[j].totalWidth - level0[i].children[j].width) / 10;
+            tempObj = {
+              mother: -1 + (l * -1),
+              class: [ "hoverDefault_lite" ],
+              style: {
+                position: "absolute",
+                width: String(temp) + ea,
+                left: String(level0[i].children[j].width + (temp * l)) + ea,
+                background: colorChip[l <= tempMatrix.value[k] ? "green" : "gray2"],
+                top: String(tendencyTop) + ea,
+                height: String(tendencyHeight) + ea,
+              }
+            };
+            if (l === 0) {
+              tempObj.style.borderTopLeftRadius = tempObj.style.borderBottomLeftRadius = String(3) + "px";
+            }
+            if (l === 10 - 1) {
+              tempObj.style.borderTopRightRadius = tempObj.style.borderBottomRightRadius = String(3) + "px";
+            }
+            tempArr.push(tempObj);
+          }
+        }
       }
       createNodes(tempArr);
     }
 
   }
 
+}
 
+DesignerJs.prototype.checkListIconSet = function (desid) {
+  if (desid === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const designer = this.designers.pick(desid);
+
+  createNodes([
+    {
+      mother: document.getElementById("totalcontents").children[1],
+      style: {
+        position: "absolute",
+        width: String(40) + ea,
+        height: String(40) + ea,
+        bottom: String(belowHeight + 20) + ea,
+        right: String(10) + ea,
+        background: colorChip.green,
+        borderRadius: String(30) + ea,
+      }
+    }
+  ])
 
 
 
@@ -7786,6 +8512,8 @@ DesignerJs.prototype.launching = async function () {
       this.addExtractEvent();
       this.whiteResize();
       await this.checkListView();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
 
     } else {
 

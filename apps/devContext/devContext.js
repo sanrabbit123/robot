@@ -52,12 +52,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, devAlive: true });
-    // console.log(designers[6].analytics.project);
-    // console.log(designers[6].analytics.project.toNormal());
-
-
+    // console.log(designers[6].analytics.etc);
+    // console.log(designers[6].analytics.etc.toNormal());
 
 
 
@@ -347,6 +344,7 @@ DevContext.prototype.launching = async function () {
     const MONGOC = this.MONGOLOCALC;
     let whereQuery, updateQuery, updateMotherQuery;
     let rows, matrix, newMatrix;
+    let tempArr;
 
     rows = await MONGOC.db(dbName).collection(collection).find({}).toArray();
 
@@ -363,6 +361,18 @@ DevContext.prototype.launching = async function () {
       updateQuery["analytics.project.matrix"] = newMatrix;
       await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, { "$set": updateQuery });
       console.log(`${collection} add "analytics.project.matrix"`, whereQuery);
+
+      tempArr = [];
+      for (let i = 0; i < json.analytics.etc.personality.length; i++) {
+        if (i !== 3 && i !== 6) {
+          tempArr.push(json.analytics.etc.personality[i]);
+        }
+      }
+      whereQuery = { desid: json.desid };
+      updateQuery = {};
+      updateQuery["analytics.etc.personality"] = tempArr;
+      await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, { "$set": updateQuery });
+      console.log(`${collection} add "analytics.etc.personality"`, whereQuery);
     }
 
     */

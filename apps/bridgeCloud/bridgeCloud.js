@@ -425,20 +425,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           message = message + "\n\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
         }
 
-        //to notion
-        if (requestObj["phone"] !== "010-2747-3403") {
-          if (!pastInfo_boo) {
-            if (thisClient !== undefined) {
-              const { status: notionStatus } = await requestSystem("http://" + instance.address.pythoninfo.host + ":3000/toNotion", { cliid: thisClient.cliid });
-              if (notionStatus !== 200) {
-                message = message + "\n\n" + "노션으로 옮겨지는 과정에서 문제 생김";
-              }
-            } else {
-              message = message + "\n\n" + "노션으로 옮겨지는 과정에서 문제 생김";
-            }
-          }
-        }
-
         console.log(message);
 
         // to slack

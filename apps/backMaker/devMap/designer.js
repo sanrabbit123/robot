@@ -163,10 +163,8 @@ module.exports = {
               { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
               { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },
               { name: "디자인 제안 속도가 상대적으로 빠른 편", value: false },
-              { name: "3D 요청시 유료 제공", value: false },
               { name: "디자인 기획을 리드하는 편", value: false },
               { name: "디자인 기획시 고객에게 맞추는 편", value: false },
-              { name: "조립 및 설치 서비스 무료 제공", value: false },
             ],
             relation: "확인중"
           }
