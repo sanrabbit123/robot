@@ -2378,9 +2378,9 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
@@ -2421,9 +2421,9 @@ DataRouter.prototype.rou_post_humanPacket = function () {
       }
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
@@ -2463,9 +2463,9 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(final));
     } catch (e) {

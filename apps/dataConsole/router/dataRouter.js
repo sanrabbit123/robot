@@ -435,9 +435,9 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       let log_past, log_new;
 
       res.set({
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       sseStream.pipe(res);
@@ -485,9 +485,9 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       let sseObjs;
 
       res.set({
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
@@ -2905,9 +2905,9 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
@@ -2948,9 +2948,9 @@ DataRouter.prototype.rou_post_humanPacket = function () {
       }
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
@@ -2990,9 +2990,9 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(final));
     } catch (e) {
@@ -3077,9 +3077,9 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
       const imagePath = contentsArr.imagePath().keyListImage();
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(imagePath));
     } catch (e) {
@@ -3106,9 +3106,9 @@ DataRouter.prototype.rou_post_styleEstimation_getContentsByPid = function () {
       let designer;
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       if (contentsArr.length !== 1) {
         res.send(JSON.stringify({}));
@@ -3134,9 +3134,9 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
     try {
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify([
         {
@@ -3257,9 +3257,9 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
@@ -3290,9 +3290,9 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       assign = [
@@ -3334,9 +3334,9 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
     try {
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       const { cliid, proid, desid, name, phone, designer } = req.body;
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
@@ -3366,9 +3366,9 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
     try {
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       let resultObj;
       resultObj = {

@@ -295,9 +295,9 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       let log_past, log_new;
 
       res.set({
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       sseStream.pipe(res);
@@ -345,9 +345,9 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       let sseObjs;
 
       res.set({
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });

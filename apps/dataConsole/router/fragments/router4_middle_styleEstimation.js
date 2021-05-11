@@ -11,9 +11,9 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
       const imagePath = contentsArr.imagePath().keyListImage();
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(imagePath));
     } catch (e) {
@@ -40,9 +40,9 @@ DataRouter.prototype.rou_post_styleEstimation_getContentsByPid = function () {
       let designer;
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       if (contentsArr.length !== 1) {
         res.send(JSON.stringify({}));
@@ -68,9 +68,9 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
     try {
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify([
         {
@@ -191,9 +191,9 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
@@ -224,9 +224,9 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
 
       res.set({
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
       assign = [

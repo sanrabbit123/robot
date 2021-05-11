@@ -7159,6 +7159,7 @@ DesignerJs.prototype.checkListView = async function () {
     let width, height;
     let boxNumber;
     let status;
+    let searchInput;
 
     this.designers = new Designers(designers);
 
@@ -7269,35 +7270,97 @@ DesignerJs.prototype.checkListView = async function () {
 
     createNodes(nodeArr);
 
+    //search event
+    searchInput = this.searchInput;
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13) {
+        const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
+        let target;
+        if (value === "") {
+          instance.checkListDetailLaunching("", false, true);
+        } else {
+          target = null;
+          for (let { designer, desid } of instance.designers) {
+            if (value === designer) {
+              target = desid;
+            }
+          }
+          if (target !== null) {
+            instance.checkListDetailLaunching(target);
+          }
+        }
+      }
+    });
+
+
   } catch (e) {
     console.log(e);
   }
 }
 
-DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = false) {
+DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = false, removeOnly = false) {
   const instance = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = totalMother.firstChild;
-  let target = null;
-  for (let i = 0; i < this.standardDoms.length; i++) {
-    if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
-      if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
-        target = i;
-      }
-    }
-  }
-  for (let i = 1; i < this.standardDoms.length; i++) {
-    if (i !== target) {
-      this.standardDoms[i].style.display = "none";
-    } else {
+  let target;
+
+  if (this.checkListBaseTong !== undefined && this.checkListBaseTong !== null && this.checkListBaseList !== undefined && this.checkListBaseList !== null) {
+    this.checkListBaseTong.parentNode.removeChild(this.checkListBaseTong);
+    this.checkListBaseTong = null;
+    this.checkListBaseList.style.animation = "fadein 0.3s ease forwards";
+    standardBar.style.position = "relative";
+    for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.display = "block";
     }
+    const mother = document.querySelector(".totalMother");
+    if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
+      mother.removeChild(this.rInitialIcon);
+    }
+    if (this.nextIcon !== undefined && this.nextIcon !== null) {
+      mother.removeChild(this.nextIcon);
+    }
+    if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
+      mother.removeChild(this.mInitialIcon);
+    }
+    if (this.previousIcon !== undefined && this.previousIcon !== null) {
+      mother.removeChild(this.previousIcon);
+    }
+    if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
+      mother.removeChild(this.aInitialIcon);
+    }
+    if (this.listIcon !== undefined && this.listIcon !== null) {
+      mother.removeChild(this.listIcon);
+    }
+    this.listIcon = null;
+    this.aInitialIcon = null;
+    this.previousIcon = null;
+    this.mInitialIcon = null;
+    this.nextIcon = null;
+    this.rInitialIcon = null;
   }
-  standardBar.style.position = "fixed";
-  this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
-  totalMother.scrollTo({ top: 0, behavior: "smooth" });
-  this.checkListDetail(desid, noAnimation);
-  this.checkListIconSet(desid, noAnimation);
+
+  if (!removeOnly) {
+    target = null;
+    for (let i = 0; i < this.standardDoms.length; i++) {
+      if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+        if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+          target = i;
+        }
+      }
+    }
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      if (i !== target) {
+        this.standardDoms[i].style.display = "none";
+      } else {
+        this.standardDoms[i].style.display = "block";
+      }
+    }
+    standardBar.style.position = "fixed";
+    this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
+    totalMother.scrollTo({ top: 0, behavior: "smooth" });
+    this.checkListDetail(desid, noAnimation);
+    this.checkListIconSet(desid, noAnimation);
+  }
 }
 
 DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
@@ -8377,7 +8440,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
           display: "block",
           position: "relative",
           fontSize: String(size) + ea,
-          fontWeight: String(300),
+          fontWeight: String(400),
           color: colorChip.black,
           height: String(level0[i].children[j].height) + ea,
         }
@@ -8484,7 +8547,6 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   let iconTop;
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
-  let removeAll;
 
   radius = 20;
   left = 40;
@@ -8653,36 +8715,22 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   nextIcon = nodeArr[8];
   rInitialIcon = nodeArr[10];
 
-  removeAll = function () {
-    if (instance.checkListBaseTong !== undefined && instance.checkListBaseTong !== null && instance.checkListBaseList !== undefined && instance.checkListBaseList !== null) {
-      instance.checkListBaseTong.parentNode.removeChild(instance.checkListBaseTong);
-      instance.checkListBaseList.style.animation = "fadein 0.3s ease forwards";
-      const standardBar = document.querySelector(".totalMother").firstChild;
-      standardBar.style.position = "relative";
-      for (let i = 1; i < instance.standardDoms.length; i++) {
-        instance.standardDoms[i].style.display = "block";
-      }
-      const mother = document.querySelector(".totalMother");
-      mother.removeChild(rInitialIcon);
-      mother.removeChild(nextIcon);
-      mother.removeChild(mInitialIcon);
-      mother.removeChild(previousIcon);
-      mother.removeChild(aInitialIcon);
-      mother.removeChild(listIcon);
-    }
-  }
+  this.listIcon = listIcon;
+  this.aInitialIcon = aInitialIcon;
+  this.previousIcon = previousIcon;
+  this.mInitialIcon = mInitialIcon;
+  this.nextIcon = nextIcon;
+  this.rInitialIcon = rInitialIcon;
 
-  listIcon.addEventListener("click", (e) => { removeAll(); });
+  listIcon.addEventListener("click", (e) => { instance.checkListDetailLaunching(desid, false, true); });
 
   previousIcon.addEventListener("click", function (e) {
     const { desid: previousDesid } = instance.designers.previous(desid);
-    removeAll();
     instance.checkListDetailLaunching(previousDesid, true);
   });
 
   nextIcon.addEventListener("click", function (e) {
     const { desid: nextDesid } = instance.designers.next(desid);
-    removeAll();
     instance.checkListDetailLaunching(nextDesid, true);
   });
 
@@ -8750,9 +8798,7 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("grayLeftOpenButton").remove();
       await this.spreadData(null, true);
       this.addTransFormEvent();
-      this.addSearchEvent();
-      this.addExtractEvent();
-      this.whiteResize();
+      // this.addSearchEvent();
       await this.checkListView();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
