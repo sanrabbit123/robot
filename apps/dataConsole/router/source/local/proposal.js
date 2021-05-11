@@ -3760,19 +3760,19 @@ ProposalJs.save_init = async function (update = false) {
       tempObj_raw = target.getAttribute("cus_id");
       tempObj = tempObj_raw.split(' ');
 
-      if (/^홈스/g.test(tempObj[0])) {
+      if (/^홈스/g.test(tempObj_raw)) {
         result_obj["service.serid"] = "s2011_aa02s";
-      } else if (/^홈퍼/g.test(tempObj[0])) {
+      } else if (/^홈퍼/g.test(tempObj_raw)) {
         result_obj["service.serid"] = "s2011_aa01s";
-      } else if (/^토탈/g.test(tempObj[0])) {
+      } else if (/^토탈/g.test(tempObj_raw)) {
         result_obj["service.serid"] = "s2011_aa03s";
       } else {
         result_obj["service.serid"] = "s2011_aa04s";
       }
 
-      if (/mini/gi.test(tempObj[1])) {
+      if (/mini/gi.test(tempObj_raw)) {
         result_obj["service.xValue"] = "M";
-      } else if (/basic/gi.test(tempObj[1])) {
+      } else if (/basic/gi.test(tempObj_raw)) {
         result_obj["service.xValue"] = "B";
       } else {
         result_obj["service.xValue"] = "P";

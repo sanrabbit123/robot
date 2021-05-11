@@ -24,6 +24,46 @@ class Designers extends Array {
   getByDesid(desid) {
     return this.pick(desid);
   }
+  previous(desid) {
+    if (desid === undefined) {
+      throw new Error("invaild input");
+    }
+    let target = null;
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].desid === desid) {
+        target = i;
+        break;
+      }
+    }
+    if (target === null) {
+      throw new Error("invaild desid");
+    }
+    if (target !== 0) {
+      return this[target - 1];
+    } else {
+      return this[this.length - 1];
+    }
+  }
+  next(desid) {
+    if (desid === undefined) {
+      throw new Error("invaild input");
+    }
+    let target = null;
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].desid === desid) {
+        target = i;
+        break;
+      }
+    }
+    if (target === null) {
+      throw new Error("invaild desid");
+    }
+    if (target !== this.length - 1) {
+      return this[target + 1];
+    } else {
+      return this[0];
+    }
+  }
 }
 
 const DesignerJs = function () {
@@ -7142,6 +7182,8 @@ DesignerJs.prototype.checkListView = async function () {
       }
     });
 
+    this.checkListBaseList = boxTong;
+
     nodeArr = [];
     for (let i = 0; i < length; i++) {
 
@@ -7158,27 +7200,7 @@ DesignerJs.prototype.checkListView = async function () {
             type: "click",
             event: function (e) {
               const desid = this.getAttribute("desid");
-              const standardBar = document.querySelector(".totalMother").firstChild;
-              let target = null;
-              for (let i = 0; i < instance.standardDoms.length; i++) {
-                if (instance.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
-                  if (desid === instance.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
-                    target = i;
-                  }
-                }
-              }
-              for (let i = 1; i < instance.standardDoms.length; i++) {
-                if (i !== target) {
-                  instance.standardDoms[i].style.display = "none";
-                } else {
-                  instance.standardDoms[i].style.display = "block";
-                }
-              }
-              standardBar.style.position = "fixed";
-              boxTong.style.animation = "fadeout 0.3s ease forwards";
-              totalMother.scrollTo({ top: 0, behavior: "smooth" });
-              instance.checkListDetail(desid, margin);
-              instance.checkListIconSet(desid);
+              instance.checkListDetailLaunching(desid, false);
             }
           }
         ],
@@ -7252,8 +7274,34 @@ DesignerJs.prototype.checkListView = async function () {
   }
 }
 
-DesignerJs.prototype.checkListDetail = function (desid, margin) {
-  if (desid === undefined || margin === undefined) {
+DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = false) {
+  const instance = this;
+  const totalMother = document.querySelector(".totalMother");
+  const standardBar = totalMother.firstChild;
+  let target = null;
+  for (let i = 0; i < this.standardDoms.length; i++) {
+    if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+      if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+        target = i;
+      }
+    }
+  }
+  for (let i = 1; i < this.standardDoms.length; i++) {
+    if (i !== target) {
+      this.standardDoms[i].style.display = "none";
+    } else {
+      this.standardDoms[i].style.display = "block";
+    }
+  }
+  standardBar.style.position = "fixed";
+  this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
+  totalMother.scrollTo({ top: 0, behavior: "smooth" });
+  this.checkListDetail(desid, noAnimation);
+  this.checkListIconSet(desid, noAnimation);
+}
+
+DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
+  if (desid === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
@@ -7261,6 +7309,7 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   const { totalMother, ea, grayBarWidth } = this;
   const designer = this.designers.pick(desid);
   const { information, analytics } = designer;
+  let margin;
   let baseTong0, baseTong;
   let matrix;
   let tempArr;
@@ -7277,6 +7326,7 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
   let tendencyIndent, tendencyWidthIndent;
   let alphabetWidth;
 
+  margin = 8;
   level1Width = 210;
   level1Left = 160;
   topMargin = 30;
@@ -7300,7 +7350,7 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
       left: String(grayBarWidth + (margin * 3)) + ea,
       width: withOut(grayBarWidth + (margin * 6), ea),
       height: "auto",
-      animation: "fadeup 0.3s ease forwards",
+      animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
     }
   });
   baseTong = createNode({
@@ -8415,34 +8465,226 @@ DesignerJs.prototype.checkListDetail = function (desid, margin) {
 
   }
 
+  this.checkListBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.checkListIconSet = function (desid) {
+DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
+  const mother = document.querySelector(".totalMother");
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const designer = this.designers.pick(desid);
+  let radius;
+  let left, bottom;
+  let margin;
+  let color;
+  let iconTop;
+  let nodeArr;
+  let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
+  let removeAll;
 
-  createNodes([
+  radius = 20;
+  left = 40;
+  bottom = 40;
+  margin = 6;
+  color = colorChip.gradientGreen;
+  iconTop = 12.5;
+
+  nodeArr = createNodes([
     {
-      mother: document.getElementById("totalcontents").children[1],
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom) + ea,
+        left: String(left) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnHamburger(colorChip.white),
       style: {
         position: "absolute",
-        width: String(40) + ea,
-        height: String(40) + ea,
-        bottom: String(belowHeight + 20) + ea,
-        right: String(10) + ea,
-        background: colorChip.green,
-        borderRadius: String(30) + ea,
+        width: String(radius * 0.9) + ea,
+        left: "calc(50% - " + String(radius * 0.45) + ea + ")",
+        top: String(iconTop) + ea,
       }
+    },
+    {
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        left: String(left) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnAinitial(colorChip.white),
+      style: {
+        position: "absolute",
+        width: String(15) + ea,
+        left: String(12.5) + ea,
+        top: String(11) + ea,
+      }
+    },
+    {
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom) + ea,
+        left: String(left + (radius * 2) + margin) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnDecrease(colorChip.white),
+      style: {
+        position: "absolute",
+        width: String(radius * 0.9) + ea,
+        left: String(9.5) + ea,
+        top: String(iconTop - 1.5) + ea,
+      }
+    },
+    {
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        left: String(left + (radius * 2) + margin) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnMinitial(colorChip.white),
+      style: {
+        position: "absolute",
+        width: String(16.5) + ea,
+        left: String(11.5) + ea,
+        top: String(11.5) + ea,
+      }
+    },
+    {
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom) + ea,
+        left: String(left + (radius * 2) + margin + (radius * 2) + margin) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnIncrease(colorChip.white),
+      style: {
+        position: "absolute",
+        width: String(radius * 0.9) + ea,
+        left: String(11.5) + ea,
+        top: String(iconTop - 1.5) + ea,
+      }
+    },
+    {
+      mother,
+      style: {
+        position: "fixed",
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        left: String(left + (radius * 2) + margin + (radius * 2) + margin) + ea,
+        background: color,
+        borderRadius: String(radius * 2) + ea,
+        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      mode: "svg",
+      source: this.mother.returnRinitial(colorChip.white),
+      style: {
+        position: "absolute",
+        width: String(14) + ea,
+        left: String(13.5) + ea,
+        top: String(10.5) + ea,
+      }
+    },
+  ]);
+
+  listIcon = nodeArr[0];
+  aInitialIcon = nodeArr[2];
+  previousIcon = nodeArr[4];
+  mInitialIcon = nodeArr[6];
+  nextIcon = nodeArr[8];
+  rInitialIcon = nodeArr[10];
+
+  removeAll = function () {
+    if (instance.checkListBaseTong !== undefined && instance.checkListBaseTong !== null && instance.checkListBaseList !== undefined && instance.checkListBaseList !== null) {
+      instance.checkListBaseTong.parentNode.removeChild(instance.checkListBaseTong);
+      instance.checkListBaseList.style.animation = "fadein 0.3s ease forwards";
+      const standardBar = document.querySelector(".totalMother").firstChild;
+      standardBar.style.position = "relative";
+      for (let i = 1; i < instance.standardDoms.length; i++) {
+        instance.standardDoms[i].style.display = "block";
+      }
+      const mother = document.querySelector(".totalMother");
+      mother.removeChild(rInitialIcon);
+      mother.removeChild(nextIcon);
+      mother.removeChild(mInitialIcon);
+      mother.removeChild(previousIcon);
+      mother.removeChild(aInitialIcon);
+      mother.removeChild(listIcon);
     }
-  ])
+  }
 
+  listIcon.addEventListener("click", (e) => { removeAll(); });
 
+  previousIcon.addEventListener("click", function (e) {
+    const { desid: previousDesid } = instance.designers.previous(desid);
+    removeAll();
+    instance.checkListDetailLaunching(previousDesid, true);
+  });
 
+  nextIcon.addEventListener("click", function (e) {
+    const { desid: nextDesid } = instance.designers.next(desid);
+    removeAll();
+    instance.checkListDetailLaunching(nextDesid, true);
+  });
 
 }
 
