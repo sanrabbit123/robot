@@ -268,9 +268,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     try {
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "https://home-liaison.com",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send('this is new bridge cloud');
     } catch (e) {
@@ -439,9 +439,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //end
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "https://home-liaison.com",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send("success");
 
@@ -787,9 +787,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //end
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "https://home-liaison.com",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send("success");
 
@@ -817,9 +817,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "https://home-liaison.com",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       if (boo) {
         res.send("success");
@@ -913,9 +913,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //end
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
+            "Access-Control-Allow-Origin": "https://home-liaison.com",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
           res.send('success');
 
@@ -923,9 +923,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
+            "Access-Control-Allow-Origin": "https://home-liaison.com",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
           res.send('error');
         }
@@ -994,9 +994,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //end
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
+            "Access-Control-Allow-Origin": "https://home-liaison.com",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
           res.send('success');
 
@@ -1007,9 +1007,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": '*',
+            "Access-Control-Allow-Origin": "https://home-liaison.com",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
           res.send('error');
         }
@@ -1032,9 +1032,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
+        "Access-Control-Allow-Origin": "https://home-liaison.com",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send("success");
     } catch (e) {
