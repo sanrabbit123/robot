@@ -2802,6 +2802,7 @@ GeneralJs.getCookiesAll = function () {
 
   for (let i of tempArr0) {
     tempArr1 = i.split('=');
+    console.log(tempArr1);
     resultObj[tempArr1[0].trim()] = tempArr1[1].trim();
   }
 
