@@ -2851,14 +2851,14 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
         calendarWidth = 260;
         calendarHeight = 295.058;
 
-        top = 28;
+        top = GeneralJs.isMac() ? 28 : 29;
         left = 290;
-        size0 = 21;
-        size1 = 31;
+        size0 = 20;
+        size1 = 30;
         size2 = 14;
         lineHeight = 10;
 
-        valueTop = 102;
+        valueTop = GeneralJs.isMac() ? 102 : 105;
         valueLineHeight = 40;
         valueRight = 34;
         lineWidth = 121;
@@ -2918,7 +2918,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
           },
           {
             mother: -2,
-            text: "제안서가 고객님께 발송될",
+            text: "제안서가 발송될",
             style: {
               position: "absolute",
               top: String(top) + ea,
@@ -2930,7 +2930,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
           },
           {
             mother: -3,
-            text: "정확한 시간을 설정해주세요!",
+            text: "시간을 설정해주세요!",
             style: {
               position: "absolute",
               top: String(top + size0 + lineHeight) + ea,
@@ -2952,7 +2952,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               position: "absolute",
               borderBottom: "1px solid " + colorChip.gray4,
               width: String(lineWidth) + ea,
-              top: String(valueTop + (size1 / 2) + 5) + ea,
+              top: String(valueTop + (size1 / 2) + 5 + (GeneralJs.isMac() ? 0 : -3)) + ea,
               right: String(145) + ea,
             }
           },
@@ -2964,7 +2964,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               borderBottom: "1px solid " + colorChip.gray4,
               width: String(arrowWidth) + ea,
               height: String(arrowWidth) + ea,
-              top: String(valueTop + (size1 / 2)) + ea,
+              top: String(valueTop + (size1 / 2) + (GeneralJs.isMac() ? 0 : -3)) + ea,
               right: String(146) + ea,
               transform: "rotate(-45deg)",
             }
@@ -3172,7 +3172,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(2.5) + ea,
+              top: String(GeneralJs.isMac() ? 2.5 : 5) + ea,
               cursor: "pointer",
             }
           },
@@ -3209,7 +3209,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(2.5) + ea,
+              top: String(GeneralJs.isMac() ? 2.5 : 5) + ea,
               cursor: "pointer",
             }
           }

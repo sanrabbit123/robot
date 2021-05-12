@@ -1663,7 +1663,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
               position: "absolute",
               fontSize: String(25) + ea,
               fontWeight: String(100),
-              top: String(16) + ea,
+              top: String(GeneralJs.isMac() ? 16 : 20) + ea,
               left: String(29) + ea,
               color: colorChip.green,
             }
@@ -7269,7 +7269,7 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
         style: {
           position: "absolute",
           width: String(100) + '%',
-          top: String(-43) + ea,
+          top: String(GeneralJs.isMac() ? -43 : -40) + ea,
           fontSize: String(32) + ea,
           textAlign: "center",
           fontWeight: String(500),

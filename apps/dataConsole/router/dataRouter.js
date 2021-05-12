@@ -313,7 +313,8 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      // if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      if (false) {
 
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
