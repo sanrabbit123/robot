@@ -5,7 +5,7 @@ const { Menu } = require(GENERAL_DIR + "/generator.js");
 
 //etc
 
-class AreaMatrixFactorY extends Array {
+class AreaMatrixFactor extends Array {
 
   constructor(json) {
     super();
@@ -24,31 +24,12 @@ class AreaMatrixFactorY extends Array {
 
 }
 
-class AreaMatrixFactorX extends Array {
-
-  constructor(json) {
-    super();
-    for (let arr of json) {
-      this.push(new AreaMatrixFactorY(arr));
-    }
-  }
-
-  toNormal() {
-    let arr = [];
-    for (let i of this) {
-      arr.push(i.toNormal());
-    }
-    return arr;
-  }
-
-}
-
 class AreaMatrix extends Array {
 
   constructor(json) {
     super();
     for (let arr of json) {
-      this.push(new AreaMatrixFactorX(arr));
+      this.push(new AreaMatrixFactor(arr));
     }
   }
 
@@ -61,12 +42,9 @@ class AreaMatrix extends Array {
         "XT"
       ],
       yValues: [
-        "B",
-        "N"
-      ],
-      zValues: [
+        "partial",
+        "normal",
         "premium",
-        "normal"
       ]
     };
   }
@@ -123,8 +101,6 @@ OperationBudget.prototype.toNormal = function () {
 }
 
 const EtcAnalytics = function (json) {
-  this.matrix = new AreaMatrix(json.matrix);
-  this.operationBudget = new OperationBudget(json.operationBudget);
   this.personality = new Personality(json.personality);
   this.relation = new Menu(json.relation, [
     "지속가능성 높음",
@@ -136,8 +112,6 @@ const EtcAnalytics = function (json) {
 
 EtcAnalytics.prototype.toNormal = function () {
   let obj = {};
-  obj.matrix = this.matrix.toNormal();
-  obj.operationBudget = this.operationBudget.toNormal();
   obj.personality = this.personality.toNormal();
   obj.relation = this.relation.toNormal();
   return obj;
@@ -174,7 +148,8 @@ PurchaseAnalytics.prototype.toNormal = function () {
 //styling
 
 const StylingFabric = function (json) {
-  this.manufacture = json.manufacture;
+  this.curtain = json.curtain;
+  this.bedding = json.bedding;
   this.method = new Menu(json.method, [
     "업체 연결",
     "기성 제품 추천",
@@ -184,7 +159,8 @@ const StylingFabric = function (json) {
 
 StylingFabric.prototype.toNormal = function () {
   let obj = {};
-  obj.manufacture = this.manufacture;
+  obj.curtain = this.curtain;
+  obj.bedding = this.bedding;
   obj.method = this.method.toNormal();
   return obj;
 }
@@ -317,34 +293,69 @@ StylingAnalytics.prototype.toNormal = function () {
 
 //construct
 
-const ConstructPossible = function (json) {
-  this.supervision = json.supervision;
-  this.others = json.others;
-}
-
-ConstructPossible.prototype.toNormal = function () {
-  let obj = {};
-  obj.supervision = this.supervision;
-  obj.others = this.others;
-  return obj;
-}
-
-const ConstructAnalytics = function (json) {
-  this.level = json.level;
-  this.possible = new ConstructPossible(json.possible);
+const ConstructCase = function (json) {
+  this.name = json.name;
   this.contract = new Menu(json.contract, [
     "직접 계약, 직접 감리",
     "직접 계약, 외주 감리",
     "협업사 계약",
     "공정별 연결"
   ], true);
+  this.possible = new Menu(json.possible, [
+    "고객 시공사",
+    "홈리에종 시공사",
+    "디자이너 시공사",
+  ], true);
+}
+
+ConstructCase.prototype.toNormal = function () {
+  let obj = {};
+  obj.name = this.name;
+  obj.contract = this.contract.toNormal();
+  obj.possible = this.possible.toNormal();
+  return obj;
+}
+
+class ConstructCases extends Array {
+  constructor(arr) {
+    super();
+    if (arr.length !== 3) {
+      throw new Error("construct case must be 3 length array");
+    }
+    for (let i of arr) {
+      this.push(new ConstructCase(i));
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
+const ConstructPossible = function (json) {
+  this.supervision = json.supervision;
+}
+
+ConstructPossible.prototype.toNormal = function () {
+  let obj = {};
+  obj.supervision = this.supervision;
+  return obj;
+}
+
+const ConstructAnalytics = function (json) {
+  this.level = json.level;
+  this.possible = new ConstructPossible(json.possible);
+  this.case = new ConstructCases(json.case);
 }
 
 ConstructAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.level = this.level;
   obj.possible = this.possible.toNormal();
-  obj.contract = this.contract.toNormal();
+  obj.case = this.case.toNormal();
   return obj;
 }
 
@@ -374,12 +385,20 @@ const ProjectAnalytics = function (json) {
     "참고 이미지",
     "드로잉",
   ], true);
+  this.online = json.online;
+  this.living = json.living;
+  this.matrix = new AreaMatrix(json.matrix);
+  this.operationBudget = new OperationBudget(json.operationBudget);
 }
 
 ProjectAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.time = this.time.toNormal();
   obj.paperWork = this.paperWork.toNormal();
+  obj.online = this.online;
+  obj.living = this.living;
+  obj.matrix = this.matrix.toNormal();
+  obj.operationBudget = this.operationBudget.toNormal();
   return obj;
 }
 
@@ -387,28 +406,11 @@ ProjectAnalytics.prototype.toNormal = function () {
 //region
 
 const RegionAnalytics = function (json) {
-  this.available = new Menu(json.available, [
-    "서울",
-    "인천",
-    "경기",
-    "강원",
-    "충청",
-    "대전",
-    "세종",
-    "전라",
-    "경상",
-    "제주",
-    "부산",
-    "대구",
-    "울산",
-    "광주"
-  ], true);
   this.transportation = new Menu(json.transportation, [ "자동차", "대중교통" ], false);
 }
 
 RegionAnalytics.prototype.toNormal = function () {
   let obj = {};
-  obj.available = this.available.toNormal();
   obj.transportation = this.transportation.toNormal();
   return obj;
 }

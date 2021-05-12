@@ -21,6 +21,8 @@ module.exports = {
           },
           business: {
             career: {
+              relatedY: 0,
+              relatedM: 0,
               startY: 0,
               startM: 0,
             },
@@ -65,7 +67,6 @@ module.exports = {
         },
         analytics: {
           region: {
-            available: [ "서울", "경기" ],
             transportation: "자동차",
           },
           project: {
@@ -74,14 +75,36 @@ module.exports = {
               entire: 30,
             },
             paperWork: [],
+            online: true,
+            living: true,
+            matrix: [],
+            operationBudget: {
+              min: 5000000,
+              max: 10000000
+            }
           },
           construct: {
             level: 1,
             possible: {
               supervision: true,
-              others: true
             },
-            contract: [ "협업사 계약" ],
+            case: [
+              {
+                name: "homeStyling",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              },
+              {
+                name: "totalStyling",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              },
+              {
+                name: "architecture",
+                contract: [ "협업사 계약" ],
+                possible: [],
+              }
+            ]
           },
           styling: {
             level: 1,
@@ -123,7 +146,8 @@ module.exports = {
               design: false
             },
             fabric: {
-              manufacture: false,
+              curtain: false,
+              bedding: false,
               method: "업체 연결",
             }
           },
@@ -135,19 +159,12 @@ module.exports = {
             },
           },
           etc: {
-            matrix: [],
-            operationBudget: {
-              min: 5000000,
-              max: 10000000
-            },
             personality: [
               { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
               { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },
               { name: "디자인 제안 속도가 상대적으로 빠른 편", value: false },
-              { name: "3D 요청시 유료 제공", value: false },
               { name: "디자인 기획을 리드하는 편", value: false },
               { name: "디자인 기획시 고객에게 맞추는 편", value: false },
-              { name: "조립 및 설치 서비스 무료 제공", value: false },
             ],
             relation: "확인중"
           }

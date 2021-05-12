@@ -1728,7 +1728,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           second: Number(second),
         };
         command = [ "webProposal", proid ];
-        message = await coreRequest("timer", { command, time });
+        // message = await coreRequest("timer", { command, time });
         await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
 
         res.set("Content-Type", "application/json");

@@ -94,12 +94,16 @@ PersonalSystem.prototype.toNormal = function () {
 //business --------------------------------------------------------------------
 
 const Career = function (json) {
+  this.relatedY = Number(json.relatedY);
+  this.relatedM = Number(json.relatedM);
   this.startY = Number(json.startY);
   this.startM = Number(json.startM);
 }
 
 Career.prototype.toNormal = function () {
   let obj = {};
+  obj.relatedY = Number(this.relatedY);
+  obj.relatedM = Number(this.relatedM);
   obj.startY = Number(this.startY);
   obj.startM = Number(this.startM);
   return obj;

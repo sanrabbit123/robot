@@ -7920,7 +7920,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
           style: {
             position: "fixed",
             width: "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(margin) + ea + ")",
-            height: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(margin) + ea + ")",
+            height: "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 2) - " + String(margin) + ea + ")",
             bottom: String(belowHeight + margin) + ea,
             right: String(margin) + ea,
             borderRadius: String(3) + "px",
@@ -7929,6 +7929,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             background: colorChip.gradientGreen2,
           }
         });
+
         [ titleBox, whiteBox, scrollBox, textBox ] = createNodes([
           {
             mother: memoTong,
@@ -7948,7 +7949,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               position: "absolute",
               bottom: String(innerMargin) + ea,
               left: String(innerMargin) + ea,
-              width: withOut(innerMargin * 2, ea),
+              width: "calc(50% - " + String(innerMargin * 1.5) + ea + ")",
               height: withOut((innerMargin * 2) + titleHeight, ea),
               background: colorChip.white,
               borderRadius: String(3) + "px",
@@ -8014,9 +8015,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
         textBox.value = history;
 
       } else {
-
         totalMother.removeChild(document.getElementById("memoTong"));
-
       }
 
     } catch (e) {

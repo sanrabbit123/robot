@@ -43,7 +43,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep } = this.mother;
   try {
-    // await this.MONGOC.connect();
+    await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
     const back = this.back;
     const report = new BackReport();
@@ -54,9 +54,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, devAlive: true });
-    // console.log(designers[6].analytics.etc);
-    // console.log(designers[6].analytics.etc.toNormal());
+
+
+
 
 
 
@@ -153,9 +153,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김지혜",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1Z5cNcOh5jywyhkpsZXU5Sd9H92Z5wWwB",
+    //     client: "장윤정",
+    //     designer: "고윤미",
+    //     link: "https://drive.google.com/drive/folders/18udDkOFJQF2i4_UBkgxZayCU2bLQSkIZ",
     //   }
     // ]);
 
@@ -251,7 +251,7 @@ DevContext.prototype.launching = async function () {
     /*
     await this.cookProperty([
       {
-        mongoConnection: this.MONGOLOCALC,
+        mongoConnection: this.MONGOC,
         collection: "designer",
         standard: "desid",
         mode: "add",
@@ -343,7 +343,7 @@ DevContext.prototype.launching = async function () {
 
     const dbName = "miro81";
     const collection = "designer";
-    const MONGOC = this.MONGOLOCALC;
+    const MONGOC = this.MONGOC;
     let whereQuery, updateQuery, updateMotherQuery;
     let rows, matrix, newMatrix;
     let tempArr;
@@ -382,7 +382,7 @@ DevContext.prototype.launching = async function () {
   } catch (e) {
     console.log(e);
   } finally {
-    // this.MONGOC.close();
+    this.MONGOC.close();
     this.MONGOLOCALC.close();
     console.log(`done`);
   }

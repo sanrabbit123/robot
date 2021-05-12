@@ -2952,7 +2952,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               position: "absolute",
               borderBottom: "1px solid " + colorChip.gray4,
               width: String(lineWidth) + ea,
-              top: String(valueTop + (size1 / 2) + 5 + (GeneralJs.isMac() ? 0 : -3)) + ea,
+              top: String(valueTop + (size1 / 2) + 5 + (GeneralJs.isMac() ? 0.5 : -3)) + ea,
               right: String(145) + ea,
             }
           },
@@ -2964,7 +2964,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               borderBottom: "1px solid " + colorChip.gray4,
               width: String(arrowWidth) + ea,
               height: String(arrowWidth) + ea,
-              top: String(valueTop + (size1 / 2) + (GeneralJs.isMac() ? 0 : -3)) + ea,
+              top: String(valueTop + (size1 / 2) + (GeneralJs.isMac() ? 0.5 : -3)) + ea,
               right: String(146) + ea,
               transform: "rotate(-45deg)",
             }
@@ -3172,7 +3172,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(GeneralJs.isMac() ? 2.5 : 5) + ea,
+              top: String(GeneralJs.isMac() ? 3 : 5) + ea,
               cursor: "pointer",
             }
           },
@@ -3209,7 +3209,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(GeneralJs.isMac() ? 2.5 : 5) + ea,
+              top: String(GeneralJs.isMac() ? 3 : 5) + ea,
               cursor: "pointer",
             }
           }
