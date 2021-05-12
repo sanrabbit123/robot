@@ -313,8 +313,7 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      // if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-      if (false) {
+      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
 
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
@@ -2257,7 +2256,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         };
         command = [ "webProposal", proid ];
         message = await coreRequest("timer", { command, time });
-        // await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
+        await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify(message));
