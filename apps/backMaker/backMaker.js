@@ -2445,8 +2445,10 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     }
 
     projectQuery = {};
-    projectQuery[sortStandard] = 1;
-    projectQuery[property] = 1;
+    if (property !== "$all") {
+      projectQuery[sortStandard] = 1;
+      projectQuery[property] = 1;
+    }
 
     findQuery = { "$or": [] };
     if (idArr === null) {
@@ -2497,7 +2499,11 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     if (tong.length > 0) {
       finalTong = {};
       for (let obj of tong) {
-        finalTong[obj[sortStandard]] = obj[property];
+        if (property !== "$all") {
+          finalTong[obj[sortStandard]] = obj[property];
+        } else {
+          finalTong[obj[sortStandard]] = obj;
+        }
       }
       return finalTong;
     } else {
@@ -2651,6 +2657,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         desid: updateQuery.desid,
         important: false,
         history: "",
+        career: "",
         issue: "",
         manager: "-"
       };

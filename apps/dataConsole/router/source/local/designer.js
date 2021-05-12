@@ -7355,6 +7355,10 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = f
     this.mInitialIcon = null;
     this.nextIcon = null;
     this.rInitialIcon = null;
+
+    if (document.getElementById("memoTong") !== null) {
+      totalMother.removeChild(document.getElementById("memoTong"));
+    }
   }
 
   if (!removeOnly) {
@@ -7883,19 +7887,21 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
         let innerMargin;
         let titleHeight;
         let size;
-        let titleBox, whiteBox, scrollBox, textBox;
-        let resObj, history;
+        let resObj, history, career;
+        let nodeArr;
 
         margin = 40;
         innerMargin = 15;
-        titleHeight = 31;
+        titleHeight = 28;
         size = 16;
 
-        resObj = await ajaxJson({ method: "designer", property: "history", idArr: [ desid ] }, "/getHistoryProperty");
+        resObj = await ajaxJson({ method: "designer", property: "history", idArr: [ desid ] }, "/getHistoryTotal");
         if (resObj[desid] === undefined) {
           throw new Error("history error");
         }
-        history = resObj[desid];
+        history = resObj[desid].history;
+        career = resObj[desid].career;
+
         memoTong = createNode({
           mother: totalMother,
           id: "memoTong",
@@ -7930,7 +7936,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
           }
         });
 
-        [ titleBox, whiteBox, scrollBox, textBox ] = createNodes([
+        nodeArr = createNodes([
           {
             mother: memoTong,
             text: designer.designer + " 디자이너 메모",
@@ -7960,9 +7966,9 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             mother: -1,
             style: {
               position: "absolute",
-              top: String(innerMargin) + ea,
+              top: String(innerMargin - 2) + ea,
               left: String(innerMargin) + ea,
-              width: withOut(innerMargin * 2, ea),
+              width: withOut((innerMargin - 2) * 2, ea),
               height: withOut(innerMargin * 2, ea),
               background: "aqua",
             }
@@ -8010,9 +8016,90 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               height: String(100) + '%',
               lineHeight: String(1.7),
             }
-          }
+          },
+          {
+            mother: memoTong,
+            text: designer.designer + " 디자이너 상세 경력",
+            style: {
+              position: "absolute",
+              top: String(innerMargin - 1) + ea,
+              left: "calc(50% + " + String(innerMargin * 0.5) + ea + ")",
+              fontSize: String(size) + ea,
+              fontWeight: String(600),
+              color: colorChip.white,
+            }
+          },
+          {
+            mother: memoTong,
+            style: {
+              position: "absolute",
+              bottom: String(innerMargin) + ea,
+              left: "calc(50% + " + String(innerMargin * 0.5) + ea + ")",
+              width: "calc(50% - " + String(innerMargin * 1.5) + ea + ")",
+              height: withOut((innerMargin * 2) + titleHeight, ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              opacity: String(0.95),
+            }
+          },
+          {
+            mother: -1,
+            style: {
+              position: "absolute",
+              top: String(innerMargin - 2) + ea,
+              left: String(innerMargin) + ea,
+              width: withOut((innerMargin - 2) * 2, ea),
+              height: withOut(innerMargin * 2, ea),
+              background: "aqua",
+            }
+          },
+          {
+            mother: -1,
+            mode: "textarea",
+            events: [
+              {
+                type: "blur",
+                event: function (e) {
+                  const cookies = GeneralJs.getCookiesAll();
+                  const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                }
+              },
+              {
+                type: "keypress",
+                event: function (e) {
+                  if (e.keyCode === 13) {
+                    const cookies = GeneralJs.getCookiesAll();
+                    const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                    GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                  }
+                }
+              },
+              {
+                type: "contextmenu",
+                event: function (e) {
+                  e.stopPropagation();
+                }
+              }
+            ],
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              fontSize: String(size - 1) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              border: String(0),
+              outline: String(0),
+              overflow: "scroll",
+              height: String(100) + '%',
+              lineHeight: String(1.7),
+            }
+          },
         ]);
-        textBox.value = history;
+        nodeArr[3].value = history;
+        nodeArr[7].value = career;
 
       } else {
         totalMother.removeChild(document.getElementById("memoTong"));

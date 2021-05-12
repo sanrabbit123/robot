@@ -32,7 +32,7 @@ const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
@@ -49,14 +49,37 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
-
-
-
-
-
-
-
-
+    // const aspirants = await back.getAspirantsByQuery({});
+    // const designers = await back.getDesignersByQuery({});
+    // let targetDesid, histories;
+    // let whereQuery, updateQuery;
+    // let careerTong;
+    //
+    // targetDesid = [];
+    // careerTong = {};
+    // for (let designer of designers) {
+    //   for (let aspirant of aspirants) {
+    //     if (aspirant.phone === designer.information.phone) {
+    //       targetDesid.push(designer.desid);
+    //       careerTong[designer.desid] = aspirant.information.career.detail;
+    //     }
+    //   }
+    // }
+    //
+    // targetDesid = Array.from(new Set(targetDesid));
+    //
+    // histories = await this.MONGOLOCALC.db("miro81").collection("designerHistory").find({}).toArray();
+    //
+    // for (let obj of histories) {
+    //   whereQuery = { desid: obj.desid };
+    //   updateQuery = {};
+    //   updateQuery["career"] = "";
+    //   if (targetDesid.includes(obj.desid)) {
+    //     updateQuery["career"] = careerTong[obj.desid];
+    //   }
+    //   await this.MONGOLOCALC.db("miro81").collection("designerHistory").updateOne(whereQuery, { "$set": updateQuery });
+    //   console.log(whereQuery);
+    // }
 
 
 

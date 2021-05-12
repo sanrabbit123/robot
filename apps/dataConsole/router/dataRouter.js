@@ -1692,12 +1692,13 @@ DataRouter.prototype.rou_post_getHistory = function () {
     return str.replace(/\&/g, ",");
   }
   let obj = {};
-  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
+  obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
   obj.func = async function (req, res) {
     try {
       let historyObj, responseArr;
       let resultObj;
       let method;
+      let temp, tempArr;
 
       responseArr = [];
 
@@ -1738,6 +1739,12 @@ DataRouter.prototype.rou_post_getHistory = function () {
       } else if (req.url === "/getHistoryProperty") {
         if (JSON.parse(req.body.idArr).length > 0) {
           responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr), { selfMongo: instance.mongolocal });
+        } else {
+          responseArr = [];
+        }
+      } else if (req.url === "/getHistoryTotal") {
+        if (JSON.parse(req.body.idArr).length > 0) {
+          responseArr = await back.getHistoryProperty(req.body.method, "$all", JSON.parse(req.body.idArr), { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
@@ -2255,7 +2262,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           second: Number(second),
         };
         command = [ "webProposal", proid ];
-        message = await coreRequest("timer", { command, time });
+        // message = await coreRequest("timer", { command, time });
         await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
 
         res.set("Content-Type", "application/json");
