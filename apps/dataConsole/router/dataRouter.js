@@ -1088,7 +1088,11 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       let raw_data;
       let whereQuery, updateQuery, dateQuery;
 
-      whereQuery = JSON.parse(req.body.where);
+      if (req.body.where !== undefined) {
+        whereQuery = JSON.parse(req.body.where);
+      } else {
+        whereQuery = JSON.parse(req.body.whereQuery);
+      }
 
       if (req.body.updateQuery === undefined) {
         updateQuery = {};

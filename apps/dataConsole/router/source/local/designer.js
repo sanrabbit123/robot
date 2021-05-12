@@ -16,6 +16,9 @@ class Designers extends Array {
         break;
       }
     }
+    if (target === null) {
+      throw new Error("invaild desid");
+    }
     return target;
   }
   getById(desid) {
@@ -96,7 +99,7 @@ const DesignerJs = function () {
   this.designers = [];
 }
 
-DesignerJs.prototype.standardBar = function (standard) {
+DesignerJs.prototype.standardBar = function (standard, localMode = false, specificDesid = null) {
   const instance = this;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
@@ -248,6 +251,14 @@ DesignerJs.prototype.standardBar = function (standard) {
     for (let i in style2) {
       div_clone2.style[i] = style2[i];
     }
+    if (num !== 0) {
+      div_clone2.setAttribute("desid", desid);
+      if (specificDesid !== null) {
+        if (specificDesid !== desid) {
+          div_clone2.style.display = "none";
+        }
+      }
+    }
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.textContent = desid;
@@ -256,7 +267,9 @@ DesignerJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[0]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("contextmenu", sortEventFunction(0));
+      if (!localMode) {
+        div_clone3.addEventListener("contextmenu", sortEventFunction(0));
+      }
     }
     div_clone2.appendChild(div_clone3);
 
@@ -267,14 +280,18 @@ DesignerJs.prototype.standardBar = function (standard) {
     }
     div_clone3.style.left = String(leftPosition[1]) + ea;
     if (num === 0) {
-      div_clone3.addEventListener("contextmenu", sortEventFunction(1));
+      if (!localMode) {
+        div_clone3.addEventListener("contextmenu", sortEventFunction(1));
+      }
     }
     div_clone2.appendChild(div_clone3);
 
     div_clone2.style.cursor = "pointer";
     if (num !== 0) {
-      div_clone2.addEventListener("click", this.whiteViewMaker(num));
-      div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(desid));
+      if (!localMode) {
+        div_clone2.addEventListener("click", this.whiteViewMaker(num));
+        div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(desid));
+      }
     }
 
     if (num !== 0) {
@@ -298,12 +315,14 @@ DesignerJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
-  if (this.standardDoms.length === 2) {
-    GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
-      instance.standardDoms[1].click();
-      clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
-      GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
-    }, 401);
+  if (!localMode) {
+    if (this.standardDoms.length === 2) {
+      GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
+        instance.standardDoms[1].click();
+        clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
+        GeneralJs.timeouts["oneWhiteCardOnSelection"] = null;
+      }, 401);
+    }
   }
 
 }
@@ -1480,7 +1499,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
 }
 
-DesignerJs.prototype.spreadData = async function (search = null, standardMode = false) {
+DesignerJs.prototype.spreadData = async function (search = null, localMode = false, specificDesid = null) {
   const instance = this;
   try {
     let designers, totalMother;
@@ -1527,8 +1546,8 @@ DesignerJs.prototype.spreadData = async function (search = null, standardMode = 
       }
     }
 
-    this.standardBar({ standard: standard.standard, data: standardDataTong, search: search });
-    if (!standardMode) {
+    this.standardBar({ standard: standard.standard, data: standardDataTong, search: search }, localMode, specificDesid);
+    if (!localMode) {
       this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
     }
 
@@ -1863,7 +1882,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     convertIcon.style[i] = style[i];
   }
-  convertIcon.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (49 / 60) : (52 / 60)))) + ea;
+  convertIcon.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (49 / 60) : (55 / 60)))) + ea;
   convertIcon.style.height = String(iconHeight) + ea;
   convertIcon.style.width = String(iconHeight * SvgTong.getRatio(convertIcon)) + ea;
   div_clone2.appendChild(convertIcon);
@@ -1873,32 +1892,11 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     convertIconBox.style[i] = style[i];
   }
-  convertIconBox.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (46 / 60) : (49 / 60)))) + ea;
+  convertIconBox.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? (46 / 60) : (52 / 60)))) + ea;
   convertIconBox.style.height = String(leftMargin * (20 / 60)) + ea;
   convertIconBox.style.width = String(leftMargin * (17 / 60)) + ea;
   convertIconBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
   div_clone2.appendChild(convertIconBox);
-
-  //alimtalk icon
-  alimtalkIcon = SvgTong.stringParsing(this.mother.returnAinitial(GeneralJs.colorChip.green));
-  for (let i in style) {
-    alimtalkIcon.style[i] = style[i];
-  }
-  alimtalkIcon.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? ((49 + 49 - 35.5 + 1.5) / 60) : ((52 + 52 - 38.5 + 1.5) / 60)))) + ea;
-  alimtalkIcon.style.height = String(iconHeight) + ea;
-  alimtalkIcon.style.width = String(iconHeight * SvgTong.getRatio(alimtalkIcon)) + ea;
-  div_clone2.appendChild(alimtalkIcon);
-
-  //alimtalk button
-  alimtalkButton = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    alimtalkButton.style[i] = style[i];
-  }
-  alimtalkButton.style.right = String(leftMargin + (leftMargin * (GeneralJs.isMac() ? ((46 + 17) / 60) : ((49 + 17) / 60)))) + ea;
-  alimtalkButton.style.height = String(leftMargin * (20 / 60)) + ea;
-  alimtalkButton.style.width = String(leftMargin * (17 / 60)) + ea;
-  alimtalkButton.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  div_clone2.appendChild(alimtalkButton);
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -3041,71 +3039,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //convert event
-  convertIconBox.addEventListener("click", this.convertWhiteContents(div_clone, titleArea, contentsArea, leftMargin, thisCase));
-  if (instance.whiteConvert !== 0) {
-    GeneralJs.timeouts["convertChaining"] = setTimeout(async function () {
-      try {
-        let num = instance.whiteConvert;
-        instance.whiteConvert = 0;
-        instance.whiteMatrixA = null;
-        instance.whiteMatrixB = null;
-        for (let i = 0; i < num; i++) {
-          convertIconBox.click();
-          await GeneralJs.sleep(400);
-        }
-        clearTimeout(GeneralJs.timeouts["convertChaining"]);
-        GeneralJs.timeouts["convertChaining"] = null;
-      } catch (e) {
-        GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-        console.log(e);
-      }
-    }, 400);
-  }
-
-  //alimtalk event
-  alimtalkButton.addEventListener("click", function (e) {
-    const today = new Date();
-    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
-    let expiredString = '';
-
-    if (today.getDay() !== 0 && today.getDay() !== 6) {
-      //pyeong-day
-      today.setDate(today.getDate() + 7);
-    } else {
-      if (today.getDay() !== 0) {
-        //saturday
-        today.setDate(today.getDate() + 9);
-      } else {
-        //sunday
-        today.setDate(today.getDate() + 8);
-      }
-    }
-
-    expiredString += String(today.getMonth() + 1) + "월";
-    expiredString += " ";
-    expiredString += String(today.getDate()) + "일";
-    expiredString += " ";
-    expiredString += dayArr[today.getDay()] + "요일";
-    expiredString += " ";
-    expiredString += String(14) + "시";
-
-    if (window.confirm(thisCase[standard[0]] + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-      GeneralJs.ajax("method=designerCheckList&name=" + thisCase[standard[0]] + "&phone=" + thisCase.phone + "&option=" + JSON.stringify({ date: expiredString, desid: thisCase[standard[1]], host: "ADDRESS[homeinfo(ghost)]" }), "/alimTalk", function (rawJson) {
-        let middleDate, deadDate;
-        if (JSON.parse(rawJson).message !== "success") {
-          throw new Error("alimTalk error");
-        } else {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-          //set deadline
-          middleDate = new Date();
-          middleDate.setHours(middleDate.getHours() + 8);
-          deadDate = new Date();
-          deadDate.setDate(deadDate.getDate() + 9);
-          GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + thisCase[standard[1]], mode: "set" }), "/manageDeadline", function (res) {});
-        }
-      });
-    }
-
+  convertIconBox.addEventListener("click", function (e) {
+    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=checklist&desid=" + thisCase[standard[1]];
   });
 
   //end ---------------------------------------------
@@ -3163,1448 +3098,6 @@ DesignerJs.checkListSseEvent = function (e) {
           matrixFactors[i].click();
         }
       }
-    }
-  }
-}
-
-DesignerJs.prototype.convertWhiteContents = function (motherArea, titleArea, contentsArea, leftMargin, thisCase) {
-  const instance = this;
-  const { designer, desid } = thisCase;
-  let es;
-  let esConnect = false;
-  this.whiteSse = es;
-  return async function (e) {
-    try {
-
-      let div_clone;
-      let style, style2, style3;
-      let ea = "px";
-      let temp;
-
-      if (instance.whiteConvert === 0) {
-
-        //sse connetion
-        if (!esConnect) {
-          es = new EventSource("https://" + SSEHOST + ":3000/specificsse/get_checklist/" + desid);
-          es.addEventListener("updateTong", DesignerJs.checkListSseEvent);
-          instance.whiteSse = es;
-        }
-
-        //make total base
-        instance.whiteConvert = 3;
-        contentsArea.style.opacity = String(0);
-        div_clone = contentsArea.cloneNode(false);
-        div_clone.style.animation = "fadeinlite 0.3s ease forwards";
-        GeneralJs.ajax("button=get" + "&desid=" + desid + "&target=matrixA", "/designerMatrix", function (rawString) {
-          instance.whiteConvert = 1;
-          const responseObject = JSON.parse(rawString);
-          if (responseObject.analytics === undefined) {
-            throw new Error(responseObject.error);
-            return;
-          }
-          class ItemsArray extends Array {
-            constructor(arr) {
-              super();
-              for (let i of arr) {
-                this.push(i);
-              }
-            }
-            get maxLength() {
-              let tong = [];
-              for (let i of this) {
-                if (typeof i !== "string") {
-                  return null;
-                } else {
-                  tong.push(i.length);
-                }
-              }
-              tong.sort((a, b) => { return b - a; });
-              return tong[0];
-            }
-          }
-          const { matrixA, analytics, values } = responseObject;
-          const { xValues, yValues, zValues } = values;
-          const classNameConst = "designerMatrixFactor";
-          let matrixBase;
-          let matrix;
-          let leftWordWidth;
-          let bottomWordWidth;
-          let margin;
-          let boxNumber;
-          let matrixFactor;
-          let matrixBaseStyle, matrixStyle, matrixMargin;
-          let xTitleBoxesTong, yTitleBoxesTong;
-          let xTitleBox, yTitleBox, zTitleBox;
-          let xTitleBoxWord, yTitleBoxWord, zTitleBoxWord;
-          let zToggleEvent;
-          let invisible;
-          let invisibleStyle;
-          let invisibleText;
-          let invisibleTextStyle;
-          let totalMatrix;
-          let x, y, z;
-          let checkList;
-          let checkListBase, checkListBaseWhite;
-          let checkListBaseStyle;
-          let checkListFactor, checkListFactorTitle, checkListFactorContents, checkListFactorContentsItem, checkListFactorContentsItemText, checkListFactorContentsItemText2;
-          let checkListWidth, checkListMargin;
-          let minimumButtonWidth;
-          let checkDivideNum;
-          let checkNum;
-          let checkBoxEvent, radioEvent, rangeEvent;
-          let styleFactorTitle;
-          let checkFactorButtonMargin;
-          let designNumberArr, purchaseArr, constructArr, relationArr;
-          let checkListFactorMiddle;
-          let baseWhiteStyle;
-          let domDictionary;
-          let inputEvent;
-
-          totalMatrix = [];
-          leftWordWidth = 30;
-          bottomWordWidth = 34;
-          margin = 10;
-          matrixMargin = 8;
-          boxNumber = xValues.length * yValues.length;
-          checkListWidth = (Number(motherArea.style.width.replace(/[^0-9\.\-]/g, '')) - (leftMargin * 2)) * (0.5);
-          checkListMargin = 20;
-          minimumButtonWidth = 75;
-          checkDivideNum = Math.floor((checkListWidth - checkListMargin - (matrixMargin * 8)) / minimumButtonWidth);
-          checkFactorButtonMargin = 5;
-          domDictionary = {};
-
-          //start check list
-          checkList = DataPatch.designerCheckList(analytics);
-          checkListBase = GeneralJs.nodes.div.cloneNode(true);
-          checkListBase.addEventListener("dblclick", function (e) {
-            if (instance.whiteMemoBox !== undefined && instance.whiteMemoBox !== null) {
-              instance.whiteMemoBox.style.display = "block";
-              instance.whiteMemoBox.style.animation = "fadeupmiddle 0.3s ease forwards";
-            }
-          });
-          checkListBaseStyle = {
-            position: "absolute",
-            width: String(checkListWidth - (checkListMargin / 2)) + ea,
-            top: String(0) + ea,
-            right: String(leftMargin) + ea,
-            height: String(100) + '%',
-            borderRadius: String(5) + ea,
-            border: "1px solid " + GeneralJs.colorChip.gray3,
-            background: GeneralJs.colorChip.gray1,
-          };
-          for (let i in checkListBaseStyle) {
-            checkListBase.style[i] = checkListBaseStyle[i];
-          }
-
-          checkBoxEvent = function (e) {
-            const column = this.getAttribute("column");
-            const type = this.getAttribute("type");
-            const { children: siblings } = this.parentElement;
-            let resultObj, checkOrder;
-
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = GeneralJs.colorChip.green;
-              this.children[0].style.color = GeneralJs.colorChip.white;
-              this.setAttribute("toggle", "on");
-            } else {
-              this.style.background = GeneralJs.colorChip.gray1;
-              this.children[0].style.color = GeneralJs.colorChip.deactive;
-              this.setAttribute("toggle", "off");
-            }
-
-            resultObj = [];
-            checkOrder = [];
-            for (let dom of siblings) {
-              checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
-              if (dom.getAttribute("toggle") === "on") {
-                if (type === "number") {
-                  resultObj.push(Number(dom.getAttribute("value").replace(/[^0-9\.\-]/g, '')));
-                } else if (type === "boolean") {
-                  resultObj.push(!/[안미비n]/gi.test(dom.getAttribute("value")));
-                } else {
-                  resultObj.push(dom.getAttribute("value"));
-                }
-              }
-            }
-
-            GeneralJs.ajax("type=check&order=" + JSON.stringify(checkOrder) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(resultObj)), "/designerMatrix", function(res) {});
-          }
-
-          radioEvent = function (e) {
-            const column = this.getAttribute("column");
-            const type = this.getAttribute("type");
-            const { children: siblings } = this.parentElement;
-            let checkOrder;
-
-            checkOrder = [];
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = GeneralJs.colorChip.green;
-              this.children[0].style.color = GeneralJs.colorChip.white;
-              this.setAttribute("toggle", "on");
-              for (let dom of siblings) {
-                if (dom !== this) {
-                  dom.setAttribute("toggle", "off");
-                  dom.style.background = GeneralJs.colorChip.gray1;
-                  dom.children[0].style.color = GeneralJs.colorChip.deactive;
-                }
-                checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
-              }
-            } else {
-              this.style.background = GeneralJs.colorChip.gray1;
-              this.children[0].style.color = GeneralJs.colorChip.deactive;
-              this.setAttribute("toggle", "off");
-              for (let dom of siblings) {
-                if (dom !== this) {
-                  dom.setAttribute("toggle", "on");
-                  dom.style.background = GeneralJs.colorChip.green;
-                  dom.children[0].style.color = GeneralJs.colorChip.white;
-                }
-                checkOrder.push(dom.getAttribute("toggle") === "on" ? 1 : 0);
-              }
-            }
-
-            GeneralJs.ajax("type=radio&order=" + JSON.stringify(checkOrder) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(checkList.search(column).position(this.getAttribute("value"))), "/designerMatrix", function(res) {});
-          }
-
-          rangeEvent = function (e) {
-            const column = this.getAttribute("column");
-            const nameConst = "checkRange";
-            const [ x, y, z ] = [ Number(this.getAttribute('x')), Number(this.getAttribute('y')), Number(this.getAttribute('z')) ];
-            const max = Number(this.getAttribute('max'));
-            const multiple = this.getAttribute("multiple") === "true";
-            let onTarget, offTarget;
-            let target, oppositeTarget;
-            let resultObj;
-            let thisCheckListObj;
-            let itemsTong;
-
-            resultObj = {};
-            thisCheckListObj = checkList.search(column);
-
-            onTarget = [];
-            offTarget = [];
-            for (let i = 0; i < max; i++) {
-              target = document.getElementById(nameConst + column + String(x) + String(y) + String(i));
-              if (i <= z) {
-                onTarget.push(target);
-              } else {
-                offTarget.push(target);
-              }
-              if (!multiple) {
-                oppositeTarget = document.getElementById(nameConst + column + String(x) + String(1 - y) + String(max - i - 1));
-                if (i > z) {
-                  onTarget.push(oppositeTarget);
-                } else {
-                  offTarget.push(oppositeTarget);
-                }
-              }
-            }
-
-            for (let dom of onTarget) {
-              dom.style.background = GeneralJs.colorChip.green;
-            }
-
-            for (let dom of offTarget) {
-              dom.style.background = GeneralJs.colorChip.gray1;
-            }
-
-            document.getElementById(nameConst + column + String(x) + String(y) + "value").firstChild.textContent = String(z + 1);
-            if (!multiple) {
-              document.getElementById(nameConst + column + String(x) + String(1 - y) + "value").firstChild.textContent = String(max - (z + 1));
-            }
-
-            for (let k = 0; k < thisCheckListObj.items.length; k++) {
-              resultObj[thisCheckListObj.items[k].column] = Number(document.getElementById(nameConst + column + String(x) + String(k) + "value").firstChild.textContent);
-            }
-
-            itemsTong = [];
-            for (let k in resultObj) {
-              itemsTong.push({ column: k, value: resultObj[k] });
-            }
-
-            GeneralJs.ajax("type=range&order=" + JSON.stringify(itemsTong) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + JSON.stringify(thisCheckListObj.position(itemsTong)), "/designerMatrix", function(res) {});
-          }
-
-          inputEvent = function (e) {
-            if ((e.type === "keypress" && e.keyCode === 13) || (e.type === "blur")) {
-              const column = this.getAttribute("column");
-              const updateQuery = JSON.stringify(checkList.search(column).position(this.value));
-              GeneralJs.ajax("type=input&order=" + JSON.stringify([ this.value ]) + "&column=" + column + "&button=update&desid=" + desid + "&update=" + updateQuery, "/designerMatrix", function(res) {});
-            }
-          }
-
-          styleFactorTitle = {
-            position: "relative",
-            fontSize: String(14) + ea,
-            fontWeight: String(600),
-            color: GeneralJs.colorChip.black,
-            marginBottom: String(7) + ea,
-          };
-
-          checkNum = 0;
-
-          checkListFactorMiddle = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "relative",
-            width: String(100) + '%',
-            height: String(100) + '%',
-            borderRadius: String(5) + ea,
-            background: "transparent",
-            overflow: "scroll",
-          };
-          for (let i in style) {
-            checkListFactorMiddle.style[i] = style[i];
-          }
-
-          baseWhiteStyle = {
-            position: "relative",
-            width: "calc(100% - " + String(matrixMargin * 8) + ea + ")",
-            marginTop: String(matrixMargin * 2) + ea,
-            marginLeft: String(matrixMargin * 2) + ea,
-            padding: String(matrixMargin * 2) + ea,
-            paddingTop: String((matrixMargin * 2) + 3) + ea,
-            paddingBottom: String((matrixMargin * 2) - 6) + ea,
-            borderRadius: String(5) + ea,
-            background: GeneralJs.colorChip.white,
-            overflow: "scroll",
-          };
-
-          for (let c = 0; c < checkList.length; c++) {
-            checkListBaseWhite = GeneralJs.nodes.div.cloneNode(true);
-            if (c === checkList.length - 1) {
-              baseWhiteStyle.marginBottom = String(matrixMargin * 4) + ea;
-            }
-            for (let i in baseWhiteStyle) {
-              checkListBaseWhite.style[i] = baseWhiteStyle[i];
-            }
-            for (let { name, column, items, multiple, type, value, dependency } of checkList[c].items) {
-
-              items = new ItemsArray(items);
-
-              checkListFactor = GeneralJs.nodes.div.cloneNode(true);
-              style = {
-                position: "relative",
-              };
-              for (let i in style) {
-                checkListFactor.style[i] = style[i];
-              }
-
-              checkListFactorTitle = GeneralJs.nodes.div.cloneNode(true);
-              checkListFactorTitle.insertAdjacentHTML("beforeend", "<b style=\"color:" + GeneralJs.colorChip.green + "\" >" + String(checkNum + 1) + ".</b>&nbsp;" + name);
-              for (let i in styleFactorTitle) {
-                checkListFactorTitle.style[i] = styleFactorTitle[i];
-              }
-              checkListFactor.appendChild(checkListFactorTitle);
-
-              //items tong
-              checkListFactorContents = GeneralJs.nodes.div.cloneNode(true);
-              checkListFactorContents.id = desid + "_" + column;
-              style = {
-                position: "relative",
-                background: GeneralJs.colorChip.white,
-                borderRadius: String(5) + ea,
-                padding: String(checkFactorButtonMargin) + ea,
-                paddingRight: String(0) + ea,
-                marginBottom: String(14) + ea,
-                overflow: "hidden",
-                width: "calc(100% - " + String(checkFactorButtonMargin + 0) + ea + ")",
-                border: "1px solid " + GeneralJs.colorChip.gray2,
-              };
-              if (!/^object/gi.test(type) && items.maxLength < 16) {
-                style.height = String((30 * Math.ceil(items.length / checkDivideNum)) + (checkFactorButtonMargin * (Math.ceil(items.length / checkDivideNum) - 1))) + ea;
-              } else {
-                style.height = String((30 * Math.ceil(items.length / 1)) + (checkFactorButtonMargin * (Math.ceil(items.length / 1) - 1))) + ea;
-              }
-              for (let i in style) {
-                checkListFactorContents.style[i] = style[i];
-              }
-
-              if (type !== "input") {
-                for (let i = 0; i < items.length; i++) {
-                  checkListFactorContentsItem = GeneralJs.nodes.div.cloneNode(true);
-                  if (value.includes(items[i])) {
-                    checkListFactorContentsItem.setAttribute("toggle", "on");
-                  } else {
-                    checkListFactorContentsItem.setAttribute("toggle", "off");
-                  }
-                  style = {
-                    position: "relative",
-                    height: String(30) + ea,
-                    borderRadius: String(3) + ea,
-                    marginRight: String(checkFactorButtonMargin) + ea,
-                    marginBottom: String(checkFactorButtonMargin) + ea,
-                    cursor: "pointer",
-                    transition: "all 0s ease",
-                    overflow: "hidden",
-                  }
-                  if (!/^object/gi.test(type) && items.maxLength < 16) {
-                    style.display = "inline-block";
-                    style.width = "calc(calc(100% - " + String(checkFactorButtonMargin * (items.length <= checkDivideNum ? items.length : checkDivideNum)) + ea + ") / " + String((items.length <= checkDivideNum ? items.length : checkDivideNum)) + ")";
-                    style.background = value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1;
-                  } else {
-                    style.display = "block";
-                    style.width = "calc(100% - " + String(checkFactorButtonMargin) + ea + ")";
-                    if (/^object/gi.test(type)) {
-                      style.background = GeneralJs.colorChip.white;
-                    } else {
-                      style.background = value.includes(items[i]) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1;
-                    }
-                  }
-                  for (let j in style) {
-                    checkListFactorContentsItem.style[j] = style[j];
-                  }
-
-                  if (/^object/gi.test(type)) {
-                    //gray back
-                    checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                    style = {
-                      position: "absolute",
-                      width: String(minimumButtonWidth) + ea,
-                      height: String(30) + ea,
-                      borderRadius: String(3) + ea,
-                      top: String(0) + ea,
-                      left: String(0),
-                      background: GeneralJs.colorChip.gray0,
-                      cursor: "pointer",
-                      transition: "all 0s ease",
-                      fontSize: String(13) + ea,
-                      fontWeight: String(500),
-                      color: GeneralJs.colorChip.black,
-                    };
-                    for (let j in style) {
-                      checkListFactorContentsItemText.style[j] = style[j];
-                    }
-                    checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
-
-                    //range number tong
-                    checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                    checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + "value";
-                    checkListFactorContentsItemText.classList.add("checkRange" + String(column) + "_value");
-                    for (let j in style) {
-                      checkListFactorContentsItemText.style[j] = style[j];
-                    }
-                    checkListFactorContentsItemText.style.left = "";
-                    checkListFactorContentsItemText.style.right = String(0);
-
-                    //range number text
-                    checkListFactorContentsItemText2 = GeneralJs.nodes.div.cloneNode(true);
-                    checkListFactorContentsItemText2.textContent = String(value.search(items[i].column).value);
-                    style = {
-                      position: "absolute",
-                      width: String(minimumButtonWidth) + ea,
-                      height: String(30) + ea,
-                      fontSize: String(13) + ea,
-                      fontWeight: String(500),
-                      borderRadius: String(3) + ea,
-                      top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
-                      left: String(0),
-                      textAlign: "center",
-                      color: GeneralJs.colorChip.green,
-                      cursor: "pointer",
-                      transition: "all 0s ease",
-                    };
-                    for (let j in style) {
-                      checkListFactorContentsItemText2.style[j] = style[j];
-                    }
-                    checkListFactorContentsItemText.appendChild(checkListFactorContentsItemText2);
-                    checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
-
-                    //ranges
-                    for (let j = 0; j < items[i].value; j++) {
-                      checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                      checkListFactorContentsItemText.classList.add("hoverDefault");
-                      checkListFactorContentsItemText.classList.add("checkRange" + String(column) + "_boxes");
-                      checkListFactorContentsItemText.id = "checkRange" + String(column) + String(checkNum) + String(i) + String(j);
-                      checkListFactorContentsItemText.setAttribute('x', String(checkNum));
-                      checkListFactorContentsItemText.setAttribute('y', String(i));
-                      checkListFactorContentsItemText.setAttribute('z', String(j));
-                      checkListFactorContentsItemText.setAttribute('max', String(items[i].value));
-                      checkListFactorContentsItemText.setAttribute("column", column);
-                      checkListFactorContentsItemText.setAttribute("type", type);
-                      checkListFactorContentsItemText.setAttribute("value", String(j + 1));
-                      checkListFactorContentsItemText.setAttribute("multiple", (type.split('.')[1] === "multiple") ? "true" : "false");
-                      style = {
-                        position: "absolute",
-                        width: "calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ")",
-                        height: String(30) + ea,
-                        borderRadius: String(3) + ea,
-                        top: String(0) + ea,
-                        left: "calc(" + String(minimumButtonWidth) + ea + " + calc(calc(calc(100% - " + String(minimumButtonWidth * 2) + ea + " - " + String(checkFactorButtonMargin * (items[i].value + 1)) + ea + ") / " + String(items[i].value) + ") * " + String(j) + " + " + String(checkFactorButtonMargin * (j + 1)) + ea + "))",
-                        background: (j < value.search(items[i].column).value) ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1,
-                        cursor: "pointer",
-                        transition: "all 0s ease",
-                      };
-                      for (let k in style) {
-                        checkListFactorContentsItemText.style[k] = style[k];
-                      }
-                      checkListFactorContentsItemText.addEventListener("click", rangeEvent);
-                      checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
-                    }
-
-                    //name text
-                    checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                    checkListFactorContentsItemText.textContent = items[i].name;
-                    style = {
-                      position: "absolute",
-                      width: String(minimumButtonWidth) + ea,
-                      height: String(30) + ea,
-                      fontSize: String(13) + ea,
-                      fontWeight: String(500),
-                      borderRadius: String(3) + ea,
-                      top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
-                      left: String(0),
-                      textAlign: "center",
-                      color: GeneralJs.colorChip.black,
-                      cursor: "pointer",
-                      transition: "all 0s ease",
-                    }
-                    for (let j in style) {
-                      checkListFactorContentsItemText.style[j] = style[j];
-                    }
-                    checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
-                  } else {
-                    checkListFactorContentsItemText = GeneralJs.nodes.div.cloneNode(true);
-                    checkListFactorContentsItemText.textContent = items[i];
-                    style = {
-                      position: "absolute",
-                      width: String(100) + '%',
-                      height: String(30) + ea,
-                      fontSize: String(13) + ea,
-                      fontWeight: String(500),
-                      borderRadius: String(3) + ea,
-                      top: String(checkFactorButtonMargin + (GeneralJs.isMac() ? 0 : 2)) + ea,
-                      textAlign: "center",
-                      color: value.includes(items[i]) ? GeneralJs.colorChip.white : GeneralJs.colorChip.deactive,
-                      cursor: "pointer",
-                      transition: "all 0s ease",
-                    }
-                    for (let j in style) {
-                      checkListFactorContentsItemText.style[j] = style[j];
-                    }
-                    checkListFactorContentsItem.appendChild(checkListFactorContentsItemText);
-                    checkListFactorContentsItem.setAttribute("column", column);
-                    checkListFactorContentsItem.setAttribute("type", type);
-                    checkListFactorContentsItem.setAttribute("value", items[i]);
-                    checkListFactorContentsItem.addEventListener("click", (multiple ? checkBoxEvent : radioEvent));
-                  }
-                  checkListFactorContents.appendChild(checkListFactorContentsItem);
-                }
-              } else {
-                checkListFactorContentsItem = GeneralJs.nodes.input.cloneNode(true);
-                checkListFactorContentsItem.setAttribute("type", "text");
-                checkListFactorContentsItem.setAttribute("column", column);
-                checkListFactorContentsItem.value = value[0];
-                style = {
-                  position: "relative",
-                  width: String(100) + "%",
-                  height: String(26) + ea,
-                  fontSize: String(14) + ea,
-                  fontWeight: String(300),
-                  border: String(0),
-                  outline: String(0),
-                  left: String(0),
-                  padding: String(5) + ea,
-                  paddingBottom: String(7) + ea,
-                  overflow: "hidden",
-                };
-                for (let i in style) {
-                  checkListFactorContentsItem.style[i] = style[i];
-                }
-                checkListFactorContentsItem.addEventListener("keypress", inputEvent);
-                checkListFactorContentsItem.addEventListener("blur", inputEvent);
-                checkListFactorContents.appendChild(checkListFactorContentsItem);
-              }
-
-              checkListFactor.appendChild(checkListFactorContents);
-              checkListBaseWhite.appendChild(checkListFactor);
-              domDictionary[column] = checkListFactorContents;
-
-              checkNum++;
-            }
-            checkListFactorMiddle.appendChild(checkListBaseWhite);
-          }
-
-          checkListBase.appendChild(checkListFactorMiddle);
-          div_clone.appendChild(checkListBase);
-
-          //start matrixA
-          matrixBase = GeneralJs.nodes.div.cloneNode(true);
-          matrixBaseStyle = {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(leftMargin) + ea,
-            width: "calc(100% - " + String((leftMargin * 2) + checkListWidth + (checkListMargin / 2)) + ea + ")",
-            height: String(100) + '%',
-            background: GeneralJs.colorChip.white,
-          };
-          for (let i in matrixBaseStyle) {
-            matrixBase.style[i] = matrixBaseStyle[i];
-          }
-
-          //entire matrix
-          matrix = GeneralJs.nodes.div.cloneNode(true);
-          matrix.id = desid + "_" + "matrixA";
-          style = {
-            position: "absolute",
-            top: String(0) + ea,
-            right: String(0) + ea,
-            width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
-            height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
-            background: GeneralJs.colorChip.gray1,
-            borderRadius: String(5) + ea,
-            border: "1px solid " + GeneralJs.colorChip.gray3,
-          };
-          for (let i in style) {
-            matrix.style[i] = style[i];
-          }
-
-          //make 12 boxes
-          matrixStyle = {
-            position: "absolute",
-            width: "calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ")",
-            height: "calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ")",
-            borderRadius: String(5) + ea,
-            background: GeneralJs.colorChip.white,
-            overflow: "hidden",
-          };
-
-          style2 = {
-            position: "relative",
-            display: "block",
-            height: "calc(100% / " + String(zValues.length) + ")",
-            background: "transparent",
-            cursor: "pointer",
-            transition: "all 0s ease",
-            borderBottom: "1px dashed #dddddd",
-            color: "#dddddd",
-          };
-
-          style3 = {
-            position: "absolute",
-            fontSize: String(14) + ea,
-            top: "calc(50% - " + String(13.5) + ea + ")",
-            width: String(100) + '%',
-            textAlign: "center",
-            fontFamily: "graphik",
-            fontWeight: String(400),
-            color: "inherit",
-          };
-
-          invisibleStyle = {
-            position: "absolute",
-            width: String(100) + '%',
-            height: String(100) + '%',
-            top: String(0) + ea,
-            left: String(0) + ea,
-            color: "transparent",
-            fontSize: String(34) + ea,
-            fontWeight: String(400),
-            fontFamily: "graphik",
-          };
-
-          invisibleTextStyle = {
-            position: "absolute",
-            top: "calc(50% - " + String(25) + ea + ")",
-            width: String(84) + ea,
-            left: "calc(50% - " + String(42) + ea + ")",
-            textAlign: "center",
-            color: "inherit",
-            fontSize: "inherit",
-            fontWeight: "inherit",
-            fontFamily: "inherit",
-            cursor: "pointer",
-            zIndex: String(0),
-          };
-
-          zToggleEvent = async function (e) {
-            try {
-              const xyzArr = this.getAttribute("xyz").split("_");
-              const [ x, y, z ] = xyzArr;
-              const xyz = xyzArr.join("");
-              const xy = xyzArr[0] + xyzArr[1];
-              let friends, boo, invisible;
-              let temp0, temp1, temp2;
-
-              if (this.getAttribute("toggle") === "off") {
-                this.style.background = "#2fa678";
-                this.style.color = GeneralJs.colorChip.white;
-                this.firstChild.textContent = this.getAttribute("name") + " : " + this.getAttribute("original");
-                this.setAttribute("toggle", "on");
-              } else if (this.getAttribute("toggle") === "on") {
-                this.style.background = "transparent";
-                this.style.color = "#dddddd";
-                this.firstChild.textContent = this.getAttribute("original");
-                this.setAttribute("toggle", "off");
-              }
-
-              friends = document.querySelectorAll("." + classNameConst + xy);
-              boo = true;
-              invisible = document.getElementById(classNameConst + xy + "invisible");
-
-              for (let i of friends) {
-                if (i.getAttribute("toggle") === "off") {
-                  boo = false;
-                }
-              }
-
-              if (boo) {
-                for (let i = 0; i < friends.length - 1; i++) {
-                  friends[i].style.borderBottom = "1px dashed #2fa678";
-                  friends[i].style.color = "transparent";
-                }
-                friends[friends.length - 1].style.color = "transparent";
-                invisible.style.color = GeneralJs.colorChip.white;
-                invisible.firstChild.style.zIndex = String(1);
-              } else {
-                for (let i = 0; i < friends.length - 1; i++) {
-                  if (friends[i].getAttribute("toggle") === "on") {
-                    friends[i].style.color = GeneralJs.colorChip.white;
-                  } else {
-                    friends[i].style.color = "#dddddd";
-                  }
-                  friends[i].style.borderBottom = "1px dashed #dddddd";
-                }
-                if (friends[friends.length - 1].getAttribute("toggle") === "on") {
-                  friends[friends.length - 1].style.color = GeneralJs.colorChip.white;
-                } else {
-                  friends[friends.length - 1].style.color = "#dddddd";
-                }
-                invisible.style.color = "transparent";
-                invisible.firstChild.style.zIndex = String(0);
-              }
-
-              temp0 = [];
-              for (let i = 0; i < xValues.length; i++) {
-                temp1 = [];
-                for (let j = 0; j < yValues.length; j++) {
-                  temp2 = [];
-                  for (let k = 0; k < zValues.length; k++) {
-                    if (totalMatrix[i][j][k].getAttribute("toggle") === "on") {
-                      temp2.push(1);
-                    } else {
-                      temp2.push(0);
-                    }
-                  }
-                  temp1.push(temp2);
-                }
-                temp0.push(temp1);
-              }
-
-              await GeneralJs.ajaxPromise("type=matrix&order=" + JSON.stringify(temp0) + "&column=matrixA&button=update&desid=" + desid + "&matrixA=" + JSON.stringify(temp0), "/designerMatrix");
-
-            } catch (e) {
-              GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-              console.log(e);
-            }
-          }
-
-          //make totalMatrix dom
-          for (let i = 0; i < xValues.length; i++) {
-            temp = [];
-            for (let j = 0; j < yValues.length; j++) {
-              temp.push([]);
-            }
-            totalMatrix.push(temp);
-          }
-
-          for (let i = 0; i < boxNumber; i++) {
-            x = i % xValues.length;
-            y = Math.floor(i / xValues.length);
-
-            matrixFactor = GeneralJs.nodes.div.cloneNode(true);
-            for (let j in matrixStyle) {
-              matrixFactor.style[j] = matrixStyle[j];
-            }
-            matrixFactor.style.top = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(y) + "))";
-            matrixFactor.style.left = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(x) + "))";
-
-            //make invisible background
-            invisible = GeneralJs.nodes.div.cloneNode(true);
-            invisible.id = classNameConst + String(x) + String(y) + "invisible";
-            for (let j in invisibleStyle) {
-              invisible.style[j] = invisibleStyle[j];
-            }
-            invisibleText = GeneralJs.nodes.div.cloneNode(true);
-            invisibleText.classList.add("hoverDefault_lite");
-            for (let j in invisibleTextStyle) {
-              invisibleText.style[j] = invisibleTextStyle[j];
-            }
-            invisibleText.textContent = xValues[x] + yValues[y];
-            invisibleText.setAttribute('x', x);
-            invisibleText.setAttribute('y', y);
-            invisibleText.addEventListener("click", function (e) {
-              document.getElementById(classNameConst + String(this.getAttribute('x')) + String(this.getAttribute('y')) + String(1)).click();
-            });
-            invisible.appendChild(invisibleText);
-            matrixFactor.appendChild(invisible);
-
-            //make z titles
-            for (let j = 0; j < zValues.length; j++) {
-              z = j;
-
-              zTitleBox = GeneralJs.nodes.div.cloneNode(true);
-              zTitleBox.classList.add(classNameConst);
-              zTitleBox.classList.add(classNameConst + String(x) + String(y));
-              zTitleBox.id = classNameConst + String(x) + String(y) + String(j);
-              zTitleBox.setAttribute("name", xValues[x] + yValues[y]);
-              zTitleBox.setAttribute("original", zValues[j]);
-              zTitleBox.setAttribute("xyz", String(x) + '_' + String(y) + '_' + String(j));
-
-              if (matrixA[x][y][z] === 0) {
-                zTitleBox.setAttribute("toggle", "off");
-                style2.background = "transparent";
-                style2.color = "#dddddd";
-              } else {
-                zTitleBox.setAttribute("toggle", "on");
-                style2.background = "#2fa678";
-                style2.color = GeneralJs.colorChip.white;
-              }
-
-              for (let k in style2) {
-                zTitleBox.style[k] = style2[k];
-              }
-              if (j === zValues.length - 1) {
-                zTitleBox.style.borderBottom = "";
-              }
-              zTitleBox.addEventListener("click", zToggleEvent);
-
-              zTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
-              for (let k in style3) {
-                zTitleBoxWord.style[k] = style3[k];
-              }
-              zTitleBoxWord.textContent = zValues[j];
-              zTitleBox.appendChild(zTitleBoxWord);
-
-              totalMatrix[x][y].push(zTitleBox);
-              matrixFactor.appendChild(zTitleBox);
-            }
-
-            if (!matrixA[x][y].includes(0)) {
-              for (let z = 0; z < totalMatrix[x][y].length; z++) {
-                if (z !== totalMatrix[x][y].length - 1) {
-                  totalMatrix[x][y][z].style.borderBottom = "1px dashed #2fa678";
-                }
-                totalMatrix[x][y][z].style.color = "transparent";
-              }
-              invisible.style.color = GeneralJs.colorChip.white;
-              invisible.firstChild.style.zIndex = String(1);
-            }
-
-            matrix.appendChild(matrixFactor);
-          }
-          matrixBase.appendChild(matrix);
-
-          //make x-titles
-          xTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            bottom: String(0) + ea,
-            right: String(0) + ea,
-            width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
-            height: String(bottomWordWidth) + ea,
-          };
-          for (let i in style) {
-            xTitleBoxesTong.style[i] = style[i];
-          }
-          style = {
-            position: "absolute",
-            width: "calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ")",
-            height: String(bottomWordWidth) + ea,
-          };
-          style2 = {
-            position: "absolute",
-            width: String(100) + '%',
-            fontSize: String(23) + ea,
-            bottom: String(0),
-            textAlign: "center",
-            fontFamily: "graphik",
-            fontWeight: String(400),
-          };
-          for (let i = 0; i < xValues.length; i++) {
-            xTitleBox = GeneralJs.nodes.div.cloneNode(true);
-            for (let j in style) {
-              xTitleBox.style[j] = style[j];
-            }
-            xTitleBox.style.left = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length + 3)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i % xValues.length) + "))";
-
-            xTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
-            for (let j in style2) {
-              xTitleBoxWord.style[j] = style2[j];
-            }
-            xTitleBoxWord.textContent = xValues[i];
-            xTitleBox.appendChild(xTitleBoxWord);
-
-            xTitleBoxesTong.appendChild(xTitleBox);
-          }
-          matrixBase.appendChild(xTitleBoxesTong);
-
-          //make ytitles
-          yTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
-          style = {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(leftWordWidth + margin) + ea,
-            height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
-          };
-          for (let i in style) {
-            yTitleBoxesTong.style[i] = style[i];
-          }
-          style = {
-            position: "absolute",
-            width: String(leftWordWidth) + ea,
-            height: "calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ")",
-            left: String(0) + ea,
-          };
-          style2 = {
-            position: "absolute",
-            fontSize: String(23) + ea,
-            top: "calc(50% - " + String(16) + ea + ")",
-            textAlign: "center",
-            fontFamily: "graphik",
-            fontWeight: String(400),
-          };
-          for (let i = 0; i < yValues.length; i++) {
-            yTitleBox = GeneralJs.nodes.div.cloneNode(true);
-            for (let j in style) {
-              yTitleBox.style[j] = style[j];
-            }
-            yTitleBox.style.top = "calc(" + String(matrixMargin * 2) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length + 3)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i) + "))";
-
-            yTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
-            for (let j in style2) {
-              yTitleBoxWord.style[j] = style2[j];
-            }
-            yTitleBoxWord.textContent = yValues[i];
-            yTitleBox.appendChild(yTitleBoxWord);
-
-            yTitleBoxesTong.appendChild(yTitleBox);
-          }
-          matrixBase.appendChild(yTitleBoxesTong);
-
-          div_clone.appendChild(matrixBase);
-
-          //memo box
-          GeneralJs.timeouts["checkListMemoBox"] = setTimeout(function () {
-            GeneralJs.ajax("method=designer&property=history&idArr=" + JSON.stringify([ desid ]), "/getHistoryProperty", function (res) {
-              const resObj = JSON.parse(res);
-              if (resObj[desid] === undefined) {
-                throw new Error("history error");
-              }
-              const history = resObj[desid];
-              let memoBox;
-              let memoWhite;
-              let memoTitle;
-              let memoArea;
-              let memoTextScroll, memoText;
-              let style;
-              let ea;
-
-              ea = "px";
-
-              memoBox = GeneralJs.nodes.div.cloneNode(true);
-              memoBox.setAttribute("mode", "left");
-              style = {
-                ...matrixBaseStyle,
-                display: "none",
-                right: "",
-                borderRadius: String(5) + ea,
-                border: "1px solid " + GeneralJs.colorChip.gray3,
-                background: GeneralJs.colorChip.gray1,
-                zIndex: String(4),
-              };
-              for (let i in style) {
-                memoBox.style[i] = style[i];
-              }
-              memoBox.addEventListener("contextmenu", function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                if (this.getAttribute("mode") === "left") {
-                  this.style.width = checkListBaseStyle.width;
-                  this.style.left = "";
-                  this.style.right = checkListBaseStyle.right;
-                  this.setAttribute("mode", "right");
-                } else {
-                  this.style.width = matrixBaseStyle.width;
-                  this.style.right = "";
-                  this.style.left = matrixBaseStyle.left;
-                  this.setAttribute("mode", "left");
-                }
-              });
-              memoBox.addEventListener("dblclick", function (e) {
-                this.style.display = "none";
-                this.style.animation = "";
-              });
-
-              memoWhite = GeneralJs.nodes.div.cloneNode(true);
-              style = {
-                position: "relative",
-                top: String(matrixMargin * 2) + ea,
-                left: String(matrixMargin * 2) + ea,
-                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-                height: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-                borderRadius: String(5) + ea,
-                background: GeneralJs.colorChip.white,
-              };
-              for (let i in style) {
-                memoWhite.style[i] = style[i];
-              }
-              memoBox.appendChild(memoWhite);
-
-              memoTitle = GeneralJs.nodes.div.cloneNode(true);
-              memoTitle.insertAdjacentHTML("beforeend", '<b style="color:' + GeneralJs.colorChip.green + '">0. </b> ' + designer + ' 디자이너 메모');
-              style = {
-                position: "absolute",
-                top: String((matrixMargin * 2) + 3) + ea,
-                left: String(matrixMargin * 2) + ea,
-                fontSize: String(14) + ea,
-                fontWeight: String(600),
-                color: GeneralJs.colorChip.black,
-                marginBottom: String(7) + ea,
-              };
-              for (let i in style) {
-                memoTitle.style[i] = style[i];
-              }
-              memoWhite.appendChild(memoTitle);
-
-              memoArea = GeneralJs.nodes.div.cloneNode(true);
-              style = {
-                position: "relative",
-                top: String((matrixMargin * 2) + 3 + 19 + 7) + ea,
-                left: String(matrixMargin * 2) + ea,
-                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-                height: "calc(100% - " + String((matrixMargin * 4) + 3 + 19 + 7) + ea + ")",
-                borderRadius: String(5) + ea,
-                border: "1px solid " + GeneralJs.colorChip.gray2,
-                boxSizing: "border-box",
-              };
-              for (let i in style) {
-                memoArea.style[i] = style[i];
-              }
-
-              memoWhite.appendChild(memoArea);
-
-              memoTextScroll = GeneralJs.nodes.div.cloneNode(true);
-              style = {
-                position: "absolute",
-                top: String((matrixMargin * 2) - 4) + ea,
-                left: String(matrixMargin * 2) + ea,
-                width: "calc(100% - " + String(matrixMargin * 4) + ea + ")",
-                height: "calc(100% - " + String((matrixMargin * 4) - 4) + ea + ")",
-                overflow: "scroll",
-              };
-              for (let i in style) {
-                memoTextScroll.style[i] = style[i];
-              }
-              memoArea.appendChild(memoTextScroll);
-
-              memoText = GeneralJs.nodes.textarea.cloneNode(true);
-              memoText.value = history;
-              style = {
-                position: "absolute",
-                top: String(0) + ea,
-                left: String(0) + ea,
-                width: String(100) + '%',
-                height: String(5000) + ea,
-                fontSize: String(14) + ea,
-                fontWeight: String(300),
-                outline: String(0),
-                border: String(0),
-                lineHeight: String(1.66),
-                wordSpacing: String(-1) + ea,
-                color: GeneralJs.colorChip.black
-              };
-              for (let i in style) {
-                memoText.style[i] = style[i];
-              }
-              memoText.addEventListener("blur", function (e) {
-                const cookies = GeneralJs.getCookiesAll();
-                const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-              });
-              memoText.addEventListener("keypress", function (e) {
-                if (e.keyCode === 13) {
-                  const cookies = GeneralJs.getCookiesAll();
-                  const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-                }
-              });
-
-              memoTextScroll.appendChild(memoText);
-
-              instance.whiteMemoBox = memoBox;
-              div_clone.appendChild(memoBox);
-
-              memoText.focus();
-            });
-            clearTimeout(GeneralJs.timeouts["checkListMemoBox"]);
-            GeneralJs.timeouts["checkListMemoBox"] = null;
-          }, 500);
-
-          instance.whiteMatrixA = div_clone;
-          motherArea.appendChild(div_clone);
-
-        });
-
-      // DEV => designer needs and schedule area =================================================================
-      // =========================================================================================================
-      // =========================================================================================================
-      } else if (false) {
-      // } else if (instance.whiteConvert === 1) {
-
-        //convert animation
-        if (instance.whiteMatrixA !== null) {
-          instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
-        }
-        if (contentsArea.style.animation !== "fadeoutlite 0.3s ease forwards") {
-          contentsArea.style.animation = "fadeoutlite 0.3s ease forwards";
-        }
-        instance.whiteConvert = 3;
-        GeneralJs.timeouts["whiteConvertMatrixB"] = setTimeout(function () {
-          if (instance.whiteMatrixA !== null) {
-            motherArea.removeChild(instance.whiteMatrixA);
-          }
-          instance.whiteConvert = 2;
-          instance.whiteMatrixA = null;
-          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixB"]);
-          GeneralJs.timeouts["whiteConvertMatrixB"] = null;
-        }, 301);
-
-        //start matrixB
-        div_clone = contentsArea.cloneNode(false);
-        div_clone.style.animation = "fadeinlite 0.3s ease forwards";
-
-        const { matrixB, values } = JSON.parse(await GeneralJs.ajaxPromise("button=get" + "&desid=" + desid + "&target=matrixB", "/designerMatrix"));
-        const { xValues, yValues } = values;
-        const classNameConst = "designerMatrixFactor";
-
-        let matrixBase;
-        let matrix;
-        let leftWordWidth;
-        let bottomWordWidth;
-        let margin;
-        let boxNumber;
-        let matrixFactor;
-        let matrixStyle, matrixMargin;
-        let xTitleBoxesTong, yTitleBoxesTong;
-        let xTitleBox, yTitleBox;
-        let xTitleBoxWord, yTitleBoxWord;
-        let x, y;
-        let hoverEvent, leaveEvent, clickEvent;
-        let domBox;
-
-        domBox = [];
-        leftWordWidth = 26;
-        bottomWordWidth = 30;
-        margin = 10;
-        matrixMargin = 6;
-        boxNumber = xValues.length * yValues.length;
-
-        //base
-        matrixBase = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          top: String(0) + ea,
-          left: String(leftMargin) + ea,
-          width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
-          height: String(100) + '%',
-          background: GeneralJs.colorChip.white,
-        };
-        for (let i in style) {
-          matrixBase.style[i] = style[i];
-        }
-
-        //entire matrix
-        matrix = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          top: String(0) + ea,
-          right: String(0) + ea,
-          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
-          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
-          borderRadius: String(5) + ea,
-        };
-        for (let i in style) {
-          matrix.style[i] = style[i];
-        }
-
-        //make boxes
-        matrixStyle = {
-          position: "absolute",
-          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ")",
-          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ")",
-          borderRadius: String(5) + ea,
-          background: GeneralJs.colorChip.white,
-          overflow: "hidden",
-          border: "1px solid #dddddd",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-        };
-
-        hoverEvent = function (e) {
-          const xyArr = this.getAttribute("xy").split("_");
-          const thisLevel = this.getAttribute("level");
-          const [ x, y ] = xyArr;
-          let targets;
-
-          if (this.getAttribute("hover") === "off" && this.getAttribute("toggle") === "off") {
-            targets = document.querySelectorAll('.' + classNameConst + x);
-            for (let dom of targets) {
-              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
-                if (dom.getAttribute("toggle") === "off") {
-                  dom.style.background = "#d5ede4";
-                  dom.setAttribute("hover", "on");
-                }
-              }
-            }
-            this.style.background = "#acdbc9";
-            this.setAttribute("hover", "on");
-          } else {
-            this.style.background = "#acdbc9";
-            this.setAttribute("hover", "on");
-          }
-        }
-
-        leaveEvent = function (e) {
-          const xyArr = this.getAttribute("xy").split("_");
-          const thisLevel = this.getAttribute("level");
-          const [ x, y ] = xyArr;
-          let targets;
-
-          if (this.getAttribute("hover") === "on" && this.getAttribute("toggle") === "off") {
-            targets = document.querySelectorAll('.' + classNameConst + x);
-            for (let dom of targets) {
-              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
-                if (dom.getAttribute("toggle") === "off") {
-                  dom.style.background = "";
-                  dom.setAttribute("hover", "off");
-                }
-              }
-            }
-            this.style.background = "";
-            this.setAttribute("hover", "off");
-          } else {
-            this.style.background = "#2fa678";
-            this.setAttribute("hover", "off");
-          }
-        }
-
-        clickEvent = async function (e) {
-          try {
-            const xyArr = this.getAttribute("xy").split("_");
-            const thisLevel = this.getAttribute("level");
-            const [ x, y ] = xyArr;
-            let targets;
-            let resultArr;
-            let num;
-
-            targets = document.querySelectorAll('.' + classNameConst + x);
-            for (let dom of targets) {
-              if (Number(dom.getAttribute("level")) < Number(thisLevel)) {
-                dom.style.background = "#2fa678";
-                dom.setAttribute("toggle", "on");
-              } else {
-                dom.style.background = "";
-                dom.setAttribute("toggle", "off");
-              }
-            }
-            this.style.background = "#2fa678";
-            this.setAttribute("toggle", "on");
-
-            resultArr = [];
-            for (let arr of domBox) {
-              num = 0;
-              for (let dom of arr) {
-                if (dom.getAttribute("toggle") === "on") {
-                  num = num + 1;
-                }
-              }
-              resultArr.push(num);
-            }
-
-            await GeneralJs.ajaxPromise("button=update" + "&desid=" + desid + "&matrixB=" + JSON.stringify(resultArr), "/designerMatrix");
-          } catch (e) {
-            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-            console.log(e);
-          }
-        }
-
-        for (let i = 0; i < xValues.length; i++) {
-          temp = [];
-          for (let j = 0; j < yValues.length; j++) {
-            temp.push({});
-          }
-          domBox.push(temp);
-        }
-
-        for (let i = 0; i < boxNumber; i++) {
-          x = i % xValues.length;
-          y = Math.floor(i / xValues.length);
-
-          matrixFactor = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in matrixStyle) {
-            matrixFactor.style[j] = matrixStyle[j];
-          }
-          matrixFactor.style.top = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(y) + "))";
-          matrixFactor.style.left = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(x) + "))";
-
-          matrixFactor.classList.add(classNameConst + String(x));
-          matrixFactor.setAttribute("hover", "off");
-          matrixFactor.setAttribute("xy", String(x) + "_" + String(y));
-          matrixFactor.setAttribute("level", yValues[y]);
-
-          matrixFactor.addEventListener("mouseover", hoverEvent);
-          matrixFactor.addEventListener("mouseleave", leaveEvent);
-          matrixFactor.addEventListener("click", clickEvent);
-
-          domBox[x][y] = matrixFactor;
-          matrix.appendChild(matrixFactor);
-        }
-        matrixBase.appendChild(matrix);
-
-        for (let i = 0; i < domBox.length; i++) {
-          for (let j = 0; j < domBox[i].length; j++) {
-            if (j >= matrixB[i]) {
-              domBox[i][domBox[i].length - j - 1].setAttribute("toggle", "off");
-              domBox[i][domBox[i].length - j - 1].style.background = "transparent";
-            } else {
-              domBox[i][domBox[i].length - j - 1].setAttribute("toggle", "on");
-              domBox[i][domBox[i].length - j - 1].style.background = "#2fa678";
-            }
-          }
-        }
-
-        //make x-titles
-        xTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          bottom: String(0) + ea,
-          right: String(0) + ea,
-          width: "calc(100% - " + String(leftWordWidth + margin) + ea + ")",
-          height: String(bottomWordWidth) + ea,
-        };
-        for (let i in style) {
-          xTitleBoxesTong.style[i] = style[i];
-        }
-        style = {
-          position: "absolute",
-          width: "calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ")",
-          height: String(bottomWordWidth) + ea,
-        };
-        style2 = {
-          position: "absolute",
-          width: String(100) + '%',
-          fontSize: String(17) + ea,
-          bottom: String(0),
-          textAlign: "center",
-          fontWeight: String(600),
-        };
-        for (let i = 0; i < xValues.length; i++) {
-          xTitleBox = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in style) {
-            xTitleBox.style[j] = style[j];
-          }
-          xTitleBox.style.left = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (xValues.length - 1)) + ea + ") / " + String(xValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i % xValues.length) + "))";
-
-          xTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in style2) {
-            xTitleBoxWord.style[j] = style2[j];
-          }
-          xTitleBoxWord.textContent = xValues[i];
-          xTitleBox.appendChild(xTitleBoxWord);
-
-          xTitleBoxesTong.appendChild(xTitleBox);
-        }
-        matrixBase.appendChild(xTitleBoxesTong);
-
-        //make ytitles
-        yTitleBoxesTong = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String(leftWordWidth + margin) + ea,
-          height: "calc(100% - " + String(bottomWordWidth + margin) + ea + ")",
-        };
-        for (let i in style) {
-          yTitleBoxesTong.style[i] = style[i];
-        }
-        style = {
-          position: "absolute",
-          width: String(leftWordWidth) + ea,
-          height: "calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ")",
-          left: String(0) + ea,
-        };
-        style2 = {
-          position: "absolute",
-          fontSize: String(18) + ea,
-          top: "calc(50% - " + String(12) + ea + ")",
-          textAlign: "center",
-          fontFamily: "graphik",
-          fontWeight: String(400),
-        };
-        for (let i = 0; i < yValues.length; i++) {
-          yTitleBox = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in style) {
-            yTitleBox.style[j] = style[j];
-          }
-          yTitleBox.style.top = "calc(" + String(0) + ea + " + calc(calc(calc(calc(100% - " + String(matrixMargin * (yValues.length - 1)) + ea + ") / " + String(yValues.length) + ") + " + String(matrixMargin) + ea + ") * " + String(i) + "))";
-
-          yTitleBoxWord = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in style2) {
-            yTitleBoxWord.style[j] = style2[j];
-          }
-          yTitleBoxWord.textContent = yValues[i];
-          yTitleBox.appendChild(yTitleBoxWord);
-
-          yTitleBoxesTong.appendChild(yTitleBox);
-        }
-        matrixBase.appendChild(yTitleBoxesTong);
-
-        div_clone.appendChild(matrixBase);
-
-        instance.whiteMatrixB = div_clone;
-        motherArea.appendChild(div_clone);
-
-      // =========================================================================================================
-      // =========================================================================================================
-      } else if (instance.whiteConvert === 1 || instance.whiteConvert === 2) {
-      // } else if (instance.whiteConvert === 2) {
-
-        //disconnect sse
-        es.close();
-        esConnect = false;
-        es = null;
-        instance.whiteSse = null;
-
-        //convert animation
-        if (instance.whiteMatrixA !== null) {
-          instance.whiteMatrixA.style.animation = "fadeoutlite 0.3s ease forwards";
-        }
-        if (instance.whiteMatrixB !== null) {
-          instance.whiteMatrixB.style.animation = "fadeoutlite 0.3s ease forwards";
-        }
-        contentsArea.style.opacity = String(1);
-        instance.whiteConvert = 3;
-        GeneralJs.timeouts["whiteConvertMatrixReturn"] = setTimeout(function () {
-          if (instance.whiteMatrixA !== null) {
-            motherArea.removeChild(instance.whiteMatrixA);
-          }
-          if (instance.whiteMatrixB !== null) {
-            motherArea.removeChild(instance.whiteMatrixB);
-          }
-          instance.whiteConvert = 0;
-          instance.whiteMatrixA = null;
-          instance.whiteMatrixB = null;
-          clearTimeout(GeneralJs.timeouts["whiteConvertMatrixReturn"]);
-          GeneralJs.timeouts["whiteConvertMatrixReturn"] = null;
-        }, 301);
-
-      }
-
-    } catch (e) {
-      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-      console.log(e);
     }
   }
 }
@@ -7144,7 +5637,1525 @@ DesignerJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
-DesignerJs.prototype.checkListView = async function () {
+// 06 Designer checkList
+
+// checkList data
+
+DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
+  const checkListData = [
+    {
+      name: "일반",
+      children: [
+        {
+          name: "성함",
+          value: function (designer) {
+            return designer.designer;
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "연락처",
+          value: function (designer) {
+            return designer.information.phone;
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "경력",
+          value: function (designer) {
+            const { information } = designer;
+            const { relatedY, relatedM, startY, startM } = information.business.career;
+            return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
+          },
+          update: function (text) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let tempArr;
+            let arr0, arr1;
+            let relatedY, relatedM, startY, startM;
+            let divText;
+            updateQuery = {};
+            divText = "";
+            if (!/\|/g.test(text)) {
+              return errorObj;
+            } else {
+              tempArr = text.split('|');
+              if (tempArr.length !== 2) {
+                return errorObj;
+              } else {
+                if (/년/g.test(tempArr[0]) && /년/g.test(tempArr[1])) {
+                  arr0 = tempArr[0].split('년');
+                  arr1 = tempArr[1].split('년');
+                  if (arr0.length === 2 && arr1.length === 2) {
+                    if (arr0[0].replace(/[^0-9]/gi, '').length === 0) {
+                      return errorObj;
+                    }
+                    if (arr0[1].replace(/[^0-9]/gi, '').length === 0) {
+                      return errorObj;
+                    }
+                    if (arr1[0].replace(/[^0-9]/gi, '').length === 0) {
+                      return errorObj;
+                    }
+                    if (arr1[1].replace(/[^0-9]/gi, '').length === 0) {
+                      return errorObj;
+                    }
+                    if (Number.isNaN(Number(arr0[0].replace(/[^0-9]/gi, '')))) {
+                      return errorObj;
+                    }
+                    if (Number.isNaN(Number(arr0[1].replace(/[^0-9]/gi, '')))) {
+                      return errorObj;
+                    }
+                    if (Number.isNaN(Number(arr1[0].replace(/[^0-9]/gi, '')))) {
+                      return errorObj;
+                    }
+                    if (Number.isNaN(Number(arr1[1].replace(/[^0-9]/gi, '')))) {
+                      return errorObj;
+                    }
+                    relatedY = Number(arr0[0].replace(/[^0-9]/gi, ''));
+                    relatedM = Number(arr0[1].replace(/[^0-9]/gi, ''));
+                    startY = Number(arr1[0].replace(/[^0-9]/gi, ''));
+                    startM = Number(arr1[1].replace(/[^0-9]/gi, ''));
+                    if (relatedY < 0) {
+                      return errorObj;
+                    }
+                    if (relatedM < 0 || relatedM > 12) {
+                      return errorObj;
+                    }
+                    if (startY < 1900 || startY > 4000) {
+                      return errorObj;
+                    }
+                    if (startM <= 0 || startM > 12) {
+                      return errorObj;
+                    }
+                    updateQuery["information.business.career.relatedY"] = relatedY;
+                    updateQuery["information.business.career.relatedM"] = relatedM;
+                    updateQuery["information.business.career.startY"] = startY;
+                    updateQuery["information.business.career.startM"] = startM;
+                    divText = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
+                  } else {
+                    return errorObj;
+                  }
+                } else {
+                  return errorObj;
+                }
+              }
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
+        }
+      ]
+    },
+    {
+      name: "공간",
+      children: [
+        {
+          name: "주소",
+          value: function (designer) {
+            return (designer.information.address.length === 0) ? "주소 없음" : designer.information.address[0];
+          },
+          update: function (text) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            updateQuery = {};
+            divText = "";
+            if (text === '') {
+              return errorObj;
+            } else {
+              if (/없음/gi.test(text)) {
+                updateQuery["information.address"] = [ text ];
+              } else {
+                updateQuery["information.address.0"] = text;
+              }
+            }
+            return { updateQuery, text };
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "이동 수단",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "대중교통",
+              "자동차"
+            ];
+            value = [
+              (/대중/.test(designer.analytics.region.transportation)) ? 1 : 0,
+              (/대중/.test(designer.analytics.region.transportation)) ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              "대중교통",
+              "자동차"
+            ];
+            target = null;
+            for (let i = 0; i < value.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+                break;
+              }
+            }
+            if (target === null) {
+              target = contents[0];
+            }
+            return { "analytics.region.transportation": target };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+      ]
+    },
+    {
+      name: "작업",
+      children: [
+        {
+          name: "활동 범위",
+          value: function (designer) {
+            const { matrix } = designer.analytics.project;
+            let contents, value;
+            contents = [
+              "홈퍼니싱 프리미엄",
+              "홈스타일링 프리미엄",
+              "토탈 스타일링 프리미엄",
+              "설계 변경 프리미엄",
+              "홈퍼니싱 일반",
+              "홈스타일링 일반",
+              "토탈 스타일링 일반",
+              "설계 변경 일반",
+            ];
+            value = [
+              matrix[0][2],
+              matrix[1][2],
+              matrix[2][2],
+              matrix[3][2],
+              matrix[0][1],
+              matrix[1][1],
+              matrix[2][1],
+              matrix[3][1],
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            let xy, updateQuery;
+            const positionConst = "analytics.project.matrix.";
+            xy = [
+              '0.2',
+              '1.2',
+              '2.2',
+              '3.2',
+              '0.1',
+              '1.1',
+              '2.1',
+              '3.1',
+            ];
+            updateQuery = {};
+            for (let i = 0; i < value.length; i++) {
+              updateQuery[positionConst + xy[i]] = value[i];
+            }
+            return updateQuery;
+          },
+          height: factorHeight * 2,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "부분 공간",
+          value: function (designer) {
+            const { matrix } = designer.analytics.project;
+            let contents, value;
+            contents = [
+              "홈퍼니싱 부분 공간",
+              "홈스타일링 부분 공간",
+              "토탈 스타일링 부분 공간",
+              "설계 변경 부분 공간",
+            ];
+            value = [
+              matrix[0][0],
+              matrix[1][0],
+              matrix[2][0],
+              matrix[3][0],
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            let xy, updateQuery;
+            const positionConst = "analytics.project.matrix.";
+            xy = [
+              '0.0',
+              '1.0',
+              '2.0',
+              '3.0'
+            ];
+            updateQuery = {};
+            for (let i = 0; i < value.length; i++) {
+              updateQuery[positionConst + xy[i]] = value[i];
+            }
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "온라인",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.project.online ? 1 : 0,
+              designer.analytics.project.online ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.project.online";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "고객 예산 범위",
+          value: function (designer) {
+            let { min, max } = designer.analytics.project.operationBudget;
+            let contentsValues;
+            let tempArr;
+            let contents, value;
+
+            min = min / 10000;
+            max = max / 10000;
+
+            contents = [
+              "0 - 500",
+              "500 - 1000",
+              "1000 - 2000",
+              "2000 - 5000",
+              "5000 -",
+            ];
+
+            contentsValues = [];
+            for (let i = 0; i < contents.length; i++) {
+              tempArr = contents[i].split(' - ');
+              if (tempArr.length === 1) {
+                tempArr.push("10000");
+              }
+              for (let j = 0; j < tempArr.length; j++) {
+                tempArr[j] = Number(tempArr[j].replace(/[^0-9]/g, ''));
+              }
+              if (tempArr.length !== 2) {
+                throw new Error("range error");
+              }
+              contentsValues.push(tempArr);
+            }
+            value = [];
+            for (let i = 0; i < contents.length; i++) {
+              value.push((min <= contentsValues[i][0] && contentsValues[i][1] <= max) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents;
+            let min = null, max = null;
+            contents = [
+              [ 0, 500 ],
+              [ 500, 1000 ],
+              [ 1000, 2000 ],
+              [ 2000, 5000 ],
+              [ 5000, 10000 ],
+            ];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                min = i;
+                break;
+              }
+            }
+            for (let i = contents.length - 1; i > -1; i--) {
+              if (value[i] === 1) {
+                max = i;
+                break;
+              }
+            }
+            if (min === null || max === null) {
+              min = 0;
+              max = 0;
+            }
+            return { "analytics.project.operationBudget": { min: (contents[min][0] * 10000), max: (contents[max][1] * 10000) } };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 5,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "1차 제안 시간",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "1주일 이내",
+              "2주일 이내",
+              "3주일 이내",
+              "3주 이상"
+            ];
+            value = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (designer.analytics.project.time.first === ((i + 1) * 7)) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              7,
+              14,
+              21,
+              28
+            ];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = i;
+              }
+            }
+            return { "analytics.project.time.first": contents[target] };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "페이퍼 워크",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "도면",
+              "3D",
+              "컨셉 제안",
+              "마감재 제안",
+              "제품 리스트",
+              "참고 이미지",
+              "드로잉",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(designer.analytics.project.paperWork.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              "도면",
+              "3D",
+              "컨셉 제안",
+              "마감재 제안",
+              "제품 리스트",
+              "참고 이미지",
+              "드로잉",
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            return { "analytics.project.paperWork": target };
+          },
+          height: factorHeight * 2.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+      ]
+    },
+    {
+      name: "시공",
+      children: [
+        {
+          name: "시공 능력",
+          value: function (designer) {
+            let contents, value;
+            contents = [ "1단계", "2단계", "3단계" ];
+            value = [ 0, 0, 0 ];
+            if (value[designer.analytics.construct.level - 1] === undefined) {
+              throw new Error("level error");
+            }
+            value[designer.analytics.construct.level - 1] = 1;
+            return { contents, value };
+          },
+          update: function (value) {
+            let target;
+            target = null;
+            for (let i = 0; i < value.length; i++) {
+              if (value[i] === 1) {
+                target = i + 1;
+              }
+            }
+            if (target === null) {
+              target = 1;
+            }
+            return { "analytics.construct.level": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 감리",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.construct.possible.supervision ? 1 : 0,
+              designer.analytics.construct.possible.supervision ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.possible.supervision";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "시공 방식 (S)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[0].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.0.contract";
+            let contents, updateQuery, target;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "시공 가능 (S)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[0].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.0.possible";
+            let contents, updateQuery, target;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "시공 방식 (T)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[1].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.1.contract";
+            let contents, updateQuery, target;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "시공 가능 (T)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[1].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.1.possible";
+            let contents, updateQuery, target;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "시공 방식 (XT)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[2].contract.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.2.contract";
+            let contents, updateQuery, target;
+            contents = [
+              "직접 계약, 직접 감리",
+              "직접 계약, 외주 감리",
+              "협업사 계약",
+              "공정별 연결"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "시공 가능 (XT)",
+          value: function (designer) {
+            const constructCase = designer.analytics.construct.case;
+            if (!Array.isArray(constructCase)) {
+              throw new Error("invaild value");
+            }
+            if (constructCase.length !== 3) {
+              throw new Error("invaild value");
+            }
+            let contents, value;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            value = [];
+            for (let i of contents) {
+              value.push(constructCase[2].possible.includes(i) ? 1 : 0);
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.construct.case.2.possible";
+            let contents, updateQuery, target;
+            contents = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            updateQuery = {};
+            updateQuery[position] = target;
+            return updateQuery;
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+      ]
+    },
+    {
+      name: "스타일링",
+      children: [
+        {
+          name: "스타일링 능력",
+          value: function (designer) {
+            let contents, value;
+            contents = [ "1단계", "2단계", "3단계" ];
+            value = [ 0, 0, 0 ];
+            if (value[designer.analytics.styling.level - 1] === undefined) {
+              throw new Error("level error");
+            }
+            value[designer.analytics.styling.level - 1] = 1;
+            return { contents, value };
+          },
+          update: function (value) {
+            let target;
+            target = null;
+            for (let i = 0; i < value.length; i++) {
+              if (value[i] === 1) {
+                target = i + 1;
+              }
+            }
+            if (target === null) {
+              target = 1;
+            }
+            return { "analytics.styling.level": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "제안 방식",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "순차 제안",
+              "한번에 제안"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.analytics.styling.method) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              "순차 제안",
+              "한번에 제안"
+            ];
+            target = null;
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+              }
+            }
+            if (target === null) {
+              target = contents[0];
+            }
+            return { "analytics.styling.method": target };
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "빌트인 가구 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.furniture.builtin ? 1 : 0,
+              designer.analytics.styling.furniture.builtin ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.styling.furniture.builtin";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "디자인 가구 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.furniture.design ? 1 : 0,
+              designer.analytics.styling.furniture.design ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.styling.furniture.design";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "커튼 패브릭 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.fabric.curtain ? 1 : 0,
+              designer.analytics.styling.fabric.curtain ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.styling.fabric.curtain";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "베딩 패브릭 제작",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.styling.fabric.bedding ? 1 : 0,
+              designer.analytics.styling.fabric.bedding ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.styling.fabric.bedding";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "패브릭 발주 방식",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (designer.analytics.styling.fabric.method === i) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작"
+            ];
+            target = null;
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+              }
+            }
+            if (target === null) {
+              target = contents[0];
+            }
+            return { "analytics.styling.fabric.method": target };
+          },
+          height: factorHeight * 1.5,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "스타일 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsKey = [
+              "modern",
+              "classic",
+              "natural",
+              "mixmatch",
+              "scandinavian",
+              "vintage",
+              "oriental",
+              "exotic",
+            ];
+            contentsMother = {
+              modern: "모던",
+              classic: "클래식",
+              natural: "내추럴",
+              mixmatch: "믹스매치",
+              scandinavian: "북유럽",
+              vintage: "빈티지",
+              oriental: "오리엔탈",
+              exotic: "이그저틱",
+            };
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.style[i] - 1);
+            }
+            return { contents, value };
+          },
+          update: function (z, t) {
+            const position = "analytics.styling.tendency.style.";
+            let contents, updateQuery;
+            contents = [
+              "modern",
+              "classic",
+              "natural",
+              "mixmatch",
+              "scandinavian",
+              "vintage",
+              "oriental",
+              "exotic",
+            ];
+            updateQuery = {};
+            updateQuery[position + contents[z]] = t + 1;
+            return updateQuery;
+          },
+          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "텍스처 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsKey = [
+              "darkWood",
+              "whiteWood",
+              "coating",
+              "metal",
+            ];
+            contentsMother = {
+              darkWood: "진한 우드",
+              whiteWood: "연한 우드",
+              coating: "도장",
+              metal: "금속",
+            };
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.texture[i] - 1);
+            }
+            return { contents, value };
+          },
+          update: function (z, t) {
+            const position = "analytics.styling.tendency.texture.";
+            let contents, updateQuery;
+            contents = [
+              "darkWood",
+              "whiteWood",
+              "coating",
+              "metal",
+            ];
+            updateQuery = {};
+            updateQuery[position + contents[z]] = t + 1;
+            return updateQuery;
+          },
+          height: (tendencyFactorHeight * 4) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "컬러톤 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsKey = [
+              "darkWood",
+              "whiteWood",
+              "highContrast",
+              "vivid",
+              "white",
+              "mono",
+              "bright",
+              "dark",
+            ];
+            contentsMother = {
+              darkWood: "다크 우드",
+              whiteWood: "화이트 우드",
+              highContrast: "고대비",
+              vivid: "비비드",
+              white: "화이트",
+              mono: "모노톤",
+              bright: "밝은톤",
+              dark: "어두운톤",
+            };
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.color[i] - 1);
+            }
+            return { contents, value };
+          },
+          update: function (z, t) {
+            const position = "analytics.styling.tendency.color.";
+            let contents, updateQuery;
+            contents = [
+              "darkWood",
+              "whiteWood",
+              "highContrast",
+              "vivid",
+              "white",
+              "mono",
+              "bright",
+              "dark",
+            ];
+            updateQuery = {};
+            updateQuery[position + contents[z]] = t + 1;
+            return updateQuery;
+          },
+          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+        },
+        {
+          name: "밀도 경향성",
+          value: function (designer) {
+            let contents, contentsKey, contentsMother, value;
+            contentsKey = [
+              "maximun",
+              "minimum",
+            ];
+            contentsMother = {
+              maximun: "맥시멈",
+              minimum: "미니멈",
+            };
+            contents = [];
+            for (let i of contentsKey) {
+              contents.push(contentsMother[i]);
+            }
+            value = [];
+            for (let i of contentsKey) {
+              value.push(designer.analytics.styling.tendency.density[i] - 1);
+            }
+            return { contents, value };
+          },
+          update: function (z, t) {
+            const position = "analytics.styling.tendency.density.";
+            let contents, updateQuery;
+            contents = [
+              "maximun",
+              "minimum",
+            ];
+            updateQuery = {};
+            updateQuery[position + contents[z]] = t + 1;
+            updateQuery[position + contents[1 - z]] = 10 - (t + 1);
+            return updateQuery;
+          },
+          height: (tendencyFactorHeight * 2) + (factorHeight * 0.5),
+          width: factorWidth - tendencyIndent,
+          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
+          factorHeight: tendencyFactorHeight,
+          type: "tendency",
+          opposite: true,
+        },
+      ]
+    },
+    {
+      name: "구매",
+      children: [
+        {
+          name: "구매 대행",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.purchase.agencies ? 1 : 0,
+              designer.analytics.purchase.agencies ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.purchase.agencies";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "조립 설치 서비스",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "제공",
+              "미제공"
+            ];
+            value = [
+              designer.analytics.purchase.setting.install ? 1 : 0,
+              designer.analytics.purchase.setting.install ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.purchase.setting.install";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "정리 수납 상담",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.purchase.setting.storage ? 1 : 0,
+              designer.analytics.purchase.setting.storage ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.purchase.setting.storage";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+      ]
+    },
+    {
+      name: "성격",
+      children: [
+        {
+          name: "미팅 적극성",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "높음",
+              "낮음"
+            ];
+            value = [
+              designer.analytics.etc.personality[0].value ? 1 : 0,
+              designer.analytics.etc.personality[0].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.etc.personality.0.value";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "미팅 준비성",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "높음",
+              "낮음"
+            ];
+            value = [
+              designer.analytics.etc.personality[1].value ? 1 : 0,
+              designer.analytics.etc.personality[1].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.etc.personality.1.value";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "작업 속도",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "빠름",
+              "느림"
+            ];
+            value = [
+              designer.analytics.etc.personality[2].value ? 1 : 0,
+              designer.analytics.etc.personality[2].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.etc.personality.2.value";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "진행 스타일",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "리드",
+              "순응"
+            ];
+            value = [
+              designer.analytics.etc.personality[3].value ? 1 : 0,
+              designer.analytics.etc.personality[3].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.etc.personality.3.value";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "고객 맞춤",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "적극",
+              "소극"
+            ];
+            value = [
+              designer.analytics.etc.personality[4].value ? 1 : 0,
+              designer.analytics.etc.personality[4].value ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value) {
+            const position = "analytics.etc.personality.4.value";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "홈리에종 관계",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "지속가능성 높음",
+              "그냥 평범",
+              "확인중",
+              "좋지 않음"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.analytics.etc.relation) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value) {
+            let contents, target;
+            contents = [
+              "지속가능성 높음",
+              "그냥 평범",
+              "확인중",
+              "좋지 않음"
+            ];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+              }
+            }
+            return { "analytics.etc.relation": target };
+          },
+          height: factorHeight * 1.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+      ]
+    }
+  ];
+  return checkListData;
+}
+
+// checkList method
+
+DesignerJs.prototype.checkListView = async function (invisible = false) {
   const instance = this;
   try {
     const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
@@ -7180,6 +7191,7 @@ DesignerJs.prototype.checkListView = async function () {
         paddingBottom: String(margin * 3) + ea,
         width: withOut(grayBarWidth + (margin * 3), ea),
         height: "auto",
+        animation: !invisible ? "fadeup 0.3s ease forwards" : "invisible 0.3s ease forwards",
       }
     });
 
@@ -7292,6 +7304,12 @@ DesignerJs.prototype.checkListView = async function () {
       }
     });
 
+    //standard doms event
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      this.standardDoms[i].addEventListener("click", (e) => {
+        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + instance.standardDoms[i].getAttribute("desid");
+      });
+    }
 
   } catch (e) {
     console.log(e);
@@ -7356,7 +7374,9 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = f
       }
     }
     standardBar.style.position = "fixed";
-    this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
+    if (/fade/gi.test(this.checkListBaseList.style.animation)) {
+      this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
+    }
     totalMother.scrollTo({ top: 0, behavior: "smooth" });
     this.checkListDetail(desid, noAnimation);
     this.checkListIconSet(desid, noAnimation);
@@ -7372,22 +7392,22 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   const { totalMother, ea, grayBarWidth } = this;
   const designer = this.designers.pick(desid);
   const { information, analytics } = designer;
+  const matrixButtonConst = "matrixButtons_" + desid;
   let margin;
   let baseTong0, baseTong;
   let matrix;
   let tempArr;
   let tempObj, nodeArr;
-  let level0, level1;
   let eachTotalTong, eachNameTong, eachValueTong;
   let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
   let size;
   let tempMatrix;
-  let factorHeight, factorWidth;
-  let temp;
-  let tendencyTop, tendencyHeight;
-  let tendencyIndent, tendencyWidthIndent;
   let alphabetWidth;
+  let temp;
+  let factorHeight, factorWidth;
+  let tendencyTop, tendencyHeight;
+  let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
 
   margin = 8;
   level1Width = 210;
@@ -7396,14 +7416,17 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   leftMargin = 34;
   bottomMargin = 15;
   size = 17;
-  factorHeight = 38;
-  factorWidth = 210;
   tendencyTop = 3;
   tendencyHeight = 16;
+  alphabetWidth = 30;
+
+  factorHeight = 38;
+  factorWidth = 210;
   tendencyFactorHeight = 30;
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
-  alphabetWidth = 30;
+
+  const checkListData = DesignerJs.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -7432,929 +7455,19 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
     }
   });
 
-  level0 = [
-    {
-      name: "일반",
-      children: [
-        {
-          name: "성함",
-          value: function (designer) {
-            return designer.designer;
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "연락처",
-          value: function (designer) {
-            return designer.information.phone;
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "경력",
-          value: function (designer) {
-            const { information } = designer;
-            const { relatedY, relatedM, startY, startM } = information.business.career;
-            return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-          },
-          height: factorHeight,
-          type: "string",
-        }
-      ]
-    },
-    {
-      name: "공간",
-      children: [
-        {
-          name: "주소",
-          value: function (designer) {
-            return (information.address.length === 0) ? "주소 없음" : information.address[0];
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "이동 수단",
-          value: function (designer) {
-            return designer.analytics.region.transportation;
-          },
-          height: factorHeight,
-          type: "string",
-        },
-      ]
-    },
-    {
-      name: "작업",
-      children: [
-        {
-          name: "활동 범위",
-          value: function (designer) {
-            const { matrix } = designer.analytics.project;
-            let contents, value;
-            contents = [
-              "홈퍼니싱 프리미엄",
-              "홈스타일링 프리미엄",
-              "토탈 스타일링 프리미엄",
-              "설계 변경 프리미엄",
-              "홈퍼니싱 일반",
-              "홈스타일링 일반",
-              "토탈 스타일링 일반",
-              "설계 변경 일반",
-            ];
-            value = [
-              matrix[0][2],
-              matrix[1][2],
-              matrix[2][2],
-              matrix[3][2],
-              matrix[0][1],
-              matrix[1][1],
-              matrix[2][1],
-              matrix[3][1],
-            ];
-            return { contents, value };
-          },
-          height: factorHeight * 2,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "부분 공간",
-          value: function (designer) {
-            const { matrix } = designer.analytics.project;
-            let contents, value;
-            contents = [
-              "홈퍼니싱 부분 공간",
-              "홈스타일링 부분 공간",
-              "토탈 스타일링 부분 공간",
-              "설계 변경 부분 공간",
-            ];
-            value = [
-              matrix[0][0],
-              matrix[1][0],
-              matrix[2][0],
-              matrix[3][0],
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "온라인",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.project.online ? 1 : 0,
-              designer.analytics.project.online ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "고객 예산 범위",
-          value: function (designer) {
-            let { min, max } = designer.analytics.project.operationBudget;
-            let contentsValues;
-            let tempArr;
-            let contents, value;
-
-            min = min / 10000;
-            max = max / 10000;
-
-            contents = [
-              "0 - 500",
-              "500 - 1000",
-              "1000 - 2000",
-              "2000 - 5000",
-              "5000 -",
-            ];
-
-            contentsValues = [];
-            for (let i = 0; i < contents.length; i++) {
-              tempArr = contents[i].split(' - ');
-              if (tempArr.length === 1) {
-                tempArr.push("10000");
-              }
-              for (let j = 0; j < tempArr.length; j++) {
-                tempArr[j] = Number(tempArr[j].replace(/[^0-9]/g, ''));
-              }
-              if (tempArr.length !== 2) {
-                throw new Error("range error");
-              }
-              contentsValues.push(tempArr);
-            }
-            value = [];
-            for (let i = 0; i < contents.length; i++) {
-              value.push((min <= contentsValues[i][0] && contentsValues[i][1] <= max) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 5,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "1차 제안 시간",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "1주일 이내",
-              "2주일 이내",
-              "3주일 이내",
-              "3주 이상"
-            ];
-            value = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (designer.analytics.project.time.first === ((i + 1) * 7)) {
-                value.push(1);
-              } else {
-                value.push(0);
-              }
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "페이퍼 워크",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "도면",
-              "3D",
-              "컨셉 제안",
-              "마감재 제안",
-              "제품 리스트",
-              "참고 이미지",
-              "드로잉",
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(designer.analytics.project.paperWork.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight * 2.1,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-      ]
-    },
-    {
-      name: "시공",
-      children: [
-        {
-          name: "시공 능력",
-          value: function (designer) {
-            let contents, value;
-            contents = [ "1단계", "2단계", "3단계" ];
-            value = [ 0, 0, 0 ];
-            if (value[designer.analytics.construct.level - 1] === undefined) {
-              throw new Error("level error");
-            }
-            value[designer.analytics.construct.level - 1] = 1;
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 3,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 감리",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.construct.possible.supervision ? 1 : 0,
-              designer.analytics.construct.possible.supervision ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 방식 (S)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[0].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 가능 (S)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[0].possible.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 방식 (T)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[1].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 가능 (T)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[1].possible.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 방식 (XT)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[2].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "시공 가능 (XT)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[2].possible.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          height: factorHeight * 1.1,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-      ]
-    },
-    {
-      name: "스타일링",
-      children: [
-        {
-          name: "스타일링 능력",
-          value: function (designer) {
-            let contents, value;
-            contents = [ "1단계", "2단계", "3단계" ];
-            value = [ 0, 0, 0 ];
-            if (value[designer.analytics.styling.level - 1] === undefined) {
-              throw new Error("level error");
-            }
-            value[designer.analytics.styling.level - 1] = 1;
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 3,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "제안 방식",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "순차 제안",
-              "한번에 제안"
-            ];
-            value = [];
-            for (let i of contents) {
-              if (i === designer.analytics.styling.method) {
-                value.push(1);
-              } else {
-                value.push(0);
-              }
-            }
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 3,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "빌트인 가구 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.furniture.builtin ? 1 : 0,
-              designer.analytics.styling.furniture.builtin ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "디자인 가구 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.furniture.design ? 1 : 0,
-              designer.analytics.styling.furniture.design ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "커튼 패브릭 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.fabric.curtain ? 1 : 0,
-              designer.analytics.styling.fabric.curtain ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "베딩 패브릭 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.fabric.bedding ? 1 : 0,
-              designer.analytics.styling.fabric.bedding ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "패브릭 발주 방식",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "업체 연결",
-              "기성 제품 추천",
-              "직접 제작"
-            ];
-            value = [];
-            for (let i of contents) {
-              if (designer.analytics.styling.fabric.method === i) {
-                value.push(1);
-              } else {
-                value.push(0);
-              }
-            }
-            return { contents, value };
-          },
-          height: factorHeight * 1.5,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "스타일 경향성",
-          value: function (designer) {
-            let contents, contentsKey, contentsMother, value;
-            contentsMother = {
-              modern: "모던",
-              classic: "클래식",
-              natural: "내추럴",
-              mixmatch: "믹스매치",
-              scandinavian: "북유럽",
-              vintage: "빈티지",
-              oriental: "오리엔탈",
-              exotic: "이그저틱",
-            };
-            contentsKey = Object.keys(contentsMother);
-            contents = [];
-            for (let i of contentsKey) {
-              contents.push(contentsMother[i]);
-            }
-            value = [];
-            for (let i of contentsKey) {
-              value.push(designer.analytics.styling.tendency.style[i]);
-            }
-            return { contents, value };
-          },
-          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
-          width: factorWidth - tendencyIndent,
-          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
-          factorHeight: tendencyFactorHeight,
-          type: "tendency",
-        },
-        {
-          name: "텍스처 경향성",
-          value: function (designer) {
-            let contents, contentsKey, contentsMother, value;
-            contentsMother = {
-              darkWood: "진한 우드",
-              whiteWood: "연한 우드",
-              coating: "도장",
-              metal: "금속",
-            };
-            contentsKey = Object.keys(contentsMother);
-            contents = [];
-            for (let i of contentsKey) {
-              contents.push(contentsMother[i]);
-            }
-            value = [];
-            for (let i of contentsKey) {
-              value.push(designer.analytics.styling.tendency.texture[i]);
-            }
-            return { contents, value };
-          },
-          height: (tendencyFactorHeight * 4) + (factorHeight * 0.7),
-          width: factorWidth - tendencyIndent,
-          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
-          factorHeight: tendencyFactorHeight,
-          type: "tendency",
-        },
-        {
-          name: "컬러톤 경향성",
-          value: function (designer) {
-            let contents, contentsKey, contentsMother, value;
-            contentsMother = {
-              darkWood: "다크 우드",
-              whiteWood: "화이트 우드",
-              highContrast: "고대비",
-              vivid: "비비드",
-              white: "화이트",
-              mono: "모노톤",
-              bright: "밝은톤",
-              dark: "어두운톤",
-            };
-            contentsKey = Object.keys(contentsMother);
-            contents = [];
-            for (let i of contentsKey) {
-              contents.push(contentsMother[i]);
-            }
-            value = [];
-            for (let i of contentsKey) {
-              value.push(designer.analytics.styling.tendency.color[i]);
-            }
-            return { contents, value };
-          },
-          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
-          width: factorWidth - tendencyIndent,
-          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
-          factorHeight: tendencyFactorHeight,
-          type: "tendency",
-        },
-        {
-          name: "밀도 경향성",
-          value: function (designer) {
-            let contents, contentsKey, contentsMother, value;
-            contentsMother = {
-              modern: "맥시멈",
-              classic: "미니멈",
-            };
-            contentsKey = Object.keys(contentsMother);
-            contents = [];
-            for (let i of contentsKey) {
-              contents.push(contentsMother[i]);
-            }
-            value = [];
-            for (let i of contentsKey) {
-              value.push(designer.analytics.styling.tendency.density[i]);
-            }
-            return { contents, value };
-          },
-          height: (tendencyFactorHeight * 2) + (factorHeight * 0.5),
-          width: factorWidth - tendencyIndent,
-          totalWidth: (factorWidth * 4) + tendencyWidthIndent,
-          factorHeight: tendencyFactorHeight,
-          type: "tendency",
-        },
-      ]
-    },
-    {
-      name: "구매",
-      children: [
-        {
-          name: "구매 대행",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.purchase.agencies ? 1 : 0,
-              designer.analytics.purchase.agencies ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "조립 설치 서비스",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "제공",
-              "미제공"
-            ];
-            value = [
-              designer.analytics.purchase.setting.install ? 1 : 0,
-              designer.analytics.purchase.setting.install ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "정리 수납 상담",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.purchase.setting.storage ? 1 : 0,
-              designer.analytics.purchase.setting.storage ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight * 1.1,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-      ]
-    },
-    {
-      name: "성격",
-      children: [
-        {
-          name: "미팅 적극성",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "높음",
-              "낮음"
-            ];
-            value = [
-              designer.analytics.etc.personality[0].value ? 1 : 0,
-              designer.analytics.etc.personality[0].value ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "미팅 준비성",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "높음",
-              "낮음"
-            ];
-            value = [
-              designer.analytics.etc.personality[1].value ? 1 : 0,
-              designer.analytics.etc.personality[1].value ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "작업 속도",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "빠름",
-              "느림"
-            ];
-            value = [
-              designer.analytics.etc.personality[2].value ? 1 : 0,
-              designer.analytics.etc.personality[2].value ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "진행 스타일",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "리드",
-              "순응"
-            ];
-            value = [
-              designer.analytics.etc.personality[3].value ? 1 : 0,
-              designer.analytics.etc.personality[3].value ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "고객 맞춤",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "적극",
-              "소극"
-            ];
-            value = [
-              designer.analytics.etc.personality[4].value ? 1 : 0,
-              designer.analytics.etc.personality[4].value ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "홈리에종 관계",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "지속가능성 높음",
-              "그냥 평범",
-              "확인중",
-              "좋지 않음"
-            ];
-            value = [];
-            for (let i of contents) {
-              if (i === designer.analytics.etc.relation) {
-                value.push(1);
-              } else {
-                value.push(0);
-              }
-            }
-            return { contents, value };
-          },
-          height: factorHeight * 1.1,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-      ]
-    }
-  ];
-
-  for (let i = 0; i < level0.length; i++) {
+  for (let i = 0; i < checkListData.length; i++) {
     nodeArr = createNodes([
       {
         mother: baseTong,
         style: {
           position: "relative",
           width: String(100) + '%',
-          borderBottom: i !== level0.length - 1 ? "1px solid " + colorChip.gray4 : "",
+          borderBottom: i !== checkListData.length - 1 ? "1px solid " + colorChip.gray4 : "",
         }
       },
       {
         mother: -1,
-        text: level0[i].name,
+        text: checkListData[i].name,
         style: {
           position: "absolute",
           fontSize: String(size) + ea,
@@ -8396,6 +7509,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
           color: colorChip.green,
           bottom: String(topMargin) + ea,
           right: String(leftMargin) + ea,
+          zIndex: String(2),
         }
       },
     ]);
@@ -8404,7 +7518,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
     eachNameTong = nodeArr[2];
     eachValueTong = nodeArr[3];
 
-    for (let j = 0; j < level0[i].children.length; j++) {
+    for (let j = 0; j < checkListData[i].children.length; j++) {
       tempArr = [];
       tempObj = {
         mother: eachNameTong,
@@ -8415,74 +7529,242 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
           fontSize: String(size) + ea,
           fontWeight: String(200),
           color: colorChip.green,
-          height: String(level0[i].children[j].height) + ea,
+          height: String(checkListData[i].children[j].height) + ea,
           width: String(alphabetWidth) + ea,
         }
       };
       tempArr.push(tempObj);
       tempObj = {
         mother: eachNameTong,
-        text: level0[i].children[j].name,
+        text: checkListData[i].children[j].name,
         style: {
           display: "inline-block",
           position: "relative",
           fontSize: String(size) + ea,
           fontWeight: String(500),
           color: colorChip.black,
-          height: String(level0[i].children[j].height) + ea,
+          height: String(checkListData[i].children[j].height) + ea,
           width: withOut(alphabetWidth, ea),
         }
       };
       tempArr.push(tempObj);
-      tempObj = {
-        mother: eachValueTong,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(size) + ea,
-          fontWeight: String(400),
-          color: colorChip.black,
-          height: String(level0[i].children[j].height) + ea,
-        }
-      };
-      if (level0[i].children[j].type === "string") {
-        tempObj.text = (typeof level0[i].children[j].value === "function") ? level0[i].children[j].value(designer) : "NULL";
-        tempArr.push(tempObj);
-      } else if (level0[i].children[j].type === "matrix") {
-        tempMatrix = level0[i].children[j].value(designer);
-        tempObj.style = {
-          display: "block",
-          position: "relative",
-          width: String(level0[i].children[j].totalWidth) + ea,
-          height: String(level0[i].children[j].height) + ea,
+
+      if (checkListData[i].children[j].type === "string") {
+
+        tempObj = {
+          mother: eachValueTong,
+          text: (typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer) : "NULL",
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+          ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                e.stopPropagation();
+                if (/div/gi.test(e.target.nodeName)) {
+                  const x = Number(this.getAttribute('x'));
+                  const y = Number(this.getAttribute('y'));
+                  if (typeof checkListData[x].children[y].update === "function") {
+                    const [ cancelBox, inputBox ] = createNodes([
+                      {
+                        mother: this,
+                        mode: "aside",
+                        events: [
+                          {
+                            type: "click",
+                            event: function (e) {
+                              this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                              this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                            }
+                          }
+                        ],
+                        style: {
+                          position: "fixed",
+                          top: String(0) + ea,
+                          left: String(0) + ea,
+                          width: String(100) + '%',
+                          height: String(100) + '%',
+                          background: "transparent",
+                          zIndex: String(1),
+                        }
+                      },
+                      {
+                        mother: this,
+                        mode: "input",
+                        attribute: [
+                          { type: "text" },
+                          { value: this.textContent },
+                          { past: this.textContent },
+                        ],
+                        events: [
+                          {
+                            type: "keypress",
+                            event: async function (e) {
+                              try {
+                                if (e.keyCode === 13) {
+                                  const whereQuery = { desid };
+                                  const { updateQuery, text } = checkListData[x].children[y].update(this.value);
+                                  if (updateQuery === "error") {
+                                    this.value = this.getAttribute("past");
+                                  } else {
+                                    this.parentElement.removeChild(this.parentElement.firstChild);
+                                    this.parentElement.insertAdjacentHTML("beforeend", text);
+                                    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                  }
+                                  this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                  this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                }
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            }
+                          }
+                        ],
+                        style: {
+                          display: "block",
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          top: String(0),
+                          left: String(0),
+                          color: colorChip.green,
+                          background: colorChip.white,
+                          border: String(0),
+                          outline: String(0),
+                          width: String(this.getBoundingClientRect().width) + ea,
+                          zIndex: String(1),
+                        }
+                      }
+                    ]);
+                    inputBox.focus();
+                  }
+                }
+              }
+            }
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            height: String(checkListData[i].children[j].height) + ea,
+            cursor: "pointer",
+          }
         };
         tempArr.push(tempObj);
+
+      } else if (checkListData[i].children[j].type === "matrix") {
+
+        tempMatrix = checkListData[i].children[j].value(designer);
+
+        tempObj = {
+          mother: eachValueTong,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            width: String(checkListData[i].children[j].totalWidth) + ea,
+            height: String(checkListData[i].children[j].height) + ea,
+          }
+        };
+        tempArr.push(tempObj);
+
         for (let k = 0; k < tempMatrix.contents.length; k++) {
           tempObj = {
             mother: -1 + (k * -1),
             text: tempMatrix.contents[k],
-            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { x: String(i) },
+              { y: String(j) },
+              { z: String(k) },
+              { toggle: String(tempMatrix.value[k]) },
+            ],
+            events: [
+              {
+                type: "click",
+                event: async function (e) {
+                  try {
+                    const x = Number(this.getAttribute('x'));
+                    const y = Number(this.getAttribute('y'));
+                    const z = Number(this.getAttribute('z'));
+                    const toggle = Number(this.getAttribute('toggle'));
+                    const multiple = checkListData[x].children[y].multiple === true;
+                    const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y));
+                    let anothers, resultArr;
+                    let whereQuery, updateQuery;
+
+                    anothers = [];
+                    for (let dom of thisButtons) {
+                      if (this !== dom) {
+                        anothers.push(dom);
+                      }
+                    }
+                    if (toggle === 0) {
+                      if (!multiple) {
+                        for (let dom of anothers) {
+                          dom.style.color = colorChip.gray4;
+                          dom.setAttribute("toggle", String(0));
+                        }
+                      }
+                      this.style.color = colorChip.green;
+                      this.setAttribute("toggle", String(1));
+                    } else {
+                      this.style.color = colorChip.gray4;
+                      this.setAttribute("toggle", String(0));
+                    }
+
+                    resultArr = [];
+                    for (let dom of thisButtons) {
+                      resultArr.push(Number(dom.getAttribute("toggle")));
+                    }
+                    updateQuery = checkListData[x].children[y].update(resultArr);
+                    whereQuery = { desid };
+
+                    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }
+              }
+            ],
+            class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j), matrixButtonConst + String(i) + String(j) + String(k) ],
             style: {
               display: "inline-block",
               position: "relative",
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: String(level0[i].children[j].width) + ea,
+              width: String(checkListData[i].children[j].width) + ea,
               color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
-              height: String(level0[i].children[j].factorHeight) + ea,
+              height: String(checkListData[i].children[j].factorHeight) + ea,
+              transition: "all 0.1s ease",
             }
           };
           tempArr.push(tempObj);
         }
-      } else if (level0[i].children[j].type === "tendency") {
-        tempMatrix = level0[i].children[j].value(designer);
-        tempObj.style = {
-          display: "block",
-          position: "relative",
-          width: String(level0[i].children[j].totalWidth) + ea,
-          height: String(level0[i].children[j].height) + ea,
+
+      } else if (checkListData[i].children[j].type === "tendency") {
+
+        tempMatrix = checkListData[i].children[j].value(designer);
+        tempObj = {
+          mother: eachValueTong,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            width: String(checkListData[i].children[j].totalWidth) + ea,
+            height: String(checkListData[i].children[j].height) + ea,
+          }
         };
         tempArr.push(tempObj);
+
         for (let k = 0; k < tempMatrix.contents.length; k++) {
           tempObj = {
             mother: -1 + (k * -11),
@@ -8493,24 +7775,79 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
               position: "relative",
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: String(level0[i].children[j].totalWidth) + ea,
+              width: String(checkListData[i].children[j].totalWidth) + ea,
               color: colorChip.black,
-              height: String(level0[i].children[j].factorHeight) + ea,
+              height: String(checkListData[i].children[j].factorHeight) + ea,
             }
           };
           tempArr.push(tempObj);
           for (let l = 0; l < 10; l++) {
-            temp = (level0[i].children[j].totalWidth - level0[i].children[j].width) / 10;
+            temp = (checkListData[i].children[j].totalWidth - checkListData[i].children[j].width) / 10;
             tempObj = {
               mother: -1 + (l * -1),
-              class: [ "hoverDefault_lite" ],
+              attribute: [
+                { x: String(i) },
+                { y: String(j) },
+                { z: String(k) },
+                { t: String(l) },
+                { toggle: String(l <= tempMatrix.value[k] ? 1 : 0) },
+              ],
+              events: [
+                {
+                  type: "click",
+                  event: async function (e) {
+                    try {
+                      const x = Number(this.getAttribute('x'));
+                      const y = Number(this.getAttribute('y'));
+                      const z = Number(this.getAttribute('z'));
+                      const t = Number(this.getAttribute('t'));
+                      const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(z));
+                      let whereQuery, updateQuery;
+
+                      for (let i = 0; i < thisButtons.length; i++) {
+                        if (i <= t) {
+                          thisButtons[i].setAttribute("toggle", String(1));
+                          thisButtons[i].style.background = colorChip.green;
+                        } else {
+                          thisButtons[i].setAttribute("toggle", String(0));
+                          thisButtons[i].style.background = colorChip.gray2;
+                        }
+                      }
+
+                      if (checkListData[x].children[y].opposite === true) {
+                        const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(1 - z));
+                        if (oppositeButtons !== null) {
+                          for (let i = 0; i < oppositeButtons.length; i++) {
+                            if (i < oppositeButtons.length - t - 1) {
+                              oppositeButtons[i].setAttribute("toggle", String(1));
+                              oppositeButtons[i].style.background = colorChip.green;
+                            } else {
+                              oppositeButtons[i].setAttribute("toggle", String(0));
+                              oppositeButtons[i].style.background = colorChip.gray2;
+                            }
+                          }
+                        }
+                      }
+
+                      whereQuery = { desid };
+                      updateQuery = checkListData[x].children[y].update(z, t);
+
+                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                }
+              ],
+              class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j) + String(k) ],
               style: {
                 position: "absolute",
                 width: String(temp) + ea,
-                left: String(level0[i].children[j].width + (temp * l)) + ea,
+                left: String(checkListData[i].children[j].width + (temp * l)) + ea,
                 background: colorChip[l <= tempMatrix.value[k] ? "green" : "gray2"],
                 top: String(tendencyTop) + ea,
                 height: String(tendencyHeight) + ea,
+                transition: "all 0.1s ease",
               }
             };
             if (l === 0) {
@@ -8531,13 +7868,170 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   this.checkListBaseTong = baseTong0;
 }
 
+DesignerJs.prototype.checkListDesignerMemo = function (desid) {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
+  const baseTong = this.checkListBaseTong;
+  const designer = this.designers.pick(desid);
+  return async function (e) {
+    try {
+      if (document.getElementById("memoTong") === null) {
+
+        let memoTong;
+        let margin;
+        let innerMargin;
+        let titleHeight;
+        let size;
+        let titleBox, whiteBox, scrollBox, textBox;
+        let resObj, history;
+
+        margin = 40;
+        innerMargin = 15;
+        titleHeight = 31;
+        size = 16;
+
+        resObj = await ajaxJson({ method: "designer", property: "history", idArr: [ desid ] }, "/getHistoryProperty");
+        if (resObj[desid] === undefined) {
+          throw new Error("history error");
+        }
+        history = resObj[desid];
+        memoTong = createNode({
+          mother: totalMother,
+          id: "memoTong",
+          events: [
+            {
+              type: "dblclick",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                totalMother.removeChild(document.getElementById("memoTong"));
+              }
+            },
+            {
+              type: "contextmenu",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                totalMother.removeChild(document.getElementById("memoTong"));
+              }
+            }
+          ],
+          style: {
+            position: "fixed",
+            width: "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(margin) + ea + ")",
+            height: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(margin) + ea + ")",
+            bottom: String(belowHeight + margin) + ea,
+            right: String(margin) + ea,
+            borderRadius: String(3) + "px",
+            boxShadow: "0px 5px 18px -9px " + colorChip.shadow,
+            animation: "fadeup 0.3s ease forwards",
+            background: colorChip.gradientGreen2,
+          }
+        });
+        [ titleBox, whiteBox, scrollBox, textBox ] = createNodes([
+          {
+            mother: memoTong,
+            text: designer.designer + " 디자이너 메모",
+            style: {
+              position: "absolute",
+              top: String(innerMargin - 1) + ea,
+              left: String(innerMargin + 2) + ea,
+              fontSize: String(size) + ea,
+              fontWeight: String(600),
+              color: colorChip.white,
+            }
+          },
+          {
+            mother: memoTong,
+            style: {
+              position: "absolute",
+              bottom: String(innerMargin) + ea,
+              left: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: withOut((innerMargin * 2) + titleHeight, ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              opacity: String(0.95),
+            }
+          },
+          {
+            mother: -1,
+            style: {
+              position: "absolute",
+              top: String(innerMargin) + ea,
+              left: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: withOut(innerMargin * 2, ea),
+              background: "aqua",
+            }
+          },
+          {
+            mother: -1,
+            mode: "textarea",
+            events: [
+              {
+                type: "blur",
+                event: function (e) {
+                  const cookies = GeneralJs.getCookiesAll();
+                  const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                }
+              },
+              {
+                type: "keypress",
+                event: function (e) {
+                  if (e.keyCode === 13) {
+                    const cookies = GeneralJs.getCookiesAll();
+                    const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
+                    GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
+                  }
+                }
+              },
+              {
+                type: "contextmenu",
+                event: function (e) {
+                  e.stopPropagation();
+                }
+              }
+            ],
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              fontSize: String(size - 1) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              border: String(0),
+              outline: String(0),
+              overflow: "scroll",
+              height: String(100) + '%',
+              lineHeight: String(1.7),
+            }
+          }
+        ]);
+        textBox.value = history;
+
+      } else {
+
+        totalMother.removeChild(document.getElementById("memoTong"));
+
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
   const mother = document.querySelector(".totalMother");
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const designer = this.designers.pick(desid);
   let radius;
@@ -8734,6 +8228,58 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     instance.checkListDetailLaunching(nextDesid, true);
   });
 
+  rInitialIcon.addEventListener("click", function (e) {
+    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid);
+  });
+
+  mInitialIcon.addEventListener("click", instance.checkListDesignerMemo(desid));
+
+  aInitialIcon.addEventListener("click", function (e) {
+    const today = new Date();
+    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
+    let expiredString = '';
+
+    if (today.getDay() !== 0 && today.getDay() !== 6) {
+      //pyeong-day
+      today.setDate(today.getDate() + 7);
+    } else {
+      if (today.getDay() !== 0) {
+        //saturday
+        today.setDate(today.getDate() + 9);
+      } else {
+        //sunday
+        today.setDate(today.getDate() + 8);
+      }
+    }
+
+    expiredString += String(today.getMonth() + 1) + "월";
+    expiredString += " ";
+    expiredString += String(today.getDate()) + "일";
+    expiredString += " ";
+    expiredString += dayArr[today.getDay()] + "요일";
+    expiredString += " ";
+    expiredString += String(14) + "시";
+
+    if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
+      GeneralJs.ajax("method=designerCheckList&name=" + designer.designer + "&phone=" + designer.information.phone + "&option=" + JSON.stringify({ date: expiredString, desid: desid, host: "ADDRESS[homeinfo(ghost)]" }), "/alimTalk", function (rawJson) {
+        let middleDate, deadDate;
+        if (JSON.parse(rawJson).message !== "success") {
+          throw new Error("alimTalk error");
+        } else {
+          instance.mother.greenAlert("알림톡이 전송되었습니다!");
+          //set deadline
+          middleDate = new Date();
+          middleDate.setHours(middleDate.getHours() + 8);
+          deadDate = new Date();
+          deadDate.setDate(deadDate.getDate() + 9);
+          GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid, mode: "set" }), "/manageDeadline", function (res) {});
+        }
+      });
+    } else {
+      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
+    }
+  });
+
 }
 
 DesignerJs.prototype.launching = async function () {
@@ -8785,21 +8331,26 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "aspirant" || getObj.mode === '1') {
 
-      // tempFunction = this.cardViewMaker();
-      // tempFunction().then(() => {
-      //   const temp = instance.reportViewMaker();
-      //   temp();
-      // }).catch(function (e) {
-      //   throw new Error(e);
-      // });
+      await this.spreadData();
+      this.addTransFormEvent();
+      this.addSearchEvent();
+      this.addExtractEvent();
+      this.whiteResize();
+      tempFunction = instance.reportViewMaker();
+      tempFunction();
 
     } else if (getObj.mode === "checklist" || getObj.mode === '6') {
 
       document.getElementById("grayLeftOpenButton").remove();
-      await this.spreadData(null, true);
+      if (getObj.desid !== undefined) {
+        await this.spreadData(null, true, getObj.desid);
+        await this.checkListView(true);
+        this.checkListDetailLaunching(getObj.desid);
+      } else {
+        await this.spreadData(null, true);
+        await this.checkListView();
+      }
       this.addTransFormEvent();
-      // this.addSearchEvent();
-      await this.checkListView();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 

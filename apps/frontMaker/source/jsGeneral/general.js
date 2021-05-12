@@ -77,18 +77,23 @@ GeneralJs.ajax = function (data, url, callback) {
       if (!/Exception occur/g.test(response)) {
         callback(response);
       } else {
-        window.location = "https://home-liaison.com/about.php";
+        alert("오류가 발생하였습니다. 다시 시도해주세요!");
+        window.location.reload();
       }
     } else if (xhr.status >= 500) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     } else if (xhr.status >= 402 && xhr.status <= 420) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     } else if(xhr.status === 400 || xhr.status === 401) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     }
   }
   xhr.onerror = function () {
-    window.location = "https://home-liaison.com/about.php";
+    alert("오류가 발생하였습니다. 다시 시도해주세요!");
+    window.location.reload();
   }
   if (typeof data === "string") {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -174,18 +179,23 @@ GeneralJs.request = function (url, callback) {
       if (!/Exception occur/g.test(response)) {
         callback(response);
       } else {
-        window.location = "https://home-liaison.com/about.php";
+        alert("오류가 발생하였습니다. 다시 시도해주세요!");
+        window.location.reload();
       }
     } else if (xhr.status >= 500) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     } else if (xhr.status >= 402 && xhr.status <= 420) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     } else if(xhr.status === 400 || xhr.status === 401) {
-      window.location = "https://home-liaison.com/about.php";
+      alert("오류가 발생하였습니다. 다시 시도해주세요!");
+      window.location.reload();
     }
   }
   xhr.onerror = function () {
-    window.location = "https://home-liaison.com/about.php";
+    alert("오류가 발생하였습니다. 다시 시도해주세요!");
+    window.location.reload();
   }
   xhr.send();
 }

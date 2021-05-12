@@ -752,6 +752,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes justfadeoutmiddle{from{opacity:0.6;}to{opacity:0;}}
   @keyframes justfadein{from{opacity:0;}to{opacity:0.3;}}
   @keyframes justfadeout{from{opacity:0.3;}to{opacity:0;}}
+  @keyframes invisible{from{opacity:0;}to{opacity:0;}}
   @keyframes fadedown{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(20px);}}
   @keyframes fadeup{from{opacity:0;transform:translateY(20px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadeupdelay{from,30%{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
