@@ -17,12 +17,15 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   try {
+
     //set static
+    const moduleName = "module";
     const staticDir = `${this.dir}/router/source/local`;
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
-    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
+    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", moduleName ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     let folderSize;
+
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
     }
@@ -49,6 +52,13 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     if (!thisDirList.includes("contents_latest.json")) {
       shell.exec(`touch ${shellLink(this.dir)}/log/contents_latest.json`);
     }
+
+    const staticFolderList = await fileSystem(`readDir`, [ staticFolder ]);
+    if (staticFolderList.includes(moduleName)) {
+      shell.exec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
+    }
+    shell.exec(`cp -r ${shellLink(staticDir + "/" + moduleName)} ${shellLink(staticFolder)}`);
+
     console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;

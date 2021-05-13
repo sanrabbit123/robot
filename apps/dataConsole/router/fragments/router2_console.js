@@ -1739,7 +1739,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
 
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify(message));
+        res.send(JSON.stringify({ message: "done" }));
       }
 
     } catch (e) {
