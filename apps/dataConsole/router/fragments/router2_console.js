@@ -2495,7 +2495,11 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json", });
-      instance.mother.slack_bot.chat.postMessage({ text: req.body.imp_uid, channel: "#general" });
+      const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" });
+      const token = payResponse.data.response.access_token;
+      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "X-ImpTokenHeader": token } });
+      const { amount, buyer_name, card_name } = data.response;
+      instance.mother.slack_bot.chat.postMessage({ text: `${buyer_name} 고객님이 ${card_name}로 ${String(amount)}원 결제하셨습니다!`, channel: "#general" });
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });

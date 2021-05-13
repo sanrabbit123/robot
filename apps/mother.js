@@ -400,7 +400,6 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
     configBoo = false;
   } else if (dataKeys.length === 0 && configKeys.length > 0) {
     method = "get";
-    config = data;
     dataBoo = false;
     configBoo = true;
   } else if (dataKeys.length > 0) {
