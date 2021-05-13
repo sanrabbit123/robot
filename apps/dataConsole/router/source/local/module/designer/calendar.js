@@ -158,6 +158,11 @@ DesignerJs.prototype.calendarBase = function () {
     },
   ]);
 
+  this.calendarTitleTime(titleTime);
+  this.calendarContentsDesigner(contentsDesigner);
+  this.calendarContentsProject(contentsProject);
+  this.calendarContentsTime(contentsTime);
+
 }
 
 DesignerJs.prototype.calendarMatrix = function () {
@@ -170,6 +175,29 @@ DesignerJs.prototype.calendarMatrix = function () {
       return String(num);
     }
   }
+  class CalendarMatrixFactor {
+    getEntireWidth(width, margin) {
+      if (typeof width === "number" && typeof margin === "number") {
+        return ((width * this.children.length) + (margin * (this.children.length - 1)) + (margin * 3));
+      } else {
+        throw new Error("invaild arguments");
+      }
+    }
+  }
+  class CalendarMatrix extends Array {
+    getEntireWidth(width, margin) {
+      if (typeof width === "number" && typeof margin === "number") {
+        let total;
+        total = 0;
+        for (let i of this) {
+          total += i.getEntireWidth(width, margin);
+        }
+        return total;
+      } else {
+        throw new Error("invaild arguments");
+      }
+    }
+  }
   const length = 12;
   let past, future;
   let date, week;
@@ -178,13 +206,14 @@ DesignerJs.prototype.calendarMatrix = function () {
   let today;
   let complex;
   let final;
+  let pastMonth;
 
   today = new Date();
   past = today.valueOf();
   today.setMonth(today.getMonth() + length);
   future = today.valueOf();
 
-  date = ((((future - past) / 1000) / 60) / 60) / 24
+  date = (((((future - past) / 1000) / 60) / 60) / 24);
   week = Math.floor(date / 7);
 
   today = new Date(2021, 4, 13);
@@ -229,15 +258,48 @@ DesignerJs.prototype.calendarMatrix = function () {
     complex.push(tempObj);
   }
 
-  final = [];
+  final = new CalendarMatrix();
+  pastMonth = null;
+  tempObj = new CalendarMatrixFactor();
   for (let i = 0; i < complex.length; i++) {
-    tempObj = {};
-    
-
+    if (pastMonth === complex[i].month) {
+      tempObj.children.push(complex[i]);
+    } else {
+      tempObj = new CalendarMatrixFactor();
+      tempObj.year = complex[i].year;
+      tempObj.month = complex[i].month;
+      tempObj.children = [];
+      tempObj.children.push(complex[i]);
+      final.push(tempObj);
+    }
+    pastMonth = complex[i].month;
   }
 
+  return final;
+}
 
-  console.log(complex);
+DesignerJs.prototype.calendarTitleTime = function (mother) {
+  const instance = this;
+
+}
+
+DesignerJs.prototype.calendarContentsDesigner = function (mother) {
+  const instance = this;
+
+}
+
+DesignerJs.prototype.calendarContentsProject = function (mother) {
+  const instance = this;
+
+}
+
+DesignerJs.prototype.calendarContentsTime = function (mother) {
+  const instance = this;
+  const { createNodes, colorChip, ajaxJson } = GeneralJs;
+
+  const app = this.calendarMatrix();
+  console.log(app.getEntireWidth(100, 20));
+
 
 
 }
@@ -250,7 +312,6 @@ DesignerJs.prototype.calendarView = async function () {
 
     this.designers = new Designers(designers);
 
-    this.calendarMatrix();
 
     this.calendarBase();
 

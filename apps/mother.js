@@ -384,6 +384,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   let dataBoo, configBoo, jsonBoo;
   let options;
   let form;
+  let finalConfig;
 
   method = "get";
   dataKeys = Object.keys(data);
@@ -433,7 +434,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
     } else if (method === "post") {
 
       if (jsonBoo) {
-        axios.post(url, data, { ...config }).then(function (response) {
+        axios.post(url, data, config).then(function (response) {
           resolve(response);
         }).catch(function (error) {
           reject(error);
@@ -455,7 +456,22 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
             reject(error);
           });
         } else {
-          axios.post(url, form, { ...config, ...({ headers: { ...formHeaders } }) }).then(function (response) {
+          finalConfig = { headers: { ...formHeaders } };
+          if (config.headers !== undefined) {
+            for (let z in config.headers) {
+              finalConfig.headers[z] = config.headers[z];
+            }
+            for (let z in config) {
+              if (z !== "headers") {
+                finalConfig[z] = config[z];
+              }
+            }
+          } else {
+            for (let z in config) {
+              finalConfig[z] = config[z];
+            }
+          }
+          axios.post(url, form, finalConfig).then(function (response) {
             resolve(response);
           }).catch(function (error) {
             reject(error);

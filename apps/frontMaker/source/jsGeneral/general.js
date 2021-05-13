@@ -1308,6 +1308,17 @@ GeneralJs.cleanChildren = function (dom) {
   }
 }
 
+GeneralJs.protoPatch = async function (instance, modulePath) {
+  try {
+    const className = instance.constructor.name;
+    const appendScript = await GeneralJs.requestPromise(modulePath);
+    const protoFunc = new Function(className, appendScript);
+    protoFunc(instance.constructor);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
