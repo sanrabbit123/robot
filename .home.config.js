@@ -10,7 +10,7 @@ module.exports = {
     {
       name: "ghost",
       script: "./ghost.js",
-      instances: 4,
+      instances: 1,
       exec_mode: "cluster",
       args: [ "file" ]
     },

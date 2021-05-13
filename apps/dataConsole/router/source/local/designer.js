@@ -3721,6 +3721,19 @@ DesignerJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
+DesignerJs.prototype.protoPatch = async function (name) {
+  const instance = this;
+  try {
+    const modulePath = "/module/designer";
+    const className = "DesignerJs";
+    const appendScript = await GeneralJs.requestPromise(`${modulePath}/${name}.js`);
+    const protoFunc = new Function(className, appendScript);
+    protoFunc(this.constructor);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -3730,14 +3743,13 @@ DesignerJs.prototype.launching = async function () {
     let protoPatch;
 
     this.user = GeneralJs.getUser();
-
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
-    this.backGrayBar();
 
     getTarget = null;
-    if (getObj.mode === "general" || getObj.mode === '2') {
+    if (getObj.mode === "general") {
 
+      this.backGrayBar();
       await this.spreadData();
       this.addTransFormEvent();
       this.addSearchEvent();
@@ -3764,11 +3776,10 @@ DesignerJs.prototype.launching = async function () {
         }
       }
 
-    } else if (getObj.mode === "aspirant" || getObj.mode === '1') {
+    } else if (getObj.mode === "aspirant") {
 
-      protoPatch = new Function("DesignerJs", (await GeneralJs.requestPromise("/module/designer/aspirant.js")));
-      protoPatch(this.constructor);
-
+      this.backGrayBar();
+      await this.protoPatch(getObj.mode);
       await this.spreadData();
       this.addTransFormEvent();
       this.addSearchEvent();
@@ -3777,23 +3788,19 @@ DesignerJs.prototype.launching = async function () {
       tempFunction = instance.reportViewMaker();
       tempFunction();
 
-    } else if (getObj.mode === "calendar" || getObj.mode === '5') {
+    } else if (getObj.mode === "calendar") {
 
-      protoPatch = new Function("DesignerJs", (await GeneralJs.requestPromise("/module/designer/calendar.js")));
-      protoPatch(this.constructor);
-
+      await this.protoPatch(getObj.mode);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.spreadData(null, true);
       await this.calendarView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
-    } else if (getObj.mode === "checklist" || getObj.mode === '6') {
+    } else if (getObj.mode === "checklist") {
 
-      protoPatch = new Function("DesignerJs", (await GeneralJs.requestPromise("/module/designer/checklist.js")));
-      protoPatch(this.constructor);
-
+      this.backGrayBar();
+      await this.protoPatch(getObj.mode);
       document.getElementById("grayLeftOpenButton").remove();
       if (getObj.desid !== undefined) {
         await this.spreadData(null, true, getObj.desid);

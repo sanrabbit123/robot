@@ -1,7 +1,3 @@
-// 06 Designer checkList
-
-// checkList data
-
 DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
   const checkListData = [
     {
@@ -1513,8 +1509,6 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
   ];
   return checkListData;
 }
-
-// checkList method
 
 DesignerJs.prototype.checkListView = async function (invisible = false) {
   const instance = this;

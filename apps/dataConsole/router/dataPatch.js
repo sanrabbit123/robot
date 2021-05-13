@@ -1569,7 +1569,6 @@ DataPatch.prototype.clientMap = function () {
       '연결 안 됨',
       '가벼운 문의',
       '타사 계약',
-      '비용 문제',
       '의견 조정 안 됨',
       '직접 진행',
       '고객 상황 변동',

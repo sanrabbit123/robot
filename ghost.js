@@ -1418,6 +1418,13 @@ Ghost.prototype.fileLaunching = async function () {
         app.post(obj.link, obj.func);
       }
 
+      //webhook
+      app.post("/ghost_webhook", function (req, res) {
+        res.set({ "Content-Type": "application/json" });
+        console.log(req.body);
+        res.send(JSON.stringify({ message: "will do" }));
+      });
+
       //server on
       https.createServer(pems, app).listen(address.file.port, address.ip.inner, () => {
         console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(address.file.port)}`);
