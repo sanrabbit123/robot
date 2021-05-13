@@ -11,6 +11,7 @@ DesignerJs.prototype.calendarBase = function () {
   let contentsDesigner, contentsProject, contentsTime;
   let designerWidth, projectWidth;
   let size;
+  let borderBack;
 
   titleHeight = 34;
   margin = 30;
@@ -34,21 +35,7 @@ DesignerJs.prototype.calendarBase = function () {
   });
   this.totalMother = totalMother;
 
-  [ titleArea, contentsArea ] = createNodes([
-    {
-      mother: totalMother,
-      style: {
-        position: "relative",
-        height: String(titleHeight) + ea,
-      }
-    },
-    {
-      mother: totalMother,
-      style: {
-        position: "relative",
-        height: withOut(titleHeight, ea),
-      }
-    },
+  [ borderBack, titleArea, contentsArea ] = createNodes([
     {
       mother: totalMother,
       style: {
@@ -62,6 +49,20 @@ DesignerJs.prototype.calendarBase = function () {
         borderTopLeftRadius: String(5) + "px",
         borderTopRightRadius: String(5) + "px",
         boxSizing: "border-box",
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: String(titleHeight) + ea,
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: withOut(titleHeight, ea),
       }
     }
   ]);
@@ -106,6 +107,8 @@ DesignerJs.prototype.calendarBase = function () {
         width: String(designerWidth) + ea,
         borderRight: "1px solid " + colorChip.gray4,
         boxSizing: "border-box",
+        overflowY: "scroll",
+        overflowX: "hidden",
       }
     },
     {
@@ -117,6 +120,8 @@ DesignerJs.prototype.calendarBase = function () {
         width: String(projectWidth) + ea,
         borderRight: "1px solid " + colorChip.gray4,
         boxSizing: "border-box",
+        overflowY: "scroll",
+        overflowX: "hidden",
       }
     },
     {
@@ -127,6 +132,8 @@ DesignerJs.prototype.calendarBase = function () {
         height: String(100) + '%',
         width: withOut(designerWidth + projectWidth, ea),
         boxSizing: "border-box",
+        overflowY: "scroll",
+        overflowX: "hidden",
       }
     },
   ]);
@@ -300,10 +307,15 @@ DesignerJs.prototype.calendarContentsTime = function (mother) {
   const matrix = this.calendarMatrix();
   let width, margin;
   let totalWidth;
+  let nodeArr;
 
-  width = 100;
+  width = 200;
   margin = 20;
   totalWidth = matrix.getEntireWidth(width, margin);
+
+  nodeArr = [];
+  
+
 
   createNodes([
     {
@@ -311,11 +323,11 @@ DesignerJs.prototype.calendarContentsTime = function (mother) {
       style: {
         position: "relative",
         width: String(totalWidth) + ea,
-        height: String(200) + ea,
-        background: "aliceblue",
+        height: String(60) + ea,
+        background: colorChip.gradientGreen2,
       }
     }
-  ])
+  ]);
 
 }
 

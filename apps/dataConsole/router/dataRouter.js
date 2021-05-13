@@ -2838,9 +2838,19 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
         if (projects.length > 0) {
           whereQuery = { proid: projects[0].proid };
           if (/계/gi.test(name)) {
-            updateQuery = { "process.contract.first.date": new Date() };
+            updateQuery = {};
+            updateQuery["process.contract.first.date"] = new Date();
+            updateQuery["process.contract.first.calculation.amount"] = amount;
+            updateQuery["process.contract.first.calculation.info.method"] = "카드";
+            updateQuery["process.contract.first.calculation.info.proof"] = buyer_name;
+            updateQuery["process.contract.first.calculation.info.to"] = "이니시스";
           } else {
-            updateQuery = { "process.contract.remain.date": new Date() };
+            updateQuery = {};
+            updateQuery["process.contract.remain.date"] = new Date();
+            updateQuery["process.contract.remain.calculation.amount"] = amount;
+            updateQuery["process.contract.remain.calculation.info.method"] = "카드";
+            updateQuery["process.contract.remain.calculation.info.proof"] = buyer_name;
+            updateQuery["process.contract.remain.calculation.info.to"] = "이니시스";
           }
           await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         }
