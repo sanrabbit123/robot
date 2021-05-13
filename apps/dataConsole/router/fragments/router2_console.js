@@ -2486,3 +2486,23 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_webHookPayment = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/webHookPayment";
+  obj.func = async function (req, res) {
+    try {
+      res.set({ "Content-Type": "application/json", });
+
+      console.log(req.body);
+
+      res.send(JSON.stringify({ "message": "ok" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
