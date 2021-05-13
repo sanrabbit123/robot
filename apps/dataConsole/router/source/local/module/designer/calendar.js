@@ -177,6 +177,7 @@ DesignerJs.prototype.calendarMatrix = function () {
   let tempArr, tempObj;
   let today;
   let complex;
+  let final;
 
   today = new Date();
   past = today.valueOf();
@@ -225,10 +226,15 @@ DesignerJs.prototype.calendarMatrix = function () {
     tempObj.start = `${String(dateMatrix[i][0][0])}-${zeroAddition(dateMatrix[i][0][1])}-${zeroAddition(dateMatrix[i][0][2])}`;
     tempObj.end = `${String(dateMatrix[i][1][0])}-${zeroAddition(dateMatrix[i][1][1])}-${zeroAddition(dateMatrix[i][1][2])}`;
 
-
     complex.push(tempObj);
   }
 
+  final = [];
+  for (let i = 0; i < complex.length; i++) {
+    tempObj = {};
+    
+
+  }
 
 
   console.log(complex);

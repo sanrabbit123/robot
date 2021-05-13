@@ -428,10 +428,14 @@ GeneralJs.autoComma = function (str) {
   } else if (num.length < 10) {
     tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
     return minus + tmp;
-  } else {
+  } else if (num.length < 13) {
     tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
     return minus + tmp;
+  } else if (num.length < 16) {
+    tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    return minus + tmp;
   }
+
   return minus + num;
 }
 

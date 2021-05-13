@@ -2293,7 +2293,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const token = payResponse.data.response.access_token;
       const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "X-ImpTokenHeader": token } });
       const { amount, buyer_name, card_name } = data.response;
-      instance.mother.slack_bot.chat.postMessage({ text: `${buyer_name} 고객님이 ${card_name}로 ${String(amount)}원 결제하셨습니다!`, channel: "#700_operation" });
+      instance.mother.slack_bot.chat.postMessage({ text: `${buyer_name} 고객님이 ${card_name}로 ${DataRouter.autoComma(amount)}원 결제하셨습니다!`, channel: "#700_operation" });
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
