@@ -2490,6 +2490,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
 DataRouter.prototype.rou_post_webHookPayment = function () {
   const instance = this;
   const back = this.back;
+  const { requestSystem } = this.mother;
   let obj = {};
   obj.link = "/webHookPayment";
   obj.func = async function (req, res) {
