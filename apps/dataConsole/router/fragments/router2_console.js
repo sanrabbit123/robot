@@ -2495,9 +2495,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json", });
-
-      console.log(req.body);
-
+      instance.mother.slack_bot.chat.postMessage({ text: req.body.imp_uid, channel: "#general" });
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
