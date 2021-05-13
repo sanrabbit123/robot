@@ -295,12 +295,27 @@ DesignerJs.prototype.calendarContentsProject = function (mother) {
 
 DesignerJs.prototype.calendarContentsTime = function (mother) {
   const instance = this;
+  const { ea } = this;
   const { createNodes, colorChip, ajaxJson } = GeneralJs;
+  const matrix = this.calendarMatrix();
+  let width, margin;
+  let totalWidth;
 
-  const app = this.calendarMatrix();
-  console.log(app.getEntireWidth(100, 20));
+  width = 100;
+  margin = 20;
+  totalWidth = matrix.getEntireWidth(width, margin);
 
-
+  createNodes([
+    {
+      mother,
+      style: {
+        position: "relative",
+        width: String(totalWidth) + ea,
+        height: String(200) + ea,
+        background: "aliceblue",
+      }
+    }
+  ])
 
 }
 
