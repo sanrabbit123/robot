@@ -8,6 +8,8 @@ DataRouter.prototype.rou_post_getDocuments = function () {
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
 
+      console.log(req.headers.origin);
+
       if (req.url === "/getClients") {
         standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };

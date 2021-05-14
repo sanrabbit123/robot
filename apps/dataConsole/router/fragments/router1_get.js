@@ -124,35 +124,6 @@ DataRouter.prototype.rou_get_Root = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_get_Binary = function () {
-  const instance = this;
-  const brandProjectConstant = "brandProject";
-  let obj = {};
-  obj.link = "/" + brandProjectConstant + "/:id";
-  obj.func = async function (req, res) {
-    try {
-      let html, mainPdfName, sourceName;
-
-      mainPdfName = "index";
-      sourceName = `${instance.address.s3info.host}/${brandProjectConstant}/${req.params.id}/${mainPdfName}.pdf`;
-      const { statusCode } = await instance.mother.headRequest(sourceName);
-
-      if (statusCode === 200) {
-        html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><title></title><style media="screen">*{margin:0;padding:0}</style></head><body><embed id="this" src="${sourceName}"/><script type="text/javascript">let e = document.getElementById("this");let ea = "px";e.setAttribute("width", (String(window.innerWidth) + ea));e.setAttribute("height", (String(window.innerHeight) + ea));window.addEventListener("resize", (e) => { window.location.reload(); })</script></body></html>`;
-        res.set("Content-Type", "text/html");
-        res.send(html);
-      } else {
-        res.redirect("/client");
-      }
-
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
   let obj = {};
