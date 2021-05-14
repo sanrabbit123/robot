@@ -2294,7 +2294,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const { data } = await requestSystem("https://api.iamport.kr/payments/imp_706381046289", {}, { headers: { "Authorization": token } });
 
       // const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
-      console.log("ok");
+      console.log(data.response);
       // const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
       // const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo: instance.mongo });
       // let client, cliid;
