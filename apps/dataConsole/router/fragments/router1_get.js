@@ -107,6 +107,21 @@ DataRouter.prototype.getCalendar = async function (length = 12) {
   }
 }
 
+DataRouter.prototype.ghostWall = function (headers) {
+  const instance = this;
+  let boo;
+  boo = false;
+  if (typeof headers.referer === "string" && typeof headers.origin === "string") {
+    boo = (new RegExp(this.address.homeinfo.ghost.host, "gi")).test(headers.referer) || (new RegExp(this.address.homeinfo.ghost.host, "gi")).test(headers.origin);
+  } else if (typeof headers.referer === "string") {
+    boo = (new RegExp(this.address.homeinfo.ghost.host, "gi")).test(headers.referer);
+  } else if (typeof headers.origin === "string") {
+    boo = (new RegExp(this.address.homeinfo.ghost.host, "gi")).test(headers.origin);
+  }
+  console.log(boo);
+  return boo;
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 DataRouter.prototype.rou_get_Root = function () {
