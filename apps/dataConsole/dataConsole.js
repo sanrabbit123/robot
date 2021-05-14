@@ -614,6 +614,9 @@ DataConsole.prototype.connect = async function () {
     if (isGhost) {
       for (let obj of rouObj.post) {
         if (obj.public !== true) {
+
+          // SOLVE THIS =====================================================================================================================================
+
           app.post(obj.link, function (req, res) {
             let __ghostWallLogic, __ghostHost;
             __ghostWallLogic = false;
@@ -633,6 +636,9 @@ DataConsole.prototype.connect = async function () {
               obj.func(req, res);
             }
           });
+
+          // SOLVE THIS =====================================================================================================================================
+
         } else {
           app.post(obj.link, obj.func);
         }
