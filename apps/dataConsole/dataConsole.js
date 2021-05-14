@@ -612,11 +612,6 @@ DataConsole.prototype.connect = async function () {
       app.get(obj.link, obj.func);
     }
     if (isGhost) {
-      if (obj.public !== true) {
-
-      } else {
-
-      }
       for (let obj of rouObj.post) {
         if (obj.public !== true) {
           app.post(obj.link, function (req, res) {
