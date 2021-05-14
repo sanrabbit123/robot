@@ -2291,42 +2291,39 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       res.set({ "Content-Type": "application/json", });
       const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" }, { headers: { "Content-Type": "application/json" } });
       const token = payResponse.data.response.access_token;
-      const { data } = await requestSystem("https://api.iamport.kr/payments/imp_706381046289", {}, { headers: { "Authorization": token } });
+      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
+      const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
+      const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo: instance.mongo });
+      let client, cliid;
+      let projects;
+      let whereQuery, updateQuery;
 
-      // const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
-      console.log(data.response);
-      // const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
-      // const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo: instance.mongo });
-      // let client, cliid;
-      // let projects;
-      // let whereQuery, updateQuery;
-      //
-      // if (clients.length === 1) {
-      //   client = clients[0];
-      //   cliid = client.cliid;
-      //   projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { selfMongo: instance.mongo });
-      //   if (projects.length > 0) {
-      //     whereQuery = { proid: projects[0].proid };
-      //     if (/계/gi.test(name)) {
-      //       updateQuery = {};
-      //       updateQuery["process.contract.first.date"] = new Date();
-      //       updateQuery["process.contract.first.calculation.amount"] = amount;
-      //       updateQuery["process.contract.first.calculation.info.method"] = "카드";
-      //       updateQuery["process.contract.first.calculation.info.proof"] = buyer_name;
-      //       updateQuery["process.contract.first.calculation.info.to"] = "이니시스";
-      //     } else {
-      //       updateQuery = {};
-      //       updateQuery["process.contract.remain.date"] = new Date();
-      //       updateQuery["process.contract.remain.calculation.amount"] = amount;
-      //       updateQuery["process.contract.remain.calculation.info.method"] = "카드";
-      //       updateQuery["process.contract.remain.calculation.info.proof"] = buyer_name;
-      //       updateQuery["process.contract.remain.calculation.info.to"] = "이니시스";
-      //     }
-      //     await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      //   }
-      // }
-      //
-      // instance.mother.slack_bot.chat.postMessage({ text: `${buyer_name} 고객님이 ${card_name}로 ${DataRouter.autoComma(amount)}원 결제하셨습니다!`, channel: "#700_operation" });
+      if (clients.length === 1) {
+        client = clients[0];
+        cliid = client.cliid;
+        projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { selfMongo: instance.mongo });
+        if (projects.length > 0) {
+          whereQuery = { proid: projects[0].proid };
+          if (/계/gi.test(name)) {
+            updateQuery = {};
+            updateQuery["process.contract.first.date"] = new Date();
+            updateQuery["process.contract.first.calculation.amount"] = amount;
+            updateQuery["process.contract.first.calculation.info.method"] = "카드";
+            updateQuery["process.contract.first.calculation.info.proof"] = buyer_name;
+            updateQuery["process.contract.first.calculation.info.to"] = "이니시스";
+          } else {
+            updateQuery = {};
+            updateQuery["process.contract.remain.date"] = new Date();
+            updateQuery["process.contract.remain.calculation.amount"] = amount;
+            updateQuery["process.contract.remain.calculation.info.method"] = "카드";
+            updateQuery["process.contract.remain.calculation.info.proof"] = buyer_name;
+            updateQuery["process.contract.remain.calculation.info.to"] = "이니시스";
+          }
+          await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        }
+      }
+
+      instance.mother.slack_bot.chat.postMessage({ text: `${buyer_name} 고객님이 ${card_name}로 ${DataRouter.autoComma(amount)}원 결제하셨습니다!`, channel: "#700_operation" });
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
