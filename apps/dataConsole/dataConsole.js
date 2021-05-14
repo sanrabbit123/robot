@@ -612,26 +612,35 @@ DataConsole.prototype.connect = async function () {
       app.get(obj.link, obj.func);
     }
     if (isGhost) {
+      if (obj.public !== true) {
+
+      } else {
+
+      }
       for (let obj of rouObj.post) {
-        app.post(obj.link, function (req, res) {
-          let __ghostWallLogic;
-          __ghostWallLogic = false;
-          if (typeof req.headers.referer === "string" && typeof req.headers.origin === "string") {
-            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.referer) || (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.origin);
-          } else if (typeof req.headers.referer === "string") {
-            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.referer);
-          } else if (typeof req.headers.origin === "string") {
-            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.origin);
-          }
-          if (!__ghostWallLogic) {
-            res.set("Content-Type", "application/json");
-            res.send(JSON.stringify({ message: "ok" }));
-            return;
-          } else {
-            console.log(__ghostWallLogic)
-            obj.func(req, res);
-          }
-        });
+        if (obj.public !== true) {
+          app.post(obj.link, function (req, res) {
+            let __ghostWallLogic, __ghostHost;
+            __ghostWallLogic = false;
+            __ghostHost = instance.address.homeinfo.ghost.host;
+            if (typeof req.headers.referer === "string" && typeof req.headers.origin === "string") {
+              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.referer) || (new RegExp(__ghostHost, "gi")).test(req.headers.origin);
+            } else if (typeof req.headers.referer === "string") {
+              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.referer);
+            } else if (typeof req.headers.origin === "string") {
+              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.origin);
+            }
+            if (!__ghostWallLogic) {
+              res.set("Content-Type", "application/json");
+              res.send(JSON.stringify({ message: "ok" }));
+              return;
+            } else {
+              obj.func(req, res);
+            }
+          });
+        } else {
+          app.post(obj.link, obj.func);
+        }
       }
     } else {
       for (let obj of rouObj.post) {

@@ -2285,12 +2285,13 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   const { requestSystem } = this.mother;
   let obj = {};
   obj.link = "/webHookPayment";
+  obj.public = true;
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json", });
       const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" }, { headers: { "Content-Type": "application/json" } });
       const token = payResponse.data.response.access_token;
-      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "X-ImpTokenHeader": token } });
+      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
       const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
       const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo: instance.mongo });
       let client, cliid;
