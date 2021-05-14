@@ -141,10 +141,20 @@ DataRouter.prototype.rou_get_First = function () {
   obj.link = "/:id";
   obj.func = function (req, res) {
     try {
+      let ip, pass;
       let target;
 
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      pass = true;
+      if (instance.isGhost) {
+        if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          pass = true;
+        } else {
+          pass = false;
+        }
+      }
+
+      if (!pass) {
 
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
@@ -153,43 +163,32 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        // if (instance.isGhost) {
-        //
-        //   res.set("Content-Type", "text/html");
-        //   res.send(`<html><head><title>Permission denied</title></head><body><script>
-        //     alert("접근할 수 없는 경로입니다!");
-        //     window.location.href = "https://home-liaison.com";</script></body></html>`);
-        //
-        // } else {
+        if (/^cl/i.test(req.params.id)) {
+          target = "client";
+        } else if (/^de/i.test(req.params.id)) {
+          target = "designer";
+        } else if (/^ser/i.test(req.params.id)) {
+          target = "service";
+        } else if (/^proj/i.test(req.params.id)) {
+          target = "project";
+        } else if (/^prop/i.test(req.params.id)) {
+          target = "proposal";
+        } else if (/^ana/i.test(req.params.id)) {
+          target = "analytics";
+        } else if (/^con/i.test(req.params.id)) {
+          target = "contents";
+        } else if (/^pho/i.test(req.params.id)) {
+          target = "photo";
+        } else {
+          target = "client";
+        }
 
-          if (/^cl/i.test(req.params.id)) {
-            target = "client";
-          } else if (/^de/i.test(req.params.id)) {
-            target = "designer";
-          } else if (/^ser/i.test(req.params.id)) {
-            target = "service";
-          } else if (/^proj/i.test(req.params.id)) {
-            target = "project";
-          } else if (/^prop/i.test(req.params.id)) {
-            target = "proposal";
-          } else if (/^ana/i.test(req.params.id)) {
-            target = "analytics";
-          } else if (/^con/i.test(req.params.id)) {
-            target = "contents";
-          } else if (/^pho/i.test(req.params.id)) {
-            target = "photo";
-          } else {
-            target = "client";
-          }
-
-          instance.baseMaker(target, "first", null).then(function (html) {
-            res.set("Content-Type", "text/html");
-            res.send(html);
-          }).catch(function (err) {
-            throw new Error(err);
-          });
-
-        // }
+        instance.baseMaker(target, "first", null).then(function (html) {
+          res.set("Content-Type", "text/html");
+          res.send(html);
+        }).catch(function (err) {
+          throw new Error(err);
+        });
 
       }
 

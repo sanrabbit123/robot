@@ -67,6 +67,36 @@ class Designers extends Array {
       return this[0];
     }
   }
+  setProjects(projects) {
+    if (!Array.isArray(projects)) {
+      throw new Error("invaild arguments");
+    }
+    for (let designer of this) {
+      designer.projects = [];
+      for (let project of projects) {
+        if (designer.desid === project.desid) {
+          designer.projects.push(project);
+        }
+      }
+    }
+  }
+  setClients(clients) {
+    if (!Array.isArray(clients)) {
+      throw new Error("invaild arguments");
+    }
+    for (let designer of this) {
+      if (designer.projects === undefined) {
+        throw new Error("set Project first");
+      }
+      for (let project of designer.projects) {
+        for (let client of clients) {
+          if (project.cliid === client.cliid) {
+            project.name = client.name;
+          }
+        }
+      }
+    }
+  }
 }
 
 const DesignerJs = function () {
@@ -79,7 +109,7 @@ const DesignerJs = function () {
     initialLine: 14,
     initialMargin: 14,
   }
-  this.grayBarWidth = 210;
+  this.grayBarWidth = null;
   this.belowHeight = null;
   this.whiteBox = null;
   this.standardDoms = [];
@@ -3744,6 +3774,7 @@ DesignerJs.prototype.launching = async function () {
     let tempFunction;
 
     this.user = getUser();
+    this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
@@ -3791,6 +3822,8 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "calendar") {
 
+      this.grayBarWidth = 600;
+      this.mother.grayBarWidth = 600;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.calendarView();

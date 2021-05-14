@@ -1979,6 +1979,7 @@ GeneralJs.prototype.greenBar = function () {
   let moveEventLeft, moveEventRight;
   let top, belowTop, right, iconRight;
 
+  this.grayBarWidth = 210;
   this.belowHeight = 123;
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2057,8 +2058,8 @@ GeneralJs.prototype.greenBar = function () {
       }
       if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
       }
     }
   }
@@ -2093,8 +2094,8 @@ GeneralJs.prototype.greenBar = function () {
       }
       if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
+      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
       }
     }
   }
@@ -2371,8 +2372,8 @@ GeneralJs.prototype.greenBar = function () {
               target.style.transform = "translateX(0px)";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
               GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
+            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
               GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
             }
@@ -2426,8 +2427,8 @@ GeneralJs.prototype.greenBar = function () {
               target.style.transform = "translateX(0px)";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
               GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + 210) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + 210)) + ea + ")";
+            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
               window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
               GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
             }

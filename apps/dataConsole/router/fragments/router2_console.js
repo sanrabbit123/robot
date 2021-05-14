@@ -7,6 +7,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   obj.func = async function (req, res) {
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
+      if (req.body.where === undefined && req.body.whereQuery !== undefined) {
+        req.body.where = req.body.whereQuery;
+      }
       if (req.url === "/getClients") {
         standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };

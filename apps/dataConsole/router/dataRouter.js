@@ -287,10 +287,20 @@ DataRouter.prototype.rou_get_First = function () {
   obj.link = "/:id";
   obj.func = function (req, res) {
     try {
+      let ip, pass;
       let target;
 
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (!ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      pass = true;
+      if (instance.isGhost) {
+        if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          pass = true;
+        } else {
+          pass = false;
+        }
+      }
+
+      if (!pass) {
 
         res.set("Content-Type", "text/html");
         res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
@@ -299,43 +309,32 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        // if (instance.isGhost) {
-        //
-        //   res.set("Content-Type", "text/html");
-        //   res.send(`<html><head><title>Permission denied</title></head><body><script>
-        //     alert("접근할 수 없는 경로입니다!");
-        //     window.location.href = "https://home-liaison.com";</script></body></html>`);
-        //
-        // } else {
+        if (/^cl/i.test(req.params.id)) {
+          target = "client";
+        } else if (/^de/i.test(req.params.id)) {
+          target = "designer";
+        } else if (/^ser/i.test(req.params.id)) {
+          target = "service";
+        } else if (/^proj/i.test(req.params.id)) {
+          target = "project";
+        } else if (/^prop/i.test(req.params.id)) {
+          target = "proposal";
+        } else if (/^ana/i.test(req.params.id)) {
+          target = "analytics";
+        } else if (/^con/i.test(req.params.id)) {
+          target = "contents";
+        } else if (/^pho/i.test(req.params.id)) {
+          target = "photo";
+        } else {
+          target = "client";
+        }
 
-          if (/^cl/i.test(req.params.id)) {
-            target = "client";
-          } else if (/^de/i.test(req.params.id)) {
-            target = "designer";
-          } else if (/^ser/i.test(req.params.id)) {
-            target = "service";
-          } else if (/^proj/i.test(req.params.id)) {
-            target = "project";
-          } else if (/^prop/i.test(req.params.id)) {
-            target = "proposal";
-          } else if (/^ana/i.test(req.params.id)) {
-            target = "analytics";
-          } else if (/^con/i.test(req.params.id)) {
-            target = "contents";
-          } else if (/^pho/i.test(req.params.id)) {
-            target = "photo";
-          } else {
-            target = "client";
-          }
-
-          instance.baseMaker(target, "first", null).then(function (html) {
-            res.set("Content-Type", "text/html");
-            res.send(html);
-          }).catch(function (err) {
-            throw new Error(err);
-          });
-
-        // }
+        instance.baseMaker(target, "first", null).then(function (html) {
+          res.set("Content-Type", "text/html");
+          res.send(html);
+        }).catch(function (err) {
+          throw new Error(err);
+        });
 
       }
 
@@ -511,9 +510,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   obj.func = async function (req, res) {
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
-
-      console.log(req.headers.origin);
-
+      if (req.body.where === undefined && req.body.whereQuery !== undefined) {
+        req.body.where = req.body.whereQuery;
+      }
       if (req.url === "/getClients") {
         standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
@@ -2792,12 +2791,13 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   const { requestSystem } = this.mother;
   let obj = {};
   obj.link = "/webHookPayment";
+  obj.public = true;
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json", });
       const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" }, { headers: { "Content-Type": "application/json" } });
       const token = payResponse.data.response.access_token;
-      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "X-ImpTokenHeader": token } });
+      const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
       const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
       const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo: instance.mongo });
       let client, cliid;

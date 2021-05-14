@@ -8,7 +8,7 @@ const ProjectJs = function () {
     initialLine: 14,
     initialMargin: 14,
   }
-  this.grayBarWidth = 210;
+  this.grayBarWidth = null;
   this.belowHeight = null;
   this.whiteBox = null;
   this.standardDoms = [];
@@ -5537,6 +5537,7 @@ ProjectJs.prototype.whiteResize = function () {
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
+    this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.backGrayBar();
