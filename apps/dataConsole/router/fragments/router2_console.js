@@ -5,10 +5,8 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getPhotos" ];
   obj.func = async function (req, res) {
-    if (instance.isGhost) { if (!instance.ghostWall(req.headers)) { res.set("Content-Type", "application/json"); res.send(JSON.stringify({ message: "ok" })); return; } }
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
-
       if (req.url === "/getClients") {
         standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };

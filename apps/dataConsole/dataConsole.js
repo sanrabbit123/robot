@@ -611,8 +611,32 @@ DataConsole.prototype.connect = async function () {
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);
     }
-    for (let obj of rouObj.post) {
-      app.post(obj.link, obj.func);
+    if (isGhost) {
+      for (let obj of rouObj.post) {
+        app.post(obj.link, function (req, res) {
+          let __ghostWallLogic;
+          __ghostWallLogic = false;
+          if (typeof req.headers.referer === "string" && typeof req.headers.origin === "string") {
+            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.referer) || (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.origin);
+          } else if (typeof req.headers.referer === "string") {
+            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.referer);
+          } else if (typeof req.headers.origin === "string") {
+            __ghostWallLogic = (new RegExp(instance.address.homeinfo.ghost.host, "gi")).test(req.headers.origin);
+          }
+          if (!__ghostWallLogic) {
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify({ message: "ok" }));
+            return;
+          } else {
+            console.log(__ghostWallLogic)
+            obj.func(req, res);
+          }
+        });
+      }
+    } else {
+      for (let obj of rouObj.post) {
+        app.post(obj.link, obj.func);
+      }
     }
     console.log(`set router`);
 
