@@ -273,6 +273,20 @@ Ghost.prototype.ghostRouter = function (needs) {
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
+  //GET - ssl test
+  funcObj.get_ssl = {
+    link: [ "/ssl" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ message: "hello?" }));
+    }
+  };
+
   //POST - shell
   funcObj.post_shell = {
     link: [ "/shell" ],
