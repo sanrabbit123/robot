@@ -7,12 +7,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       const { cliid, proid, desid, name, phone, designer } = req.body;
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
       await instance.kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
@@ -39,12 +34,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   obj.link = "/designerProposal_policy";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       let resultObj;
       resultObj = {
         policy: DataRouter.policy(),

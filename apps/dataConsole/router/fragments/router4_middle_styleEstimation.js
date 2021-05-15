@@ -9,12 +9,7 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
     try {
       const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.mongo, withTools: true });
       const imagePath = contentsArr.imagePath().keyListImage();
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(imagePath));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -38,12 +33,7 @@ DataRouter.prototype.rou_post_styleEstimation_getContentsByPid = function () {
       const { pid } = req.body;
       const contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo: this.mongo });
       let designer;
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       if (contentsArr.length !== 1) {
         res.send(JSON.stringify({}));
       } else {
@@ -66,12 +56,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
   obj.link = "/styleEstimation_getQuestions";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify([
         {
           question: "진한 우드를 사용하였는가?",
@@ -189,12 +174,7 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
         await back.mongoUpdate(collection, [ { id, who }, { date: json.date, index, value } ], { selfMongo: instance.mongolocal });
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -222,12 +202,7 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
       let row, initialNumber;
       let assign;
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
 
       assign = [
         0,
