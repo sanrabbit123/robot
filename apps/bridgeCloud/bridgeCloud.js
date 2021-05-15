@@ -267,12 +267,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //GET - ssl test
   funcObj.get_ssl = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": instance.frontHost,
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "text/plain" });
       res.send('this is new bridge cloud');
     } catch (e) {
       slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
