@@ -110,11 +110,7 @@ class Designers extends Array {
     } else if (/\//g.test(q)) {
       query = q.split('/');
     } else if (/\./g.test(q)) {
-      query = q.split('.');
-    } else if (/\-/g.test(q)) {
-      query = q.split('-');
-    } else if (/\_/g.test(q)) {
-      query = q.split('_');
+      query = q.split(' ');
     } else {
       query = [ q ];
     }
@@ -2602,101 +2598,63 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   //realtime
-  GeneralJs.ajax("type=get&desid=" + thisCase[standard[1]], "/realtimeDesigner", function (data) {
-    const dateArr = JSON.parse(data);
-    let div_clone3, div_clone4, div_clone5;
+  div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone3.setAttribute("index", "realtimeDesigner");
+  style = {
+    position: "absolute",
+    top: String(fontSize * lineHeightRatio * info.length) + ea,
+    left: String(0) + ea,
+    width: "100%",
+    height: String(16) + ea,
+  };
+  for (let j in style) {
+    div_clone3.style[j] = style[j];
+  }
 
-    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone3.setAttribute("index", "realtimeDesigner");
-    style = {
-      position: "absolute",
-      top: String(fontSize * lineHeightRatio * info.length) + ea,
-      left: String(0) + ea,
-      width: "100%",
-      height: String(16) + ea,
-    };
-    for (let j in style) {
-      div_clone3.style[j] = style[j];
-    }
+  //column name
+  div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone4.textContent = "가능 일정";
+  style = {
+    display: "inline-block",
+    position: "absolute",
+    top: String(-0.8 * (fontSize / 15)) + ea,
+    left: String(0) + ea,
+    width: String(fontSize * 9) + ea,
+    height: String(fontSize * (21 / 16)) + ea,
+    fontSize: String(fontSize) + ea,
+    fontWeight: String(700),
+  };
+  for (let j in style) {
+    div_clone4.style[j] = style[j];
+  }
+  div_clone3.appendChild(div_clone4);
 
-    //column name
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone4.textContent = "가능 일정";
-    style = {
-      display: "inline-block",
-      position: "absolute",
-      top: String(-0.8 * (fontSize / 15)) + ea,
-      left: String(0) + ea,
-      width: String(fontSize * 9) + ea,
-      height: String(fontSize * (21 / 16)) + ea,
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(700),
-    };
-    for (let j in style) {
-      div_clone4.style[j] = style[j];
-    }
-    div_clone3.appendChild(div_clone4);
-
-    //value
-    div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      display: "inline-block",
-      position: "absolute",
-      top: String(-1.2 * (fontSize / 15)) + ea,
-      left: String(fontSize * 9) + ea,
-      width: "calc(100% - " + String(fontSize * 9) + ea + ")",
-      height: String(fontSize * (21 / 16)) + ea,
-      overflow: "scroll",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(300),
-    };
-    for (let j in style) {
-      div_clone4.style[j] = style[j];
-    }
-
-    for (let j = 0; j < dateArr.length; j++) {
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone5.textContent = String(dateArr[j].year).slice(2) + '년' + ' ' + String(dateArr[j].month) + '월';
-      style = {
-        display: "inline-block",
-        position: "relative",
-        top: String(-1.6 * (fontSize / 15)) + ea,
-        marginRight: String(14) + ea,
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(300),
-        cursor: "pointer",
-        color: (dateArr[j].onoff ? GeneralJs.colorChip.green : GeneralJs.colorChip.deactive),
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone5.setAttribute("year", String(dateArr[j].year));
-      div_clone5.setAttribute("month", String(dateArr[j].month));
-      div_clone5.setAttribute("onoff", (dateArr[j].onoff ? "true" : "false"));
-      div_clone5.addEventListener("click", async function (e) {
-        try {
-          let onoff;
-          if (this.getAttribute("onoff") === "true") {
-            onoff = 0;
-            this.style.color = GeneralJs.colorChip.deactive;
-            this.setAttribute("onoff", "false");
-          } else {
-            onoff = 1;
-            this.style.color = GeneralJs.colorChip.green;
-            this.setAttribute("onoff", "true");
-          }
-          await GeneralJs.ajaxPromise("type=update&year=" + this.getAttribute("year") + "&month=" + this.getAttribute("month") + "&onoff=" + String(onoff) + "&desid=" + thisCase[standard[1]], "/realtimeDesigner");
-        } catch (e) {
-          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-          console.log(e);
-        }
-      });
-      div_clone4.appendChild(div_clone5);
-    }
-
-    div_clone3.appendChild(div_clone4);
-    propertyBox.appendChild(div_clone3);
+  //value
+  div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+  div_clone4.textContent = "일정 관리 콘솔";
+  div_clone4.classList.add("hoverDefault");
+  style = {
+    display: "inline-block",
+    position: "absolute",
+    top: String(-1.2 * (fontSize / 15)) + ea,
+    left: String(fontSize * 9) + ea,
+    width: "calc(100% - " + String(fontSize * 9) + ea + ")",
+    height: String(fontSize * (21 / 16)) + ea,
+    overflow: "scroll",
+    fontSize: String(fontSize) + ea,
+    fontWeight: String(300),
+    color: GeneralJs.colorChip.green,
+  };
+  for (let j in style) {
+    div_clone4.style[j] = style[j];
+  }
+  div_clone4.addEventListener("click", function (e) {
+    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=calendar&desid=" + thisCase[standard[1]];
   });
+
+  div_clone3.appendChild(div_clone4);
+  propertyBox.appendChild(div_clone3);
+
 
   //projects
   GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ "$or": [ { desid: thisCase[standard[1]], "process.status": "진행중" }, { desid: thisCase[standard[1]], "process.status": "대기" } ] }), "/getProjects", async function (data) {

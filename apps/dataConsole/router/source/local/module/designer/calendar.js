@@ -1,4 +1,4 @@
-DesignerJs.prototype.calendarBase = function () {
+DesignerJs.prototype.calendarBase = function (search = null) {
   const instance = this;
   const { ea, belowHeight } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -177,7 +177,7 @@ DesignerJs.prototype.calendarBase = function () {
   this.calendarDashBoard = dashBoard;
 
   this.calendarTitleTime(titleTime);
-  this.calendarContentsTime();
+  this.calendarContentsTime(search);
 }
 
 DesignerJs.prototype.calendarMatrix = function () {
@@ -955,6 +955,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   let size;
   let textTop;
   let y;
+  let designerNameBox, designerNameBox_clone;
 
   size = 16;
   pastTop = 0;
@@ -967,6 +968,9 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     nodeArr = [
       {
         mother,
+        attribute: [
+          { desid: designers[i].desid },
+        ],
         style: {
           display: "block",
           position: "absolute",
@@ -1042,7 +1046,17 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
       nodeArr[nodeArr.length - 1 - 2 + (-1 * (j + 1))].class.push(classNameTextY + "_" + String(y + (j + 1)));
     }
 
-    createNodes(nodeArr);
+    [ designerNameBox ] = createNodes(nodeArr);
+    designerNameBox_clone = designerNameBox.cloneNode(false);
+    designerNameBox_clone.style.background = "transparent";
+    designerNameBox_clone.style.border = String(0);
+    designerNameBox_clone.style.zIndex = String(3);
+    designerNameBox_clone.classList.add("hoverDefault");
+    designerNameBox_clone.addEventListener("click", function (e) {
+      const desid = this.getAttribute("desid");
+      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid;
+    });
+    mother.appendChild(designerNameBox_clone);
 
     pastTop += boxHeight + 1;
 
@@ -1214,7 +1228,7 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
           {
             type: "click",
             event: function (e) {
-              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general";
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general" + (GeneralJs.returnGet().desid === undefined ? "" : "&desid=" + GeneralJs.returnGet().desid);
             }
           }
         ],
@@ -1224,7 +1238,27 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
           right: String(leftMargin) + ea,
           height: String(size - 3) + ea,
         }
-      }
+      },
+      {
+        mother: calendarDashBoard,
+        mode: "svg",
+        source: this.mother.returnHamburger(colorChip.black),
+        class: [ "hoverDefault_lite" ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              instance.calendarContentsTime();
+            }
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(topMargin + 5.5) + ea,
+          right: String(leftMargin + 16) + ea,
+          height: String(size - 5) + ea,
+        }
+      },
     ]);
 
   } else {
@@ -1253,7 +1287,8 @@ DesignerJs.prototype.calendarSearchEvent = function () {
 DesignerJs.prototype.calendarView = async function () {
   const instance = this;
   try {
-    const { createNodes, colorChip, ajaxJson, sleep } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, sleep, returnGet } = GeneralJs;
+    const getObj = returnGet();
     let designers, projects, clients;
     let desidArr, cliidArr;
     let desidArr_raw;
@@ -1323,7 +1358,7 @@ DesignerJs.prototype.calendarView = async function () {
     this.calendarDashBoard = null;
 
     this.matrix = this.calendarMatrix();
-    this.calendarBase();
+    this.calendarBase(getObj.desid === undefined ? null : getObj.desid);
     this.calendarSearchEvent();
 
     await sleep(500);
