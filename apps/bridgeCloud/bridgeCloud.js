@@ -435,7 +435,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //end
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": instance.frontHost,
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
@@ -783,7 +783,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       //end
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": instance.frontHost,
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
@@ -813,7 +813,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": instance.frontHost,
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
@@ -909,7 +909,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //end
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": instance.frontHost,
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
             "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
@@ -919,7 +919,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": instance.frontHost,
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
             "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
@@ -990,7 +990,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //end
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": instance.frontHost,
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
             "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
@@ -1003,7 +1003,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": instance.frontHost,
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
             "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
           });
@@ -1028,7 +1028,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
       res.set({
         "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": instance.frontHost,
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });

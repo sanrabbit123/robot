@@ -97,6 +97,50 @@ class Designers extends Array {
       }
     }
   }
+  search(q) {
+    if (typeof q !== "string") {
+      throw new Error("search input must be string");
+    }
+    if (q === '' || q === "전체" || q === '.' || q === "all") {
+      return this;
+    }
+    let query;
+    if (/,/g.test(q)) {
+      query = q.split(',');
+    } else if (/\//g.test(q)) {
+      query = q.split('/');
+    } else if (/\./g.test(q)) {
+      query = q.split('.');
+    } else if (/\-/g.test(q)) {
+      query = q.split('-');
+    } else if (/\_/g.test(q)) {
+      query = q.split('_');
+    } else {
+      query = [ q ];
+    }
+    for (let i = 0; i < query.length; i++) {
+      query[i] = query[i].trim();
+    }
+    const newTong = [];
+    for (let q of query) {
+      for (let designer of this) {
+        if ((new RegExp(q, "gi")).test(designer.designer) || (new RegExp(q, "gi")).test(designer.desid) || (new RegExp(q, "gi")).test(designer.information.phone) || (new RegExp(q, "gi")).test(designer.information.email)) {
+          newTong.push(designer);
+        }
+      }
+    }
+    return new Designers(newTong);
+  }
+  getProjectsByDesid(desid) {
+    if (typeof desid !== "string") {
+      throw new Error("input must be string");
+    }
+    const designer = this.pick(desid);
+    if (designer.projects === undefined) {
+      throw new Error("set Project first");
+    }
+    return designer.projects;
+  }
 }
 
 const DesignerJs = function () {
@@ -3849,6 +3893,13 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveLeftArea").style.display = "none";
 
     } else {
+
+      this.backGrayBar();
+      await this.spreadData();
+      this.addTransFormEvent();
+      this.addSearchEvent();
+      this.addExtractEvent();
+      this.whiteResize();
 
       tempFunction = this.cardViewMaker(true);
       tempFunction().catch(function (e) {

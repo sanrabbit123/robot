@@ -2118,71 +2118,6 @@ DataRouter.prototype.rou_post_calendarArr = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_notionUpdate = function () {
-  const instance = this;
-  const back = this.back;
-  const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
-  const notion = new NotionAPIs();
-  let obj = {};
-  obj.link = "/notionUpdate";
-  obj.func = async function (req, res) {
-    try {
-      let notionCard;
-      let whoMethod, whoFunction;
-      let result;
-      let whereQuery, updateQuery;
-      let historyObj;
-
-      whoMethod = null;
-      if (req.body.cliid !== undefined) {
-        notionCard = await notion.getElementById(req.body.cliid, true);
-        whoMethod = "client";
-      } else if (req.body.desid !== undefined) {
-        notionCard = await notion.getElementById(req.body.desid);
-        whoMethod = "designer";
-      }
-
-      whoFunction = instance.patch[whoMethod + "NotionMap"];
-      result = whoFunction(notionCard);
-
-      updateQuery = {};
-      for (let { target, finalValue } of result) {
-        if (finalValue !== null && finalValue !== undefined) {
-          updateQuery[target] = finalValue;
-        }
-      }
-
-      whereQuery = {};
-      if (req.body.cliid !== undefined) {
-        whereQuery.cliid = req.body.cliid;
-        await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-
-        historyObj = {};
-        historyObj.cliid = req.body.cliid;
-        historyObj.history = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.history === undefined ? [] : notionCard.detailStory.history))));
-        historyObj.space = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.space === undefined ? [] : notionCard.detailStory.space))));
-        historyObj.styling = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.styling === undefined ? [] : notionCard.detailStory.styling))));
-        historyObj.construct = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.construct === undefined ? [] : notionCard.detailStory.construct))));
-        historyObj.budget = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.budget === undefined ? [] : notionCard.detailStory.budget))));
-        historyObj.progress = DataRouter.splitToSpace(DataRouter.objectToFlat(DataRouter.notionArrRefine((notionCard.detailStory.progress === undefined ? [] : notionCard.detailStory.progress))));
-
-        await instance.back.updateHistory("client", [ whereQuery, historyObj ], { selfMongo: instance.mongolocal });
-
-      } else if (req.body.desid !== undefined) {
-        whereQuery.desid = req.body.desid;
-        await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-      }
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ "message": "success" }));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
   const back = this.back;
@@ -2369,68 +2304,6 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(rows));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_designerMatrix = function () {
-  const instance = this;
-  const back = this.back;
-  const { fileSystem } = this.mother;
-  let obj = {};
-  obj.link = "/designerMatrix";
-  obj.func = async function (req, res) {
-    try {
-      const logDir = `${instance.dir}/log`;
-      const { button, desid } = req.body;
-      const sseConst = "sse_designerMatrix";
-      let responseObj;
-      let thisObjs, thisObj;
-      let temp0, temp1;
-      let matrixA, matrixB;
-      let json;
-      let standardA, standardB;
-      let today;
-      let whereQuery, updateQuery;
-      let sseObjs;
-
-      responseObj = {};
-
-      if (button === "get") {
-        thisObjs = await back.getDesignersByQuery({ desid }, { selfMongo: instance.mongo });
-        if (thisObjs.length > 0) {
-          thisObj = thisObjs[0];
-          responseObj[req.body.target] = thisObj.analytics.project.matrix;
-          responseObj["values"] = thisObj.analytics.project.matrix.getStandards();
-          responseObj["analytics"] = thisObj.analytics.toNormal();
-        } else {
-          responseObj["error"] = "There is no designer";
-        }
-
-        sseObjs = await back.mongoRead(sseConst, { desid }, { selfMongo: instance.mongolocal });
-        if (sseObjs.length === 0) {
-          await back.mongoCreate(sseConst, { desid, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
-        }
-
-      } else if (button === "update") {
-        whereQuery = { desid };
-        updateQuery = {};
-        if (req.body.matrixA !== undefined) {
-          updateQuery["analytics.project.matrix"] = JSON.parse(req.body.matrixA);
-        } else {
-          updateQuery = JSON.parse(req.body.update);
-        }
-        await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        await back.mongoUpdate(sseConst, [ { desid }, { column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) } ], { selfMongo: instance.mongolocal });
-        // await fileSystem(`write`, [ logDir + "/designerMatrix_" + desid + "_latest.json", JSON.stringify({ desid, column: req.body.column, type: req.body.type, order: JSON.parse(req.body.order) }) ]);
-      }
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(responseObj));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
@@ -2685,12 +2558,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
         }
       }
       await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -2728,12 +2596,7 @@ DataRouter.prototype.rou_post_humanPacket = function () {
           contents: req.body.contents
         });
       }
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -2770,12 +2633,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
         final.push(tempArr);
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(final));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -2794,7 +2652,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   obj.public = true;
   obj.func = async function (req, res) {
     try {
-      res.set({ "Content-Type": "application/json", });
+      res.set({ "Content-Type": "application/json" });
       const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" }, { headers: { "Content-Type": "application/json" } });
       const token = payResponse.data.response.access_token;
       const { data } = await requestSystem("https://api.iamport.kr/payments/" + req.body.imp_uid, {}, { headers: { "Authorization": token } });
@@ -2911,12 +2769,7 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
     try {
       const contentsArr = await back.getContentsArrByQuery({}, { selfMongo: this.mongo, withTools: true });
       const imagePath = contentsArr.imagePath().keyListImage();
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(imagePath));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -2940,12 +2793,7 @@ DataRouter.prototype.rou_post_styleEstimation_getContentsByPid = function () {
       const { pid } = req.body;
       const contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo: this.mongo });
       let designer;
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       if (contentsArr.length !== 1) {
         res.send(JSON.stringify({}));
       } else {
@@ -2968,12 +2816,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
   obj.link = "/styleEstimation_getQuestions";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify([
         {
           question: "진한 우드를 사용하였는가?",
@@ -3091,12 +2934,7 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
         await back.mongoUpdate(collection, [ { id, who }, { date: json.date, index, value } ], { selfMongo: instance.mongolocal });
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
@@ -3124,12 +2962,7 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
       let row, initialNumber;
       let assign;
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
 
       assign = [
         0,
@@ -3168,12 +3001,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       const { cliid, proid, desid, name, phone, designer } = req.body;
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
       await instance.kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
@@ -3200,12 +3028,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   obj.link = "/designerProposal_policy";
   obj.func = async function (req, res) {
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.set({ "Content-Type": "application/json" });
       let resultObj;
       resultObj = {
         policy: DataRouter.policy(),
