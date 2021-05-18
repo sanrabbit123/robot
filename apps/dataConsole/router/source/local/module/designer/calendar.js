@@ -408,7 +408,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     let size;
 
     width = 218;
-    height = meeting !== "on" ? (isMac() ? 82 : 79) : 58;
+    height = meeting !== "on" ? (isMac() ? 82 : 80) : 58;
     outerMargin = 10;
     margin = 5;
 
@@ -1112,7 +1112,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
 DesignerJs.prototype.calendarDashBoardLaunching = function () {
   const instance = this;
   const { ea, calendarDashBoard } = this;
-  const { createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { createNodes, colorChip, withOut, cleanChildren, isMac } = GeneralJs;
   const { classNameX, classNameY, classNameXY, classNameTextY, classNameDesid, classDesignerBox } = this.calendarClass;
   const firstDoms = document.querySelectorAll('.' + classNameX + '_' + String(0));
   const today = new Date();
@@ -1128,8 +1128,8 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
 
   size = 16;
   width = 400;
-  height = 24;
-  topMargin = 12;
+  height = isMac() ? 24 : 21;
+  topMargin = isMac() ? 12 : 15;
   leftMargin = 20;
 
   cleanChildren(calendarDashBoard);
