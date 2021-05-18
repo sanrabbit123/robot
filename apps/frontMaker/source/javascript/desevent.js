@@ -1750,7 +1750,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -1797,7 +1797,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   }
                   input_clone.value = tempArr[z];
                   input_clone.addEventListener("keypress", function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === "Enter") {
                       okEvent.call(this, e);
                     }
                   });
@@ -1845,7 +1845,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", "https://www.instagram.com/homeliaison");
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -1915,7 +1915,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -4183,7 +4183,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -4230,7 +4230,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   }
                   input_clone.value = tempArr[z];
                   input_clone.addEventListener("keypress", function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === "Enter") {
                       okEvent.call(this, e);
                     }
                   });
@@ -4278,7 +4278,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", "https://www.instagram.com/homeliaison");
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -4348,7 +4348,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -6756,7 +6756,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -6803,7 +6803,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                   }
                   input_clone.value = tempArr[z];
                   input_clone.addEventListener("keypress", function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === "Enter") {
                       okEvent.call(this, e);
                     }
                   });
@@ -6851,7 +6851,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", "https://www.instagram.com/homeliaison");
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });
@@ -6921,7 +6921,7 @@ DeseventJs.prototype.returnBlocks = function (pageBoo) {
                 }
                 input_clone.setAttribute("placeholder", (thisIndex === 0 ? "https://home-liaison.com" : (thisIndex === 1 ? "https://blog.naver.com/homeliaison" : "https://drive.google.com/drive/folders/----")));
                 input_clone.addEventListener("keypress", function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     okEvent.call(this, e);
                   }
                 });

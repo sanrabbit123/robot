@@ -487,7 +487,7 @@ ContentsJs.prototype.infoArea = function (info) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
 
           if (this.hasAttribute("dateEventMethod")) {
             originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -823,7 +823,7 @@ ContentsJs.prototype.infoArea = function (info) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -1825,7 +1825,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
   mother.appendChild(tong);
 
   this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       const offStandard = [
         "white",
         "rgb(32, 32, 32)",
@@ -2333,7 +2333,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
   mother.appendChild(tong);
 
   this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       const offStandard = [
         "white",
         "rgb(32, 32, 32)",
@@ -4383,7 +4383,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
       //make search event
       instance.overrideSearch.querySelector("input").addEventListener("keypress", function (e) {
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           let targetDoms, intervalId, num;
           targetDoms = [];
           for (let { dom, keywords } of allSearchTargets) {
@@ -4976,7 +4976,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
 
           if (this.hasAttribute("dateEventMethod")) {
@@ -5322,7 +5322,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -5693,7 +5693,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     textArea_clone.addEventListener("blur", detailBlurEvent);
     if (i === detailTongTarget.length - 1) {
       textArea_clone.addEventListener("keydown", function (e) {
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
           e.preventDefault();
           this.blur();
         }
@@ -7138,7 +7138,7 @@ ContentsJs.prototype.addTransFormEvent = function () {
 ContentsJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
         this.value = this.value.replace(/[ \n]/g, '');
@@ -7526,7 +7526,7 @@ ContentsJs.prototype.launching = async function () {
       }
       if (getTarget === null) {
         tempFunction = this.makeSearchEvent(getObj.conid);
-        await tempFunction({ keyCode: 13 });
+        await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.conid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
@@ -7544,7 +7544,7 @@ ContentsJs.prototype.launching = async function () {
       }
       if (getTarget === null) {
         tempFunction = this.makeSearchEvent(getObj.pid);
-        await tempFunction({ keyCode: 13 });
+        await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.pid, 'gi')).test(dom.textContent)) {
             getTarget = dom;

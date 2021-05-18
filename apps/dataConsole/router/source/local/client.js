@@ -514,7 +514,7 @@ ClientJs.prototype.infoArea = function (info) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
 
           if (this.hasAttribute("dateEventMethod")) {
             originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -851,7 +851,7 @@ ClientJs.prototype.infoArea = function (info) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -2322,7 +2322,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
 
           if (this.hasAttribute("dateEventMethod")) {
@@ -2668,7 +2668,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -3049,7 +3049,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     textArea_clone.addEventListener("blur", historyBlurEvent);
     if (i === historyTongTarget.length - 1) {
       textArea_clone.addEventListener("keydown", function (e) {
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
           e.preventDefault();
           this.blur();
         }
@@ -4233,7 +4233,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     vaildValue(this);
   });
   input_clone.addEventListener("keyup", function (e) {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       const queryObj = vaildValue(this);
       input_clone.blur();
       mother.removeChild(mother.lastChild);
@@ -4396,7 +4396,7 @@ ClientJs.prototype.addTransFormEvent = function () {
 ClientJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
         this.value = this.value.replace(/[ \n]/g, '');
@@ -4856,7 +4856,7 @@ ClientJs.prototype.launching = async function () {
       }
       if (getTarget === null) {
         tempFunction = this.makeSearchEvent(getObj.cliid);
-        await tempFunction({ keyCode: 13 });
+        await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
             getTarget = dom;

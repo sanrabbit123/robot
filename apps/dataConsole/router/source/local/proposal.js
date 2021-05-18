@@ -88,7 +88,7 @@ ProposalJs.below_events = {
   },
   search: {
     client: function (e) {
-      if (e.keyCode === 13 || e.keyCode === 32) {
+      if (e.key === "Enter" || e.code === "Space") {
         e.preventDefault();
         this.value = this.value.replace(/ /g, '').replace(/\t/g, '').replace(/\n/g, '');
         let targets = document.querySelectorAll('.pp_clients_label > div');
@@ -100,7 +100,7 @@ ProposalJs.below_events = {
       }
     },
     service: function (e) {
-      if (e.keyCode === 13 || e.keyCode === 32) {
+      if (e.key === "Enter" || e.code === "Space") {
         e.preventDefault();
         this.value = this.value.replace(/ /g, '').replace(/\t/g, '').replace(/\n/g, '');
         let targets = document.querySelectorAll('.pp_clients_label > div');
@@ -151,7 +151,7 @@ ProposalJs.below_events = {
         }
       }
       e.preventDefault();
-      if (e.keyCode === 13 || e.keyCode === 32) {
+      if (e.key === "Enter" || e.code === "Space") {
         if (key < mothers.length) {
           targets = mothers[key].querySelectorAll('.pp_designer_selected_box_contents_designers > label > div');
           for (let i of targets) {
@@ -173,7 +173,7 @@ ProposalJs.below_events = {
           }
         }
         this.value = '';
-      } else if (e.keyCode === 8 && this.value === '') {
+      } else if (e.key === "Backspace" && this.value === '') {
         if (key !== 0) {
           if (key < mothers.length) {
             targets = mothers[key - 1].querySelectorAll('.pp_designer_selected_box_contents_designers_input');
@@ -1110,7 +1110,7 @@ ProposalJs.prototype.thirdKeyup = function () {
   const instance = this;
   return function (e) {
     if (e.cancelable) { e.preventDefault(); }
-    if (e.keyCode !== 13 && e.keyCode !== 9) {
+    if (e.key !== "Enter" && e.key !== "Tab") {
       if (this.value.length > 2) { this.value = "4명"; }
       this.value = this.value.replace(/[^0-9]/g, '') + "명";
     } else {
@@ -1171,7 +1171,7 @@ ProposalJs.prototype.thirdProcess = async function () {
   children.get("box1").appendChild(div_clone);
 
   input_clone.addEventListener("keydown", function (e) {
-    if (e.keyCode === 13 || e.keyCode === 9) {
+    if (e.key === "Enter" || e.key === "Tab") {
       if (e.cancelable) {
         e.preventDefault();
       }
@@ -1208,7 +1208,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   fourth.events.money = function (e) {
     if (this.value === '') { this.value = "0"; }
     if (e.type === "keyup") {
-      if (e.keyCode === 13 || e.keyCode === 9) {
+      if (e.key === "Enter" || e.key === "Tab") {
         this.value = GeneralJs.autoComma(this.value);
       }
     } else if (e.type === "blur") {
@@ -2457,7 +2457,7 @@ ProposalJs.prototype.list_searchBar = async function () {
       let ea = "px";
       let width;
 
-      if (e.keyCode === 13) {
+      if (e.key === "Enter") {
 
         entireList = [ "전체", "모두", "all" ];
 
@@ -5062,7 +5062,7 @@ ProposalJs.prototype.launching = async function () {
             } else {
               client = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"))[0];
               instance.mother.searchInput.nextElementSibling.value = client.name;
-              (GeneralJs.events["proposalListSearch"]).call(instance.mother.searchInput.nextElementSibling, { keyCode: 13 });
+              (GeneralJs.events["proposalListSearch"]).call(instance.mother.searchInput.nextElementSibling, { key: "Enter" });
               if (GeneralJs.stacks["proposalListSearchResult"] !== null) {
                 GeneralJs.timeouts["belowLaunchingTimeOut4"] = setTimeout(function () {
                   const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");

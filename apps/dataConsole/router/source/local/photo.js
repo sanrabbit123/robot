@@ -516,7 +516,7 @@ PhotoJs.prototype.infoArea = function (info) {
         let idDomChildren;
         let targetOriginalDiv;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
 
           if (this.hasAttribute("dateEventMethod")) {
             originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -780,7 +780,7 @@ PhotoJs.prototype.infoArea = function (info) {
             button_clone2.style[j] = style[j];
           }
           button_clone2.addEventListener("keypress", (e) => {
-            if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+            if (GeneralJs.confirmKey.includes(e.key)) {
               input_clone.value = window.encodeURIComponent(button_clone2.value);
               this.setAttribute("link", input_clone.value);
               this.style.color = "#404040";
@@ -978,7 +978,7 @@ PhotoJs.prototype.infoArea = function (info) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -2696,7 +2696,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let targetOriginalRowDiv, targetOriginalDiv;
         let motherChildren;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
 
           if (this.hasAttribute("dateEventMethod")) {
@@ -2993,7 +2993,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             button_clone2.style[j] = style[j];
           }
           button_clone2.addEventListener("keypress", (e) => {
-            if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+            if (GeneralJs.confirmKey.includes(e.key)) {
               input_clone.value = window.encodeURIComponent(button_clone2.value);
               this.setAttribute("link", input_clone.value);
               this.style.color = "#404040";
@@ -3193,7 +3193,7 @@ PhotoJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -4219,7 +4219,7 @@ PhotoJs.prototype.reportContents = function (data, mother, loadingIcon) {
     vaildValue(this);
   });
   input_clone.addEventListener("keyup", function (e) {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       vaildValue(this);
       const today = new Date();
       const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
@@ -4404,7 +4404,7 @@ PhotoJs.prototype.addTransFormEvent = function () {
 PhotoJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
         this.value = this.value.replace(/[ \n]/g, '');
@@ -4869,7 +4869,7 @@ PhotoJs.prototype.launching = async function () {
       }
       if (getTarget === null) {
         tempFunction = this.makeSearchEvent(getObj.proid);
-        await tempFunction({ keyCode: 13 });
+        await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
@@ -4878,7 +4878,7 @@ PhotoJs.prototype.launching = async function () {
       }
     } else if (getObj.cliid !== undefined) {
       tempFunction = this.makeSearchEvent(getObj.cliid);
-      await tempFunction({ keyCode: 13 });
+      await tempFunction({ key: "Enter" });
       if (this.standardDoms.length > 1) {
         getTarget = this.standardDoms[1];
       }

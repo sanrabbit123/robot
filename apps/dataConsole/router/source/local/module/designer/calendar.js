@@ -367,6 +367,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   const { ea } = this;
   const { createNode, createNodes, colorChip, ajaxJson, withOut, cleanChildren } = GeneralJs;
   const { contentsTime: mother, designerWidth: box0Width, projectWidth: box1Width } = this.calendarSpec;
+  const { DateX, DesignerDate, DesignerDates } = this.calendarDateClass;
   let designers;
 
   if (mother.firstChild !== null && mother.firstChild !== undefined) {
@@ -388,7 +389,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     const arr = str.split('-');
     return new Date(Number(arr[0]), Number(arr[1].replace(/^0/, '')) - 1, Number(arr[2].replace(/^0/, '')));
   }
-  const detailTimeEvent = function (e) {
+  this.detailTimeEvent = function (e) {
     const that = this;
     const { ea } = instance;
     const x = Number(this.getAttribute('x'));
@@ -444,11 +445,11 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             },
           ],
           style: {
-            position: "absolute",
+            position: y < 3 ? "fixed" : "absolute",
             width: String(width) + ea,
             height: String(height) + ea,
-            top: String(-1 * (height + outerMargin)) + ea,
-            left: withOut(50, width / 2, ea),
+            top: String(y < 3 ? this.getBoundingClientRect().top - height - outerMargin : -1 * (height + outerMargin)) + ea,
+            left: y < 3 ? String(this.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (width / 2)) + ea : withOut(50, width / 2, ea),
             background: meeting === "on" ? colorChip.red : (!possibleTimes ? colorChip.gradientGreen : colorChip.yellow),
             borderRadius: String(3) + "px",
             zIndex: String(2),
@@ -598,7 +599,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     }
 
   }
-  const moduleEvent = function (e) {
+  this.moduleEvent = function (e) {
     if (e.cancelable) {
       e.preventDefault();
     }
@@ -620,6 +621,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     let size0, size1;
     let textTop0, textTop1;
     let calendarBar;
+    let updateBoo;
 
     size0 = 16;
     size1 = 17;
@@ -627,6 +629,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     textTop1 = 3;
 
     if (toggle === "off") {
+      updateBoo = true;
       num = 0;
       directNum = 0;
       for (let dom of lineDoms) {
@@ -691,7 +694,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         lastDom.setAttribute("direct", "on");
         if (!possibleTimes) {
           calendarBar = createNode({
-            mother: this,
+            mother: firstDom,
             class: [ classCalendarBarName ],
             attribute: [
               { value: text },
@@ -712,7 +715,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                   }
                   if (this.getAttribute("memo") === "on") {
                     e.stopPropagation();
-                    detailTimeEvent.call(this, e);
+                    instance.detailTimeEvent.call(this, e);
                   }
                 }
               },
@@ -723,7 +726,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                     e.preventDefault();
                   }
                   e.stopPropagation();
-                  detailTimeEvent.call(this, e);
+                  instance.detailTimeEvent.call(this, e);
                 }
               },
             ],
@@ -731,22 +734,14 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
               position: "absolute",
               width: String(lastDom.getBoundingClientRect().left - firstDom.getBoundingClientRect().left + width) + ea,
               top: String(0) + ea,
-              left: tempArr[0] === x ? String(0) + ea : "",
-              right: tempArr[0] === x ? "" : String(0) + ea,
+              left: String(0) + ea,
               height: String(100) + '%',
               background: colorChip.gradientGreen4,
               borderRadius: String(3) + "px",
-              zIndex: String(1),
+              zIndex: String(2),
             }
           });
-          if (this !== firstDom) {
-            firstDom.firstChild.style.zIndex = String(3);
-            GeneralJs.timeouts["barMake"] = setTimeout(function () {
-              calendarBar.style.zIndex = String(2);
-              clearTimeout(GeneralJs.timeouts["barMake"]);
-              GeneralJs.timeouts["barMake"] = null;
-            }, 0);
-          }
+          firstDom.appendChild(firstDom.firstChild);
         }
       }
 
@@ -788,9 +783,12 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
 
     } else {
 
+      updateBoo = false;
+
       if (e.type === "click" && this.getAttribute("memo") !== "on") {
 
         if (e.altKey) {
+          updateBoo = true;
           if (this.getAttribute("link") === "off") {
             this.style.background = !possibleTimes ? colorChip.gray2 : colorChip.gray3;
             this.setAttribute("toggle", "off");
@@ -820,19 +818,32 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
           }
         } else {
           if (this.querySelector('.' + classCalendarBarName) !== null) {
-            detailTimeEvent.call(this.querySelector('.' + classCalendarBarName), e);
+            instance.detailTimeEvent.call(this.querySelector('.' + classCalendarBarName), e);
           } else {
             if (this.getAttribute("link") === "off") {
-              detailTimeEvent.call(this, e);
+              instance.detailTimeEvent.call(this, e);
             }
           }
         }
 
       } else {
-        detailTimeEvent.call(this, e);
+        instance.detailTimeEvent.call(this, e);
       }
 
     }
+
+    if (updateBoo) {
+      if (!e.ctrlKey) {
+        instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+          if (resultNumber !== 1) {
+            throw new Error("update error");
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+    }
+
   }
   const createBlock = function (mother, desid, proid, width, margin, barHeight, y, possibleTimes) {
     let totalWidth;
@@ -883,6 +894,9 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     nodeArr = [];
 
     x = 0;
+    if (instance.calendarX === null) {
+      instance.calendarX = [];
+    }
     for (let i = 0; i < matrix.length; i++) {
       tempObj = {
         mother: entireTong,
@@ -916,11 +930,11 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
           events: [
             {
               type: "click",
-              event: moduleEvent
+              event: instance.moduleEvent
             },
             {
               type: "contextmenu",
-              event: moduleEvent
+              event: instance.moduleEvent
             },
           ],
           class: [
@@ -943,8 +957,17 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         };
         nodeArr.push(tempObj);
 
+        if (instance.calendarX.break !== true) {
+          instance.calendarX.push({
+            start: matrix[i].children[j].start,
+            end: matrix[i].children[j].end
+          });
+        }
         x++;
       }
+    }
+    if (instance.calendarX.break !== true) {
+      instance.calendarX.break = true;
     }
     createNodes(nodeArr);
   }
@@ -1080,6 +1103,10 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   }
 
   this.calendarDashBoardLaunching();
+  if (this.calendarX.constructor.name !== "DateX") {
+    this.calendarX = new DateX(this.calendarX);
+  }
+  this.calendarData.render();
 }
 
 DesignerJs.prototype.calendarDashBoardLaunching = function () {
@@ -1278,7 +1305,7 @@ DesignerJs.prototype.calendarSearchEvent = function () {
   input.parentNode.style.width = String(width) + ea;
   input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
   input.addEventListener("keypress", function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (e.key === "Enter") {
       instance.calendarContentsTime(this.value.trim());
     }
   });
@@ -1295,6 +1322,397 @@ DesignerJs.prototype.calendarView = async function () {
     let loading;
 
     loading = await this.mother.loadingRun();
+
+    this.moduleBox = {
+      width: 58,
+      height: 34,
+      margin: 3,
+    };
+    this.calendarSpec = {};
+    this.calendarClass = {
+      classNameX: "calendarModuleX",
+      classNameY: "calendarModuleY",
+      classNameXY: "calendarModuleXY",
+      classNameTextY: "calendarTextY",
+      classNameDesid: "calendar",
+      classDesignerBox: "designerBox",
+      classCalendarBarName: "calendar_bar"
+    };
+    this.calendarDashBoard = null;
+    this.calendarX = null;
+    this.moduleEvent = null;
+    this.detailTimeEvent = null;
+    this.calendarData = null;
+
+    class DateX extends Array {
+      constructor(arr) {
+        super();
+        let tempArr0, tempArr1;
+        let startDate, endDate;
+        for (let obj of arr) {
+          tempArr0 = obj.start.split('-');
+          tempArr1 = obj.end.split('-');
+          startDate = new Date(Number(tempArr0[0]), Number(tempArr0[1]) - 1, Number(tempArr0[2]));
+          endDate = new Date(Number(tempArr1[0]), Number(tempArr1[1]) - 1, Number(tempArr1[2]));
+          endDate.setDate(endDate.getDate() + 1);
+          this.push({ start: startDate, end: endDate });
+        }
+        this.break = true;
+      }
+      firstDate() {
+        if (this.length > 0) {
+          return this[0].start;
+        } else {
+          return null;
+        }
+      }
+      endDate() {
+        if (this.length > 0) {
+          return this[this.length - 1].end;
+        } else {
+          return null;
+        }
+      }
+      dateToX(dateObj) {
+        if (!(dateObj instanceof Date)) {
+          throw new Error("must be date object");
+        }
+        let value, x;
+        x = null;
+        for (let i = 0; i < this.length; i++) {
+          value = dateObj.valueOf();
+          if ((this[i].start.valueOf() <= value) && (value < this[i].end.valueOf())) {
+            x = i;
+            break;
+          }
+        }
+        return x;
+      }
+      dateToDom(desid, proid, dateObj, x = null) {
+        if (!(dateObj instanceof Date)) {
+          throw new Error("must be date object");
+        }
+        if (desid === undefined || proid === undefined) {
+          throw new Error("invaild input");
+        }
+        if (x === null || x === undefined) {
+          x = this.dateToX(dateObj);
+        }
+        if (x === null) {
+          return null;
+        } else {
+          return document.getElementById(instance.calendarClass.classNameDesid + '-' + desid + '-' + proid + '-' + String(x));
+        }
+      }
+      dateToDomX(desid, proid, dateObj) {
+        if (!(dateObj instanceof Date)) {
+          throw new Error("must be date object");
+        }
+        const x = this.dateToX(dateObj);
+        const dom = this.dateToDom(desid, proid, dateObj, x);
+        return { x, dom };
+      }
+    }
+    class DesignerDate {
+      constructor(obj) {
+        this.desid = obj.desid;
+        this.possible = obj.possible;
+        this.projects = obj.projects;
+      }
+      render() {
+        const { desid, possible, projects } = this;
+        const calendarX = instance.calendarX;
+        if (instance.moduleEvent === null || instance.detailTimeEvent === null) {
+          throw new Error("event definition first");
+        }
+        const firstDate = calendarX.firstDate();
+        const endDate = calendarX.endDate();
+        const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+        const dateToString = (dateObj) => { return `${String(dateObj.getFullYear())}-${zeroAddition(dateObj.getMonth() + 1)}-${zeroAddition(dateObj.getDate())}`; }
+        let clickObj, tempObj, tempDom, contenxtObj;
+        let startObj, startDom;
+        let x0, x1;
+
+        clickObj = {
+          type: "click",
+          cancelable: false,
+          preventDefault: function () {},
+          stopPropagation: function () {},
+          altKey: false,
+          ctrlKey: true,
+        };
+
+        contenxtObj = {
+          type: "contextmenu",
+          cancelable: false,
+          preventDefault: function () {},
+          stopPropagation: function () {},
+          altKey: false,
+          ctrlKey: true,
+        };
+
+        for (let { start, end } of possible) {
+          tempObj = calendarX.dateToDomX(desid, "possible", start);
+          tempDom = tempObj.dom;
+          x0 = tempObj.x;
+          if (tempDom !== null) {
+            tempDom.setAttribute("spot", dateToString(start));
+            instance.moduleEvent.call(tempDom, clickObj);
+          }
+          tempObj = calendarX.dateToDomX(desid, "possible", end);
+          tempDom = tempObj.dom;
+          x1 = tempObj.x;
+          if (x0 !== x1) {
+            if (tempDom !== null) {
+              if (x0 === null && x1 !== null && start.valueOf() <= firstDate.valueOf()) {
+                startDom = calendarX.dateToDom(desid, "possible", start, 0);
+                if (startDom !== null) {
+                  startDom.setAttribute("spot", dateToString(start));
+                  instance.moduleEvent.call(startDom, clickObj);
+                }
+                if (x1 !== 0) {
+                  tempDom.setAttribute("spot", dateToString(end));
+                  instance.moduleEvent.call(tempDom, clickObj);
+                }
+              } else {
+                tempDom.setAttribute("spot", dateToString(end));
+                instance.moduleEvent.call(tempDom, clickObj);
+              }
+            }
+          }
+        }
+        for (let { proid, meeting, project } of projects) {
+          for (let time of meeting) {
+            tempObj = calendarX.dateToDomX(desid, proid, time);
+            tempDom = tempObj.dom;
+            if (tempDom !== null) {
+              tempDom.setAttribute("spot", dateToString(time));
+              instance.moduleEvent.call(tempDom, contenxtObj);
+            }
+          }
+          for (let { start, end } of project) {
+            tempObj = calendarX.dateToDomX(desid, proid, start);
+            tempDom = tempObj.dom;
+            x0 = tempObj.x;
+            if (tempDom !== null) {
+              tempDom.setAttribute("spot", dateToString(start));
+              instance.moduleEvent.call(tempDom, clickObj);
+            }
+            tempObj = calendarX.dateToDomX(desid, proid, end);
+            tempDom = tempObj.dom;
+            x1 = tempObj.x;
+            if (x0 !== x1) {
+              if (tempDom !== null) {
+                if (x0 === null && x1 !== null && start.valueOf() <= firstDate.valueOf()) {
+                  startDom = calendarX.dateToDom(desid, proid, start, 0);
+                  if (startDom !== null) {
+                    startDom.setAttribute("spot", dateToString(start));
+                    instance.moduleEvent.call(startDom, clickObj);
+                  }
+                  if (x1 !== 0) {
+                    tempDom.setAttribute("spot", dateToString(end));
+                    instance.moduleEvent.call(tempDom, clickObj);
+                  }
+                } else {
+                  tempDom.setAttribute("spot", dateToString(end));
+                  instance.moduleEvent.call(tempDom, clickObj);
+                }
+              }
+            }
+          }
+        }
+      }
+      projectConvert(projectObj) {
+        if (typeof projectObj !== "object") {
+          throw new Error("invaild input");
+        }
+        if (projectObj.proid === undefined) {
+          throw new Error("invaild input");
+        }
+        const { proid } = projectObj;
+        let index;
+
+        index = null;
+        for (let i = 0; i < this.projects.length; i++) {
+          if (this.projects[i].proid === proid) {
+            index = i;
+            break;
+          }
+        }
+
+        if (index !== null) {
+          this.projects.splice(index, 1, projectObj);
+        } else {
+          this.projects.push(projectObj);
+        }
+      }
+    }
+    class DesignerDates extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(new DesignerDate(i));
+        }
+      }
+      pick(desid) {
+        if (desid === undefined) {
+          throw new Error("invaild input");
+        }
+        let target = null;
+        for (let i of this) {
+          if (i.desid === desid) {
+            target = i;
+            break;
+          }
+        }
+        if (target === null) {
+          if (/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/i.test(desid)) {
+            target = new DesignerDate({ desid, possible: [], projects: [] });
+            this.push(target);
+          } else {
+            throw new Error("invaild desid");
+          }
+        }
+        return target;
+      }
+      render() {
+        for (let i of this) {
+          i.render();
+        }
+      }
+      async updateByDoms(doms) {
+        const length = doms.length;
+        const stringToDate = (str) => {
+          let tempArr = str.split('-');
+          if (tempArr.length !== 3) {
+            throw new Error("invaild input");
+          }
+          return new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2]));
+        }
+
+        let desid, proid;
+        let id;
+        let tempArr;
+        let toggle, meeting;
+        let pastBoo;
+        let startPoint, endPoint;
+        let model;
+        let updateData, url;
+        let thisDesigner;
+
+        if (length === 0) {
+          return 0;
+        }
+
+        id = null;
+        for (let dom of doms) {
+          if (dom.id !== "" && dom.id !== null && dom.id !== undefined) {
+            id = dom.id;
+            break;
+          }
+        }
+        if (id === null) {
+          return 0;
+        }
+        tempArr = id.split('-');
+        if (tempArr.length !== 4) {
+          return 0;
+        }
+        desid = tempArr[1];
+        proid = tempArr[2];
+        thisDesigner = this.pick(desid);
+
+        if (proid !== "possible") {
+
+          toggle = [];
+          meeting = [];
+          for (let dom of doms) {
+            toggle.push((dom.getAttribute("toggle") === "on" && dom.getAttribute("meeting") === "off") ? true : false);
+            meeting.push(dom.getAttribute("meeting") === "on" ? true : false);
+          }
+
+          pastBoo = false;
+          startPoint = [];
+          endPoint = [];
+          model = { proid, meeting: [], project: [] };
+          for (let i = 0; i < length; i++) {
+            if (!pastBoo && toggle[i]) {
+              startPoint.push(i);
+            }
+            if (pastBoo && !toggle[i]) {
+              endPoint.push(i - 1);
+            }
+            pastBoo = toggle[i];
+            if (meeting[i]) {
+              model.meeting.push(stringToDate((doms[i].getAttribute("spot") !== null && doms[i].getAttribute("spot") !== "null") ? doms[i].getAttribute("spot") : doms[i].getAttribute("start")));
+            }
+          }
+          if (startPoint.length !== endPoint.length) {
+            return 0;
+          }
+
+          for (let i = 0; i < startPoint.length; i++) {
+            model.project.push({
+              start: stringToDate((doms[startPoint[i]].getAttribute("spot") !== null && doms[startPoint[i]].getAttribute("spot") !== "null") ? doms[startPoint[i]].getAttribute("spot") : doms[startPoint[i]].getAttribute("start")),
+              end: stringToDate((doms[endPoint[i]].getAttribute("spot") !== null && doms[endPoint[i]].getAttribute("spot") !== "null") ?  doms[endPoint[i]].getAttribute("spot") :  doms[endPoint[i]].getAttribute("end"))
+            });
+          }
+
+          thisDesigner.projectConvert(model);
+
+        } else {
+
+          toggle = [];
+          for (let dom of doms) {
+            toggle.push(dom.getAttribute("toggle") === "on");
+          }
+
+          pastBoo = false;
+          startPoint = [];
+          endPoint = [];
+          model = [];
+          for (let i = 0; i < length; i++) {
+            if (!pastBoo && toggle[i]) {
+              startPoint.push(i);
+            }
+            if (pastBoo && !toggle[i]) {
+              endPoint.push(i - 1);
+            }
+            pastBoo = toggle[i];
+          }
+          if (startPoint.length !== endPoint.length) {
+            return 0;
+          }
+
+          for (let i = 0; i < startPoint.length; i++) {
+            model.push({
+              start: stringToDate((doms[startPoint[i]].getAttribute("spot") !== null && doms[startPoint[i]].getAttribute("spot") !== "null") ? doms[startPoint[i]].getAttribute("spot") : doms[startPoint[i]].getAttribute("start")),
+              end: stringToDate((doms[endPoint[i]].getAttribute("spot") !== null && doms[endPoint[i]].getAttribute("spot") !== "null") ?  doms[endPoint[i]].getAttribute("spot") :  doms[endPoint[i]].getAttribute("end"))
+            });
+          }
+
+          thisDesigner.possible = model;
+
+        }
+
+        url = "/generalMongo";
+        updateData = {
+          mode: "update",
+          db: "console",
+          collection: "realtimeDesigner",
+          whereQuery: { desid },
+          updateQuery: thisDesigner
+        };
+        await GeneralJs.ajaxJson(updateData, url);
+        return 1;
+      }
+    }
+
+    this.calendarDateClass = {
+      DateX: DateX,
+      DesignerDate: DesignerDate,
+      DesignerDates: DesignerDates,
+    };
 
     projects = await ajaxJson({
       noFlat: true,
@@ -1336,32 +1754,22 @@ DesignerJs.prototype.calendarView = async function () {
       }
     }, "/getClients");
 
+    this.calendarData = new DesignerDates(await ajaxJson({
+      mode: "read",
+      db: "console",
+      collection: "realtimeDesigner",
+      whereQuery: {},
+    }, "/generalMongo", { equal: true }));
+
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
     this.designers.setClients(clients);
-
-    this.moduleBox = {
-      width: 58,
-      height: 34,
-      margin: 3,
-    };
-    this.calendarSpec = {};
-    this.calendarClass = {
-      classNameX: "calendarModuleX",
-      classNameY: "calendarModuleY",
-      classNameXY: "calendarModuleXY",
-      classNameTextY: "calendarTextY",
-      classNameDesid: "calendar",
-      classDesignerBox: "designerBox",
-      classCalendarBarName: "calendar_bar"
-    };
-    this.calendarDashBoard = null;
 
     this.matrix = this.calendarMatrix();
     this.calendarBase(getObj.desid === undefined ? null : getObj.desid);
     this.calendarSearchEvent();
 
-    await sleep(500);
+    await sleep(800);
 
     loading.parentNode.removeChild(loading);
     this.totalMother.style.animation = "fadeup 0.3s ease forwards";

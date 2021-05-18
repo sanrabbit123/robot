@@ -958,7 +958,7 @@ IndexJs.prototype.asyncExec = function () {
           window.location.href = "/portfolio.php?search=" + value;
         }
         input_clone.addEventListener("keyup", function (e) {
-          if (e.keyCode === 13) {
+          if (e.key === "Enter") {
             searchEvent(e);
           }
         });
@@ -1498,7 +1498,7 @@ IndexJs.prototype.asyncExec = function () {
           window.location.href = "/portfolio.php?search=" + value;
         }
         input_clone.addEventListener("keyup", function (e) {
-          if (e.keyCode === 13) {
+          if (e.key === "Enter") {
             searchEvent(e);
           }
         });

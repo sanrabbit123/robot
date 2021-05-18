@@ -151,13 +151,27 @@ GeneralJs.ajaxPromise = function (data, url) {
   });
 }
 
-GeneralJs.ajaxJson = function (data, url) {
+GeneralJs.ajaxJson = function (data, url, option = { equal: null }) {
+  if (typeof option !== "object") {
+    reject("invaild input");
+  }
   return new Promise(function (resolve, reject) {
     GeneralJs.ajaxPromise(data, url).then(function (jsonString) {
-      let json;
+      let json, filtered, temp, tempFunc;
       try {
-        json = JSON.parse(jsonString);
-        resolve(json);
+        temp = jsonString.trim();
+        if (temp[0] !== '{' && temp[0] !== '[') {
+          reject("server must send json");
+        } else {
+          if (option.equal !== undefined && option.equal !== null) {
+            filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+            tempFunc = new Function("const obj = " + filtered + "; return obj;");
+            json = tempFunc();
+          } else {
+            json = JSON.parse(jsonString);
+          }
+          resolve(json);
+        }
       } catch (e) {
         reject(e);
       }
@@ -2268,7 +2282,7 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
               let ea = !Boolean(i) ? "px" : "vw";
               let valuesTong = [];
 
-              if (e.keyCode === 13) {
+              if (e.key === "Enter") {
 
                 //loader
                 height = !Boolean(i) ? 48 : 10;
@@ -2311,7 +2325,7 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
               let ea = !Boolean(i) ? "px" : "vw";
               let valuesTong = [];
 
-              if (e.keyCode === 13) {
+              if (e.key === "Enter") {
                 valuesTong.push(this.value);
 
                 //fadeout word and input
@@ -2377,7 +2391,7 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
                   let style = {};
                   let ea = !Boolean(i) ? "px" : "vw";
 
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     targets = [ "green", "newWording", "newInput", "greenArrow", "inputBase" ];
                     for (let i = 0; i < targets.length; i++) {
                       whiteDoms[targets[i]].style.animation = "justfadeout 0.3s ease forwards";
@@ -2700,7 +2714,7 @@ GeneralJs.prototype.whiteLogin = function (boo = "desktop") {
   //submit event to keypress event
   GeneralJs.stacks["whiteLoginBox"] = 0;
   submitEventKey = function (e) {
-    if (e.keyCode === 13 && GeneralJs.stacks["whiteLoginBox"] === 0) {
+    if (e.key === "Enter" && GeneralJs.stacks["whiteLoginBox"] === 0) {
       submitEvent(e);
       GeneralJs.stacks["whiteLoginBox"] = 1;
     }

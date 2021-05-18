@@ -47,9 +47,9 @@ class DateParse extends Date {
   }
 }
 
-GeneralJs.confirmKeyCode = [
-  13,
-  9,
+GeneralJs.confirmKey = [
+  "Enter",
+  "Tab",
 ];
 
 GeneralJs.updateHistoryTong = [];
@@ -1701,7 +1701,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
               });
               input_clone.addEventListener("keypress", async function (e) {
                 try {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     text_div.textContent = this.value;
                     await GeneralJs.ajaxPromise("id=" + id + "&column=issue&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail + "&method=" + thisPathName, "/updateHistory");
                     cancel_event.call(this, e);

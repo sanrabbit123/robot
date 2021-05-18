@@ -1742,7 +1742,7 @@ AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
           mother = this.parentNode.parentNode;
 
@@ -1963,7 +1963,7 @@ AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -2535,7 +2535,7 @@ AnalyticsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     textArea_clone.addEventListener("blur", historyBlurEvent);
     if (i === historyTongTarget.length - 1) {
       textArea_clone.addEventListener("keydown", function (e) {
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
           e.preventDefault();
           this.blur();
         }
@@ -3200,7 +3200,7 @@ AnalyticsJs.prototype.addTransFormEvent = function () {
 AnalyticsJs.prototype.makeSearchEvent = function (option = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
         instance.totalFather.style.zIndex = String(-1);
@@ -3544,7 +3544,7 @@ AnalyticsJs.prototype.addSearchEvent = function () {
   const input = this.searchInput;
   input.addEventListener("keypress", function (e) {
     let that = this;
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
       instance.whitePromptEvent(function (option) {
         let searchEvent = instance.makeSearchEvent({ ...option, value: that.value });
         searchEvent.call(that, e);

@@ -647,7 +647,7 @@ DesignerJs.prototype.infoArea = function (info) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
 
           if (this.hasAttribute("dateEventMethod")) {
             originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -983,7 +983,7 @@ DesignerJs.prototype.infoArea = function (info) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -2030,7 +2030,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let finalValue;
         let pastRawData;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
 
           if (this.hasAttribute("dateEventMethod")) {
@@ -2376,7 +2376,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -3376,7 +3376,7 @@ DesignerJs.prototype.addTransFormEvent = function () {
 DesignerJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
         this.value = this.value.replace(/[ \n]/g, '');
@@ -3798,7 +3798,7 @@ DesignerJs.prototype.launching = async function () {
         }
         if (getTarget === null) {
           tempFunction = this.makeSearchEvent(getObj.desid);
-          await tempFunction({ keyCode: 13 });
+          await tempFunction({ key: "Enter" });
           for (let dom of this.standardDoms) {
             if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
               getTarget = dom;

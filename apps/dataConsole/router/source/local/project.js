@@ -516,7 +516,7 @@ ProjectJs.prototype.infoArea = function (info) {
         let idDomChildren;
         let targetOriginalDiv;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
 
           if (this.hasAttribute("dateEventMethod")) {
             originalDiv = this.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -890,7 +890,7 @@ ProjectJs.prototype.infoArea = function (info) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -2585,7 +2585,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         let targetOriginalRowDiv, targetOriginalDiv;
         let motherChildren;
 
-        if ((e.type === "keypress" && GeneralJs.confirmKeyCode.includes(e.keyCode)) || e.type === "click" || e.type === "message") {
+        if ((e.type === "keypress" && GeneralJs.confirmKey.includes(e.key)) || e.type === "click" || e.type === "message") {
           grandMother = instance.whiteBox.contentsBox;
 
           if (this.hasAttribute("dateEventMethod")) {
@@ -2990,7 +2990,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
-            e.keyCode = 13;
+            e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           });
@@ -3469,7 +3469,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     textArea_clone.addEventListener("blur", historyBlurEvent);
     if (i === historyTongTarget.length - 1) {
       textArea_clone.addEventListener("keydown", function (e) {
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
           e.preventDefault();
           this.blur();
         }
@@ -4910,7 +4910,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     vaildValue(this);
   });
   input_clone.addEventListener("keyup", function (e) {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       vaildValue(this);
       const today = new Date();
       const todayString = String(today.getFullYear()) + '-' + zeroAddition(today.getMonth() + 1) + '-' + zeroAddition(today.getDate());
@@ -5095,7 +5095,7 @@ ProjectJs.prototype.addTransFormEvent = function () {
 ProjectJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
-    if (GeneralJs.confirmKeyCode.includes(e.keyCode)) {
+    if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
         this.value = this.value.replace(/[ \n]/g, '');
@@ -5560,7 +5560,7 @@ ProjectJs.prototype.launching = async function () {
       }
       if (getTarget === null) {
         tempFunction = this.makeSearchEvent(getObj.proid);
-        await tempFunction({ keyCode: 13 });
+        await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
@@ -5569,7 +5569,7 @@ ProjectJs.prototype.launching = async function () {
       }
     } else if (getObj.cliid !== undefined) {
       tempFunction = this.makeSearchEvent(getObj.cliid);
-      await tempFunction({ keyCode: 13 });
+      await tempFunction({ key: "Enter" });
       if (this.standardDoms.length > 1) {
         getTarget = this.standardDoms[1];
       }

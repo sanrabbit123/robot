@@ -2602,6 +2602,80 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_generalMongo = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/generalMongo";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("must be mode => [ create, read, update, delete ]");
+      }
+      if (req.body.collection === undefined) {
+        throw new Error("must be collection name");
+      }
+      if (req.body.db === undefined) {
+        throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
+      }
+      const { mode, db, collection } = req.body;
+      let selfMongo, result;
+      let whereQuery, updateQuery;
+
+      if (db === "core" || db === "back" || db === "mongo") {
+        selfMongo = instance.mongo;
+      } else if (db === "sub" || db === "local" || db === "console") {
+        selfMongo = instance.mongolocal;
+      } else {
+        throw new Error("must be db name => ( [ core, back, mongo ] => instance.mongo or [ sub, local, console ] => instance.mongolocal )");
+      }
+
+      if (mode === "read") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("must be whereQuery");
+        }
+        whereQuery = equalJson(req.body.whereQuery);
+        result = await back.mongoRead(collection, whereQuery, { selfMongo });
+      } else if (mode === "update") {
+        if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+          throw new Error("must be whereQuery and updateQuery");
+        }
+        whereQuery = equalJson(req.body.whereQuery);
+        updateQuery = equalJson(req.body.updateQuery);
+        result = await back.mongoRead(collection, whereQuery, { selfMongo });
+        if (result.length === 0) {
+          await back.mongoCreate(collection, updateQuery, { selfMongo });
+        } else {
+          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        }
+        result = { message: "done" };
+      } else if (mode === "create") {
+        if (req.body.updateQuery === undefined) {
+          throw new Error("must be updateQuery");
+        }
+        updateQuery = equalJson(req.body.updateQuery);
+        await back.mongoCreate(collection, updateQuery, { selfMongo });
+        result = { message: "done" };
+      } else if (mode === "delete") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("must be whereQuery");
+        }
+        whereQuery = equalJson(req.body.whereQuery);
+        await back.mongoDelete(collection, whereQuery, { selfMongo });
+        result = { message: "done" };
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 DataRouter.policy = function () {
   let text = '';

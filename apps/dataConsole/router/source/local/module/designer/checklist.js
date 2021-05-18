@@ -1640,7 +1640,7 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
     //search event
     searchInput = this.searchInput;
     searchInput.addEventListener("keypress", function (e) {
-      if (e.keyCode === 13) {
+      if (e.key === "Enter") {
         const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
         let target;
         if (value === "") {
@@ -1962,7 +1962,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                             type: "keypress",
                             event: async function (e) {
                               try {
-                                if (e.keyCode === 13) {
+                                if (e.key === "Enter") {
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value);
                                   if (updateQuery === "error") {
@@ -2343,7 +2343,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               {
                 type: "keypress",
                 event: function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     const cookies = GeneralJs.getCookiesAll();
                     const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
                     GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
@@ -2423,7 +2423,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               {
                 type: "keypress",
                 event: function (e) {
-                  if (e.keyCode === 13) {
+                  if (e.key === "Enter") {
                     const cookies = GeneralJs.getCookiesAll();
                     const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
                     GeneralJs.ajax(ajaxData, "/updateHistory", function () {});

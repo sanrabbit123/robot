@@ -1763,7 +1763,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
       searchTarget.parentNode.insertBefore(searchTarget_new, instance.searchInput.parentNode.nextElementSibling);
       searchTarget_new.querySelector("input").addEventListener("keypress", function (e) {
         this.value = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           const finalValue = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
           const regexp = new RegExp(finalValue, "gi");
           for (let dom of instance.aspirants) {
