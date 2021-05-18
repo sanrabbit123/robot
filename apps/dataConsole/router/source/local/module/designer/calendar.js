@@ -867,6 +867,18 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     let tempObj;
     let entireTong;
     let x;
+    let countMode;
+
+    if (possibleTimes === 0) {
+      countMode = true;
+      possibleTimes = false;
+    } else if (possibleTimes === 1) {
+      countMode = false;
+      possibleTimes = true;
+    } else {
+      countMode = false;
+      possibleTimes = false;
+    }
 
     totalWidth = matrix.getEntireWidth(width, margin);
 
@@ -907,85 +919,143 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         borderRadius: String(3) + "px",
       }
     });
-    nodeArr = [];
 
-    x = 0;
-    if (instance.calendarX === null) {
-      instance.calendarX = [];
-    }
-    for (let i = 0; i < matrix.length; i++) {
-      tempObj = {
-        mother: entireTong,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(matrix[i].getEntireWidth(width, margin)) + ea,
-          height: String(barHeight) + ea,
-        }
-      };
-      nodeArr.push(tempObj);
-      for (let j = 0; j < matrix[i].children.length; j++) {
+    if (!countMode) {
+      nodeArr = [];
+      x = 0;
+      if (instance.calendarX === null) {
+        instance.calendarX = [];
+      }
+      for (let i = 0; i < matrix.length; i++) {
         tempObj = {
-          mother: -1 * ((1 * j) + 1),
-          id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
-          attribute: [
-            { x: String(x) },
-            { y: String(y) },
-            { toggle: "off" },
-            { direct: "off" },
-            { link: "off" },
-            { meeting: "off" },
-            { value: String(matrix[i].month) + ' - ' + String((i === 0 ? instance.matrix.weekOrder : 1) + j) },
-            { start: matrix[i].children[j].start },
-            { end: matrix[i].children[j].end },
-            { spot: "null" },
-            { possible: possibleTimes ? "true" : "false" },
-            { desid },
-            { proid },
-          ],
+          mother: entireTong,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(matrix[i].getEntireWidth(width, margin)) + ea,
+            height: String(barHeight) + ea,
+          }
+        };
+        nodeArr.push(tempObj);
+        for (let j = 0; j < matrix[i].children.length; j++) {
+          tempObj = {
+            mother: -1 * ((1 * j) + 1),
+            id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
+            attribute: [
+              { x: String(x) },
+              { y: String(y) },
+              { toggle: "off" },
+              { direct: "off" },
+              { link: "off" },
+              { meeting: "off" },
+              { value: String(matrix[i].month) + ' - ' + String((i === 0 ? instance.matrix.weekOrder : 1) + j) },
+              { start: matrix[i].children[j].start },
+              { end: matrix[i].children[j].end },
+              { spot: "null" },
+              { possible: possibleTimes ? "true" : "false" },
+              { desid },
+              { proid },
+            ],
+            events: [
+              {
+                type: "click",
+                event: instance.moduleEvent
+              },
+              {
+                type: "contextmenu",
+                event: instance.moduleEvent
+              },
+            ],
+            class: [
+              classNameX + "_" + String(x),
+              classNameY + "_" + String(y),
+              classNameXY + "_" + String(x) + '_' + String(y),
+              classNameDesid + "-" + desid + "-" + proid,
+            ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(width) + ea,
+              height: withOut(0, ea),
+              marginRight: String(margin) + ea,
+              background: !possibleTimes ? colorChip.gray2 : colorChip.gray3,
+              borderRadius: String(3) + "px",
+              cursor: "pointer",
+              transition: "all 0s ease",
+            }
+          };
+          nodeArr.push(tempObj);
+
+          if (instance.calendarX.break !== true) {
+            instance.calendarX.push({
+              start: matrix[i].children[j].start,
+              end: matrix[i].children[j].end
+            });
+          }
+          x++;
+        }
+      }
+      if (instance.calendarX.break !== true) {
+        instance.calendarX.break = true;
+      }
+      createNodes(nodeArr);
+    } else {
+      nodeArr = [];
+      for (let i = 0; i < matrix.length; i++) {
+        tempObj = {
+          mother: entireTong,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(matrix[i].getEntireWidth(width, margin)) + ea,
+            height: String(barHeight) + ea,
+          }
+        };
+        nodeArr.push(tempObj);
+        tempObj = {
+          mother: -1,
           events: [
             {
               type: "click",
-              event: instance.moduleEvent
-            },
-            {
-              type: "contextmenu",
-              event: instance.moduleEvent
-            },
-          ],
-          class: [
-            classNameX + "_" + String(x),
-            classNameY + "_" + String(y),
-            classNameXY + "_" + String(x) + '_' + String(y),
-            classNameDesid + "-" + desid + "-" + proid,
+              event: function (e) {
+                console.log("this!");
+              }
+            }
           ],
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(width) + ea,
+            width: String((width * matrix[i].children.length) + (margin * (matrix[i].children.length - 1))) + ea,
             height: withOut(0, ea),
             marginRight: String(margin) + ea,
-            background: !possibleTimes ? colorChip.gray2 : colorChip.gray3,
+            background: colorChip.grayDeactive,
             borderRadius: String(3) + "px",
             cursor: "pointer",
             transition: "all 0s ease",
           }
         };
         nodeArr.push(tempObj);
-
-        if (instance.calendarX.break !== true) {
-          instance.calendarX.push({
-            start: matrix[i].children[j].start,
-            end: matrix[i].children[j].end
-          });
-        }
-        x++;
+        tempObj = {
+          mother: -1,
+          attribute: [ { value: String(5) } ],
+          text: String(5),
+          style: {
+            position: "absolute",
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(17) + ea,
+            top: String(3) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(500),
+            color: colorChip.white,
+            zIndex: String(2),
+          }
+        };
+        nodeArr.push(tempObj);
       }
+      createNodes(nodeArr);
     }
-    if (instance.calendarX.break !== true) {
-      instance.calendarX.break = true;
-    }
-    createNodes(nodeArr);
+
   }
   let designerBox;
   let pastTop;
@@ -1002,7 +1072,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   y = 0;
 
   for (let i = 0; i < designers.length; i++) {
-    boxHeight = (margin * 5) + (height + (margin * 1)) + ((height + (margin * 1)) * designers[i].projects.length);
+    boxHeight = (margin * 5) + ((height + (margin * 1)) * (designers[i].projects.length + 2));
 
     nodeArr = [
       {
@@ -1055,7 +1125,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
       },
       {
         mother: -1,
-        text: "가능 시간",
+        text: "가능 개수",
         class: [ classNameTextY + "_" + String(y) ],
         style: {
           position: "absolute",
@@ -1065,24 +1135,37 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
           textAlign: "center",
           top: String(textTop) + ea,
         }
-      }
-    ];
-
-    for (let j = 0; j < designers[i].projects.length; j++) {
-      nodeArr.push({
-        mother: -1 + (-1 * (j + 1)),
-        text: designers[i].projects[j].name,
-        class: [ classNameTextY + "_" + String(y + (j + 1)) ],
+      },
+      {
+        mother: -2,
+        text: "가능 시간",
+        class: [ classNameTextY + "_" + String(y + 1) ],
         style: {
           position: "absolute",
           fontSize: String(size) + ea,
           fontWeight: String(300),
           width: String(100) + '%',
           textAlign: "center",
-          top: String(textTop + ((height + (margin * 1)) * (j + 1))) + ea,
+          top: String(textTop + height + margin) + ea,
+        }
+      },
+    ];
+
+    for (let j = 0; j < designers[i].projects.length; j++) {
+      nodeArr.push({
+        mother: -1 + (-1 * (j + 2)),
+        text: designers[i].projects[j].name,
+        class: [ classNameTextY + "_" + String(y + (j + 2)) ],
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(300),
+          width: String(100) + '%',
+          textAlign: "center",
+          top: String(textTop + ((height + (margin * 1)) * (j + 2))) + ea,
         }
       });
-      nodeArr[nodeArr.length - 1 - 2 + (-1 * (j + 1))].class.push(classNameTextY + "_" + String(y + (j + 1)));
+      nodeArr[nodeArr.length - 1 - 2 + (-1 * (j + 2))].class.push(classNameTextY + "_" + String(y + (j + 2)));
     }
 
     [ designerNameBox ] = createNodes(nodeArr);
@@ -1112,8 +1195,8 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         marginBottom: (i === designers.length - 1) ? String(window.innerHeight / 2) + ea : "",
       }
     });
-    for (let j = 0; j < designers[i].projects.length + 1; j++) {
-      createBlock(designerBox, designers[i].desid, (j !== 0 ? designers[i].projects[j - 1].proid : "possible"), width, margin, height, y, (j === 0));
+    for (let j = 0; j < designers[i].projects.length + 2; j++) {
+      createBlock(designerBox, designers[i].desid, (j > 1 ? designers[i].projects[j - 2].proid : (j === 1 ? "possible" : "count")), width, margin, height, y, j);
       y++;
     }
   }
@@ -1151,7 +1234,6 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
   cleanChildren(calendarDashBoard);
 
   if (firstDoms.length !== 0) {
-
     order = Number(firstDoms[0].getAttribute("value").split('-')[1].trim()) - 1;
     dateText = `${String(today.getFullYear())}년 ${String(today.getMonth() + 1)}월 ${String(today.getDate())}일 (${String(today.getMonth() + 1)}월 ${([ '첫', '둘', '셋', '넷', '다섯', '여섯' ])[order]}째주)`;
 
@@ -1820,7 +1902,7 @@ DesignerJs.prototype.calendarView = async function () {
       collection: "realtimeDesigner",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
-    this.calendarData.mergeProjects(projects);
+    // this.calendarData.mergeProjects(projects);
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
