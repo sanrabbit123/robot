@@ -497,6 +497,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                 const desid = that.getAttribute("desid");
                 const proid = that.getAttribute("proid");
                 const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[0] : that.getAttribute("x");
+                const y = that.getAttribute("y");
                 const target = document.getElementById(classNameDesid + '-' + desid + '-' + proid + '-' + x);
                 const startDate = stringToDate(target.getAttribute("start"));
                 const endDate = stringToDate(target.getAttribute("end"));
@@ -506,6 +507,13 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                   if (/_/g.test(spot)) {
                     that.setAttribute("spot", this.value.trim() + '_' + spot.split('_')[1]);
                   }
+                  instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y)).then((resultNumber) => {
+                    if (resultNumber !== 1) {
+                      throw new Error("update error");
+                    }
+                  }).catch((err) => {
+                    console.log(err);
+                  });
                 } else {
                   this.value = (/_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start));
                 }
@@ -555,6 +563,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                   const desid = that.getAttribute("desid");
                   const proid = that.getAttribute("proid");
                   const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[1] : that.getAttribute("x");
+                  const y = that.getAttribute("y");
                   const target = document.getElementById(classNameDesid + '-' + desid + '-' + proid + '-' + x);
                   const startDate = stringToDate(target.getAttribute("start"));
                   const endDate = stringToDate(target.getAttribute("end"));
@@ -564,6 +573,13 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                     if (/_/g.test(spot)) {
                       that.setAttribute("spot", spot.split('_')[1] + '_' + this.value.trim());
                     }
+                    instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y)).then((resultNumber) => {
+                      if (resultNumber !== 1) {
+                        throw new Error("update error");
+                      }
+                    }).catch((err) => {
+                      console.log(err);
+                    });
                   } else {
                     this.value = (/_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end));
                   }
@@ -1601,6 +1617,7 @@ DesignerJs.prototype.calendarView = async function () {
         let thisDesigner;
 
         if (length === 0) {
+          throw new Error("length error");
           return 0;
         }
 
@@ -1612,10 +1629,12 @@ DesignerJs.prototype.calendarView = async function () {
           }
         }
         if (id === null) {
+          throw new Error("id error");
           return 0;
         }
         tempArr = id.split('-');
         if (tempArr.length !== 4) {
+          throw new Error("id error 2");
           return 0;
         }
         desid = tempArr[1];
@@ -1648,6 +1667,7 @@ DesignerJs.prototype.calendarView = async function () {
             }
           }
           if (startPoint.length !== endPoint.length) {
+            throw new Error("point error");
             return 0;
           }
 
@@ -1681,6 +1701,7 @@ DesignerJs.prototype.calendarView = async function () {
             pastBoo = toggle[i];
           }
           if (startPoint.length !== endPoint.length) {
+            throw new Error("point error");
             return 0;
           }
 
