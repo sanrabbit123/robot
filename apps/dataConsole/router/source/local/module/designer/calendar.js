@@ -365,7 +365,7 @@ DesignerJs.prototype.calendarTitleTime = function (mother) {
 DesignerJs.prototype.calendarContentsTime = function (search = null) {
   const instance = this;
   const { ea } = this;
-  const { createNode, createNodes, colorChip, ajaxJson, withOut, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, ajaxJson, withOut, cleanChildren, isMac } = GeneralJs;
   const { contentsTime: mother, designerWidth: box0Width, projectWidth: box1Width } = this.calendarSpec;
   const { DateX, DesignerDate, DesignerDates } = this.calendarDateClass;
   let designers;
@@ -400,7 +400,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     const start = this.getAttribute("start");
     const end = this.getAttribute("end");
     const spot = this.getAttribute("spot");
-    const { createNodes, colorChip, withOut } = GeneralJs;
+    const { createNodes, colorChip, withOut, isMac } = GeneralJs;
     let width, height, outerMargin, margin;
     let doms;
     let nodeArr;
@@ -408,12 +408,12 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     let size;
 
     width = 218;
-    height = meeting !== "on" ? 82 : 58;
+    height = meeting !== "on" ? (isMac() ? 82 : 79) : 58;
     outerMargin = 10;
     margin = 5;
 
     size = 17;
-    topMargin = 10;
+    topMargin = isMac() ? 10 : 13;
     leftMargin = 18;
     bottomMargin = 7;
 
@@ -605,7 +605,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     }
     e.stopPropagation();
     const that = this;
-    const { createNode, cleanChildren, colorChip } = GeneralJs;
+    const { createNode, cleanChildren, colorChip, isMac } = GeneralJs;
     const x = Number(this.getAttribute('x'));
     const y = Number(this.getAttribute('y'));
     const toggle = this.getAttribute("toggle");
@@ -625,7 +625,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
 
     size0 = 16;
     size1 = 17;
-    textTop0 = 6;
+    textTop0 = isMac() ? 6 : 8;
     textTop1 = 3;
 
     if (toggle === "off") {
@@ -982,7 +982,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
 
   size = 16;
   pastTop = 0;
-  textTop = 14;
+  textTop = isMac() ? 14 : 16;
   y = 0;
 
   for (let i = 0; i < designers.length; i++) {
