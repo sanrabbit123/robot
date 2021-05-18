@@ -1727,6 +1727,45 @@ DesignerJs.prototype.calendarView = async function () {
         await GeneralJs.ajaxJson(updateData, url);
         return 1;
       }
+
+      mergeProjects(projects) {
+        const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+        if (projects === undefined) {
+          throw new Error("invaild input");
+        }
+        let temp, tempTarget;
+        for (let project of projects) {
+          if (project.process.contract.form.date.from.valueOf() > emptyDateValue && project.process.contract.form.date.to.valueOf() > emptyDateValue) {
+            temp = this.pick(project.desid);
+            tempTarget = null;
+            for (let obj of temp.projects) {
+              if (obj.proid === project.proid) {
+                tempTarget = obj;
+              }
+            }
+            if (tempTarget === null) {
+              temp.projects.push({ proid: project.proid, meeting: [], project: [ { start: project.process.contract.form.date.from, end: project.process.contract.form.date.to } ] });
+            } else {
+              tempTarget.project = [ { start: project.process.contract.form.date.from, end: project.process.contract.form.date.to } ];
+            }
+          }
+          if (project.process.contract.meeting.date.valueOf() > emptyDateValue) {
+            temp = this.pick(project.desid);
+            tempTarget = null;
+            for (let obj of temp.projects) {
+              if (obj.proid === project.proid) {
+                tempTarget = obj;
+              }
+            }
+            if (tempTarget === null) {
+              temp.projects.push({ proid: project.proid, meeting: [ project.process.contract.meeting.date ], project: [] });
+            } else {
+              tempTarget.meeting = [ project.process.contract.meeting.date ];
+            }
+          }
+        }
+      }
+
     }
 
     this.calendarDateClass = {
@@ -1743,7 +1782,7 @@ DesignerJs.prototype.calendarView = async function () {
           { "process.status": { $regex: "^[대진]" } }
         ]
       }
-    }, "/getProjects");
+    }, "/getProjects", { equal: true });
     desidArr_raw = [];
     for (let project of projects) {
       desidArr_raw.push(project.desid);
@@ -1781,6 +1820,7 @@ DesignerJs.prototype.calendarView = async function () {
       collection: "realtimeDesigner",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
+    this.calendarData.mergeProjects(projects);
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
