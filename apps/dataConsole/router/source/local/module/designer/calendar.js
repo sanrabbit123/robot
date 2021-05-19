@@ -446,14 +446,9 @@ DesignerJs.prototype.calendarMonthYSearch = function (arr) {
 
   targetMonth = [];
   for (let i of arr) {
-    if (!Array.isArray(i)) {
-      throw new Error("invaild input");
-    } else {
-      if (i.length === 0) {
-        throw new Error("invaild input");
-      }
+    if ((i.trim() !== '') && !Number.isNaN(Number(i.replace(/[^0-9]/g, '')))) {
+      targetMonth.push(Number(i.replace(/[^0-9]/g, '')));
     }
-    targetMonth.push(Number(i[0]));
   }
 
   if (targetMonth.includes(0)) {
@@ -489,8 +484,16 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   if (search === null || search === undefined) {
     designers = this.designers;
   } else if (typeof search === "string") {
+    this.calendarPastQueries.push(search);
+    if (search !== '0') {
+      if (/^[0-9]+$/.test(search.replace(/[\,\.\/ ]/g, '').trim())) {
+        if (this.calendarPastQueries.length > 1) {
+          search = this.calendarPastQueries[this.calendarPastQueries.length - 2].replace(/0/g, '') + ',' + search;
+        }
+      }
+    }
     if (/[0-9]/g.test(search)) {
-      this.calendarMonthYSearch([ ...search.matchAll(/[0-9]/g) ]);
+      this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/).split(',') ]);
       search = search.replace(/[0-9]/g, '');
     }
     designers = this.designers.search(search);
@@ -1036,6 +1039,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         marginTop: String(margin * 1) + ea,
         marginLeft: String((margin * 4) - 1) + ea,
         borderRadius: String(3) + "px",
+        transform: instance.calendarPastTranslate,
       }
     });
 
@@ -1575,8 +1579,6 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
       },
     ]);
 
-  } else {
-    this.calendarContentsTime();
   }
 
 }
@@ -1631,6 +1633,11 @@ DesignerJs.prototype.calendarView = async function () {
     this.detailTimeEvent = null;
     this.calendarData = null;
     this.calendarMonthY = {};
+    this.calendarPastQueries = [];
+    this.calendarPastTranslate = "translateX(0px)";
+
+    this.mother.belowButtons.arrow.right.addEventListener("click", (e) => { instance.calendarPastTranslate = document.querySelector(".moveTarget").style.transform; });
+    this.mother.belowButtons.arrow.left.addEventListener("click", (e) => { instance.calendarPastTranslate = document.querySelector(".moveTarget").style.transform; });
 
     class DateX extends Array {
       constructor(arr) {

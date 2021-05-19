@@ -1996,9 +1996,9 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in style) {
     div_clone.style[i] = style[i];
   }
-  // div_clone.addEventListener("selectstart", function (e) {
-  //   e.preventDefault();
-  // });
+  div_clone.addEventListener("selectstart", function (e) {
+    e.preventDefault();
+  });
   this.below = div_clone;
 
   //circle

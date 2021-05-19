@@ -101,7 +101,7 @@ class Designers extends Array {
     if (typeof q !== "string") {
       throw new Error("search input must be string");
     }
-    if (q === '' || q === "전체" || q === '.' || q === "all") {
+    if (q === '' || q === "전체" || q === '.' || q === "all" || q === ",") {
       return this;
     }
     let query, tempArr;
@@ -120,6 +120,9 @@ class Designers extends Array {
         query.push(tempArr[i].trim());
       }
     }
+    if (query.length === 0) {
+      return this;
+    }
     const newTong = [];
     for (let q of query) {
       for (let designer of this) {
@@ -127,6 +130,9 @@ class Designers extends Array {
           newTong.push(designer);
         }
       }
+    }
+    if (newTong.length === 0) {
+      return this;
     }
     return new Designers(newTong);
   }
