@@ -333,9 +333,81 @@ DesignerJs.prototype.calendarTitleTime = function (mother) {
     }
   });
   nodeArr = [];
+  this.calendarMonthY = {};
   for (let i = 0; i < matrix.length; i++) {
     tempObj = {
       mother: entireTong,
+      class: [ "hoverDefault" ],
+      attribute: [
+        { query: "y" + String(matrix[i].year) + "m" + String(matrix[i].month) }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const thisQuery = this.getAttribute("query");
+            const tong = instance.calendarMonthY;
+            const on = String(1);
+            const off = String(0.3);
+            let boo, arr;
+
+            boo = false;
+            for (let i in tong) {
+              if (tong[i] === "off") {
+                boo = true;
+                break;
+              }
+            }
+
+            if (!boo) {
+              for (let i in tong) {
+                if (i !== thisQuery) {
+                  tong[i] = "off";
+                  arr = document.querySelectorAll('.' + i);
+                  for (let j of arr) {
+                    j.style.opacity = off;
+                  }
+                } else {
+                  tong[i] = "on";
+                }
+              }
+            } else {
+              if (tong[thisQuery] === "off") {
+                arr = document.querySelectorAll('.' + thisQuery);
+                for (let j of arr) {
+                  j.style.opacity = on;
+                }
+                tong[thisQuery] = "on";
+              } else {
+                arr = document.querySelectorAll('.' + thisQuery);
+                for (let j of arr) {
+                  j.style.opacity = off;
+                }
+                tong[thisQuery] = "off";
+              }
+            }
+
+          }
+        },
+        {
+          type: "contextmenu",
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const tong = instance.calendarMonthY;
+            const on = String(1);
+            for (let i in tong) {
+              tong[i] = "on";
+              arr = document.querySelectorAll('.' + i);
+              for (let j of arr) {
+                j.style.opacity = on;
+              }
+            }
+          }
+        }
+      ],
       style: {
         display: "inline-block",
         position: "relative",
@@ -357,9 +429,50 @@ DesignerJs.prototype.calendarTitleTime = function (mother) {
       }
     };
     nodeArr.push(tempObj);
+    this.calendarMonthY["y" + String(matrix[i].year) + "m" + String(matrix[i].month)] = "on";
   }
   createNodes(nodeArr);
 
+}
+
+DesignerJs.prototype.calendarMonthYSearch = function (arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const tong = this.calendarMonthY;
+  let targetMonth;
+  let tempArr;
+
+  targetMonth = [];
+  for (let i of arr) {
+    if (!Array.isArray(i)) {
+      throw new Error("invaild input");
+    } else {
+      if (i.length === 0) {
+        throw new Error("invaild input");
+      }
+    }
+    targetMonth.push(Number(i[0]));
+  }
+
+  if (targetMonth.includes(0)) {
+    for (let i in tong) {
+      tong[i] = "on";
+    }
+  } else {
+    for (let i in tong) {
+      tempArr = i.split('m');
+      if (tempArr.length !== 2) {
+        throw new Error("tong error");
+      }
+      if (targetMonth.includes(Number(tempArr[1].replace(/[^0-9]/g, '')))) {
+        tong[i] = "on";
+      } else {
+        tong[i] = "off";
+      }
+    }
+  }
 }
 
 DesignerJs.prototype.calendarContentsTime = function (search = null) {
@@ -375,8 +488,14 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   }
   if (search === null || search === undefined) {
     designers = this.designers;
-  } else {
+  } else if (typeof search === "string") {
+    if (/[0-9]/g.test(search)) {
+      this.calendarMonthYSearch([ ...search.matchAll(/[0-9]/g) ]);
+      search = search.replace(/[0-9]/g, '');
+    }
     designers = this.designers.search(search);
+  } else {
+    throw new Error("invaild search");
   }
 
   const { width, margin, height } = this.moduleBox;
@@ -935,6 +1054,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             position: "relative",
             width: String(matrix[i].getEntireWidth(width, margin)) + ea,
             height: String(barHeight) + ea,
+            opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
           }
         };
         nodeArr.push(tempObj);
@@ -1012,6 +1132,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             position: "relative",
             width: String(matrix[i].getEntireWidth(width, margin)) + ea,
             height: String(barHeight) + ea,
+            opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
           }
         };
         nodeArr.push(tempObj);
@@ -1441,7 +1562,7 @@ DesignerJs.prototype.calendarDashBoardLaunching = function () {
           {
             type: "click",
             event: function (e) {
-              instance.calendarContentsTime();
+              instance.calendarContentsTime('0');
             }
           }
         ],
@@ -1509,6 +1630,7 @@ DesignerJs.prototype.calendarView = async function () {
     this.moduleEvent = null;
     this.detailTimeEvent = null;
     this.calendarData = null;
+    this.calendarMonthY = {};
 
     class DateX extends Array {
       constructor(arr) {

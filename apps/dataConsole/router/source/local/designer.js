@@ -104,18 +104,21 @@ class Designers extends Array {
     if (q === '' || q === "전체" || q === '.' || q === "all") {
       return this;
     }
-    let query;
+    let query, tempArr;
     if (/,/g.test(q)) {
-      query = q.split(',');
+      tempArr = q.split(',');
     } else if (/\//g.test(q)) {
-      query = q.split('/');
+      tempArr = q.split('/');
     } else if (/\./g.test(q)) {
-      query = q.split(' ');
+      tempArr = q.split(' ');
     } else {
-      query = [ q ];
+      tempArr = [ q ];
     }
-    for (let i = 0; i < query.length; i++) {
-      query[i] = query[i].trim();
+    query = [];
+    for (let i = 0; i < tempArr.length; i++) {
+      if (tempArr[i].trim() !== '') {
+        query.push(tempArr[i].trim());
+      }
     }
     const newTong = [];
     for (let q of query) {
