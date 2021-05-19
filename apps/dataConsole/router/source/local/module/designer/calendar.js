@@ -929,6 +929,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
       for (let i = 0; i < matrix.length; i++) {
         tempObj = {
           mother: entireTong,
+          class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
           style: {
             display: "inline-block",
             position: "relative",
@@ -1001,9 +1002,11 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
       createNodes(nodeArr);
     } else {
       nodeArr = [];
+      x = 0;
       for (let i = 0; i < matrix.length; i++) {
         tempObj = {
           mother: entireTong,
+          class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
           style: {
             display: "inline-block",
             position: "relative",
@@ -1014,11 +1017,67 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         nodeArr.push(tempObj);
         tempObj = {
           mother: -1,
+          id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
+          attribute: [
+            { x: String(x) },
+            { y: String(y) },
+            { value: String(5) },
+            { start: matrix[i].children[0].start },
+            { end: matrix[i].children[matrix[i].children.length - 1].end },
+            { desid },
+            { proid },
+            { year: String(matrix[i].year) },
+            { month: String(matrix[i].month) }
+          ],
+          class: [
+            classNameY + "_" + String(y),
+            classNameXY + "_" + String(x) + '_' + String(y),
+            classNameDesid + "-" + desid + "-" + proid,
+            desid + '-' + proid + '-' + 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month),
+          ],
           events: [
             {
               type: "click",
               event: function (e) {
-                console.log("this!");
+                e.preventDefault();
+                e.stopPropagation();
+                const y = this.getAttribute('y');
+                const desid = this.getAttribute('desid');
+                const proid = this.getAttribute('proid');
+                const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
+                let thisValue = Number(this.firstChild.textContent);
+                thisValue = thisValue + 1;
+                this.firstChild.textContent = String(thisValue);
+                this.setAttribute("value", String(thisValue));
+                instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+                  if (resultNumber !== 1) {
+                    throw new Error("update error");
+                  }
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
+            },
+            {
+              type: "contextmenu",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const y = this.getAttribute('y');
+                const desid = this.getAttribute('desid');
+                const proid = this.getAttribute('proid');
+                const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
+                let thisValue = Number(this.firstChild.textContent);
+                thisValue = thisValue - 1;
+                this.firstChild.textContent = String(thisValue);
+                this.setAttribute("value", String(thisValue));
+                instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+                  if (resultNumber !== 1) {
+                    throw new Error("update error");
+                  }
+                }).catch((err) => {
+                  console.log(err);
+                });
               }
             }
           ],
@@ -1028,7 +1087,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             width: String((width * matrix[i].children.length) + (margin * (matrix[i].children.length - 1))) + ea,
             height: withOut(0, ea),
             marginRight: String(margin) + ea,
-            background: colorChip.grayDeactive,
+            background: colorChip.gray2,
             borderRadius: String(3) + "px",
             cursor: "pointer",
             transition: "all 0s ease",
@@ -1037,8 +1096,16 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         nodeArr.push(tempObj);
         tempObj = {
           mother: -1,
-          attribute: [ { value: String(5) } ],
           text: String(5),
+          events: [
+            {
+              type: "selectstart",
+              event: function (e) {
+                e.preventDefault();
+                return false;
+              }
+            }
+          ],
           style: {
             position: "absolute",
             width: String(100) + '%',
@@ -1047,11 +1114,12 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             top: String(3) + ea,
             fontFamily: "graphik",
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.deactive,
             zIndex: String(2),
           }
         };
         nodeArr.push(tempObj);
+        x = x + matrix[i].children.length;
       }
       createNodes(nodeArr);
     }
@@ -1514,11 +1582,12 @@ DesignerJs.prototype.calendarView = async function () {
     class DesignerDate {
       constructor(obj) {
         this.desid = obj.desid;
+        this.count = obj.count;
         this.possible = obj.possible;
         this.projects = obj.projects;
       }
       render() {
-        const { desid, possible, projects } = this;
+        const { desid, count, possible, projects } = this;
         const calendarX = instance.calendarX;
         if (instance.moduleEvent === null || instance.detailTimeEvent === null) {
           throw new Error("event definition first");
@@ -1619,6 +1688,13 @@ DesignerJs.prototype.calendarView = async function () {
             }
           }
         }
+        for (let ym in count) {
+          tempDom = document.querySelector('.' + desid + '-' + "count" + '-' + ym);
+          if (tempDom !== null) {
+            tempDom.firstChild.textContent = String(count[ym]);
+            tempDom.setAttribute("value", String(count[ym]));
+          }
+        }
       }
       projectConvert(projectObj) {
         if (typeof projectObj !== "object") {
@@ -1665,7 +1741,7 @@ DesignerJs.prototype.calendarView = async function () {
         }
         if (target === null) {
           if (/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/i.test(desid)) {
-            target = new DesignerDate({ desid, possible: [], projects: [] });
+            target = new DesignerDate({ desid, count: {}, possible: [], projects: [] });
             this.push(target);
           } else {
             throw new Error("invaild desid");
@@ -1723,7 +1799,7 @@ DesignerJs.prototype.calendarView = async function () {
         proid = tempArr[2];
         thisDesigner = this.pick(desid);
 
-        if (proid !== "possible") {
+        if (proid !== "possible" && proid !== "count") {
 
           toggle = [];
           meeting = [];
@@ -1762,7 +1838,7 @@ DesignerJs.prototype.calendarView = async function () {
 
           thisDesigner.projectConvert(model);
 
-        } else {
+        } else if (proid === "possible") {
 
           toggle = [];
           for (let dom of doms) {
@@ -1796,6 +1872,10 @@ DesignerJs.prototype.calendarView = async function () {
 
           thisDesigner.possible = model;
 
+        } else {
+          for (let dom of doms) {
+            thisDesigner.count['y' + dom.getAttribute("year") + 'm' + dom.getAttribute("month")] = Number(dom.getAttribute("value"));
+          }
         }
 
         url = "/generalMongo";
