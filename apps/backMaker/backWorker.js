@@ -260,7 +260,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
 
     const targetAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: MONGOC });
-    let aspirantJson, updateQuery, contractDay, newDesid, newDesigner;
+    let aspirantJson, updateQuery, contractDay, newDesid, newDesigner, designerFolderResponse;
 
     for (let aspirant of targetAspirants) {
       contractDay = aspidArr.search(aspirant.aspid);
@@ -269,7 +269,10 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       if (updateQuery !== null) {
         newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
         newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
-        await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
+        designerFolderResponse = await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
+        designerFolderResponse.desid = newDesid;
+        designerFolderResponse.date = new Date();
+        await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true });
       }
     }
 
