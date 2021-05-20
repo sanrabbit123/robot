@@ -1335,6 +1335,13 @@ GeneralJs.protoPatch = async function (instance, modulePath) {
   }
 }
 
+GeneralJs.equalJson = function (jsonString) {
+  const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+  const json = tempFunc();
+  return json;
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

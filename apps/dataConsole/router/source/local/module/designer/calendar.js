@@ -633,7 +633,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                   if (/_/g.test(spot)) {
                     that.setAttribute("spot", this.value.trim() + '_' + spot.split('_')[1]);
                   }
-                  instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y)).then((resultNumber) => {
+                  instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y), x, e.type, e.altKey).then((resultNumber) => {
                     if (resultNumber !== 1) {
                       throw new Error("update error");
                     }
@@ -699,7 +699,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                     if (/_/g.test(spot)) {
                       that.setAttribute("spot", spot.split('_')[1] + '_' + this.value.trim());
                     }
-                    instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y)).then((resultNumber) => {
+                    instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y), x, e.type, e.altKey).then((resultNumber) => {
                       if (resultNumber !== 1) {
                         throw new Error("update error");
                       }
@@ -976,7 +976,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
 
     if (updateBoo) {
       if (!e.ctrlKey) {
-        instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+        instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
           if (resultNumber !== 1) {
             throw new Error("update error");
           }
@@ -990,6 +990,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   this.countEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
+    const x = this.getAttribute('x');
     const y = this.getAttribute('y');
     const desid = this.getAttribute('desid');
     const proid = this.getAttribute('proid');
@@ -1004,7 +1005,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     this.firstChild.textContent = String(thisValue);
     this.setAttribute("value", String(thisValue));
     if (!e.ctrlKey) {
-      instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+      instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
         if (resultNumber !== 1) {
           throw new Error("update error");
         }
@@ -1595,7 +1596,7 @@ DesignerJs.prototype.calendarSearchEvent = function () {
   });
 }
 
-DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x) {
+DesignerJs.prototype.calendarModuleClickDetail = function (mode, alt, desid, proid, x) {
   const instance = this;
   const { classNameDesid } = this.calendarClass;
   if (this.moduleEvent === null || this.countEvent === null) {
@@ -1604,7 +1605,7 @@ DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x
   if (mode !== "click" && mode !== "contextmenu") {
     throw new Error("mode must be String: 'click' or String: 'contextmenu'")
   }
-  if (typeof desid !== "string" && typeof proid !== "string" && typeof x !== "number") {
+  if (typeof alt !== "number" && typeof desid !== "string" && typeof proid !== "string" && typeof x !== "number") {
     throw new Error("invaild input");
   }
 
@@ -1619,7 +1620,7 @@ DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x
       cancelable: false,
       preventDefault: function () {},
       stopPropagation: function () {},
-      altKey: false,
+      altKey: (alt === 1),
       ctrlKey: true,
     };
 
@@ -1628,7 +1629,7 @@ DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x
       cancelable: false,
       preventDefault: function () {},
       stopPropagation: function () {},
-      altKey: false,
+      altKey: (alt === 1),
       ctrlKey: true,
     };
 
@@ -1642,32 +1643,70 @@ DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x
   }
 }
 
-DesignerJs.prototype.calendarModuleClick = async function (arr) {
+DesignerJs.prototype.calendarModuleClick = function (arr) {
   const instance = this;
-  const { sleep } = GeneralJs;
-  try {
-    if (!Array.isArray(arr)) {
-      throw new Error("must be array");
-    }
-    for (let obj of arr) {
-      if (typeof obj !== "object") {
-        throw new Error("invaild input");
-      }
-      if (obj.mode === undefined || obj.desid === undefined || obj.proid === undefined || obj.x === undefined) {
-        throw new Error("invaild input");
-      }
-      this.calendarModuleClickDetail(obj.mode, obj.desid, obj.proid, obj.x);
-      await sleep(100);
-    }
-  } catch (e) {
-    console.log(e);
+  if (!Array.isArray(arr)) {
+    throw new Error("must be array");
   }
+  for (let obj of arr) {
+    if (obj.who !== this.cookiesWho) {
+      this.calendarModuleClickDetail(obj.mode, obj.alt, obj.desid, obj.proid, obj.x);
+    }
+  }
+}
+
+DesignerJs.prototype.calendarFixUp = function () {
+  const instance = this;
+  const { ea, totalMother } = this;
+  const { calendarBase, calendarHeight } = this.mother.makeCalendar(new Date, function (e) {});
+  const { colorChip, createNode, withOut } = GeneralJs;
+  let mother, style, calendarBox;
+  let width, height;
+
+  width = Number(calendarBase.style.width.replace(/[^0-9\-\.]/g, ''));
+  height = Number(calendarBase.style.width.replace(/[^0-9\-\.]/g, ''));
+
+  calendarBox = createNode({
+    mother: totalMother,
+    events: [
+      {
+        type: "contextmenu",
+        event: function (e) {
+          e.preventDefault();
+          this.parentElement.removeChild(this);
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      width: String(width) + ea,
+      height: String(height) + ea,
+      top: withOut(100, this.mother.belowHeight + 205, ea),
+      right: String(42) + ea,
+      transition: "all 0s ease",
+      animation: "fadeup 0.3s ease forwards",
+    }
+  });
+
+  style = {
+    position: "absolute",
+    background: colorChip.white,
+    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+    transition: "all 0s ease",
+    borderRadius: String(3) + "px",
+    opacity: String(0.95),
+  };
+  for (let i in style) {
+    calendarBase.style[i] = style[i];
+  }
+  calendarBox.appendChild(calendarBase);
+
 }
 
 DesignerJs.prototype.calendarView = async function () {
   const instance = this;
   try {
-    const { createNodes, colorChip, ajaxJson, sleep, returnGet } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, sleep, returnGet, equalJson } = GeneralJs;
     const getObj = returnGet();
     let designers, projects, clients;
     let desidArr, cliidArr;
@@ -1700,6 +1739,8 @@ DesignerJs.prototype.calendarView = async function () {
     this.calendarMonthY = {};
     this.calendarPastQueries = [];
     this.calendarPastTranslate = "translateX(0px)";
+    this.cookies = GeneralJs.getCookiesAll();
+    this.cookiesWho = this.cookies.homeliaisonConsoleLoginedName;
 
     this.mother.belowButtons.arrow.right.addEventListener("click", (e) => { instance.calendarPastTranslate = document.querySelector(".moveTarget").style.transform; });
     this.mother.belowButtons.arrow.left.addEventListener("click", (e) => { instance.calendarPastTranslate = document.querySelector(".moveTarget").style.transform; });
@@ -1914,15 +1955,37 @@ DesignerJs.prototype.calendarView = async function () {
           this.projects.push(projectObj);
         }
       }
-      projectPick(proid) {
+      projectPick(proid, returnModel = false) {
         if (proid === undefined) {
           throw new Error("must be proid");
         }
+        let model;
         let target;
+
         target = null;
-        
+        model = function (proid) {
+          return {
+            proid,
+            meeting: [],
+            project: []
+          };
+        }
 
+        if (returnModel) {
+          return model(proid);
+        }
 
+        for (let p of this.projects) {
+          if (p.proid === proid) {
+            target = p;
+            break;
+          }
+        }
+        if (target === null) {
+          target = model(proid);
+          this.projects.push(target);
+        }
+        return target;
       }
     }
     class DesignerDates extends Array {
@@ -1958,9 +2021,12 @@ DesignerJs.prototype.calendarView = async function () {
           i.render();
         }
       }
-      async updateByDoms(doms) {
+      async updateByDoms(doms, x = 0, type = "click", alt = false) {
         const length = doms.length;
         const stringToDate = (str) => {
+          if (typeof str !== "string") {
+            throw new Error("invaild input");
+          }
           let tempArr = str.split('-');
           if (tempArr.length !== 3) {
             throw new Error("invaild input");
@@ -1974,14 +2040,21 @@ DesignerJs.prototype.calendarView = async function () {
         let toggle, meeting;
         let pastBoo;
         let startPoint, endPoint;
-        let model;
+        let model, modelFiltered;
         let updateData, url;
         let thisDesigner;
+        let original;
+        let premiereStart, premiereEnd;
+        let rescueTong_project, rescueTong_meeting;
+        let indexTong;
 
         if (length === 0) {
           throw new Error("length error");
           return 0;
         }
+
+        premiereStart = stringToDate(doms[0].getAttribute("start")).valueOf();
+        premiereEnd = stringToDate(doms[0].getAttribute("end")).valueOf();
 
         id = null;
         for (let dom of doms) {
@@ -2015,7 +2088,8 @@ DesignerJs.prototype.calendarView = async function () {
           pastBoo = false;
           startPoint = [];
           endPoint = [];
-          model = { proid, meeting: [], project: [] };
+          original = thisDesigner.projectPick(proid, false);
+          model = thisDesigner.projectPick(proid, true);
           for (let i = 0; i < length; i++) {
             if (!pastBoo && toggle[i]) {
               if (!meeting[i]) {
@@ -2047,6 +2121,45 @@ DesignerJs.prototype.calendarView = async function () {
               end: stringToDate((doms[endPoint[i]].getAttribute("spot") !== null && doms[endPoint[i]].getAttribute("spot") !== "null") ?  doms[endPoint[i]].getAttribute("spot") :  doms[endPoint[i]].getAttribute("end"))
             });
           }
+
+          rescueTong_project = [];
+          for (let obj of original.project) {
+            if (obj.start.valueOf() < premiereStart && obj.end.valueOf() < premiereStart) {
+              rescueTong_project.push(obj);
+            } else if (obj.start.valueOf() < premiereStart && obj.end.valueOf() >= premiereStart) {
+              for (let obj2 of model.project) {
+                if (premiereStart <= obj2.start.valueOf() && obj2.start.valueOf() <= premiereEnd) {
+                  obj.end = obj2.end;
+                  rescueTong_project.push(obj);
+                }
+              }
+            }
+          }
+          indexTong = [];
+          for (let i = 0; i < model.project.length; i++) {
+            if (premiereStart <= model.project[i].start.valueOf() && model.project[i].start.valueOf() <= premiereEnd) {
+              for (let { end } of rescueTong_project) {
+                if (end.valueOf() === model.project[i].end.valueOf()) {
+                  indexTong.push(i);
+                }
+              }
+            }
+          }
+          modelFiltered = [];
+          for (let i = 0; i < model.project.length; i++) {
+            if (!indexTong.includes(i)) {
+              modelFiltered.push(model.project[i]);
+            }
+          }
+          model.project = rescueTong_project.concat(modelFiltered);
+
+          rescueTong_meeting = [];
+          for (let date of original.meeting) {
+            if (date.valueOf() < premiereStart) {
+              rescueTong_meeting.push(date);
+            }
+          }
+          model.meeting = rescueTong_meeting.concat(model.meeting);
 
           thisDesigner.projectConvert(model);
 
@@ -2099,6 +2212,25 @@ DesignerJs.prototype.calendarView = async function () {
           updateQuery: thisDesigner
         };
         await GeneralJs.ajaxJson(updateData, url);
+
+        if (type !== "blur") {
+          url = "/generalMongo";
+          updateData = {
+            mode: "sse",
+            db: "console",
+            collection: "sse_realtimeDesigner",
+            updateQuery: {
+              mode: type,
+              alt: alt ? 1 : 0,
+              desid,
+              proid,
+              x: String(x),
+              who: instance.cookiesWho,
+            }
+          };
+          await GeneralJs.ajaxJson(updateData, url);
+        }
+
         return 1;
       }
 
@@ -2194,6 +2326,7 @@ DesignerJs.prototype.calendarView = async function () {
       collection: "realtimeDesigner",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
+
     // this.calendarData.mergeProjects(projects);
 
     this.designers = new Designers(designers);
@@ -2209,38 +2342,14 @@ DesignerJs.prototype.calendarView = async function () {
     loading.parentNode.removeChild(loading);
     this.totalMother.style.animation = "fadeup 0.3s ease forwards";
 
-    this.calendarModuleClick([
-      {
-        mode: "click",
-        desid: "d2105_aa02s",
-        proid: "possible",
-        x: String(3),
-      },
-      {
-        mode: "click",
-        desid: "d2105_aa02s",
-        proid: "possible",
-        x: String(10),
-      },
-      {
-        mode: "click",
-        desid: "d2105_aa02s",
-        proid: "count",
-        x: String(3),
-      },
-      {
-        mode: "click",
-        desid: "d2105_aa02s",
-        proid: "count",
-        x: String(3),
-      },
-      {
-        mode: "contextmenu",
-        desid: "d2105_aa02s",
-        proid: "count",
-        x: String(3),
-      },
-    ]);
+    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/realtimeDesigner");
+    es.addEventListener("updateTong", function (e) {
+      instance.calendarModuleClick(equalJson(e.data));
+    });
+
+    await sleep(500);
+
+    this.calendarFixUp();
 
   } catch (e) {
     console.log(e);

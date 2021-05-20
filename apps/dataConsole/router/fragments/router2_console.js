@@ -2108,13 +2108,13 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalMongo";
   obj.func = async function (req, res) {
     try {
       if (req.body.mode === undefined) {
-        throw new Error("must be mode => [ create, read, update, delete ]");
+        throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
       if (req.body.collection === undefined) {
         throw new Error("must be collection name");
@@ -2167,6 +2167,22 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         whereQuery = equalJson(req.body.whereQuery);
         await back.mongoDelete(collection, whereQuery, { selfMongo });
         result = { message: "done" };
+      } else if (mode === "sse") {
+        if (req.body.updateQuery === undefined) {
+          throw new Error("must be updateQuery");
+        }
+        updateQuery = equalJson(req.body.updateQuery);
+        result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+        if (result.length === 0) {
+          await back.mongoCreate(collection, { id: "sse", order: [ updateQuery ] }, { selfMongo });
+        } else {
+          result[0].order.push(updateQuery);
+          await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+        }
+        await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
+        result = { message: "done" };
+      } else {
+        throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
 
       res.set({ "Content-Type": "application/json" });

@@ -302,48 +302,66 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const back = this.back;
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
+  const { readFileSync } = require(`fs`);
+  let connectionNumber = 0;
+  let totalOrder = 0;
   let obj = {};
-  obj.link = [ "/specificsse/get_checklist/:id" ];
+  obj.link = [ "/specificsse/:id" ];
   obj.func = async function (req, res) {
     try {
-      const thisPath = req.url.split('/')[2].split('_')[1];
-      const thisId = req.params.id;
-      const sseStream = new SseStream(req);
-      const logDir = instance.dir + "/log";
-      const sseConst = "sse_designerMatrix";
-      let log_past, log_new_raw, log_new, log_new_string;
+      const idConst = "sse";
+      const sseConst = idConst + "_" + req.params.id;
+      const sseFile = instance.dir + "/log/sse_" + req.params.id + "_latest.json"
       let sseObjs;
+      let orderRaw, order;
+      let trigger;
 
       res.set({
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Connection": 'keep-alive',
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
-      sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
+      sseObjs = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
       if (sseObjs.length === 0) {
-        await back.mongoCreate(sseConst, { desid: thisId, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
+        await back.mongoCreate(sseConst, { id: idConst, order: [] }, { selfMongo: instance.mongolocal });
       }
 
-      sseStream.pipe(res);
+      if (!(await fileSystem(`exist`, [ sseFile ]))) {
+        await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
+      }
+
+      connectionNumber = connectionNumber + 1;
+      totalOrder = connectionNumber;
 
       const pusher = setInterval(async function () {
         try {
-          log_new_raw = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
-          log_new = { desid: log_new_raw[0].desid, column: log_new_raw[0].column, type: log_new_raw[0].type, order: log_new_raw[0].order };
-          log_new_string = JSON.stringify(log_new);
-          if (log_new_string !== log_past) {
-            sseStream.write({ event: 'updateTong', data: log_new_string });
+          if (totalOrder <= 0) {
+            totalOrder = connectionNumber;
           }
-          log_past = log_new_string;
+          trigger = JSON.parse(readFileSync(sseFile));
+          if (trigger.length > 0) {
+            orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
+            order = orderRaw[0].order;
+            res.write(`event: updateTong\ndata: ${JSON.stringify(order)}\n\n`);
+            totalOrder = totalOrder - 1;
+            if (totalOrder <= 0) {
+              await back.mongoUpdate(sseConst, [ { id: idConst }, { order: [] } ], { selfMongo: instance.mongolocal });
+              await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
+            }
+          }
         } catch (e) {
           console.log(e);
         }
-      }, 1000);
+      }, 100);
 
       res.on('close', function () {
         clearInterval(pusher);
-        sseStream.unpipe(res);
+        res.end();
+        connectionNumber = connectionNumber - 1;
       });
 
     } catch (e) {

@@ -661,7 +661,7 @@ Ghost.prototype.designerRouter = function (needs) {
   const pathNameConst = "/designer_";
   const standardId = "desid";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -750,34 +750,60 @@ Ghost.prototype.designerRouter = function (needs) {
   //POST - create new designer folder
   funcObj.post_createFolder = {
     link: [ "/create", "/createFolder" ],
-    func: function (req, res) {
-      let id, subid;
-      let folderName;
-      let basicList = [
-        "포트폴리오",
-        "등록서류",
-        "고객안내및제안문서"
-      ];
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.name !== undefined && req.body.subid !== undefined) {
-        folderName = req.body.subid + "_" + req.body.name;
-        shell.exec(`mkdir ${shellLink(sambaDir)}/${folderName}`, { async: true }, function (err, stdout, stderr) {
-          if (err) {
-            console.log(err);
-          } else {
-            for (let b of basicList) {
-              shell.exec(`mkdir ${shellLink(sambaDir)}/${folderName}/${b}`);
+    func: async function (req, res) {
+      try {
+        const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+        const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+        const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
+        const drive = new GoogleDrive();
+        const sheets = new GoogleSheet();
+        const docs = new GoogleDocs();
+        let id, subid;
+        let folderName;
+        let folderId, docsId, sheetsId;
+        let basicList = [
+          "포트폴리오",
+          "등록서류",
+          "고객안내및제안문서"
+        ];
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.name !== undefined && req.body.subid !== undefined) {
+          folderName = req.body.subid + "_" + req.body.name;
+          if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ]))) {
+            await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}` ]);
+          }
+          for (let b of basicList) {
+            if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}/${b}` ]))) {
+              await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}/${b}` ]);
             }
           }
-        });
-        res.send(JSON.stringify({ folderName: folderName }));
-      } else {
-        res.send(JSON.stringify({ error: "must be property 'name' and 'subid'" }));
+
+          do {
+            await sleep(2000);
+            folderId = await drive.searchId_inPython(folderName);
+          } while (folderId === null);
+
+          docsId = await docs.create_newDocs_inPython(req.body.name, folderId);
+          sheetsId = await sheets.create_newSheets_inPython(req.body.name, folderId);
+
+          res.send(JSON.stringify({
+            folderName: folderName,
+            forder: `https://drive.google.com/drive/folders/${folderId}`,
+            docs: `https://drive.google.com/drive/folders/${docsId}`,
+            sheets: `https://drive.google.com/drive/folders/${sheetsId}`,
+          }));
+
+        } else {
+          res.send(JSON.stringify({ error: "must be property 'name' and 'subid'" }));
+        }
+
+      } catch (e) {
+        console.log(e);
       }
     }
   };

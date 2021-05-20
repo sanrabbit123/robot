@@ -448,48 +448,66 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const back = this.back;
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
+  const { readFileSync } = require(`fs`);
+  let connectionNumber = 0;
+  let totalOrder = 0;
   let obj = {};
-  obj.link = [ "/specificsse/get_checklist/:id" ];
+  obj.link = [ "/specificsse/:id" ];
   obj.func = async function (req, res) {
     try {
-      const thisPath = req.url.split('/')[2].split('_')[1];
-      const thisId = req.params.id;
-      const sseStream = new SseStream(req);
-      const logDir = instance.dir + "/log";
-      const sseConst = "sse_designerMatrix";
-      let log_past, log_new_raw, log_new, log_new_string;
+      const idConst = "sse";
+      const sseConst = idConst + "_" + req.params.id;
+      const sseFile = instance.dir + "/log/sse_" + req.params.id + "_latest.json"
       let sseObjs;
+      let orderRaw, order;
+      let trigger;
 
       res.set({
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Connection": 'keep-alive',
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
 
-      sseObjs = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
+      sseObjs = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
       if (sseObjs.length === 0) {
-        await back.mongoCreate(sseConst, { desid: thisId, column: "null", type: "null", order: [] }, { selfMongo: instance.mongolocal });
+        await back.mongoCreate(sseConst, { id: idConst, order: [] }, { selfMongo: instance.mongolocal });
       }
 
-      sseStream.pipe(res);
+      if (!(await fileSystem(`exist`, [ sseFile ]))) {
+        await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
+      }
+
+      connectionNumber = connectionNumber + 1;
+      totalOrder = connectionNumber;
 
       const pusher = setInterval(async function () {
         try {
-          log_new_raw = await back.mongoRead(sseConst, { desid: thisId }, { selfMongo: instance.mongolocal });
-          log_new = { desid: log_new_raw[0].desid, column: log_new_raw[0].column, type: log_new_raw[0].type, order: log_new_raw[0].order };
-          log_new_string = JSON.stringify(log_new);
-          if (log_new_string !== log_past) {
-            sseStream.write({ event: 'updateTong', data: log_new_string });
+          if (totalOrder <= 0) {
+            totalOrder = connectionNumber;
           }
-          log_past = log_new_string;
+          trigger = JSON.parse(readFileSync(sseFile));
+          if (trigger.length > 0) {
+            orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
+            order = orderRaw[0].order;
+            res.write(`event: updateTong\ndata: ${JSON.stringify(order)}\n\n`);
+            totalOrder = totalOrder - 1;
+            if (totalOrder <= 0) {
+              await back.mongoUpdate(sseConst, [ { id: idConst }, { order: [] } ], { selfMongo: instance.mongolocal });
+              await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
+            }
+          }
         } catch (e) {
           console.log(e);
         }
-      }, 1000);
+      }, 100);
 
       res.on('close', function () {
         clearInterval(pusher);
-        sseStream.unpipe(res);
+        res.end();
+        connectionNumber = connectionNumber - 1;
       });
 
     } catch (e) {
@@ -2567,6 +2585,10 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       let projects;
       let whereQuery, updateQuery;
 
+      updateQuery["process.contract.remain.calculation.amount.supply"] = Number(supply);
+      updateQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+      updateQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
       if (clients.length === 1) {
         client = clients[0];
         cliid = client.cliid;
@@ -2583,7 +2605,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           } else {
             updateQuery = {};
             updateQuery["process.contract.remain.date"] = new Date();
-            updateQuery["process.contract.remain.calculation.amount"] = amount;
+            updateQuery["process.contract.remain.calculation.amount.supply"] = (projects[0].process.contract.first.calculation.amount + amount) * (10 / 11);
+            updateQuery["process.contract.remain.calculation.amount.vat"] = (projects[0].process.contract.first.calculation.amount + amount) * (1 / 11);
+            updateQuery["process.contract.remain.calculation.amount.consumer"] = projects[0].process.contract.first.calculation.amount + amount;
             updateQuery["process.contract.remain.calculation.info.method"] = "카드";
             updateQuery["process.contract.remain.calculation.info.proof"] = buyer_name;
             updateQuery["process.contract.remain.calculation.info.to"] = "이니시스";
@@ -2605,13 +2629,13 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalMongo";
   obj.func = async function (req, res) {
     try {
       if (req.body.mode === undefined) {
-        throw new Error("must be mode => [ create, read, update, delete ]");
+        throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
       if (req.body.collection === undefined) {
         throw new Error("must be collection name");
@@ -2664,6 +2688,22 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         whereQuery = equalJson(req.body.whereQuery);
         await back.mongoDelete(collection, whereQuery, { selfMongo });
         result = { message: "done" };
+      } else if (mode === "sse") {
+        if (req.body.updateQuery === undefined) {
+          throw new Error("must be updateQuery");
+        }
+        updateQuery = equalJson(req.body.updateQuery);
+        result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+        if (result.length === 0) {
+          await back.mongoCreate(collection, { id: "sse", order: [ updateQuery ] }, { selfMongo });
+        } else {
+          result[0].order.push(updateQuery);
+          await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+        }
+        await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
+        result = { message: "done" };
+      } else {
+        throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
 
       res.set({ "Content-Type": "application/json" });

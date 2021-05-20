@@ -51,6 +51,23 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const drive = new GoogleDrive();
+    const designers = await back.getDesignersByQuery({});
+    let id;
+
+
+    for (let d of designers) {
+      id = await drive.searchId_inPython(d.information.did + "_" + d.designer);
+      if (String(id) === "null") {
+        console.log(d);
+      } else {
+        console.log(d.designer, `https://drive.google.com/drive/folders/${id}`)
+      }
+    }
+
+
+
+
     // const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" });
     // const token = payResponse.data.response.access_token;
     // const { data } = await requestSystem("https://api.iamport.kr/payments/imp_706381046289", {}, { headers: { "X-ImpTokenHeader": token } });

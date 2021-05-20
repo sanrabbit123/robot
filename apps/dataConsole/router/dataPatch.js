@@ -3383,7 +3383,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     firstInfo: {
       name: "계약금 정보",
-      width: 300,
+      width: 400,
     },
     remainPure: {
       name: "잔금",
@@ -3395,7 +3395,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     remainInfo: {
       name: "잔금 정보",
-      width: 300,
+      width: 400,
     },
     designer: {
       name: "디자이너",
@@ -3431,7 +3431,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     calculationInfo: {
       name: "정산 정보",
-      width: 300,
+      width: 400,
     },
     next: {
       name: "전화 예정",
