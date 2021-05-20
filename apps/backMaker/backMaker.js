@@ -2817,12 +2817,27 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
   }
 }
 
-BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, bridge: null, python: null, selfMongo: null }) {
+BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, bridge: null, python: null, selfMongo: null, unset: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongohomeinfo, bridgeinfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
+    let unsetBoo;
+    let finalUpdateObj;
+
+    if (option.unset === null || option.unset === false || option.unset === undefined) {
+      unsetBoo = false;
+    } else if (option.unset === true) {
+      unsetBoo = true;
+    }
+
+    finalUpdateObj = {};
+    if (!unsetBoo) {
+      finalUpdateObj["$set"] = updateQuery;
+    } else {
+      finalUpdateObj["$unset"] = updateQuery;
+    }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       if (option.local !== undefined && option.local !== null) {
@@ -2839,10 +2854,10 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
         MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       }
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
       MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      await option.selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
     }
     return "success";
   } catch (e) {

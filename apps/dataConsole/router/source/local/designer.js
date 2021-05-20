@@ -1871,7 +1871,45 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", clipboardEvent);
+  // div_clone3.addEventListener("click", clipboardEvent);
+  div_clone3.addEventListener("contextmenu", async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const links = await GeneralJs.ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "folderDesigner",
+        whereQuery: { desid: thisCase[standard[1]] }
+      }, "/generalMongo", { equal: true });
+      if (links.length === 0) {
+        alert("만들어진 폴더가 없습니다!");
+      } else {
+        GeneralJs.blankHref(links[0].drive);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  div_clone3.addEventListener("click", async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const links = await GeneralJs.ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "folderDesigner",
+        whereQuery: { desid: thisCase[standard[1]] }
+      }, "/generalMongo", { equal: true });
+      if (links.length === 0) {
+        alert("만들어진 문서가 없습니다!");
+      } else {
+        GeneralJs.blankHref(links[0].docs);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
   div_clone2.appendChild(div_clone3);
 
   //desid

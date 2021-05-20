@@ -794,8 +794,8 @@ Ghost.prototype.designerRouter = function (needs) {
           res.send(JSON.stringify({
             folderName: folderName,
             forder: `https://drive.google.com/drive/folders/${folderId}`,
-            docs: `https://drive.google.com/document/d/${docsId}`,
-            sheets: `https://drive.google.com/spreadsheets/d/${sheetsId}`,
+            docs: `https://docs.google.com/document/d/${docsId}`,
+            sheets: `https://docs.google.com/spreadsheets/d/${sheetsId}`,
           }));
 
         } else {

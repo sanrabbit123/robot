@@ -51,21 +51,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const designers = await back.getDesignersByQuery({});
-    const designerRequest = ghostRequest().bindPath("designer");
-    let res, tong;
-
-    tong = [];
-    for (let d of designers) {
-      res = await designerRequest("create", { name: d.designer, subid: d.information.did });
-      res.desid = d.desid;
-      res.date = new Date();
-      tong.push(res);
-    }
-
-    for (let json of tong) {
-      await back.mongoCreate("folderDesigner", json, { console: true });
-    }
 
 
 
