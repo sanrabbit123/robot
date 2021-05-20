@@ -788,8 +788,8 @@ Ghost.prototype.designerRouter = function (needs) {
             folderId = await drive.searchId_inPython(folderName);
           } while (folderId === null);
 
-          docsId = await docs.create_newDocs_inPython(req.body.name, folderId);
-          sheetsId = await sheets.create_newSheets_inPython(req.body.name, folderId);
+          docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
+          sheetsId = await sheets.create_newSheets_inPython(folderName + '_' + "sheets", folderId);
 
           res.send(JSON.stringify({
             folderName: folderName,
