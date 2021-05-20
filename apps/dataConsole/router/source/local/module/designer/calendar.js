@@ -571,14 +571,14 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             },
           ],
           style: {
-            position: y < 3 ? "fixed" : "absolute",
+            position: y < 0 ? "fixed" : "absolute",
             width: String(width) + ea,
             height: String(height) + ea,
-            top: String(y < 3 ? this.getBoundingClientRect().top - height - outerMargin : -1 * (height + outerMargin)) + ea,
-            left: y < 3 ? String(this.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (width / 2)) + ea : withOut(50, width / 2, ea),
+            top: String(y < 0 ? this.getBoundingClientRect().top - height - outerMargin : -1 * (height + outerMargin)) + ea,
+            left: y < 0 ? String(this.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (width / 2)) + ea : withOut(50, width / 2, ea),
             background: meeting === "on" ? colorChip.red : (!possibleTimes ? colorChip.gradientGreen : colorChip.yellow),
             borderRadius: String(3) + "px",
-            zIndex: String(2),
+            zIndex: String(3),
             opacity: String(0.95),
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
           }
