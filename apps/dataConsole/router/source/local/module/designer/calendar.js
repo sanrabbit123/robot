@@ -990,28 +990,30 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   this.countEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
-    const x = this.getAttribute('x');
-    const y = this.getAttribute('y');
-    const desid = this.getAttribute('desid');
-    const proid = this.getAttribute('proid');
-    const { classNameDesid } = instance.calendarClass;
-    const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
-    let thisValue = Number(this.firstChild.textContent);
-    if (e.type === "click") {
-      thisValue = thisValue + 1;
-    } else {
-      thisValue = thisValue - 1;
-    }
-    this.firstChild.textContent = String(thisValue);
-    this.setAttribute("value", String(thisValue));
-    if (!e.ctrlKey) {
-      instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
-        if (resultNumber !== 1) {
-          throw new Error("update error");
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
+    if (e.altKey) {
+      const x = this.getAttribute('x');
+      const y = this.getAttribute('y');
+      const desid = this.getAttribute('desid');
+      const proid = this.getAttribute('proid');
+      const { classNameDesid } = instance.calendarClass;
+      const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
+      let thisValue = Number(this.firstChild.textContent);
+      if (e.type === "click") {
+        thisValue = thisValue + 1;
+      } else {
+        thisValue = thisValue - 1;
+      }
+      this.firstChild.textContent = String(thisValue);
+      this.setAttribute("value", String(thisValue));
+      if (!e.ctrlKey) {
+        instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
+          if (resultNumber !== 1) {
+            throw new Error("update error");
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     }
   }
   const createBlock = function (mother, desid, proid, width, margin, barHeight, y, possibleTimes) {
@@ -2272,6 +2274,21 @@ DesignerJs.prototype.calendarView = async function () {
         }
       }
 
+      async updateThisState() {
+        const url = "/generalMongo";
+        let updateData;
+        for (let obj of this) {
+          updateData = {
+            mode: "update",
+            db: "console",
+            collection: "realtimeDesigner",
+            whereQuery: { desid: obj.desid },
+            updateQuery: obj
+          };
+          await GeneralJs.ajaxJson(updateData, url);
+        }
+      }
+
     }
 
     this.calendarDateClass = {
@@ -2327,7 +2344,8 @@ DesignerJs.prototype.calendarView = async function () {
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
 
-    // this.calendarData.mergeProjects(projects);
+    this.calendarData.mergeProjects(projects);
+    await this.calendarData.updateThisState();
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);

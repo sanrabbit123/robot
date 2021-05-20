@@ -597,6 +597,8 @@ ProjectJs.prototype.infoArea = function (info) {
             index: Number(idDom.getAttribute("index")),
           });
 
+          await instance.globalChaining(thisCase, column, finalValue);
+
           thisCase[column] = finalValue;
           if (GeneralJs.moneyBoo(column)) {
             originalDiv.textContent = GeneralJs.autoComma(finalValue);
@@ -2682,6 +2684,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             value: finalValue,
             index: thisCase["index"],
           });
+
+          await instance.globalChaining(thisCase, column, finalValue);
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
@@ -5532,6 +5536,149 @@ ProjectJs.prototype.whiteResize = function () {
     }
   }
   window.addEventListener('resize', resizeDebounceEvent());
+}
+
+ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
+  const instance = this;
+  try {
+    const map = DataPatch.projectMap();
+    const realtimeDesigner = async function (thisCase, column, value) {
+      try {
+        const { ajaxJson } = GeneralJs;
+        const stringToDate = function (str) {
+          if (typeof str !== "string") {
+            throw new Error("invaild input");
+          }
+          if (str === '-' || str === '') {
+            return new Date(1800, 0, 1);
+          }
+          if (str.length === 10) {
+            const arr = str.split('-');
+            return new Date(Number(arr[0]), Number(arr[1].replace(/^0/, '')) - 1, Number(arr[2].replace(/^0/, '')));
+          } else {
+            let tempArr0, tempArr1, tempArr2;
+            tempArr0 = str.split(' ');
+            tempArr1 = tempArr0[0].split('-');
+            tempArr2 = tempArr0[1].split(':');
+            return new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
+          }
+        }
+        const { proid, designer } = thisCase;
+        const desid = designer.split(' ')[1];
+        let res, target;
+        let index;
+        let projectObj;
+        let valueStandard;
+        let meeting, start, end;
+        let breakNum;
+
+        res = await ajaxJson({
+          mode: "read",
+          db: "console",
+          collection: "realtimeDesigner",
+          whereQuery: { desid },
+        }, "/generalMongo", { equal: true });
+
+        if (res.length === 0) {
+          target = { desid, count: {}, possible: [], projects: [] };
+          await ajaxJson({
+            mode: "create",
+            db: "console",
+            collection: "realtimeDesigner",
+            updateQuery: target,
+          }, "/generalMongo");
+        } else {
+          target = res[0];
+        }
+
+        index = null;
+        for (let i = 0; i < target.projects.length; i++) {
+          if (target.projects[i].proid === proid) {
+            index = i;
+          }
+        }
+
+        if (index === null) {
+          projectObj = { proid, meeting: [], project: [] };
+        } else {
+          projectObj = target.projects[index];
+        }
+
+        thisCase[column] = value;
+        valueStandard = (new Date(2000, 0, 1)).valueOf();
+        meeting = stringToDate(thisCase["meetingDate"]);
+        start = stringToDate(thisCase["formDateFrom"]);
+        end = stringToDate(thisCase["formDateTo"]);
+
+        if (meeting.valueOf() > valueStandard) {
+          projectObj.meeting = [ meeting ];
+        }
+
+        if (start.valueOf() > valueStandard && end.valueOf() > valueStandard) {
+          if (projectObj.project.length > 0) {
+            projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+            for (let i = 0; i < projectObj.project.length; i++) {
+              if (start.valueOf() <= projectObj.project[i].end.valueOf()) {
+                projectObj.project[i].start = start;
+                breakNum = i;
+                break;
+              }
+            }
+            projectObj.project = projectObj.project.slice(breakNum);
+            projectObj.project.sort((a, b) => { return b.end.valueOf() - a.end.valueOf() });
+            for (let i = 0; i < projectObj.project.length; i++) {
+              if (end.valueOf() > projectObj.project[i].start.valueOf()) {
+                projectObj.project[i].end = end;
+                breakNum = i;
+                break;
+              }
+            }
+            projectObj.project = projectObj.project.slice(breakNum);
+            projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+          } else {
+            projectObj.project = [ { start, end } ];
+          }
+        }
+
+        index = null;
+        for (let i = 0; i < target.projects.length; i++) {
+          if (target.projects[i].proid === projectObj.proid) {
+            index = i;
+          }
+        }
+        if (index === null) {
+          target.projects.push(projectObj);
+        } else {
+          target.projects.splice(index, 1, projectObj);
+        }
+
+        delete target._id;
+        await ajaxJson({
+          mode: "update",
+          db: "console",
+          collection: "realtimeDesigner",
+          whereQuery: { desid },
+          updateQuery: target
+        }, "/generalMongo");
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const dictionary = {
+      meetingDate: realtimeDesigner,
+      formDateFrom: realtimeDesigner,
+      formDateTo: realtimeDesigner,
+    };
+
+    let tempFunction;
+    if (dictionary[column] !== undefined) {
+      tempFunction = dictionary[column];
+      await tempFunction(thisCase, column, value);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ProjectJs.prototype.launching = async function () {
