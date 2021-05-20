@@ -148,13 +148,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "김지은";
-    // const pid = "p91";
-    // const rid = "re085";
+    // const client = "유미희";
+    // const pid = "p94";
+    // const rid = "re088";
     // const links = [
-    //   "https://docs.google.com/document/d/13jZyU3dyBQLOHKtJZYDjQNknCP1mwWLsk_EPXAQJUb0/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/11zGWgTtjfTJcR46He05DVqHeX8UFlpY0NaTDM4Ogo5U/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1NNBCBPggupfs0zx87cZLLlENS_URHA41?usp=sharing",
+    //   "https://docs.google.com/document/d/17_g4KFKl1Mi6O2gjMDXEvRUeuZp_-B30gZ_BAxVi-o0/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1yZPVXkd9v0fOKrHGvNwgVUwK5YGBkaMnhmljZ1ulxnA/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1ExP57LW1vEdbqgnshRu6yy3_7EokJg0x?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -213,7 +213,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p92");
+    // await this.getCorePortfolio("p94");
 
 
     // aspirant to designer
