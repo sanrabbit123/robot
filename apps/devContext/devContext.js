@@ -51,20 +51,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const drive = new GoogleDrive();
     const designers = await back.getDesignersByQuery({});
-    let id;
-
+    const designerRequest = ghostRequest().bind("designer");
+    let res;
 
     for (let d of designers) {
-      id = await drive.searchId_inPython(d.information.did + "_" + d.designer);
-      if (String(id) === "null") {
-        console.log(d);
-      } else {
-        console.log(d.designer, `https://drive.google.com/drive/folders/${id}`)
-      }
+      res = await designerRequest("create", { name: d.designer, subid: d.information.did });
+      console.log(res);
     }
-
 
 
 
