@@ -496,7 +496,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
         }
       }
       if (/[0-9]/g.test(search)) {
-        this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/).split(',') ]);
+        this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/g, '').split(',') ]);
         search = search.replace(/[0-9]/g, '');
       }
       designers = this.designers.search(search);
