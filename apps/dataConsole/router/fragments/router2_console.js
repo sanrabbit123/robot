@@ -2064,6 +2064,10 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       let projects;
       let whereQuery, updateQuery;
 
+      updateQuery["process.contract.remain.calculation.amount.supply"] = Number(supply);
+      updateQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+      updateQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
       if (clients.length === 1) {
         client = clients[0];
         cliid = client.cliid;
@@ -2080,7 +2084,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           } else {
             updateQuery = {};
             updateQuery["process.contract.remain.date"] = new Date();
-            updateQuery["process.contract.remain.calculation.amount"] = amount;
+            updateQuery["process.contract.remain.calculation.amount.supply"] = (projects[0].process.contract.first.calculation.amount + amount) * (10 / 11);
+            updateQuery["process.contract.remain.calculation.amount.vat"] = (projects[0].process.contract.first.calculation.amount + amount) * (1 / 11);
+            updateQuery["process.contract.remain.calculation.amount.consumer"] = projects[0].process.contract.first.calculation.amount + amount;
             updateQuery["process.contract.remain.calculation.info.method"] = "카드";
             updateQuery["process.contract.remain.calculation.info.proof"] = buyer_name;
             updateQuery["process.contract.remain.calculation.info.to"] = "이니시스";

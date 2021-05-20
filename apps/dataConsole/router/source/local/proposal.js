@@ -3398,7 +3398,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 
               } catch (e) {
-                GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+                GeneralJs.ajax("message=proposal고객선택에러&channel=#error_log", "/sendSlack", function () {});
                 console.log(e);
               }
             });

@@ -432,7 +432,6 @@ DesignerJs.prototype.calendarTitleTime = function (mother) {
     this.calendarMonthY["y" + String(matrix[i].year) + "m" + String(matrix[i].month)] = "on";
   }
   createNodes(nodeArr);
-
 }
 
 DesignerJs.prototype.calendarMonthYSearch = function (arr) {
@@ -481,22 +480,27 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
   if (mother.firstChild !== null && mother.firstChild !== undefined) {
     cleanChildren(mother);
   }
+
   if (search === null || search === undefined) {
     designers = this.designers;
   } else if (typeof search === "string") {
-    this.calendarPastQueries.push(search);
-    if (search !== '0') {
-      if (/^[0-9]+$/.test(search.replace(/[\,\.\/ ]/g, '').trim())) {
-        if (this.calendarPastQueries.length > 1) {
-          search = this.calendarPastQueries[this.calendarPastQueries.length - 2].replace(/0/g, '') + ',' + search;
+    if (/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/i.test(search.trim())) {
+      designers = this.designers.search(search);
+    } else {
+      this.calendarPastQueries.push(search);
+      if (search !== '0') {
+        if (/^[0-9]+$/.test(search.replace(/[\,\.\/ ]/g, '').trim())) {
+          if (this.calendarPastQueries.length > 1) {
+            search = this.calendarPastQueries[this.calendarPastQueries.length - 2].replace(/0/g, '') + ',' + search;
+          }
         }
       }
+      if (/[0-9]/g.test(search)) {
+        this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/).split(',') ]);
+        search = search.replace(/[0-9]/g, '');
+      }
+      designers = this.designers.search(search);
     }
-    if (/[0-9]/g.test(search)) {
-      this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/).split(',') ]);
-      search = search.replace(/[0-9]/g, '');
-    }
-    designers = this.designers.search(search);
   } else {
     throw new Error("invaild search");
   }
@@ -983,6 +987,32 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     }
 
   }
+  this.countEvent = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const y = this.getAttribute('y');
+    const desid = this.getAttribute('desid');
+    const proid = this.getAttribute('proid');
+    const { classNameDesid } = instance.calendarClass;
+    const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
+    let thisValue = Number(this.firstChild.textContent);
+    if (e.type === "click") {
+      thisValue = thisValue + 1;
+    } else {
+      thisValue = thisValue - 1;
+    }
+    this.firstChild.textContent = String(thisValue);
+    this.setAttribute("value", String(thisValue));
+    if (!e.ctrlKey) {
+      instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
+        if (resultNumber !== 1) {
+          throw new Error("update error");
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
   const createBlock = function (mother, desid, proid, width, margin, barHeight, y, possibleTimes) {
     let totalWidth;
     let nodeArr;
@@ -1163,47 +1193,11 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
           events: [
             {
               type: "click",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const y = this.getAttribute('y');
-                const desid = this.getAttribute('desid');
-                const proid = this.getAttribute('proid');
-                const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
-                let thisValue = Number(this.firstChild.textContent);
-                thisValue = thisValue + 1;
-                this.firstChild.textContent = String(thisValue);
-                this.setAttribute("value", String(thisValue));
-                instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
-                  if (resultNumber !== 1) {
-                    throw new Error("update error");
-                  }
-                }).catch((err) => {
-                  console.log(err);
-                });
-              }
+              event: instance.countEvent
             },
             {
               type: "contextmenu",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const y = this.getAttribute('y');
-                const desid = this.getAttribute('desid');
-                const proid = this.getAttribute('proid');
-                const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
-                let thisValue = Number(this.firstChild.textContent);
-                thisValue = thisValue - 1;
-                this.firstChild.textContent = String(thisValue);
-                this.setAttribute("value", String(thisValue));
-                instance.calendarData.updateByDoms(lineDoms).then((resultNumber) => {
-                  if (resultNumber !== 1) {
-                    throw new Error("update error");
-                  }
-                }).catch((err) => {
-                  console.log(err);
-                });
-              }
+              event: instance.countEvent
             }
           ],
           style: {
@@ -1399,6 +1393,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     this.calendarX = new DateX(this.calendarX);
   }
   this.calendarData.render();
+
 }
 
 DesignerJs.prototype.calendarDashBoardLaunching = function () {
@@ -1600,6 +1595,75 @@ DesignerJs.prototype.calendarSearchEvent = function () {
   });
 }
 
+DesignerJs.prototype.calendarModuleClickDetail = function (mode, desid, proid, x) {
+  const instance = this;
+  const { classNameDesid } = this.calendarClass;
+  if (this.moduleEvent === null || this.countEvent === null) {
+    throw new Error("event ready first");
+  }
+  if (mode !== "click" && mode !== "contextmenu") {
+    throw new Error("mode must be String: 'click' or String: 'contextmenu'")
+  }
+  if (typeof desid !== "string" && typeof proid !== "string" && typeof x !== "number") {
+    throw new Error("invaild input");
+  }
+
+  const id = classNameDesid + "-" + desid + "-" + proid + '-' + String(x);
+  const target = document.getElementById(id);
+  let clickObj, contenxtObj;
+  let eventObj;
+
+  if (target !== null) {
+    clickObj = {
+      type: "click",
+      cancelable: false,
+      preventDefault: function () {},
+      stopPropagation: function () {},
+      altKey: false,
+      ctrlKey: true,
+    };
+
+    contenxtObj = {
+      type: "contextmenu",
+      cancelable: false,
+      preventDefault: function () {},
+      stopPropagation: function () {},
+      altKey: false,
+      ctrlKey: true,
+    };
+
+    eventObj = (mode === "click") ? clickObj : contenxtObj;
+
+    if (proid === "count") {
+      this.countEvent.call(target, eventObj);
+    } else {
+      this.moduleEvent.call(target, eventObj);
+    }
+  }
+}
+
+DesignerJs.prototype.calendarModuleClick = async function (arr) {
+  const instance = this;
+  const { sleep } = GeneralJs;
+  try {
+    if (!Array.isArray(arr)) {
+      throw new Error("must be array");
+    }
+    for (let obj of arr) {
+      if (typeof obj !== "object") {
+        throw new Error("invaild input");
+      }
+      if (obj.mode === undefined || obj.desid === undefined || obj.proid === undefined || obj.x === undefined) {
+        throw new Error("invaild input");
+      }
+      this.calendarModuleClickDetail(obj.mode, obj.desid, obj.proid, obj.x);
+      await sleep(100);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.calendarView = async function () {
   const instance = this;
   try {
@@ -1630,6 +1694,7 @@ DesignerJs.prototype.calendarView = async function () {
     this.calendarDashBoard = null;
     this.calendarX = null;
     this.moduleEvent = null;
+    this.countEvent = null;
     this.detailTimeEvent = null;
     this.calendarData = null;
     this.calendarMonthY = {};
@@ -1849,6 +1914,16 @@ DesignerJs.prototype.calendarView = async function () {
           this.projects.push(projectObj);
         }
       }
+      projectPick(proid) {
+        if (proid === undefined) {
+          throw new Error("must be proid");
+        }
+        let target;
+        target = null;
+        
+
+
+      }
     }
     class DesignerDates extends Array {
       constructor(arr) {
@@ -1933,7 +2008,7 @@ DesignerJs.prototype.calendarView = async function () {
           toggle = [];
           meeting = [];
           for (let dom of doms) {
-            toggle.push((dom.getAttribute("toggle") === "on" && dom.getAttribute("meeting") === "off") ? true : false);
+            toggle.push(dom.getAttribute("toggle") === "on" ? true : false);
             meeting.push(dom.getAttribute("meeting") === "on" ? true : false);
           }
 
@@ -1943,12 +2018,20 @@ DesignerJs.prototype.calendarView = async function () {
           model = { proid, meeting: [], project: [] };
           for (let i = 0; i < length; i++) {
             if (!pastBoo && toggle[i]) {
-              startPoint.push(i);
+              if (!meeting[i]) {
+                startPoint.push(i);
+              }
             }
             if (pastBoo && !toggle[i]) {
               endPoint.push(i - 1);
             }
-            pastBoo = toggle[i];
+            if (!pastBoo) {
+              if (!meeting[i]) {
+                pastBoo = toggle[i];
+              }
+            } else {
+              pastBoo = toggle[i];
+            }
             if (meeting[i]) {
               model.meeting.push(stringToDate((doms[i].getAttribute("spot") !== null && doms[i].getAttribute("spot") !== "null") ? doms[i].getAttribute("spot") : doms[i].getAttribute("start")));
             }
@@ -2125,6 +2208,39 @@ DesignerJs.prototype.calendarView = async function () {
 
     loading.parentNode.removeChild(loading);
     this.totalMother.style.animation = "fadeup 0.3s ease forwards";
+
+    this.calendarModuleClick([
+      {
+        mode: "click",
+        desid: "d2105_aa02s",
+        proid: "possible",
+        x: String(3),
+      },
+      {
+        mode: "click",
+        desid: "d2105_aa02s",
+        proid: "possible",
+        x: String(10),
+      },
+      {
+        mode: "click",
+        desid: "d2105_aa02s",
+        proid: "count",
+        x: String(3),
+      },
+      {
+        mode: "click",
+        desid: "d2105_aa02s",
+        proid: "count",
+        x: String(3),
+      },
+      {
+        mode: "contextmenu",
+        desid: "d2105_aa02s",
+        proid: "count",
+        x: String(3),
+      },
+    ]);
 
   } catch (e) {
     console.log(e);
