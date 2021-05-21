@@ -118,6 +118,22 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   }
 }
 
+Alien.prototype.requestWhisk = async function (num) {
+  try {
+    if (typeof num !== "number") {
+      throw new Error("invaild input");
+    }
+    if (Number.isNaN(num)) {
+      throw new Error("invaild input");
+    }
+    const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
+    const app = new RequestWhisk();
+    await app.requestBeating();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Alien();
@@ -127,4 +143,6 @@ if (/office/gi.test(process.argv[2])) {
   app.cronLaunching(0);
 } else if (/static/gi.test(process.argv[2])) {
   app.cronLaunching(1);
+} else if (/request/gi.test(process.argv[2])) {
+  app.requestWhisk(Number(process.argv[3]));
 }

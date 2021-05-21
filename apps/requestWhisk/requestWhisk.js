@@ -4,25 +4,25 @@ const RequestWhisk = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/requestWhisk";
+  this.list = [];
 }
 
-RequestWhisk.prototype.scriptReady = async function (method, url, data, headers, interval) {
+RequestWhisk.prototype.scriptReady = async function (method, url, data, headers) {
   if (typeof method === "object") {
-    if (method.method === undefined || method.url === undefined || method.data === undefined || method.headers === undefined || method.interval === undefined) {
+    if (method.method === undefined || method.url === undefined || method.data === undefined || method.headers === undefined) {
       throw new Error("invaild object input => must be { method, url, data, headers, interval }");
     } else {
       url = method.url;
       data = method.data;
       headers = method.headers;
-      interval = method.interval;
       method = method.method;
     }
   }
   if (method !== "get" && method !== "post") {
     throw new Error("method must be 'get' or 'post'");
   }
-  if (typeof url !== "string" || typeof data !== "object" || typeof headers !== "object" || typeof interval !== "number") {
-    throw new Error("url must be string, data must be json, headers must be object, interval must be number");
+  if (typeof url !== "string" || typeof data !== "object" || typeof headers !== "object") {
+    throw new Error("url must be string, data must be json, headers must be object");
   }
   if (method === "post" && typeof data !== "object") {
     throw new Error("data must be json");
@@ -33,15 +33,16 @@ RequestWhisk.prototype.scriptReady = async function (method, url, data, headers,
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   try {
+    const modulePath = process.cwd() + "/python_modules";
     let pythonArr, pythonScript;
 
     pythonScript = "";
 
     pythonArr = [
+      `import sys`,
+      `sys.path.append("${modulePath.replace(/"/g, "'")}")`,
       `import aiohttp`,
       `import asyncio`,
-      `import json`,
-      `from apscheduler.schedulers.asyncio import AsyncIOScheduler`,
       ``,
     ];
     pythonScript += pythonArr.join('\n');
@@ -52,10 +53,8 @@ RequestWhisk.prototype.scriptReady = async function (method, url, data, headers,
         `async def main():`,
         `    async with aiohttp.ClientSession() as session:`,
         `        async with session.get('${url.replace(/\'/g, '"')}') as response:`,
-        `            html = await response.text()`,
-        `            tong = {}`,
-        `            tong["data"] = html`,
-        `            print(json.dumps(tong))`,
+        `            resText = await response.text()`,
+        `            print(resText)`,
         ``,
       ];
       pythonScript += pythonArr.join('\n');
@@ -67,8 +66,8 @@ RequestWhisk.prototype.scriptReady = async function (method, url, data, headers,
         `async def main():`,
         `    async with aiohttp.ClientSession() as session:`,
         `        async with session.post('${url.replace(/\'/g, '"')}', json=${JSON.stringify(data)}, headers=${JSON.stringify(headers)}) as response:`,
-        `            jsonResponse = await response.text()`,
-        `            print(jsonResponse)`,
+        `            resText = await response.text()`,
+        `            print(resText)`,
         ``,
       ];
       pythonScript += pythonArr.join('\n');
@@ -76,40 +75,63 @@ RequestWhisk.prototype.scriptReady = async function (method, url, data, headers,
     }
 
     pythonArr = [
-      `scheduler = AsyncIOScheduler()`,
-      `scheduler.add_job(main, 'interval', seconds=${String(interval / 1000)})`,
-      `scheduler.start()`,
-      ``,
       `try:`,
-      `    asyncio.get_event_loop().run_forever()`,
+      `    asyncio.run(main())`,
       `except (KeyboardInterrupt, SystemExit):`,
       `    pass`,
     ];
     pythonScript += pythonArr.join('\n');
+
+    await fileSystem(`write`, [ `${this.dir}/requestWhisk.py`, pythonScript ]);
+
+    return `${this.dir}/requestWhisk.py`;
 
   } catch (e) {
     console.log(e);
   }
 }
 
-RequestWhisk.protocol.requestBeating = async function () {
+RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
+  if (typeof requestNumber !== "number") {
+    throw new Error("input must be number");
+  }
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const mother = this.mother;
+  const { fileSystem, shell, shellLink } = mother;
   const http = require("http");
   const express = require("express");
   const app = express();
+  const { spawn } = require('child_process');
   try {
-    let requestScript;
+    let requestScript, targetList, requestOpt;
 
-    app.get("/", function (req, res) {
-      res.send("test");
-    });
+    targetList = await fileSystem(`readDir`, [ `${this.dir}/list` ]);
+    targetList = targetList.filter((a) => { return a !== `.DS_Store`; });
+    targetList.sort((a, b) => { return Number(a.split('_')[0]) - Number(b.split('_')[0]); });
 
-    requestScript = await this.scriptReady();
-    shell.exec(`python3 ${shellLink(requestScript)}`, { async: true });
+    this.list = [];
+    for (let i of targetList) {
+      this.list.push(require(`${this.dir}/list/${i}`));
+    }
+
+    requestOpt = this.list[requestNumber];
+    if (requestOpt.method === undefined || requestOpt.url === undefined || requestOpt.data === undefined || requestOpt.headers === undefined || requestOpt.interval === undefined || requestOpt.callBack === undefined) {
+      throw new Error("invaild request object");
+    }
+    requestScript = await this.scriptReady(requestOpt);
+    setInterval(async function () {
+      shell.exec(`python3 ${shellLink(requestScript)}`, { async: true }, async function (code, stdout, stderr) {
+        try {
+          await requestOpt.callBack(mother, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }, requestOpt.interval);
+
     console.log(`\x1b[33m%s\x1b[0m`, `Request running`);
 
-    http.createServer(app).listen(3000, () => {});
+    http.createServer(app).listen(5000, () => {});
 
   } catch (e) {
     console.log(e);
