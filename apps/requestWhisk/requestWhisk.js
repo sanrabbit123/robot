@@ -97,6 +97,7 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
   }
   const instance = this;
   const mother = this.mother;
+  const back = this.back;
   const { fileSystem, shell, shellLink } = mother;
   const http = require("http");
   const express = require("express");
@@ -122,7 +123,7 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
     setInterval(async function () {
       shell.exec(`python3 ${shellLink(requestScript)}`, { async: true }, async function (code, stdout, stderr) {
         try {
-          await requestOpt.callBack(mother, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
+          await requestOpt.callBack(mother, back, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
         } catch (e) {
           console.log(e);
         }

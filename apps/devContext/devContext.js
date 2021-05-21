@@ -49,8 +49,15 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
+    let url, res;
 
+    const axios = require(`axios`);
 
+    url = "https://openapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code&client_id=46bbe866-e8a0-41fe-b401-f97ae2b05de4&redirect_uri=http%3A%2F%2Flocalhost&scope=login%20inquiry%20transfer&client_info=test&state=b80BLsfigm9OokPTjy03elbJqRHOfGSY&auth_type=0&cellphone_cert_yn=Y&authorized_cert_yn=Y&account_hold_auth_yn=N&register_info=A";
+
+    res = await axios.get(url)
+
+    console.log(res);
 
 
 

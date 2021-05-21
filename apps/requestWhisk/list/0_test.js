@@ -3,8 +3,8 @@ module.exports = {
   url: "https://google.com",
   data: {},
   headers: {},
-  interval: 100,
-  callBack: async function (mother, raw) {
+  interval: 1000 * 60 * 3,
+  callBack: async function (mother, back, raw) {
     console.log(raw);
   }
 };
