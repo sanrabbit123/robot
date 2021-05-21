@@ -483,7 +483,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   });
 }
 
-Mother.prototype.headRequest = function (to, port = 80, header = {}) {
+Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   let target;
   const http = require("http");
   if (/^https:\/\//.test(to)) {
@@ -505,9 +505,9 @@ Mother.prototype.headRequest = function (to, port = 80, header = {}) {
     path: pathString,
     method: "HEAD"
   }
-  options.header = {};
-  for (let i in header) {
-    options.header[i] = header[i];
+  options.headers = {};
+  for (let i in headers) {
+    options.headers[i] = headers[i];
   }
   return new Promise(function (resolve, reject) {
     let req = http.request(options, function (res) {

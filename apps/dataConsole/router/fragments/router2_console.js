@@ -2,6 +2,7 @@
 
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getPhotos" ];
   obj.func = async function (req, res) {
@@ -26,7 +27,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getClientsByQuery(JSON.parse(req.body.where), optionQuery);
+          raw_data = await instance.back.getClientsByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getDesigners") {
         standard = instance.patch.designerStandard();
@@ -44,7 +45,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getDesignersByQuery(JSON.parse(req.body.where), optionQuery);
+          raw_data = await instance.back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getProjects" || req.url === "/getPhotos") {
         standard = instance.patch.projectStandard();
@@ -62,7 +63,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          whereQuery = JSON.parse(req.body.where);
+          whereQuery = equalJson(req.body.where);
           if (req.url === "/getPhotos") {
             whereQuery["$and"].push({ "process.calculation.payments.first.date": { "$gt": (new Date(2000, 0, 1)) } });
           }
@@ -84,7 +85,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getContentsArrByQuery(JSON.parse(req.body.where), optionQuery);
+          raw_data = await instance.back.getContentsArrByQuery(equalJson(req.body.where), optionQuery);
         }
       }
 
