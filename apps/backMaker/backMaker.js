@@ -1483,19 +1483,14 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     }
 
     matrixStandard0 = [ 'F', 'S', 'T', 'XT' ];
-    matrixStandard1 = [ 'N', 'B' ];
-    matrixStandard2 = [ 'normal', 'premium' ];
+    matrixStandard1 = [ 'mini', 'normal', 'premium' ];
 
     for (let i = 0; i < matrixStandard0.length; i++) {
       temp0 = [];
       for (let j = 0; j < matrixStandard1.length; j++) {
-        temp1 = [];
-        for (let k = 0; k < matrixStandard2.length; k++) {
-          temp1.push(0);
-        }
-        temp0.push(temp1);
+        temp0.push(0);
       }
-      dummy.structure.analytics.etc.matrix.push(temp0);
+      dummy.structure.analytics.project.matrix.push(temp0);
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
