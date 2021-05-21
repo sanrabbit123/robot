@@ -268,10 +268,12 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       updateQuery = toUpdateQuery(aspirantJson, contractDay);
       if (updateQuery !== null) {
         newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
+        console.log("create designer success");
         newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
         designerFolderResponse = await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
         designerFolderResponse.desid = newDesid;
         designerFolderResponse.date = new Date();
+        console.log(designerFolderResponse);
         await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true });
       }
     }
@@ -349,6 +351,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
 
     await compileFrontDesidScript(newDesid);
+    console.log("front desid make");
 
   } catch (e) {
     console.log(e);

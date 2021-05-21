@@ -218,7 +218,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "전진화", "2021-03-15" ],
+    //   [ "김연주", "2021-04-27" ],
     // ]);
 
 
@@ -227,17 +227,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2104_aa06s", [
-    //   { porlid: "a83", index: 1 },
-    //   { porlid: "a83", index: 4 },
-    //   { porlid: "a83", index: 11 },
-    //   { porlid: "a83", index: 16 },
-    //   { porlid: "a83", index: 14 },
-    //   { porlid: "a83", index: 15 }
+    // await this.setProposalSettingForDesigner("d2105_aa06s", [
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 10 },
+    //   { porlid: "ghost", index: 11 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 7 }
     // ], [
-    //   "고객님의 취향을 존중하여 항상 스타일링 작업 전에 충분한 소통을 합니다.",
-    //   "너무 화려기보다는 깔끔하고 심플하며, 내추럴한 스타일을 지향합니다.",
-    //   "고객님이 원래 사용하시던 제품들의 리폼과 재활용을 통해 쓰임을 새롭게 합니다."
+    //   "고객님의 취향과 라이프 스타일에 맞게 시공부터 스타일링까지 진행합니다.",
+    //   "모던하고 대비 있는 스타일에 능하며, 그 외에도 여러 스타일을 구사할 수 있습니다.",
+    //   "고객님과의 활발한 커뮤니케이션을 진행하며 디자인을 진행합니다."
     // ]);
 
 

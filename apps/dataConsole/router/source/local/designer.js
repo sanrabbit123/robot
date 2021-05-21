@@ -1672,9 +1672,9 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("general"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: (e) => { modeHref("calculation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 정보", event: (e) => { modeHref("calendar"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>큐레이션 정보", event: (e) => { modeHref("checklist"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>상세 정보", event: (e) => { modeHref("detail"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("calendar"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("checklist"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>컨텐츠 관리", event: (e) => { modeHref("contents"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
       ];
       let totalFather, tong, nodeArr;
@@ -3876,6 +3876,17 @@ DesignerJs.prototype.launching = async function () {
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.calendarView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+
+    } else if (getObj.mode === "contents") {
+
+      this.grayBarWidth = 600;
+      this.mother.grayBarWidth = 600;
+      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.contentsView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";

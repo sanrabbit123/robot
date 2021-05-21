@@ -164,6 +164,18 @@ Filter.pastToNew = function (str) {
     case "de058":
       return "d2105_aa02s";
       break;
+    case "de059":
+      return "d2105_aa03s";
+      break;
+    case "de060":
+      return "d2105_aa04s";
+      break;
+    case "de061":
+      return "d2105_aa05s";
+      break;
+    case "de062":
+      return "d2105_aa06s";
+      break;
   }
 }
 
@@ -330,6 +342,18 @@ Filter.newToPast = function (str) {
       break;
     case "d2105_aa02s":
       return "de058";
+      break;
+    case "d2105_aa03s":
+      return "de059";
+      break;
+    case "d2105_aa04s":
+      return "de060";
+      break;
+    case "d2105_aa05s":
+      return "de061";
+      break;
+    case "d2105_aa06s":
+      return "de062";
       break;
   }
 }
