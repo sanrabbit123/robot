@@ -621,11 +621,7 @@ DataConsole.prototype.connect = async function () {
             let __ghostWallLogic, __ghostHost;
             __ghostWallLogic = false;
             __ghostHost = instance.address.homeinfo.ghost.host;
-            if (typeof req.headers.referer === "string" && typeof req.headers.origin === "string") {
-              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.referer) || (new RegExp(__ghostHost, "gi")).test(req.headers.origin);
-            } else if (typeof req.headers.referer === "string") {
-              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.referer);
-            } else if (typeof req.headers.origin === "string") {
+            if (typeof req.headers.origin === "string") {
               __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.origin);
             }
             if (!__ghostWallLogic) {

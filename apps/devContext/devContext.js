@@ -54,15 +54,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const payResponse = await requestSystem("https://api.iamport.kr/users/getToken", { "imp_key": "7188483898255321", "imp_secret": "05z9vXYzdvq9Xb2SHBu8j8RpTw60LnALs9UY6TxkoYul9weR8JZsSRSLoYM9lmUOwPMCIjX7istrYIj7" });
-    // const token = payResponse.data.response.access_token;
-    // const { data } = await requestSystem("https://api.iamport.kr/payments/imp_706381046289", {}, { headers: { "X-ImpTokenHeader": token } });
-    // const { amount, buyer_name, buyer_tel, card_name, name } = data.response;
-    //
-    //
-    // console.log(amount, buyer_name, buyer_tel, card_name, name);
-
-
 
 
     // const aspirants = await back.getAspirantsByQuery({});
@@ -99,19 +90,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // designer analytics
-    // const desid = "d2104_aa09s";
-    // const fileName = (process.cwd() + "/temp/" + desid + ".json");
-    // const analytics = JSON.parse(await fileSystem(`readString`, [ fileName ]));
-    // let whereQuery, updateQuery;
-    // whereQuery = { desid };
-    // updateQuery = {};
-    // updateQuery["analytics"] = analytics;
-    // await back.updateDesigner([ whereQuery, updateQuery ]);
 
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    // card setting
+    // await this.cardSetting("010-2500-1016");
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
@@ -200,8 +184,8 @@ DevContext.prototype.launching = async function () {
 
 
     // get photo folder
-    const drive = new GoogleDrive();
-    await drive.get_folder("https://drive.google.com/drive/folders/1-fszrR5hWn__B2So0uoG8OcGIbOHyeD5", "p95");
+    // const drive = new GoogleDrive();
+    // await drive.get_folder("https://drive.google.com/drive/folders/1-fszrR5hWn__B2So0uoG8OcGIbOHyeD5", "p95");
 
 
     // send checklist
@@ -424,6 +408,47 @@ DevContext.prototype.launching = async function () {
     this.MONGOC.close();
     this.MONGOLOCALC.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.cardSetting = async function (phone) {
+  const instance = this;
+  const back = this.back;
+  const { mysqlQuery } = this.mother;
+  try {
+    if (typeof phone !== "string") {
+      throw new Error("invaild input");
+    }
+    if (!/-/g.test(phone)) {
+      throw new Error("invaild input");
+    }
+    const clients = await back.getClientsByQuery({ phone });
+    if (clients.length === 0) {
+      throw new Error("clients error");
+    }
+    let cliid, name;
+    let projects, project;
+    let first, remain;
+    let query;
+
+    cliid = clients[0].cliid;
+    name = clients[0].name;
+    projects = await back.getProjectsByQuery({ cliid });
+    if (projects.length === 0) {
+      throw new Error("projects error");
+    }
+
+    project = projects[0];
+    first = project.process.contract.first.calculation.amount;
+    remain = project.process.contract.remain.calculation.amount.consumer - first;
+
+    query = `INSERT INTO cardlist (name,phone,amount) VALUES ('${name}','${phone}','${String(remain)}');`;
+
+    await mysqlQuery(query, { front: true });
+    await this.mother.slack_bot.chat.postMessage({ text: `${name} 고객님의 카드 세팅을 완료하였습니다!`, channel: "#400_customer" });
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
