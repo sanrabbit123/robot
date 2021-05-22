@@ -99,6 +99,7 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
     let driveFolderDir, index;
     let folderInside;
     let thisExec;
+    let tempArr, motherPath, length;
 
     //init setting
     if (!tempFolderDir.includes(targetFolderNameConst)) {
@@ -136,13 +137,24 @@ GoogleDrive.prototype.get_folder = async function (folder_id, folder_name = null
       }
     }
 
-    if (folder_name !== null) {
-      shell.exec(`mv ${shellLink(folderPath)} ${shellLink(folderPath.split("/").slice(0, -1).join("/"))}/${shellLink(folder_name)}`);
+    tempArr = folderPath.split("/");
+    motherPath = '';
+    length = (tempArr[tempArr.length - 1] === '' ? tempArr.length - 2 : tempArr.length - 1);
+    for (let i = 0; i < length; i++) {
+      motherPath += tempArr[i];
+      motherPath += '/';
     }
-    shell.exec(`open ${shellLink(folderPath.split("/").slice(0, -1).join("/"))}`);
+    motherPath = motherPath.slice(0, -1);
+
+    if (folder_name !== null) {
+      if (shellLink(folderPath) !== shellLink(motherPath + "/" + folder_name)) {
+        shell.exec(`mv ${shellLink(folderPath)} ${shellLink(motherPath)}/${shellLink(folder_name)}`);
+      }
+    }
+    shell.exec(`open ${shellLink(motherPath)}`);
     console.log(`total: ${String(index)}`);
     if (folder_name !== null) {
-      return `${folderPath.split("/").slice(0, -1).join("/")}/${folder_name}`;
+      return `${motherPath}/${folder_name}`;
     } else {
       return folderPath;
     }

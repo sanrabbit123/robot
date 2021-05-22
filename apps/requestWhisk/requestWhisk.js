@@ -116,14 +116,14 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
     }
 
     requestOpt = this.list[requestNumber];
-    if (requestOpt.method === undefined || requestOpt.url === undefined || requestOpt.data === undefined || requestOpt.headers === undefined || requestOpt.interval === undefined || requestOpt.callBack === undefined) {
+    if (requestOpt.method === undefined || requestOpt.url === undefined || requestOpt.data === undefined || requestOpt.headers === undefined || requestOpt.interval === undefined || requestOpt.callback === undefined || requestOpt.port === undefined) {
       throw new Error("invaild request object");
     }
     requestScript = await this.scriptReady(requestOpt);
     setInterval(async function () {
       shell.exec(`python3 ${shellLink(requestScript)}`, { async: true }, async function (code, stdout, stderr) {
         try {
-          await requestOpt.callBack(mother, back, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
+          await requestOpt.callback(mother, back, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
         } catch (e) {
           console.log(e);
         }
@@ -132,7 +132,7 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
 
     console.log(`\x1b[33m%s\x1b[0m`, `Request running`);
 
-    http.createServer(app).listen(5000, () => {});
+    http.createServer(app).listen(requestOpt.port, () => {});
 
   } catch (e) {
     console.log(e);
