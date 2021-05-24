@@ -95,7 +95,7 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   this.contentsDashBoard();
 }
 
-DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = false) {
+DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index) {
   if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
@@ -158,7 +158,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = fals
   width1 = 3;
 
   top = 9;
-  left = 15;
+  left = 16;
   size = 15;
   textMargin = 6;
   startLeft = 160;
@@ -235,20 +235,28 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = fals
       redPoint = true;
     }
 
+    stringArr.push(textMaker("웹 발행", dateToString(project.web), dateToColor(project.web, false)));
+    stringArr.push(textMaker("컨텐츠 아이디", project.pid, "black"));
+
   } else if (this.type === "share") {
 
     stringArr.push(textMaker("고객 사진 공유", dateToString(photoClient).replace(/미정/g, "예정"), dateToColor(photoClient, false).replace(/red/gi, "black")));
     stringArr.push(textMaker("고객 컨텐츠 공유", dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black")));
     stringArr.push(textMaker("디자이너 사진 공유", dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black")));
     stringArr.push(textMaker("디자이너 컨텐츠 공유", dateToString(contentsDesigner).replace(/미정/g, "예정"), dateToColor(contentsDesigner, false).replace(/red/gi, "black")));
+    stringArr.push(textMaker("원본 사진 상태", photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black")));
+    stringArr.push(textMaker("컨텐츠 아이디", project.pid, "black"));
 
   }
 
   [ whiteBlock ] = createNodes([
     {
       mother,
+      attribute: [
+        { index: String(index) }
+      ],
       style: {
-        display: "block",
+        display: instance.contentsSearchIndex.includes(index) ? "none" : "block",
         position: "relative",
         background: colorChip[boo ? "white" : "gray0"],
         width: String(100) + '%',
@@ -261,6 +269,15 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = fals
     {
       mother: -1,
       text: project.title,
+      class: [ "hoverDefault" ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
+          }
+        }
+      ],
       style: {
         position: "absolute",
         width: String(width0) + ea,
@@ -344,6 +361,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = fals
     circle.style.background = colorChip.gray4;
   }
 
+  this.contentsBlocks.push(whiteBlock);
+
   return totalObj;
 }
 
@@ -385,9 +404,10 @@ DesignerJs.prototype.contentsBlockInjection = function () {
 
   projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
 
+  this.contentsBlocks = [];
   for (let i = 0; i < projects.length; i++) {
     if (!actionList.includes(projects[i].process.action)) {
-      [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1));
+      [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i);
       width.push(widthArr);
       dom.push(domArr);
     }
@@ -415,13 +435,15 @@ DesignerJs.prototype.contentsDashBoard = function () {
   const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
   const { dashBoard } = this.contentsSpec;
-  let size, top;
+  let size, top, left;
   let nodeArr;
   let textArr;
   let typeNum;
+  let dashBoardBox;
 
   size = 16;
   top = 11;
+  left = 19;
 
   textArr = [];
   typeNum = 0;
@@ -432,10 +454,21 @@ DesignerJs.prototype.contentsDashBoard = function () {
     textArr.push(this.typeArr[i].slice(0, 1).toUpperCase() + this.typeArr[i].slice(1));
   }
 
+  dashBoardBox = createNode({
+    mother: dashBoard,
+    style: {
+      position: "relative",
+      width: withOut(left * 2, ea),
+      height: String(100) + '%',
+      left: String(left) + ea,
+      textAlign: "left",
+    }
+  });
+
   nodeArr = [];
   for (let i = 0; i < textArr.length; i++) {
     nodeArr.push({
-      mother: dashBoard,
+      mother: dashBoardBox,
       text: textArr[i],
       class: [ "hoverDefault" ],
       attribute: [
@@ -469,7 +502,7 @@ DesignerJs.prototype.contentsDashBoard = function () {
     });
     if (i !== textArr.length - 1) {
       nodeArr.push({
-        mother: dashBoard,
+        mother: dashBoardBox,
         text: `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`,
         style: {
           display: "inline-block",
@@ -483,6 +516,74 @@ DesignerJs.prototype.contentsDashBoard = function () {
       });
     }
   }
+  nodeArr.push({
+    mother: dashBoardBox,
+    text: 'D',
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=general");
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontFamily: "graphik",
+      fontSize: String(size + 2) + ea,
+      fontWeight: String(500),
+      top: String(top - 1) + ea,
+      right: String(0) + ea,
+      fontStyle: "italic",
+      color: colorChip["black"],
+    }
+  });
+  nodeArr.push({
+    mother: dashBoardBox,
+    text: 'C',
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project");
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontFamily: "graphik",
+      fontSize: String(size + 2) + ea,
+      fontWeight: String(500),
+      top: String(top - 1) + ea,
+      right: String(18) + ea,
+      fontStyle: "italic",
+      color: colorChip["black"],
+    }
+  });
+
+  nodeArr.push({
+    mother: dashBoardBox,
+    mode: "svg",
+    source: this.mother.returnHamburger(colorChip.black),
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          instance.contentsSearchIndex = [];
+          instance.contentsBlockInjection();
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      height: String(11) + ea,
+      top: String(18) + ea,
+      right: String(38) + ea,
+    }
+  });
 
   nodeArr = createNodes(nodeArr);
   instance.typeDoms = [];
@@ -491,6 +592,44 @@ DesignerJs.prototype.contentsDashBoard = function () {
       instance.typeDoms.push(nodeArr[i]);
     }
   }
+}
+
+DesignerJs.prototype.contentsSearchEvent = function () {
+  const instance = this;
+  const { ea } = this;
+  const input = this.searchInput;
+  let width, length;
+
+  length = this.projects.length;
+  width = 800;
+
+  input.parentNode.style.width = String(width) + ea;
+  input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
+  input.addEventListener("keypress", function (e) {
+    let tempArr, orArr;
+    if (e.key === "Enter") {
+      instance.contentsSearchIndex = [];
+      orArr = [];
+      tempArr = this.value.trim().split(',');
+      for (let value of tempArr) {
+        if (value.trim() !== '' && value.trim() !== '.') {
+          for (let dom of instance.contentsBlocks) {
+            if ((new RegExp(value.trim(), "gi")).test(dom.textContent)) {
+              orArr.push(Number(dom.getAttribute("index")));
+            }
+          }
+        }
+      }
+      if (this.value.trim() !== '' && this.value.trim() !== '.') {
+        for (let i = 0; i < length; i++) {
+          if (!orArr.includes(i)) {
+            instance.contentsSearchIndex.push(i);
+          }
+        }
+      }
+      instance.contentsBlockInjection();
+    }
+  });
 }
 
 DesignerJs.prototype.contentsView = async function () {
@@ -518,6 +657,8 @@ DesignerJs.prototype.contentsView = async function () {
     let projects;
     let designers, desidArr_raw, desidArr;
     let clients, cliidArr_raw, cliidArr;
+    let proidArr_raw;
+    let contents;
     let temp;
     let type, typeArr;
 
@@ -532,6 +673,8 @@ DesignerJs.prototype.contentsView = async function () {
     this.typeArr = typeArr;
     this.type = type;
     this.contentsSpec = {};
+    this.contentsSearchIndex = [];
+    this.contentsBlocks = null;
 
     projects = new SearchArray(await ajaxJson({
       noFlat: true,
@@ -545,23 +688,23 @@ DesignerJs.prototype.contentsView = async function () {
     }, "/getProjects", { equal: true }));
 
     desidArr_raw = [];
+    cliidArr_raw = [];
+    proidArr_raw = [];
     for (let project of projects) {
       desidArr_raw.push(project.desid);
+      cliidArr_raw.push(project.cliid);
+      proidArr_raw.push({ proid: project.proid });
     }
+
     desidArr_raw = Array.from(new Set(desidArr_raw));
     desidArr = [];
     for (let desid of desidArr_raw) {
       desidArr.push({ desid });
     }
-
-    cliidArr_raw = [];
-    for (let project of projects) {
-      cliidArr_raw.push(project.cliid);
-    }
     cliidArr_raw = Array.from(new Set(cliidArr_raw));
     cliidArr = [];
-    for (let project of projects) {
-      cliidArr.push({ cliid: project.cliid });
+    for (let cliid of cliidArr_raw) {
+      cliidArr.push({ cliid });
     }
 
     designers = new SearchArray(await ajaxJson({
@@ -578,12 +721,27 @@ DesignerJs.prototype.contentsView = async function () {
       }
     }, "/getClients"));
 
+    contents = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: proidArr_raw
+      }
+    }, "/getContents", { equal: true }));
+
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
       temp = clients.search("cliid", p.cliid);
       p.name = temp.name;
       p.address = temp.requests[0].request.space.address;
       p.title = `${p.designer} <b style="color:${colorChip.green}">D</b>&nbsp;&nbsp;${p.name} <b style="color:${colorChip.green}">C</b>`;
+      temp = contents.search("proid", p.proid);
+      if (temp !== null) {
+        p.web = temp.contents.portfolio.date;
+        p.pid = temp.contents.portfolio.pid;
+      } else {
+        p.web = p.contents.sns.interview.long;
+        p.pid = "미정";
+      }
     }
 
     this.projects = projects;
@@ -594,6 +752,7 @@ DesignerJs.prototype.contentsView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.contentsBase();
+    this.contentsSearchEvent();
 
   } catch (e) {
     console.log(e);
