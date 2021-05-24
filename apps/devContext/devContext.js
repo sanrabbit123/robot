@@ -51,6 +51,197 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+
+    const sheets = new GoogleSheet();
+    const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
+    const matrix = await sheets.get_value_inPython(sheetsId, "총괄 시트!B2:V");
+    const columns = [ "name", "null0", "boo", "status", "designer", "photographer", "interviewer", "date", "hours", "memo", "rawInterview", "rawPortfolio", "rawPhoto", "blogInterview", "blogPortfolio", "instaInterview", "instaPortfolio", "web", "sharePhotoDesigner", "sharePhotoClient", "shareContents" ];
+    const matrix_clone = JSON.parse(JSON.stringify(matrix));
+    const selfMongo = this.MONGOLOCALC;
+    const convertStatus_photo = (str) => {
+      if (/대기/gi.test(str)) {
+        return '세팅 대기';
+      } else if (/요망/gi.test(str)) {
+        return '촬영 컨택 요망';
+      } else if (/컨택중/gi.test(str)) {
+        return '촬영 컨택중';
+      } else if (/확정/gi.test(str)) {
+        return '촬영 일정 확정';
+      } else if (/완료/gi.test(str)) {
+        return '촬영 완료';
+      } else if (/홀딩/gi.test(str)) {
+        return '촬영 홀딩';
+      } else if (/없음/gi.test(str)) {
+        return '해당 없음';
+      } else {
+        console.log("photo", str);
+        throw new Error("invaild input");
+      }
+    }
+    const convertStatus_rawPortfolio = (str) => {
+      if (/대기/gi.test(str)) {
+        return '세팅 대기';
+      } else if (/요망/gi.test(str)) {
+        return '원본 요청 요망';
+      } else if (/요청 완료/gi.test(str)) {
+        return '원본 요청 완료';
+      } else if (/수집 완료/gi.test(str)) {
+        return '원본 수집 완료';
+      } else if (/편집중/gi.test(str)) {
+        return '원본 편집중';
+      } else if (/편집 완료/gi.test(str)) {
+        return '원본 편집 완료';
+      } else if (/없음/gi.test(str)) {
+        return '해당 없음';
+      } else {
+        console.log("portfolio", str);
+        throw new Error("invaild input");
+      }
+    }
+    const convertStatus_rawInterview = (str) => {
+      if (/대기/gi.test(str)) {
+        return '세팅 대기';
+      } else if (/요망/gi.test(str)) {
+        return '인터뷰 요망';
+      } else if (/인터뷰 완료/gi.test(str)) {
+        return '인터뷰 완료';
+      } else if (/편집중/gi.test(str)) {
+        return '원본 편집중';
+      } else if (/편집 완료/gi.test(str)) {
+        return '원본 편집 완료';
+      } else if (/없음/gi.test(str)) {
+        return '해당 없음';
+      } else {
+        console.log("interview", str);
+        throw new Error("invaild input");
+      }
+    }
+    const convertStatus_rawPhoto = (str) => {
+      if (/대기/gi.test(str)) {
+        return '촬영 대기';
+      } else if (/요망/gi.test(str)) {
+        return '원본 요청 요망';
+      } else if (/요청 완료/gi.test(str)) {
+        return '원본 요청 완료';
+      } else if (/수집 완료/gi.test(str)) {
+        return '원본 수집 완료';
+      } else if (/보정중/gi.test(str)) {
+        return '원본 보정중';
+      } else if (/보정 완료/gi.test(str)) {
+        return '원본 보정 완료';
+      } else if (/없음/gi.test(str)) {
+        return '해당 없음';
+      } else {
+        console.log("rawphoto", str);
+        throw new Error("invaild input");
+      }
+    }
+    const stringToDate = (dateString, hours = null) => {
+      let tempArr, hoursArr, h;
+      tempArr = dateString.split('-');
+      if (hours === null) {
+        return new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+      } else {
+        hoursArr = hours.split(':');
+        if (/후/.test(hoursArr[0])) {
+          h = Number(hoursArr[0].replace(/[^0-9]/g, '')) + 12;
+        } else {
+          h = Number(hoursArr[0].replace(/[^0-9]/g, ''));
+        }
+        return new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), h);
+      }
+    }
+    let tong, tempObj;
+    let filteredTong;
+    let projects, project;
+    let convertingDictionary;
+    let whereQuery, updateQuery;
+    let tempDate;
+    let contents;
+    let tempContentsDate;
+
+    matrix_clone.sort((a, b) => { return b.length - a.length });
+
+    tong = [];
+    for (let arr of matrix) {
+      tempObj = {};
+      for (let i = 0; i < columns.length; i++) {
+        tempObj[columns[i]] = arr[i] === undefined ? "" : arr[i].trim();
+      }
+      tong.push(tempObj);
+    }
+
+    filteredTong = [];
+    for (let obj of tong) {
+      projects = await back.getProjectsByNames([ obj.name, obj.designer ], { selfMongo, devAlive: true });
+      contents = await back.getContentsArrByQuery({ proid: projects[0].proid }, { selfMongo, devAlive: true });
+      tempContentsDate = new Date(3800, 0, 1);
+      if (contents.length !== 0) {
+        tempContentsDate = contents[0].contents.portfolio.date.toNormal();
+      }
+      tempDate = stringToDate(obj.date, obj.hours);
+      tempDate.setDate(tempDate.getDate() + 3);
+      tempObj = {
+        proid: projects[0].proid,
+        cliid: projects[0].cliid,
+        desid: projects[0].desid,
+        boo: (obj.boo.trim() === 'X' || obj.boo.trim() === 'x') ? false : true,
+        status: convertStatus_photo(obj.status),
+        photographer: obj.photographer.trim(),
+        interviewer: obj.interviewer.trim(),
+        date: stringToDate(obj.date, obj.hours),
+        memo: obj.memo,
+        rawInterview: convertStatus_rawInterview(obj.rawInterview),
+        rawPortfolio: convertStatus_rawPortfolio(obj.rawPortfolio),
+        rawPhoto: convertStatus_rawPhoto(obj.rawPhoto),
+        blogInterview: stringToDate(obj.blogInterview),
+        blogPortfolio: stringToDate(obj.blogPortfolio),
+        instaInterview: stringToDate(obj.instaInterview),
+        instaPortfolio: stringToDate(obj.instaPortfolio),
+        sharePhotoDesigner: obj.sharePhotoDesigner === 'O' ? tempDate : new Date(3800, 0, 1),
+        sharePhotoClient: obj.sharePhotoClient === 'O' ? tempDate : new Date(3800, 0, 1),
+        shareContentsDesigner: obj.shareContents === 'O' ? tempContentsDate : new Date(3800, 0, 1),
+        shareContentsClient: obj.shareContents === 'O' ? tempContentsDate : new Date(3800, 0, 1),
+      };
+      filteredTong.push(tempObj);
+    }
+
+    convertingDictionary = {
+      boo: "contents.photo.boo",
+      status: "contents.photo.status",
+      photographer: "contents.photo.info.photographer",
+      interviewer: "contents.photo.info.interviewer",
+      date: "contents.photo.date",
+      rawInterview: "contents.raw.interview.status",
+      rawPortfolio: "contents.raw.portfolio.status",
+      rawPhoto: "contents.raw.photo.status",
+      blogInterview: "contents.sns.interview.long",
+      blogPortfolio: "contents.sns.portfolio.long",
+      instaInterview: "contents.sns.interview.short",
+      instaPortfolio: "contents.sns.portfolio.short",
+      sharePhotoDesigner: "contents.share.designer.photo",
+      sharePhotoClient: "contents.share.client.photo",
+      shareContentsDesigner: "contents.share.designer.contents",
+      shareContentsClient: "contents.share.client.contents",
+    };
+
+    console.log(filteredTong);
+
+    for (let obj of filteredTong) {
+      whereQuery = { proid: obj.proid };
+      updateQuery = {};
+      for (let i in convertingDictionary) {
+        updateQuery[convertingDictionary[i]] = obj[i];
+      }
+      await back.updateProject([ whereQuery, updateQuery ], { selfMongo, devAlive: true });
+      console.log(whereQuery);
+    }
+
+    */
+
+
+
 
 
 
@@ -95,7 +286,7 @@ DevContext.prototype.launching = async function () {
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // card setting
-    // await this.cardSetting("010-2500-1016");
+    // await this.cardSetting("010-3751-9786");
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
@@ -176,9 +367,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "장윤정",
-    //     designer: "고윤미",
-    //     link: "https://drive.google.com/drive/folders/18udDkOFJQF2i4_UBkgxZayCU2bLQSkIZ",
+    //     client: "임재신",
+    //     designer: "김남희",
+    //     link: "https://drive.google.com/drive/folders/1TZ9zYaMEjisZdfWgTCABc7aKcg5DKuLf",
     //   }
     // ]);
 
@@ -274,131 +465,24 @@ DevContext.prototype.launching = async function () {
     /*
     await this.cookProperty([
       {
-        mongoConnection: this.MONGOC,
-        collection: "designer",
-        standard: "desid",
+        mongoConnection: this.MONGOLOCALC,
+        collection: "project",
+        standard: "proid",
         mode: "add",
-        position: "information.business.career.relatedY",
-        value: 0
-      },
-      {
-        mode: "add",
-        position: "information.business.career.relatedM",
-        value: 0
-      },
-      {
-        mode: "remove",
-        position: "analytics.region.available",
-        value: ""
-      },
-      {
-        mode: "add",
-        position: "analytics.project.online",
-        value: true
-      },
-      {
-        node: "add",
-        position: "analytics.project.living",
-        value: true
-      },
-      {
-        mode: "remove",
-        position: "analytics.construct.possible.others",
-        value: ""
-      },
-      {
-        mode: "add",
-        position: "analytics.construct.case",
-        value: [
-          {
-            name: "homeStyling",
-            contract: [],
-            possible: [],
+        position: "contents.sns",
+        value: {
+          portfolio: {
+            long: new Date(3800, 0, 1),
+            short: new Date(3800, 0, 1),
           },
-          {
-            name: "totalStyling",
-            contract: [],
-            possible: [],
+          interview: {
+            long: new Date(3800, 0, 1),
+            short: new Date(3800, 0, 1),
           },
-          {
-            name: "architecture",
-            contract: [],
-            possible: [],
-          }
-        ]
-      },
-      {
-        mode: "copy",
-        position: "analytics.construct.case.0.contract",
-        value: "analytics.construct.contract"
-      },
-      {
-        mode: "copy",
-        position: "analytics.construct.case.1.contract",
-        value: "analytics.construct.contract"
-      },
-      {
-        mode: "move",
-        position: "analytics.construct.case.2.contract",
-        value: "analytics.construct.contract"
-      },
-      {
-        mode: "copy",
-        position: "analytics.styling.fabric.curtain",
-        value: "analytics.styling.fabric.manufacture"
-      },
-      {
-        mode: "move",
-        position: "analytics.styling.fabric.bedding",
-        value: "analytics.styling.fabric.manufacture"
-      },
-      {
-        mode: "move",
-        position: "analytics.project.matrix",
-        value: "analytics.etc.matrix"
-      },
-      {
-        mode: "move",
-        position: "analytics.project.operationBudget",
-        value: "analytics.etc.operationBudget"
-      },
-    ]);
-
-    const dbName = "miro81";
-    const collection = "designer";
-    const MONGOC = this.MONGOC;
-    let whereQuery, updateQuery, updateMotherQuery;
-    let rows, matrix, newMatrix;
-    let tempArr;
-
-    rows = await MONGOC.db(dbName).collection(collection).find({}).toArray();
-
-    for (let json of rows) {
-      matrix = json.analytics.project.matrix;
-      newMatrix = [
-        [ (matrix[0][1][0] || matrix[0][1][1]), (matrix[0][0][1] || matrix[0][1][1]), (matrix[0][0][0] || matrix[0][1][0]) ],
-        [ (matrix[1][1][0] || matrix[1][1][1]), (matrix[1][0][1] || matrix[1][1][1]), (matrix[1][0][0] || matrix[1][1][0]) ],
-        [ (matrix[2][1][0] || matrix[2][1][1]), (matrix[2][0][1] || matrix[2][1][1]), (matrix[2][0][0] || matrix[2][1][0]) ],
-        [ (matrix[3][1][0] || matrix[3][1][1]), (matrix[3][0][1] || matrix[3][1][1]), (matrix[3][0][0] || matrix[3][1][0]) ],
-      ];
-      whereQuery = { desid: json.desid };
-      updateQuery = {};
-      updateQuery["analytics.project.matrix"] = newMatrix;
-      await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, { "$set": updateQuery });
-      console.log(`${collection} add "analytics.project.matrix"`, whereQuery);
-
-      tempArr = [];
-      for (let i = 0; i < json.analytics.etc.personality.length; i++) {
-        if (i !== 3 && i !== 6) {
-          tempArr.push(json.analytics.etc.personality[i]);
         }
       }
-      whereQuery = { desid: json.desid };
-      updateQuery = {};
-      updateQuery["analytics.etc.personality"] = tempArr;
-      await MONGOC.db(dbName).collection(collection).updateOne(whereQuery, { "$set": updateQuery });
-      console.log(`${collection} add "analytics.etc.personality"`, whereQuery);
-    }
+    ]);
+
 
     */
 

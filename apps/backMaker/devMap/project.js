@@ -139,13 +139,23 @@ module.exports = {
           },
           share: {
             client: {
-              photo: new Date(1800, 0, 1),
-              contents: new Date(1800, 0, 1),
+              photo: new Date(3800, 0, 1),
+              contents: new Date(3800, 0, 1),
             },
             designer: {
-              photo: new Date(1800, 0, 1),
-              contents: new Date(1800, 0, 1),
+              photo: new Date(3800, 0, 1),
+              contents: new Date(3800, 0, 1),
             }
+          },
+          sns: {
+            portfolio: {
+              long: new Date(3800, 0, 1),
+              short: new Date(3800, 0, 1),
+            },
+            interview: {
+              long: new Date(3800, 0, 1),
+              short: new Date(3800, 0, 1),
+            },
           }
         },
       }

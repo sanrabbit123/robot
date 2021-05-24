@@ -2,6 +2,42 @@ const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
 const { Menu, DateParse } = require(GENERAL_DIR + "/generator.js");
 
+const ContentsSnsInterview = function (json) {
+  this.long = new DateParse(json.long);
+  this.short = new DateParse(json.short);
+}
+
+ContentsSnsInterview.prototype.toNormal = function () {
+  let obj = {};
+  obj.long = this.long.toNormal();
+  obj.short = this.short.toNormal();
+  return obj;
+}
+
+const ContentsSnsPortfolio = function (json) {
+  this.long = new DateParse(json.long);
+  this.short = new DateParse(json.short);
+}
+
+ContentsSnsPortfolio.prototype.toNormal = function () {
+  let obj = {};
+  obj.long = this.long.toNormal();
+  obj.short = this.short.toNormal();
+  return obj;
+}
+
+const ContentsSns = function (json) {
+  this.portfolio = new ContentsSnsPortfolio(json.portfolio);
+  this.interview = new ContentsSnsInterview(json.interview);
+}
+
+ContentsSns.prototype.toNormal = function () {
+  let obj = {};
+  obj.portfolio = this.portfolio.toNormal();
+  obj.interview = this.interview.toNormal();
+  return obj;
+}
+
 const ContentsShareDesigner = function (json) {
   this.photo = new DateParse(json.photo);
   this.contents = new DateParse(json.contents);
@@ -121,6 +157,7 @@ const ProjectContents = function (json) {
   this.photo = new ContentsPhoto(json.photo);
   this.raw = new ContentsRaw(json.raw);
   this.share = new ContentsShare(json.share);
+  this.sns = new ContentsSns(json.sns);
 }
 
 ProjectContents.prototype.toNormal = function () {
@@ -129,6 +166,7 @@ ProjectContents.prototype.toNormal = function () {
   obj.photo = this.photo.toNormal();
   obj.raw = this.raw.toNormal();
   obj.share = this.share.toNormal();
+  obj.sns = this.sns.toNormal();
   return obj;
 }
 

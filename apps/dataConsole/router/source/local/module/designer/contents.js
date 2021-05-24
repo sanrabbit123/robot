@@ -37,7 +37,7 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   });
   this.totalMother = totalMother;
 
-  [ borderBack, dashBoard, contentsArea ] = createNodes([
+  [ borderBack, dashBoard, contentsArea, contentsTong ] = createNodes([
     {
       mother: totalMother,
       style: {
@@ -61,6 +61,7 @@ DesignerJs.prototype.contentsBase = function (search = null) {
         marginBottom: String(dashBoardMargin) + ea,
         background: colorChip.gray2,
         borderRadius: String(3) + "px",
+        textAlign: "center",
       }
     },
     {
@@ -69,12 +70,9 @@ DesignerJs.prototype.contentsBase = function (search = null) {
         position: "relative",
         height: withOut(dashBoardHeight + dashBoardMargin, ea),
       }
-    }
-  ]);
-
-  [ contentsTong ] = createNodes([
+    },
     {
-      mother: contentsArea,
+      mother: -1,
       style: {
         display: "block",
         position: "relative",
@@ -88,62 +86,290 @@ DesignerJs.prototype.contentsBase = function (search = null) {
         overflowY: "scroll",
         overflowX: "hidden",
       }
-    },
+    }
   ]);
-
 
   this.contentsSpec.contentsTong = contentsTong;
   this.contentsSpec.dashBoard = dashBoard;
   this.contentsBlockInjection();
+  this.contentsDashBoard();
 }
 
-DesignerJs.prototype.contentsWhiteBlock = function (mother, project) {
+DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last = false) {
   if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
   const { ea } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { address, contents: { photo, raw, share, sns } } = project;
+  const { boo, date, info: { interviewer, photographer }, status } = photo;
+  const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
+  const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
+  const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
+  const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+  const textMaker = (title, value, color = "black") => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:</b>${space}<b style="color:${colorChip[color]}">${value}</b>`; }
+  const dateToString = (dateObj) => {
+    if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+      return "미정";
+    } else if (dateObj.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      return "해당 없음";
+    } else {
+      return `${String(dateObj.getFullYear())}-${zeroAddition(dateObj.getMonth() + 1)}-${zeroAddition(dateObj.getDate())}`;
+    }
+  }
+  const dateToColor = (dateObj, reverse = true) => {
+    if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+      return "red";
+    } else if (dateObj.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      return "gray5";
+    } else {
+      if (dateObj.valueOf() <= (new Date()).valueOf()) {
+        return !reverse ? "green" : "black";
+      } else {
+        return !reverse ? "black" : "green";
+      }
+    }
+  }
   let height, margin;
   let whiteBlock;
-  let innerMargin;
+  let width0, width1;
+  let top, left, size;
+  let textMargin;
+  let startLeft;
+  let previousWidth, betweenText;
+  let widthArr, domArr;
+  let totalObj;
+  let tempQsa;
+  let circle, whiteBack;
+  let radius;
+  let circleTop;
+  let redPoint;
+  let whiteWidth;
+  let stringArr, tempDom;
+  let tempString;
 
-  innerMargin = 4;
-  height = 46;
+  totalObj = [];
+
+  height = 41;
   margin = 4;
 
-  whiteBlock = createNode({
-    mother,
-    style: {
-      display: "block",
-      background: colorChip.white,
-      width: String(100) + '%',
-      height: String(height) + ea,
-      borderRadius: String(5) + "px",
-      marginBottom: String(margin) + ea,
-    }
-  });
+  width0 = 115;
+  width1 = 3;
 
-  createNodes([
+  top = 9;
+  left = 15;
+  size = 15;
+  textMargin = 6;
+  startLeft = 160;
+  betweenText = 28;
+  totalObj.push(startLeft);
+  totalObj.push(betweenText);
+
+  radius = 4;
+  circleTop = 16;
+  redPoint = false;
+  whiteWidth = 40;
+
+  stringArr = [];
+
+  if (this.type === "photo") {
+
+    stringArr.push(textMaker("촬영 여부", boo ? 'O' : 'X'));
+    stringArr.push(textMaker("촬영일", dateToString(date), dateToColor(date, true)));
+
+    if (date.valueOf() > (new Date(3000, 0, 1).valueOf())) {
+      stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "red"));
+      redPoint = true;
+    } else if (date.valueOf() > (new Date(2000, 0, 1).valueOf())) {
+      if (date.valueOf() >= (new Date()).valueOf()) {
+        stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "green"));
+      } else {
+        stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`));
+      }
+    } else {
+      stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "gray5"));
+    }
+
+    stringArr.push(textMaker("촬영 상태", status));
+    stringArr.push(textMaker("포토", photographer, (photographer === "미정" ? "red" : "black")));
+    stringArr.push(textMaker("인터뷰어", interviewer, (interviewer === "미정" ? "red" : "black")));
+    if (photographer === "미정" || interviewer === "미정") {
+      redPoint = true;
+    }
+    stringArr.push(textMaker("주소", address));
+
+  } else if (this.type === "source") {
+
+    stringArr.push(textMaker("디자이너글 상태", portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")));
+    stringArr.push(textMaker("디자이너글 링크", portfolioLink === '' ? "링크 없음" : "링크 이동"));
+    stringArr.push(textMaker("인터뷰 상태", interviewStatus, /요망/gi.test(interviewStatus) ? "red" : (/편집 완료/gi.test(interviewStatus) ? "green" : "black")));
+    stringArr.push(textMaker("인터뷰 링크", interviewLink === '' ? "링크 없음" : "링크 이동"));
+    stringArr.push(textMaker("원본 사진 상태", photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black")));
+    stringArr.push(textMaker("원본 사진 링크", photoLink === '' ? "링크 없음" : "링크 이동"));
+
+    if (/요망/gi.test(portfolioStatus) || /요망/gi.test(interviewStatus) || /요망/gi.test(photoStatus)) {
+      redPoint = true;
+    }
+
+  } else if (this.type === "contents") {
+
+    tempString = dateToString(longPortfolio);
+    stringArr.push(textMaker("블로그 디자이너글", tempString, dateToColor(longPortfolio, false)));
+    if (/미정/gi.test(tempString)) {
+      redPoint = true;
+    }
+    tempString = dateToString(longInterview);
+    stringArr.push(textMaker("블로그 인터뷰", tempString, dateToColor(longInterview, false)));
+    if (/미정/gi.test(tempString)) {
+      redPoint = true;
+    }
+    tempString = dateToString(shortPortfoilo);
+    stringArr.push(textMaker("인스타 디자이너글", tempString, dateToColor(shortPortfoilo, false)));
+    if (/미정/gi.test(tempString)) {
+      redPoint = true;
+    }
+    tempString = dateToString(shortInterview);
+    stringArr.push(textMaker("인스타 인터뷰", tempString, dateToColor(shortInterview, false)));
+    if (/미정/gi.test(tempString)) {
+      redPoint = true;
+    }
+
+  } else if (this.type === "share") {
+
+    stringArr.push(textMaker("고객 사진 공유", dateToString(photoClient).replace(/미정/g, "예정"), dateToColor(photoClient, false).replace(/red/gi, "black")));
+    stringArr.push(textMaker("고객 컨텐츠 공유", dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black")));
+    stringArr.push(textMaker("디자이너 사진 공유", dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black")));
+    stringArr.push(textMaker("디자이너 컨텐츠 공유", dateToString(contentsDesigner).replace(/미정/g, "예정"), dateToColor(contentsDesigner, false).replace(/red/gi, "black")));
+
+  }
+
+  [ whiteBlock ] = createNodes([
+    {
+      mother,
+      style: {
+        display: "block",
+        position: "relative",
+        background: colorChip[boo ? "white" : "gray0"],
+        width: String(100) + '%',
+        height: String(height) + ea,
+        borderRadius: String(5) + "px",
+        marginBottom: String(margin * (!last ? 1 : 60)) + ea,
+        overflow: "hidden",
+      }
+    },
+    {
+      mother: -1,
+      text: project.title,
+      style: {
+        position: "absolute",
+        width: String(width0) + ea,
+        top: String(top + 1) + ea,
+        left: String(left) + ea,
+        fontSize: String(size) + ea,
+      }
+    },
+    {
+      mother: -2,
+      text: '|',
+      style: {
+        position: "absolute",
+        width: String(width1) + ea,
+        top: String(top + 1) + ea,
+        left: String(left + width0 + textMargin) + ea,
+        fontSize: String(size) + ea,
+        color: colorChip.gray4
+      }
+    },
+  ]);
+
+  widthArr = [];
+  domArr = [];
+  for (let str of stringArr) {
+    tempDom = createNode({
+      mother: whiteBlock,
+      text: str,
+      style: {
+        position: "absolute",
+        top: String(top) + ea,
+        left: String(startLeft) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(400),
+      }
+    });
+    domArr.push(tempDom);
+    previousWidth = tempDom.getBoundingClientRect().width;
+    widthArr.push(previousWidth);
+    startLeft = startLeft + previousWidth + betweenText;
+  }
+  totalObj.push(widthArr);
+  totalObj.push(domArr);
+
+  [ whiteBack, circle ] = createNodes([
     {
       mother: whiteBlock,
       style: {
-        display: "inline-block",
-        width: String(100) + ea,
-        height: String(height * 0.8) + ea,
-        background: "red",
+        position: "absolute",
+        top: String(0) + ea,
+        right: String(0) + ea,
+        width: String(whiteWidth) + ea,
+        height: String(100) + '%',
+        background: colorChip["white"]
+      }
+    },
+    {
+      mother: whiteBlock,
+      style: {
+        position: "absolute",
+        top: String(circleTop) + ea,
+        right: String(left + 1) + ea,
+        width: String(radius * 2) + ea,
+        height: String(radius * 2) + ea,
+        borderRadius: String(radius * 2) + ea,
+        background: colorChip[redPoint ? "red" : "green"]
       }
     }
   ]);
 
+  if (!boo) {
+    tempQsa = whiteBlock.querySelectorAll("div");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    tempQsa = whiteBlock.querySelectorAll("b");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    whiteBack.style.background = colorChip.gray0;
+    circle.style.background = colorChip.gray4;
+  }
+
+  return totalObj;
 }
 
 DesignerJs.prototype.contentsBlockInjection = function () {
   const instance = this;
   const { ea, projects } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
+  let width, dom;
+  let maxWidth;
+  let startLeft, betweenText, widthArr, domArr;
+  let temp;
+  let actionList;
+
+  cleanChildren(contentsTong);
+
+  actionList = [
+    "응대 대기",
+    "현장 미팅",
+    "1차 제안",
+    "수정 제안",
+    "시공 진행",
+    "제품 구매",
+    "배송중",
+  ];
 
   scrollTong = createNode({
     mother: contentsTong,
@@ -153,11 +379,118 @@ DesignerJs.prototype.contentsBlockInjection = function () {
     }
   });
 
-  for (var i = 0; i < projects.length; i++) {
-    this.contentsWhiteBlock(scrollTong, projects[i]);
+  width = [];
+  dom = [];
+  maxWidth = [];
+
+  projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
+
+  for (let i = 0; i < projects.length; i++) {
+    if (!actionList.includes(projects[i].process.action)) {
+      [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1));
+      width.push(widthArr);
+      dom.push(domArr);
+    }
   }
 
+  if (width.length > 0) {
+    for (let i = 0; i < width[0].length; i++) {
+      width.sort((a, b) => { return b[i] - a[i] });
+      maxWidth.push(width[0][i]);
+    }
+    for (let i = 0; i < dom.length; i++) {
+      temp = startLeft;
+      for (let j = 0; j < dom[i].length; j++) {
+        dom[i][j].style.left = String(temp) + ea;
+        dom[i][j].style.width = String(maxWidth[j] + 1) + ea;
+        temp += maxWidth[j] + betweenText;
+      }
+    }
+  }
 
+}
+
+DesignerJs.prototype.contentsDashBoard = function () {
+  const instance = this;
+  const { ea, projects } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { dashBoard } = this.contentsSpec;
+  let size, top;
+  let nodeArr;
+  let textArr;
+  let typeNum;
+
+  size = 16;
+  top = 11;
+
+  textArr = [];
+  typeNum = 0;
+  for (let i = 0; i < this.typeArr.length; i++) {
+    if (this.typeArr[i] === this.type) {
+      typeNum = i;
+    }
+    textArr.push(this.typeArr[i].slice(0, 1).toUpperCase() + this.typeArr[i].slice(1));
+  }
+
+  nodeArr = [];
+  for (let i = 0; i < textArr.length; i++) {
+    nodeArr.push({
+      mother: dashBoard,
+      text: textArr[i],
+      class: [ "hoverDefault" ],
+      attribute: [
+        { value: instance.typeArr[i] }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            instance.type = this.getAttribute("value");
+            for (let i = 0; i < instance.typeArr.length; i++) {
+              if (instance.typeArr[i] === instance.type) {
+                instance.typeDoms[i].style.color = colorChip.green;
+              } else {
+                instance.typeDoms[i].style.color = colorChip.shadow;
+              }
+            }
+            instance.contentsBlockInjection();
+          }
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontFamily: "graphik",
+        fontSize: String(size) + ea,
+        fontWeight: String(400),
+        top: String(top) + ea,
+        color: colorChip[i === typeNum ? "green" : "shadow"],
+      }
+    });
+    if (i !== textArr.length - 1) {
+      nodeArr.push({
+        mother: dashBoard,
+        text: `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontFamily: "graphik",
+          fontSize: String(size) + ea,
+          fontWeight: String(200),
+          top: String(top) + ea,
+          color: colorChip.gray5
+        }
+      });
+    }
+  }
+
+  nodeArr = createNodes(nodeArr);
+  instance.typeDoms = [];
+  for (let i = 0; i < nodeArr.length; i++) {
+    if (i % 2 === 0) {
+      instance.typeDoms.push(nodeArr[i]);
+    }
+  }
 }
 
 DesignerJs.prototype.contentsView = async function () {
@@ -185,72 +518,19 @@ DesignerJs.prototype.contentsView = async function () {
     let projects;
     let designers, desidArr_raw, desidArr;
     let clients, cliidArr_raw, cliidArr;
+    let temp;
+    let type, typeArr;
 
     loading = await this.mother.loadingRun();
 
-    /*
+    typeArr = [ "photo", "source", "contents", "share" ];
+    type = returnGet().type;
+    if (type === undefined || type === null || !typeArr.includes(type)) {
+      type = typeArr[0];
+    }
 
-    // -----------------------------------------------------------------
-
-    [ 촬영 관리 ]
-
-    촬영 진행 여부
-
-    촬영 진행 상태
-
-    촬영일
-
-    촬영 작가
-
-    인터뷰어
-
-    촬영 메모
-
-    // -----------------------------------------------------------------
-
-    [ 소스 수집 ]
-
-    사진 원본
-
-    인터뷰 상태
-
-    인터뷰 원고
-
-    디자이너 글
-
-    // -----------------------------------------------------------------
-
-    [ 발행 관리 ]
-
-    블로그 포트폴리오 컨텐츠 발행
-
-    블로그 인터뷰 컨텐츠 발행
-
-    인스타 포트폴리오 컨텐츠 발행
-
-    인스타 인터뷰 컨텐츠 발행
-
-    웹 컨텐츠 발행
-
-    // -----------------------------------------------------------------
-
-    [ 발행 관리 ]
-
-    블로그 포트폴리오 컨텐츠 발행
-
-    블로그 인터뷰 컨텐츠 발행
-
-    인스타 포트폴리오 컨텐츠 발행
-
-    인스타 인터뷰 컨텐츠 발행
-
-    웹 컨텐츠 발행
-
-    // -----------------------------------------------------------------
-
-
-    */
-
+    this.typeArr = typeArr;
+    this.type = type;
     this.contentsSpec = {};
 
     projects = new SearchArray(await ajaxJson({
@@ -258,7 +538,7 @@ DesignerJs.prototype.contentsView = async function () {
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[진]" } },
+          { "process.status": { $regex: "^[진홀]" } },
           { "process.calculation.payments.first.date": { $gte: new Date(2000, 0, 1) } }
         ]
       }
@@ -300,8 +580,10 @@ DesignerJs.prototype.contentsView = async function () {
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
-      p.name = clients.search("cliid", p.cliid).name;
-      p.title = `${p.designer} <b style="color:${colorChip.green}">D</b> ${p.name} <b style="color:${colorChip.green}">C</b>`;
+      temp = clients.search("cliid", p.cliid);
+      p.name = temp.name;
+      p.address = temp.requests[0].request.space.address;
+      p.title = `${p.designer} <b style="color:${colorChip.green}">D</b>&nbsp;&nbsp;${p.name} <b style="color:${colorChip.green}">C</b>`;
     }
 
     this.projects = projects;
@@ -309,7 +591,6 @@ DesignerJs.prototype.contentsView = async function () {
     this.designers.setProjects(projects);
     this.designers.setClients(clients);
 
-    await sleep(500);
     loading.parentNode.removeChild(loading);
 
     this.contentsBase();

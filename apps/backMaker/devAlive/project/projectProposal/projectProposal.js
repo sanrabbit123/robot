@@ -1,5 +1,5 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
-const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
+const PROJECT_DIR = process.cwd() + "/apps/backMaker/devAlive/project";
 const { DateParse } = require(GENERAL_DIR + "/generator.js");
 
 class Fees extends Array {

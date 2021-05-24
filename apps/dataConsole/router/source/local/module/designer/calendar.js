@@ -2302,7 +2302,7 @@ DesignerJs.prototype.calendarView = async function () {
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진]" } }
+          { "process.status": { $regex: "^[대진홀]" } }
         ]
       }
     }, "/getProjects", { equal: true });

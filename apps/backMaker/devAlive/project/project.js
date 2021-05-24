@@ -1,5 +1,5 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
-const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
+const PROJECT_DIR = process.cwd() + "/apps/backMaker/devAlive/project";
 const ProjectProposal = require(PROJECT_DIR + "/projectProposal/projectProposal.js");
 const ProjectProcess = require(PROJECT_DIR + "/projectProcess/projectProcess.js");
 const ProjectContents = require(PROJECT_DIR + "/projectContents/projectContents.js");
