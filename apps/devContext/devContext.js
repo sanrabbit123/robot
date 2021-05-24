@@ -58,7 +58,7 @@ DevContext.prototype.launching = async function () {
     const matrix = await sheets.get_value_inPython(sheetsId, "총괄 시트!B2:V");
     const columns = [ "name", "null0", "boo", "status", "designer", "photographer", "interviewer", "date", "hours", "memo", "rawInterview", "rawPortfolio", "rawPhoto", "blogInterview", "blogPortfolio", "instaInterview", "instaPortfolio", "web", "sharePhotoDesigner", "sharePhotoClient", "shareContents" ];
     const matrix_clone = JSON.parse(JSON.stringify(matrix));
-    const selfMongo = this.MONGOLOCALC;
+    const selfMongo = this.MONGOC;
     const convertStatus_photo = (str) => {
       if (/대기/gi.test(str)) {
         return '세팅 대기';
@@ -174,8 +174,8 @@ DevContext.prototype.launching = async function () {
 
     filteredTong = [];
     for (let obj of tong) {
-      projects = await back.getProjectsByNames([ obj.name, obj.designer ], { selfMongo, devAlive: true });
-      contents = await back.getContentsArrByQuery({ proid: projects[0].proid }, { selfMongo, devAlive: true });
+      projects = await back.getProjectsByNames([ obj.name, obj.designer ], { selfMongo });
+      contents = await back.getContentsArrByQuery({ proid: projects[0].proid }, { selfMongo });
       tempContentsDate = new Date(3800, 0, 1);
       if (contents.length !== 0) {
         tempContentsDate = contents[0].contents.portfolio.date.toNormal();
@@ -234,7 +234,7 @@ DevContext.prototype.launching = async function () {
       for (let i in convertingDictionary) {
         updateQuery[convertingDictionary[i]] = obj[i];
       }
-      await back.updateProject([ whereQuery, updateQuery ], { selfMongo, devAlive: true });
+      await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
       console.log(whereQuery);
     }
 
@@ -465,7 +465,7 @@ DevContext.prototype.launching = async function () {
     /*
     await this.cookProperty([
       {
-        mongoConnection: this.MONGOLOCALC,
+        mongoConnection: this.MONGOC,
         collection: "project",
         standard: "proid",
         mode: "add",
