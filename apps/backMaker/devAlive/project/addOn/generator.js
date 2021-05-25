@@ -1,4 +1,4 @@
-const PROJECT_DIR = process.cwd() + "/apps/backMaker/devAlive/project";
+const PROJECT_DIR = process.cwd() + "/apps/backMaker/alive/project";
 const Project = require(PROJECT_DIR + "/project.js");
 
 class Projects extends Array {

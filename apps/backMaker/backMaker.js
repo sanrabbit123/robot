@@ -2629,6 +2629,8 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
 
     let dummy;
     let sortStandard, collection, whereQuery;
+    let temp, tempArr;
+    let projectManager;
 
     if (/client/gi.test(method)) {
       collection = "clientHistory";
@@ -2659,6 +2661,18 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
     } else if (/project/gi.test(method)) {
       collection = "projectHistory";
       sortStandard = "proid";
+      projectManager = '-';
+      if (SELFMONGOBOO) {
+        temp = await this.getProjectById(updateQuery.proid);
+        if (temp !== null) {
+          if (/^d/.test(temp)) {
+            tempArr = await MONGOLOCALC.db("miro81").collection("designerHistory").find({ desid: temp.desid }).toArray();
+            if (tempArr.length > 0) {
+              projectManager = tempArr[0].manager;
+            }
+          }
+        }
+      }
       dummy = {
         proid: updateQuery.proid,
         history: "",
@@ -2693,7 +2707,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         },
         important: false,
         issue: "",
-        manager: "-"
+        manager: projectManager
       };
     } else if (/contents/gi.test(method)) {
       collection = "contentsHistory";

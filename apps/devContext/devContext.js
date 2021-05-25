@@ -41,6 +41,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -49,6 +50,35 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
+
+
+
+
+
+
+    // const sheets = new GoogleSheet();
+    // const sheetsId = "1W2duVMJVtQgbjQpTafM4lnuukebWNAEHyvD__VnOb_w";
+    // const selfMongo = this.MONGOLOCALC;
+    // const option = { selfMongo, withTools: true };
+    // const clients = await back.getClientsByQuery({}, option);
+    // const projects = await back.getProjectsByQuery({}, option);
+    // const tongs = clients.getRequestsTongsMonthly();
+    // let temp, num;
+    // let tempArr;
+    // let matrix;
+    //
+    // matrix = [ [ "날짜", "문의", "계약", "계약율" ] ];
+    // for (let { name, tong } of tongs) {
+    //   num = 0;
+    //   for (let { cliid } of tong) {
+    //     temp = projects.searchByCliid(cliid, true);
+    //     num += temp.length;
+    //   }
+    //   matrix.push([ name, String(tong.length), String(num), (String(Math.round((num / tong.length) * 10000) / 100) + '%') ]);
+    // }
+    // console.log(matrix)
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "문의계약", matrix, [ 0, 0 ]);
 
 
 

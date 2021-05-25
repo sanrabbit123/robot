@@ -108,7 +108,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
   const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const textMaker = (title, value, color = "black") => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:</b>${space}<b style="color:${colorChip[color]}">${value}</b>`; }
+  const textMaker = (title, value, color = "black") => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:</b>${space}<b class="value" style="color:${colorChip[color]}">${value}</b>`; }
   const dateToString = (dateObj) => {
     if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
       return "미정";
@@ -147,7 +147,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let redPoint;
   let whiteWidth;
   let stringArr, tempDom;
-  let tempString;
+  let tempString, tempString0, tempString1, tempString2, tempString3;
+  let updateArr;
 
   totalObj = [];
 
@@ -172,32 +173,125 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   whiteWidth = 40;
 
   stringArr = [];
+  updateArr = [];
 
   if (this.type === "photo") {
 
     stringArr.push(textMaker("촬영 여부", boo ? 'O' : 'X'));
-    stringArr.push(textMaker("촬영일", dateToString(date), dateToColor(date, true)));
+    updateArr.push(function (e, option) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, valueDom } = option;
+      let startLeft, width, height, size, margin, textTop, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position, updateQuery;
 
-    if (date.valueOf() > (new Date(3000, 0, 1).valueOf())) {
-      stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "red"));
-      redPoint = true;
-    } else if (date.valueOf() > (new Date(2000, 0, 1).valueOf())) {
-      if (date.valueOf() >= (new Date()).valueOf()) {
-        stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "green"));
-      } else {
-        stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`));
+      updateQuery = {};
+      position = "contents.photo.boo";
+      values = [
+        'O',
+        'X'
+      ];
+
+      startLeft = 31.5;
+      width = 36;
+      height = 30;
+      size = 16;
+      margin = 4;
+      textTop = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+
+          updateQuery[position] = value;
+          await instance.contentsUpdate(updateQuery);
+
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
-    } else {
-      stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, "gray5"));
-    }
 
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [
+            { value: values[i] }
+          ],
+          events: [
+            {
+              type: "click",
+              event: updateEvent
+            }
+          ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width + margin) * i)) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            color: colorChip.white,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker("촬영일", dateToString(date), dateToColor(date, true)));
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
+    stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, dateToColor(date, true)));
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
     stringArr.push(textMaker("촬영 상태", status));
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
     stringArr.push(textMaker("포토", photographer, (photographer === "미정" ? "red" : "black")));
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
     stringArr.push(textMaker("인터뷰어", interviewer, (interviewer === "미정" ? "red" : "black")));
-    if (photographer === "미정" || interviewer === "미정") {
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
+    stringArr.push(textMaker("주소", address));
+    updateArr.push(function (e, option) {
+      const { ea, createNodes, colorChip, withOut } = option;
+      console.log("this!");
+    });
+
+    if (date.valueOf() > (new Date(3000, 0, 1).valueOf()) || photographer === "미정" || interviewer === "미정") {
       redPoint = true;
     }
-    stringArr.push(textMaker("주소", address));
 
   } else if (this.type === "source") {
 
@@ -214,29 +308,21 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   } else if (this.type === "contents") {
 
-    tempString = dateToString(longPortfolio);
-    stringArr.push(textMaker("블로그 디자이너글", tempString, dateToColor(longPortfolio, false)));
-    if (/미정/gi.test(tempString)) {
-      redPoint = true;
-    }
-    tempString = dateToString(longInterview);
-    stringArr.push(textMaker("블로그 인터뷰", tempString, dateToColor(longInterview, false)));
-    if (/미정/gi.test(tempString)) {
-      redPoint = true;
-    }
-    tempString = dateToString(shortPortfoilo);
-    stringArr.push(textMaker("인스타 디자이너글", tempString, dateToColor(shortPortfoilo, false)));
-    if (/미정/gi.test(tempString)) {
-      redPoint = true;
-    }
-    tempString = dateToString(shortInterview);
-    stringArr.push(textMaker("인스타 인터뷰", tempString, dateToColor(shortInterview, false)));
-    if (/미정/gi.test(tempString)) {
-      redPoint = true;
-    }
+    tempString0 = dateToString(longPortfolio);
+    tempString1 = dateToString(longInterview);
+    tempString2 = dateToString(shortPortfoilo);
+    tempString3 = dateToString(shortInterview);
 
+    stringArr.push(textMaker("블로그 디자이너글", tempString0, dateToColor(longPortfolio, false)));
+    stringArr.push(textMaker("블로그 인터뷰", tempString1, dateToColor(longInterview, false)));
+    stringArr.push(textMaker("인스타 디자이너글", tempString2, dateToColor(shortPortfoilo, false)));
+    stringArr.push(textMaker("인스타 인터뷰", tempString3, dateToColor(shortInterview, false)));
     stringArr.push(textMaker("웹 발행", dateToString(project.web), dateToColor(project.web, false)));
     stringArr.push(textMaker("컨텐츠 아이디", project.pid, "black"));
+
+    if (/미정/gi.test(tempString0) || /미정/gi.test(tempString1) || /미정/gi.test(tempString2) || /미정/gi.test(tempString3)) {
+      redPoint = true;
+    }
 
   } else if (this.type === "share") {
 
@@ -302,16 +388,59 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   widthArr = [];
   domArr = [];
-  for (let str of stringArr) {
+  for (let i = 0; i < stringArr.length; i++) {
     tempDom = createNode({
       mother: whiteBlock,
-      text: str,
+      text: stringArr[i],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            const { ea } = instance;
+            const { createNodes, colorChip, withOut } = GeneralJs;
+            const valueDom = this.querySelector(".value");
+            const option = { ea, top: 25, createNodes, colorChip, withOut, boxShadow: "0px 3px 10px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom };
+            createNodes([
+              {
+                mother: this,
+                mode: "aside",
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const parent = this.parentElement;
+                      const removeTargets = parent.querySelectorAll("aside");
+                      for (let dom of removeTargets) {
+                        parent.removeChild(dom);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: "transparent",
+                  zIndex: option.zIndex,
+                }
+              }
+            ]);
+            this.parentElement.style.overflow = "visible";
+            updateArr[i].call(this, e, option);
+          }
+        }
+      ],
       style: {
         position: "absolute",
         top: String(top) + ea,
         left: String(startLeft) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(400),
+        cursor: "pointer",
       }
     });
     domArr.push(tempDom);
