@@ -557,6 +557,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents" ];
   obj.func = async function (req, res) {
@@ -565,9 +566,9 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       let whereQuery, updateQuery, dateQuery;
 
       if (req.body.where !== undefined) {
-        whereQuery = JSON.parse(req.body.where);
+        whereQuery = equalJson(req.body.where);
       } else {
-        whereQuery = JSON.parse(req.body.whereQuery);
+        whereQuery = equalJson(req.body.whereQuery);
       }
 
       if (req.body.updateQuery === undefined) {
@@ -580,19 +581,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
           updateQuery[req.body.target] = req.body.updateValue;
         }
       } else {
-        updateQuery = JSON.parse(req.body.updateQuery);
-        if (req.body.dateQuery !== undefined) {
-          dateQuery = JSON.parse(req.body.dateQuery);
-          for (let z in dateQuery) {
-            if (dateQuery[z]) {
-              if (updateQuery[z] === undefined) {
-                throw new Error("invaild date query");
-              } else {
-                updateQuery[z] = new Date(updateQuery[z]);
-              }
-            }
-          }
-        }
+        updateQuery = equalJson(req.body.updateQuery);
       }
 
       if (req.url === "/rawUpdateClient") {

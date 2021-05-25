@@ -2856,7 +2856,6 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
             //update
             whereQuery = {};
             updateQuery = {};
-            dateQuery = {};
 
             whereQuery.proid = proid;
 
@@ -2869,11 +2868,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
             updateQuery["contents.photo.info.photographer"] = GeneralJs.queryFilter(photographerInput.value.trim());
             updateQuery["contents.photo.info.interviewer"] = GeneralJs.queryFilter(interviewerInput.value.trim());
 
-            dateQuery["contents.photo.date"] = true;
-            dateQuery["contents.photo.info.photographer"] = false;
-            dateQuery["contents.photo.info.interviewer"] = false;
-
-            await GeneralJs.ajaxPromise("where=" + JSON.stringify(whereQuery) + "&updateQuery=" + JSON.stringify(updateQuery) + "&dateQuery=" + JSON.stringify(dateQuery), "/rawUpdateProject");
+            await GeneralJs.ajaxPromise("where=" + JSON.stringify(whereQuery) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
 
             title = thisClientName + "C/" + thisDesignerName + "D 촬영";
             description = "포토 : " + updateQuery["contents.photo.info.photographer"];
