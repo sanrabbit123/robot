@@ -52,6 +52,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+
+    const toA = "이큰별";
+    const fromA = [ "김은정", "김남희", "천유정", "김경임", "박혜인", "김은설", "김소영", "김다래", "우다미", "정다연", "이정아", "윤보라", "김지은", "한서원", "김윤진", "이한솔", "권미정", "김현영", "한채은" ];
+    const toB = "임지민";
+    const fromB = [ "임은숙", "강진아", "이선영", "왕지연", "고윤미", "이연주", "전경화", "전소영", "김경수", "한혜원", "박정훈", "호지희", "오정수", "박선영", "손병준", "박주령", "전진화", "김연주" ];
+    let fromDesidA, fromDesidB;
+    let designers, designer;
+    let projects;
+    let rows;
+
 
 
 

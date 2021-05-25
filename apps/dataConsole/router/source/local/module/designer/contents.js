@@ -108,7 +108,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
   const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const textMaker = (title, value, color = "black") => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:</b>${space}<b class="value" style="color:${colorChip[color]}">${value}</b>`; }
+  const textMaker = (title, value, color, column) => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:${space}</b><b id="${project.proid}_${column}" class="value" style="color:${colorChip[color]}">${value}</b>`; }
   const dateToString = (dateObj) => {
     if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
       return "미정";
@@ -149,6 +149,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let stringArr, tempDom;
   let tempString, tempString0, tempString1, tempString2, tempString3;
   let updateArr;
+  let emptyDate, emptyValue;
+  let map, mapColumn;
 
   totalObj = [];
 
@@ -175,42 +177,107 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   stringArr = [];
   updateArr = [];
 
+  emptyDate = new Date(1800, 0, 1);
+  emptyValue = "해당 없음";
+
   if (this.type === "photo") {
 
-    stringArr.push(textMaker("촬영 여부", boo ? 'O' : 'X'));
+    map = {
+      boo: {
+        title: "촬영 여부",
+        position: "contents.photo.boo",
+        values: [ 'O', 'X' ],
+        chain: {
+          condition: 'X',
+          updateQuery: {
+            "contents.photo.status": emptyValue,
+            "contents.photo.date": emptyDate,
+            "contents.photo.info.photographer": emptyValue,
+            "contents.photo.info.interviewer": emptyValue,
+            "contents.raw.portfolio.status": emptyValue,
+            "contents.raw.portfolio.link": "",
+            "contents.raw.interview.status": emptyValue,
+            "contents.raw.interview.link": "",
+            "contents.raw.photo.status": emptyValue,
+            "contents.raw.photo.link": "",
+            "contents.share.client.photo": emptyDate,
+            "contents.share.client.contents": emptyDate,
+            "contents.share.designer.photo": emptyDate,
+            "contents.share.designer.contents": emptyDate,
+            "contents.sns.portfolio.long": emptyDate,
+            "contents.sns.portfolio.short": emptyDate,
+            "contents.sns.interview.long": emptyDate,
+            "contents.sns.interview.short": emptyDate,
+          }
+        }
+      },
+      date: {
+        title: "촬영일",
+        position: "contents.photo.date",
+        values: [ '미정', '없음' ],
+        chain: null
+      },
+      dateHour: {
+        title: "촬영 시간",
+        position: "contents.photo.date",
+        values: [],
+        chain: null
+      },
+      status: {
+        title: "촬영 상태",
+        position: "contents.photo.status",
+        values: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ],
+        chain: null
+      },
+      photographer: {
+        title: "포토",
+        position: "contents.photo.info.photographer",
+        values: [ '미정', '정경일', '이현익', '김다현', '박혜연', '배창규' ],
+        chain: null
+      },
+      interviewer: {
+        title: "인터뷰어",
+        position: "contents.photo.info.interviewer",
+        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연' ],
+        chain: null
+      },
+      address: {
+        title: "주소",
+        position: "",
+        values: [],
+        chain: null
+      },
+    };
+
+    stringArr.push(textMaker(map["boo"].title, boo ? 'O' : 'X', "black", "boo"));
     updateArr.push(function (e, option) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, valueDom } = option;
-      let startLeft, width, height, size, margin, textTop, background;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "boo";
+      let startLeft, width, margin, background;
       let values, updateEvent;
       let nodeArr;
-      let position, updateQuery;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
 
       updateQuery = {};
-      position = "contents.photo.boo";
-      values = [
-        'O',
-        'X'
-      ];
-
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
       startLeft = 31.5;
       width = 36;
-      height = 30;
-      size = 16;
       margin = 4;
-      textTop = 4;
 
-      background = colorChip.gradientGreen;
+      background = colorChip.gradientGreen4;
       updateEvent = async function (e) {
         e.stopPropagation();
         e.preventDefault();
         try {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
-
           updateQuery[position] = value;
-          await instance.contentsUpdate(updateQuery);
-
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
           valueDom.textContent = value;
           for (let dom of removeTargets) {
             mother.removeChild(dom);
@@ -225,15 +292,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         nodeArr.push({
           mother: this,
           mode: "aside",
-          attribute: [
-            { value: values[i] }
-          ],
-          events: [
-            {
-              type: "click",
-              event: updateEvent
-            }
-          ],
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
           style: {
             position: "absolute",
             top: String(top) + ea,
@@ -252,48 +312,540 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             width: String(100) + '%',
             textAlign: "center",
             fontSize: String(size) + ea,
+            fontWeight: String(500),
             color: colorChip.white,
           }
         });
       }
       createNodes(nodeArr);
     });
-    stringArr.push(textMaker("촬영일", dateToString(date), dateToColor(date, true)));
+
+    stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
     updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "date";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.red;
+          } else if (value === "없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.gray4;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
     });
-    stringArr.push(textMaker("촬영 시간", `${zeroAddition(date.getHours())}시`, dateToColor(date, true)));
+
+    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시`, dateToColor(date, true), "dateHour"));
     updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "dateHour";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let newDom, newInput;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 31.5;
+      width = 36;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (thisCase["date"].textContent.trim() === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.red;
+          } else if (thisCase["date"].textContent.trim() === "없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.gray4;
+          } else {
+            tempArr = thisCase["date"].textContent.trim().split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      [ newDom, newInput ] = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          text: `<b style="display:inline-block;font-weight:200;color:${colorChip.green}">${this.textContent.split(':')[0]}:&nbsp;</b>`,
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(this.getBoundingClientRect().width) + ea,
+            height: String(this.getBoundingClientRect().height) + ea,
+            fontSize: String(size + 1) + ea,
+            fontWeight: String(200),
+            color: colorChip.green,
+            background: colorChip.white,
+            zIndex
+          }
+        },
+        {
+          mother: -1,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: this.textContent.split(':')[1].trim() },
+            { past: this.textContent.split(':')[1].trim() },
+          ],
+          events: [
+            { type: "click", event: (e) => { e.stopPropagation(); } },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.key === "Enter") {
+                  if (/^[0-9]+시$/i.test(this.value.trim())) {
+                    this.setAttribute("value", this.value.trim());
+                    updateEvent.call(this, e);
+                  } else {
+                    this.value = this.getAttribute("past");
+                  }
+                }
+              }
+            },
+          ],
+          style: {
+            display: "inline-block",
+            fontSize: String(size + 1) + ea,
+            fontWeight: String(400),
+            color: colorChip.green,
+            background: colorChip.white,
+            outline: String(0),
+            border: String(0),
+            width: String(Math.floor(valueDom.parentElement.getBoundingClientRect().width - valueDom.parentElement.firstChild.getBoundingClientRect().width)) + ea,
+            height: String(valueDom.getBoundingClientRect().height) + ea,
+          }
+        }
+      ]);
+
+      newInput.focus();
+
     });
-    stringArr.push(textMaker("촬영 상태", status));
+
+    stringArr.push(textMaker(map["status"].title, status, "black", "status"));
     updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 49;
+      width = 114;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.white,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
-    stringArr.push(textMaker("포토", photographer, (photographer === "미정" ? "red" : "black")));
+
+    stringArr.push(textMaker(map["photographer"].title, photographer, (photographer === "미정" ? "red" : "black"), "photographer"));
     updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "photographer";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 21;
+      width = 70;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
+          valueDom.textContent = value;
+          if (value === "미정") {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.white,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
-    stringArr.push(textMaker("인터뷰어", interviewer, (interviewer === "미정" ? "red" : "black")));
+
+    stringArr.push(textMaker(map["interviewer"].title, interviewer, (interviewer === "미정" ? "red" : "black"), "interviewer"));
     updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewer";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 45;
+      width = 70;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery);
+          valueDom.textContent = value;
+          if (value === "미정") {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.white,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
-    stringArr.push(textMaker("주소", address));
-    updateArr.push(function (e, option) {
-      const { ea, createNodes, colorChip, withOut } = option;
-      console.log("this!");
-    });
+
+    stringArr.push(textMaker(map["address"].title, address, "black", "address"));
+    updateArr.push(function (e, option) {});
 
     if (date.valueOf() > (new Date(3000, 0, 1).valueOf()) || photographer === "미정" || interviewer === "미정") {
       redPoint = true;
     }
 
   } else if (this.type === "source") {
+
+    map = {
+      portfolioStatus: {
+        title: "디자이너글 상태",
+        position: "contents.photo.boo",
+        values: [ 'O', 'X' ],
+        chain: null
+      },
+      portfolioLink: {
+        title: "디자이너글 링크",
+        position: "contents.photo.date",
+        values: [ '미정', '없음' ],
+        chain: null
+      },
+      interviewStatus: {
+        title: "인터뷰 상태",
+        position: "contents.photo.date",
+        values: [],
+        chain: null
+      },
+      interviewLink: {
+        title: "인터뷰 링크",
+        position: "contents.photo.status",
+        values: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ],
+        chain: null
+      },
+      photoStatus: {
+        title: "원본 사진 상태",
+        position: "contents.photo.info.photographer",
+        values: [ '미정', '정경일', '이현익', '김다현', '박혜연', '배창규' ],
+        chain: null
+      },
+      photoLink: {
+        title: "원본 사진 링크",
+        position: "contents.photo.info.interviewer",
+        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연' ],
+        chain: null
+      },
+    };
 
     stringArr.push(textMaker("디자이너글 상태", portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")));
     stringArr.push(textMaker("디자이너글 링크", portfolioLink === '' ? "링크 없음" : "링크 이동"));
@@ -338,6 +890,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   [ whiteBlock ] = createNodes([
     {
       mother,
+      id: project.proid,
       attribute: [
         { index: String(index) }
       ],
@@ -399,7 +952,15 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             const { ea } = instance;
             const { createNodes, colorChip, withOut } = GeneralJs;
             const valueDom = this.querySelector(".value");
-            const option = { ea, top: 25, createNodes, colorChip, withOut, boxShadow: "0px 3px 10px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom };
+            let thisCase;
+            thisCase = {};
+            for (let column in map) {
+              if (document.getElementById(project.proid + "_" + column) === null) {
+                throw new Error("invaild doms");
+              }
+              thisCase[column] = document.getElementById(project.proid + "_" + column);
+            }
+            const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: 5 };
             createNodes([
               {
                 mother: this,
@@ -759,6 +1320,26 @@ DesignerJs.prototype.contentsSearchEvent = function () {
       instance.contentsBlockInjection();
     }
   });
+}
+
+DesignerJs.prototype.contentsUpdate = async function (whereQuery, updateQuery, chainQuery = null) {
+  const instance = this;
+  try {
+    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+      throw new Error("invaild input");
+    }
+    if (chainQuery !== null) {
+      if (chainQuery.condition === undefined || chainQuery.updateQuery === undefined) {
+        throw new Error("invaild input");
+      }
+    }
+
+    console.log(whereQuery, updateQuery, chainQuery);
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DesignerJs.prototype.contentsView = async function () {

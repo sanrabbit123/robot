@@ -2065,10 +2065,6 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       let projects;
       let whereQuery, updateQuery;
 
-      updateQuery["process.contract.remain.calculation.amount.supply"] = Number(supply);
-      updateQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
-      updateQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
-
       if (clients.length === 1) {
         client = clients[0];
         cliid = client.cliid;

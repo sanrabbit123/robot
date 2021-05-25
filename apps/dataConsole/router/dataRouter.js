@@ -1704,7 +1704,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
         historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
 
         if (historyObj === null) {
-          await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal });
+          await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
           for (let i = 0; i < 6; i++) {
             responseArr.push('');
           }
@@ -1722,7 +1722,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
         historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
 
         if (historyObj === null) {
-          await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal });
+          await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
           for (let i = 0; i < 4; i++) {
             responseArr.push('');
           }
@@ -1822,7 +1822,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         } else {
           updateQuery[column] = value;
         }
-        await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal });
+        await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
       } else {
         whereQuery = {};
         whereQuery[standard] = id;
