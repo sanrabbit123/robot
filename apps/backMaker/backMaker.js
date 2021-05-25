@@ -2610,7 +2610,7 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
   }
 }
 
-BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false, selfMongo: null }) {
+BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false, selfMongo: null, secondMongo: null }) {
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   try {
@@ -2663,12 +2663,14 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
       sortStandard = "proid";
       projectManager = '-';
       if (SELFMONGOBOO) {
-        temp = await this.getProjectById(updateQuery.proid);
-        if (temp !== null) {
-          if (/^d/.test(temp)) {
-            tempArr = await MONGOLOCALC.db("miro81").collection("designerHistory").find({ desid: temp.desid }).toArray();
-            if (tempArr.length > 0) {
-              projectManager = tempArr[0].manager;
+        if (option.secondMongo !== undefined && option.secondMongo !== null) {
+          temp = await this.getProjectById(updateQuery.proid, { selfMongo: option.secondMongo });
+          if (temp !== null) {
+            if (/^d/.test(temp)) {
+              tempArr = await MONGOLOCALC.db("miro81").collection("designerHistory").find({ desid: temp.desid }).toArray();
+              if (tempArr.length > 0) {
+                projectManager = tempArr[0].manager;
+              }
             }
           }
         }
