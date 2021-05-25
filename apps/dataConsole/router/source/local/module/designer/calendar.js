@@ -2368,8 +2368,8 @@ DesignerJs.prototype.calendarView = async function () {
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
 
-    // this.calendarData.mergeProjects(projects);
-    // await this.calendarData.updateThisState();
+    this.calendarData.mergeProjects(projects);
+    await this.calendarData.updateThisState();
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
