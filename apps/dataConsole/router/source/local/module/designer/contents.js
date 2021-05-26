@@ -3222,7 +3222,7 @@ DesignerJs.prototype.contentsView = async function () {
         return obj;
       }
     }
-    const { createNodes, colorChip, ajaxJson, sleep, returnGet, equalJson } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, returnGet, equalJson } = GeneralJs;
     let loading;
     let projects;
     let designers, desidArr_raw, desidArr;

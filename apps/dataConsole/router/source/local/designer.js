@@ -3891,6 +3891,17 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
+    } else if (getObj.mode === "calculation") {
+
+      this.grayBarWidth = 600;
+      this.mother.grayBarWidth = 600;
+      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.calculationView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+
     } else if (getObj.mode === "checklist") {
 
       this.backGrayBar();
