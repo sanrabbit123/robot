@@ -2721,7 +2721,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
               }
               thisCase[column] = document.getElementById(project.proid + "_" + column);
             }
-            const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: 5 };
+            const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
             let cancelBox, parent;
             [ cancelBox ] = createNodes([
               {
