@@ -56,7 +56,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let sumHeight;
   let nodeArr;
   let projectHeight;
-  let whiteBlock;
+  let whiteBlock_mother, whiteBlock;
   let textTop, textLeft;
   let firstWidth;
   let boxTop;
@@ -66,6 +66,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let amount;
   let firstAmount, leftAmount;
   let redPointBoo, circleWidth;
+  let titleTextTop;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -77,8 +78,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   sumSize = 17;
   sumHeight = 46;
   projectHeight = 40;
-  firstWidth = 40;
+  firstWidth = 34;
   boxTop = 9;
+  titleTextTop = isMac() ? -1 : 1;
   textTop = isMac() ? 0 : 2;
   textLeft = 12;
   lineTop = 9;
@@ -140,7 +142,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         position: "absolute",
         fontSize: String(titleSize) + ea,
         fontWeight: String(600),
-        top: String(0) + ea,
+        top: String(titleTextTop) + ea,
         left: String(3) + ea,
       }
     },
@@ -171,7 +173,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   firstAmount = 0;
   leftAmount = 0;
   for (let i = 0; i < designer.projects.length; i++) {
-    whiteBlock = createNode({
+    whiteBlock_mother = createNode({
       mother: nodeArr[2],
       id: designer.projects[i].proid,
       attribute: [
@@ -199,8 +201,32 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     });
 
     createNode({
+      mother: whiteBlock_mother,
+      text: designer.projects[i].name,
+      style: {
+        position: "absolute",
+        top: String(boxTop + textTop) + ea,
+        left: String(textLeft) + ea,
+        width: String(50) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+      }
+    });
+
+    whiteBlock = createNode({
+      mother: whiteBlock_mother,
+      style: {
+        position: "relative",
+        width: withOut(100, 50, ea),
+        height: String(projectHeight) + ea,
+        marginLeft: String(50) + ea,
+      }
+    });
+
+    createNode({
       mother: whiteBlock,
-      text: "선금 : ",
+      text: "선금",
       style: {
         position: "absolute",
         top: String(boxTop + textTop) + ea,
@@ -271,7 +297,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
 
     createNode({
       mother: whiteBlock,
-      text: "잔금 : ",
+      text: "잔금",
       style: {
         position: "absolute",
         top: String(boxTop + textTop) + ea,
@@ -361,7 +387,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   textLeft = textLeft + 3;
   createNode({
     mother: sumArea,
-    text: "선금 : ",
+    text: "선금",
     style: {
       position: "absolute",
       top: String(boxTop + textTop) + ea,
@@ -412,7 +438,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   ]);
   createNode({
     mother: sumArea,
-    text: "잔금 : ",
+    text: "잔금",
     style: {
       position: "absolute",
       top: String(boxTop + textTop) + ea,
@@ -500,7 +526,7 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
   margin = 30;
   length = this.designers.length;
   target = window.innerWidth - (margin * 2);
-  minWidth = 520;
+  minWidth = 540;
   boxMargin = 10;
   min = Math.floor(target / minWidth);
   width = (target - (boxMargin * (min - 1))) / min;
