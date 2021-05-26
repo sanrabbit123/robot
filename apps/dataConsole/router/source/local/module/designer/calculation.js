@@ -44,13 +44,26 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   }
   const instance = this;
   const { ea, belowHeight } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, isMac, autoComma } = GeneralJs;
   const { designer: name, desid } = designer;
+  const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+  const dateToString = (date) => { return date.valueOf() > emptyDateValue ? `${date.getMonth() + 1}/${date.getDate()}` : `0/0`; }
   let motherWidth;
-  let titleArea, contentsArea;
+  let titleArea, listArea, sumArea;
   let titleWidth, titleHeight;
   let outerMargin, innerMargin;
   let titleSize, size;
+  let sumHeight;
+  let nodeArr;
+  let projectHeight;
+  let whiteBlock;
+  let textTop, textLeft;
+  let firstWidth;
+  let boxTop;
+  let lineTop, lineMargin;
+  let textBox;
+  let condition;
+  let amount;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -59,8 +72,16 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   innerMargin = 10;
   titleSize = 21;
   size = 15;
+  sumHeight = 54;
+  projectHeight = 40;
+  firstWidth = 40;
+  boxTop = 9;
+  textTop = isMac() ? 0 : 2;
+  textLeft = 12;
+  lineTop = 9;
+  lineMargin = 6;
 
-  [ titleArea, contentsArea ] = createNodes([
+  [ titleArea, listArea, sumArea ] = createNodes([
     {
       mother,
       style: {
@@ -75,17 +96,31 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       mother,
       style: {
         position: "relative",
-        width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin, ea),
-        height: withOut(100, outerMargin * 2, ea),
+        width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin + innerMargin, ea),
+        height: withOut(100, (outerMargin * 2) + sumHeight + innerMargin + innerMargin, ea),
         marginLeft: String(outerMargin + titleWidth + innerMargin) + ea,
         marginTop: String(outerMargin) + ea,
+        paddingTop: String(innerMargin) + ea,
+        paddingLeft: String(innerMargin) + ea,
         background: colorChip.gray3,
         borderRadius: String(5) + "px",
       }
-    }
+    },
+    {
+      mother,
+      style: {
+        position: "relative",
+        width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin, ea),
+        height: String(sumHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        marginLeft: String(outerMargin + titleWidth + innerMargin) + ea,
+        marginTop: String(innerMargin) + ea,
+      }
+    },
   ]);
 
-  createNodes([
+  nodeArr = createNodes([
     {
       mother: titleArea,
       text: name,
@@ -96,9 +131,202 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         top: String(0) + ea,
         left: String(3) + ea,
       }
+    },
+    {
+      mother: listArea,
+      style: {
+        position: "relative",
+        width: withOut(100, innerMargin, ea),
+        height: withOut(100, innerMargin, ea),
+        background: colorChip.gray4,
+        borderRadius: String(5) + "px",
+        overflow: "hidden",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        width: withOut(100, 0, ea),
+        height: withOut(100, innerMargin * (1 + 3), ea),
+        paddingTop: String(innerMargin) + ea,
+        paddingBottom: String(innerMargin * 3) + ea,
+        borderRadius: String(5) + "px",
+        overflow: "scroll",
+      }
     }
   ]);
 
+  for (let i = 0; i < designer.projects.length; i++) {
+    whiteBlock = createNode({
+      mother: nodeArr[2],
+      style: {
+        position: "relative",
+        width: withOut(100, innerMargin * 2, ea),
+        height: String(projectHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        marginBottom: String(innerMargin / 2) + ea,
+        marginLeft: String(innerMargin) + ea,
+      }
+    });
+
+    createNode({
+      mother: whiteBlock,
+      text: "선금 : ",
+      style: {
+        position: "absolute",
+        top: String(boxTop + textTop) + ea,
+        left: String(textLeft) + ea,
+        width: String(firstWidth) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(200),
+        color: colorChip.shadow,
+      }
+    });
+    textBox = createNode({
+      mother: whiteBlock,
+      style: {
+        position: "absolute",
+        top: String(boxTop) + ea,
+        left: String(textLeft + firstWidth) + ea,
+        width: withOut(50, textLeft + firstWidth + (textLeft * 1), ea),
+        height: withOut(100, boxTop, ea),
+        overflow: "hidden",
+      }
+    });
+
+    amount = designer.projects[i].process.calculation.payments.first.amount;
+    condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
+    createNodes([
+      {
+        mother: textBox,
+        text: autoComma(amount) + "원",
+        style: {
+          position: "absolute",
+          top: String(textTop) + ea,
+          left: String(0),
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          paddingRight: String(lineMargin) + ea,
+          background: colorChip.white,
+          zIndex: String(1),
+          color: (condition ? colorChip.black : colorChip.red),
+        }
+      },
+      {
+        mother: textBox,
+        style: {
+          position: "absolute",
+          top: String(lineTop) + ea,
+          left: String(0),
+          width: String(100) + '%',
+          borderBottom: "1px solid " + (condition ? colorChip.gray3 : colorChip.red),
+        }
+      },
+      {
+        mother: textBox,
+        text: dateToString(designer.projects[i].process.calculation.payments.first.date),
+        style: {
+          position: "absolute",
+          top: String(textTop) + ea,
+          right: String(0),
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          paddingLeft: String(lineMargin) + ea,
+          background: colorChip.white,
+          color: (condition ? colorChip.green : colorChip.red),
+        }
+      }
+    ]);
+
+    createNode({
+      mother: whiteBlock,
+      text: "잔금 : ",
+      style: {
+        position: "absolute",
+        top: String(boxTop + textTop) + ea,
+        left: withOut(50, 0, ea),
+        width: String(firstWidth) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(200),
+        color: colorChip.shadow,
+      }
+    });
+    textBox = createNode({
+      mother: whiteBlock,
+      style: {
+        position: "absolute",
+        top: String(boxTop) + ea,
+        right: String(textLeft) + ea,
+        width: withOut(50, textLeft + firstWidth, ea),
+        height: withOut(100, boxTop, ea),
+        overflow: "hidden",
+      }
+    });
+
+    amount = designer.projects[i].process.calculation.payments.remain.amount;
+    if (designer.projects[i].contents.photo.boo) {
+      if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+        if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
+          condition = true;
+        } else {
+          condition = false;
+        }
+      } else {
+        condition = true;
+      }
+    } else {
+      if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+        condition = false;
+      } else {
+        condition = true;
+      }
+    }
+
+    createNodes([
+      {
+        mother: textBox,
+        text: autoComma(amount) + "원",
+        style: {
+          position: "absolute",
+          top: String(textTop) + ea,
+          left: String(0),
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          paddingRight: String(lineMargin) + ea,
+          background: colorChip.white,
+          zIndex: String(1),
+          color: (condition ? colorChip.black : colorChip.red),
+        }
+      },
+      {
+        mother: textBox,
+        style: {
+          position: "absolute",
+          top: String(lineTop) + ea,
+          left: String(0),
+          width: String(100) + '%',
+          borderBottom: "1px solid " + (condition ? colorChip.gray3 : colorChip.red),
+        }
+      },
+      {
+        mother: textBox,
+        text: dateToString(designer.projects[i].process.calculation.payments.remain.date),
+        style: {
+          position: "absolute",
+          top: String(textTop) + ea,
+          right: String(0),
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          paddingLeft: String(lineMargin) + ea,
+          background: colorChip.white,
+          color: (condition ? colorChip.green : colorChip.red),
+        }
+      }
+    ]);
+
+  }
 
 }
 
@@ -124,7 +352,7 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
   boxMargin = 10;
   min = Math.floor(target / minWidth);
   width = (target - (boxMargin * (min - 1))) / min;
-  height = 400;
+  height = 300;
 
   cleanChildren(scrollTong);
 
@@ -173,7 +401,8 @@ DesignerJs.prototype.calculationView = async function () {
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진홀]" } }
+          { "process.status": { $regex: "^[대진홀]" } },
+          { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
         ]
       }
     }, "/getProjects", { equal: true });
@@ -212,6 +441,7 @@ DesignerJs.prototype.calculationView = async function () {
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
     this.designers.setClients(clients);
+    this.designers = this.designers.returnDoingDesigners();
 
     this.calculationBase();
     window.addEventListener("resize", (e) => { window.location.reload(); });

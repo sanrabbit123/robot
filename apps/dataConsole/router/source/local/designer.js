@@ -146,6 +146,21 @@ class Designers extends Array {
     }
     return designer.projects;
   }
+  returnDoingDesigners() {
+    let arr = [];
+    if (this.length === 0) {
+      throw new Error("no designer error");
+    }
+    if (this[0].projects === undefined) {
+      throw new Error("set projects first");
+    }
+    for (let designer of this) {
+      if (designer.projects.length > 0) {
+        arr.push(designer);
+      }
+    }
+    return new Designers(arr);
+  }
 }
 
 const DesignerJs = function () {

@@ -302,6 +302,16 @@ Robot.prototype.ultimateReflection = async function () {
   }
 }
 
+Robot.prototype.mysqlReflection = async function () {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    await reflection.mysqlReflection();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.localReflection = async function (arg = null) {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -667,6 +677,13 @@ const MENU = {
   reflect: async function () {
     try {
       await robot.ultimateReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  mysqlReflect: async function () {
+    try {
+      await robot.mysqlReflection();
     } catch (e) {
       console.log(e);
     }

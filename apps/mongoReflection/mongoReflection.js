@@ -249,7 +249,6 @@ MongoReflection.prototype.mongoReflection = async function (to = "local") {
   }
 }
 
-
 MongoReflection.prototype.mysqlReflection = async function (to = "local") {
   const instance = this;
   const { mysqlQuery } = this.mother;

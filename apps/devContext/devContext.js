@@ -332,7 +332,7 @@ DevContext.prototype.launching = async function () {
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // card setting
-    // await this.cardSetting("010-3751-9786");
+    // await this.cardSetting("010-8933-5252");
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
