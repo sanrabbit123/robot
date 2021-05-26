@@ -40,8 +40,8 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
 
     key = JSON.parse(await fileSystem(`readString`, [ `${this.app}/jsondata/mongoKey.json` ]));
 
-    key.mongo.hash = await this.mother.cryptoString(key.mongo.password, this.mother.mongohomeinfo);
-    key.mysql.hash = await this.mother.cryptoString(key.mongo.password, JSON.stringify(this.mother.mysqlofficeinfo));
+    key.mongo.hash = await this.mother.cryptoString(key.mongo.password, this.mother.mongopythoninfo);
+    key.mysql.hash = await this.mother.cryptoString(key.mongo.password, JSON.stringify(this.mother.mysqlpythoninfo));
 
     command = '';
 
@@ -49,10 +49,11 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
       if (homeDir.includes(this.applicationName)) {
         shell.exec(`rm -rf ${shellLink(home)}/${this.applicationName};`);
       }
-      command += `cd ${shellLink(home)};`;
-      command += `git clone git@gitlab.com:uragen/${this.applicationName}.git;`;
-      command += `cd ${shellLink(home)}/${this.applicationName};`;
-      command += `git pull;`;
+      command += `mkdir ${shellLink(home)}/${this.applicationName};`;
+      // command += `cd ${shellLink(home)};`;
+      // command += `git clone git@gitlab.com:uragen/${this.applicationName}.git;`;
+      // command += `cd ${shellLink(home)}/${this.applicationName};`;
+      // command += `git pull;`;
     } else {
       if (!homeDir.includes(this.applicationName)) {
         throw new Error("There is no " + this.applicationName);
@@ -66,13 +67,18 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
     for (let g of googleList) {
       command += `cp ${shellLink(process.cwd())}/apps/googleAPIs/${g} ${shellLink(home)}/${this.applicationName}/${this.nodeAppName}/googleAPIs;`;
     }
+    // command += `cd ${shellLink(home)}/${this.applicationName};`;
+    // command += `git add -A;`;
+    // command += `git commit -m "CatfishAutoUpdate_${todayMaker("total")}";`;
+    // command += `git push;`;
+
     command += `cd ${shellLink(home)}/${this.applicationName};`;
-    command += `git add -A;`;
-    command += `git commit -m "CatfishAutoUpdate_${todayMaker("total")}";`;
-    command += `git push;`;
+    command += `npm install;`;
 
     shell.exec(command);
     await fileSystem(`write`, [ `${home}/${this.applicationName}/jsondata/mongoKey.json`, JSON.stringify(key, null, 2) ]);
+
+    shell.exec(`open ${shellLink(home)}/${this.applicationName};`);
 
   } catch (e) {
     console.log(e);

@@ -22,12 +22,12 @@ const Mother = function () {
     port: infoObj.frontinfo.port,
     database: infoObj.frontinfo.database
   };
-  this.mysqlofficeinfo = {
-    host: infoObj.officeinfo.mysql.outer,
-    user: infoObj.officeinfo.mysql.user,
-    password: infoObj.officeinfo.mysql.password,
-    port: infoObj.officeinfo.mysql.port,
-    database: infoObj.officeinfo.mysql.database
+  this.mysqlpythoninfo = {
+    host: infoObj.pythoninfo.host,
+    user: infoObj.frontinfo.user,
+    password: infoObj.frontinfo.password,
+    port: infoObj.frontinfo.port,
+    database: infoObj.frontinfo.database
   };
   this.mysql = require("mysql2");
 
@@ -1682,7 +1682,7 @@ Mother.prototype.decryptoHash = function (password, hash) {
   });
 }
 
-Mother.prototype.mysqlQuery = function (query, option = { local: true, front: false, office: false, home: false }) {
+Mother.prototype.mysqlQuery = function (query, option = { local: false, front: false, python: true }) {
   const mysql = require('mysql2');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const mysqlStandard = ADDRESS["frontinfo"];
@@ -1691,12 +1691,10 @@ Mother.prototype.mysqlQuery = function (query, option = { local: true, front: fa
     host = "localhost";
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
-  } else if (option.office === true) {
-    host = ADDRESS["officeinfo"]["ghost"]["ddns"];
-  } else if (option.home === true) {
-    host = ADDRESS["homeinfo"]["ghost"]["ddns"];
+  } else if (option.python === true) {
+    host = ADDRESS["pythoninfo"]["host"];
   } else {
-    host = "localhost";
+    host = ADDRESS["pythoninfo"]["host"];
   }
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });

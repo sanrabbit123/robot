@@ -32,10 +32,9 @@ BasicTools.query = function (q) {
   const result = "mysqlQueryResult";
   fs.writeFileSync(normalize(jsonDirRoot + sep + order + ".sql"), q);
   shell.exec(`node ${shellLink(appDirRoot + sep + "fromMysql")} file_${order}`, { silent: true });
-  return JSON.parse(fs.readFileSync(normalize(jsonDirRoot + sep + result + ".json")));
+  const json = JSON.parse(fs.readFileSync(normalize(jsonDirRoot + sep + result + ".json")));
+  console.log(json);
+  return json;
 }
-
-
-
 
 module.exports = BasicTools;

@@ -52,7 +52,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let titleArea, listArea, sumArea;
   let titleWidth, titleHeight;
   let outerMargin, innerMargin;
-  let titleSize, size;
+  let titleSize, size, sumSize;
   let sumHeight;
   let nodeArr;
   let projectHeight;
@@ -64,6 +64,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let textBox;
   let condition;
   let amount;
+  let firstAmount, leftAmount;
+  let redPointBoo, circleWidth;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -72,7 +74,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   innerMargin = 10;
   titleSize = 21;
   size = 15;
-  sumHeight = 54;
+  sumSize = 17;
+  sumHeight = 46;
   projectHeight = 40;
   firstWidth = 40;
   boxTop = 9;
@@ -80,28 +83,37 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   textLeft = 12;
   lineTop = 9;
   lineMargin = 6;
+  circleWidth = 8;
 
   [ titleArea, listArea, sumArea ] = createNodes([
     {
       mother,
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=general&desid=" + designer.desid);
+          }
+        }
+      ],
       style: {
         position: "absolute",
         width: String(titleWidth) + ea,
         height: String(titleHeight) + ea,
         top: String(outerMargin) + ea,
         left: String(outerMargin) + ea,
+        cursor: "pointer",
       }
     },
     {
       mother,
       style: {
         position: "relative",
-        width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin + innerMargin, ea),
+        width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin, ea),
         height: withOut(100, (outerMargin * 2) + sumHeight + innerMargin + innerMargin, ea),
         marginLeft: String(outerMargin + titleWidth + innerMargin) + ea,
         marginTop: String(outerMargin) + ea,
         paddingTop: String(innerMargin) + ea,
-        paddingLeft: String(innerMargin) + ea,
         background: colorChip.gray3,
         borderRadius: String(5) + "px",
       }
@@ -136,9 +148,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       mother: listArea,
       style: {
         position: "relative",
-        width: withOut(100, innerMargin, ea),
+        width: withOut(100, 0, ea),
         height: withOut(100, innerMargin, ea),
-        background: colorChip.gray4,
+        background: colorChip.gray3,
         borderRadius: String(5) + "px",
         overflow: "hidden",
       }
@@ -148,8 +160,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       style: {
         position: "relative",
         width: withOut(100, 0, ea),
-        height: withOut(100, innerMargin * (1 + 3), ea),
-        paddingTop: String(innerMargin) + ea,
+        height: withOut(100, innerMargin * (0 + 3), ea),
         paddingBottom: String(innerMargin * 3) + ea,
         borderRadius: String(5) + "px",
         overflow: "scroll",
@@ -157,9 +168,24 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     }
   ]);
 
+  firstAmount = 0;
+  leftAmount = 0;
   for (let i = 0; i < designer.projects.length; i++) {
     whiteBlock = createNode({
       mother: nodeArr[2],
+      id: designer.projects[i].proid,
+      attribute: [
+        { proid: designer.projects[i].proid }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            const proid = this.getAttribute("proid");
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
+          }
+        }
+      ],
       style: {
         position: "relative",
         width: withOut(100, innerMargin * 2, ea),
@@ -168,6 +194,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         borderRadius: String(5) + "px",
         marginBottom: String(innerMargin / 2) + ea,
         marginLeft: String(innerMargin) + ea,
+        cursor: "pointer",
       }
     });
 
@@ -195,9 +222,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         overflow: "hidden",
       }
     });
-
     amount = designer.projects[i].process.calculation.payments.first.amount;
     condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
+    if (!condition) {
+      firstAmount += amount;
+    }
     createNodes([
       {
         mother: textBox,
@@ -264,7 +293,6 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         overflow: "hidden",
       }
     });
-
     amount = designer.projects[i].process.calculation.payments.remain.amount;
     if (designer.projects[i].contents.photo.boo) {
       if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
@@ -283,7 +311,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         condition = true;
       }
     }
-
+    if (!condition) {
+      leftAmount += amount;
+    }
     createNodes([
       {
         mother: textBox,
@@ -321,12 +351,134 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
           fontWeight: String(500),
           paddingLeft: String(lineMargin) + ea,
           background: colorChip.white,
-          color: (condition ? colorChip.green : colorChip.red),
+          color: (condition ? ((designer.projects[i].process.calculation.payments.remain.date.valueOf() > emptyDateValue) ? colorChip.green : colorChip.purple) : colorChip.red),
         }
       }
     ]);
 
   }
+
+  textLeft = textLeft + 3;
+  createNode({
+    mother: sumArea,
+    text: "선금 : ",
+    style: {
+      position: "absolute",
+      top: String(boxTop + textTop) + ea,
+      left: String(textLeft) + ea,
+      width: String(firstWidth) + ea,
+      fontSize: String(sumSize) + ea,
+      fontWeight: String(200),
+      color: colorChip.shadow,
+    }
+  });
+  textBox = createNode({
+    mother: sumArea,
+    style: {
+      position: "absolute",
+      top: String(boxTop) + ea,
+      left: String(textLeft + firstWidth) + ea,
+      width: withOut(50, textLeft + firstWidth + (textLeft * 1), ea),
+      height: withOut(100, boxTop, ea),
+      overflow: "hidden",
+    }
+  });
+  createNodes([
+    {
+      mother: textBox,
+      text: autoComma(firstAmount) + "원",
+      style: {
+        position: "absolute",
+        top: String(textTop) + ea,
+        right: String(0),
+        fontSize: String(sumSize) + ea,
+        fontWeight: String(500),
+        paddingLeft: String(lineMargin + 3) + ea,
+        background: colorChip.white,
+        zIndex: String(1),
+        color: (firstAmount === 0 ? colorChip.black : colorChip.red),
+      }
+    },
+    {
+      mother: textBox,
+      style: {
+        position: "absolute",
+        top: String(lineTop + 3) + ea,
+        left: String(6) + ea,
+        width: String(100) + '%',
+        borderBottom: "1px solid " + colorChip.gray3,
+      }
+    }
+  ]);
+  createNode({
+    mother: sumArea,
+    text: "잔금 : ",
+    style: {
+      position: "absolute",
+      top: String(boxTop + textTop) + ea,
+      left: withOut(50, 0, ea),
+      width: String(firstWidth) + ea,
+      fontSize: String(sumSize) + ea,
+      fontWeight: String(200),
+      color: colorChip.shadow,
+    }
+  });
+  textBox = createNode({
+    mother: sumArea,
+    style: {
+      position: "absolute",
+      top: String(boxTop) + ea,
+      right: String(textLeft + 1) + ea,
+      width: withOut(50, textLeft + firstWidth, ea),
+      height: withOut(100, boxTop, ea),
+      overflow: "hidden",
+    }
+  });
+  createNodes([
+    {
+      mother: textBox,
+      text: autoComma(leftAmount) + "원",
+      style: {
+        position: "absolute",
+        top: String(textTop) + ea,
+        right: String(0),
+        fontSize: String(sumSize) + ea,
+        fontWeight: String(500),
+        paddingLeft: String(lineMargin + 3) + ea,
+        background: colorChip.white,
+        zIndex: String(1),
+        color: (condition ? colorChip.black : colorChip.red),
+      }
+    },
+    {
+      mother: textBox,
+      style: {
+        position: "absolute",
+        top: String(lineTop + 3) + ea,
+        left: String(6) + ea,
+        width: String(100) + '%',
+        borderBottom: "1px solid " + (condition ? colorChip.gray3 : colorChip.red),
+      }
+    },
+  ]);
+
+  if (firstAmount === 0 && leftAmount === 0) {
+    redPointBoo = false;
+  } else {
+    redPointBoo = true;
+  }
+  createNode({
+    mother,
+    style: {
+      position: "absolute",
+      bottom: String(outerMargin + 1) + ea,
+      left: String(outerMargin + 3) + ea,
+      width: String(circleWidth) + ea,
+      height: String(circleWidth) + ea,
+      borderRadius: String(circleWidth) + "px",
+      background: (redPointBoo ? colorChip.red : colorChip.green),
+    }
+  });
 
 }
 
@@ -352,13 +504,18 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
   boxMargin = 10;
   min = Math.floor(target / minWidth);
   width = (target - (boxMargin * (min - 1))) / min;
-  height = 300;
+  height = 282;
 
   cleanChildren(scrollTong);
 
-  if (search === null) {
+  if (search === null || search === undefined) {
     designers = this.designers;
     length = designers.length;
+  } else if (typeof search === "string") {
+    designers = this.designers.search(search);
+    length = designers.length;
+  } else {
+    throw new Error("invaild search");
   }
 
   this.designerDoms = [];
@@ -371,7 +528,7 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
         position: "relative",
         width: String(width) + ea,
         height: String(height) + ea,
-        background: colorChip.gray2,
+        background: colorChip.gray1,
         borderRadius: String(5) + "px",
         marginRight: String(((i + 1) % min) === 0 ? 0 : boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
@@ -383,10 +540,58 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
 
 }
 
+DesignerJs.prototype.calculationSearchEvent = function () {
+  const instance = this;
+  const { ea } = this;
+  const input = this.searchInput;
+  let width;
+
+  width = 800;
+
+  input.parentNode.style.width = String(width) + ea;
+  input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      instance.calculationBlocks(this.value.trim());
+    }
+  });
+}
+
+DesignerJs.prototype.calculationControlPannel = function () {
+  const instance = this;
+  const { ea, totalMother, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  let width, height;
+  let right, bottom;
+  let base;
+
+  width = 210;
+  height = 220;
+  right = 22;
+  bottom = 35;
+
+  base = createNode({
+    mother: totalMother,
+    style: {
+      position: "fixed",
+      width: String(width) + ea,
+      height: String(height) + ea,
+      background: colorChip.gradientGreen,
+      right: String(right) + ea,
+      bottom: String(belowHeight + bottom) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      animation: "fadeup 0.3s ease forwards",
+    }
+  });
+
+
+}
+
 DesignerJs.prototype.calculationView = async function () {
   const instance = this;
   try {
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson } = GeneralJs;
+    const { colorChip, ajaxJson, sleep } = GeneralJs;
     let loading;
     let projects;
     let desidArr_raw, desidArr;
@@ -401,7 +606,7 @@ DesignerJs.prototype.calculationView = async function () {
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진홀]" } },
+          { "process.status": { $regex: "^[진홀]" } },
           { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
         ]
       }
@@ -444,6 +649,9 @@ DesignerJs.prototype.calculationView = async function () {
     this.designers = this.designers.returnDoingDesigners();
 
     this.calculationBase();
+    this.calculationSearchEvent();
+    await sleep(300);
+    this.calculationControlPannel();
     window.addEventListener("resize", (e) => { window.location.reload(); });
 
     loading.parentNode.removeChild(loading);
