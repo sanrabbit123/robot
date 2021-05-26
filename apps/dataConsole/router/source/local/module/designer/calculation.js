@@ -590,11 +590,27 @@ DesignerJs.prototype.calculationControlPannel = function () {
   let width, height;
   let right, bottom;
   let base;
+  let size;
+  let textTop, textLeft, buttonTop, buttonLeft;
+  let buttonWidth, buttonHeight;
+  let lineHeight;
+  let circleMargin;
 
-  width = 210;
-  height = 220;
+  width = 125;
+  height = 83;
   right = 22;
   bottom = 35;
+
+  size = 15;
+  textTop = 15;
+  textLeft = 20;
+  buttonTop = 16;
+  buttonLeft = 66;
+  buttonWidth = 39;
+  buttonHeight = 20;
+
+  lineHeight = 28;
+  circleMargin = 3;
 
   base = createNode({
     mother: totalMother,
@@ -610,6 +626,123 @@ DesignerJs.prototype.calculationControlPannel = function () {
       animation: "fadeup 0.3s ease forwards",
     }
   });
+
+  createNodes([
+    {
+      mother: base,
+      text: "미정산",
+      style: {
+        position: "absolute",
+        top: String(textTop) + ea,
+        left: String(textLeft) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(500),
+        color: colorChip.white,
+      }
+    },
+    {
+      mother: base,
+      attribute: [
+        { toggle: "off" }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            const toggle = this.getAttribute("toggle");
+            const circle = this.firstChild;
+            if (toggle === "off") {
+              this.setAttribute("toggle", "on");
+              circle.style.transform = "translateX(19px)";
+            } else {
+              this.setAttribute("toggle", "off");
+              circle.style.transform = "translateX(0px)";
+            }
+          }
+        }
+      ],
+      style: {
+        position: "absolute",
+        top: String(buttonTop) + ea,
+        left: String(buttonLeft) + ea,
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(buttonHeight) + ea,
+        background: colorChip.white,
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(circleMargin) + ea,
+        left: String(circleMargin) + ea,
+        width: String(buttonHeight - (circleMargin * 2)) + ea,
+        height: String(buttonHeight - (circleMargin * 2)) + ea,
+        borderRadius: String(buttonHeight - (circleMargin * 2)) + ea,
+        background: colorChip.gradientGreen,
+        transform: "translateX(0px)"
+      }
+    },
+    {
+      mother: base,
+      text: "합계만",
+      style: {
+        position: "absolute",
+        top: String(textTop + lineHeight) + ea,
+        left: String(textLeft) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(500),
+        color: colorChip.white,
+      }
+    },
+    {
+      mother: base,
+      attribute: [
+        { toggle: "off" }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            const toggle = this.getAttribute("toggle");
+            const circle = this.firstChild;
+            if (toggle === "off") {
+              this.setAttribute("toggle", "on");
+              circle.style.transform = "translateX(19px)";
+            } else {
+              this.setAttribute("toggle", "off");
+              circle.style.transform = "translateX(0px)";
+            }
+          }
+        }
+      ],
+      style: {
+        position: "absolute",
+        top: String(buttonTop + lineHeight) + ea,
+        left: String(buttonLeft) + ea,
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(buttonHeight) + ea,
+        background: colorChip.white,
+        cursor: "pointer",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(circleMargin) + ea,
+        left: String(circleMargin) + ea,
+        width: String(buttonHeight - (circleMargin * 2)) + ea,
+        height: String(buttonHeight - (circleMargin * 2)) + ea,
+        borderRadius: String(buttonHeight - (circleMargin * 2)) + ea,
+        background: colorChip.gradientGreen,
+        transform: "translateX(0px)"
+      }
+    },
+  ]);
 
 
 }

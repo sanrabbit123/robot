@@ -89,7 +89,11 @@ CronGhost.prototype.endPython = function (listNum) {
       throw new Error("invaild time");
     }
     const { hour, minute, second } = time;
-    return `scheduler.add_job(${name}, 'cron', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
+    if (time.day_of_week === undefined) {
+      return `scheduler.add_job(${name}, 'cron', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
+    } else {
+      return `scheduler.add_job(${name}, 'cron', day_of_week='${String(time.day_of_week)}', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
+    }
   }
 
   script = `scheduler = AsyncIOScheduler()`;
