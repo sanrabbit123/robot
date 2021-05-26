@@ -143,6 +143,8 @@ if (/office/gi.test(process.argv[2])) {
   app.cronLaunching(0);
 } else if (/static/gi.test(process.argv[2])) {
   app.cronLaunching(1);
+} else if (/python/gi.test(process.argv[2])) {
+  app.cronLaunching(3);
 } else if (/request/gi.test(process.argv[2])) {
   app.requestWhisk(Number(process.argv[3]));
 }
