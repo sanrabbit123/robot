@@ -5,17 +5,19 @@ DesignerJs.prototype.calculationBase = function () {
   let entireTong;
   let scrollTong;
   let margin;
+  let boxMargin;
 
   margin = 30;
+  boxMargin = 10;
 
   entireTong = createNode({
     mother: document.getElementById("totalcontents"),
     style: {
       position: "relative",
-      width: withOut(100, margin * 2, ea),
+      width: withOut(100, margin + boxMargin, ea),
       height: withOut(100, belowHeight, ea),
       paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
+      paddingRight: String(boxMargin) + ea,
       overflow: "hidden",
     }
   });
@@ -67,6 +69,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let firstAmount, leftAmount;
   let redPointBoo, circleWidth;
   let titleTextTop;
+  let listHeight;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -76,6 +79,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   titleSize = 21;
   size = 15;
   sumSize = 17;
+  listHeight = 178;
   sumHeight = 46;
   projectHeight = 40;
   firstWidth = 34;
@@ -109,10 +113,12 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     },
     {
       mother,
+      class: [ "list" ],
       style: {
+        display: "block",
         position: "relative",
         width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin, ea),
-        height: withOut(100, (outerMargin * 2) + sumHeight + innerMargin + innerMargin, ea),
+        height: String(listHeight) + ea,
         marginLeft: String(outerMargin + titleWidth + innerMargin) + ea,
         marginTop: String(outerMargin) + ea,
         paddingTop: String(innerMargin) + ea,
@@ -122,6 +128,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     },
     {
       mother,
+      attribute: [
+        { outer: String(outerMargin) + ea },
+        { inner: String(innerMargin) + ea },
+      ],
+      class: [ "sum" ],
       style: {
         position: "relative",
         width: withOut(100, (outerMargin * 2) + titleWidth + innerMargin, ea),
@@ -130,6 +141,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         borderRadius: String(5) + "px",
         marginLeft: String(outerMargin + titleWidth + innerMargin) + ea,
         marginTop: String(innerMargin) + ea,
+        marginBottom: String(outerMargin) + ea,
       }
     },
   ]);
@@ -138,6 +150,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     {
       mother: titleArea,
       text: name,
+      class: [ "title" ],
+      attribute: [
+        { big: String(titleTextTop) + ea },
+        { small: String(titleTextTop + 7) + ea },
+      ],
       style: {
         position: "absolute",
         fontSize: String(titleSize) + ea,
@@ -473,7 +490,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         paddingLeft: String(lineMargin + 3) + ea,
         background: colorChip.white,
         zIndex: String(1),
-        color: (condition ? colorChip.black : colorChip.red),
+        color: (leftAmount === 0 ? colorChip.black : colorChip.red),
       }
     },
     {
@@ -492,12 +509,15 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     redPointBoo = false;
   } else {
     redPointBoo = true;
+    mother.setAttribute("color", "red");
   }
   createNode({
     mother,
+    class: [ "circle" ],
     style: {
+      display: "block",
       position: "absolute",
-      bottom: String(outerMargin + 1) + ea,
+      top: String(outerMargin + listHeight + innerMargin + sumHeight) + ea,
       left: String(outerMargin + 3) + ea,
       width: String(circleWidth) + ea,
       height: String(circleWidth) + ea,
@@ -514,7 +534,7 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
   const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
   const scrollTong = this.scrollTong;
   let length;
-  let width, height;
+  let width;
   let boxMargin;
   let minWidth;
   let min;
@@ -530,7 +550,6 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
   boxMargin = 10;
   min = Math.floor(target / minWidth);
   width = (target - (boxMargin * (min - 1))) / min;
-  height = 282;
 
   cleanChildren(scrollTong);
 
@@ -549,14 +568,16 @@ DesignerJs.prototype.calculationBlocks = function (search = null) {
     tempDom = createNode({
       mother: scrollTong,
       id: designers[i].desid,
+      attribute: [
+        { color: "green" }
+      ],
       style: {
         display: "inline-block",
         position: "relative",
         width: String(width) + ea,
-        height: String(height) + ea,
         background: colorChip.gray1,
         borderRadius: String(5) + "px",
-        marginRight: String(((i + 1) % min) === 0 ? 0 : boxMargin) + ea,
+        marginRight: String(boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
       }
     });
@@ -651,12 +672,23 @@ DesignerJs.prototype.calculationControlPannel = function () {
           event: function (e) {
             const toggle = this.getAttribute("toggle");
             const circle = this.firstChild;
+            const doms = instance.designerDoms;
             if (toggle === "off") {
               this.setAttribute("toggle", "on");
               circle.style.transform = "translateX(19px)";
+              for (let dom of doms) {
+                if (dom.getAttribute("color") === "red") {
+                  dom.style.display = "inline-block";
+                } else {
+                  dom.style.display = "none";
+                }
+              }
             } else {
               this.setAttribute("toggle", "off");
               circle.style.transform = "translateX(0px)";
+              for (let dom of doms) {
+                dom.style.display = "inline-block";
+              }
             }
           }
         }
@@ -708,12 +740,25 @@ DesignerJs.prototype.calculationControlPannel = function () {
           event: function (e) {
             const toggle = this.getAttribute("toggle");
             const circle = this.firstChild;
+            const doms = instance.designerDoms;
             if (toggle === "off") {
               this.setAttribute("toggle", "on");
               circle.style.transform = "translateX(19px)";
+              for (let dom of doms) {
+                dom.querySelector(".list").style.display = "none";
+                dom.querySelector(".circle").style.display = "none";
+                dom.querySelector(".sum").style.marginTop = dom.querySelector(".sum").getAttribute("outer");
+                dom.querySelector(".title").style.top = dom.querySelector(".title").getAttribute("small");
+              }
             } else {
               this.setAttribute("toggle", "off");
               circle.style.transform = "translateX(0px)";
+              for (let dom of doms) {
+                dom.querySelector(".list").style.display = "block";
+                dom.querySelector(".circle").style.display = "block";
+                dom.querySelector(".sum").style.marginTop = dom.querySelector(".sum").getAttribute("inner");
+                dom.querySelector(".title").style.top = dom.querySelector(".title").getAttribute("big");
+              }
             }
           }
         }
