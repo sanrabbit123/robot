@@ -101,7 +101,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   }
   const instance = this;
   const { ea } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const { address, contents: { photo, raw, share, sns } } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
@@ -160,7 +160,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   width0 = 115;
   width1 = 3;
 
-  top = 9;
+  top = isMac() ? 9 : 11;
   left = 16;
   size = 15;
   textMargin = 6;
@@ -2681,7 +2681,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       style: {
         position: "absolute",
         width: String(width0) + ea,
-        top: String(top + 1) + ea,
+        top: String(top + (isMac() ? 1 : 0)) + ea,
         left: String(left) + ea,
         fontSize: String(size) + ea,
       }
@@ -2692,7 +2692,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       style: {
         position: "absolute",
         width: String(width1) + ea,
-        top: String(top + 1) + ea,
+        top: String(top + (isMac() ? 1 : 0)) + ea,
         left: String(left + width0 + textMargin) + ea,
         fontSize: String(size) + ea,
         color: colorChip.gray4
