@@ -434,6 +434,16 @@ Robot.prototype.sayHello = async function (message = null) {
   }
 }
 
+Robot.prototype.designerCalculation = async function () {
+  try {
+    const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+    const work = new BackWorker();
+    await work.designerCalculation();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -787,6 +797,13 @@ const MENU = {
   sayHello: async function () {
     try {
       await robot.sayHello(process.argv[3] !== undefined ? process.argv[3] : null);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  designerCalculation: async function () {
+    try {
+      await robot.designerCalculation();
     } catch (e) {
       console.log(e);
     }

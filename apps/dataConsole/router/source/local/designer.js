@@ -3677,6 +3677,10 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
+    if (getObj.desid !== undefined && getObj.mode === undefined) {
+      getObj.mode = "general";
+    }
+
     getTarget = null;
     if (getObj.mode === "general") {
 

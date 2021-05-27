@@ -631,4 +631,161 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
   }
 }
 
+BackWorker.prototype.designerCalculation = async function () {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  try {
+    await MONGOC.connect();
+    const back = this.back;
+    const Designers = require(`${process.cwd()}/apps/dataConsole/router/source/class/designer.js`);
+    const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+    const selfMongo = MONGOC;
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const autoComma = function (str) {
+      if (typeof str === "number") {
+        str = String(str);
+      }
+      let minus, num, tmp;
+
+      if (/\-/g.test(str)) {
+        minus = /\-/g.exec(str)[0];
+      } else {
+        minus = '';
+      }
+
+      num = str.replace(/[^0-9]/g, '');
+      tmp = '';
+
+      if (num.length < 4) {
+        return minus + num;
+      } else if (num.length < 7) {
+        tmp += num.slice(-6, -3) + ',' + num.slice(-3);
+        return minus + tmp;
+      } else if (num.length < 10) {
+        tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+        return minus + tmp;
+      } else if (num.length < 13) {
+        tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+        return minus + tmp;
+      } else if (num.length < 16) {
+        tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+        return minus + tmp;
+      }
+
+      return minus + num;
+    };
+    let projects, clients, designers;
+    let desidArr_raw, desidArr;
+    let cliidArr;
+    let whereQuery, updateQuery;
+    let tong, detailTong;
+    let firstAmount, leftAmount;
+    let amount0, amount1;
+    let condition0, condition1;
+    let name;
+    let designerBoo;
+    let tempString;
+
+    whereQuery = {
+      $and: [
+        { desid: { $regex: "^d" } },
+        { "process.status": { $regex: "^[진홀]" } },
+        { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
+      ]
+    };
+
+    projects = await back.getProjectsByQuery(whereQuery, { selfMongo });
+
+    desidArr_raw = [];
+    for (let project of projects) {
+      desidArr_raw.push(project.desid);
+    }
+    desidArr_raw = Array.from(new Set(desidArr_raw));
+    desidArr = [];
+    for (let desid of desidArr_raw) {
+      desidArr.push({ desid });
+    }
+    cliidArr = [];
+    for (let project of projects) {
+      cliidArr.push({ cliid: project.cliid });
+    }
+
+    whereQuery = {
+      $or: [
+        { $or: desidArr },
+        { "information.contract.status": { $regex: "완료" } }
+      ]
+    };
+    designers = await back.getDesignersByQuery(whereQuery, { selfMongo });
+
+    whereQuery = {
+      $or: cliidArr
+    };
+    clients = await back.getClientsByQuery(whereQuery, { selfMongo });
+
+    designers = new Designers(designers.toNormal());
+    designers.setProjects(projects.toNormal());
+    designers.setClients(clients.toNormal());
+    designers = designers.returnDoingDesigners();
+
+    tong = [];
+    for (let designer of designers) {
+      firstAmount = 0;
+      leftAmount = 0;
+      designerBoo = false;
+
+      for (let i = 0; i < designer.projects.length; i++) {
+        name = designer.projects[i].name;
+        amount0 = designer.projects[i].process.calculation.payments.first.amount;
+        condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
+        if (!condition0) {
+          firstAmount += amount0;
+        }
+        amount1 = designer.projects[i].process.calculation.payments.remain.amount;
+        if (designer.projects[i].contents.photo.boo) {
+          if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+            if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
+              condition1 = true;
+            } else {
+              condition1 = false;
+            }
+          } else {
+            condition1 = true;
+          }
+        } else {
+          if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+            condition1 = false;
+          } else {
+            condition1 = true;
+          }
+        }
+        if (!condition1) {
+          leftAmount += amount1;
+        }
+        if (!condition0 || !condition1) {
+          designerBoo = true;
+        }
+      }
+
+      if (designerBoo) {
+        tempString = `${designer.designer} : 선금 ${autoComma(firstAmount)}원  /  잔금 ${autoComma(leftAmount)}원`;
+        tong.push(tempString);
+      }
+    }
+
+    tong.unshift("=======================================");
+    tong.unshift(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
+    tong.unshift("디자이너 디자인비 정산 명단입니다!");
+    tong.push("=======================================");
+
+    await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MONGOC.close();
+  }
+}
+
 module.exports = BackWorker;
