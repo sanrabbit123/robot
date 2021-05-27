@@ -22,33 +22,21 @@ async def run(cmdArr):
         print(stderr.decode())
         return stderr.decode()
 
-async def sendAspirantPresentation():
-    await run([ 'node', ROBOT, 'sendAspirantPresentation' ])
+async def relect():
+    await run([ 'node', ROBOT, 'relect' ])
 
-async def mongoToJson():
-    await run([ 'node', ROBOT, 'mongoToJson' ])
+async def mysqlReflect():
+    await run([ 'node', ROBOT, 'mysqlReflect' ])
 
-async def analyticsParsing():
-    await run([ 'node', ROBOT, 'analyticsParsing' ])
-
-async def proposalToClient():
-    await run([ 'node', ROBOT, 'proposalToClient' ])
-
-async def reflect():
-    await run([ 'node', ROBOT, 'reflect' ])
-
-async def clientReportToSheets():
-    await run([ 'node', ROBOT, 'clientReportToSheets' ])
+async def designerCalculation():
+    await run([ 'node', ROBOT, 'designerCalculation' ])
 
 
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
-scheduler.add_job(mongoToJson, 'cron', hour='1', minute='30', second='30')
-scheduler.add_job(analyticsParsing, 'cron', hour='2', minute='30', second='30')
-scheduler.add_job(proposalToClient, 'cron', hour='3', minute='10', second='30')
-scheduler.add_job(reflect, 'cron', hour='3', minute='40', second='30')
-scheduler.add_job(clientReportToSheets, 'cron', hour='4', minute='30', second='30')
+scheduler.add_job(relect, 'cron', hour='8', minute='10', second='30')
+scheduler.add_job(mysqlReflect, 'cron', hour='8', minute='50', second='30')
+scheduler.add_job(designerCalculation, 'cron', day_of_week='mon', hour='9', minute='50', second='30')
 scheduler.start()
 try:
     asyncio.get_event_loop().run_forever()

@@ -42,15 +42,13 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
     const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
-
-
 
 
 
