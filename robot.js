@@ -444,6 +444,16 @@ Robot.prototype.designerCalculation = async function () {
   }
 }
 
+Robot.prototype.spawnCatfish = async function () {
+  try {
+    const SpawnCatfish = require(`${process.cwd()}/apps/spawnCatfish/spawnCatfish.js`);
+    const app = new SpawnCatfish();
+    await app.spawnLaunching(true);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -804,6 +814,13 @@ const MENU = {
   designerCalculation: async function () {
     try {
       await robot.designerCalculation();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  spawnCatfish: async function () {
+    try {
+      await robot.spawnCatfish();
     } catch (e) {
       console.log(e);
     }

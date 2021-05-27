@@ -53,6 +53,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
     // let resultObj, res;
     // resultObj = {};
     // resultObj["pretext"] = "김주연";
@@ -336,6 +343,7 @@ DevContext.prototype.launching = async function () {
     // card setting
     // await this.cardSetting("010-9069-1587");
 
+
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
     //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
@@ -371,13 +379,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "유미희";
-    // const pid = "p94";
-    // const rid = "re088";
+    // const client = "최영미";
+    // const pid = "p95";
+    // const rid = "re089";
     // const links = [
-    //   "https://docs.google.com/document/d/17_g4KFKl1Mi6O2gjMDXEvRUeuZp_-B30gZ_BAxVi-o0/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1yZPVXkd9v0fOKrHGvNwgVUwK5YGBkaMnhmljZ1ulxnA/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1ExP57LW1vEdbqgnshRu6yy3_7EokJg0x?usp=sharing",
+    //   "https://docs.google.com/document/d/1ATtGuIWbBmVrA_7U0kkVtfeL3pHwc_5WTg_AQwttyOA/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1hmHACGLg9EzSUEszti1DyJcDuUSjUW9Dea-3OcEgi2Q/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1T-wnDda0LEJq5i0ppY2IwGdqrXLiA9Xj?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -436,7 +444,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p94");
+    // await this.getCorePortfolio("p95");
 
 
     // aspirant to designer
