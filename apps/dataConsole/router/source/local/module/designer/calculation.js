@@ -506,7 +506,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         top: String(lineTop + 3) + ea,
         left: String(6) + ea,
         width: String(100) + '%',
-        borderBottom: "1px solid " + (condition ? colorChip.gray3 : colorChip.red),
+        borderBottom: "1px solid " + colorChip.gray3,
       }
     },
   ]);

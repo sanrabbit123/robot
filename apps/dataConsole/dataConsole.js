@@ -61,7 +61,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -97,6 +97,10 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
           return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
         });
         svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
+      }
+      if (await fileSystem(`exist`, [ `${this.dir}/router/source/class/${i}` ])) {
+        classString = await fileSystem(`readString`, [ `${this.dir}/router/source/class/${i}` ]);
+        fileString = classString.replace(/module\.exports \= [^\n]+/gi, '') + "\n\n" + fileString;
       }
 
       //set data patch
