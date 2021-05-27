@@ -332,7 +332,7 @@ DevContext.prototype.launching = async function () {
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // card setting
-    // await this.cardSetting("010-8933-5252");
+    // await this.cardSetting("010-9069-1587");
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
@@ -430,7 +430,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p94");
+    // await this.spellCheck("p95");
 
 
     // get corePortfolio by pid

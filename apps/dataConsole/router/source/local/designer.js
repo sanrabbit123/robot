@@ -3897,8 +3897,8 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "contents") {
 
-      this.grayBarWidth = 600;
-      this.mother.grayBarWidth = 600;
+      this.grayBarWidth = 0;
+      this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.contentsView();
@@ -3908,8 +3908,8 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "calculation") {
 
-      this.grayBarWidth = 600;
-      this.mother.grayBarWidth = 600;
+      this.grayBarWidth = 0;
+      this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.calculationView();
@@ -3949,6 +3949,12 @@ DesignerJs.prototype.launching = async function () {
       });
 
     }
+
+    window.addEventListener("keypress", (e) => {
+      if (e.key === "Ω") {
+        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      }
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

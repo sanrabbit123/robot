@@ -193,6 +193,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     whiteBlock_mother = createNode({
       mother: nodeArr[2],
       id: designer.projects[i].proid,
+      class: [ "projectWhite" ],
       attribute: [
         { proid: designer.projects[i].proid }
       ],
@@ -219,6 +220,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
 
     createNode({
       mother: whiteBlock_mother,
+      class: [ "clientName" ],
       text: designer.projects[i].name,
       style: {
         position: "absolute",
@@ -273,6 +275,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     createNodes([
       {
         mother: textBox,
+        class: [ "firstAmount" ],
         text: autoComma(amount) + "원",
         style: {
           position: "absolute",
@@ -298,6 +301,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       },
       {
         mother: textBox,
+        class: [ "firstDate" ],
         text: dateToString(designer.projects[i].process.calculation.payments.first.date),
         style: {
           position: "absolute",
@@ -360,6 +364,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     createNodes([
       {
         mother: textBox,
+        class: [ "remainAmount" ],
         text: autoComma(amount) + "원",
         style: {
           position: "absolute",
@@ -385,6 +390,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       },
       {
         mother: textBox,
+        class: [ "remainDate" ],
         text: dateToString(designer.projects[i].process.calculation.payments.remain.date),
         style: {
           position: "absolute",
@@ -602,6 +608,107 @@ DesignerJs.prototype.calculationSearchEvent = function () {
       instance.calculationBlocks(this.value.trim());
     }
   });
+}
+
+DesignerJs.prototype.calculationExtractEvent = function () {
+  const instance = this;
+  const { ea } = this;
+  const { sub: { extractIcon } } = this.mother.belowButtons;
+  const sendEvent = async function (e) {
+    try {
+      const { autoComma, colorChip, ajaxJson } = GeneralJs;
+      const today = new Date();
+      const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+      const designerDoms = instance.designerDoms;
+      const bar = "---------------------------";
+      let title, contents, sum;
+      let projectWhites, projectWhite, clientName, firstAmount, firstDate, remainAmount, remainDate;
+      let designer;
+      let matrix;
+      let tempArr;
+      let div_clone, svg_clone;
+      let style;
+      let width;
+
+      matrix = [ [ "디자이너", "고객", "선금", "입금일", "잔금", "입금일" ] ];
+      for (let i of designerDoms) {
+        title = i.querySelector(".title");
+        contents = i.querySelector(".list");
+        sum = i.querySelector(".sum");
+        designer = title.textContent.trim();
+        projectWhites = i.querySelectorAll(".projectWhite");
+        for (let j = 0; j < projectWhites.length; j++) {
+          clientName = projectWhites[j].querySelector(".clientName").textContent.trim();
+          firstAmount = projectWhites[j].querySelector(".firstAmount").textContent.trim();
+          firstDate = projectWhites[j].querySelector(".firstDate").textContent.trim();
+          remainAmount = projectWhites[j].querySelector(".remainAmount").textContent.trim();
+          remainDate = projectWhites[j].querySelector(".remainDate").textContent.trim();
+          matrix.push([ designer, clientName, firstAmount, firstDate, remainAmount, remainDate ]);
+        }
+        tempArr = sum.textContent.split("잔금");
+        matrix.push([ "합계", "", (autoComma(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '원'), "", (autoComma(Number(tempArr[1].replace(/[^0-9]/g, ''))) + '원'), "" ]);
+        matrix.push([ bar, bar, bar, bar, bar, bar ]);
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      div_clone.classList.add("justfadein");
+      style = {
+        position: "fixed",
+        zIndex: String(2),
+        background: colorChip.shadow,
+        opacity: String(0.2),
+        width: "100%",
+        height: "100%",
+        top: String(0),
+        left: String(0),
+      };
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+      instance.totalMother.appendChild(div_clone);
+
+      width = 50;
+      svg_clone = instance.mother.returnLoadingIcon();
+      style = {
+        position: "fixed",
+        zIndex: String(2),
+        width: String(width) + ea,
+        height: String(width) + ea,
+        top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
+        left: "calc(50% - " + String((width / 2)) + ea + ")",
+      };
+      for (let i in style) {
+        svg_clone.style[i] = style[i];
+      }
+      instance.totalMother.appendChild(svg_clone);
+
+      const res = await ajaxJson({
+        values: JSON.stringify(matrix),
+        newMake: "true",
+        parentId: parentId,
+        sheetName: "fromDB_designerCalculation_" + String(today.getFullYear()) + instance.mother.todayMaker(),
+      }, "/sendSheets");
+
+      const link = res.link;
+      div_clone.classList.remove("justfadein");
+      div_clone.classList.add("justfadeout");
+      svg_clone.style.opacity = "0";
+      GeneralJs.timeouts["extractPendingBack"] = setTimeout(function () {
+        let viewFunction;
+        instance.totalMother.removeChild(instance.totalMother.lastChild);
+        instance.totalMother.removeChild(instance.totalMother.lastChild);
+        viewFunction = instance.extractViewMaker(link);
+        viewFunction();
+        clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
+        GeneralJs.timeouts["extractPendingBack"] = null;
+      }, 401);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  extractIcon.addEventListener("click", sendEvent);
 }
 
 DesignerJs.prototype.calculationControlPannel = function () {
@@ -854,6 +961,7 @@ DesignerJs.prototype.calculationView = async function () {
 
     this.calculationBase();
     this.calculationSearchEvent();
+    this.calculationExtractEvent();
     await sleep(300);
     this.calculationControlPannel();
     window.addEventListener("resize", (e) => { window.location.reload(); });
