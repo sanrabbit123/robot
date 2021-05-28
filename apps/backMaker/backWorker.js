@@ -641,7 +641,10 @@ BackWorker.prototype.designerCalculation = async function () {
     const Designers = require(`${process.cwd()}/apps/dataConsole/router/source/class/designer.js`);
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const selfMongo = MONGOC;
+    const bar1 = "==================================================";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const zeroAddition = (num) => { return ((num < 10) ? `0${String(num)}` : String(num)); }
+    const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
     const autoComma = function (str) {
       if (typeof str === "number") {
         str = String(str);
@@ -734,12 +737,13 @@ BackWorker.prototype.designerCalculation = async function () {
       firstAmount = 0;
       leftAmount = 0;
       designerBoo = false;
-
+      detailTong = [];
       for (let i = 0; i < designer.projects.length; i++) {
         name = designer.projects[i].name;
         amount0 = designer.projects[i].process.calculation.payments.first.amount;
         condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
         if (!condition0) {
+          detailTong.push(`${designer.designer} ${name} : 선금 ${autoComma(amount0)}원`);
           firstAmount += amount0;
         }
         amount1 = designer.projects[i].process.calculation.payments.remain.amount;
@@ -761,6 +765,7 @@ BackWorker.prototype.designerCalculation = async function () {
           }
         }
         if (!condition1) {
+          detailTong.push(`${designer.designer} ${name} : 잔금 ${autoComma(amount1)}원`);
           leftAmount += amount1;
         }
         if (!condition0 || !condition1) {
@@ -769,15 +774,16 @@ BackWorker.prototype.designerCalculation = async function () {
       }
 
       if (designerBoo) {
-        tempString = `${designer.designer} : 선금 ${autoComma(firstAmount)}원  /  잔금 ${autoComma(leftAmount)}원`;
+        tong.push(detailTong.join("\n"));
+        tempString = `=> ${designer.designer} 합계 : 선금 ${autoComma(firstAmount)}원  /  잔금 ${autoComma(leftAmount)}원  /  ${designer.information.business.businessInfo.classification}`;
         tong.push(tempString);
+        tong.push(bar1);
       }
     }
 
-    tong.unshift("=======================================");
+    tong.unshift(bar1);
     tong.unshift(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
-    tong.unshift("디자이너 디자인비 정산 명단입니다!");
-    tong.push("=======================================");
+    tong.unshift(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
 
     await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
 

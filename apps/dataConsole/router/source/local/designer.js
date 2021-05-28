@@ -3790,7 +3790,7 @@ DesignerJs.prototype.launching = async function () {
     }
 
     window.addEventListener("keypress", (e) => {
-      if (e.key === "Ω") {
+      if (e.key === "Ω" || (e.altKey && e.key === "z") || (e.altKey && e.key === "Z")) {
         window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname;
       }
     });

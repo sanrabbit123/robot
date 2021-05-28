@@ -70,6 +70,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let redPointBoo, circleWidth;
   let titleTextTop;
   let listHeight;
+  let classificationWidth;
+  let sumMargin;
+  let sumCaseTop;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -78,18 +81,21 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   innerMargin = 10;
   titleSize = 21;
   size = 15;
-  sumSize = 17;
+  sumSize = 16;
   listHeight = 178;
-  sumHeight = 46;
+  sumHeight = 44;
   projectHeight = 40;
   firstWidth = 34;
   boxTop = 9;
   titleTextTop = isMac() ? -1 : 1;
   textTop = isMac() ? 0 : 2;
   textLeft = 12;
-  lineTop = 9;
+  lineTop = 10;
   lineMargin = 6;
   circleWidth = 8;
+  classificationWidth = 68;
+  sumMargin = 10;
+  sumCaseTop = 6;
 
   [ titleArea, listArea, sumArea ] = createNodes([
     {
@@ -153,7 +159,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       class: [ "title" ],
       attribute: [
         { big: String(titleTextTop) + ea },
-        { small: String(titleTextTop + 7) + ea },
+        { small: String(titleTextTop + sumCaseTop) + ea },
       ],
       style: {
         position: "absolute",
@@ -410,11 +416,24 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   textLeft = textLeft + 3;
   createNode({
     mother: sumArea,
+    text: designer.information.business.businessInfo.classification.replace(/사업자/g, ''),
+    style: {
+      position: "absolute",
+      top: String(boxTop + 1 + textTop) + ea,
+      left: String(textLeft) + ea,
+      width: String(classificationWidth) + ea,
+      fontSize: String(sumSize) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+    }
+  });
+  createNode({
+    mother: sumArea,
     text: "선금",
     style: {
       position: "absolute",
-      top: String(boxTop + textTop) + ea,
-      left: String(textLeft) + ea,
+      top: String(boxTop + 1 + textTop) + ea,
+      left: String(textLeft + classificationWidth + sumMargin) + ea,
       width: String(firstWidth) + ea,
       fontSize: String(sumSize) + ea,
       fontWeight: String(200),
@@ -425,9 +444,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     mother: sumArea,
     style: {
       position: "absolute",
-      top: String(boxTop) + ea,
-      left: String(textLeft + firstWidth) + ea,
-      width: withOut(50, textLeft + firstWidth + (textLeft * 1), ea),
+      top: String(boxTop + 1) + ea,
+      left: String(textLeft + classificationWidth + sumMargin + firstWidth) + ea,
+      width: "calc(calc(calc(100% - " + String(classificationWidth + sumMargin) + ea + ") / 2) - " + String(textLeft + firstWidth + (textLeft * 1)) + ea + ")",
       height: withOut(100, boxTop, ea),
       overflow: "hidden",
     }
@@ -452,8 +471,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       mother: textBox,
       style: {
         position: "absolute",
-        top: String(lineTop + 3) + ea,
-        left: String(6) + ea,
+        top: String(lineTop) + ea,
+        left: String(3) + ea,
         width: String(100) + '%',
         borderBottom: "1px solid " + colorChip.gray3,
       }
@@ -464,8 +483,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     text: "잔금",
     style: {
       position: "absolute",
-      top: String(boxTop + textTop) + ea,
-      left: withOut(50, 0, ea),
+      top: String(boxTop + 1 + textTop) + ea,
+      left: "calc(calc(calc(100% - " + String(classificationWidth + sumMargin) + ea + ") / 2) + " + String(classificationWidth + sumMargin) + ea + ")",
       width: String(firstWidth) + ea,
       fontSize: String(sumSize) + ea,
       fontWeight: String(200),
@@ -476,9 +495,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     mother: sumArea,
     style: {
       position: "absolute",
-      top: String(boxTop) + ea,
+      top: String(boxTop + 1) + ea,
       right: String(textLeft + 1) + ea,
-      width: withOut(50, textLeft + firstWidth, ea),
+      width: "calc(calc(calc(100% - " + String(classificationWidth + sumMargin) + ea + ") / 2) - " + String(textLeft + firstWidth) + ea + ")",
       height: withOut(100, boxTop, ea),
       overflow: "hidden",
     }
@@ -503,8 +522,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       mother: textBox,
       style: {
         position: "absolute",
-        top: String(lineTop + 3) + ea,
-        left: String(6) + ea,
+        top: String(lineTop) + ea,
+        left: String(4) + ea,
         width: String(100) + '%',
         borderBottom: "1px solid " + colorChip.gray3,
       }
@@ -714,7 +733,7 @@ DesignerJs.prototype.calculationExtractEvent = function () {
 DesignerJs.prototype.calculationControlPannel = function () {
   const instance = this;
   const { ea, totalMother, belowHeight } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   let width, height;
   let right, bottom;
   let base;
@@ -730,7 +749,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
   bottom = 35;
 
   size = 15;
-  textTop = 15;
+  textTop = isMac() ? 15 : 17;
   textLeft = 20;
   buttonTop = 16;
   buttonLeft = 66;

@@ -219,7 +219,7 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
                 }
 
                 if (cliid === null || proid === null) {
-                  message += `알 수 없는 문자가 왔습니다! 직접 해석해주세요!`;
+                  message += `해석할 수 없는 문자가 왔습니다! 직접 해석해주세요!`;
                 } else {
                   message += `고객 아이디: ${cliid} / 프로젝트 아이디: ${proid} / 금액: ${autoComma(amount)}원\n`;
                   message += `고객 : https://${address["backinfo"]["host"]}/client?cliid=${cliid}\n`;
