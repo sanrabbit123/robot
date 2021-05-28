@@ -832,6 +832,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - binary files
   funcObj.post_binary = async function (req, res) {
     try {
+      console.log(req);
       console.log("file request get");
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
