@@ -719,7 +719,10 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
               }
 
-              GeneralJs.ajaxForm(formData, "https://homeliaison-bridge.xyz:3000/designerBinary");
+              GeneralJs.ajaxForm(formData, "https://homeliaison-bridge.xyz:3000/designerBinary").catch(function (err) {
+                alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
+                window.location.reload();
+              });
             }
 
             if (finalObj.phone !== "010-2747-3403") {
