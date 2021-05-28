@@ -832,7 +832,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - binary files
   funcObj.post_binary = async function (req, res) {
     try {
-      const form = instance.formidable({ maxFileSize: (300 * 1024 * 1024), multiples: true });
+      const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
@@ -916,7 +916,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           res.send('success');
 
         } else {
-          slack_bot.chat.postMessage({ text: "고객 파일 전송 문제 : " + JSON.stringify(fields) + err, channel: "#error_log" });
+          slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
@@ -927,7 +927,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
       });
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "고객 파일 전송 문제 : " + JSON.stringify(fields) + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -935,7 +935,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - designer portfolio binary
   funcObj.post_designerBinary = async function (req, res) {
     try {
-      const form = instance.formidable({ maxFileSize: (300 * 1024 * 1024), multiples: true });
+      const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         const { designer, phone } = fields;
@@ -1000,7 +1000,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           if (designer !== undefined && designer !== null && phone !== undefined && phone !== null) {
             KAKAO.sendTalk("portfolioFail", designer, phone);
           }
-          slack_bot.chat.postMessage({ text: "디자이너 파일 전송 문제 : " + JSON.stringify(fields) + err, channel: "#error_log" });
+          slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
@@ -1011,7 +1011,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
       });
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "디자이너 파일 전송 문제 : " + JSON.stringify(fields) + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
