@@ -103,7 +103,7 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
 
     app.get("/", function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      res.send(ip);
+      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     });
 
     //launching python cron
