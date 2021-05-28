@@ -719,7 +719,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
               }
 
-              GeneralJs.ajax(formData, "https://homeliaison-bridge.xyz:3000/designerBinary", function (d) {});
+              GeneralJs.ajaxForm(formData, "https://homeliaison-bridge.xyz:3000/designerBinary");
             }
 
             if (finalObj.phone !== "010-2747-3403") {

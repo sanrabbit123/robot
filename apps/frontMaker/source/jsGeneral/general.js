@@ -153,6 +153,37 @@ GeneralJs.ajaxPromise = function (data, url) {
   });
 }
 
+GeneralJs.ajaxForm = function (data, url) {
+  if (data === undefined && url === undefined) {
+    throw new Error("must be arguments (data, url)");
+  } else if (data !== undefined && url === undefined) {
+    url = data;
+    data = "";
+  }
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.onload = function () {
+     if (xhr.readyState !== 4) { return }
+     if (xhr.status >= 200 && xhr.status < 300) {
+       resolve(xhr.response);
+     } else {
+       reject({
+         status: this.status,
+         statusText: xhr.statusText
+       });
+     }
+    };
+    xhr.onerror = function () {
+     reject({
+       status: this.status,
+       statusText: xhr.statusText
+     });
+    };
+    xhr.send(data);
+  });
+}
+
 GeneralJs.ajaxJson = function (data, url, option = { equal: null }) {
   if (typeof option !== "object") {
     reject("invaild input");

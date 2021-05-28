@@ -832,7 +832,6 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //POST - binary files
   funcObj.post_binary = async function (req, res) {
     try {
-      console.log(req);
       console.log("file request get");
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
@@ -918,7 +917,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           res.send('success');
 
         } else {
-          slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
+          slack_bot.chat.postMessage({ text: "고객 파일 서버 문제 생김 : " + JSON.stringify(fields) + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
@@ -929,7 +928,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
       });
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "고객 파일 서버 문제 생김 : " + JSON.stringify(fields) + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1002,7 +1001,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           if (designer !== undefined && designer !== null && phone !== undefined && phone !== null) {
             KAKAO.sendTalk("portfolioFail", designer, phone);
           }
-          slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + err, channel: "#error_log" });
+          slack_bot.chat.postMessage({ text: "디자이너 파일 서버 문제 생김 : " + JSON.stringify(fields) + err, channel: "#error_log" });
           res.set({
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
@@ -1013,7 +1012,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
       });
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "디자이너 파일 서버 문제 생김 : " + JSON.stringify(fields) + e, channel: "#error_log" });
       console.log(e);
     }
   }

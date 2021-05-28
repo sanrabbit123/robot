@@ -1381,7 +1381,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
           }
         }
 
-        GeneralJs.ajax(formData, "https://homeliaison-bridge.xyz:3000/binary", function (data) {
+        GeneralJs.ajaxForm(formData, "https://homeliaison-bridge.xyz:3000/binary").then(function (data) {
           if (data === "success") {
             instance.pendingBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"), true, true);
             instance.completeBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"));
