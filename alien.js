@@ -186,7 +186,7 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
             let message;
 
             for (let { body } of notifications) {
-              if (/^\[Web/.test(body.trim()) && /입금/gi.test(body) && /원/gi.test(body) && /\]/gi.test(body) && /\//gi.test(body) && /\:/gi.test(body)) {
+              if (/\[Web/.test(body.trim()) && /입금/gi.test(body) && /원/gi.test(body) && /\]/gi.test(body) && /\//gi.test(body) && /\:/gi.test(body)) {
                 tempArr = body.split("원");
 
                 amount = Number(((tempArr[0].split("입금"))[1]).replace(/[^0-9]/gi, ''));
