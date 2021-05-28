@@ -612,7 +612,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 49;
+      startLeft = 21;
       width = 114;
       margin = 4;
 
@@ -683,7 +683,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 21;
+      startLeft = 20;
       width = 70;
       margin = 4;
 
@@ -759,7 +759,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 45;
+      startLeft = 20;
       width = 70;
       margin = 4;
 
@@ -819,7 +819,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       }
       createNodes(nodeArr);
     });
-    stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
+    stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/군 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
@@ -1239,7 +1239,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 82;
+      startLeft = 51;
       width = 110;
       margin = 4;
 
@@ -2517,10 +2517,103 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   }
 
-  stringArr.push(textMaker("촬영 메모", history.replace(/\n/g, ' '), "black", "history"));
+  stringArr.push(textMaker("촬영 메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
   updateArr.push(function (e, option, cancelBox, parent) {
-    cancelBox.parentNode.removeChild(cancelBox);
-    parent.style.overflow = "hidden";
+    const mother = this;
+    const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+    const column = "status";
+    let startLeft, width, margin, background;
+    let values, updateEvent;
+    let nodeArr;
+    let position;
+    let whereQuery, updateQuery, chainQuery;
+    let historyHeight;
+    let historyMargin;
+
+    updateQuery = {};
+    whereQuery = { proid: project.proid };
+    // position = map[column].position;
+    // values = map[column].values;
+    // chainQuery = map[column].chain;
+    startLeft = 0;
+    width = 560;
+    historyHeight = 400;
+    margin = 4;
+    historyMargin = 15;
+
+    this.style.overflow = "visible";
+
+    background = colorChip.white;
+    updateEvent = async function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      try {
+        // const value = this.getAttribute("value");
+        // const removeTargets = mother.querySelectorAll("aside");
+        // updateQuery[position] = value;
+        // await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+        // valueDom.textContent = value;
+        // for (let dom of removeTargets) {
+        //   mother.removeChild(dom);
+        // }
+        // parent.style.overflow = "hidden";
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    createNodes([
+      {
+        mother: this,
+        mode: "aside",
+        events: [ { type: "click", event: updateEvent } ],
+        style: {
+          position: "absolute",
+          top: String(top) + ea,
+          left: String(startLeft) + ea,
+          width: String(width) + ea,
+          height: String(historyHeight) + ea,
+          background: colorChip.white,
+          zIndex, boxShadow, borderRadius, animation,
+        }
+      },
+      {
+        mother: -1,
+        mode: "textarea",
+        text: history.replace(/\<br\>/gi, "\n"),
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.stopPropagation();
+            }
+          },
+          {
+            type: "keypress",
+            event: function (e) {
+              if (e.key === "Tab") {
+                console.log("this!");
+              }
+            }
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(historyMargin) + ea,
+          left: String(historyMargin + 3) + ea,
+          width: withOut(100, (historyMargin + 3) * 2, ea),
+          height: withOut(100, historyMargin * 2, ea),
+          fontSize: String(size + 1) + ea,
+          fontWeight: String(300),
+          background: colorChip.white,
+          lineHeight: String(1.7),
+          color: colorChip.black,
+          border: String(0),
+          outline: String(0),
+        }
+      }
+    ]);
+
   });
 
   [ whiteBlock ] = createNodes([
@@ -2605,6 +2698,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             }
             const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
             let cancelBox, parent;
+
+            parent = this.parentElement;
+
             [ cancelBox ] = createNodes([
               {
                 mother: this,
@@ -2615,10 +2711,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                     event: function (e) {
                       e.stopPropagation();
                       e.preventDefault();
-                      const parent = this.parentElement;
-                      const removeTargets = parent.querySelectorAll("aside");
+                      parent.style.overflow = "hidden";
+                      const directParent = this.parentElement;
+                      const removeTargets = directParent.querySelectorAll("aside");
                       for (let dom of removeTargets) {
-                        parent.removeChild(dom);
+                        directParent.removeChild(dom);
                       }
                     }
                   }
@@ -2634,77 +2731,78 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                 }
               }
             ]);
-            parent = this.parentElement;
+
             parent.style.overflow = "visible";
+
             updateArr[index].call(this, e, option, cancelBox, parent);
           }
         },
-        {
-          type: "contextmenu",
-          event: function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            if (instance.contentsBlocks.length > 0) {
-
-              const mother = instance.contentsBlocks[0].parentElement;
-              const index = Number(this.getAttribute("arrindex"));
-              const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
-              const nameConst = "white_child_";
-              let tempArr;
-              let thisValue;
-              let numberBoo;
-
-              numberBoo = false;
-
-              for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                thisValue = tempArr[1].trim();
-                if (/[0-9]/gi.test(thisValue)) {
-                  numberBoo = true;
-                }
-              }
-
-              for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                thisValue = tempArr[1].trim();
-                if (/[0-9]/gi.test(thisValue)) {
-                  instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
-                } else {
-                  if (numberBoo) {
-                    if (thisValue === "예정" || thisValue === "미정") {
-                      instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
-                    } else {
-                      instance.contentsBlocks[z].setAttribute("sortstandard", "0");
-                    }
-                  } else {
-                    instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
-                  }
-                }
-              }
-
-              if (sort === 1) {
-                if (numberBoo) {
-                  instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
-                } else {
-                  instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
-                }
-              } else {
-                if (numberBoo) {
-                  instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
-                } else {
-                  instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
-                }
-              }
-
-              for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                mother.appendChild(instance.contentsBlocks[z]);
-                instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
-                instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
-              }
-
-            }
-          }
-        }
+        // {
+        //   type: "contextmenu",
+        //   event: function (e) {
+        //     e.stopPropagation();
+        //     e.preventDefault();
+        //     if (instance.contentsBlocks.length > 0) {
+        //
+        //       const mother = instance.contentsBlocks[0].parentElement;
+        //       const index = Number(this.getAttribute("arrindex"));
+        //       const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
+        //       const nameConst = "white_child_";
+        //       let tempArr;
+        //       let thisValue;
+        //       let numberBoo;
+        //
+        //       numberBoo = false;
+        //
+        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
+        //         tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+        //         thisValue = tempArr[1].trim();
+        //         if (/[0-9]/gi.test(thisValue)) {
+        //           numberBoo = true;
+        //         }
+        //       }
+        //
+        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
+        //         tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+        //         thisValue = tempArr[1].trim();
+        //         if (/[0-9]/gi.test(thisValue)) {
+        //           instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
+        //         } else {
+        //           if (numberBoo) {
+        //             if (thisValue === "예정" || thisValue === "미정") {
+        //               instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
+        //             } else {
+        //               instance.contentsBlocks[z].setAttribute("sortstandard", "0");
+        //             }
+        //           } else {
+        //             instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
+        //           }
+        //         }
+        //       }
+        //
+        //       if (sort === 1) {
+        //         if (numberBoo) {
+        //           instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
+        //         } else {
+        //           instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
+        //         }
+        //       } else {
+        //         if (numberBoo) {
+        //           instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
+        //         } else {
+        //           instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
+        //         }
+        //       }
+        //
+        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
+        //         mother.appendChild(instance.contentsBlocks[z]);
+        //         instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
+        //         instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
+        //       }
+        //
+        //     }
+        //   }
+        // }
       ],
       style: {
         position: "absolute",
@@ -2712,9 +2810,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         left: String(startLeft) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(400),
+        height: ((i === stringArr.length - 1) ? String(factorHeight) + ea : ""),
+        overflow: ((i === stringArr.length - 1) ? "hidden" : "visible"),
+        transition: "all 0s ease",
         cursor: "pointer",
-        height: String(factorHeight) + ea,
-        overflow: "scroll",
       }
     });
     domArr.push(tempDom);
@@ -3172,7 +3271,7 @@ DesignerJs.prototype.contentsView = async function () {
         return obj;
       }
     }
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep } = GeneralJs;
     let loading;
     let projects;
     let designers, desidArr_raw, desidArr;

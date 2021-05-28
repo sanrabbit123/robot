@@ -461,7 +461,11 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               style.text = style.text.replace(/\%b\>/gi, "</b>");
             }
           }
-          dom_clone.insertAdjacentHTML("beforeend", style.text.replace(/\n/g, "<br>"));
+          if (mode !== "textarea") {
+            dom_clone.insertAdjacentHTML("beforeend", style.text.replace(/\n/g, "<br>"));
+          } else {
+            dom_clone.textContent = style.text.replace(/\<br\>/g, "\n");
+          }
         }
         delete style.text;
       }
