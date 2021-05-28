@@ -2524,17 +2524,12 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     const column = "status";
     let startLeft, width, margin, background;
     let values, updateEvent;
-    let nodeArr;
-    let position;
     let whereQuery, updateQuery, chainQuery;
     let historyHeight;
     let historyMargin;
 
     updateQuery = {};
     whereQuery = { proid: project.proid };
-    // position = map[column].position;
-    // values = map[column].values;
-    // chainQuery = map[column].chain;
     startLeft = 0;
     width = 560;
     historyHeight = 400;
@@ -2544,32 +2539,23 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     this.style.overflow = "visible";
 
     background = colorChip.white;
-    updateEvent = async function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-      try {
-        // const value = this.getAttribute("value");
-        // const removeTargets = mother.querySelectorAll("aside");
-        // updateQuery[position] = value;
-        // await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
-        // valueDom.textContent = value;
-        // for (let dom of removeTargets) {
-        //   mother.removeChild(dom);
-        // }
-        // parent.style.overflow = "hidden";
-      } catch (e) {
-        console.log(e);
-      }
-    }
 
     createNodes([
       {
         mother: this,
         mode: "aside",
-        events: [ { type: "click", event: updateEvent } ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        ],
         style: {
           position: "absolute",
-          top: String(top) + ea,
+          top: String(top + 1) + ea,
           left: String(startLeft) + ea,
           width: String(width) + ea,
           height: String(historyHeight) + ea,
@@ -2589,10 +2575,32 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             }
           },
           {
-            type: "keypress",
-            event: function (e) {
-              if (e.key === "Tab") {
-                console.log("this!");
+            type: "keydown",
+            event: async function (e) {
+              try {
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  mother.style.overflow = "hidden";
+                  parent.style.overflow = "hidden";
+                  const removeTargets = mother.querySelectorAll("aside");
+                  const value = this.value;
+                  const cookies = GeneralJs.getCookiesAll();
+
+                  (mother.querySelectorAll('b'))[1].textContent = value.slice(0, 40);
+                  await GeneralJs.ajaxJson({
+                    id: project.proid,
+                    column: "photo",
+                    value,
+                    email: cookies.homeliaisonConsoleLoginedEmail
+                  }, "/updateProjectHistory");
+
+                  for (let dom of removeTargets) {
+                    mother.removeChild(dom);
+                  }
+                }
+              } catch (e) {
+                console.log(e);
               }
             }
           }
@@ -2684,125 +2692,126 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         {
           type: "click",
           event: function (e) {
-            const index = Number(this.getAttribute("arrindex"));
-            const { ea } = instance;
-            const { createNodes, colorChip, withOut } = GeneralJs;
-            const valueDom = this.querySelector(".value");
-            let thisCase;
-            thisCase = {};
-            for (let column in map) {
-              if (document.getElementById(project.proid + "_" + column) === null) {
-                throw new Error("invaild doms");
+            if (this.querySelectorAll("aside").length === 0) {
+              const index = Number(this.getAttribute("arrindex"));
+              const { ea } = instance;
+              const { createNodes, colorChip, withOut } = GeneralJs;
+              const valueDom = this.querySelector(".value");
+              let thisCase;
+              thisCase = {};
+              for (let column in map) {
+                if (document.getElementById(project.proid + "_" + column) === null) {
+                  throw new Error("invaild doms");
+                }
+                thisCase[column] = document.getElementById(project.proid + "_" + column);
               }
-              thisCase[column] = document.getElementById(project.proid + "_" + column);
-            }
-            const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
-            let cancelBox, parent;
+              const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
+              let cancelBox, parent;
 
-            parent = this.parentElement;
-
-            [ cancelBox ] = createNodes([
-              {
-                mother: this,
-                mode: "aside",
-                events: [
-                  {
-                    type: "click",
-                    event: function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      parent.style.overflow = "hidden";
-                      const directParent = this.parentElement;
-                      const removeTargets = directParent.querySelectorAll("aside");
-                      for (let dom of removeTargets) {
-                        directParent.removeChild(dom);
+              parent = this.parentElement;
+              [ cancelBox ] = createNodes([
+                {
+                  mother: this,
+                  mode: "aside",
+                  events: [
+                    {
+                      type: "click",
+                      event: function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        parent.style.overflow = "hidden";
+                        const directParent = this.parentElement;
+                        const removeTargets = directParent.querySelectorAll("aside");
+                        for (let dom of removeTargets) {
+                          directParent.removeChild(dom);
+                        }
                       }
                     }
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String(0) + ea,
+                    left: String(0) + ea,
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: option.zIndex,
                   }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0) + ea,
-                  left: String(0) + ea,
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  background: "transparent",
-                  zIndex: option.zIndex,
                 }
-              }
-            ]);
-
-            parent.style.overflow = "visible";
-
-            updateArr[index].call(this, e, option, cancelBox, parent);
+              ]);
+              parent.style.overflow = "visible";
+              updateArr[index].call(this, e, option, cancelBox, parent);
+            }
           }
         },
-        // {
-        //   type: "contextmenu",
-        //   event: function (e) {
-        //     e.stopPropagation();
-        //     e.preventDefault();
-        //     if (instance.contentsBlocks.length > 0) {
-        //
-        //       const mother = instance.contentsBlocks[0].parentElement;
-        //       const index = Number(this.getAttribute("arrindex"));
-        //       const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
-        //       const nameConst = "white_child_";
-        //       let tempArr;
-        //       let thisValue;
-        //       let numberBoo;
-        //
-        //       numberBoo = false;
-        //
-        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
-        //         tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-        //         thisValue = tempArr[1].trim();
-        //         if (/[0-9]/gi.test(thisValue)) {
-        //           numberBoo = true;
-        //         }
-        //       }
-        //
-        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
-        //         tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-        //         thisValue = tempArr[1].trim();
-        //         if (/[0-9]/gi.test(thisValue)) {
-        //           instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
-        //         } else {
-        //           if (numberBoo) {
-        //             if (thisValue === "예정" || thisValue === "미정") {
-        //               instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
-        //             } else {
-        //               instance.contentsBlocks[z].setAttribute("sortstandard", "0");
-        //             }
-        //           } else {
-        //             instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
-        //           }
-        //         }
-        //       }
-        //
-        //       if (sort === 1) {
-        //         if (numberBoo) {
-        //           instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
-        //         } else {
-        //           instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
-        //         }
-        //       } else {
-        //         if (numberBoo) {
-        //           instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
-        //         } else {
-        //           instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
-        //         }
-        //       }
-        //
-        //       for (let z = 0; z < instance.contentsBlocks.length; z++) {
-        //         mother.appendChild(instance.contentsBlocks[z]);
-        //         instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
-        //         instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
-        //       }
-        //
-        //     }
-        //   }
-        // }
+        {
+          type: "contextmenu",
+          event: function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if (this.querySelectorAll("aside").length === 0) {
+              if (instance.contentsBlocks.length > 0) {
+
+                const mother = instance.contentsBlocks[0].parentElement;
+                const index = Number(this.getAttribute("arrindex"));
+                const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
+                const nameConst = "white_child_";
+                let tempArr;
+                let thisValue;
+                let numberBoo;
+
+                numberBoo = false;
+
+                for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                  tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                  thisValue = tempArr[1].trim();
+                  if (/[0-9]/gi.test(thisValue)) {
+                    numberBoo = true;
+                  }
+                }
+
+                for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                  tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                  thisValue = tempArr[1].trim();
+                  if (/[0-9]/gi.test(thisValue)) {
+                    instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
+                  } else {
+                    if (numberBoo) {
+                      if (thisValue === "예정" || thisValue === "미정") {
+                        instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
+                      } else {
+                        instance.contentsBlocks[z].setAttribute("sortstandard", "0");
+                      }
+                    } else {
+                      instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
+                    }
+                  }
+                }
+
+                if (sort === 1) {
+                  if (numberBoo) {
+                    instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
+                  } else {
+                    instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
+                  }
+                } else {
+                  if (numberBoo) {
+                    instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
+                  } else {
+                    instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
+                  }
+                }
+
+                for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                  mother.appendChild(instance.contentsBlocks[z]);
+                  instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
+                  instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
+                }
+
+              }
+            }
+          }
+        }
       ],
       style: {
         position: "absolute",
