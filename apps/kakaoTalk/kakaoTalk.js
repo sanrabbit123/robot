@@ -14,6 +14,7 @@ const KakaoTalk = function () {
     bridge: address.bridgeinfo.ip.outer,
     console: address.backinfo.ip.outer,
     front: address.frontinfo.ip.outer,
+    python: address.pythoninfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office + "\n", 'g'),
@@ -21,13 +22,15 @@ const KakaoTalk = function () {
     bridge: new RegExp(this.ip.bridge + "\n", 'g'),
     console: new RegExp(this.ip.console + "\n", 'g'),
     front: new RegExp(this.ip.front + "\n", 'g'),
+    python: new RegExp(this.ip.python + "\n", 'g'),
   };
   this.token = {
     office: 'f05cb48bb2b2397b0a00673f9d042cb11e617e2f474adb80aa21def198e93defb9772db0decfdceb11711fe00220d7353e22750dfa4a033787d2b65baa74c0edRpWklMHb+gajmvp0DWz3EOkwdpHCjhFmkliDkyfGD20Rw/GTrgkATGf016jQH2sPQym/QCo7cxJnGmM4do74ZA==',
     home: 'cc851a072d2ce73cd7ecf1390fe4e79fb858c0e78c038536bfca379f7b0dcb064a576a7a3048d0ef1afb1c591cda68bc1432614ae143dce4228c02de270969f7gNeHUuqtRL2jE8SWVZSeSAnqB7tqO1KtQ4o8sMn1Q1oFdwfOPVnFLTTaFvNYlSomdjZjihdtRexwdQ9vWRm6pw==',
-    bridge: 'ad71db7b43a31011c2cad920198f0820c3ee1984db28fea5770ea728b8b1bc0fbc231da21c02113119568762aec1588c0a7c29b05c354d07493a8b9341436d3fZaVjZRr90NmU9J/cDxAMHR3tjA9/k6mK22IkZFPVHMGbuqY3erFhtZAq6/L4B4JCcG5cmfbRJAGE4OTK71Udwg==',
+    bridge: '2b80cde31ca60c59a782540b5aac827a49c0c4ff0358dc6f6db80d124b94426813119f550bbc303ab1dbdca305d4dcdb46029637ee615d99794261a7c4d8f92dwA7XxPABsJjAM2UytTmE3t+RcQIQ5A4K8bmRYBSGlJLlh9pL54R36gXznHdul83r+ly1oygeat/SSP49ORKmSw==',
     front: 'c14a594407ce851449e11aa060556b54faf1e4de714adc353e49f645c9720880a1149ed617ad5ef19de94fed1da6094bdeb4f1a8756bed3b3fe74c8120490fe4hX3mInjDzik6Yz05qMUnpOJkL6ix9DcJRLVAZpofdBoZA89GFnHTtZJ5BUx\/iFFVdRVHW2vD4cA0dmbL8Qkf0A==',
     console: 'aa75be3ea35bd41e6df6f61e78cc60c3ad7c4cc7904977c1d196d2450c32fe0c56149c2e108acf4c5f1ed99fbcab12477abfe8e687e65a1558d6755898030efct1SICS3yu5x3EKNeIHKkY4ua62MZH2aweY7zBm2BvPVvHmQDS1eH9eEX3+peb5hQrO8p8sB7XgSrzsz+3UODcg==',
+    python: '786b0d4ac1842028afa3040383a376a7266a56abafd828d6f5d006cf2f1ea7024f58c2b14e61824a4cbceb61f250934008a157b7adb442bc4c971c24cf30b20eC6SuVOSK1WhQraJ6x4anTsijkB/JQmX1zTVQnAG6765nBLZFjWWooknW9NJASAYXEHN4TbTHjTv0I+0eVOrM7g==',
   };
   this.authObj = {};
   this.templates = {};
@@ -63,6 +66,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.bridge;
     } else if (this.ipRegExp.console.test(data)) {
       this.authObj.token = this.token.console;
+    } else if (this.ipRegExp.python.test(data)) {
+      this.authObj.token = this.token.python;
     }
 
   } catch (e) {
