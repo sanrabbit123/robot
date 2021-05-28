@@ -102,7 +102,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const instance = this;
   const { ea } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const { address, contents: { photo, raw, share, sns } } = project;
+  const { address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
@@ -151,6 +151,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let updateArr;
   let emptyDate, emptyValue;
   let map, mapColumn;
+  let photoSourceBoo;
+  let generalMargin, lastMargin;
+  let factorHeight;
 
   totalObj = [];
 
@@ -177,8 +180,20 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   stringArr = [];
   updateArr = [];
 
+  generalMargin = 1;
+  lastMargin = 60;
+
+  factorHeight = 20;
+
   emptyDate = new Date(1800, 0, 1);
   emptyValue = "해당 없음";
+
+  photoSourceBoo = true;
+  if (this.type === "contents" || this.type === "share") {
+    if (([ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(project.contents.raw.photo.status)) {
+      photoSourceBoo = false;
+    }
+  }
 
   if (this.type === "photo") {
 
@@ -212,19 +227,19 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         }
       },
       date: {
-        title: "촬영일",
+        title: "날짜",
         position: "contents.photo.date",
         values: [ '미정', '해당 없음' ],
         chain: null
       },
       dateHour: {
-        title: "촬영 시간",
+        title: "시간",
         position: "contents.photo.date",
         values: [],
         chain: null
       },
       status: {
-        title: "촬영 상태",
+        title: "상태",
         position: "contents.photo.status",
         values: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ],
         chain: null
@@ -236,7 +251,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         chain: null
       },
       interviewer: {
-        title: "인터뷰어",
+        title: "담당",
         position: "contents.photo.info.interviewer",
         values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연' ],
         chain: null
@@ -804,7 +819,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       }
       createNodes(nodeArr);
     });
-    stringArr.push(textMaker(map["address"].title, address, "black", "address"));
+    stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
@@ -847,21 +862,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         chain: null
       },
       photoStatus: {
-        title: "원본 사진 상태",
+        title: "사진 상태",
         position: "contents.raw.photo.status",
         values: [ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ],
         chain: null
-      },
-      photoLink: {
-        title: "원본 사진 링크",
-        position: "contents.raw.photo.link",
-        values: [],
-        chain: {
-          condition: "^http",
-          updateQuery: {
-            "contents.raw.photo.status": "원본 수집 완료"
-          },
-        }
       },
     };
 
@@ -1297,108 +1301,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       }
       createNodes(nodeArr);
     });
-    stringArr.push(textMaker(map["photoLink"].title, photoLink === '' ? "링크 없음" : "링크 있음", "black", "photoLink"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "photoLink";
-      let startLeft, width, margin, background;
-      let values, updateEvent;
-      let nodeArr;
-      let position;
-      let whereQuery, updateQuery, chainQuery;
-      let newDom, newInput;
-
-      updateQuery = {};
-      whereQuery = { proid: project.proid };
-      position = map[column].position;
-      values = map[column].values;
-      chainQuery = map[column].chain;
-      startLeft = 31.5;
-      width = 36;
-      margin = 4;
-
-      background = colorChip.gradientGreen;
-      updateEvent = async function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        try {
-          const value = this.getAttribute("value");
-          const removeTargets = mother.querySelectorAll("aside");
-          updateQuery[position] = value;
-          if (value === '') {
-            valueDom.textContent = "링크 없음";
-          } else {
-            valueDom.textContent = "링크 있음";
-            thisCase["photoStatus"].textContent = "원본 수집 완료";
-            thisCase["photoStatus"].style.color = colorChip.black;
-          }
-          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
-          parent.style.overflow = "hidden";
-        } catch (e) {
-          console.log(e);
-        }
-      };
-
-      [ newDom, newInput ] = createNodes([
-        {
-          mother: this,
-          mode: "aside",
-          text: `<b style="display:inline-block;font-weight:200;color:${colorChip.green}">${this.textContent.split(':')[0]}:&nbsp;</b>`,
-          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
-          style: {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(this.getBoundingClientRect().width) + ea,
-            height: String(this.getBoundingClientRect().height) + ea,
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(200),
-            color: colorChip.green,
-            background: colorChip.white,
-            zIndex
-          }
-        },
-        {
-          mother: -1,
-          mode: "input",
-          attribute: [
-            { type: "text" },
-            { value: project.contents.raw.photo.link },
-            { past: project.contents.raw.photo.link },
-          ],
-          events: [
-            { type: "click", event: (e) => { e.stopPropagation(); } },
-            {
-              type: "keypress",
-              event: function (e) {
-                if (e.key === "Enter") {
-                  this.setAttribute("value", this.value.trim());
-                  updateEvent.call(this, e);
-                }
-              }
-            },
-          ],
-          style: {
-            display: "inline-block",
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(400),
-            color: colorChip.green,
-            background: colorChip.white,
-            outline: String(0),
-            border: String(0),
-            width: String(Math.floor(valueDom.parentElement.getBoundingClientRect().width - valueDom.parentElement.firstChild.getBoundingClientRect().width)) + ea,
-            height: String(valueDom.getBoundingClientRect().height) + ea,
-          }
-        }
-      ]);
-
-      newInput.focus();
-
-    });
 
     if (/요망/gi.test(portfolioStatus) || /요망/gi.test(interviewStatus) || /요망/gi.test(photoStatus)) {
       redPoint = true;
@@ -1408,7 +1310,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     map = {
       portfolioLong: {
-        title: "블로그 디자이너글",
+        title: "블로그 포폴",
         position: "contents.sns.portfolio.long",
         values: [ '미정', '해당 없음' ],
         chain: null
@@ -1420,7 +1322,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         chain: null
       },
       portfolioShort: {
-        title: "인스타 디자이너글",
+        title: "인스타 포폴",
         position: "contents.sns.portfolio.short",
         values: [ '미정', '해당 없음' ],
         chain: null
@@ -1432,13 +1334,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         chain: null
       },
       webPublish: {
-        title: "웹 발행",
-        position: "",
-        values: [],
-        chain: null
-      },
-      contentsPid: {
-        title: "컨텐츠 아이디",
+        title: "웹",
         position: "",
         values: [],
         chain: null
@@ -2020,11 +1916,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
     });
-    stringArr.push(textMaker(map["contentsPid"].title, project.pid, "black", "contentsPid"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      cancelBox.parentNode.removeChild(cancelBox);
-      parent.style.overflow = "hidden";
-    });
 
     if (/미정/gi.test(tempString0) || /미정/gi.test(tempString1) || /미정/gi.test(tempString2) || /미정/gi.test(tempString3)) {
       redPoint = true;
@@ -2055,18 +1946,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         title: "디자이너 컨텐츠 공유",
         position: "contents.share.designer.contents",
         values: [ '예정', '해당 없음' ],
-        chain: null
-      },
-      photoStatus: {
-        title: "원본 사진 상태",
-        position: "",
-        values: [],
-        chain: null
-      },
-      contentsPid: {
-        title: "컨텐츠 아이디",
-        position: "",
-        values: [],
         chain: null
       },
     };
@@ -2635,34 +2514,32 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       });
       calendarTong.appendChild(calendar.calendarBase);
     });
-    stringArr.push(textMaker(map["photoStatus"].title, photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black"), "photoStatus"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      cancelBox.parentNode.removeChild(cancelBox);
-      parent.style.overflow = "hidden";
-    });
-    stringArr.push(textMaker(map["contentsPid"].title, project.pid, "black", "contentsPid"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      cancelBox.parentNode.removeChild(cancelBox);
-      parent.style.overflow = "hidden";
-    });
 
   }
+
+  stringArr.push(textMaker("촬영 메모", history.replace(/\n/g, ' '), "black", "history"));
+  updateArr.push(function (e, option, cancelBox, parent) {
+    cancelBox.parentNode.removeChild(cancelBox);
+    parent.style.overflow = "hidden";
+  });
 
   [ whiteBlock ] = createNodes([
     {
       mother,
       id: project.proid,
       attribute: [
-        { index: String(index) }
+        { index: String(index) },
+        { sortstandard: "" },
+        { sort: "1" },
       ],
       style: {
-        display: instance.contentsSearchIndex.includes(index) ? "none" : "block",
+        display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "block" : "none"),
         position: "relative",
         background: colorChip[boo ? "white" : "gray0"],
         width: String(100) + '%',
         height: String(height) + ea,
         borderRadius: String(5) + "px",
-        marginBottom: String(margin * (!last ? 1 : 60)) + ea,
+        marginBottom: String(margin * (!last ? generalMargin : lastMargin)) + ea,
         overflow: "hidden",
       }
     },
@@ -2705,11 +2582,16 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   for (let i = 0; i < stringArr.length; i++) {
     tempDom = createNode({
       mother: whiteBlock,
+      attribute: [
+        { arrindex: String(i) },
+      ],
       text: stringArr[i],
+      class: [ "white_child_" + String(i) ],
       events: [
         {
           type: "click",
           event: function (e) {
+            const index = Number(this.getAttribute("arrindex"));
             const { ea } = instance;
             const { createNodes, colorChip, withOut } = GeneralJs;
             const valueDom = this.querySelector(".value");
@@ -2754,7 +2636,73 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             ]);
             parent = this.parentElement;
             parent.style.overflow = "visible";
-            updateArr[i].call(this, e, option, cancelBox, parent);
+            updateArr[index].call(this, e, option, cancelBox, parent);
+          }
+        },
+        {
+          type: "contextmenu",
+          event: function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if (instance.contentsBlocks.length > 0) {
+
+              const mother = instance.contentsBlocks[0].parentElement;
+              const index = Number(this.getAttribute("arrindex"));
+              const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
+              const nameConst = "white_child_";
+              let tempArr;
+              let thisValue;
+              let numberBoo;
+
+              numberBoo = false;
+
+              for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                thisValue = tempArr[1].trim();
+                if (/[0-9]/gi.test(thisValue)) {
+                  numberBoo = true;
+                }
+              }
+
+              for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                thisValue = tempArr[1].trim();
+                if (/[0-9]/gi.test(thisValue)) {
+                  instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
+                } else {
+                  if (numberBoo) {
+                    if (thisValue === "예정" || thisValue === "미정") {
+                      instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
+                    } else {
+                      instance.contentsBlocks[z].setAttribute("sortstandard", "0");
+                    }
+                  } else {
+                    instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
+                  }
+                }
+              }
+
+              if (sort === 1) {
+                if (numberBoo) {
+                  instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
+                } else {
+                  instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
+                }
+              } else {
+                if (numberBoo) {
+                  instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
+                } else {
+                  instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
+                }
+              }
+
+              for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                mother.appendChild(instance.contentsBlocks[z]);
+                instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
+                instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
+              }
+
+            }
           }
         }
       ],
@@ -2765,6 +2713,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         fontSize: String(size) + ea,
         fontWeight: String(400),
         cursor: "pointer",
+        height: String(factorHeight) + ea,
+        overflow: "scroll",
       }
     });
     domArr.push(tempDom);
@@ -3231,6 +3181,8 @@ DesignerJs.prototype.contentsView = async function () {
     let contents;
     let temp;
     let type, typeArr;
+    let projectHistory;
+    let proidArr;
 
     loading = await this.mother.loadingRun();
 
@@ -3260,10 +3212,12 @@ DesignerJs.prototype.contentsView = async function () {
     desidArr_raw = [];
     cliidArr_raw = [];
     proidArr_raw = [];
+    proidArr = [];
     for (let project of projects) {
       desidArr_raw.push(project.desid);
       cliidArr_raw.push(project.cliid);
       proidArr_raw.push({ proid: project.proid });
+      proidArr.push(project.proid);
     }
 
     desidArr_raw = Array.from(new Set(desidArr_raw));
@@ -3298,12 +3252,18 @@ DesignerJs.prototype.contentsView = async function () {
       }
     }, "/getContents", { equal: true }));
 
+    projectHistory = await ajaxJson({
+      idArr: proidArr,
+      method: "project",
+      property: "photo",
+    }, "/getHistoryProperty");
+
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
       temp = clients.search("cliid", p.cliid);
       p.name = temp.name;
       p.address = temp.requests[0].request.space.address;
-      p.title = `${p.designer} <b style="color:${colorChip.green}">D</b>&nbsp;&nbsp;${p.name} <b style="color:${colorChip.green}">C</b>`;
+      p.title = `${p.name} <b style="color:${colorChip.green}">C</b>&nbsp;&nbsp;${p.designer} <b style="color:${colorChip.green}">D</b>`;
       temp = contents.search("proid", p.proid);
       if (temp !== null) {
         p.web = temp.contents.portfolio.date;
@@ -3312,6 +3272,7 @@ DesignerJs.prototype.contentsView = async function () {
         p.web = p.contents.sns.interview.long;
         p.pid = "미정";
       }
+      p.history = projectHistory[p.proid];
     }
 
     this.projects = projects;
