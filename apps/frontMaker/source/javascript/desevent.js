@@ -178,7 +178,7 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
 
   randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
   // GeneralJs.ajax(randomValueAjaxData, "/engine/Smssend.php", function (data) {});
-  GeneralJs.ajax(randomValueAjaxData, "https://homeliaison-bridgecloud.xyz:3000/certification", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "https://homeliaison-bridge.xyz:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;
@@ -697,7 +697,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
 
       instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {
         try {
-          GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridgecloud.xyz:3000/designerSubmit", function (data) {
+          GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://homeliaison-bridge.xyz:3000/designerSubmit", function (data) {
             let style;
             let ea;
             let svg_clone, svg_dom;
@@ -719,7 +719,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
               }
 
-              GeneralJs.ajax(formData, "https://homeliaison-bridgecloud.xyz:3000/designerBinary", function (d) {});
+              GeneralJs.ajax(formData, "https://homeliaison-bridge.xyz:3000/designerBinary", function (d) {});
             }
 
             if (finalObj.phone !== "010-2747-3403") {
