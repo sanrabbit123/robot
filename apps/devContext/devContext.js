@@ -53,14 +53,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const WebSocket = require('ws');
-
-    const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
-    ws.on('message', async (raw) => {
-      const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
-      console.log(data);
-    });
-
+    // const WebSocket = require('ws');
+    // const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
+    // ws.on('message', async (raw) => {
+    //   const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
+    //   console.log(data);
+    // });
 
 
 
@@ -633,8 +631,8 @@ DevContext.prototype.launching = async function () {
   } catch (e) {
     console.log(e);
   } finally {
-    this.MONGOC.close();
-    this.MONGOLOCALC.close();
+    await this.MONGOC.close();
+    await this.MONGOLOCALC.close();
     console.log(`done`);
   }
 }

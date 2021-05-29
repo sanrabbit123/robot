@@ -552,6 +552,7 @@ ClientJs.prototype.infoArea = function (info) {
             finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
 
+          instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
           await GeneralJs.updateValue({
             thisId: thisId,
             requestIndex: String(requestIndex),
@@ -559,9 +560,9 @@ ClientJs.prototype.infoArea = function (info) {
             pastValue: pastRawData,
             value: finalValue,
             index: Number(idDom.getAttribute("index")),
+            thisCase: instance.cases[Number(idDom.getAttribute("index"))]
           });
 
-          instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
           originalDiv.textContent = finalValue;
           idDom.setAttribute("active", "false");
           removeAllEvent();
@@ -1718,6 +1719,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
           finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
 
+          instance.cases[Number(index)][column] = finalValue;
           await GeneralJs.updateValue({
             thisId: cliid,
             requestIndex: requestIndex,
@@ -1725,9 +1727,9 @@ ClientJs.prototype.cardViewMaker = function () {
             pastValue: originalStatus,
             value: finalValue,
             index: Number(index),
+            thisCase: instance.cases[Number(index)]
           });
 
-          instance.cases[Number(index)][column] = finalValue;
           originalDiv.textContent = finalValue;
 
         } catch (e) {
@@ -2360,6 +2362,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
 
+          instance.cases[thisCase["index"]][column] = finalValue;
           await GeneralJs.updateValue({
             thisId: thisId,
             requestIndex: requestIndex,
@@ -2367,6 +2370,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             pastValue: pastRawData,
             value: finalValue,
             index: thisCase["index"],
+            thisCase: instance.cases[thisCase["index"]],
           });
 
           if (instance.totalFather !== null) {
@@ -2381,7 +2385,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               fatherTarget.textContent = finalValue;
             }
           }
-          instance.cases[thisCase["index"]][column] = finalValue;
           originalDiv.textContent = finalValue;
           targetDom.textContent = finalValue;
 

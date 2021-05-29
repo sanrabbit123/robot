@@ -318,7 +318,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ cliid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ cliid }).toArray();
     }
@@ -368,7 +368,7 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -410,7 +410,7 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       tong = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       tong = await option.selfMongo.db(`miro81`).collection(button).find({}).toArray();
     }
@@ -448,7 +448,7 @@ BackMaker.prototype.getLatestClient = async function (option = { withTools: fals
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).limit(1).toArray();
     }
@@ -483,7 +483,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).limit(Number(number)).toArray();
       }
@@ -491,7 +491,7 @@ BackMaker.prototype.getLatestClients = async function (number = 1, option = { wi
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "requests.0.request.timeline": -1 }).toArray();
       }
@@ -532,7 +532,7 @@ BackMaker.prototype.updateClient = async function (queryArr, option = { selfMong
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
@@ -552,7 +552,7 @@ BackMaker.prototype.deleteClient = async function (cliid, option = { selfMongo: 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).deleteOne({ cliid });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ cliid });
     }
@@ -606,7 +606,7 @@ BackMaker.prototype.createClient = async function (updateQuery, option = { selfM
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
@@ -852,7 +852,7 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ conid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ conid }).toArray();
     }
@@ -885,7 +885,7 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ "contents.portfolio.pid": pid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ "contents.portfolio.pid": pid }).toArray();
     }
@@ -934,7 +934,7 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -975,7 +975,7 @@ BackMaker.prototype.getContentsArrAll = async function (option = { withTools: fa
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       tong = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       tong = await option.selfMongo.db(`miro81`).collection(button).find({}).toArray();
     }
@@ -1012,7 +1012,7 @@ BackMaker.prototype.getLatestContents = async function (option = { withTools: fa
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).limit(1).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).limit(1).toArray();
     }
@@ -1046,7 +1046,7 @@ BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = 
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).limit(Number(number)).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).limit(Number(number)).toArray();
       }
@@ -1054,7 +1054,7 @@ BackMaker.prototype.getLatestContentsArr = async function (number = 1, option = 
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "contents.portfolio.date": -1 }).toArray();
       }
@@ -1094,7 +1094,7 @@ BackMaker.prototype.updateContents = async function (queryArr, option = { selfMo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
@@ -1114,7 +1114,7 @@ BackMaker.prototype.deleteContents = async function (conid, option = { selfMongo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).deleteOne({ conid });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ conid });
     }
@@ -1149,7 +1149,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
@@ -1176,7 +1176,7 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ serid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ serid }).toArray();
     }
@@ -1207,7 +1207,7 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ desid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ desid }).toArray();
     }
@@ -1256,7 +1256,7 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -1297,7 +1297,7 @@ BackMaker.prototype.getDesignersAll = async function (option = { withTools: fals
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       tong = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       tong = await option.selfMongo.db(`miro81`).collection(button).find({}).toArray();
     }
@@ -1334,7 +1334,7 @@ BackMaker.prototype.getLatestDesigner = async function (option = { withTools: fa
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).limit(1).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).limit(1).toArray();
     }
@@ -1368,7 +1368,7 @@ BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { 
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).limit(Number(number)).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).limit(Number(number)).toArray();
       }
@@ -1376,7 +1376,7 @@ BackMaker.prototype.getLatestDesigners = async function (number = 1, option = { 
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "information.contract.date": -1 }).toArray();
       }
@@ -1416,7 +1416,7 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
@@ -1436,7 +1436,7 @@ BackMaker.prototype.deleteDesigner = async function (desid, option = { selfMongo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).deleteOne({ desid });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ desid });
     }
@@ -1496,7 +1496,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
@@ -1566,7 +1566,7 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ proid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ proid }).toArray();
     }
@@ -1615,7 +1615,7 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -1656,7 +1656,7 @@ BackMaker.prototype.getProjectsAll = async function (option = { withTools: false
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       tong = await MONGOC.db(`miro81`).collection(button).find({}).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       tong = await option.selfMongo.db(`miro81`).collection(button).find({}).toArray();
     }
@@ -1693,7 +1693,7 @@ BackMaker.prototype.getLatestProject = async function (option = { withTools: fal
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).limit(1).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).limit(1).toArray();
     }
@@ -1727,7 +1727,7 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).limit(Number(number)).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).limit(Number(number)).toArray();
       }
@@ -1735,7 +1735,7 @@ BackMaker.prototype.getLatestProjects = async function (number = 1, option = { w
       if (option.selfMongo === undefined || option.selfMongo === null) {
         await MONGOC.connect();
         tong = await MONGOC.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).toArray();
-        MONGOC.close();
+        await MONGOC.close();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find({}).sort({ "proid": -1 }).toArray();
       }
@@ -1894,7 +1894,7 @@ BackMaker.prototype.updateProject = async function (queryArr, option = { selfMon
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
@@ -1914,7 +1914,7 @@ BackMaker.prototype.deleteProject = async function (proid, option = { selfMongo:
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).deleteOne({ proid });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ proid });
     }
@@ -1959,7 +1959,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
@@ -1986,7 +1986,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       arr = await MONGOC.db(`miro81`).collection(button).find({ aspid }).toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ aspid }).toArray();
     }
@@ -2036,7 +2036,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -2070,7 +2070,7 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
         }
       }
       if (option.selfMongo === undefined || option.selfMongo === null) {
-        MONGOC.close();
+        await MONGOC.close();
       }
     }
 
@@ -2108,7 +2108,7 @@ BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
     }
@@ -2128,7 +2128,7 @@ BackMaker.prototype.deleteAspirant = async function (aspid, option = { selfMongo
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).deleteOne({ aspid });
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).deleteOne({ aspid });
     }
@@ -2165,7 +2165,7 @@ BackMaker.prototype.createAspirant = async function (updateQuery, option = { sel
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
     }
@@ -2256,7 +2256,7 @@ BackMaker.prototype.getHistoryById = async function (method, id, option = { from
     }
     arr = await MONGOLOCALC.db(`miro81`).collection(collection).find(whereQuery).toArray();
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
     if (arr.length > 0) {
       return arr[0];
@@ -2320,7 +2320,7 @@ BackMaker.prototype.getHistoriesByQuery = async function (method, query, option 
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
     }
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
 
     return tong;
@@ -2381,7 +2381,7 @@ BackMaker.prototype.getHistoriesAll = async function (method, option = { fromCon
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find({}).sort(sortQuery).toArray();
     }
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
 
     return tong;
@@ -2467,7 +2467,7 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       tong = await MONGOLOCALC.db(`miro81`).collection(collection).find(findQuery).project(projectQuery).sort(sortQuery).toArray();
     }
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
 
     if (idArr !== null) {
@@ -2550,7 +2550,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
     }
     await MONGOLOCALC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
 
     return "success";
@@ -2602,7 +2602,7 @@ BackMaker.prototype.deleteHistory = async function (method, id, option = { fromC
     }
     await MONGOLOCALC.db(`miro81`).collection(collection).deleteOne(deleteQuery);
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
     return "success";
   } catch (e) {
@@ -2729,7 +2729,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
     }
     await MONGOLOCALC.db(`miro81`).collection(collection).insertOne(dummy);
     if (!SELFMONGOBOO) {
-      MONGOLOCALC.close();
+      await MONGOLOCALC.close();
     }
 
     whereQuery = {};
@@ -2768,7 +2768,7 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
       }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).insertOne(json);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(collection).insertOne(json);
     }
@@ -2813,7 +2813,7 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
       } else {
         tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
       }
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
         tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
@@ -2866,7 +2866,7 @@ BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option =
       }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, finalUpdateObj);
     }
@@ -2898,7 +2898,7 @@ BackMaker.prototype.mongoDelete = async function (collection, query, option = { 
       }
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(collection).deleteOne(query);
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       await option.selfMongo.db(`miro81`).collection(collection).deleteOne(query);
     }
@@ -2930,7 +2930,7 @@ BackMaker.prototype.mongoListCollections = async function (option = { local: nul
       }
       await MONGOC.connect();
       allCollections_raw = await MONGOC.db(`miro81`).listCollections().toArray();
-      MONGOC.close();
+      await MONGOC.close();
     } else {
       allCollections_raw = await option.selfMongo.db(`miro81`).listCollections().toArray();
     }

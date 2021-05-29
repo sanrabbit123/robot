@@ -119,10 +119,20 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
         finalValue = "예정";
       } else {
         filteredValue = DataPatch.toolsDateFilter(value);
-        if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
-          finalValue = filteredValue;
+        if (map[column].detailDate === undefined) {
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
+            finalValue = filteredValue;
+          } else {
+            finalValue = pastValue;
+          }
         } else {
-          finalValue = pastValue;
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/g.test(filteredValue)) {
+            finalValue = filteredValue + " " + (pastValue.split(' '))[1];
+          } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(filteredValue)) {
+            finalValue = filteredValue;
+          } else {
+            finalValue = pastValue;
+          }
         }
       }
       break;

@@ -434,7 +434,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       console.log(`ghost upload done`);
     }
 
-    return this.folderName;
+    return { folderName: this.folderName, webViewLink };
 
   } catch (e) {
     console.log(e);
@@ -668,6 +668,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let foreRows;
     let nextPid;
     let note;
+    let projects, project;
+    let totalMakeResult;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -742,7 +744,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       this.designer = designer;
       this.pid = nextPid;
       this.apartName = "";
-      googleFolderName = await this.total_make(true);
+      totalMakeResult = await this.total_make(true);
+      googleFolderName = totalMakeResult.folderName;
 
       ghostPhotos = await photoRequest("ls");
       while (!ghostPhotos.includes(googleFolderName)) {
@@ -774,6 +777,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
 
       shell.exec(`rm -rf ${shellLink(folderPath)};`);
+
+      projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
+      if (projects.length > 0) {
+        project = projects[0];
+        await back.updateProject([ { proid: project.proid }, { "contents.raw.photo.status": "원본 보정 완료", "contents.raw.photo.link": totalMakeResult.webViewLink } ]);
+      }
 
       console.log(`${client}C ${designer}D raw to raw done`);
     }

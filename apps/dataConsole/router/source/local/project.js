@@ -570,6 +570,7 @@ ProjectJs.prototype.infoArea = function (info) {
                 pastValue: thisCase[c],
                 value: chainingFinalValue,
                 index: Number(idDom.getAttribute("index")),
+                thisCase: thisCase
               });
               thisCase[c] = chainingFinalValue;
               targetOriginalDiv = null;
@@ -595,6 +596,7 @@ ProjectJs.prototype.infoArea = function (info) {
             pastValue: pastRawData,
             value: finalValue,
             index: Number(idDom.getAttribute("index")),
+            thisCase: thisCase
           });
 
           await instance.globalChaining(thisCase, column, finalValue);
@@ -1841,6 +1843,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
           finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
 
+          instance.cases[Number(index)][column] = finalValue;
           await GeneralJs.updateValue({
             thisId: proid,
             requestIndex: 0,
@@ -1848,9 +1851,9 @@ ProjectJs.prototype.cardViewMaker = function () {
             pastValue: originalStatus,
             value: finalValue,
             index: Number(index),
+            thisCase: instance.cases[Number(index)]
           });
 
-          instance.cases[Number(index)][column] = finalValue;
           originalDiv.textContent = finalValue;
 
         } catch (e) {
@@ -2642,6 +2645,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 pastValue: thisCaseOriginal[c],
                 value: chainingFinalValue,
                 index: Number(thisCase["index"]),
+                thisCase: thisCaseOriginal,
               });
               thisCaseOriginal[c] = chainingFinalValue;
               targetOriginalRowDiv = null;
@@ -2683,6 +2687,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             pastValue: pastRawData,
             value: finalValue,
             index: thisCase["index"],
+            thisCase: thisCaseOriginal,
           });
 
           await instance.globalChaining(thisCase, column, finalValue);

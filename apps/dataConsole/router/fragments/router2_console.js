@@ -342,12 +342,12 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
-  const { fileSystem, pythonExecute, shell, shellLink } = this.mother;
+  const { fileSystem, pythonExecute, shell, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updatePhoto" ];
   obj.func = async function (req, res) {
     try {
-      let { thisId, requestIndex, column, value, pastValue, user } = req.body;
+      let { thisId, requestIndex, column, value, pastValue, user, thisCase } = req.body;
       let thisPath;
       let map;
       let whereQuery, updateQuery;
@@ -543,6 +543,27 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
         }
         await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
+      }
+
+      //calendar
+      if (map[column].calendar !== undefined) {
+        if (typeof map[column].calendar === "function") {
+          let calendObj, start, id, to, title;
+          calendObj = map[column].calendar(JSON.parse(thisCase));
+          id = calendObj.id;
+          to = calendObj.to;
+          title = calendObj.title;
+          start = finalValue;
+          instance.calendar.listEvents(to, id).then((searchResult) => {
+            if (searchResult.length === 0) {
+              instance.calendar.makeSchedule(to, title, "", start, null);
+            } else {
+              instance.calendar.updateSchedule(to, searchResult[0].eventId, { start, title });
+            }
+          }).catch((err) => {
+            throw new Error(err);
+          });
+        }
       }
 
       res.set("Content-Type", "application/json");
@@ -2173,6 +2194,59 @@ DataRouter.prototype.rou_post_generalMongo = function () {
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_generalCalendar = function () {
+  const instance = this;
+  const back = this.back;
+  const calendar = this.calendar;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/makeSchedule", "/listSchedule", "/updateSchedule", "deleteSchedule" ];
+  obj.func = async function (req, res) {
+    try {
+      let resultObj;
+      if (req.url === "/makeSchedule") {
+        if (req.body.to === undefined || req.body.title === undefined || req.body.start === undefined) {
+          throw new Error("invaild body");
+        }
+        const { to, title } = req.body;
+        const start = new Date(req.body.start.replace(/"/g, ''));
+        const end = (req.body.end !== undefined) ? new Date(req.body.end.replace(/"/g, '')) : null;
+        const description = (req.body.description !== undefined) ? req.body.description : "";
+        resultObj = await calendar.makeSchedule(to, title, description, start, end);
+      } else if (req.url === "/listSchedule") {
+        if (req.body.from === undefined) {
+          throw new Error("invaild body");
+        }
+        const { from } = req.body;
+        const search = (req.body.search !== undefined) ? req.body.search : null;
+        resultObj = await calendar.listEvents(from, search);
+      } else if (req.url === "/updateSchedule") {
+        if (req.body.from === undefined || req.body.id === undefined || req.body.updateQuery === undefined) {
+          throw new Error("invaild body");
+        }
+        const { from, id } = req.body;
+        const updateQuery = equalJson(req.body.updateQuery);
+        await calendar.updateSchedule(from, id, updateQuery);
+        resultObj = { "message": "done" };
+      } else {
+        if (req.body.from === undefined || req.body.id === undefined) {
+          throw new Error("invaild body");
+        }
+        const { from, id } = req.body;
+        await calendar.deleteSchedule(from, id);
+        resultObj = { "message": "done" };
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(resultObj));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

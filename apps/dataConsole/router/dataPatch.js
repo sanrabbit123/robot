@@ -5275,7 +5275,13 @@ DataPatch.prototype.projectMap = function () {
     firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
     firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     firstRefund: { name: "계약금 환불액", position: "process.contract.first.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
-    meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", detailDate: true, searchBoo: true, yesNo: [ "Y", "N" ], calendar: function (thisCase) {
+      const id = thisCase.proid;
+      const to = "designerMeeting";
+      const designer = ((thisCase.designer.split(" "))[0]).trim();
+      const title = "현장 미팅 W " + thisCase.name + "C " + designer + "D " + thisCase.proid;
+      return { id: id, to: to, title: title };
+    }, },
     remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainCancel: { name: "잔금 취소", position: "process.contract.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
