@@ -51,6 +51,22 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
 
 
+
+
+    const WebSocket = require('ws');
+
+    const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
+    ws.on('message', async (raw) => {
+      const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
+      console.log(data);
+    });
+
+
+
+
+
+
+
     // const selfMongo = this.MONGOLOCALC;
     // const targetDesigners = [ "홍민영", "이지수", "채성은" ];
     // const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
