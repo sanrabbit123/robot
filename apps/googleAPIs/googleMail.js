@@ -57,7 +57,7 @@ GoogleMail.prototype.send_mail = async function (to, subject, message) {
 GoogleMail.prototype.total_make = async function () {
   let instance = this;
   try {
-    let to = "homeliaisonserver@gmail.com";
+    let to = "uragen@naver.com";
     let subject = "proposalMaker4";
     let message = "Make proposal";
     this.gmail = await this.general.get_app("gmail");
@@ -68,5 +68,19 @@ GoogleMail.prototype.total_make = async function () {
   }
 }
 
+GoogleMail.prototype.getMails = async function () {
+  let instance = this;
+  try {
+    this.gmail = await this.general.get_app("gmail");
+    console.log(await instance.gmail.users.messages.list({
+      userId: 'me',
+      includeSpamTrash: true,
+      maxResults: 20
+    }));
+    return 0;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 
 module.exports = GoogleMail;

@@ -5,10 +5,12 @@ const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const BackReport = require(APP_PATH + "/backMaker/backReport.js");
 const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
 const BridgeCloud = require(APP_PATH + "/bridgeCloud/bridgeCloud.js");
+const GoogleAPIs = require(APP_PATH + "/googleAPIs/googleAPIs.js");
 const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
+const GoogleMail = require(APP_PATH + "/googleAPIs/googleMail.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
@@ -51,6 +53,11 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
 
 
+
+
+
+    // const gmail = new GoogleMail();
+    // await gmail.getMails();
 
 
     // const WebSocket = require('ws');
