@@ -72,11 +72,24 @@ GoogleMail.prototype.getMails = async function () {
   let instance = this;
   try {
     this.gmail = await this.general.get_app("gmail");
-    console.log(await instance.gmail.users.messages.list({
-      userId: 'me',
-      includeSpamTrash: true,
-      maxResults: 20
-    }));
+    const userId = "me";
+    const res = await instance.gmail.users.messages.list({ userId });
+    const { messages } = res.data;
+    let detailRes;
+    let attachments;
+
+    // for (let { id } of messages) {
+    //   detailRes = await instance.gmail.users.messages.get({ userId, id });
+    //   console.log(detailRes.data);
+    // }
+
+    detailRes = await instance.gmail.users.messages.get({ userId, id: "179b6d0d5b3b0f4e" });
+
+
+    attachments = await instance.gmail.users.messages.attachments.get({ userId, messageId: "179b6d0d5b3b0f4e", id: detailRes.data.payload.parts[1].body.attachmentId })
+
+    console.log(attachments);
+
     return 0;
   } catch (e) {
     console.log(e.message);

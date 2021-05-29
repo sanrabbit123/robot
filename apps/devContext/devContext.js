@@ -56,8 +56,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const gmail = new GoogleMail();
-    // await gmail.getMails();
+    const gmail = new GoogleMail();
+    await gmail.getMails();
 
 
     // const WebSocket = require('ws');
