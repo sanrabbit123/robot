@@ -56,8 +56,58 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const gmail = new GoogleMail();
-    await gmail.getMails();
+    // const gmail = new GoogleMail();
+    // const tong = await gmail.getLatestMailAttachments("uragen@naver.com");
+    // await fileSystem(`write`, [ `${process.cwd()}/temp/i.html`, tong[0].data ]);
+
+    const html = await fileSystem(`readString`, [ `${process.cwd()}/temp/i.html` ]);
+    const search = [ ...html.matchAll(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi) ];
+    let res, localScript;
+    let newHtml;
+
+    localScript = '';
+    for (let arr of search) {
+      res = await requestSystem(arr[1]);
+      localScript += res.data;
+      localScript += "\n\n";
+    }
+
+    localScript = `<script>\n\n${localScript}\n\n</script>`;
+
+    newHtml = html.replace(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi, '');
+    newHtml = newHtml.replace(/\<\/head\>/g, localScript + "</head>").replace(/src\=\"[^\"]+\"/gi, "").replace(/href\=\"[^\"]+\"/gi, "");
+    newHtml = newHtml.replace(/\<script defer\>[^\<]+\<\/script\>/gi, '');
+    newHtml += `\n\n<script>
+    var s = document.getElementById("idCriHeader").value;
+    var decodeHeader = CryptoJS.enc.Base64.parse(s);
+    var words = decodeHeader.words;
+    var decHeader="";
+    for(i=0; i < decodeHeader.sigBytes; i++)
+    {
+      var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+      var bite2 = bite ^ 0x6b;
+      decHeader = decHeader + String.fromCharCode(bite2);
+    }
+    decHeader = decHeader.replace(/\\r\\n/gi, '||');
+    decHeader = decHeader.replace(/\\n/gi, '||');
+    Cri_Header_parser(decHeader);
+    Cri_Check_Pwd("2218149759");
+    CriDisplayBody();
+    console.log(document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent);
+    </script>`
+
+    await fileSystem(`write`, [ `${process.cwd()}/temp/i2.html`, newHtml ]);
+
+
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
+    const dom = new JSDOM(newHtml, { runScripts: "dangerously" });
+    console.log(dom.window.document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent);
+
+
+    // contentWindow.document.querySelectorAll("table")
+
+
 
 
     // const WebSocket = require('ws');

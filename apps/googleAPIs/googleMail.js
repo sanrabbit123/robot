@@ -68,31 +68,84 @@ GoogleMail.prototype.total_make = async function () {
   }
 }
 
-GoogleMail.prototype.getMails = async function () {
-  let instance = this;
+GoogleMail.prototype.getLatestMail = async function (from) {
+  if (from === undefined || typeof from !== "string") {
+    throw new Error("must be from email");
+  }
+  const instance = this;
   try {
     this.gmail = await this.general.get_app("gmail");
     const userId = "me";
-    const res = await instance.gmail.users.messages.list({ userId });
+    const res = await this.gmail.users.messages.list({ userId, q: "from:" + from });
     const { messages } = res.data;
     let detailRes;
     let attachments;
 
-    // for (let { id } of messages) {
-    //   detailRes = await instance.gmail.users.messages.get({ userId, id });
-    //   console.log(detailRes.data);
-    // }
+    if (messages.length === 0) {
+      return null;
+    } else {
+      for (let { id } of messages) {
+        detailRes = await instance.gmail.users.messages.get({ userId, id });
+        break;
+      }
+      return detailRes.data;
+    }
 
-    detailRes = await instance.gmail.users.messages.get({ userId, id: "179b6d0d5b3b0f4e" });
+    // detailRes = await instance.gmail.users.messages.get({ userId, id: "179b6d0d5b3b0f4e" });
+    //
+    // attachments = await instance.gmail.users.messages.attachments.get({ userId, messageId: "179b6d0d5b3b0f4e", id: detailRes.data.payload.parts[1].body.attachmentId })
+    //
+    // console.log(attachments);
 
-
-    attachments = await instance.gmail.users.messages.attachments.get({ userId, messageId: "179b6d0d5b3b0f4e", id: detailRes.data.payload.parts[1].body.attachmentId })
-
-    console.log(attachments);
-
-    return 0;
   } catch (e) {
     console.log(e.message);
+  }
+}
+
+GoogleMail.prototype.parsingAttachments = function (messageObj) {
+  if (typeof messageObj !== "object") {
+    throw new Error("must be message object");
+  }
+  if (messageObj.payload === undefined) {
+    throw new Error("must be message object");
+  }
+  const instance = this;
+  let tong;
+
+  tong = [];
+  for (let { mimeType, filename, body } of messageObj.payload.parts) {
+    if (body.attachmentId !== undefined) {
+      tong.push({ mimeType, filename, attachmentId: body.attachmentId });
+    }
+  }
+
+  return tong;
+}
+
+GoogleMail.prototype.getLatestMailAttachments = async function (from) {
+  if (from === undefined || typeof from !== "string") {
+    throw new Error("must be from email");
+  }
+  const instance = this;
+  try {
+    const userId = "me";
+    const messageObj = await this.getLatestMail(from);
+    const targets = this.parsingAttachments(messageObj);
+    let attachments, buff;
+    let tong;
+    tong = [];
+    for (let { mimeType, filename, attachmentId } of targets) {
+      attachments = await instance.gmail.users.messages.attachments.get({ userId, messageId: messageObj.id, id: attachmentId });
+      buff = Buffer.from(attachments.data.data, 'base64');
+      if (/text/gi.test(mimeType)) {
+        tong.push({ mimeType, fileName: filename, data: buff.toString("utf-8") });
+      } else {
+        tong.push({ mimeType, fileName: filename, data: buff });
+      }
+    }
+    return tong;
+  } catch (e) {
+    console.log(e);
   }
 }
 
