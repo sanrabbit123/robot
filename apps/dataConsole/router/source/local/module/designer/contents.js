@@ -195,8 +195,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       photoSourceBoo = false;
     }
     if (photoSourceBoo && this.pastPhotoSourceBoo) {
-      console.log(project.name);
-      console.log("this!");
       last = true;
     }
   }
