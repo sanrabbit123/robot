@@ -515,7 +515,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1-fszrR5hWn__B2So0uoG8OcGIbOHyeD5", "p95");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1f7TO4P5SoSPoI9v6ZgVNEohwhTsNEquf", "p96");
 
 
     // send checklist
@@ -527,7 +527,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p95");
+    // await this.getCorePortfolio("p96");
 
 
     // aspirant to designer
