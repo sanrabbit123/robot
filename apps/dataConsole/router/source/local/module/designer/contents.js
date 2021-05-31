@@ -100,7 +100,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     throw new Error("invaild input");
   }
   const instance = this;
-  const { ea } = this;
+  const { ea, photoActionList } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const { address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
@@ -154,6 +154,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let photoSourceBoo;
   let generalMargin, lastMargin;
   let factorHeight;
+  let num;
 
   totalObj = [];
 
@@ -190,8 +191,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   photoSourceBoo = true;
   if (this.type === "contents" || this.type === "share") {
-    if (([ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(project.contents.raw.photo.status)) {
+    if (photoActionList.includes(project.contents.raw.photo.status)) {
       photoSourceBoo = false;
+    }
+    if (photoSourceBoo && this.pastPhotoSourceBoo) {
+      console.log(project.name);
+      console.log("this!");
+      last = true;
     }
   }
 
@@ -2647,6 +2653,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         borderRadius: String(5) + "px",
         marginBottom: String(margin * (!last ? generalMargin : lastMargin)) + ea,
         overflow: "hidden",
+        transition: "all 0s ease",
       }
     },
     {
@@ -2695,155 +2702,153 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       class: [ "white_child_" + String(i) ],
       events: [
         {
-          type: "click",
-          event: function (e) {
-            if (this.querySelectorAll("aside").length === 0) {
-              const index = Number(this.getAttribute("arrindex"));
-              const { ea } = instance;
-              const { createNodes, colorChip, withOut } = GeneralJs;
-              const valueDom = this.querySelector(".value");
-              let thisCase;
-              thisCase = {};
-              for (let column in map) {
-                if (document.getElementById(project.proid + "_" + column) === null) {
-                  throw new Error("invaild doms");
-                }
-                thisCase[column] = document.getElementById(project.proid + "_" + column);
-              }
-              const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
-              let cancelBox, parent, calendarEvent;
-
-              parent = this.parentElement;
-              [ cancelBox ] = createNodes([
-                {
-                  mother: this,
-                  mode: "aside",
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        parent.style.overflow = "hidden";
-                        const directParent = this.parentElement;
-                        const removeTargets = directParent.querySelectorAll("aside");
-                        for (let dom of removeTargets) {
-                          directParent.removeChild(dom);
-                        }
-                      }
-                    }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0) + ea,
-                    left: String(0) + ea,
-                    width: String(100) + '%',
-                    height: String(100) + '%',
-                    background: "transparent",
-                    zIndex: option.zIndex,
-                  }
-                }
-              ]);
-              parent.style.overflow = "visible";
-
-              calendarEvent = null;
-              if (instance.type === "photo") {
-                if (thisCase["boo"].textContent.trim() === "O") {
-                  calendarEvent = function (thisCase) {
-                    let tempArr, dateValue, updateDate;
-                    dateValue = thisCase["date"].textContent.trim();
-                    if (dateValue !== "미정" && dateValue !== "해당 없음") {
-                      tempArr = dateValue.split('-');
-                      updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.replace(/[^0-9]/g, '')));
-                      const to = "photographing";
-                      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
-                      const start = updateDate;
-                      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
-                        if (list.length === 0) {
-                          return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
-                        } else {
-                          return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
-                        }
-                      }).catch((err) => {
-                        throw new Error(err);
-                      });
-                    }
-                  }
-                }
-              }
-
-              updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent);
-            }
-          }
-        },
-        {
-          type: "contextmenu",
+          type: [ "click", "contextmenu" ],
           event: function (e) {
             e.stopPropagation();
             e.preventDefault();
             if (this.querySelectorAll("aside").length === 0) {
-              if (instance.contentsBlocks.length > 0) {
-
-                const mother = instance.contentsBlocks[0].parentElement;
+              if (!e.altKey) {
                 const index = Number(this.getAttribute("arrindex"));
-                const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
-                const nameConst = "white_child_";
-                let tempArr;
-                let thisValue;
-                let numberBoo;
-
-                numberBoo = false;
-
-                for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                  tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                  thisValue = tempArr[1].trim();
-                  if (/[0-9]/gi.test(thisValue)) {
-                    numberBoo = true;
+                const { ea } = instance;
+                const { createNodes, colorChip, withOut } = GeneralJs;
+                const valueDom = this.querySelector(".value");
+                let thisCase;
+                thisCase = {};
+                for (let column in map) {
+                  if (document.getElementById(project.proid + "_" + column) === null) {
+                    throw new Error("invaild doms");
                   }
+                  thisCase[column] = document.getElementById(project.proid + "_" + column);
                 }
+                const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
+                let cancelBox, parent, calendarEvent;
 
-                for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                  tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                  thisValue = tempArr[1].trim();
-                  if (/[0-9]/gi.test(thisValue)) {
-                    instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
-                  } else {
-                    if (numberBoo) {
-                      if (thisValue === "예정" || thisValue === "미정") {
-                        instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
-                      } else {
-                        instance.contentsBlocks[z].setAttribute("sortstandard", "0");
+                parent = this.parentElement;
+                [ cancelBox ] = createNodes([
+                  {
+                    mother: this,
+                    mode: "aside",
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          parent.style.overflow = "hidden";
+                          const directParent = this.parentElement;
+                          const removeTargets = directParent.querySelectorAll("aside");
+                          for (let dom of removeTargets) {
+                            directParent.removeChild(dom);
+                          }
+                        }
                       }
-                    } else {
-                      instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0) + ea,
+                      left: String(0) + ea,
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: "transparent",
+                      zIndex: option.zIndex,
+                    }
+                  }
+                ]);
+                parent.style.overflow = "visible";
+
+                calendarEvent = null;
+                if (instance.type === "photo") {
+                  if (thisCase["boo"].textContent.trim() === "O") {
+                    calendarEvent = function (thisCase) {
+                      let tempArr, dateValue, updateDate;
+                      dateValue = thisCase["date"].textContent.trim();
+                      if (dateValue !== "미정" && dateValue !== "해당 없음") {
+                        tempArr = dateValue.split('-');
+                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.replace(/[^0-9]/g, '')));
+                        const to = "photographing";
+                        const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+                        const start = updateDate;
+                        GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+                          if (list.length === 0) {
+                            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
+                          } else {
+                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+                          }
+                        }).catch((err) => {
+                          throw new Error(err);
+                        });
+                      }
                     }
                   }
                 }
 
-                if (sort === 1) {
-                  if (numberBoo) {
-                    instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
-                  } else {
-                    instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
-                  }
-                } else {
-                  if (numberBoo) {
-                    instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
-                  } else {
-                    instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
-                  }
-                }
+                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent);
+              } else {
 
-                for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                  mother.appendChild(instance.contentsBlocks[z]);
-                  instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
-                  instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
+                if (instance.contentsBlocks.length > 0) {
+
+                  const mother = instance.contentsBlocks[0].parentElement;
+                  const index = Number(this.getAttribute("arrindex"));
+                  const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
+                  const nameConst = "white_child_";
+                  let tempArr;
+                  let thisValue;
+                  let numberBoo;
+
+                  numberBoo = false;
+
+                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                    tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                    thisValue = tempArr[1].trim();
+                    if (/[0-9]/gi.test(thisValue)) {
+                      numberBoo = true;
+                    }
+                  }
+
+                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                    tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
+                    thisValue = tempArr[1].trim();
+                    if (/[0-9]/gi.test(thisValue)) {
+                      instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
+                    } else {
+                      if (numberBoo) {
+                        if (thisValue === "예정" || thisValue === "미정") {
+                          instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
+                        } else {
+                          instance.contentsBlocks[z].setAttribute("sortstandard", "0");
+                        }
+                      } else {
+                        instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
+                      }
+                    }
+                  }
+
+                  if (sort === 1) {
+                    if (numberBoo) {
+                      instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
+                    } else {
+                      instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
+                    }
+                  } else {
+                    if (numberBoo) {
+                      instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
+                    } else {
+                      instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
+                    }
+                  }
+
+                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
+                    mother.appendChild(instance.contentsBlocks[z]);
+                    instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
+                    instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
+                  }
+
                 }
 
               }
             }
           }
-        }
+        },
       ],
       style: {
         position: "absolute",
@@ -2905,6 +2910,14 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   }
 
   this.contentsBlocks.push(whiteBlock);
+  if (photoSourceBoo && this.pastPhotoSourceBoo) {
+    num = 2;
+    while (this.contentsBlocks[this.contentsBlocks.length - num] !== undefined) {
+      this.contentsBlocks[this.contentsBlocks.length - num].style.marginBottom = String(margin * generalMargin) + ea;
+      num++;
+    }
+  }
+  this.pastPhotoSourceBoo = photoSourceBoo;
 
   return totalObj;
 }
@@ -2937,6 +2950,7 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
 
   this.contentsBlocks = [];
+  this.pastPhotoSourceBoo = true;
   for (let i = 0; i < projects.length; i++) {
     if (!actionList.includes(projects[i].process.action)) {
       [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i);
@@ -3336,6 +3350,12 @@ DesignerJs.prototype.contentsView = async function () {
       "시공 진행",
       "제품 구매",
       "배송중",
+    ];
+    this.photoActionList = [
+      '촬영 대기',
+      '원본 요청 요망',
+      '원본 요청 완료',
+      '해당 없음'
     ];
 
     whereQuery = {};

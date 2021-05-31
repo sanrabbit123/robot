@@ -510,7 +510,15 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       }
       if (style.events !== undefined && Array.isArray(style.events)) {
         for (let obj of style.events) {
-          dom_clone.addEventListener(obj.type, obj.event);
+          if (Array.isArray(obj.type)) {
+            for (let str of obj.type) {
+              dom_clone.addEventListener(str, obj.event);
+            }
+          } else if (typeof obj.type === "string") {
+            dom_clone.addEventListener(obj.type, obj.event);
+          } else {
+            throw new Error("invaild type");
+          }
         }
       }
       if (mother !== null && mother.appendChild.constructor === Function) {
@@ -576,7 +584,15 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       }
       if (style.events !== undefined && Array.isArray(style.events)) {
         for (let obj of style.events) {
-          dom_clone.addEventListener(obj.type, obj.event);
+          if (Array.isArray(obj.type)) {
+            for (let str of obj.type) {
+              dom_clone.addEventListener(str, obj.event);
+            }
+          } else if (typeof obj.type === "string") {
+            dom_clone.addEventListener(obj.type, obj.event);
+          } else {
+            throw new Error("invaild type");
+          }
         }
       }
       if (mother !== null && mother.appendChild.constructor === Function) {
