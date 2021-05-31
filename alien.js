@@ -537,7 +537,6 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
     ws.on('message', async (raw) => {
       try {
         const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
-        console.log(data);
         if (data.type === "push") {
           const { push: { type } } = data;
           if (type === "sms_changed") {
