@@ -58,13 +58,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const WebSocket = require('ws');
-    // const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
-    // ws.on('message', async (raw) => {
-    //   const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
-    //   console.log(data);
-    // });
-
 
 
 

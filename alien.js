@@ -537,9 +537,11 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
     ws.on('message', async (raw) => {
       try {
         const data = JSON.parse(raw.replace(/^\n/, '').replace(/\n$/, '').trim());
+        console.log(data);
         if (data.type === "push") {
-          if (data.type === "sms_changed") {
-            const { push: { type, notifications } } = data;
+          const { push: { type } } = data;
+          if (type === "sms_changed") {
+            const { notifications } = data.push;
             let tempArr;
             let amount, who;
             let whereQuery, updateQuery;
@@ -548,7 +550,6 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
             let boo;
             let num;
             let message;
-
             for (let { body } of notifications) {
               if (/\[Web/.test(body.trim()) && /입금/gi.test(body) && /원/gi.test(body) && /\]/gi.test(body) && /\//gi.test(body) && /\:/gi.test(body)) {
                 tempArr = body.split("원");
@@ -593,13 +594,14 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
                 message += "\n";
                 message += body;
 
-                await this.mother.slack_bot.chat.postMessage({ text: message, channel });
+                await instance.mother.slack_bot.chat.postMessage({ text: message, channel });
 
               }
             }
-          } else if (data.type === "mirror") {
-            if (data.push.package_name === "net.daum.android.mail") {
-              await this.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지됨 : \n" + JSON.stringify(data, null, 2), channel: "#error_log" });
+          } else if (type === "mirror") {
+            const { package_name } = data.push;
+            if (/net\.daum\.android\.mail/gi.test(package_name)) {
+              await instance.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지됨 : \n" + JSON.stringify(data, null, 2), channel: "#error_log" });
             }
           }
         }
