@@ -2096,11 +2096,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       });
       calendarTong.appendChild(calendar.calendarBase);
     });
-    stringArr.push(textMaker(map["clientContents"].title, dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black"), "clientContents"));
+    stringArr.push(textMaker(map["designerPhoto"].title, dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black"), "designerPhoto"));
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "clientContents";
+      const column = "designerPhoto";
       let startLeft, width, margin, background;
       let values, updateEvent;
       let nodeArr;
@@ -2237,11 +2237,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       });
       calendarTong.appendChild(calendar.calendarBase);
     });
-    stringArr.push(textMaker(map["designerPhoto"].title, dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black"), "designerPhoto"));
+    stringArr.push(textMaker(map["clientContents"].title, dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black"), "clientContents"));
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "designerPhoto";
+      const column = "clientContents";
       let startLeft, width, margin, background;
       let values, updateEvent;
       let nodeArr;
@@ -2911,7 +2911,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
 DesignerJs.prototype.contentsBlockInjection = function () {
   const instance = this;
-  const { ea, projects } = this;
+  const { ea, projects, actionList } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
@@ -2919,19 +2919,8 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   let maxWidth;
   let startLeft, betweenText, widthArr, domArr;
   let temp;
-  let actionList;
 
   cleanChildren(contentsTong);
-
-  actionList = [
-    "응대 대기",
-    "현장 미팅",
-    "1차 제안",
-    "수정 제안",
-    "시공 진행",
-    "제품 구매",
-    "배송중",
-  ];
 
   scrollTong = createNode({
     mother: contentsTong,
@@ -3313,6 +3302,7 @@ DesignerJs.prototype.contentsView = async function () {
       }
     }
     const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep } = GeneralJs;
+    const todayDateValue = (new Date()).valueOf();
     let loading;
     let projects;
     let designers, desidArr_raw, desidArr;
@@ -3323,6 +3313,7 @@ DesignerJs.prototype.contentsView = async function () {
     let type, typeArr;
     let projectHistory;
     let proidArr;
+    let whereQuery;
 
     loading = await this.mother.loadingRun();
 
@@ -3337,17 +3328,37 @@ DesignerJs.prototype.contentsView = async function () {
     this.contentsSpec = {};
     this.contentsSearchIndex = [];
     this.contentsBlocks = null;
+    this.actionList = [
+      "응대 대기",
+      "현장 미팅",
+      "1차 제안",
+      "수정 제안",
+      "시공 진행",
+      "제품 구매",
+      "배송중",
+    ];
 
-    projects = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $and: [
-          { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[진홀]" } },
-          { "process.calculation.payments.first.date": { $gte: new Date(2000, 0, 1) } }
-        ]
-      }
-    }, "/getProjects", { equal: true }));
+    whereQuery = {};
+    whereQuery["$and"] = [];
+    whereQuery["$and"].push({ desid: { $regex: "^d" } });
+    whereQuery["$and"].push({ "process.status": { $regex: "^[진홀완]" } });
+    for (let i of this.actionList) {
+      whereQuery["$and"].push({ "process.action": { $not: { $regex: i } } });
+    }
+    whereQuery["$and"].push({
+      $or: [
+        { "contents.share.client.photo": { $gte: new Date() } },
+        { "contents.share.client.contents": { $gte: new Date() } },
+        { "contents.share.designer.photo": { $gte: new Date() } },
+        { "contents.share.designer.contents": { $gte: new Date() } },
+        { "contents.sns.portfolio.long": { $gte: new Date() } },
+        { "contents.sns.portfolio.short": { $gte: new Date() } },
+        { "contents.sns.interview.long": { $gte: new Date() } },
+        { "contents.sns.interview.short": { $gte: new Date() } },
+      ]
+    });
+
+    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true }));
 
     desidArr_raw = [];
     cliidArr_raw = [];
