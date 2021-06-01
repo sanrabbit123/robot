@@ -101,6 +101,8 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   const cron = new CronGhost();
   try {
 
+    let cronScript;
+
     app.get("/", function (req, res) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       res.send(String(ip).replace(/[^0-9\.]/gi, ''));
@@ -525,6 +527,7 @@ Alien.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) {
               }
             } else if (tempNum === 4) {
               tempArr.push("");
+              tempArr.push("");
               tempArr.push(1);
               tempArr.push(textArr[j]);
               tempArr.push(textArr[j]);
@@ -746,6 +749,8 @@ if (/office/gi.test(process.argv[2])) {
 } else if (/static/gi.test(process.argv[2])) {
   app.cronLaunching(1);
 } else if (/python/gi.test(process.argv[2])) {
+  app.cronLaunching(2);
+} else if (/calculation/gi.test(process.argv[2])) {
   app.wssClientLaunching();
 } else if (/request/gi.test(process.argv[2])) {
   app.requestWhisk(Number(process.argv[3]));

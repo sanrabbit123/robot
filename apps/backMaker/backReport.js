@@ -72,7 +72,7 @@ BackReport.prototype.getDesignerProposalReport = async function (option = { self
 
           temp3[desid] = temp2;
         }
-        
+
         return temp3;
       }
     }
@@ -144,7 +144,7 @@ BackReport.prototype.getDesignerProposalReport = async function (option = { self
     }
 
     if (!selfBoo) {
-      MONGOC.close();
+      await MONGOC.close();
     }
 
     return proposalTongObj;

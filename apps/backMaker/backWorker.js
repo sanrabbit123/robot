@@ -99,7 +99,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      MONGOC.close();
+      await MONGOC.close();
     }
 
   } catch (e) {
@@ -279,7 +279,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      MONGOC.close();
+      await MONGOC.close();
     }
 
     //front desid
@@ -631,7 +631,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
   }
 }
 
-BackWorker.prototype.designerCalculation = async function () {
+BackWorker.prototype.designerCalculation = async function (infoMode = false) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -642,6 +642,7 @@ BackWorker.prototype.designerCalculation = async function () {
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const selfMongo = MONGOC;
     const bar1 = "==================================================";
+    const collection = "taxBill";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     const zeroAddition = (num) => { return ((num < 10) ? `0${String(num)}` : String(num)); }
     const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
@@ -689,6 +690,7 @@ BackWorker.prototype.designerCalculation = async function () {
     let name;
     let designerBoo;
     let tempString;
+    let infoTong, infoDetail;
 
     whereQuery = {
       $and: [
@@ -733,16 +735,25 @@ BackWorker.prototype.designerCalculation = async function () {
     designers = designers.returnDoingDesigners();
 
     tong = [];
+    infoTong = [];
     for (let designer of designers) {
       firstAmount = 0;
       leftAmount = 0;
       designerBoo = false;
       detailTong = [];
+      infoDetail = {
+        desid: designer.desid,
+        designer: designer.designer,
+        business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
+        first: [],
+        remain: [],
+      };
       for (let i = 0; i < designer.projects.length; i++) {
         name = designer.projects[i].name;
         amount0 = designer.projects[i].process.calculation.payments.first.amount;
         condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
         if (!condition0) {
+          infoDetail.first.push({ name, amount: amount0, proposal: designer.projects[i].proposal.date, receipt: true, free: true });
           detailTong.push(`${designer.designer} ${name} : 선금 ${autoComma(amount0)}원`);
           firstAmount += amount0;
         }
@@ -765,6 +776,7 @@ BackWorker.prototype.designerCalculation = async function () {
           }
         }
         if (!condition1) {
+          infoDetail.remain.push({ name, amount: amount1, proposal: designer.projects[i].proposal.date, receipt: true, free: true });
           detailTong.push(`${designer.designer} ${name} : 잔금 ${autoComma(amount1)}원`);
           leftAmount += amount1;
         }
@@ -773,10 +785,9 @@ BackWorker.prototype.designerCalculation = async function () {
         }
       }
 
+      infoTong.push(infoDetail);
       if (designerBoo) {
         tong.push(detailTong.join("\n"));
-        tempString = `=> ${designer.designer} 합계 : 선금 ${autoComma(firstAmount)}원  /  잔금 ${autoComma(leftAmount)}원  /  ${designer.information.business.businessInfo.classification}`;
-        tong.push(tempString);
         tong.push(bar1);
       }
     }
@@ -785,12 +796,18 @@ BackWorker.prototype.designerCalculation = async function () {
     tong.unshift(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
     tong.unshift(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
 
-    await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
+    infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
+
+    if (!infoMode) {
+      await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
+    }
+
+    return infoTong;
 
   } catch (e) {
     console.log(e);
   } finally {
-    MONGOC.close();
+    await MONGOC.close();
   }
 }
 
