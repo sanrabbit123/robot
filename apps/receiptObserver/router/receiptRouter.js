@@ -25,6 +25,12 @@ ReceiptRouter.prototype.rou_get_Root = function () {
   obj.func = async function (req, res) {
     try {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     } catch (e) {
       console.log(e);
@@ -113,7 +119,12 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
 
-      res.set({ "Content-Type": "application/json" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       res.send(JSON.stringify(result));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });

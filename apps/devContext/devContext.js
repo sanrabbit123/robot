@@ -30,6 +30,7 @@ const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js"
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
 const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
 const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
+const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -51,9 +52,6 @@ DevContext.prototype.launching = async function () {
     const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
-
-
-
 
 
 
@@ -443,8 +441,8 @@ DevContext.prototype.launching = async function () {
 
 
     // get drive folder
-    const drive = new GoogleDrive();
-    await drive.get_folder("https://drive.google.com/drive/folders/1EPqtpQeY_JOeKN4gtskh9sm6H8eOdSKd");
+    // const drive = new GoogleDrive();
+    // await drive.get_folder("https://drive.google.com/drive/folders/1EPqtpQeY_JOeKN4gtskh9sm6H8eOdSKd");
 
 
     // naverBlog to json

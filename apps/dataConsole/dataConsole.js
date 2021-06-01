@@ -16,6 +16,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
+  const PYTHONHOST = this.address.pythoninfo.host;
   try {
 
     //set static
@@ -61,7 +62,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -73,6 +74,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
     ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
+    pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
@@ -121,7 +123,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString;
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + svgTongString;
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -163,6 +165,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
+  const PYTHONHOST = this.address.pythoninfo.host;
   try {
 
     //set static
@@ -179,7 +182,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     }
     console.log(`set middle static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString;
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -243,6 +246,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
     sseConsoleString = "const SSEHOST_CONSOLE = \"" + SSEHOST_CONSOLE + "\";";
     ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
+    pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
@@ -330,7 +334,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + svgTongString + "\n\n" + generalSvg;
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + svgTongString + "\n\n" + generalSvg;
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;

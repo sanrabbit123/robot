@@ -928,6 +928,8 @@ DesignerJs.prototype.calculationView = async function () {
     let cliidArr;
     let designers;
     let clients;
+    let proposalDate;
+    let taxBill;
 
     loading = await this.mother.loadingRun();
 
@@ -972,6 +974,21 @@ DesignerJs.prototype.calculationView = async function () {
         $or: cliidArr
       }
     }, "/getClients", { equal: true });
+
+    proposalDate = [];
+    for (let project of projects) {
+      proposalDate.push({ date: project.proposal.date, proid: project.proid });
+    }
+    proposalDate.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+    taxBill = await ajaxJson({
+      mode: "read",
+      db: "python",
+      collection: "taxBill",
+      whereQuery: { date: { $gte: proposalDate[0].date } },
+    }, "https://" + PYTHONHOST + "/getClients", { equal: true });
+
+    console.log(taxBill);
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
