@@ -240,7 +240,7 @@ Alien.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) {
         message += "- 이메일 : " + who.from.email + "\n";
         message += "\n";
         message += "수신자\n";
-        message += "- 상호 : " + who.to.company + " (" + who.from.business + ")" + "\n";
+        message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
         message += "- 성함 : " + who.to.name + "\n";
         message += "- 주소 : " + who.to.address + "\n";
         message += "- 업태 : " + who.to.status + "\n";
