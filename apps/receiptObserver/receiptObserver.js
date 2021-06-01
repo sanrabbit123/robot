@@ -668,7 +668,7 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const ReceiptRouter = require(`${this.dir}/router/ReceiptRouter.js`);
+    const ReceiptRouter = require(`${this.dir}/router/receiptRouter.js`);
     const router = new ReceiptRouter(MONGOC, MONGOLOCALC);
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
