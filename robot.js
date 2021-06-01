@@ -231,9 +231,19 @@ Robot.prototype.officePolling = async function (sw, boo = true) {
 
 Robot.prototype.pythonCloud = async function () {
   try {
-    const PythonCloud = require(`${process.cwd()}/apps/pythonCloud/pythonCloud.js`);
-    const app = new PythonCloud();
-    app.serverLaunching();
+    const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
+    const app = new ReceiptObserver();
+    await app.taxServerLaunching();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.pythonWatcher = async function () {
+  try {
+    const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
+    const app = new ReceiptObserver();
+    await app.wssClientLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -645,16 +655,16 @@ const MENU = {
       console.log(e);
     }
   },
-  pythoncloud: async function () {
+  pythonCloud: async function () {
     try {
       await robot.pythonCloud();
     } catch (e) {
       console.log(e);
     }
   },
-  pythonserver: async function () {
+  pythonWatcher: async function () {
     try {
-      await robot.pythonCloud();
+      await robot.pythonWatcher();
     } catch (e) {
       console.log(e);
     }

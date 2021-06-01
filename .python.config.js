@@ -1,18 +1,18 @@
 module.exports = {
   apps: [
     {
-      name: "alien",
-      script: "./alien.js",
+      name: "robot",
+      script: "./robot.js",
       instances: 1,
       exec_mode: "cluster",
-      args: [ "python" ]
+      args: [ "pythonCloud" ]
     },
     {
-      name: "alien",
-      script: "./alien.js",
+      name: "robot",
+      script: "./robot.js",
       instances: 1,
       exec_mode: "cluster",
-      args: [ "calculation" ]
+      args: [ "pythonWatcher" ]
     },
   ]
 };

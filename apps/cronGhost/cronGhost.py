@@ -22,20 +22,12 @@ async def run(cmdArr):
         print(stderr.decode())
         return stderr.decode()
 
-async def relect():
-    await run([ 'node', ROBOT, 'relect' ])
-
-async def mysqlReflect():
-    await run([ 'node', ROBOT, 'mysqlReflect' ])
-
 async def designerCalculation():
     await run([ 'node', ROBOT, 'designerCalculation' ])
 
 
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(relect, 'cron', hour='8', minute='10', second='30')
-scheduler.add_job(mysqlReflect, 'cron', hour='8', minute='50', second='30')
 scheduler.add_job(designerCalculation, 'cron', day_of_week='mon', hour='9', minute='50', second='30')
 scheduler.start()
 try:

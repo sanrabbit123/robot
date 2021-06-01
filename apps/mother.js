@@ -821,7 +821,7 @@ Mother.prototype.ipCheck = function () {
   const keys = Object.keys(ADDRESS);
   const values = Object.values(ADDRESS);
   return new Promise(function(resolve, reject) {
-    axios.get("http://" + ADDRESS["pythoninfo"]["host"] + ":5000").then(function (response) {
+    axios.get("http://" + ADDRESS["pythoninfo"]["host"] + ":3000").then(function (response) {
       const ip = response.data.replace(/[^0-9\.]/g, '');
       let obj = { ip };
       let target = "unknown", targetNum = 0;
