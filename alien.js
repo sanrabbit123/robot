@@ -119,11 +119,15 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   }
 }
 
-Alien.prototype.taxBill = async function () {
+Alien.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) {
+  if (MONGOC === undefined || typeof MONGOC !== "object") {
+    throw new Error("invaild input");
+  }
   const instance = this;
+  const back = this.back;
   const { fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot } = this.mother;
   try {
-
+    const selfMongo = MONGOC;
     const today = new Date();
     const yesterday = new Date();
     const month = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -137,6 +141,7 @@ Alien.prototype.taxBill = async function () {
     const { JSDOM } = jsdom;
     const keywords = "전자세금계산서를 발급하고 발송한 메일";
     const attachmentsKeywords = "Content-Disposition: attachment";
+    const dateKeywords = "Date: ";
     const pythonFile = `${process.cwd()}/temp/getMail.py`;
     const autoComma = function (str) {
       if (typeof str === "number") {
@@ -179,7 +184,7 @@ Alien.prototype.taxBill = async function () {
           this.push(i);
         }
       }
-      findIndexAll(word, regxp = false) {
+      findIndexAll(word, regxp = false, between = 0, start = 0) {
         let result;
         result = [];
         if (regxp) {
@@ -195,13 +200,20 @@ Alien.prototype.taxBill = async function () {
             }
           }
         }
+        result = result.slice(start);
+        if (result.length > 1 && between > 0) {
+          result.splice(1, between);
+        }
         return result;
       }
     }
     class TaxBill {
-      constructor(id = '') {
+      constructor(id, date) {
+        if (id === undefined || date === undefined) {
+          throw new Error("invaild input");
+        }
         this.id = id;
-        this.date = new Date();
+        this.date = date;
         this.who = {};
         this.who.from = {};
         this.who.to = {};
@@ -213,24 +225,23 @@ Alien.prototype.taxBill = async function () {
         };
       }
       toMessage() {
-        const now = new Date();
-        const { id, who, items, sum } = this;
+        const { id, date, who, items, sum } = this;
         let message = '';
-        message += "전자 세금 계산서(" + this.id + ") " + String(now.getFullYear()) + "-" + zeroAddition(now.getMonth() + 1) + "-" + zeroAddition(now.getDate()) + " " + zeroAddition(now.getHours()) + ":" + zeroAddition(now.getMinutes()) + ":" + zeroAddition(now.getSeconds()) + "\n";
+        message += "전자 세금 계산서(" + this.id + ") " + String(date.getFullYear()) + "-" + zeroAddition(date.getMonth() + 1) + "-" + zeroAddition(date.getDate()) + " " + zeroAddition(date.getHours()) + ":" + zeroAddition(date.getMinutes()) + ":" + zeroAddition(date.getSeconds()) + "\n";
         message += "\n";
         message += "발신자\n";
-        message += "- 상호 : " + who.from.company + "\n";
+        message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
         message += "- 성함 : " + who.from.name + "\n";
         message += "- 주소 : " + who.from.address + "\n";
-        message += "- 업태 : " + who.from.business + "\n";
+        message += "- 업태 : " + who.from.status + "\n";
         message += "- 종목 : " + who.from.detail + "\n";
         message += "- 이메일 : " + who.from.email + "\n";
         message += "\n";
         message += "수신자\n";
-        message += "- 상호 : " + who.to.company + "\n";
+        message += "- 상호 : " + who.to.company + " (" + who.from.business + ")" + "\n";
         message += "- 성함 : " + who.to.name + "\n";
         message += "- 주소 : " + who.to.address + "\n";
-        message += "- 업태 : " + who.to.business + "\n";
+        message += "- 업태 : " + who.to.status + "\n";
         message += "- 종목 : " + who.to.detail + "\n";
         message += "- 이메일 : " + who.to.email + "\n";
         message += "\n";
@@ -254,9 +265,10 @@ Alien.prototype.taxBill = async function () {
     let realPwd;
     let result;
     let rawArr;
+    let dateIndex;
     let attachmentsIndex;
     let binary, buff, data;
-    let html;
+    let html, date;
     let search;
     let res, localScript;
     let newHtml;
@@ -265,12 +277,18 @@ Alien.prototype.taxBill = async function () {
     let textArr, resultObj, tempArr;
     let spotTargets;
     let items, itemStart, itemEnd;
-    let num, standardNum;
-    let accumulation;
+    let num;
     let supplySum, vatSum;
     let tempObj;
+    let htmlTong, htmlNum;
+    let resultObjTong;
+    let startNums;
+    let orderArr;
+    let minus;
+    let tempNum;
+    let rows;
 
-    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setDate(yesterday.getDate() - pastDateNumber);
     realPwd = await decryptoHash(password, hash);
     pythonDate = `${zeroAddition(yesterday.getDate())}-${month[yesterday.getMonth()]}-${String(yesterday.getFullYear())}`;
     pythonScript = ``;
@@ -303,9 +321,18 @@ Alien.prototype.taxBill = async function () {
 
     result = await pythonExecute(pythonFile, [], {});
     html = null;
+    htmlTong = [];
     for (let i = 0; i < result.length; i++) {
       if ((new RegExp(keywords, "gi")).test(result[i])) {
         rawArr = result[i].split("\r\n");
+
+        dateIndex = null;
+        for (let j = 0; j < rawArr.length; j++) {
+          if ((new RegExp(dateKeywords, "gi")).test(rawArr[j])) {
+            dateIndex = j;
+            break;
+          }
+        }
 
         attachmentsIndex = null;
         for (let j = 0; j < rawArr.length; j++) {
@@ -331,151 +358,226 @@ Alien.prototype.taxBill = async function () {
 
         buff = Buffer.from(binary, "base64");
         data = buff.toString("utf8");
-
         html = data;
-        break;
+        date = new Date(rawArr[dateIndex].replace((new RegExp(dateKeywords, "gi"), "").trim()));
+
+        htmlTong.push({ date, html });
       }
     }
 
-    if (html === null) {
-      throw new Error("not found");
+    if (html === null || htmlTong.length === 0) {
+      console.log("not found");
+      return htmlTong;
     }
 
-    search = [ ...html.matchAll(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi) ];
-    res, localScript;
-    newHtml;
+    console.log("parsing start...");
+    resultObjTong = [];
+    htmlNum = 0;
+    for (let { date, html } of htmlTong) {
 
-    localScript = '';
-    for (let arr of search) {
-      res = await requestSystem(arr[1]);
-      localScript += res.data;
-      localScript += "\n\n";
-    }
+      search = [ ...html.matchAll(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi) ];
+      res, localScript;
+      newHtml;
 
-    localScript = `<script>\n\n${localScript}\n\n</script>`;
+      localScript = '';
+      for (let arr of search) {
+        res = await requestSystem(arr[1]);
+        localScript += res.data;
+        localScript += "\n\n";
+      }
 
-    newHtml = html.replace(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi, '');
-    newHtml = newHtml.replace(/\<\/head\>/g, localScript + "</head>").replace(/src\=\"[^\"]+\"/gi, "").replace(/href\=\"[^\"]+\"/gi, "");
-    newHtml = newHtml.replace(/\<script defer\>[^\<]+\<\/script\>/gi, '');
-    newHtml += `\n\n<script>
-    var s = document.getElementById("idCriHeader").value;
-    var decodeHeader = CryptoJS.enc.Base64.parse(s);
-    var words = decodeHeader.words;
-    var decHeader="";
-    for(i=0; i < decodeHeader.sigBytes; i++)
-    {
-      var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
-      var bite2 = bite ^ 0x6b;
-      decHeader = decHeader + String.fromCharCode(bite2);
-    }
-    decHeader = decHeader.replace(/\\r\\n/gi, '||');
-    decHeader = decHeader.replace(/\\n/gi, '||');
-    Cri_Header_parser(decHeader);
-    Cri_Check_Pwd("2218149759");
-    CriDisplayBody();
-    </script>`;
+      localScript = `<script>\n\n${localScript}\n\n</script>`;
 
-    dom = new JSDOM(newHtml, { runScripts: "dangerously" });
-    finalText = dom.window.document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent;
+      newHtml = html.replace(/\<script src\=\"([^\"]+)\"\>\<\/script\>/gi, '');
+      newHtml = newHtml.replace(/\<\/head\>/g, localScript + "</head>").replace(/src\=\"[^\"]+\"/gi, "").replace(/href\=\"[^\"]+\"/gi, "");
+      newHtml = newHtml.replace(/\<script defer\>[^\<]+\<\/script\>/gi, '');
+      newHtml += `\n\n<script>
+      var s = document.getElementById("idCriHeader").value;
+      var decodeHeader = CryptoJS.enc.Base64.parse(s);
+      var words = decodeHeader.words;
+      var decHeader="";
+      for(i=0; i < decodeHeader.sigBytes; i++)
+      {
+        var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+        var bite2 = bite ^ 0x6b;
+        decHeader = decHeader + String.fromCharCode(bite2);
+      }
+      decHeader = decHeader.replace(/\\r\\n/gi, '||');
+      decHeader = decHeader.replace(/\\n/gi, '||');
+      Cri_Header_parser(decHeader);
+      Cri_Check_Pwd("2218149759");
+      CriDisplayBody();
+      </script>`;
 
-    textArr = finalText.split("\n");
-    textArr = textArr.filter((i) => { return (i.trim() !== ""); });
-    textArr = new FindIndex(textArr.map((i) => { return i.trim(); }));
-    spotTargets = [
-      { word: "상호\\(", regxp: true, column: "company" },
-      { word: "성명", regxp: false, column: "name" },
-      { word: "사업장", regxp: false, column: "address" },
-      { word: "업태", regxp: false, column: "business" },
-      { word: "종목", regxp: false, column: "detail" },
-      { word: "이메일", regxp: false, column: "email" },
-    ];
-    resultObj = new TaxBill(textArr[2]);
+      console.log("dom" + String(htmlNum) + " parsing start...");
+      dom = new JSDOM(newHtml, { runScripts: "dangerously" });
+      finalText = dom.window.document.getElementById('CriMsgPosition').contentWindow.document.querySelector("table").textContent;
+      textArr = finalText.split("\n");
+      textArr = textArr.filter((i) => { return (i.trim() !== ""); });
+      textArr = new FindIndex(textArr.map((i) => { return i.trim(); }));
+      spotTargets = [
+        { word: "번호", not: "상호", regxp: true, between: 1, start: 1, column: "business" },
+        { word: "상호\\(", not: "성명", regxp: true, between: 0, start: 0, column: "company" },
+        { word: "성명", not: "사업장", regxp: false, between: 0, start: 0, column: "name" },
+        { word: "사업장", not: "업태", regxp: false, between: 0, start: 0, column: "address" },
+        { word: "업태", not: "종목", regxp: false, between: 0, start: 0, column: "status" },
+        { word: "종목", not: "이메일", regxp: false, between: 0, start: 0, column: "detail" },
+        { word: "이메일", not: "이메일", regxp: false, between: 0, start: 0, column: "email" },
+      ];
+      resultObj = new TaxBill(textArr[2], date);
 
-    for (let { word, regxp, column } of spotTargets) {
-      tempArr = textArr.findIndexAll(word, regxp);
+      for (let { word, not, regxp, between, start, column } of spotTargets) {
+        tempArr = textArr.findIndexAll(word, regxp, between, start);
+        if (tempArr.length < 2) {
+          throw new Error("invaild text");
+        }
+        resultObj.who.from[column] = textArr[tempArr[0] + 1] === not ? "" : textArr[tempArr[0] + 1];
+        resultObj.who.to[column] = textArr[tempArr[1] + 1] === not ? "" : textArr[tempArr[1] + 1];
+      }
+
+      tempArr = textArr.findIndexAll("비고");
       if (tempArr.length < 2) {
         throw new Error("invaild text");
       }
-      resultObj.who.from[column] = textArr[tempArr[0] + 1];
-      resultObj.who.to[column] = textArr[tempArr[1] + 1];
-    }
-
-    tempArr = textArr.findIndexAll("비고");
-    if (tempArr.length < 2) {
-      throw new Error("invaild text");
-    }
-    itemStart = tempArr[1] + 1;
-    tempArr = textArr.findIndexAll("합계금액");
-    if (tempArr.length < 1) {
-      throw new Error("invaild text");
-    }
-    itemEnd = tempArr[0] - 1;
-
-    textArr = Array.from(textArr);
-    textArr = textArr.slice(itemStart, itemEnd + 1);
-
-    num = 0;
-    standardNum = 8;
-    accumulation = 0;
-
-    while (!(((standardNum) * num <= textArr.length) && ((standardNum + 1) * num >= textArr.length))) {
-      num++;
-    }
-
-    items = [];
-    for (let i = 0; i < num; i++) {
-      tempArr = [];
-      for (var j = 0; j < standardNum; j++) {
-        tempArr.push(textArr[accumulation + j]);
+      itemStart = tempArr[1] + 1;
+      tempArr = textArr.findIndexAll("합계금액");
+      if (tempArr.length < 1) {
+        throw new Error("invaild text");
       }
-      if (textArr[accumulation + standardNum] === undefined) {
+      itemEnd = tempArr[0] - 1;
+
+      textArr = Array.from(textArr);
+      textArr = textArr.slice(itemStart, itemEnd + 1);
+
+      startNums = [];
+      for (let i = 0; i < textArr.length; i++) {
+        if (i !== textArr.length - 1) {
+          if (/^[0-1][0-9]$/.test(textArr[i].trim())) {
+            if (/^[0-9][0-9]$/.test(textArr[i + 1].trim())) {
+              startNums.push(i);
+            }
+          }
+        }
+      }
+
+      orderArr = [];
+      for (let i = 0; i < startNums.length; i++) {
+        if (i === startNums.length - 1) {
+          orderArr.push([ startNums[i], textArr.length ]);
+        } else {
+          orderArr.push([ startNums[i], startNums[i + 1] ]);
+        }
+      }
+
+      items = [];
+      for (let i = 0; i < orderArr.length; i++) {
+        tempArr = [];
+        num = 0;
+        for (let j = orderArr[i][0]; j < orderArr[i][1]; j++) {
+          if (num === 0) {
+            if (/^[0-1][0-9]$/.test(textArr[j].trim())) {
+              tempArr.push(textArr[j].trim());
+            } else {
+              throw new Error("item month error");
+            }
+          } else if (num === 1) {
+            if (/^[0-4][0-9]$/.test(textArr[j].trim())) {
+              tempArr.push(textArr[j].trim());
+            } else {
+              throw new Error("item date error");
+            }
+          } else if (num === 2) {
+
+            tempNum = orderArr[i][1] - orderArr[i][0];
+            if (tempNum === 9) {
+              for (let k = 0; k < 7; k++) {
+                tempArr.push(textArr[j + k]);
+              }
+            } else if (tempNum === 8) {
+              if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
+                for (let k = 0; k < 6; k++) {
+                  tempArr.push(textArr[j + k]);
+                }
+                tempArr.push("");
+              } else {
+                tempArr.push("");
+                for (let k = 0; k < 6; k++) {
+                  tempArr.push(textArr[j + k]);
+                }
+              }
+            } else if (tempNum === 7 || tempNum === 6 || tempNum === 5) {
+              if (/[0-9\,\-]/g.test(textArr[orderArr[i][1] - 1].trim()) && textArr[orderArr[i][1] - 1].replace(/[0-9\,\-]/g, '') === '') {
+                tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
+                tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
+                tempArr.push(1);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 1]);
+                tempArr.push("");
+              } else {
+                tempArr.push(textArr[j].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j]);
+                tempArr.push(textArr[j + 1].replace(/[0-9\,\-]/g, '') === '' ? "" : textArr[j + 1]);
+                tempArr.push(1);
+                tempArr.push(textArr[orderArr[i][1] - 3]);
+                tempArr.push(textArr[orderArr[i][1] - 3]);
+                tempArr.push(textArr[orderArr[i][1] - 2]);
+                tempArr.push(textArr[orderArr[i][1] - 1]);
+              }
+            } else if (tempNum === 4) {
+              tempArr.push("");
+              tempArr.push(1);
+              tempArr.push(textArr[j]);
+              tempArr.push(textArr[j]);
+              tempArr.push(textArr[j + 1]);
+              tempArr.push("");
+            } else {
+              throw new Error("item error");
+            }
+          }
+          num++;
+        }
         items.push(tempArr);
-        break;
       }
-      if (textArr[accumulation + standardNum + 1] === undefined) {
-        items.push(tempArr);
-        tempArr.push(accumulation + standardNum);
-        break;
+
+      supplySum = 0;
+      vatSum = 0;
+
+      for (let arr of items) {
+        tempObj = {
+          month: Number(arr[0].replace(/^0/, '')),
+          date: Number(arr[1]),
+          name: arr[2],
+          ea: arr[3],
+          amount: Number(arr[4]),
+          unit: Number(arr[5].replace(/[^0-9\-]/g, '')),
+          supply: Number(arr[6].replace(/[^0-9\-]/g, '')),
+          vat: Number(arr[7].replace(/[^0-9\-]/g, '')),
+          etc: arr[8]
+        };
+        resultObj.items.push(tempObj);
+        supplySum += tempObj.supply;
+        vatSum += tempObj.vat;
       }
-      if (/^[0-1][0-9]$/.test(textArr[accumulation + standardNum]) && /^[0-1][0-9]$/.test(textArr[accumulation + standardNum + 1])) {
-        accumulation = accumulation + standardNum;
-      } else {
-        tempArr.push(accumulation + standardNum);
-        accumulation = accumulation + standardNum + 1;
-      }
-      items.push(tempArr);
+
+      resultObj.sum.total = supplySum + vatSum;
+      resultObj.sum.supply = supplySum;
+      resultObj.sum.vat = vatSum;
+
+      console.log(resultObj);
+      resultObjTong.push(resultObj);
+      htmlNum++;
+
     }
 
-    supplySum = 0;
-    vatSum = 0;
-
-    for (let arr of items) {
-      tempObj = {
-        month: Number(arr[0].replace(/^0/, '')),
-        date: Number(arr[1]),
-        name: arr[2],
-        ea: arr[3],
-        amount: Number(arr[4]),
-        unit: Number(arr[5].replace(/[^0-9]/g, '')),
-        supply: Number(arr[6].replace(/[^0-9]/g, '')),
-        vat: Number(arr[7].replace(/[^0-9]/g, '')),
-      };
-      if (arr.length !== standardNum) {
-        tempObj.etc = arr[8];
+    resultObjTong.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+    for (let json of resultObjTong) {
+      rows = await back.mongoRead("taxBill", { id: json.id }, { selfMongo });
+      if (rows.length === 0) {
+        await back.mongoCreate("taxBill", json, { selfMongo });
+        console.log("mongo insert");
+        await slack_bot.chat.postMessage({ text: json.toMessage(), channel: "#700_operation" });
       }
-      resultObj.items.push(tempObj);
-      supplySum += tempObj.supply;
-      vatSum += tempObj.vat;
     }
-
-    resultObj.sum.total = supplySum + vatSum;
-    resultObj.sum.supply = supplySum;
-    resultObj.sum.vat = vatSum;
-
-    console.log(resultObj);
-
-    await slack_bot.chat.postMessage({ text: resultObj.toMessage(), channel: "#700_operation" });
-    shell.exec(`rm -rf ${shellLink(pythonFile)}`);
 
   } catch (e) {
     console.log(e);
@@ -486,6 +588,7 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const back = this.back;
   const address = this.address;
   const WebSocket = require('ws');
@@ -525,7 +628,9 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
   try {
 
     await MONGOC.connect();
+    await MONGOLOCALC.connect();
     const selfMongo = MONGOC;
+    const selfLocalMongo = MONGOLOCALC;
     const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
     const emptyDate = new Date(2000, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -600,7 +705,7 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
           } else if (type === "mirror") {
             const { package_name } = data.push;
             if (/net\.daum\.android\.mail/gi.test(package_name)) {
-              await instance.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지됨 : \n" + JSON.stringify(data, null, 2), channel: "#error_log" });
+              await instance.taxBill(MONGOLOCALC);
             }
           }
         }
@@ -641,8 +746,6 @@ if (/office/gi.test(process.argv[2])) {
 } else if (/static/gi.test(process.argv[2])) {
   app.cronLaunching(1);
 } else if (/python/gi.test(process.argv[2])) {
-  app.cronLaunching(3);
-} else if (/calculation/gi.test(process.argv[2])) {
   app.wssClientLaunching();
 } else if (/request/gi.test(process.argv[2])) {
   app.requestWhisk(Number(process.argv[3]));

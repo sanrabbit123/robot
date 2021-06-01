@@ -34,7 +34,7 @@ const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
@@ -43,7 +43,7 @@ const DevContext = function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
   const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, pythonExecute } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -51,9 +51,6 @@ DevContext.prototype.launching = async function () {
     const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
-
-
-
 
 
 
