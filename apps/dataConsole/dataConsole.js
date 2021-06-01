@@ -16,7 +16,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
-  const PYTHONHOST = this.address.pythoninfo.host;
+  const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   try {
 
     //set static
@@ -165,7 +165,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
-  const PYTHONHOST = this.address.pythoninfo.host;
+  const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   try {
 
     //set static

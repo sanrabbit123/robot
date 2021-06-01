@@ -933,6 +933,18 @@ DesignerJs.prototype.calculationView = async function () {
 
     loading = await this.mother.loadingRun();
 
+    class TaxSearch extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      
+
+
+    }
+
     projects = await ajaxJson({
       noFlat: true,
       whereQuery: {
@@ -986,7 +998,8 @@ DesignerJs.prototype.calculationView = async function () {
       db: "python",
       collection: "taxBill",
       whereQuery: { date: { $gte: proposalDate[0].date } },
-    }, "https://" + PYTHONHOST + "/getClients", { equal: true });
+    }, PYTHONHOST + "/generalMongo", { equal: true });
+    taxBill.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
     console.log(taxBill);
 
