@@ -2139,8 +2139,7 @@ DesignerJs.prototype.calendarView = async function () {
             }
           }
           if (startPoint.length !== endPoint.length) {
-            throw new Error("point error");
-            return 0;
+            endPoint.push(length - 1);
           }
 
           for (let i = 0; i < startPoint.length; i++) {
@@ -2211,9 +2210,9 @@ DesignerJs.prototype.calendarView = async function () {
             }
             pastBoo = toggle[i];
           }
+
           if (startPoint.length !== endPoint.length) {
-            throw new Error("point error");
-            return 0;
+            endPoint.push(length - 1);
           }
 
           for (let i = 0; i < startPoint.length; i++) {
