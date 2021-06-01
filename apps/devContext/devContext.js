@@ -54,7 +54,9 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
 
 
-
+    const app = new ReceiptObserver();
+    await app.taxBill(this.MONGOLOCALC);
+    
 
     // const selfMongo = this.MONGOLOCALC;
     // const targetDesigners = [ "홍민영", "이지수", "채성은" ];

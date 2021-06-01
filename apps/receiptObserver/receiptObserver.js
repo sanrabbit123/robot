@@ -465,7 +465,7 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
       if (rows.length === 0) {
         await back.mongoCreate("taxBill", json, { selfMongo });
         console.log("mongo insert");
-        await slack_bot.chat.postMessage({ text: json.toMessage(), channel: "#700_operation" });
+        await slack_bot.chat.postMessage({ text: json.toMessage(), channel: "#701_taxbill" });
       }
     }
 
