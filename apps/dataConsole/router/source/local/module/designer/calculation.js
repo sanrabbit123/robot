@@ -201,7 +201,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       id: designer.projects[i].proid,
       class: [ "projectWhite" ],
       attribute: [
-        { proid: designer.projects[i].proid }
+        { proid: designer.projects[i].proid },
+        { condition: "true" },
       ],
       events: [
         {
@@ -282,6 +283,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     }
     if (!condition) {
       firstAmount += amount;
+      whiteBlock_mother.setAttribute("condition", "false");
     }
     createNodes([
       {
@@ -375,7 +377,12 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       }
     }
     if (!condition) {
+      whiteBlock_mother.setAttribute("condition", "false");
       leftAmount += amount;
+    } else {
+      if (whiteBlock_mother.getAttribute("condition") === "false") {
+        whiteBlock_mother.setAttribute("condition", "false");
+      }
     }
     createNodes([
       {
@@ -416,7 +423,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
           fontWeight: String(500),
           paddingLeft: String(lineMargin) + ea,
           background: colorChip.white,
-          color: (condition ? ((designer.projects[i].process.calculation.payments.remain.date.valueOf() > emptyDateValue) ? colorChip.green : colorChip.purple) : colorChip.red),
+          color: (condition ? ((designer.projects[i].process.calculation.payments.remain.date.valueOf() > emptyDateValue) ? colorChip.green : colorChip.green) : colorChip.red),
         }
       }
     ]);
@@ -752,6 +759,8 @@ DesignerJs.prototype.calculationControlPannel = function () {
   let buttonWidth, buttonHeight;
   let lineHeight;
   let circleMargin;
+  let tempArr;
+  let nodeArr;
 
   width = 125;
   height = 83;
@@ -784,7 +793,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
     }
   });
 
-  createNodes([
+  nodeArr = createNodes([
     {
       mother: base,
       text: "미정산",
@@ -818,12 +827,24 @@ DesignerJs.prototype.calculationControlPannel = function () {
                 } else {
                   dom.style.display = "none";
                 }
+                tempArr = dom.querySelectorAll(".projectWhite");
+                for (let white of tempArr) {
+                  if (white.getAttribute("condition") === "true") {
+                    white.style.display = "none";
+                  } else {
+                    white.style.display = "block";
+                  }
+                }
               }
             } else {
               this.setAttribute("toggle", "off");
               circle.style.transform = "translateX(0px)";
               for (let dom of doms) {
                 dom.style.display = "inline-block";
+                tempArr = dom.querySelectorAll(".projectWhite");
+                for (let white of tempArr) {
+                  white.style.display = "block";
+                }
               }
             }
           }
@@ -925,7 +946,9 @@ DesignerJs.prototype.calculationControlPannel = function () {
     },
   ]);
 
-
+  this.onoffButton = {};
+  this.onoffButton.will = nodeArr[1];
+  this.onoffButton.sum = nodeArr[4];
 }
 
 DesignerJs.prototype.calculationView = async function () {
@@ -1042,6 +1065,10 @@ DesignerJs.prototype.calculationView = async function () {
     window.addEventListener("resize", (e) => { window.location.reload(); });
 
     loading.parentNode.removeChild(loading);
+
+    setTimeout(function () {
+      instance.onoffButton.will.click();
+    }, 500);
 
   } catch (e) {
     console.log(e);
