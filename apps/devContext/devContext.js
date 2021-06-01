@@ -52,58 +52,8 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
 
-    //
-    // const selfMongo = this.MONGOLOCALC;
-    // const selfLocalMongo = this.MONGOLOCALC;
-    // const collection = "taxBill";
-    // let rows, redPointTarget;
-    //
-    // redPointTarget = await work.designerCalculation(true);
-    // redPointTarget = redPointTarget.filter((obj) => { return obj.business !== ""; });
-    //
-    // for (let { desid, designer, business, first, remain } of redPointTarget) {
-    //   for (let { name, amount, proposal } of first) {
-    //     rows = await back.mongoRead(collection, { date: { $gte: proposal } }, { selfMongo: selfLocalMongo });
-    //     rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-    //     boo = false;
-    //     for (let i of rows) {
-    //       if (i.who.from.business.replace(/-/g, '') === business) {
-    //         for (let { supply, vat } of i.items) {
-    //           if (supply + vat === amount) {
-    //             boo = true;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     }
-    //     if (boo) {
-    //       console.log(`${name}C ${designer}D 선금 세금계산서 발행 완료`);
-    //     } else {
-    //       console.log(`${name}C ${designer}D 선금 세금계산서 발행 안 됨`);
-    //     }
-    //   }
-    //   for (let { name, amount, proposal } of remain) {
-    //     rows = await back.mongoRead(collection, { date: { $gte: proposal } }, { selfMongo: selfLocalMongo });
-    //     rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-    //     boo = false;
-    //     for (let i of rows) {
-    //       if (i.who.from.business.replace(/-/g, '') === business) {
-    //         for (let { supply, vat } of i.items) {
-    //           if (supply + vat === amount) {
-    //             boo = true;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     }
-    //     if (boo) {
-    //       console.log(`${name}C ${designer}D 잔금 세금계산서 발행 완료`);
-    //     } else {
-    //       console.log(`${name}C ${designer}D 잔금 세금계산서 발행 안 됨`);
-    //     }
-    //   }
-    // }
-    //
+
+
 
 
 

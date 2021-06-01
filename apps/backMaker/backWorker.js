@@ -631,17 +631,19 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
   }
 }
 
-BackWorker.prototype.designerCalculation = async function (infoMode = false) {
+BackWorker.prototype.designerCalculation = async function () {
   const instance = this;
-  const { mongo, mongoinfo } = this.mother;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const PYTHONMONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   try {
     await MONGOC.connect();
+    await PYTHONMONGOC.connect();
     const back = this.back;
     const Designers = require(`${process.cwd()}/apps/dataConsole/router/source/class/designer.js`);
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const selfMongo = MONGOC;
-    const bar1 = "==================================================";
+    const bar1 = "================================================================";
     const collection = "taxBill";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     const zeroAddition = (num) => { return ((num < 10) ? `0${String(num)}` : String(num)); }
@@ -683,14 +685,13 @@ BackWorker.prototype.designerCalculation = async function (infoMode = false) {
     let desidArr_raw, desidArr;
     let cliidArr;
     let whereQuery, updateQuery;
-    let tong, detailTong;
-    let firstAmount, leftAmount;
+    let tong;
     let amount0, amount1;
     let condition0, condition1;
     let name;
-    let designerBoo;
     let tempString;
     let infoTong, infoDetail;
+    let rows, redPointTarget, boo;
 
     whereQuery = {
       $and: [
@@ -734,16 +735,12 @@ BackWorker.prototype.designerCalculation = async function (infoMode = false) {
     designers.setClients(clients.toNormal());
     designers = designers.returnDoingDesigners();
 
-    tong = [];
     infoTong = [];
     for (let designer of designers) {
-      firstAmount = 0;
-      leftAmount = 0;
-      designerBoo = false;
-      detailTong = [];
       infoDetail = {
         desid: designer.desid,
         designer: designer.designer,
+        free: (/프리/gi.test(designer.information.business.businessInfo.classification)),
         business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
         first: [],
         remain: [],
@@ -753,9 +750,7 @@ BackWorker.prototype.designerCalculation = async function (infoMode = false) {
         amount0 = designer.projects[i].process.calculation.payments.first.amount;
         condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
         if (!condition0) {
-          infoDetail.first.push({ name, amount: amount0, proposal: designer.projects[i].proposal.date, receipt: true, free: true });
-          detailTong.push(`${designer.designer} ${name} : 선금 ${autoComma(amount0)}원`);
-          firstAmount += amount0;
+          infoDetail.first.push({ name, amount: amount0, proposal: designer.projects[i].proposal.date, receipt: true });
         }
         amount1 = designer.projects[i].process.calculation.payments.remain.amount;
         if (designer.projects[i].contents.photo.boo) {
@@ -776,38 +771,78 @@ BackWorker.prototype.designerCalculation = async function (infoMode = false) {
           }
         }
         if (!condition1) {
-          infoDetail.remain.push({ name, amount: amount1, proposal: designer.projects[i].proposal.date, receipt: true, free: true });
-          detailTong.push(`${designer.designer} ${name} : 잔금 ${autoComma(amount1)}원`);
-          leftAmount += amount1;
-        }
-        if (!condition0 || !condition1) {
-          designerBoo = true;
+          infoDetail.remain.push({ name, amount: amount1, proposal: designer.projects[i].proposal.date, receipt: true });
         }
       }
 
       infoTong.push(infoDetail);
-      if (designerBoo) {
-        tong.push(detailTong.join("\n"));
-        tong.push(bar1);
+    }
+
+    infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
+    for (let { desid, designer, business, first, remain } of infoTong) {
+      if (business !== "") {
+        for (let obj of first) {
+          rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+          boo = false;
+          for (let i of rows) {
+            if (i.who.from.business.replace(/-/g, '') === business) {
+              for (let { supply, vat } of i.items) {
+                if (supply + vat === obj.amount) {
+                  boo = true;
+                  break;
+                }
+              }
+            }
+          }
+          obj.receipt = boo;
+        }
+        for (let obj of remain) {
+          rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+          boo = false;
+          for (let i of rows) {
+            if (i.who.from.business.replace(/-/g, '') === business) {
+              for (let { supply, vat } of i.items) {
+                if (supply + vat === obj.amount) {
+                  boo = true;
+                  break;
+                }
+              }
+            }
+          }
+          obj.receipt = boo;
+        }
       }
     }
 
-    tong.unshift(bar1);
-    tong.unshift(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
-    tong.unshift(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
+    tong = [];
 
-    infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
-
-    if (!infoMode) {
-      await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
+    tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
+    tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
+    tong.push(bar1);
+    for (let { designer, free, first, remain } of infoTong) {
+      for (let { name, amount, receipt } of first) {
+        if (receipt) {
+          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? "프리랜서" : "세금 계산서 발행 완료"}`);
+        }
+      }
+      for (let { name, amount, receipt } of remain) {
+        if (receipt) {
+          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? "프리랜서" : "세금 계산서 발행 완료"}`);
+        }
+      }
     }
+    tong.push(bar1);
+
+    await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
 
     return infoTong;
-
   } catch (e) {
     console.log(e);
   } finally {
     await MONGOC.close();
+    await PYTHONMONGOC.close();
   }
 }
 
