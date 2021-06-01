@@ -708,6 +708,7 @@ Alien.prototype.wssClientLaunching = async function (url = "") {
           } else if (type === "mirror") {
             const { package_name } = data.push;
             if (/net\.daum\.android\.mail/gi.test(package_name)) {
+              await this.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지", channel: "#error_log" });
               await instance.taxBill(MONGOLOCALC);
             }
           }
@@ -749,7 +750,7 @@ if (/office/gi.test(process.argv[2])) {
 } else if (/static/gi.test(process.argv[2])) {
   app.cronLaunching(1);
 } else if (/python/gi.test(process.argv[2])) {
-  app.cronLaunching(2);
+  app.cronLaunching(3);
 } else if (/calculation/gi.test(process.argv[2])) {
   app.wssClientLaunching();
 } else if (/request/gi.test(process.argv[2])) {
