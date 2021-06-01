@@ -1882,21 +1882,21 @@ DesignerJs.prototype.calendarView = async function () {
                 startDom = calendarX.dateToDom(desid, "possible", start, 0);
                 if (startDom !== null) {
                   startDom.setAttribute("spot", dateToString(start));
-                  // if (tempDom.getAttribute("toggle") === "off") {
+                  if (tempDom.getAttribute("toggle") === "off") {
                     instance.moduleEvent.call(startDom, clickObj);
-                  // }
+                  }
                 }
                 if (x1 !== 0) {
                   tempDom.setAttribute("spot", dateToString(end));
-                  // if (tempDom.getAttribute("toggle") === "off") {
+                  if (tempDom.getAttribute("toggle") === "off") {
                     instance.moduleEvent.call(tempDom, clickObj);
-                  // }
+                  }
                 }
               } else {
                 tempDom.setAttribute("spot", dateToString(end));
-                // if (tempDom.getAttribute("toggle") === "off") {
+                if (tempDom.getAttribute("toggle") === "off") {
                   instance.moduleEvent.call(tempDom, clickObj);
-                // }
+                }
               }
             }
           }
@@ -1918,9 +1918,9 @@ DesignerJs.prototype.calendarView = async function () {
             x0 = tempObj.x;
             if (tempDom !== null) {
               tempDom.setAttribute("spot", dateToString(start));
-              // if (tempDom.getAttribute("toggle") === "off") {
+              if (tempDom.getAttribute("toggle") === "off") {
                 instance.moduleEvent.call(tempDom, clickObj);
-              // }
+              }
             }
             tempObj = calendarX.dateToDomX(desid, proid, end);
             tempDom = tempObj.dom;
@@ -1931,21 +1931,21 @@ DesignerJs.prototype.calendarView = async function () {
                   startDom = calendarX.dateToDom(desid, proid, start, 0);
                   if (startDom !== null) {
                     startDom.setAttribute("spot", dateToString(start));
-                    // if (tempDom.getAttribute("toggle") === "off") {
+                    if (tempDom.getAttribute("toggle") === "off") {
                       instance.moduleEvent.call(startDom, clickObj);
-                    // }
+                    }
                   }
                   if (x1 !== 0) {
                     tempDom.setAttribute("spot", dateToString(end));
-                    // if (tempDom.getAttribute("toggle") === "off") {
+                    if (tempDom.getAttribute("toggle") === "off") {
                       instance.moduleEvent.call(tempDom, clickObj);
-                    // }
+                    }
                   }
                 } else {
                   tempDom.setAttribute("spot", dateToString(end));
-                  // if (tempDom.getAttribute("toggle") === "off") {
+                  if (tempDom.getAttribute("toggle") === "off") {
                     instance.moduleEvent.call(tempDom, clickObj);
-                  // }
+                  }
                 }
               }
             }
