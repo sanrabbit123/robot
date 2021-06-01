@@ -633,9 +633,9 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
 
 BackWorker.prototype.designerCalculation = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const PYTHONMONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+  const PYTHONMONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     await MONGOC.connect();
     await PYTHONMONGOC.connect();

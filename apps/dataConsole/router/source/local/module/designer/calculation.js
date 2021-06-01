@@ -45,7 +45,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { ea, belowHeight } = this;
+  const { ea, belowHeight, taxBill } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, isMac, autoComma } = GeneralJs;
   const { designer: name, desid } = designer;
   const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -276,6 +276,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     amount = designer.projects[i].process.calculation.payments.first.amount;
     condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
     if (!condition) {
+      if (!/프리/gi.test(designer.information.business.businessInfo.classification)) {
+        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
+      }
+    }
+    if (!condition) {
       firstAmount += amount;
     }
     createNodes([
@@ -362,6 +367,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         condition = false;
       } else {
         condition = true;
+      }
+    }
+    if (!condition) {
+      if (!/프리/gi.test(designer.information.business.businessInfo.classification)) {
+        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
       }
     }
     if (!condition) {
@@ -940,9 +950,25 @@ DesignerJs.prototype.calculationView = async function () {
           this.push(i);
         }
       }
-      
-
-
+      search(amount, business) {
+        if (typeof amount !== "number" || typeof business !== "string") {
+          throw new Error("invaild input");
+        }
+        let boo;
+        business = business.replace(/-/g, '');
+        boo = true;
+        for (let i of this) {
+          if (i.who.from.business.replace(/-/g, '') === business) {
+            for (let { supply, vat } of i.items) {
+              if (supply + vat === amount) {
+                boo = false;
+                break;
+              }
+            }
+          }
+        }
+        return boo;
+      }
     }
 
     projects = await ajaxJson({
@@ -1001,7 +1027,7 @@ DesignerJs.prototype.calculationView = async function () {
     }, PYTHONHOST + "/generalMongo", { equal: true });
     taxBill.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
-    console.log(taxBill);
+    this.taxBill = new TaxSearch(taxBill);
 
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
