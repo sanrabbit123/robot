@@ -117,10 +117,11 @@ DesignerJs.prototype.priceBase = function () {
   ]);
 
   length = garo * sero;
+  nodeArr = [];
   for (let i = 0; i < length; i++) {
     x = String(i % garo);
     y = String(Math.floor(i / garo));
-    nodeArr = createNode({
+    nodeArr.push({
       mother: matrixBase,
       attribute: [ { x }, { y } ],
       class: [ this.domClassName + x + y ],
@@ -135,6 +136,7 @@ DesignerJs.prototype.priceBase = function () {
       }
     });
   }
+  this.priceNumbers(createNodes(nodeArr));
 
   for (let i = 0; i < sero; i++) {
     createNodes([
@@ -195,11 +197,25 @@ DesignerJs.prototype.priceBase = function () {
     ]);
   }
 
-  this.priceNumbers(nodeArr);
-
 }
 
 DesignerJs.prototype.priceNumbers = function (doms) {
+  const instance = this;
+  const price = this.price.pick(...this.key);
+  const matrix = price.matrix[this.partial ? "partial" : "entire"];
+  let x, y;
+  for (let i = 0; i < doms.length; i++) {
+    x = Number(doms[i].getAttribute('x'));
+    y = Number(doms[i].getAttribute('y'));
+    this.priceNumber(doms[i], matrix[y][x]);
+  }
+}
+
+DesignerJs.prototype.priceNumber = function (mother, value) {
+  const instance = this;
+
+  console.log(mother, value);
+
 
 }
 
@@ -209,23 +225,62 @@ DesignerJs.prototype.priceView = async function () {
     const { colorChip, ajaxJson, sleep } = GeneralJs;
     let loading, price;
 
+    class PriceMatrix extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      select(key0, key1) {
+        if (typeof key0 !== "number" || typeof key1 !== "number") {
+          throw new Error("input must be level, level");
+        }
+        if (!(0 < key0 && key0 < 4)) {
+          throw new Error("invaild level");
+        }
+        if (!(0 < key1 && key1 < 4)) {
+          throw new Error("invaild level");
+        }
+        const key = (key0 * 10) + key1;
+        let target = null;
+        for (let obj of this) {
+          if (obj.key === key) {
+            target = obj;
+            break;
+          }
+        }
+        return target;
+      }
+      search(key0, key1) {
+        return this.select(key0, key1);
+      }
+      find(key0, key1) {
+        return this.select(key0, key1);
+      }
+      pick(key0, key1) {
+        return this.select(key0, key1);
+      }
+      key(key0, key1) {
+        return this.select(key0, key1);
+      }
+    }
+
     loading = await this.mother.loadingRun();
 
     this.domClassName = "priceDom";
     this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
-    this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 900' ];
-    this.price = await ajaxJson({
+    this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 999' ];
+    this.price = new PriceMatrix(await ajaxJson({
       mode: "read",
       db: "console",
       collection: "designerPrice",
       whereQuery: {},
-    }, "/generalMongo", { equal: true });
-
-    console.log(this.price);
-
+    }, "/generalMongo", { equal: true }));
+    this.key = [ 3, 3 ];
+    this.partial = false;
 
     this.priceBase();
-
 
     loading.parentNode.removeChild(loading);
 
