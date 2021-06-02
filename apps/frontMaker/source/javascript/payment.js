@@ -1518,15 +1518,15 @@ PaymentJs.prototype.eventMaker = function (type, flatform) {
 
           } else {
 
-            GeneralJs.ajax(query, "./engine/Cardamount.php", function (data) {
+            GeneralJs.ajax(query, "https://homeliaison-bridge.xyz:3000/card", function (data) {
               if (data === "error") {
                 alert("성함과 연락처를 정확히 적어주세요!");
                 document.querySelector("." + list.mo + "paymentwhiteinput > input").focus();
                 return;
               } else {
-                var IMP = window.IMP;
-                var result = "330000";
-                var title = "홈리에종 계약금"
+                let IMP = window.IMP;
+                let result = "330000";
+                let title = "홈리에종 계약금";
                 if (obj.type === "left") {
                   title = "홈리에종 잔금";
                   result = data;

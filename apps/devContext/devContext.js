@@ -638,7 +638,7 @@ DevContext.prototype.launching = async function () {
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // card setting
-    // await this.cardSetting("010-9346-2735");
+    // await this.cardSetting("010-6663-6948");
 
 
     // get sheets

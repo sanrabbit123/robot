@@ -829,6 +829,48 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - name phone check
+  funcObj.post_card = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      if (req.body.pretext === undefined || req.body.cellphone === undefined) {
+        res.send("error");
+      }
+      const phone = req.body.cellphone.trim().replace(/[\&\=\'\(\)\<\>\; \n\?\!\[\]\{\}\*\+]/g, '');
+      if (!/^[0-9]+-[0-9]+-[0-9]+$/.test(phone)) {
+        res.send("error");
+      }
+      const clients = await instance.back.getClientsByQuery({ phone }, { withTools: false, selfMongo: MONGOC });
+      if (clients.length === 0) {
+        res.send("error");
+      }
+
+      let cliid;
+      let projects, project;
+      let first, remain;
+
+      cliid = clients[0].cliid;
+      projects = await instance.back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { withTools: false, selfMongo: MONGOC });
+      if (projects.length === 0) {
+        res.send("error");
+      }
+
+      project = projects[0];
+      first = project.process.contract.first.calculation.amount;
+      remain = project.process.contract.remain.calculation.amount.consumer - first;
+
+      res.send(String(remain));
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+
   //POST - binary files
   funcObj.post_binary = async function (req, res) {
     try {
