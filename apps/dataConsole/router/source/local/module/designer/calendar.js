@@ -1369,6 +1369,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
     designerNameBox_clone.style.background = "transparent";
     designerNameBox_clone.style.border = String(0);
     designerNameBox_clone.style.zIndex = String(3);
+    designerNameBox_clone.style.height = String(Number(designerNameBox_clone.style.height.replace(/[^0-9\-\.]/gi, '')) / 2) + ea;
     designerNameBox_clone.classList.add("hoverDefault");
     designerNameBox_clone.addEventListener("click", function (e) {
       const desid = this.getAttribute("desid");

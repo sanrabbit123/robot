@@ -52,89 +52,331 @@ DevContext.prototype.launching = async function () {
     const back = this.back;
     const report = new BackReport();
     const work = new BackWorker();
+    const sheets = new GoogleSheet();
 
 
-    const app = new ReceiptObserver();
-    await app.taxBill(this.MONGOLOCALC);
-    
+    // /*
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const targetDesigners = [ "홍민영", "이지수", "채성은" ];
-    // const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-    // const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
-    // const autoComma = function (str) {
-    //   if (typeof str === "number") {
-    //     str = String(str);
+    // const selfMongo = MONGOC;
+    // const sheetsId = "1iRp_N0RMWCxxIO96uBNlph6bX3jKaP-At2Phj3qEiHA";
+    // const res = await sheets.get_value_inPython(sheetsId, "target!C1:J");
+    // class Price extends Array {
+    //   constructor() {
+    //     super();
+    //     this.standard = {};
+    //     this.standard.x = [ 9, 15, 23, 30, 34, 39, 45 ];
+    //     this.standard.y = [ "F", "S", "T", "XT" ];
+    //
     //   }
-    //   let minus, num, tmp;
-    //
-    //   if (/\-/g.test(str)) {
-    //     minus = /\-/g.exec(str)[0];
-    //   } else {
-    //     minus = '';
+    //   set(key, value) {
+    //     this.push(value);
+    //     this[key] = value;
     //   }
-    //
-    //   num = str.replace(/[^0-9]/g, '');
-    //   tmp = '';
-    //
-    //   if (num.length < 4) {
-    //     return minus + num;
-    //   } else if (num.length < 7) {
-    //     tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 10) {
-    //     tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 13) {
-    //     tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 16) {
-    //     tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   }
-    //
-    //   return minus + num;
     // }
-    // const consoleInfo = "https://homeliaison-console.xyz";
-    // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    // let designers, designer, desid;
-    // let projects, client;
-    // let contents;
-    // let matrix, rowArr;
-    // let contentsDate;
+    // let num, standard, tempArr, tempArr2, tempArr3, tong;
+    // let num0, num1;
+    // let tempObj;
+    // let map, keyList;
     //
-    // matrix = [ [ "디자이너 이름", "고객 이름", "시작일", "종료일", "정산 금액", "프로젝트 콘솔" ] ];
+    // keyList = [ "c3s3", "c2s3", "c1s3", "c3s2", "c2s2", "c1s2", "c3s1", "c2s1", "c1s1" ];
+    // num = 0;
+    // standard = 8;
+    // tong = [];
+    // while (num < res.length) {
+    //   tempArr = [];
+    //   tempArr2 = [];
+    //   for (let i = num; i < num + (standard / 2); i++) {
+    //     tempArr3 = res[i].map((str) => { return Number(str); });
+    //     tempArr2.push(tempArr3);
+    //   }
+    //   tempArr.push(tempArr2);
+    //   tempArr2 = [];
+    //   for (let i = num + (standard / 2); i < num + standard; i++) {
+    //     tempArr3 = res[i].map((str) => { return Number(str); });
+    //     tempArr2.push(tempArr3);
+    //   }
+    //   tempArr.push(tempArr2);
+    //   tong.push(tempArr);
+    //   num = num + standard;
+    // }
+    // tong.pop();
     //
-    // for (let name of targetDesigners) {
-    //   designers = await back.getDesignersByQuery({ designer: name }, { selfMongo });
-    //   designer = designers[0];
-    //   desid = designer.desid;
-    //   projects = await back.getProjectsByQuery({ desid }, { selfMongo })
-    //   for (let project of projects) {
-    //     client = await back.getClientById(project.cliid, { selfMongo });
-    //     contents = await back.getContentsArrByQuery({ proid: project.proid }, { selfMongo });
+    // map = new Price();
+    // for (let i = 0; i < keyList.length; i++) {
+    //   tempArr = keyList[i].split('s');
+    //   num0 = Number(tempArr[0].replace(/[^0-9]/gi, ''));
+    //   num1 = Number(tempArr[1].replace(/[^0-9]/gi, ''));
+    //   tempObj = {};
+    //   tempObj.key = (num0 * 10) + num1;
+    //   tempObj.level = {};
+    //   tempObj.level.construct = num0;
+    //   tempObj.level.styling = num1;
+    //   tempObj.matrix = {};
+    //   tempObj.matrix.partial = tong[i][0];
+    //   tempObj.matrix.entire = tong[i][1];
+    //   map.push(tempObj);
+    // }
     //
-    //     contentsDate = new Date(1800, 0, 1);
-    //     if (contents.length !== 0) {
-    //       contentsDate = contents[0].contents.portfolio.date;
+    // for (let i of map) {
+    //   console.log(i);
+    //   await back.mongoCreate("designerPrice", i, { selfMongo });
+    // }
+
+    //2
+
+    // const res = await sheets.get_value_inPython(sheetsId, "target!A1:B");
+    // let vaild, tong;
+    // let tempArr, tempArr2;
+    // let temp;
+    // let keyString;
+    // let cLevel, sLevel;
+    //
+    // vaild = [];
+    // for (let arr of res) {
+    //   if (/py/g.test(arr[0])) {
+    //     vaild.push(arr[0]);
+    //   }
+    // }
+    //
+    // tong = {};
+    // for (let i of vaild) {
+    //   keyString = '';
+    //   tempArr = i.split(' py');
+    //   tempArr = tempArr.map((j) => { return j.trim(); });
+    //   keyString += (/^상/.test(tempArr[0]) ? "c3" : (/^중/.test(tempArr[0]) ? "c2" : "c1"));
+    //   cLevel = (/^상/.test(tempArr[0]) ? 3 : (/^중/.test(tempArr[0]) ? 2 : 1));
+    //   keyString += (/상$/.test(tempArr[0]) ? "s3" : (/중$/.test(tempArr[0]) ? "s2" : "s1"));
+    //   sLevel = (/상$/.test(tempArr[0]) ? 3 : (/중$/.test(tempArr[0]) ? 2 : 1));
+    //   if (tong[keyString] === undefined) {
+    //     tong[keyString] = [];
+    //   }
+    //   tempArr2 = tempArr[1].split(',');
+    //   tempArr2 = tempArr2.map((j) => { return j.trim().replace(/[^가-힣]/g, ''); });
+    //   tempArr2 = tempArr2.filter((j) => { return j !== ''; });
+    //   for (let designer of tempArr2) {
+    //     temp = await back.getDesignersByQuery({ designer }, { selfMongo });
+    //     if (temp.length === 0) {
+    //       console.log(tempArr2);
+    //       throw new Error("invaild designer : " + designer);
+    //     }
+    //     // await back.updateDesigner([ { desid: temp[0].desid }, { "analytics.construct.level": cLevel, "analytics.styling.level": sLevel } ], { selfMongo });
+    //     tong[keyString].push({ desid: temp[0].desid, c: temp[0].analytics.construct.level, s: temp[0].analytics.styling.level });
+    //   }
+    // }
+    //
+    // console.log(tong);
+
+    // */
+
+    // const getPrice = async function (desid, cliid, serviceArr) {
+    //   if (typeof desid !== "string" || typeof cliid !== "string" || !Array.isArray(serviceArr)) {
+    //     throw new Error("invaild input");
+    //   }
+    //   try {
+    //     const selfMongo = instance.MONGOLOCALC;
+    //     const collection = "designerPrice";
+    //     const pyeongArr = [ [ 0, 8 ], [ 9, 14 ], [ 15, 22 ], [ 23, 29 ], [ 30, 33 ], [ 34, 38 ], [ 39, 44 ], [ 45, 99999 ] ];
+    //     let service, xValue, yValue, pyeong, online;
+    //     let designer, client;
+    //     let cLevel, sLevel;
+    //     let priceMatrix, matrix;
+    //     let count;
+    //     let percentage;
+    //     let final;
+    //     designer = await back.getDesignerById(desid, { selfMongo });
+    //     client = await back.getClientById(cliid, { selfMongo });
+    //     service = serviceArr[0];
+    //     xValue = serviceArr[1];
+    //     pyeong = client.requests[0][0].space.pyeong.value;
+    //     online = false;
+    //     cLevel = designer.analytics.construct.level;
+    //     sLevel = designer.analytics.styling.level;
+    //     for (let i = 0; i < pyeongArr.length; i++) {
+    //       if (pyeongArr[i][0] <= pyeong && pyeong <= pyeongArr[i][1]) {
+    //         yValue = i;
+    //         break;
+    //       }
     //     }
     //
-    //     matrix.push([
-    //       name,
-    //       client.name,
-    //       dateToString(project.process.contract.meeting.date.valueOf() < emptyDateValue ? project.proposal.date : project.process.contract.meeting.date),
-    //       dateToString(project.process.contract.form.date.to.valueOf() < emptyDateValue ? ((project.process.calculation.payments.remain.date.valueOf() < emptyDateValue) ? (project.contents.photo.date.valueOf() < emptyDateValue ? contentsDate : project.contents.photo.date) : project.process.calculation.payments.remain.date) : project.process.contract.form.date.to),
-    //       autoComma(project.process.calculation.payments.totalAmount) + "원",
-    //       consoleInfo + "/project?proid=" + project.proid ]);
+    //     priceMatrix = await back.mongoRead(collection, { key: (cLevel * 10) + sLevel }, { selfMongo });
+    //     priceMatrix = priceMatrix[0];
+    //     matrix = priceMatrix.matrix[(xValue === 0) ? "partial" : "entire"];
+    //
+    //     count = 0;
+    //     for (let { value } of designer.analytics.etc.personality) {
+    //       count += value ? 1 : 0;
+    //     }
+    //     switch (designer.analytics.etc.relation) {
+    //       case "좋지 않음":
+    //         count += 0;
+    //         break;
+    //       case "확인중":
+    //         count += 1;
+    //         break;
+    //       case "그냥 평범":
+    //         count += 2;
+    //         break;
+    //       case "지속가능성 높음":
+    //         count += 3;
+    //         break;
+    //     }
+    //     percentage = (count * (10 / 8)) / 100;
+    //     final = Math.round(matrix[service][yValue] * (1 + percentage));
+    //     return final;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
+    // console.log(await getPrice("d1909_aa01s", "c2106_aa01s", [ 1, 1 ]));
+    // console.log(await getPrice("d1910_aa01s", "c2106_aa01s", [ 1, 1 ]));
+    // console.log(await getPrice("d1904_aa12s", "c2106_aa01s", [ 1, 1 ]));
+    // console.log(await getPrice("d1904_aa11s", "c2106_aa01s", [ 1, 1 ]));
+    // console.log(await getPrice("d1902_aa01s", "c2106_aa01s", [ 1, 1 ]));
+
+
+
+
+    // const selfMongo = this.MONGOLOCALC;
+    // const targetDesid = [
+    //   'd1902_aa01s',
+    //   'd1904_aa02s',
+    //   'd2007_aa02s',
+    //   'd2006_aa01s',
+    //   'd1908_aa01s',
+    //   'd1904_aa01s',
+    //   'd1906_aa01s',
+    //   'd1904_aa11s',
+    //   'd1907_aa01s',
+    //   'd2007_aa01s',
+    //   'd1908_aa02s',
+    //   'd2008_aa01s',
+    //   'd1904_aa17s',
+    //   'd1904_aa09s',
+    //   'd1910_aa02s',
+    //   'd1904_aa16s',
+    //   'd1910_aa01s',
+    //   'd1910_aa02s',
+    //   'd1910_aa03s',
+    //   'd1904_aa05s',
+    //   'd2004_aa02s',
+    //   'd1909_aa01s',
+    //   'd2004_aa01s',
+    //   'd1904_aa12s',
+    //   'd1909_aa01s',
+    // ];
+    // const projects = await back.getProjectsByQuery({ $and: [ { "service.serid": "s2011_aa02s" }, { "service.xValue": "B" }, { "service.online": false } ] }, { selfMongo });
+    // let tong, client, designer;
+    // let entireTong;
+    // let key, value;
+    // let sortTong;
+    // let standard;
+    // let range;
+    // let sum, count;
+    // let average;
+    //
+    // //1
+    // entireTong = {};
+    // for (let i = 0; i < targetDesid.length; i++) {
+    //   entireTong[targetDesid[i]] = [];
+    //   for (let project of projects) {
+    //     for (let { desid, fee } of project.proposal.detail) {
+    //       for (let { method, partial, amount } of fee) {
+    //         if (desid === targetDesid[i]) {
+    //           if (!/online/gi.test(method)) {
+    //             if (!partial) {
+    //               client = await back.getClientById(project.cliid, { selfMongo });
+    //               entireTong[targetDesid[i]].push({ amount: (amount / client.requests[0][0].space.pyeong.value), cliid: project.cliid, proid: project.proid });
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
     //   }
     // }
     //
-    // console.log(matrix);
+    // //2
+    // average = {};
+    // range = 20000;
     //
-    // const sheetsId = "1HxJjhGW1qoldqGw6IqFIbLrcCgvMBGnDJPkhYJRoFTU";
-    // const sheets = new GoogleSheet();
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "디자이너", matrix, [ 0, 0 ]);
+    // for (let d in entireTong) {
+    //   tong = {};
+    //   for (let { amount } of entireTong[d]) {
+    //     key = 'a' + String(Math.round(amount / 10000));
+    //     if (tong[key] === undefined) {
+    //       tong[key] = 0;
+    //     } else {
+    //       tong[key] = tong[key] + 1;
+    //     }
+    //   }
+    //   sortTong = [];
+    //   for (let i in tong) {
+    //     sortTong.push({ value: Number(i.replace(/[^0-9]/g, '')), count: tong[i] + 1 });
+    //   }
+    //   sortTong.sort((a, b) => { return b.count - a.count; });
+    //   standard = sortTong[0].value * 10000;
+    //
+    //   sum = 0;
+    //   count = 0;
+    //   for (let { amount } of entireTong[d]) {
+    //     // if (standard - range <= amount && amount <= standard + range) {
+    //       sum += amount;
+    //       count = count + 1;
+    //     // }
+    //   }
+    //   designer = await back.getDesignerById(d, { selfMongo });
+    //   average[d] = { average: Math.round((sum / count) / 1000) * 1000, c: designer.analytics.construct.level, s: designer.analytics.styling.level };
+    // }
+    //
+    // console.log(average)
+
+
+
+
+
+    //eform
+
+    // const id = "8tYXXpqfLD";
+    // const key = "pmXpXXlzgtsJGLIYHNfOgrBHm5XCbmixvF7hnRyd";
+    // const { data: { access_token } } = await requestSystem("https://api.eform.io/v2/token", {}, { headers: { "x-api-id": id, "x-api-key": key } });
+    // const getUrl = function (url, params) {
+    //   if (typeof url !== "string" || typeof params !== "object") {
+    //     throw new Error("invaild input");
+    //   }
+    //   if (!/^http/.test(url)) {
+    //     throw new Error("invaild input");
+    //   }
+    //   let str = '';
+    //   for (let i in params) {
+    //     str += i.replace(/[\=\&]/g, '');
+    //     str += '=';
+    //     str += params[i].replace(/[\=\&]/g, '');
+    //     str += '&';
+    //   }
+    //   if (str.length > 0) {
+    //     str = str.slice(0, -1);
+    //   }
+    //   return url + "?" + str;
+    // }
+    // let response, headers, url, data, config;
+    // headers = { "x-api-key": key, "x-access-token": access_token };
+    // data = {};
+    // config = { headers };
+    // url = "https://api.eform.io/v2/form";
+    // response = await requestSystem(getUrl(url, {}), data, config);
+    // console.log(response.data);
+    // url = "https://api.eform.io/v2/form/detail";
+    // response = await requestSystem(getUrl(url, { form_id: "60b6d531bb0e68efedc5c1f1" }), data, config);
+    // console.log(JSON.stringify(response.data, null, 2));
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -157,29 +399,6 @@ DevContext.prototype.launching = async function () {
     // console.log(res);
 
 
-    // const sheets = new GoogleSheet();
-    // const sheetsId = "1W2duVMJVtQgbjQpTafM4lnuukebWNAEHyvD__VnOb_w";
-    // const selfMongo = this.MONGOLOCALC;
-    // const option = { selfMongo, withTools: true };
-    // const clients = await back.getClientsByQuery({}, option);
-    // const projects = await back.getProjectsByQuery({}, option);
-    // const tongs = clients.getRequestsTongsMonthly();
-    // let temp, num;
-    // let tempArr;
-    // let matrix;
-    //
-    // matrix = [ [ "날짜", "문의", "계약", "계약율" ] ];
-    // for (let { name, tong } of tongs) {
-    //   num = 0;
-    //   for (let { cliid } of tong) {
-    //     temp = projects.searchByCliid(cliid, true);
-    //     num += temp.length;
-    //   }
-    //   matrix.push([ name, String(tong.length), String(num), (String(Math.round((num / tong.length) * 10000) / 100) + '%') ]);
-    // }
-    // console.log(matrix)
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "문의계약", matrix, [ 0, 0 ]);
 
 
 
@@ -187,7 +406,6 @@ DevContext.prototype.launching = async function () {
 
     /*
 
-    const sheets = new GoogleSheet();
     const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
     const matrix = await sheets.get_value_inPython(sheetsId, "총괄 시트!B2:V");
     const columns = [ "name", "null0", "boo", "status", "designer", "photographer", "interviewer", "date", "hours", "memo", "rawInterview", "rawPortfolio", "rawPhoto", "blogInterview", "blogPortfolio", "instaInterview", "instaPortfolio", "web", "sharePhotoDesigner", "sharePhotoClient", "shareContents" ];
@@ -420,7 +638,7 @@ DevContext.prototype.launching = async function () {
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // card setting
-    // await this.cardSetting("010-9476-2253");
+    // await this.cardSetting("010-9346-2735");
 
 
     // get sheets
