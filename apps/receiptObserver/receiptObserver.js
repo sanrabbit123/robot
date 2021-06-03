@@ -120,25 +120,16 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
         message += "\n";
         message += "발신자\n";
         message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
-        message += "- 성함 : " + who.from.name + "\n";
-        message += "- 주소 : " + who.from.address + "\n";
-        message += "- 업태 : " + who.from.status + "\n";
-        message += "- 종목 : " + who.from.detail + "\n";
         message += "- 이메일 : " + who.from.email + "\n";
         message += "\n";
         message += "수신자\n";
         message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
-        message += "- 성함 : " + who.to.name + "\n";
-        message += "- 주소 : " + who.to.address + "\n";
-        message += "- 업태 : " + who.to.status + "\n";
-        message += "- 종목 : " + who.to.detail + "\n";
         message += "- 이메일 : " + who.to.email + "\n";
         message += "\n";
         message += "내용\n";
         for (let item of items) {
           message += "- 날짜 : " + String((new Date()).getFullYear()) + "-" + zeroAddition(item.month) + "-" + zeroAddition(item.date) + "\n";
           message += "- 품목 : " + item.name + "\n";
-          message += "- 수량 : " + String(item.amount) + String(item.ea) + "\n";
           message += "- 공급가 : " + autoComma(item.supply) + "원" + "\n";
           message += "- 세액 : " + autoComma(item.vat) + "원" + "\n";
           message += "\n";
@@ -146,7 +137,6 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
         message += "합계\n";
         message += "- 소비자가 : " + autoComma(sum.total) + "원" + "\n";
         message += "- 공급가 : " + autoComma(sum.supply) + "원" + "\n";
-        message += "- 세액 : " + autoComma(sum.vat) + "원";
         return message;
       }
     }
