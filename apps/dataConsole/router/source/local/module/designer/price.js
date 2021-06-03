@@ -344,7 +344,9 @@ DesignerJs.prototype.priceNumbers = function () {
   let x, y;
   let height, size;
   let divVisualSpecific, inputVisualSpecific;
+  let allCaseLaunching;
 
+  allCaseLaunching = (document.querySelector('.' + "caseTarget") !== null);
   doms.removeAll();
 
   size = 32;
@@ -365,10 +367,6 @@ DesignerJs.prototype.priceNumbers = function () {
       let input;
       let titleX, titleY;
 
-      if (document.querySelector('.' + "caseTarget") !== null) {
-        instance.priceAllCase(true);
-      }
-
       titleX = document.querySelectorAll(".titleX");
       titleY = document.querySelectorAll(".titleY");
 
@@ -384,6 +382,9 @@ DesignerJs.prototype.priceNumbers = function () {
               mother.removeChild(mother.lastChild);
               mother.removeChild(mother.lastChild);
               for (let dom of doms) {
+                for (let child of dom.children) {
+                  child.style.color = colorChip.green;
+                }
                 dom.firstChild.style.color = colorChip.black;
               }
               for (let dom of titleX) {
@@ -508,13 +509,13 @@ DesignerJs.prototype.priceNumbers = function () {
         ],
         style: {
           position: "absolute",
-          width: String(100) + '%',
+          width: String(30) + '%',
           textAlign: "center",
           fontFamily: "graphik",
           fontSize: String(size) + ea,
           fontWeight: String(200),
           height: String(height) + ea,
-          left: String(0) + ea,
+          left: String(35) + '%',
           top: withOut(50, (height / 2) + inputVisualSpecific, ea),
           color: colorChip.green,
           border: String(0),
@@ -528,7 +529,9 @@ DesignerJs.prototype.priceNumbers = function () {
 
       for (let dom of doms) {
         if (!xDoms.includes(dom) && !yDoms.includes(dom)) {
-          dom.firstChild.style.color = colorChip.gray3;
+          for (let child of dom.children) {
+            child.style.color = colorChip.gray3;
+          }
         }
       }
       document.getElementById("titleX" + String(x)).firstChild.style.color = colorChip.green;
@@ -565,19 +568,29 @@ DesignerJs.prototype.priceNumbers = function () {
       doms[i].style.background = colorChip["gray0"];
     }
   }
+
+  if (allCaseLaunching) {
+    this.priceAllCase(false);
+  }
 }
 
 DesignerJs.prototype.priceAllCase = function (remove = false) {
   const instance = this;
-  const { ea, doms, price } = this;
+  const { ea, doms, price: pricePast } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const priceNew = price.allCase();
+  const { price, standard } = pricePast.allCase(...this.key);
   const className = "caseTarget";
+  let subSize;
   let size;
   let x, y;
   let removeTargets;
+  let topStart;
+  let lineHeight;
 
+  subSize = 5;
   size = 18;
+  topStart = 10;
+  lineHeight = 29;
 
   this.newcomer.boo = false;
   this.premium.boo = false;
@@ -590,19 +603,36 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   }
 
   if (!remove) {
-    this.mother.greenAlert("가로가 시공 능력, 세로가 스타일링 능력입니다!");
     for (let i = 0; i < doms.length; i++) {
       x = Number(doms[i].getAttribute('x'));
       y = Number(doms[i].getAttribute('y'));
-      for (let j = 0; j < priceNew.length; j++) {
+      for (let j = 0; j < price.length; j++) {
+
         if (j === 4) {
-          doms[i].firstChild.textContent = String(priceNew[j].matrix[x][y]);
+          doms[i].firstChild.textContent = String(price[j].matrix[x][y]);
           continue;
         }
+
         createNode({
           mother: doms[i],
           class: [ className ],
-          text: String(priceNew[j].matrix[x][y]),
+          text: standard[i][j],
+          style: {
+            position: "absolute",
+            fontSize: String(subSize) + ea,
+            fontWeight: String(700),
+            textAlign: "center",
+            color: colorChip.green,
+            width: "calc(100% / 3)",
+            top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
+            left: "calc(calc(100% / 3) * " + String(j % 3) + ")",
+          }
+        });
+
+        createNode({
+          mother: doms[i],
+          class: [ className ],
+          text: String(price[j].matrix[x][y]),
           style: {
             position: "absolute",
             fontSize: String(size) + ea,
@@ -611,10 +641,11 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
             textAlign: "center",
             color: colorChip.green,
             width: "calc(100% / 3)",
-            top: "calc(11% + calc(31% * " + String(Math.floor(j / 3)) + "))",
+            top: "calc(" + String(topStart + 7) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
             left: "calc(calc(100% / 3) * " + String(j % 3) + ")",
           }
         });
+
       }
     }
 
@@ -676,30 +707,7 @@ DesignerJs.prototype.pricePannel = function () {
   caseEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
-    const a0 = instance.key[0];
-    const a1 = instance.key[1];
-    let num0, num1;
     if (document.querySelector('.' + "caseTarget") === null) {
-      if (a0 === 1) {
-        num0 = 1;
-      } else if (a0 === 2) {
-        num0 = 0;
-      } else if (a0 === 3) {
-        num0 = 2;
-      }
-      if (a1 === 1) {
-        num1 = 1;
-      } else if (a1 === 2) {
-        num1 = 0;
-      } else if (a1 === 3) {
-        num1 = 2;
-      }
-      for (let i = 0; i < num0; i++) {
-        clickEvent.call(title0, { type: "click", preventDefault: () => {}, stopPropagation: () => {} });
-      }
-      for (let i = 0; i < num1; i++) {
-        clickEvent.call(title1, { type: "click", preventDefault: () => {}, stopPropagation: () => {} });
-      }
       instance.priceAllCase(false);
     } else {
       instance.priceAllCase(true);
@@ -1076,9 +1084,10 @@ DesignerJs.prototype.pricePannel = function () {
 DesignerJs.prototype.priceView = async function () {
   const instance = this;
   try {
-    const { colorChip, ajaxJson, sleep } = GeneralJs;
+    const { colorChip, ajaxJson, sleep, cssInjection } = GeneralJs;
     let loading, price;
 
+    cssInjection("* { transition: all 0.2s ease }")
     class PriceMatrix extends Array {
       constructor(arr) {
         super();
@@ -1118,18 +1127,38 @@ DesignerJs.prototype.priceView = async function () {
       key(key0, key1) {
         return this.select(key0, key1);
       }
-      allCase() {
-        let arr = [];
-        arr.push(this.pick(1, 3));
-        arr.push(this.pick(2, 3));
-        arr.push(this.pick(3, 3));
-        arr.push(this.pick(1, 2));
-        arr.push(this.pick(2, 2));
-        arr.push(this.pick(3, 2));
-        arr.push(this.pick(1, 1));
-        arr.push(this.pick(2, 1));
-        arr.push(this.pick(3, 1));
-        return new PriceMatrix(arr);
+      allCase(key0, key1) {
+        if (typeof key0 !== "number" || typeof key1 !== "number") {
+          throw new Error("input must be level, level");
+        }
+        const words = [ "하", "중", "상" ];
+        const add = (num) => { return ((num + 1) === 4 ? 1 : (num + 1)); }
+        const subtract = (num) => { return ((num - 1) === 0 ? 3 : (num - 1)); }
+        let arr;
+        let standard;
+        let tempArr;
+        let order = [
+          [ subtract(key0), add(key1) ],
+          [ key0, add(key1) ],
+          [ add(key0), add(key1) ],
+          [ subtract(key0), key1 ],
+          [ key0, key1 ],
+          [ add(key0), key1 ],
+          [ subtract(key0), subtract(key1) ],
+          [ key0, subtract(key1) ],
+          [ add(key0), subtract(key1) ],
+        ];
+        tempArr = [];
+        arr = [];
+        for (let [ x, y ] of order) {
+          tempArr.push(words[x - 1] + words[y - 1]);
+          arr.push(this.pick(x, y));
+        }
+        standard = [];
+        for (let i = 0; i < 36; i++) {
+          standard.push(JSON.parse(JSON.stringify(tempArr)));
+        }
+        return { price: (new PriceMatrix(arr)), standard };
       }
     }
 
