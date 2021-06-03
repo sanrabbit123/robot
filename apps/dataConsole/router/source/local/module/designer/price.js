@@ -190,6 +190,21 @@ DesignerJs.prototype.priceBase = function () {
         background: colorChip.gradientGreen,
         borderRadius: String(5) + ea,
       }
+    },
+    {
+      mother: -1,
+      text: "수수료",
+      class: [ "hoverDefault_lite" ],
+      style: {
+        position: "absolute",
+        fontSize: String(titleSize - 7) + ea,
+        fontWeight: String(600),
+        width: String(100) + '%',
+        textAlign: "center",
+        left: String(0),
+        top: withOut(50, (titleSize / 2) + 1, ea),
+        color: colorChip.white,
+      }
     }
   ]);
 
@@ -422,13 +437,10 @@ DesignerJs.prototype.priceNumbers = function () {
                   whereQuery: { key: (instance.key[0] * 10) + instance.key[1] },
                   updateQuery
                 }, "/generalMongo").then((data) => {
-                  mother.firstChild.textContent = String(value);
+                  mother.firstChild.textContent = String(Math.round(value * (instance.newcomer.boo ? instance.newcomer.ratio : 1) * (instance.premium.boo ? instance.premium.ratio : 1)));
                   instance.price.pick(...instance.key).matrix[x][y] = value;
                   mother.style.background = colorChip[value === 0 ? "gray0" : "white"];
                   instance.cancelBox.click();
-                  if (instance.autoNext) {
-                    doms.next(x, y).firstChild.click();
-                  }
                 }).catch((err) => {
                   throw new Error(err);
                 });
@@ -441,8 +453,28 @@ DesignerJs.prototype.priceNumbers = function () {
               if (e.key === "Tab") {
                 e.preventDefault();
                 e.stopPropagation();
-                instance.cancelBox.click();
-                doms.next(x, y).firstChild.click();
+                const mother = this.parentElement;
+                const x = Number(this.getAttribute('x'));
+                const y = Number(this.getAttribute('y'));
+                const value = Number(this.value.replace(/[^0-9]/g, ''));
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["matrix." + String(x) + '.' + String(y)] = value;
+                ajaxJson({
+                  mode: "update",
+                  db: "console",
+                  collection: "designerPrice",
+                  whereQuery: { key: (instance.key[0] * 10) + instance.key[1] },
+                  updateQuery
+                }, "/generalMongo").then((data) => {
+                  mother.firstChild.textContent = String(value);
+                  instance.price.pick(...instance.key).matrix[x][y] = value;
+                  mother.style.background = colorChip[value === 0 ? "gray0" : "white"];
+                  instance.cancelBox.click();
+                  doms.next(x, y).firstChild.click();
+                }).catch((err) => {
+                  throw new Error(err);
+                });
               } else if (e.key === "Escape" || e.key === " ") {
                 e.preventDefault();
                 e.stopPropagation();
@@ -512,7 +544,7 @@ DesignerJs.prototype.priceNumbers = function () {
       mother: doms[i],
       attribute: [ { x }, { y } ],
       events: [ { type: [ "click", "contextmenu" ], event: instance.eventFunc } ],
-      text: String(matrix[x][y]),
+      text: String(Math.round(matrix[x][y] * (instance.newcomer.boo ? instance.newcomer.ratio : 1) * (instance.premium.boo ? instance.premium.ratio : 1))),
       style: {
         position: "absolute",
         width: String(100) + '%',
@@ -547,6 +579,11 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
 
   size = 18;
 
+  this.newcomer.boo = false;
+  this.premium.boo = false;
+  document.getElementById("newcomerBoo").textContent = 'N';
+  document.getElementById("premiumBoo").textContent = 'N';
+
   removeTargets = document.querySelectorAll('.' + className);
   for (let dom of removeTargets) {
     dom.parentElement.removeChild(dom);
@@ -559,6 +596,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
       y = Number(doms[i].getAttribute('y'));
       for (let j = 0; j < priceNew.length; j++) {
         if (j === 4) {
+          doms[i].firstChild.textContent = String(priceNew[j].matrix[x][y]);
           continue;
         }
         createNode({
@@ -603,8 +641,12 @@ DesignerJs.prototype.pricePannel = function () {
   let betweenWords;
   let price;
   let caseEvent;
+  let premiumEvent;
+  let newcomerEvent;
+  let premiumRatioEvent;
+  let newcomerRatioEvent;
 
-  price = this.price.pick(...this.key);
+  price = this.price.pick(3, 3);
 
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 18;
@@ -663,6 +705,101 @@ DesignerJs.prototype.pricePannel = function () {
       instance.priceAllCase(true);
     }
   }
+  premiumEvent = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const doms = instance.doms;
+    const { matrix } = instance.price.pick(...instance.key);
+    let x, y;
+    if (!instance.premium.boo) {
+      for (let dom of doms) {
+        dom.firstChild.textContent = String(Math.round(Number(dom.firstChild.textContent) * instance.premium.ratio));
+      }
+      ratioValue1.textContent = 'Y';
+    } else {
+      for (let dom of doms) {
+        x = Number(dom.getAttribute('x'));
+        y = Number(dom.getAttribute('y'));
+        dom.firstChild.textContent = String(Math.round(matrix[x][y] * (instance.newcomer.boo ? instance.newcomer.ratio : 1) * (!instance.premium.boo ? instance.premium.ratio : 1)));
+      }
+      ratioValue1.textContent = 'N';
+    }
+    instance.premium.boo = !instance.premium.boo;
+  }
+  newcomerEvent = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const doms = instance.doms;
+    const { matrix } = instance.price.pick(...instance.key);
+    let x, y;
+    if (!instance.newcomer.boo) {
+      for (let dom of doms) {
+        dom.firstChild.textContent = String(Math.round(Number(dom.firstChild.textContent) * instance.newcomer.ratio));
+      }
+      ratioValue3.textContent = 'Y';
+    } else {
+      for (let dom of doms) {
+        x = Number(dom.getAttribute('x'));
+        y = Number(dom.getAttribute('y'));
+        dom.firstChild.textContent = String(Math.round(matrix[x][y] * (!instance.newcomer.boo ? instance.newcomer.ratio : 1) * (instance.premium.boo ? instance.premium.ratio : 1)));
+      }
+      ratioValue3.textContent = 'N';
+    }
+    instance.newcomer.boo = !instance.newcomer.boo;
+  }
+  premiumRatioEvent = async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const ratio = instance.premium.ratio;
+      if (1 <= ratio && ratio < 2) {
+        instance.premium.ratio = Math.round((ratio + (e.type === "click" ? 0.1 : -0.1)) * 10) / 10;
+      } else {
+        instance.premium.ratio = 1.1;
+      }
+      ratioValue0.textContent = String(Math.round(instance.premium.ratio * 10) / 10);
+      if (instance.premium.boo) {
+        premiumEvent.call(ratioValue1, { preventDefault: () => {}, stopPropagation: () => {} });
+        premiumEvent.call(ratioValue1, { preventDefault: () => {}, stopPropagation: () => {} });
+      }
+      await GeneralJs.ajaxJson({
+        mode: "update",
+        db: "console",
+        collection: "designerPrice",
+        whereQuery: { key: 33 },
+        updateQuery: { premium: (Math.round(instance.premium.ratio * 10) / 10), newcomer: (Math.round(instance.newcomer.ratio * 10) / 10) }
+      }, "/generalMongo");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  newcomerRatioEvent = async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const ratio = Math.round(instance.newcomer.ratio * 10) / 10;
+      if (0 < ratio && ratio < 1) {
+        instance.newcomer.ratio = Math.round((ratio + (e.type === "click" ? -0.1 : 0.1)) * 10) / 10;
+      } else {
+        instance.newcomer.ratio = 0.9;
+      }
+      ratioValue2.textContent = String(Math.round(instance.newcomer.ratio * 10) / 10);
+      if (instance.newcomer.boo) {
+        newcomerEvent.call(ratioValue1, { preventDefault: () => {}, stopPropagation: () => {} });
+        newcomerEvent.call(ratioValue1, { preventDefault: () => {}, stopPropagation: () => {} });
+      }
+      await GeneralJs.ajaxJson({
+        mode: "update",
+        db: "console",
+        collection: "designerPrice",
+        whereQuery: { key: 33 },
+        updateQuery: { premium: (Math.round(instance.premium.ratio * 10) / 10), newcomer: (Math.round(instance.newcomer.ratio * 10) / 10) }
+      }, "/generalMongo");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   belowPannel.addEventListener("selectstart", (e) => { e.preventDefault(); });
 
   accumulate = margin;
@@ -763,10 +900,8 @@ DesignerJs.prototype.pricePannel = function () {
     text: String(price.premium),
     events: [
       {
-        type: "click",
-        event: function (e) {
-
-        }
+        type: [ "click", "contextmenu" ],
+        event: premiumRatioEvent
       }
     ],
     style: {
@@ -785,6 +920,12 @@ DesignerJs.prototype.pricePannel = function () {
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: "프리미엄 비율",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: premiumRatioEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -799,8 +940,15 @@ DesignerJs.prototype.pricePannel = function () {
   accumulate += ratio0.getBoundingClientRect().width + betweenWords;
   ratioValue1 = createNode({
     mother: belowPannel,
+    id: "premiumBoo",
     class: [ "hoverDefault_lite" ],
     text: "N",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: premiumEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -817,6 +965,12 @@ DesignerJs.prototype.pricePannel = function () {
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: "프리미엄 적용",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: premiumEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -833,6 +987,12 @@ DesignerJs.prototype.pricePannel = function () {
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: String(price.newcomer),
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: newcomerRatioEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -849,6 +1009,12 @@ DesignerJs.prototype.pricePannel = function () {
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: "신입 비율",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: newcomerRatioEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -863,8 +1029,15 @@ DesignerJs.prototype.pricePannel = function () {
   accumulate += ratio2.getBoundingClientRect().width + betweenWords;
   ratioValue3 = createNode({
     mother: belowPannel,
+    id: "newcomerBoo",
     class: [ "hoverDefault_lite" ],
     text: "N",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: newcomerEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -881,6 +1054,12 @@ DesignerJs.prototype.pricePannel = function () {
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
     text: "신입 적용",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: newcomerEvent
+      }
+    ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -965,12 +1144,19 @@ DesignerJs.prototype.priceView = async function () {
       collection: "designerPrice",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
-    this.key = [ 3, 3 ];
+    this.key = [ 2, 2 ];
     this.doms = null;
     this.eventFunc = null;
     this.cancelBox = null;
     this.belowPannel = null;
-    this.autoNext = true;
+    this.newcomer = {
+      boo: false,
+      ratio: this.price.pick(3, 3).newcomer
+    };
+    this.premium = {
+      boo: false,
+      ratio: this.price.pick(3, 3).premium
+    };
 
     this.priceBase();
 
