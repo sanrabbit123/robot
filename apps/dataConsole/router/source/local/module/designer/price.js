@@ -193,12 +193,13 @@ DesignerJs.prototype.priceBase = function () {
     },
     {
       mother: -1,
-      text: "수수료",
+      text: "Sheets",
       class: [ "hoverDefault_lite" ],
       style: {
         position: "absolute",
-        fontSize: String(titleSize - 7) + ea,
-        fontWeight: String(600),
+        fontSize: String(titleSize - 9) + ea,
+        fontWeight: String(400),
+        fontFamily: "graphik",
         width: String(100) + '%',
         textAlign: "center",
         left: String(0),
@@ -577,19 +578,20 @@ DesignerJs.prototype.priceNumbers = function () {
 DesignerJs.prototype.priceAllCase = function (remove = false) {
   const instance = this;
   const { ea, doms, price: pricePast } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const { price, standard } = pricePast.allCase(...this.key);
   const className = "caseTarget";
   let subSize;
   let size;
   let x, y;
   let removeTargets;
-  let topStart;
+  let topStart, between;
   let lineHeight;
 
   subSize = 5;
   size = 18;
-  topStart = 10;
+  topStart = isMac() ? 10 : 11;
+  between = isMac() ? 7 : 6;
   lineHeight = 29;
 
   this.newcomer.boo = false;
@@ -641,7 +643,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
             textAlign: "center",
             color: colorChip.green,
             width: "calc(100% / 3)",
-            top: "calc(" + String(topStart + 7) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
+            top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
             left: "calc(calc(100% / 3) * " + String(j % 3) + ")",
           }
         });
@@ -656,7 +658,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
 DesignerJs.prototype.pricePannel = function () {
   const instance = this;
   const { ea, belowPannel } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const standard = [ "하", "중", "상" ];
   let motherHeight;
   let size;
@@ -682,7 +684,7 @@ DesignerJs.prototype.pricePannel = function () {
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 18;
   margin = 24;
-  top = 15;
+  top = isMac() ? 15 : 17;
   between = 8;
   betweenWords = margin * 1;
 
