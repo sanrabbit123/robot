@@ -55,118 +55,103 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    // /*
+    /*
 
-    // const selfMongo = MONGOC;
-    // const sheetsId = "1iRp_N0RMWCxxIO96uBNlph6bX3jKaP-At2Phj3qEiHA";
-    // const res = await sheets.get_value_inPython(sheetsId, "target!C1:J");
-    // class Price extends Array {
-    //   constructor() {
-    //     super();
-    //     this.standard = {};
-    //     this.standard.x = [ 9, 15, 23, 30, 34, 39, 45 ];
-    //     this.standard.y = [ "F", "S", "T", "XT" ];
-    //
-    //   }
-    //   set(key, value) {
-    //     this.push(value);
-    //     this[key] = value;
-    //   }
-    // }
-    // let num, standard, tempArr, tempArr2, tempArr3, tong;
-    // let num0, num1;
-    // let tempObj;
-    // let map, keyList;
-    //
-    // keyList = [ "c3s3", "c2s3", "c1s3", "c3s2", "c2s2", "c1s2", "c3s1", "c2s1", "c1s1" ];
-    // num = 0;
-    // standard = 8;
-    // tong = [];
-    // while (num < res.length) {
-    //   tempArr = [];
-    //   tempArr2 = [];
-    //   for (let i = num; i < num + (standard / 2); i++) {
-    //     tempArr3 = res[i].map((str) => { return Number(str); });
-    //     tempArr2.push(tempArr3);
-    //   }
-    //   tempArr.push(tempArr2);
-    //   tempArr2 = [];
-    //   for (let i = num + (standard / 2); i < num + standard; i++) {
-    //     tempArr3 = res[i].map((str) => { return Number(str); });
-    //     tempArr2.push(tempArr3);
-    //   }
-    //   tempArr.push(tempArr2);
-    //   tong.push(tempArr);
-    //   num = num + standard;
-    // }
-    // tong.pop();
-    //
-    // map = new Price();
-    // for (let i = 0; i < keyList.length; i++) {
-    //   tempArr = keyList[i].split('s');
-    //   num0 = Number(tempArr[0].replace(/[^0-9]/gi, ''));
-    //   num1 = Number(tempArr[1].replace(/[^0-9]/gi, ''));
-    //   tempObj = {};
-    //   tempObj.key = (num0 * 10) + num1;
-    //   tempObj.level = {};
-    //   tempObj.level.construct = num0;
-    //   tempObj.level.styling = num1;
-    //   tempObj.matrix = {};
-    //   tempObj.matrix.partial = tong[i][0];
-    //   tempObj.matrix.entire = tong[i][1];
-    //   map.push(tempObj);
-    // }
-    //
-    // for (let i of map) {
-    //   console.log(i);
-    //   await back.mongoCreate("designerPrice", i, { selfMongo });
-    // }
+    // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    // await MONGOC.connect();
+    const selfMongo = this.MONGOLOCALC;
+    const sheetsId = "1iRp_N0RMWCxxIO96uBNlph6bX3jKaP-At2Phj3qEiHA";
+    const res = await sheets.get_value_inPython(sheetsId, "target!C1:J");
+    class Price extends Array {
+      constructor() {
+        super();
+        this.standard = {};
+        this.standard.x = [ 9, 15, 23, 30, 34, 39, 45 ];
+        this.standard.y = [ "F", "S", "T", "XT" ];
 
-    //2
+      }
+      set(key, value) {
+        this.push(value);
+        this[key] = value;
+      }
+    }
+    let num, standard, tempArr, tempArr2, tempArr3, tong;
+    let num0, num1;
+    let tempObj;
+    let map, keyList;
+    let length;
+    let tong2;
 
-    // const res = await sheets.get_value_inPython(sheetsId, "target!A1:B");
-    // let vaild, tong;
-    // let tempArr, tempArr2;
-    // let temp;
-    // let keyString;
-    // let cLevel, sLevel;
-    //
-    // vaild = [];
-    // for (let arr of res) {
-    //   if (/py/g.test(arr[0])) {
-    //     vaild.push(arr[0]);
-    //   }
-    // }
-    //
-    // tong = {};
-    // for (let i of vaild) {
-    //   keyString = '';
-    //   tempArr = i.split(' py');
-    //   tempArr = tempArr.map((j) => { return j.trim(); });
-    //   keyString += (/^상/.test(tempArr[0]) ? "c3" : (/^중/.test(tempArr[0]) ? "c2" : "c1"));
-    //   cLevel = (/^상/.test(tempArr[0]) ? 3 : (/^중/.test(tempArr[0]) ? 2 : 1));
-    //   keyString += (/상$/.test(tempArr[0]) ? "s3" : (/중$/.test(tempArr[0]) ? "s2" : "s1"));
-    //   sLevel = (/상$/.test(tempArr[0]) ? 3 : (/중$/.test(tempArr[0]) ? 2 : 1));
-    //   if (tong[keyString] === undefined) {
-    //     tong[keyString] = [];
-    //   }
-    //   tempArr2 = tempArr[1].split(',');
-    //   tempArr2 = tempArr2.map((j) => { return j.trim().replace(/[^가-힣]/g, ''); });
-    //   tempArr2 = tempArr2.filter((j) => { return j !== ''; });
-    //   for (let designer of tempArr2) {
-    //     temp = await back.getDesignersByQuery({ designer }, { selfMongo });
-    //     if (temp.length === 0) {
-    //       console.log(tempArr2);
-    //       throw new Error("invaild designer : " + designer);
-    //     }
-    //     // await back.updateDesigner([ { desid: temp[0].desid }, { "analytics.construct.level": cLevel, "analytics.styling.level": sLevel } ], { selfMongo });
-    //     tong[keyString].push({ desid: temp[0].desid, c: temp[0].analytics.construct.level, s: temp[0].analytics.styling.level });
-    //   }
-    // }
-    //
-    // console.log(tong);
+    keyList = [ "c3s3", "c2s3", "c1s3", "c3s2", "c2s2", "c1s2", "c3s1", "c2s1", "c1s1" ];
+    num = 0;
+    standard = 8;
+    tong = [];
+    while (num < res.length) {
+      tempArr = [];
+      tempArr2 = [];
+      for (let i = num; i < num + (standard / 2); i++) {
+        tempArr3 = res[i].map((str) => { return Number(str); });
+        tempArr2.push(tempArr3);
+      }
+      tempArr.push(tempArr2);
+      tempArr2 = [];
+      for (let i = num + (standard / 2); i < num + standard; i++) {
+        tempArr3 = res[i].map((str) => { return Number(str); });
+        tempArr2.push(tempArr3);
+      }
+      tempArr.push(tempArr2);
+      tong.push(tempArr);
+      num = num + standard;
+    }
+    tong.pop();
 
-    // */
+    tong2 = [];
+    for (let arr of tong) {
+      tempArr3 = [];
+      for (let k = 0; k < arr.length; k++) {
+        tempArr2 = [];
+        for (let j = 0; j < arr[0][0].length; j++) {
+          tempArr = [];
+          for (let i = 0; i < arr[0].length; i++) {
+            tempArr.push(arr[k][i][j]);
+          }
+          tempArr2.push(tempArr);
+        }
+        tempArr3.push(tempArr2);
+      }
+      tong2.push(tempArr3);
+    }
+
+    map = new Price();
+    for (let i = 0; i < keyList.length; i++) {
+      tempArr = keyList[i].split('s');
+      num0 = Number(tempArr[0].replace(/[^0-9]/gi, ''));
+      num1 = Number(tempArr[1].replace(/[^0-9]/gi, ''));
+      tempObj = {};
+      tempObj.key = (num0 * 10) + num1;
+      tempObj.level = {};
+      tempObj.level.construct = num0;
+      tempObj.level.styling = num1;
+      tempObj.matrix = {};
+      tempObj.matrix.partial = tong2[i][0];
+      tempObj.matrix.entire = tong2[i][1];
+      map.push(tempObj);
+    }
+
+    for (let i of map) {
+      console.log(i);
+      await back.mongoCreate("designerPrice", i, { selfMongo });
+    }
+
+    // await MONGOC.close();
+
+    */
+
+
+
+
+
+
 
     // const getPrice = async function (desid, cliid, serviceArr) {
     //   if (typeof desid !== "string" || typeof cliid !== "string" || !Array.isArray(serviceArr)) {

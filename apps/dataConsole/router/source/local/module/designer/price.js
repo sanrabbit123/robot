@@ -161,7 +161,7 @@ DesignerJs.prototype.priceBase = function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(400),
           fontFamily: "graphik",
-          top: withOut(50, (titleFontHeight / 2) + 4, ea),
+          top: withOut(50, (titleFontHeight / 2) + 7, ea),
           left: String(0) + ea,
         }
       }
@@ -203,20 +203,145 @@ DesignerJs.prototype.priceNumbers = function (doms) {
   const instance = this;
   const price = this.price.pick(...this.key);
   const matrix = price.matrix[this.partial ? "partial" : "entire"];
+  const { ea } = this;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   let x, y;
+  let height, size;
+  let divVisualSpecific, inputVisualSpecific;
+
+  size = 32;
+  height = size + 4;
+  divVisualSpecific = 9;
+  inputVisualSpecific = divVisualSpecific - 3;
+
+  if (this.eventFunc === null) {
+    this.eventFunc = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const x = Number(this.getAttribute('x'));
+      const y = Number(this.getAttribute('y'));
+      let input;
+
+      createNode({
+        mother: this.parentElement,
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const mother = this.parentElement;
+              mother.removeChild(mother.lastChild);
+              mother.removeChild(mother.lastChild);
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: "transparent",
+          zIndex: String(1),
+          cursor: "pointer",
+        }
+      });
+
+      input = createNode({
+        mother: this.parentElement,
+        mode: "input",
+        attribute: [
+          { x },
+          { y },
+          { type: "text" },
+          { value: String(matrix[x][y]) },
+        ],
+        events: [
+          {
+            type: "keypress",
+            event: function (e) {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                const mother = this.parentElement;
+                const x = Number(this.getAttribute('x'));
+                const y = Number(this.getAttribute('y'));
+                const value = Number(this.value.replace(/[^0-9]/g, ''));
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["matrix." + (instance.partial ? "partial." : "entire.") + String(x) + '.' + String(y)] = value;
+                ajaxJson({
+                  mode: "update",
+                  db: "console",
+                  collection: "designerPrice",
+                  whereQuery: { key: (instance.key[0] * 10) + instance.key[1] },
+                  updateQuery
+                }, "/generalMongo").then((data) => {
+                  mother.firstChild.textContent = String(value);
+                  instance.price.pick(...instance.key).matrix[instance.partial ? "partial" : "entire"][x][y] = value;
+                  mother.removeChild(mother.lastChild);
+                  mother.removeChild(mother.lastChild);
+                  mother.style.background = colorChip[value === 0 ? "gray0" : "white"];
+                }).catch((err) => {
+                  throw new Error(err);
+                });
+              }
+            }
+          }
+        ],
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontSize: String(size) + ea,
+          fontWeight: String(200),
+          height: String(height) + ea,
+          left: String(0) + ea,
+          top: withOut(50, (height / 2) + inputVisualSpecific, ea),
+          color: colorChip.green,
+          border: String(0),
+          outline: String(0),
+          boxSizing: "border-box",
+          zIndex: String(1),
+          background: colorChip[matrix[x][y] === 0 ? "gray0" : "white"],
+        }
+      });
+
+      input.focus();
+
+    }
+  }
+
   for (let i = 0; i < doms.length; i++) {
     x = Number(doms[i].getAttribute('x'));
     y = Number(doms[i].getAttribute('y'));
-    this.priceNumber(doms[i], matrix[y][x]);
+    createNode({
+      mother: doms[i],
+      attribute: [ { x }, { y } ],
+      events: [ { type: [ "click", "contextmenu" ], event: instance.eventFunc } ],
+      text: String(matrix[x][y]),
+      style: {
+        position: "absolute",
+        width: String(100) + '%',
+        textAlign: "center",
+        fontFamily: "graphik",
+        fontSize: String(size) + ea,
+        fontWeight: String(200),
+        height: String(height) + ea,
+        left: String(0) + ea,
+        top: withOut(50, (height / 2) + divVisualSpecific, ea),
+        color: colorChip.black,
+        cursor: "pointer",
+      }
+    });
+    if (matrix[x][y] !== 0) {
+      doms[i].style.background = colorChip["white"];
+    } else {
+      doms[i].style.background = colorChip["gray0"];
+    }
   }
-}
-
-DesignerJs.prototype.priceNumber = function (mother, value) {
-  const instance = this;
-
-  console.log(mother, value);
-
-
 }
 
 DesignerJs.prototype.priceView = async function () {
@@ -271,6 +396,7 @@ DesignerJs.prototype.priceView = async function () {
     this.domClassName = "priceDom";
     this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
     this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 999' ];
+    this.eventFunc = null;
     this.price = new PriceMatrix(await ajaxJson({
       mode: "read",
       db: "console",
