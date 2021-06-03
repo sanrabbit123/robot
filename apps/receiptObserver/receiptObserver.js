@@ -120,10 +120,12 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
         message += "\n";
         message += "발신자\n";
         message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
+        message += "- 이름 : " + who.from.name + "\n";
         message += "- 이메일 : " + who.from.email + "\n";
         message += "\n";
         message += "수신자\n";
         message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
+        message += "- 이름 : " + who.to.name + "\n";
         message += "- 이메일 : " + who.to.email + "\n";
         message += "\n";
         message += "내용\n";

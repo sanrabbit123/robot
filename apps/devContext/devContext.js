@@ -57,9 +57,9 @@ DevContext.prototype.launching = async function () {
 
     /*
 
-    // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    // await MONGOC.connect();
-    const selfMongo = this.MONGOLOCALC;
+    const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    await MONGOC.connect();
+    const selfMongo = MONGOC;
     const sheetsId = "1iRp_N0RMWCxxIO96uBNlph6bX3jKaP-At2Phj3qEiHA";
     const res = await sheets.get_value_inPython(sheetsId, "target!C1:J");
     class Price extends Array {
@@ -132,9 +132,9 @@ DevContext.prototype.launching = async function () {
       tempObj.level = {};
       tempObj.level.construct = num0;
       tempObj.level.styling = num1;
-      tempObj.matrix = {};
-      tempObj.matrix.partial = tong2[i][0];
-      tempObj.matrix.entire = tong2[i][1];
+      tempObj.matrix = tong2[i][1];
+      tempObj.newcomer = 0.8;
+      tempObj.premium = 1.2;
       map.push(tempObj);
     }
 
@@ -143,7 +143,7 @@ DevContext.prototype.launching = async function () {
       await back.mongoCreate("designerPrice", i, { selfMongo });
     }
 
-    // await MONGOC.close();
+    await MONGOC.close();
 
     */
 
