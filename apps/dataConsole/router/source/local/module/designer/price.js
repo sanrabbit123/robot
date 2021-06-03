@@ -2,6 +2,65 @@ DesignerJs.prototype.priceBase = function () {
   const instance = this;
   const { ea, belowHeight, garoStandards, seroStandards } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  class PriceDoms extends Array {
+    constructor(arr) {
+      super();
+      for (let i of arr) {
+        this.push(i);
+      }
+    }
+    pick(x, y) {
+      if (typeof x !== "number" || typeof y !== "number") {
+        throw new Error("input must be x, y");
+      }
+      let target = null;
+      let length = instance.garoStandards.length;
+      if (this[(y * length) + x] !== undefined) {
+        target = this[(y * length) + x];
+      }
+      return target;
+    }
+    pickY(y) {
+      if (typeof y !== "number") {
+        throw new Error("input must be y");
+      }
+      let arr = [];
+      let length = instance.garoStandards.length;
+      for (let i = 0; i < length; i++) {
+        if (this[(y * length) + i] !== undefined) {
+          arr.push(this[(y * length) + i]);
+        }
+      }
+      return arr;
+    }
+    pickX(x) {
+      if (typeof x !== "number") {
+        throw new Error("input must be x");
+      }
+      let arr = [];
+      let length = instance.seroStandards.length;
+      let length2 = instance.garoStandards.length;
+      for (let i = 0; i < length; i++) {
+        if (this[(i * length2) + x] !== undefined) {
+          arr.push(this[(i * length2) + x]);
+        }
+      }
+      return arr;
+    }
+    next(x, y) {
+      if (typeof x !== "number" || typeof y !== "number") {
+        throw new Error("input must be x, y");
+      }
+      let target = null;
+      let length = instance.garoStandards.length;
+      if (this[(y * length) + x + 1] !== undefined) {
+        target = this[(y * length) + x + 1];
+      } else {
+        target = this[0];
+      }
+      return target;
+    }
+  }
   let margin;
   let totalMother;
   let belowPannelHeight;
@@ -90,6 +149,7 @@ DesignerJs.prototype.priceBase = function () {
         borderRadius: String(5) + ea,
         boxSizing: "border-box",
         border: "1px solid " + colorChip.gray3,
+        overflow: "hidden",
       }
     },
     {
@@ -136,12 +196,13 @@ DesignerJs.prototype.priceBase = function () {
       }
     });
   }
-  this.priceNumbers(createNodes(nodeArr));
 
   for (let i = 0; i < sero; i++) {
     createNodes([
       {
         mother: seroZone,
+        id: "titleY" + String(i),
+        class: [ "titleY" ],
         style: {
           display: "block",
           position: "relative",
@@ -172,6 +233,8 @@ DesignerJs.prototype.priceBase = function () {
     createNodes([
       {
         mother: garoZone,
+        id: "titleX" + String(i),
+        class: [ "titleX" ],
         style: {
           display: "inline-block",
           position: "relative",
@@ -197,13 +260,16 @@ DesignerJs.prototype.priceBase = function () {
     ]);
   }
 
+  this.doms = new PriceDoms(createNodes(nodeArr));
+  this.priceNumbers();
+
 }
 
-DesignerJs.prototype.priceNumbers = function (doms) {
+DesignerJs.prototype.priceNumbers = function () {
   const instance = this;
   const price = this.price.pick(...this.key);
   const matrix = price.matrix[this.partial ? "partial" : "entire"];
-  const { ea } = this;
+  const { ea, doms } = this;
   const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   let x, y;
   let height, size;
@@ -220,9 +286,16 @@ DesignerJs.prototype.priceNumbers = function (doms) {
       e.stopPropagation();
       const x = Number(this.getAttribute('x'));
       const y = Number(this.getAttribute('y'));
+      const thisDom = doms.pick(x, y);
+      const xDoms = doms.pickX(x);
+      const yDoms = doms.pickY(y);
       let input;
+      let titleX, titleY;
 
-      createNode({
+      titleX = document.querySelectorAll(".titleX");
+      titleY = document.querySelectorAll(".titleY");
+
+      instance.cancelBox = createNode({
         mother: this.parentElement,
         events: [
           {
@@ -233,6 +306,15 @@ DesignerJs.prototype.priceNumbers = function (doms) {
               const mother = this.parentElement;
               mother.removeChild(mother.lastChild);
               mother.removeChild(mother.lastChild);
+              for (let dom of doms) {
+                dom.firstChild.style.color = colorChip.black;
+              }
+              for (let dom of titleX) {
+                dom.firstChild.style.color = colorChip.black;
+              }
+              for (let dom of titleY) {
+                dom.firstChild.style.color = colorChip.black;
+              }
             }
           }
         ],
@@ -280,13 +362,34 @@ DesignerJs.prototype.priceNumbers = function (doms) {
                 }, "/generalMongo").then((data) => {
                   mother.firstChild.textContent = String(value);
                   instance.price.pick(...instance.key).matrix[instance.partial ? "partial" : "entire"][x][y] = value;
-                  mother.removeChild(mother.lastChild);
-                  mother.removeChild(mother.lastChild);
                   mother.style.background = colorChip[value === 0 ? "gray0" : "white"];
+                  instance.cancelBox.click();
+                  if (instance.autoNext) {
+                    doms.next(x, y).firstChild.click();
+                  }
                 }).catch((err) => {
                   throw new Error(err);
                 });
               }
+            }
+          },
+          {
+            type: "keydown",
+            event: function (e) {
+              if (e.key === "Tab") {
+                e.preventDefault();
+                e.stopPropagation();
+                instance.cancelBox.click();
+                doms.next(x, y).firstChild.click();
+              } else if (e.key === "Escape" || e.key === " ") {
+                e.preventDefault();
+                e.stopPropagation();
+                instance.cancelBox.click();
+              }
+              if (e.altKey) {
+                console.log("this!");
+              }
+
             }
           }
         ],
@@ -308,8 +411,15 @@ DesignerJs.prototype.priceNumbers = function (doms) {
           background: colorChip[matrix[x][y] === 0 ? "gray0" : "white"],
         }
       });
-
       input.focus();
+
+      for (let dom of doms) {
+        if (!xDoms.includes(dom) && !yDoms.includes(dom)) {
+          dom.firstChild.style.color = colorChip.gray3;
+        }
+      }
+      document.getElementById("titleX" + String(x)).firstChild.style.color = colorChip.green;
+      document.getElementById("titleY" + String(y)).firstChild.style.color = colorChip.green;
 
     }
   }
@@ -396,7 +506,6 @@ DesignerJs.prototype.priceView = async function () {
     this.domClassName = "priceDom";
     this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
     this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 999' ];
-    this.eventFunc = null;
     this.price = new PriceMatrix(await ajaxJson({
       mode: "read",
       db: "console",
@@ -405,6 +514,10 @@ DesignerJs.prototype.priceView = async function () {
     }, "/generalMongo", { equal: true }));
     this.key = [ 3, 3 ];
     this.partial = false;
+    this.doms = null;
+    this.eventFunc = null;
+    this.cancelBox = null;
+    this.autoNext = true;
 
     this.priceBase();
 
