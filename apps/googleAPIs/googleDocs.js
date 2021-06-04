@@ -8,6 +8,7 @@ const GoogleDocs = function (credentials = "default") {
 
 GoogleDocs.prototype.get_docs = function (id) {
   const instance = this;
+  id = this.general.parsingId(id);
   return new Promise(function (resolve, reject) {
     instance.docs.documents.get({
         documentId: id,
@@ -77,10 +78,52 @@ GoogleDocs.prototype.create_newDocs_inPython = async function (title, parent) {
   }
 }
 
+GoogleDocs.prototype.get_value_inPython = async function (id) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    id = this.general.parsingId(id);
+    let result = await mother.pythonExecute(this.pythonApp, [ "docs", "readDocs" ], { id });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleDocs.prototype.read_value_inPython = async function (id) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    const result = await mother.pythonExecute(this.pythonApp, [ "docs", "readDocs" ], { id });
+    let past;
+    let elements;
+
+    id = this.general.parsingId(id);
+    past = "";
+    for (let obj of result.body.content) {
+      if (obj.paragraph !== undefined) {
+        if (obj.paragraph.elements !== undefined) {
+          elements = obj.paragraph.elements;
+          for (let obj2 of elements) {
+            if (obj2.textRun !== undefined) {
+              past += obj2.textRun.content;
+            }
+          }
+        }
+      }
+    }
+
+    return past;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleDocs.prototype.update_value_inPython = async function (id, longText) {
   const instance = this;
   const mother = this.general;
   try {
+    id = this.general.parsingId(id);
     let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertText" ], { id, longText });
     return result;
   } catch (e) {

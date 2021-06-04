@@ -595,7 +595,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       if (req.body.updateQuery === undefined) {
         updateQuery = {};
         if (/^\{/.test(req.body.updateValue) || /^\[/.test(req.body.updateValue)) {
-          updateQuery[req.body.target] = JSON.parse(req.body.updateValue);
+          updateQuery[req.body.target] = equalJson(req.body.updateValue);
         } else if (req.body.updateValue === "today") {
           updateQuery[req.body.target] = new Date();
         } else {

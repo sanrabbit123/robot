@@ -11,6 +11,7 @@ const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
 const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const GoogleMail = require(APP_PATH + "/googleAPIs/googleMail.js");
+const GoogleDocs = require(APP_PATH + "/googleAPIs/googleDocs.js");
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
@@ -53,6 +54,37 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
     const sheets = new GoogleSheet();
+
+
+
+
+
+    // const document = new GoogleDocs();
+    // const selfMongo = this.MONGOLOCALC;
+    // const designers = await back.getDesignersByQuery({}, { selfMongo });
+    // let response, idArr, folders;
+    //
+    // idArr = [];
+    // for (let designer of designers) {
+    //   idArr.push(designer.desid);
+    // }
+    //
+    // response = await back.getHistoryProperty("designer", "$all", idArr, { selfMongo });
+    // for (let desid in response) {
+    //   console.log(response[desid].history);
+    // }
+    //
+    // folders = await back.mongoRead("folderDesigner", {}, { selfMongo });
+    // console.log(folders);
+    //
+    // for (let { docs, desid } of folders) {
+    //   await document.update_value_inPython(docs, response[desid].history);
+    //   console.log(desid, "done");
+    // }
+
+
+
+
 
 
     /*

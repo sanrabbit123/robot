@@ -172,7 +172,32 @@ class Designers extends Array {
     }
     return new Designers(arr);
   }
-  
+
+  update(queryArr) {
+    if (!Array.isArray(queryArr)) {
+      throw new Error("must be query arr");
+    }
+    if (queryArr.length !== 2) {
+      throw new Error("must be query arr");
+    }
+    const [ whereQuery, updateQuery ] = queryArr;
+    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+      throw new Error("invaild query");
+    }
+    if (whereQuery.desid === undefined) {
+      throw new Error("invaild whereQuery");
+    }
+    let tempArr, targetObj;
+    for (let position in updateQuery) {
+      tempArr = position.split('.');
+      targetObj = this.pick(whereQuery.desid);
+      for (let i = 0; i < tempArr.length - 1; i++) {
+        targetObj = targetObj[tempArr[i]];
+      }
+      targetObj[tempArr[tempArr.length - 1]] = updateQuery[position];
+    }
+  }
+
 }
 
 module.exports = Designers;

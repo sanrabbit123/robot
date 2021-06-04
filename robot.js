@@ -568,10 +568,10 @@ const MENU = {
   },
   back: async function () {
     try {
-      if (process.argv[3] === undefined) {
-        robot.dataConsole(false);
-      } else if (process.argv[3] === "test") {
+      if (process.argv[3] === "test") {
         robot.dataConsole(true);
+      } else {
+        robot.dataConsole(false);
       }
     } catch (e) {
       console.log(e);

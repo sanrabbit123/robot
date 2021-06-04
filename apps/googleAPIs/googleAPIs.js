@@ -269,14 +269,18 @@ GoogleAPIs.prototype.shellLink = function (str) {
 }
 
 GoogleAPIs.prototype.parsingId = function (link) {
-  const linkArr = (link.split('?'))[0].split('/');
-  let target;
-  for (let i of linkArr) {
-    if (!/drive/gi.test(i) && !/google/gi.test(i) && !/file/gi.test(i) && !/folders/gi.test(i) && !/view/gi.test(i)) {
-      if (i.length > 12) {
-        target = i;
+  let linkArr, target;
+  if (/^http/i.test(link)) {
+    linkArr = (link.split('?'))[0].split('/');
+    for (let i of linkArr) {
+      if (!/docs/gi.test(i) && !/document/gi.test(i) && !/spreadsheets/gi.test(i) && !/drive/gi.test(i) && !/google/gi.test(i) && !/file/gi.test(i) && !/folders/gi.test(i) && !/view/gi.test(i)) {
+        if (i.length > 12) {
+          target = i;
+        }
       }
     }
+  } else {
+    target = link;
   }
   return target;
 }

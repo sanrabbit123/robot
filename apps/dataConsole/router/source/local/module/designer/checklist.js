@@ -1,4 +1,5 @@
-DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
+DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
+  const instance = this;
   const checkListData = [
     {
       name: "일반",
@@ -20,13 +21,124 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
           type: "string",
         },
         {
+          name: "이메일",
+          value: function (designer) {
+            return designer.information.email;
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "계약 상태",
+          value: function (designer) {
+            return designer.information.contract.status;
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "계약일",
+          value: function (designer) {
+            const zeroAddition = (num) => { return (num < 10) ? '0' + String(num) : String(num); }
+            const targetDate = designer.information.contract.date;
+            return String(targetDate.getFullYear()) + '-' + zeroAddition(targetDate.getMonth() + 1) + '-' + zeroAddition(targetDate.getDate());
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "웹페이지",
+          value: function (designer) {
+            return (designer.information.personalSystem.webPage.length === 0) ? "웹페이지 없음" : designer.information.personalSystem.webPage[0];
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "인스타",
+          value: function (designer) {
+            const sns = designer.information.personalSystem.sns;
+            let target;
+            target = "인스타그램 없음";
+            for (let { kind, href } of sns) {
+              if (/insta/gi.test(kind)) {
+                target = href;
+              }
+            }
+            return target;
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "블로그",
+          value: function (designer) {
+            const sns = designer.information.personalSystem.sns;
+            let target;
+            target = "블로그 없음";
+            for (let { kind, href } of sns) {
+              if (/naver/gi.test(kind)) {
+                target = href;
+              }
+            }
+            return target;
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "기타 SNS",
+          value: function (designer) {
+            const sns = designer.information.personalSystem.sns;
+            let target;
+            target = "기타 SNS 없음";
+            for (let { kind, href } of sns) {
+              if (!/naver/gi.test(kind) && !/insta/gi.test(kind)) {
+                target = href;
+              }
+            }
+            return target;
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+      ]
+    },
+    {
+      name: "업무",
+      children: [
+        {
           name: "경력",
           value: function (designer) {
             const { information } = designer;
             const { relatedY, relatedM, startY, startM } = information.business.career;
             return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
           },
-          update: function (text) {
+          update: function (text, designer) {
             const errorObj = { updateQuery: "error", text: "error" };
             let updateQuery;
             let tempArr;
@@ -103,7 +215,242 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
           },
           height: factorHeight,
           type: "string",
-        }
+        },
+        {
+          name: "경력 상세",
+          value: function (designer) {
+            return "팝업 보기";
+          },
+          script: function (mother, designer) {
+            if (document.getElementById("memoTong") === null) {
+              mother.textContent = "팝업 제거";
+            } else {
+              mother.textContent = "팝업 보기";
+            }
+            instance.checkListDesignerMemo(designer.desid).call(instance.totalMother, { preventDefault: () => {}, stopPropagation: () => {} });
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "일정",
+          value: function (designer) {
+            return "일정 보기";
+          },
+          script: function (mother, designer) {
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=calendar&desid=" + designer.desid);
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "포트폴리오",
+          value: function (designer) {
+            return "포트폴리오 보기";
+          },
+          script: function (mother, designer) {
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + designer.desid);
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "계좌번호",
+          value: function (designer) {
+            return (designer.information.business.account.length === 0) ? "계좌 없음" : designer.information.business.account[0].bankName + " " + designer.information.business.account[0].accountNumber;
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            updateQuery["information.business.account"] = [];
+            if (/없음/gi.test(text)) {
+              return { updateQuery: { "information.business.account": [] }, text: "계좌 없음" };
+            } else if (!/ /gi.test(text)) {
+              return errorObj;
+            } else {
+              tempArr = text.split(' ');
+              if (tempArr.length !== 2) {
+                return errorObj;
+              } else {
+                if (tempArr[1].replace(/[0-9\-]/g, '') === '') {
+                  tempObj = {};
+                  tempObj.bankName = tempArr[0].trim();
+                  tempObj.accountNumber = tempArr[1].trim().replace(/[^0-9\-]/g, '');
+                  updateQuery["information.business.account"].push(tempObj);
+                  divText = tempObj.bankName + " " + tempObj.accountNumber;
+                } else {
+                  return errorObj;
+                }
+              }
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "사업자 분류",
+          value: function (designer) {
+            let contents, value;
+            contents = [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.information.business.businessInfo.classification) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
+            target = null;
+            for (let i = 0; i < value.length; i++) {
+              if (value[i] === 1) {
+                target = contents[i];
+                break;
+              }
+            }
+            if (target === null) {
+              target = contents[0];
+            }
+            return { "information.business.businessInfo.classification": target };
+          },
+          height: factorHeight * 2.1,
+          width: factorWidth,
+          totalWidth: factorWidth * 3,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "사업자 등록번호",
+          value: function (designer) {
+            return (designer.information.business.businessInfo.businessNumber === '') ? "사업자 등록번호 없음" : designer.information.business.businessInfo.businessNumber;
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            if (/없음/gi.test(text)) {
+              return { updateQuery: { "information.business.businessInfo.businessNumber": "" }, text: "사업자 등록번호 없음" };
+            } else if (text.replace(/[0-9\-]/g, '') === '') {
+              updateQuery["information.business.businessInfo.businessNumber"] = text.replace(/[^0-9\-]/g, '');
+              divText = text.replace(/[^0-9\-]/g, '');
+            } else {
+              return errorObj;
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "수수료",
+          value: function (designer) {
+            const dateToString = (date) => { return String(date.getFullYear()).slice(2) + '.' + String(date.getMonth() + 1) + '.' + String(date.getDate()); }
+            const history = designer.information.business.service.cost.percentageHistory;
+            const token = "&nbsp;/&nbsp;";
+            let str;
+            let tempArr, tempArr2;
+            str = String(designer.information.business.service.cost.percentage) + " (현재)";
+            for (let { date: { start, end }, percentage } of history) {
+              str += token;
+              str += String(percentage);
+              str += " (";
+              str += dateToString(start);
+              str += "-";
+              str += dateToString(end);
+              str += ")";
+            }
+            if (/\//g.test(str)) {
+              if (str.split("/").length > 5) {
+                tempArr = str.split("/");
+                tempArr2 = [];
+                for (let i = 0; i < 5; i++) {
+                  tempArr2.push(tempArr[i].trim());
+                }
+                str = tempArr2.join(token);
+              }
+            }
+            return str;
+          },
+          update: function (text, designer) {
+            const dateToString = (date) => { return String(date.getFullYear()).slice(2) + '.' + String(date.getMonth() + 1) + '.' + String(date.getDate()); }
+            const errorObj = { updateQuery: "error", text: "error" };
+            const token = "&nbsp;/&nbsp;";
+            let updateQuery;
+            let divText;
+            let tempArr, tempArr2;
+            let past, history, contractDate, startDate, endDate;
+            let str;
+
+            updateQuery = {};
+            divText = "";
+
+            past = designer.information.business.service.cost.percentage;
+            history = designer.information.business.service.cost.percentageHistory;
+            contractDate = designer.information.contract.date;
+
+            tempArr = text.split(' ');
+            if (tempArr.length === 0) {
+              return errorObj;
+            }
+            text = tempArr[0];
+
+            if (/[^0-9]/g.test(text)) {
+              return errorObj;
+            } else {
+              if (Number.isNaN(Number(text.replace(/[^0-9]/g, '')))) {
+                return errorObj;
+              } else {
+                endDate = new Date();
+                if (history.length === 0) {
+                  startDate = contractDate;
+                } else {
+                  startDate = history[0].date.end;
+                }
+                history.unshift({ date: { start: startDate, end: endDate }, percentage: past });
+                updateQuery["information.business.service.cost.percentage"] = Number(text.replace(/[^0-9]/g, ''));
+                updateQuery["information.business.service.cost.percentageHistory"] = history;
+
+                str = String(text) + " (현재)";
+                for (let { date: { start, end }, percentage } of history) {
+                  str += token;
+                  str += String(percentage);
+                  str += " (";
+                  str += dateToString(start);
+                  str += "-";
+                  str += dateToString(end);
+                  str += ")";
+                }
+
+                if (/\//g.test(str)) {
+                  if (str.split("/").length > 5) {
+                    tempArr = str.split("/");
+                    tempArr2 = [];
+                    for (let i = 0; i < 5; i++) {
+                      tempArr2.push(tempArr[i].trim());
+                    }
+                    str = tempArr2.join(token);
+                  }
+                }
+                divText = str;
+              }
+            }
+            return { updateQuery, text: divText };
+          },
+          height: factorHeight,
+          type: "string",
+        },
       ]
     },
     {
@@ -114,7 +461,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
           value: function (designer) {
             return (designer.information.address.length === 0) ? "주소 없음" : designer.information.address[0];
           },
-          update: function (text) {
+          update: function (text, designer) {
             const errorObj = { updateQuery: "error", text: "error" };
             let updateQuery;
             let divText;
@@ -148,7 +495,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               "대중교통",
@@ -204,7 +551,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let xy, updateQuery;
             const positionConst = "analytics.project.matrix.";
             xy = [
@@ -249,7 +596,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let xy, updateQuery;
             const positionConst = "analytics.project.matrix.";
             xy = [
@@ -285,7 +632,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.project.online";
             let updateQuery;
             updateQuery = {};
@@ -337,7 +684,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents;
             let min = null, max = null;
             contents = [
@@ -392,7 +739,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               7,
@@ -432,7 +779,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               "도면",
@@ -475,7 +822,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             value[designer.analytics.construct.level - 1] = 1;
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let target;
             target = null;
             for (let i = 0; i < value.length; i++) {
@@ -508,7 +855,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.possible.supervision";
             let updateQuery;
             updateQuery = {};
@@ -544,7 +891,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.0.contract";
             let contents, updateQuery, target;
             contents = [
@@ -592,7 +939,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.0.possible";
             let contents, updateQuery, target;
             contents = [
@@ -640,7 +987,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.1.contract";
             let contents, updateQuery, target;
             contents = [
@@ -688,7 +1035,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.1.possible";
             let contents, updateQuery, target;
             contents = [
@@ -736,7 +1083,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.2.contract";
             let contents, updateQuery, target;
             contents = [
@@ -784,7 +1131,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.construct.case.2.possible";
             let contents, updateQuery, target;
             contents = [
@@ -826,7 +1173,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             value[designer.analytics.styling.level - 1] = 1;
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let target;
             target = null;
             for (let i = 0; i < value.length; i++) {
@@ -863,7 +1210,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               "순차 제안",
@@ -900,7 +1247,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.styling.furniture.builtin";
             let updateQuery;
             updateQuery = {};
@@ -927,7 +1274,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.styling.furniture.design";
             let updateQuery;
             updateQuery = {};
@@ -954,7 +1301,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.styling.fabric.curtain";
             let updateQuery;
             updateQuery = {};
@@ -981,7 +1328,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.styling.fabric.bedding";
             let updateQuery;
             updateQuery = {};
@@ -1013,7 +1360,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               "업체 연결",
@@ -1071,7 +1418,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (z, t) {
+          update: function (z, t, designer) {
             const position = "analytics.styling.tendency.style.";
             let contents, updateQuery;
             contents = [
@@ -1120,7 +1467,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (z, t) {
+          update: function (z, t, designer) {
             const position = "analytics.styling.tendency.texture.";
             let contents, updateQuery;
             contents = [
@@ -1173,7 +1520,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (z, t) {
+          update: function (z, t, designer) {
             const position = "analytics.styling.tendency.color.";
             let contents, updateQuery;
             contents = [
@@ -1218,7 +1565,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (z, t) {
+          update: function (z, t, designer) {
             const position = "analytics.styling.tendency.density.";
             let contents, updateQuery;
             contents = [
@@ -1256,7 +1603,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.purchase.agencies";
             let updateQuery;
             updateQuery = {};
@@ -1283,7 +1630,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.purchase.setting.install";
             let updateQuery;
             updateQuery = {};
@@ -1310,7 +1657,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.purchase.setting.storage";
             let updateQuery;
             updateQuery = {};
@@ -1342,7 +1689,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.etc.personality.0.value";
             let updateQuery;
             updateQuery = {};
@@ -1369,7 +1716,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.etc.personality.1.value";
             let updateQuery;
             updateQuery = {};
@@ -1396,7 +1743,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.etc.personality.2.value";
             let updateQuery;
             updateQuery = {};
@@ -1423,7 +1770,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.etc.personality.3.value";
             let updateQuery;
             updateQuery = {};
@@ -1450,7 +1797,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             ];
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             const position = "analytics.etc.personality.4.value";
             let updateQuery;
             updateQuery = {};
@@ -1483,7 +1830,7 @@ DesignerJs.checkListData = function (factorHeight, factorWidth, tendencyIndent, 
             }
             return { contents, value };
           },
-          update: function (value) {
+          update: function (value, designer) {
             let contents, target;
             contents = [
               "지속가능성 높음",
@@ -1515,7 +1862,7 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
   try {
     const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
     const { totalMother, ea, grayBarWidth } = this;
-    const designers = await ajaxJson({ noFlat: true }, "/getDesigners");
+    const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
     const length = designers.length;
     let boxTong;
     let nodeArr;
@@ -1662,7 +2009,7 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
     //standard doms event
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].addEventListener("click", (e) => {
-        window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + instance.standardDoms[i].getAttribute("desid");
+        instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
       });
     }
 
@@ -1749,9 +2096,9 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
-  const designer = this.designers.pick(desid);
-  const { information, analytics } = designer;
   const matrixButtonConst = "matrixButtons_" + desid;
+  let designer;
+  let information, analytics;
   let margin;
   let baseTong0, baseTong;
   let matrix;
@@ -1767,6 +2114,10 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   let factorHeight, factorWidth;
   let tendencyTop, tendencyHeight;
   let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
+
+  designer = this.designers.pick(desid);
+  information = designer.information;
+  analytics = designer.analytics;
 
   margin = 8;
   level1Width = 210;
@@ -1785,7 +2136,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
 
-  const checkListData = DesignerJs.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
+  const checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -1964,13 +2315,15 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                               try {
                                 if (e.key === "Enter") {
                                   const whereQuery = { desid };
-                                  const { updateQuery, text } = checkListData[x].children[y].update(this.value);
+                                  const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
                                   if (updateQuery === "error") {
                                     this.value = this.getAttribute("past");
                                   } else {
                                     this.parentElement.removeChild(this.parentElement.firstChild);
                                     this.parentElement.insertAdjacentHTML("beforeend", text);
                                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                    instance.designers.update([ whereQuery, updateQuery ]);
+                                    designer = instance.designers.pick(desid);
                                   }
                                   this.parentElement.removeChild(this.parentElement.querySelector("aside"));
                                   this.parentElement.removeChild(this.parentElement.querySelector("input"));
@@ -1998,6 +2351,9 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                       }
                     ]);
                     inputBox.focus();
+                  }
+                  if (typeof checkListData[x].children[y].script === "function") {
+                    checkListData[x].children[y].script(this, designer);
                   }
                 }
               }
@@ -2081,11 +2437,12 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                     for (let dom of thisButtons) {
                       resultArr.push(Number(dom.getAttribute("toggle")));
                     }
-                    updateQuery = checkListData[x].children[y].update(resultArr);
+                    updateQuery = checkListData[x].children[y].update(resultArr, designer);
                     whereQuery = { desid };
 
                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-
+                    instance.designers.update([ whereQuery, updateQuery ]);
+                    designer = instance.designers.pick(desid);
                   } catch (err) {
                     console.log(err);
                   }
@@ -2189,9 +2546,11 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                       }
 
                       whereQuery = { desid };
-                      updateQuery = checkListData[x].children[y].update(z, t);
+                      updateQuery = checkListData[x].children[y].update(z, t, designer);
 
                       await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                      instance.designers.update([ whereQuery, updateQuery ]);
+                      designer = instance.designers.pick(desid);
                     } catch (err) {
                       console.log(err);
                     }
@@ -2254,7 +2613,6 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
         if (resObj[desid] === undefined) {
           throw new Error("history error");
         }
-        history = resObj[desid].history;
         career = resObj[desid].career;
 
         memoTong = createNode({
@@ -2280,8 +2638,8 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
           ],
           style: {
             position: "fixed",
-            width: "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(margin) + ea + ")",
-            height: "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 2) - " + String(margin) + ea + ")",
+            width: "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 3) - " + String(margin) + ea + ")",
+            height: "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 1.5) - " + String(margin) + ea + ")",
             bottom: String(belowHeight + margin) + ea,
             right: String(margin) + ea,
             borderRadius: String(3) + "px",
@@ -2294,91 +2652,11 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
         nodeArr = createNodes([
           {
             mother: memoTong,
-            text: designer.designer + " 디자이너 메모",
-            style: {
-              position: "absolute",
-              top: String(innerMargin - 1) + ea,
-              left: String(innerMargin + 2) + ea,
-              fontSize: String(size) + ea,
-              fontWeight: String(600),
-              color: colorChip.white,
-            }
-          },
-          {
-            mother: memoTong,
-            style: {
-              position: "absolute",
-              bottom: String(innerMargin) + ea,
-              left: String(innerMargin) + ea,
-              width: "calc(50% - " + String(innerMargin * 1.5) + ea + ")",
-              height: withOut((innerMargin * 2) + titleHeight, ea),
-              background: colorChip.white,
-              borderRadius: String(3) + "px",
-              opacity: String(0.95),
-            }
-          },
-          {
-            mother: -1,
-            style: {
-              position: "absolute",
-              top: String(innerMargin - 2) + ea,
-              left: String(innerMargin) + ea,
-              width: withOut((innerMargin - 2) * 2, ea),
-              height: withOut(innerMargin * 2, ea),
-              background: "aqua",
-            }
-          },
-          {
-            mother: -1,
-            mode: "textarea",
-            events: [
-              {
-                type: "blur",
-                event: function (e) {
-                  const cookies = GeneralJs.getCookiesAll();
-                  const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-                }
-              },
-              {
-                type: "keypress",
-                event: function (e) {
-                  if (e.key === "Enter") {
-                    const cookies = GeneralJs.getCookiesAll();
-                    const ajaxData = "method=designer&id=" + desid + "&column=history&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                    GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-                  }
-                }
-              },
-              {
-                type: "contextmenu",
-                event: function (e) {
-                  e.stopPropagation();
-                }
-              }
-            ],
-            style: {
-              position: "relative",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              fontSize: String(size - 1) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              border: String(0),
-              outline: String(0),
-              overflow: "scroll",
-              height: String(100) + '%',
-              lineHeight: String(1.7),
-            }
-          },
-          {
-            mother: memoTong,
             text: designer.designer + " 디자이너 상세 경력",
             style: {
               position: "absolute",
               top: String(innerMargin - 1) + ea,
-              left: "calc(50% + " + String(innerMargin * 0.5) + ea + ")",
+              left: String(innerMargin + 1) + ea,
               fontSize: String(size) + ea,
               fontWeight: String(600),
               color: colorChip.white,
@@ -2389,8 +2667,8 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             style: {
               position: "absolute",
               bottom: String(innerMargin) + ea,
-              left: "calc(50% + " + String(innerMargin * 0.5) + ea + ")",
-              width: "calc(50% - " + String(innerMargin * 1.5) + ea + ")",
+              left: String(innerMargin) + ea,
+              width: "calc(100% - " + String(innerMargin * 2) + ea + ")",
               height: withOut((innerMargin * 2) + titleHeight, ea),
               background: colorChip.white,
               borderRadius: String(3) + "px",
@@ -2453,8 +2731,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             }
           },
         ]);
-        nodeArr[3].value = history;
-        nodeArr[7].value = career;
+        nodeArr[3].value = career;
 
       } else {
         totalMother.removeChild(document.getElementById("memoTong"));
@@ -2673,7 +2950,45 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid);
   });
 
-  mInitialIcon.addEventListener("click", instance.checkListDesignerMemo(desid));
+  mInitialIcon.addEventListener("click", async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const links = await GeneralJs.ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "folderDesigner",
+        whereQuery: { desid }
+      }, "/generalMongo", { equal: true });
+      if (links.length === 0) {
+        alert("만들어진 문서가 없습니다!");
+      } else {
+        GeneralJs.blankHref(links[0].docs);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  mInitialIcon.addEventListener("contextmenu", async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const links = await GeneralJs.ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "folderDesigner",
+        whereQuery: { desid }
+      }, "/generalMongo", { equal: true });
+      if (links.length === 0) {
+        alert("만들어진 폴더가 없습니다!");
+      } else {
+        GeneralJs.blankHref(links[0].drive);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
   aInitialIcon.addEventListener("click", function (e) {
     const today = new Date();
