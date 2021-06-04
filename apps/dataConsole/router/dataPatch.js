@@ -2859,7 +2859,7 @@ DataPatch.prototype.designerMap = function () {
       return { boo: !boo, value: null };
     }
 
-    targetArr = [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ];
+    targetArr = [ "협약 완료", "협약 휴직", "협약 해지", "신청 대기", "컨택중" ];
 
     if (targetArr.includes(value)) {
       finalValue = value;
@@ -2889,7 +2889,7 @@ DataPatch.prototype.designerMap = function () {
       let finalValue;
       let items;
 
-      items = [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ];
+      items = [ "협약 완료", "협약 휴직", "협약 해지", "신청 대기", "컨택중" ];
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
@@ -2911,7 +2911,7 @@ DataPatch.prototype.designerMap = function () {
       callback();
     };
 
-    inputArr = [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ];
+    inputArr = [ "협약 완료", "협약 휴직", "협약 해지", "신청 대기", "컨택중" ];
     length = inputArr.length;
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
@@ -3005,7 +3005,7 @@ DataPatch.prototype.designerMap = function () {
     designer: { name: "성함", position: "designer", type: "string", searchBoo: true, },
     desid: { name: "아이디", position: "desid", type: "string", searchBoo: true, },
     did: { name: "별칭", position: "information.did", type: "string", searchBoo: true, },
-    status: { name: "계약 상태", position: "information.contract.status", type: "object", items: [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    status: { name: "계약 상태", position: "information.contract.status", type: "object", items: [ "협약 완료", "협약 휴직", "협약 해지", "신청 대기", "컨택중" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     date: { name: "계약일", position: "information.contract.date", type: "date", searchBoo: true, },
     phone: { name: "연락처", position: "information.phone", type: "string", searchBoo: true, },
     email: { name: "이메일", position: "information.email", type: "string", searchBoo: true, },

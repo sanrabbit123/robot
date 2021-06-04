@@ -56,10 +56,10 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
-Robot.prototype.dataConsole = function () {
+Robot.prototype.dataConsole = function (testMode = false) {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   let app = new DataConsole();
-  app.connect();
+  app.connect(testMode);
 }
 
 Robot.prototype.staticUpload = function () {
@@ -474,7 +474,7 @@ Robot.prototype.launching = async function () {
 
     //console server
     if (re === "back" || re === "1") {
-      this.dataConsole();
+      this.dataConsole(false);
 
     //contents maker
     } else if (re === "contents" || re === "2") {
@@ -568,7 +568,11 @@ const MENU = {
   },
   back: async function () {
     try {
-      robot.dataConsole();
+      if (process.argv[3] === undefined) {
+        robot.dataConsole(false);
+      } else if (process.argv[3] === "test") {
+        robot.dataConsole(true);
+      }
     } catch (e) {
       console.log(e);
     }

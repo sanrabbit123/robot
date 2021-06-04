@@ -660,6 +660,23 @@ DesignerJs.prototype.pricePannel = function () {
   const { ea, belowPannel } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const standard = [ "하", "중", "상" ];
+  const widthSpec = {
+    left: [
+      100.890625,
+      15.578125,
+      132.03125,
+      15.578125,
+    ],
+    right: [
+      20.890625,
+      97.15625,
+      12.1875,
+      97.15625,
+      26.5625,
+      66.015625,
+      12.1875,
+    ]
+  };
   let motherHeight;
   let size;
   let margin;
@@ -684,7 +701,7 @@ DesignerJs.prototype.pricePannel = function () {
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 18;
   margin = 24;
-  top = isMac() ? 15 : 17;
+  top = isMac() ? 15 : 18;
   between = 8;
   betweenWords = margin * 1;
 
@@ -830,7 +847,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += title0.getBoundingClientRect().width + between;
+  accumulate += widthSpec.left[0] + between;
   value0 = createNode({
     mother: belowPannel,
     id: "key" + String(0),
@@ -849,7 +866,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += value0.getBoundingClientRect().width + betweenWords;
+  accumulate += widthSpec.left[1] + betweenWords;
   title1 = createNode({
     mother: belowPannel,
     attribute: [ { key: String(1) } ],
@@ -867,7 +884,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += title1.getBoundingClientRect().width + between;
+  accumulate += widthSpec.left[2] + between;
   value1 = createNode({
     mother: belowPannel,
     id: "key" + String(1),
@@ -886,7 +903,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += value1.getBoundingClientRect().width + betweenWords;
+  accumulate += widthSpec.left[3] + betweenWords;
   title2 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -925,7 +942,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratioValue0.getBoundingClientRect().width + between;
+  accumulate += widthSpec.right[0] + between;
   ratio0 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -947,7 +964,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratio0.getBoundingClientRect().width + betweenWords;
+  accumulate += widthSpec.right[1] + betweenWords;
   ratioValue1 = createNode({
     mother: belowPannel,
     id: "premiumBoo",
@@ -970,7 +987,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratioValue1.getBoundingClientRect().width + between;
+  accumulate += widthSpec.right[2] + between;
   ratio1 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -992,7 +1009,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratio1.getBoundingClientRect().width + betweenWords;
+  accumulate += widthSpec.right[3] + betweenWords;
   ratioValue2 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -1014,7 +1031,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratioValue2.getBoundingClientRect().width + between;
+  accumulate += widthSpec.right[4] + between;
   ratio2 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -1036,7 +1053,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratio2.getBoundingClientRect().width + betweenWords;
+  accumulate += widthSpec.right[5] + betweenWords;
   ratioValue3 = createNode({
     mother: belowPannel,
     id: "newcomerBoo",
@@ -1059,7 +1076,7 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
-  accumulate += ratioValue3.getBoundingClientRect().width + between;
+  accumulate += widthSpec.right[6] + between;
   ratio3 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],

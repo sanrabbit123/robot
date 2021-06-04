@@ -622,10 +622,6 @@ DevContext.prototype.launching = async function () {
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // card setting
-    // await this.cardSetting("010-6663-6948");
-
-
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
     //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
@@ -661,13 +657,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "최영미";
-    // const pid = "p95";
-    // const rid = "re089";
+    // const client = "오로사";
+    // const pid = "p96";
+    // const rid = "re090";
     // const links = [
-    //   "https://docs.google.com/document/d/1ATtGuIWbBmVrA_7U0kkVtfeL3pHwc_5WTg_AQwttyOA/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1hmHACGLg9EzSUEszti1DyJcDuUSjUW9Dea-3OcEgi2Q/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1T-wnDda0LEJq5i0ppY2IwGdqrXLiA9Xj?usp=sharing",
+    //   "https://docs.google.com/document/d/1SQqg1Xwu-iYW46Z_iHRc7zG6O5_N0yg2DfVpldTVOR0/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1jeVlQeVxdOPhfcuxwzxQPuwAprunEeB4_EOKKLBBxZY/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1_KrEXQwjq0ZhMDpM7LDZ9fRts9KEyR0j?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -685,10 +681,6 @@ DevContext.prototype.launching = async function () {
     // channel = "#200_web";
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
-
-
-    // card setting
-    // await this.mother.slack_bot.chat.postMessage({ text: "김정운 고객님의 카드 세팅을 완료하였습니다!", channel: "#400_customer" });
 
 
     // kakao token
@@ -722,7 +714,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p95");
+    // await this.spellCheck("p96");
 
 
     // get corePortfolio by pid
@@ -830,47 +822,6 @@ DevContext.prototype.launching = async function () {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     console.log(`done`);
-  }
-}
-
-DevContext.prototype.cardSetting = async function (phone) {
-  const instance = this;
-  const back = this.back;
-  const { mysqlQuery } = this.mother;
-  try {
-    if (typeof phone !== "string") {
-      throw new Error("invaild input");
-    }
-    if (!/-/g.test(phone)) {
-      throw new Error("invaild input");
-    }
-    const clients = await back.getClientsByQuery({ phone });
-    if (clients.length === 0) {
-      throw new Error("clients error");
-    }
-    let cliid, name;
-    let projects, project;
-    let first, remain;
-    let query;
-
-    cliid = clients[0].cliid;
-    name = clients[0].name;
-    projects = await back.getProjectsByQuery({ cliid });
-    if (projects.length === 0) {
-      throw new Error("projects error");
-    }
-
-    project = projects[0];
-    first = project.process.contract.first.calculation.amount;
-    remain = project.process.contract.remain.calculation.amount.consumer - first;
-
-    query = `INSERT INTO cardlist (name,phone,amount) VALUES ('${name}','${phone}','${String(remain)}');`;
-
-    await mysqlQuery(query, { front: true });
-    await this.mother.slack_bot.chat.postMessage({ text: `${name} 고객님의 카드 세팅을 완료하였습니다!`, channel: "#400_customer" });
-
-  } catch (e) {
-    console.log(e);
   }
 }
 

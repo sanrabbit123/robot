@@ -512,7 +512,7 @@ DataConsole.prototype.setBinary = async function () {
   }
 }
 
-DataConsole.prototype.connect = async function () {
+DataConsole.prototype.connect = async function (testMode = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   const https = require("https");
@@ -584,9 +584,11 @@ DataConsole.prototype.connect = async function () {
     }
 
     //set pem key
-    let pems = {};
-    let pemsLink = process.cwd() + "/pems/" + address.host;
+    let pems, pemsLink;
     let certDir, keyDir, caDir;
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + (testMode ? this.address.officeinfo.ghost.host : address.host);
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -672,11 +674,11 @@ DataConsole.prototype.connect = async function () {
     // });
 
     //server on
-    https.createServer(pems, app).listen(3000, address.ip.inner, () => {
-      console.log(``);
-      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-      console.log(``);
-    });
+    if (testMode) {
+      https.createServer(pems, app).listen(3000, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    } else {
+      https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    }
 
   } catch (e) {
     console.log(e);
