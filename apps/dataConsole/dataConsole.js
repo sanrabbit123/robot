@@ -675,7 +675,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
 
     //server on
     if (testMode) {
-      https.createServer(pems, app).listen(3000, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+      https.createServer(pems, app).listen(5000, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
     } else {
       https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
     }
