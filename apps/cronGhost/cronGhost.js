@@ -91,11 +91,11 @@ CronGhost.prototype.endPython = function (listNum) {
     const { hour, minute, second } = time;
     if (time.day_of_week === undefined) {
       if (hour !== null && minute === null && second === null) {
-        return `scheduler.add_job(${name}, 'interval', hour=${String(hour)})`;
+        return `scheduler.add_job(${name}, 'interval', hours=${String(hour)})`;
       } else if (hour === null && minute !== null && second === null) {
-        return `scheduler.add_job(${name}, 'interval', minute=${String(minute)})`;
+        return `scheduler.add_job(${name}, 'interval', minutes=${String(minute)})`;
       } else if (hour === null && minute === null && second !== null) {
-        return `scheduler.add_job(${name}, 'interval', second=${String(second)})`;
+        return `scheduler.add_job(${name}, 'interval', seconds=${String(second)})`;
       } else {
         return `scheduler.add_job(${name}, 'cron', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
       }
