@@ -465,6 +465,9 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
 
   } catch (e) {
     console.log(e);
+  } finally {
+    await MONGOC.close();
+    process.exit();
   }
 }
 
@@ -538,7 +541,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
             let boo;
             let num;
             let message;
-            await instance.mother.slack_bot.chat.postMessage({ text: "문자 변동 감지" + JSON.stringify(notifications, null, 2), channel: "#error_log" });
+            await instance.mother.slack_bot.chat.postMessage({ text: "문자 변동 감지", channel: "#error_log" });
             for (let { body } of notifications) {
               if (/\[Web/.test(body.trim()) && /입금/gi.test(body) && /원/gi.test(body) && /\]/gi.test(body) && /\//gi.test(body) && /\:/gi.test(body)) {
                 tempArr = body.split("원");
