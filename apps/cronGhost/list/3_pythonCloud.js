@@ -7,5 +7,13 @@ module.exports = [
       minute: 50,
       second: 30,
     }
+  },
+  {
+    name: "taxBill",
+    time: {
+      hour: null,
+      minute: 30,
+      second: null
+    }
   }
 ];

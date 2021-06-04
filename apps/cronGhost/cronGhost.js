@@ -90,7 +90,15 @@ CronGhost.prototype.endPython = function (listNum) {
     }
     const { hour, minute, second } = time;
     if (time.day_of_week === undefined) {
-      return `scheduler.add_job(${name}, 'cron', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
+      if (hour !== null && minute === null && second === null) {
+        return `scheduler.add_job(${name}, 'interval', hour=${String(hour)})`;
+      } else if (hour === null && minute !== null && second === null) {
+        return `scheduler.add_job(${name}, 'interval', minute=${String(minute)})`;
+      } else if (hour === null && minute === null && second !== null) {
+        return `scheduler.add_job(${name}, 'interval', second=${String(second)})`;
+      } else {
+        return `scheduler.add_job(${name}, 'cron', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
+      }
     } else {
       return `scheduler.add_job(${name}, 'cron', day_of_week='${String(time.day_of_week)}', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
     }

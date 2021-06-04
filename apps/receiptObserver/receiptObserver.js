@@ -8,15 +8,14 @@ const ReceiptObserver = function () {
   this.dir = process.cwd() + "/apps/receiptObserver";
 }
 
-ReceiptObserver.prototype.taxBill = async function (MONGOC, MONGOCOREC, pastDateNumber = 2) {
-  if (MONGOC === undefined || typeof MONGOC !== "object") {
-    throw new Error("invaild input");
-  }
+ReceiptObserver.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
-    const selfMongo = MONGOC;
+    await MONGOLOCALC.connect();
+    const selfMongo = MONGOLOCALC;
     const today = new Date();
     const yesterday = new Date();
     const month = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -466,9 +465,8 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, MONGOCOREC, pastDate
   } catch (e) {
     console.log(e);
   } finally {
-    await MONGOC.close();
-    await MONGOCOREC.close();
-    process.exit();
+    await MONGOLOCALC.close();
+    await slack_bot.chat.postMessage({ text: "taxBill success : " + JSON.stringify(new Date()), channel: "#error_log" });
   }
 }
 
@@ -476,7 +474,6 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const back = this.back;
   const address = this.address;
   const WebSocket = require('ws');
@@ -516,9 +513,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
   try {
 
     await MONGOC.connect();
-    await MONGOLOCALC.connect();
     const selfMongo = MONGOC;
-    const selfLocalMongo = MONGOLOCALC;
     const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
     const emptyDate = new Date(2000, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -588,14 +583,10 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
                 message += body;
 
                 await instance.mother.slack_bot.chat.postMessage({ text: message, channel });
+                await MONGOC.close();
+                process.exit();
 
               }
-            }
-          } else if (type === "mirror") {
-            const { package_name } = data.push;
-            if (/net\.daum\.android\.mail/gi.test(package_name)) {
-              await instance.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지", channel: "#error_log" });
-              await instance.taxBill(MONGOLOCALC, MONGOC);
             }
           }
         }

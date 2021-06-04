@@ -249,6 +249,16 @@ Robot.prototype.pythonWatcher = async function () {
   }
 }
 
+Robot.prototype.taxBill = async function () {
+  try {
+    const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
+    const app = new ReceiptObserver();
+    await app.taxBill();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.bridgeCloud = async function (sw) {
   try {
     const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`);
@@ -838,7 +848,14 @@ const MENU = {
     } catch (e) {
       console.log(e);
     }
-  }
+  },
+  taxBill: async function () {
+    try {
+      await robot.taxBill();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 
