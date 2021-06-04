@@ -520,6 +520,11 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
     const contract = 330000;
     const channel = "#700_operation";
 
+    setTimeout(() => {
+      await MONGOC.close();
+      process.exit();
+    }, (1000 * 60 * 60 * 24) + (1000 * 60 * 5));
+
     console.log(`\x1b[33m%s\x1b[0m`, `Wss running`);
 
     ws.on('message', async (raw) => {
