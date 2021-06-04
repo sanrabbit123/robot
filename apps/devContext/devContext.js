@@ -56,6 +56,85 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    // const selfMongo = this.MONGOLOCALC;
+    // const targetDesigners = [ "우다미" ];
+    // const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+    // const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
+    // const autoComma = function (str) {
+    //   if (typeof str === "number") {
+    //     str = String(str);
+    //   }
+    //   let minus, num, tmp;
+    //
+    //   if (/\-/g.test(str)) {
+    //     minus = /\-/g.exec(str)[0];
+    //   } else {
+    //     minus = '';
+    //   }
+    //
+    //   num = str.replace(/[^0-9]/g, '');
+    //   tmp = '';
+    //
+    //   if (num.length < 4) {
+    //     return minus + num;
+    //   } else if (num.length < 7) {
+    //     tmp += num.slice(-6, -3) + ',' + num.slice(-3);
+    //     return minus + tmp;
+    //   } else if (num.length < 10) {
+    //     tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    //     return minus + tmp;
+    //   } else if (num.length < 13) {
+    //     tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    //     return minus + tmp;
+    //   } else if (num.length < 16) {
+    //     tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
+    //     return minus + tmp;
+    //   }
+    //
+    //   return minus + num;
+    // }
+    // const consoleInfo = "https://homeliaison-console.xyz";
+    // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    // let designers, designer, desid;
+    // let projects, client;
+    // let contents;
+    // let matrix, rowArr;
+    // let contentsDate;
+    //
+    // matrix = [ [ "디자이너 이름", "고객 이름", "시작일", "종료일", "정산 금액", "프로젝트 콘솔" ] ];
+    //
+    // for (let name of targetDesigners) {
+    //   designers = await back.getDesignersByQuery({ designer: name }, { selfMongo });
+    //   designer = designers[0];
+    //   desid = designer.desid;
+    //   projects = await back.getProjectsByQuery({ desid }, { selfMongo })
+    //   for (let project of projects) {
+    //     client = await back.getClientById(project.cliid, { selfMongo });
+    //     contents = await back.getContentsArrByQuery({ proid: project.proid }, { selfMongo });
+    //
+    //     contentsDate = new Date(1800, 0, 1);
+    //     if (contents.length !== 0) {
+    //       contentsDate = contents[0].contents.portfolio.date;
+    //     }
+    //
+    //     matrix.push([
+    //       name,
+    //       client.name,
+    //       dateToString(project.process.contract.meeting.date.valueOf() < emptyDateValue ? project.proposal.date : project.process.contract.meeting.date),
+    //       dateToString(project.process.contract.form.date.to.valueOf() < emptyDateValue ? ((project.process.calculation.payments.remain.date.valueOf() < emptyDateValue) ? (project.contents.photo.date.valueOf() < emptyDateValue ? contentsDate : project.contents.photo.date) : project.process.calculation.payments.remain.date) : project.process.contract.form.date.to),
+    //       project.process.calculation.payments.totalAmount,
+    //       consoleInfo + "/project?proid=" + project.proid ]);
+    //   }
+    // }
+    //
+    // console.log(matrix);
+    //
+    // const sheetsId = "16yiUeRROJi7Zhq-EKOmlNQtO0Rz4SeEprUBcDMEzdsI";
+    // // const sheets = new GoogleSheet();
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "디자이너", matrix, [ 0, 0 ]);
+
+
 
 
 
