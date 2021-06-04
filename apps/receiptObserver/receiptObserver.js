@@ -8,7 +8,7 @@ const ReceiptObserver = function () {
   this.dir = process.cwd() + "/apps/receiptObserver";
 }
 
-ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) {
+ReceiptObserver.prototype.taxBill = async function (MONGOC, MONGOCOREC, pastDateNumber = 2) {
   if (MONGOC === undefined || typeof MONGOC !== "object") {
     throw new Error("invaild input");
   }
@@ -467,6 +467,7 @@ ReceiptObserver.prototype.taxBill = async function (MONGOC, pastDateNumber = 2) 
     console.log(e);
   } finally {
     await MONGOC.close();
+    await MONGOCOREC.close();
     process.exit();
   }
 }
@@ -594,7 +595,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
             const { package_name } = data.push;
             if (/net\.daum\.android\.mail/gi.test(package_name)) {
               await instance.mother.slack_bot.chat.postMessage({ text: "help 메일 변동 감지", channel: "#error_log" });
-              await instance.taxBill(MONGOLOCALC);
+              await instance.taxBill(MONGOLOCALC, MONGOC);
             }
           }
         }
