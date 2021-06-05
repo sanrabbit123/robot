@@ -758,7 +758,7 @@ DevContext.prototype.launching = async function () {
 
     // get drive folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1EPqtpQeY_JOeKN4gtskh9sm6H8eOdSKd");
+    // await drive.get_folder("https://drive.google.com/drive/folders/18L-hSXjsmksMrOOb3rZzMbXylQRb7pYM");
 
 
     // naverBlog to json
