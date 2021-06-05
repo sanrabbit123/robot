@@ -2192,9 +2192,9 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   margin = 8;
   level1Width = 210;
   level1Left = 160;
-  topMargin = GeneralJs.isMac() ? 30 : 32;
+  topMargin = isMac() ? 30 : 32;
   leftMargin = 34;
-  bottomMargin = 15;
+  bottomMargin = isMac() ? 15 : 14;
   size = 17;
   tendencyTop = 3;
   tendencyHeight = 16;
