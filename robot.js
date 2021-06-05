@@ -425,10 +425,11 @@ Robot.prototype.staticInSync = async function () {
     }
 
     order = "scp -r ";
-    order += this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.inner + ":" + shellLink(this.address.homeinfo.ghost.file.static);
+    order += this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(this.address.homeinfo.ghost.file.static);
     order += " ";
     order += shellLink(home + "/" + driveName);
 
+    console.log(order);
     shell.exec(order);
 
     return home + "/" + driveName;
