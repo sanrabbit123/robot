@@ -2255,7 +2255,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
           fontSize: String(size) + ea,
           fontWeight: String(700),
           color: colorChip.black,
-          top: String(topMargin) + ea,
+          top: String(topMargin + 1) + ea,
           left: String(leftMargin) + ea,
         }
       },
