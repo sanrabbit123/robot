@@ -2163,7 +2163,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
   let designer;
@@ -2206,7 +2206,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
 
-  textAreaTop = -3;
+  textAreaTop = isMac() ? -3 : -4;
 
   const checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
 
