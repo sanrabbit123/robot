@@ -1,7 +1,7 @@
 DesignerJs.prototype.priceBase = function () {
   const instance = this;
   const { ea, belowHeight, garoStandards, seroStandards } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   class PriceDoms extends Array {
     constructor(arr) {
       super();
@@ -181,6 +181,12 @@ DesignerJs.prototype.priceBase = function () {
     },
     {
       mother: totalMother,
+      events: [
+        {
+          type: "click",
+          event: instance.priceFeeAdjust(),
+        }
+      ],
       style: {
         position: "absolute",
         bottom: String(belowBottom) + ea,
@@ -189,21 +195,21 @@ DesignerJs.prototype.priceBase = function () {
         height: String(belowPannelHeight - belowBottom + (margin * (1 / 3))) + ea,
         background: colorChip.gradientGreen,
         borderRadius: String(5) + ea,
+        cursor: "pointer",
       }
     },
     {
       mother: -1,
-      text: "Sheets",
+      text: "수수료",
       class: [ "hoverDefault_lite" ],
       style: {
         position: "absolute",
-        fontSize: String(titleSize - 9) + ea,
-        fontWeight: String(400),
-        fontFamily: "graphik",
+        fontSize: String(titleSize - 7) + ea,
+        fontWeight: String(600),
         width: String(100) + '%',
         textAlign: "center",
         left: String(0),
-        top: withOut(50, (titleSize / 2) + 1, ea),
+        top: withOut(50, (titleSize / 2) + (isMac() ? 1 : 0), ea),
         color: colorChip.white,
       }
     }
@@ -245,6 +251,7 @@ DesignerJs.prototype.priceBase = function () {
       }
     }
   ]);
+  this.matrixBase = matrixBase;
 
   length = garo * sero;
   nodeArr = [];
@@ -1100,13 +1107,188 @@ DesignerJs.prototype.pricePannel = function () {
 
 }
 
+DesignerJs.prototype.priceFeeAdjust = function () {
+  const instance = this;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  return function (e) {
+    const { ea, matrixBase, garoStandards } = instance;
+    const length = garoStandards.length;
+    const className = "feeTarget";
+    const classNameValue = "feeTargetValue";
+    const fee = instance.price.pick(3, 3).fee;
+    if (document.querySelector('.' + className) === null) {
+      let top;
+      let height, width;
+      let size;
+
+      top = 15;
+      width = 72;
+      size = 32;
+      height = (top * 2) + size + 19;
+
+      createNode({
+        mother: matrixBase,
+        class: [ className ],
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.gray5,
+          opacity: String(0.6),
+        }
+      });
+
+      for (let i = 0; i < length; i++) {
+        createNodes([
+          {
+            mother: matrixBase,
+            class: [ className ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const targets = document.querySelectorAll('.' + className);
+                  for (let dom of targets) {
+                    dom.parentElement.removeChild(dom);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: "calc(100% / " + String(length) + ")",
+              height: String(100) + '%',
+              top: String(0),
+              left: "calc(calc(100% / " + String(length) + ") * " + String(i) + ")",
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: -1,
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+            }
+          },
+          {
+            mother: -1,
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+            style: {
+              position: "absolute",
+              width: String(width) + '%',
+              height: String(height) + ea,
+              left: String((100 - width) / 2) + '%',
+              top: withOut(50, (height / 2), ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeup 0.3s ease forwards",
+            }
+          },
+          {
+            mother: -1,
+            text: String(fee[i]) + '%',
+            attribute: [
+              { index: String(i) }
+            ],
+            class: [ classNameValue ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  e.stopPropagation();
+                  const index = Number(this.getAttribute("index"));
+                  const input = createNode({
+                    mother: this.parentNode,
+                    mode: "input",
+                    attribute: [
+                      { type: "text" },
+                      { value: this.textContent },
+                      { index: String(index) },
+                    ],
+                    events: [
+                      {
+                        type: "keydown",
+                        event: async function (e) {
+                          try {
+                            if (e.key === "Tab" || e.key === "Enter") {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              const index = Number(this.getAttribute("index"));
+                              const children = document.querySelectorAll('.' + classNameValue);
+                              const next = (children[index + 1] === undefined) ? children[0] : children[index + 1];
+                              const mother = children[index].parentElement;
+                              instance.price.pick(3, 3).fee[index] = Number(this.value.replace(/[^0-9]/g, ''));
+                              await ajaxJson({
+                                mode: "update",
+                                db: "console",
+                                collection: "designerPrice",
+                                whereQuery: { key: 33 },
+                                updateQuery: { fee: instance.price.pick(3, 3).fee }
+                              }, "/generalMongo");
+                              mother.querySelector("div").textContent = String(instance.price.pick(3, 3).fee[index]) + '%';
+                              mother.removeChild(mother.querySelector("input"));
+                              if (e.key === "Tab") {
+                                next.click();
+                              }
+                            }
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }
+                      }
+                    ],
+                    style: {
+                      position: "absolute",
+                      fontSize: String(size) + ea,
+                      fontFamily: "graphik",
+                      fontWeight: String(200),
+                      color: colorChip.red,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      top: String(top) + ea,
+                      border: String(0),
+                      outline: String(0),
+                    }
+                  });
+                  input.focus();
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontFamily: "graphik",
+              fontWeight: String(200),
+              color: colorChip.green,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(top) + ea,
+            }
+          }
+        ]);
+      }
+    } else {
+      const targets = document.querySelectorAll('.' + className);
+      for (let dom of targets) {
+        dom.parentElement.removeChild(dom);
+      }
+    }
+  }
+}
+
 DesignerJs.prototype.priceView = async function () {
   const instance = this;
   try {
     const { colorChip, ajaxJson, sleep, cssInjection } = GeneralJs;
     let loading, price;
 
-    cssInjection("* { transition: all 0.2s ease }")
+    cssInjection("* { transition: all 0.2s ease }");
     class PriceMatrix extends Array {
       constructor(arr) {
         super();
@@ -1205,7 +1387,7 @@ DesignerJs.prototype.priceView = async function () {
       boo: false,
       ratio: this.price.pick(3, 3).premium
     };
-
+    this.matrixBase = null;
     this.priceBase();
 
     loading.parentNode.removeChild(loading);
