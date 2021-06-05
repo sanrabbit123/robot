@@ -1,5 +1,21 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
-const DESIGNER_DIR = process.cwd() + "/apps/backMaker/devAlive/designer";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
+const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
+
+class Description extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(i);
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
 
 // front --------------------------------------------------------------------------------
 
@@ -194,6 +210,7 @@ const DesignerSetting = function (json) {
     tempInstance = new Ghost(i);
     this.ghost.push(tempInstance);
   }
+  this.description = new Description(json.description);
 }
 
 DesignerSetting.prototype.toNormal = function () {
@@ -201,6 +218,7 @@ DesignerSetting.prototype.toNormal = function () {
   obj.front = this.front.toNormal();
   obj.proposal = this.proposal.toNormal();
   obj.ghost = this.ghost.toNormal();
+  obj.description = this.description.toNormal();
   return obj;
 }
 

@@ -187,6 +187,7 @@ module.exports = {
           },
           proposal: [],
           ghost: [],
+          description: [],
         },
       },
     };
