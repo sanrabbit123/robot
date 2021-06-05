@@ -417,7 +417,11 @@ Robot.prototype.staticInSync = async function () {
   try {
     const home = process.env.HOME;
     const homeDir = await fileSystem("readDir", [ home ]);
+    const staticName = "static";
     const driveName = "drive";
+    const diskName = "disk";
+    const ssdName = "ssd";
+    const ssdNumber = 2;
     let order = '';
 
     if (!homeDir.includes(driveName)) {
@@ -428,10 +432,19 @@ Robot.prototype.staticInSync = async function () {
     order += this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(this.address.homeinfo.ghost.file.static);
     order += " ";
     order += shellLink(home + "/" + driveName);
-
     console.log(order);
     shell.exec(order);
 
+    for (let i = 0; i < ssdNumber; i++) {
+      order = "cp -rf ";
+      order += shellLink(home + "/" + driveName + "/" + staticName);
+      order += " ";
+      order += shellLink(home + "/" + diskName + "/" + ssdName + String(i + 1));
+      console.log(order);
+      shell.exec(order);
+    }
+
+    console.log("static sync done");
     return home + "/" + driveName;
 
   } catch (e) {
