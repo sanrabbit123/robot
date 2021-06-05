@@ -123,7 +123,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               GeneralJs.blankHref(text);
             }
           },
-          height: factorHeight,
+          height: factorHeight * 1.1,
           type: "string",
         },
       ]
@@ -448,7 +448,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { updateQuery, text: divText };
           },
-          height: factorHeight,
+          height: factorHeight * 1.1,
           type: "string",
         },
       ]
@@ -2289,7 +2289,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
           fontSize: String(size) + ea,
           fontWeight: String(200),
           color: colorChip.green,
-          bottom: String(topMargin) + ea,
+          bottom: String(topMargin + (isMac() ? 0 : -3)) + ea,
           right: String(leftMargin) + ea,
           zIndex: String(2),
         }
