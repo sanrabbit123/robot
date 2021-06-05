@@ -1852,6 +1852,75 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
       ]
+    },
+    {
+      name: "세팅",
+      children: [
+        {
+          name: "제안서 설명",
+          value: function (designer) {
+            return designer.setting.description;
+          },
+          update: function (value, designer) {
+            const position = "setting.description";
+            const error = "error";
+            let updateQuery, tempArr, tempArr2, text;
+            updateQuery = {};
+            tempArr = value.split('\n');
+            tempArr2 = [];
+            for (let words of tempArr) {
+              if (words.trim().replace(/ /gi, '') !== '') {
+                text = words.trim();
+                if (text.length >= 56) {
+                  return error;
+                }
+                if (text.length < 20) {
+                  return error;
+                }
+                tempArr2.push(words.trim());
+              }
+            }
+            updateQuery[position] = tempArr2;
+            return updateQuery;
+          },
+          height: (factorHeight * 2) + 24,
+          textHeight: 14,
+          factorHeight: factorHeight,
+          type: "longtext",
+        },
+        {
+          name: "웹 설명",
+          value: function (designer) {
+            return designer.setting.front.introduction.desktop;
+          },
+          update: function (value, designer) {
+            const position = "setting.front.introduction.desktop";
+            const error = "error";
+            let updateQuery, tempArr, tempArr2, text;
+            updateQuery = {};
+            tempArr = value.split('\n');
+            tempArr2 = [];
+            for (let words of tempArr) {
+              if (words.trim().replace(/ /gi, '') !== '') {
+                text = words.trim();
+                if (text.length >= 38) {
+                  return error;
+                }
+                if (text.length < 12) {
+                  return error;
+                }
+                tempArr2.push(words.trim());
+              }
+            }
+            updateQuery[position] = tempArr2;
+            return updateQuery;
+          },
+          height: (factorHeight * 3) + 11,
+          textHeight: 3,
+          factorHeight: factorHeight,
+          type: "longtext",
+        },
+      ]
     }
   ];
   return checkListData;
@@ -2114,6 +2183,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   let factorHeight, factorWidth;
   let tendencyTop, tendencyHeight;
   let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
+  let textAreaTop;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -2135,6 +2205,8 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
   tendencyFactorHeight = 30;
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
+
+  textAreaTop = -3;
 
   const checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
 
@@ -2577,6 +2649,85 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
             tempArr.push(tempObj);
           }
         }
+      } else if (checkListData[i].children[j].type === "longtext") {
+
+        tempObj = {
+          mother: eachValueTong,
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            height: String(checkListData[i].children[j].height) + ea,
+            cursor: "pointer",
+            overflow: "scroll",
+          }
+        };
+        tempArr.push(tempObj);
+        tempObj = {
+          mother: -1,
+          mode: "textarea",
+          text: (typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL",
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+            { value: ((typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL") },
+            { past: ((typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL") }
+          ],
+          events: [
+            {
+              type: "focus",
+              event: function (e) {
+                this.style.color = colorChip.green;
+              }
+            },
+            {
+              type: "blur",
+              event: async function (e) {
+                try {
+                  const x = Number(this.getAttribute('x'));
+                  const y = Number(this.getAttribute('y'));
+                  if (typeof checkListData[x].children[y].update === "function") {
+                    const updateQuery = checkListData[x].children[y].update(this.value.trim());
+                    const whereQuery = { desid };
+                    if (updateQuery === "error") {
+                      this.value = this.getAttribute("past");
+                    } else {
+                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                      instance.designers.update([ whereQuery, updateQuery ]);
+                      designer = instance.designers.pick(desid);
+                    }
+                  }
+                  this.style.color = colorChip.black;
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+          ],
+          style: {
+            display: "block",
+            position: "absolute",
+            width: String(100) + '%',
+            height: withOut(checkListData[i].children[j].textHeight, ea),
+            top: String(textAreaTop) + ea,
+            left: String(0),
+            fontSize: String(size) + ea,
+            fontWeight: String(200),
+            color: colorChip.black,
+            border: String(0),
+            outline: String(0),
+            lineHeight: String(1.7),
+          }
+        };
+        tempArr.push(tempObj);
+
+
       }
       createNodes(tempArr);
     }
