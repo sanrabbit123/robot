@@ -283,6 +283,11 @@ DesignerJs.prototype.infoArea = function (info) {
   if (window.localStorage.getItem("designer_columnsOrder") !== null && window.localStorage.getItem("designer_columnsOrder") !== undefined) {
     originalColumns = JSON.parse(window.localStorage.getItem("designer_columnsOrder"));
     for (let c of originalColumns) {
+      if (Number.isNaN(Number(c.left))) {
+        window.localStorage.clear();
+        window.location.reload();
+        break;
+      }
       info.standard[c.name].left = c.left;
     }
   }
@@ -1275,7 +1280,15 @@ DesignerJs.prototype.infoArea = function (info) {
       originalColumns = JSON.parse(window.localStorage.getItem("designer_columnsOrder"));
     } else {
       for (let c of instance.caseDoms[0].children) {
-        originalColumns.push({ name: c.getAttribute("column"), width: Number(c.style.width.replace(/[^0-9\.\-]/g, '')), left: Number(c.style.left.replace(/[^0-9\.\-]/g, '')) });
+        originalColumns.push({ name: c.getAttribute("column"), width: info.standard[c.getAttribute("column")].width, left: info.standard[c.getAttribute("column")].left });
+      }
+    }
+
+    for (let obj of originalColumns) {
+      if (Number.isNaN(Number(obj.width)) || Number.isNaN(Number(obj.left))) {
+        window.localStorage.clear();
+        window.location.reload();
+        break;
       }
     }
 
