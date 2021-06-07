@@ -270,7 +270,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
   let funcObj = {};
 
   //GET - ssl test

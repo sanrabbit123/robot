@@ -57,47 +57,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const map = this.address.officeinfo.map;
-    const port = 3000;
-    let target;
-    target = null;
-    for (let obj of map) {
-      if (obj.name === "window") {
-        target = obj.ip;
-        break;
-      }
-    }
-    if (target !== null) {
-      target = "http://" + target + ":" + String(port);
-      headRequest(target + "/confirm").then(async (response) => {
-        const { statusCode } = response;
-        let raw, res, doing;
-        if (statusCode === 200) {
-          raw = await requestSystem(target + "/confirm");
-          if (raw.data.doing !== undefined) {
-            await sleep(1000);
-            doing = raw.data.doing;
-            while (doing === 1) {
-              console.log("waiting...");
-              await sleep(1000);
-              raw = await requestSystem(target + "/confirm");
-              if (raw.data.doing !== undefined) {
-                doing = raw.data.doing;
-              } else {
-                doing = 2;
-              }
-            }
-            if (doing === 0) {
-              res = await requestSystem(target + "/print");
-              console.log("print", res.data);
-            }
-          }
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
 
+    console.log(await ghostRequest("/print", {}));
 
 
 
