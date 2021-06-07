@@ -1,5 +1,5 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
-const DESIGNER_DIR = process.cwd() + "/apps/backMaker/devAlive/designer";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
+const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
 const { Menu } = require(GENERAL_DIR + "/generator.js");
 
 
@@ -407,11 +407,15 @@ ProjectAnalytics.prototype.toNormal = function () {
 
 const RegionAnalytics = function (json) {
   this.transportation = new Menu(json.transportation, [ "자동차", "대중교통" ], false);
+  this.range = json.range;
+  this.expenses = json.expenses;
 }
 
 RegionAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.transportation = this.transportation.toNormal();
+  obj.range = this.range;
+  obj.expenses = this.expenses;
   return obj;
 }
 

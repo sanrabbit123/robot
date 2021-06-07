@@ -68,6 +68,8 @@ module.exports = {
         analytics: {
           region: {
             transportation: "자동차",
+            range: 40,
+            expenses: false
           },
           project: {
             time: {
