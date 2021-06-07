@@ -415,9 +415,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           "entry.1749939672": requestObj["requests.0.request.timeline"].toUTCString(),
         };
         const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", toGoogle);
-        if (googleStatus === 200) {
-          message = message + "\n\n" + "구글 설문지로 옮겨졌습니다!\nhttps://docs.google.com/forms/d/1D8CNQFtRr_hiuUXdMXYAgYCk6nFC5cAdkezzp-3mlcw/edit";
-        } else {
+        if (googleStatus !== 200) {
           message = message + "\n\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
         }
 
@@ -426,11 +424,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         // to slack
         if (requestObj["phone"] !== "010-2747-3403") {
           slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-        } else {
-          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
           ghostRequest("/print", {}).catch((err) => {
             console.log(err);
           });
+        } else {
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
 
       }
