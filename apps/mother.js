@@ -1807,16 +1807,30 @@ Mother.prototype.dateToString = function (date, detail = false) {
     throw new Error("second input must be boolean");
   }
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  if (!detail) {
-    return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
+  const emptyDateValue = (new Date(1901, 0, 1)).valueOf();
+  const futureDateValue = (new Date(3000, 0, 1)).valueOf();
+  if (date.valueOf() <= emptyDateValue) {
+    return "-";
+  } else if (date.valueOf() >= futureDateValue) {
+    return "예정";
   } else {
-    return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+    if (!detail) {
+      return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
+    } else {
+      return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+    }
   }
 }
 
 Mother.prototype.stringToDate = function (str) {
   if (typeof str !== "string") {
     throw new Error("invaild input");
+  }
+  if (str.trim() === '' || str.trim() === '-' || /없음/gi.test(str)) {
+    return (new Date(1800, 0, 1));
+  }
+  if (str === "예정" || str === "진행중" || str === "미정") {
+    return (new Date(3800, 0, 1));
   }
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
     throw new Error("not date string");

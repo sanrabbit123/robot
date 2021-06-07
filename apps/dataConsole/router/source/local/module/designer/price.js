@@ -1374,6 +1374,8 @@ DesignerJs.prototype.priceView = async function () {
       collection: "designerPrice",
       whereQuery: {},
     }, "/generalMongo", { equal: true }));
+    this.seroStandards = this.price.pick(3, 3).standard.y.string;
+    this.garoStandards = this.price.pick(3, 3).standard.x.string;
     this.key = [ 2, 2 ];
     this.doms = null;
     this.eventFunc = null;
