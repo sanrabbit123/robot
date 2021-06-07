@@ -58,9 +58,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await ghostRequest("/print", {}));
-
-
 
 
 
