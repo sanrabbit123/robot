@@ -484,8 +484,18 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
 }
 
 Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
-  let target;
+  if (typeof to !== "string" || typeof headers !== "object") {
+    throw new Error("invaild input");
+  }
+  if (typeof port === "object" && Object.keys(headers).length === 0) {
+    headers = port;
+    port = 80;
+  }
   const http = require("http");
+  let target, tempArr;
+  let pathArr, pathString;
+  let options;
+  let host;
   if (/^https:\/\//.test(to)) {
     target = to.slice(8);
   } else if (/^http:\/\//.test(to)) {
@@ -493,14 +503,24 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   } else {
     target = to;
   }
-  let pathArr = target.split('/');
-  let pathString = '/';
+  pathArr = target.split('/');
+  pathString = '/';
   for (let i = 0; i < pathArr.length; i++) { if (i !== 0) {
     pathString += pathArr[i] + '/';
   }}
   pathString = pathString.slice(0, -1);
-  let options = {
-    hostname: pathArr[0],
+  if (/\:/g.test(pathArr[0])) {
+    tempArr = pathArr[0].split(':');
+    host = tempArr[0];
+    port = Number(tempArr[1].replace(/[^0-9]/g, ''));
+    if (Number.isNaN(port)) {
+      throw new Error("invaild port");
+    }
+  } else {
+    host = pathArr[0];
+  }
+  options = {
+    hostname: host,
     port: port,
     path: pathString,
     method: "HEAD"

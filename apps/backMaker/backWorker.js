@@ -633,7 +633,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
 
 BackWorker.prototype.designerCalculation = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const PYTHONMONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
@@ -646,41 +646,6 @@ BackWorker.prototype.designerCalculation = async function () {
     const bar1 = "================================================================";
     const collection = "taxBill";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const zeroAddition = (num) => { return ((num < 10) ? `0${String(num)}` : String(num)); }
-    const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
-    const autoComma = function (str) {
-      if (typeof str === "number") {
-        str = String(str);
-      }
-      let minus, num, tmp;
-
-      if (/\-/g.test(str)) {
-        minus = /\-/g.exec(str)[0];
-      } else {
-        minus = '';
-      }
-
-      num = str.replace(/[^0-9]/g, '');
-      tmp = '';
-
-      if (num.length < 4) {
-        return minus + num;
-      } else if (num.length < 7) {
-        tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-        return minus + tmp;
-      } else if (num.length < 10) {
-        tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-        return minus + tmp;
-      } else if (num.length < 13) {
-        tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-        return minus + tmp;
-      } else if (num.length < 16) {
-        tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-        return minus + tmp;
-      }
-
-      return minus + num;
-    };
     let projects, clients, designers;
     let desidArr_raw, desidArr;
     let cliidArr;
@@ -691,7 +656,7 @@ BackWorker.prototype.designerCalculation = async function () {
     let name;
     let tempString;
     let infoTong, infoDetail;
-    let rows, redPointTarget, boo;
+    let rows, boo;
 
     whereQuery = {
       $and: [
