@@ -482,6 +482,57 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "string",
         },
         {
+          name: "유효 범위",
+          value: function (designer) {
+            return String(designer.analytics.region.range) + "km";
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            text = Number(text.replace(/[^0-9]/gi, ''));
+            updateQuery["analytics.region.range"] = text;
+            divText = String(text) + "km";
+            if (Number.isNaN(text)) {
+              return errorObj;
+            } else {
+              return { updateQuery, text: divText };
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "출장 여부",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.region.expenses ? 1 : 0,
+              designer.analytics.region.expenses ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "analytics.region.expenses";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
           name: "이동 수단",
           value: function (designer) {
             let contents, value;
