@@ -1394,6 +1394,83 @@ GeneralJs.equalJson = function (jsonString) {
   return json;
 }
 
+GeneralJs.autoComma = function (str) {
+  let minus;
+  let count, countArr;
+  let temp, tempArr;
+  if (typeof str === "number") {
+    str = String(Math.floor(str));
+  }
+  if (/e/gi.test(str)) {
+    throw new Error("is too heavy");
+  }
+  minus = /\-/g.test(str) ? /\-/g.exec(str)[0] : '';
+  str = str.replace(/[^0-9]/g, '');
+  if (str === '') {
+    throw new Error("invaild number");
+  }
+  count = Math.ceil(str.length / 3);
+  countArr = [];
+  for (let i = 0; i < count; i++) {
+    countArr.push([ 3 * i, 3 * (i + 1) ]);
+  }
+  if (countArr.length === 0) {
+    throw new Error("invaild number");
+  }
+  tempArr = [];
+  for (let arr of countArr) {
+    temp = '';
+    for (let i = arr[0]; i < arr[1]; i++) {
+      if (str.length - 1 - i < 0) {
+        temp += '';
+      } else {
+        temp = str[str.length - 1 - i] + temp;
+      }
+    }
+    if (temp !== '') {
+      tempArr.unshift(temp);
+    }
+  }
+  return (minus + tempArr.join(','));
+}
+
+GeneralJs.dateToString = function (date, detail = false) {
+  if (!(date instanceof Date)) {
+    throw new Error("invaild input");
+  }
+  if (detail === undefined || detail === null) {
+    detail = false;
+  }
+  if (typeof detail !== "boolean") {
+    throw new Error("second input must be boolean");
+  }
+  const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+  if (!detail) {
+    return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
+  } else {
+    return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+  }
+}
+
+GeneralJs.stringToDate = function (str) {
+  if (typeof str !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
+    throw new Error("not date string");
+  }
+  let tempArr, tempArr2, tempArr3;
+  if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+    tempArr = str.split('-');
+    return (new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2])));
+  } else {
+    tempArr = str.split(' ');
+    tempArr2 = tempArr[0].split('-');
+    tempArr3 = tempArr[1].split(':');
+    return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]), Number(tempArr3[1]), Number(tempArr3[2])));
+  }
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

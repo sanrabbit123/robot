@@ -46,7 +46,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, pythonExecute } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -57,46 +57,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     // const selfMongo = this.MONGOLOCALC;
     // const targetDesigners = [ "우다미" ];
-    // const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-    // const dateToString = (date) => { return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`; }
-    // const autoComma = function (str) {
-    //   if (typeof str === "number") {
-    //     str = String(str);
-    //   }
-    //   let minus, num, tmp;
-    //
-    //   if (/\-/g.test(str)) {
-    //     minus = /\-/g.exec(str)[0];
-    //   } else {
-    //     minus = '';
-    //   }
-    //
-    //   num = str.replace(/[^0-9]/g, '');
-    //   tmp = '';
-    //
-    //   if (num.length < 4) {
-    //     return minus + num;
-    //   } else if (num.length < 7) {
-    //     tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 10) {
-    //     tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 13) {
-    //     tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   } else if (num.length < 16) {
-    //     tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    //     return minus + tmp;
-    //   }
-    //
-    //   return minus + num;
-    // }
     // const consoleInfo = "https://homeliaison-console.xyz";
     // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     // let designers, designer, desid;
@@ -812,10 +774,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김법정",
-    //     designer: "김지은",
-    //     link: "https://drive.google.com/drive/folders/1KM6lTMFnuXzJlo4eVmBsplL6UePwKkwo",
-    //   }
+    //     client: "이미영",
+    //     designer: "김은정",
+    //     link: "https://drive.google.com/drive/folders/112UC1Tj71vbNZFHhWz7WXXgr_MBLQpkF",
+    //   },
+    //   {
+    //     client: "정하나",
+    //     designer: "임은숙",
+    //     link: "https://drive.google.com/drive/folders/1QtKjorPDRex96up8VH6ehhK_KiabZCQN",
+    //   },
     // ]);
 
 

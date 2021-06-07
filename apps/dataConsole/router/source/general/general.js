@@ -415,40 +415,6 @@ GeneralJs.calculationMenuWidth = function (fontSize, items) {
   return wordLengthArr[0];
 }
 
-GeneralJs.autoComma = function (str) {
-  if (typeof str === "number") {
-    str = String(str);
-  }
-  let minus, num, tmp;
-
-  if (/\-/g.test(str)) {
-    minus = /\-/g.exec(str)[0];
-  } else {
-    minus = '';
-  }
-
-  num = str.replace(/[^0-9]/g, '');
-  tmp = '';
-
-  if (num.length < 4) {
-    return minus + num;
-  } else if (num.length < 7) {
-    tmp += num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 10) {
-    tmp += num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 13) {
-    tmp += num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  } else if (num.length < 16) {
-    tmp += num.slice(-15, -12) + ',' + num.slice(-12, -9) + ',' + num.slice(-9, -6) + ',' + num.slice(-6, -3) + ',' + num.slice(-3);
-    return minus + tmp;
-  }
-
-  return minus + num;
-}
-
 GeneralJs.moneyBoo = function (column) {
   let map;
   if (window.location.pathname === "/client") {
