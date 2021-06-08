@@ -59,389 +59,541 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // /*
+
+    const selfMongo = this.MONGOLOCALC;
+    const consoleInfo = "https://" + this.address.backinfo.host;
+    const today = new Date();
+    const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+    const emptyDate = new Date(1800, 0, 1);
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const allDesigners = await back.getDesignersByQuery({ designer: "우다미" }, { selfMongo });
+    const allProjects = await back.getProjectsByQuery({}, { selfMongo });
+    const reverseMatrix = function (matrix) {
+      if (!Array.isArray(matrix)) {
+        throw new Error("must be 2 matrix");
+      }
+      let length = null;
+      for (let arr of matrix) {
+        if (!Array.isArray(arr)) {
+          throw new Error("invaild matrix");
+        }
+        if (length !== null) {
+          if (length !== arr.length) {
+            throw new Error("invaild matrix");
+          }
+        }
+        length = arr.length;
+      }
+      if (length === null) {
+        return [];
+      }
+      let tong;
+      let tempArr;
+      tong = [];
+      for (let i = 0; i < length; i++) {
+        tempArr = [];
+        for (let arr of matrix) {
+          tempArr.push(arr[i]);
+        }
+        tong.push(tempArr);
+      }
+      return tong;
+    }
+    const designerPrice = "designerPrice";
+    const service = [
+      { serid: "s2011_aa01s", column: "homeFurnishing", name: "홈퍼니싱", id: 'F' },
+      { serid: "s2011_aa02s", column: "homeStyling", name: "홈스타일링", id: 'S' },
+      { serid: "s2011_aa03s", column: "totalStyling", name: "토탈 스타일링", id: 'T' },
+      { serid: "s2011_aa04s", column: "architecture", name: "설계 변경", id: 'XT' }
+    ];
+    const xValueMap = { "M": "mini", "B": "basic", "P": "premium" };
+    const standards = await back.mongoRead(designerPrice, { key: 33 }, { console: true });
+    const sheetsName = [ "제안건", "계약건", "가격" ];
+    const parentId = "1oKc2UD6hhMyLwfAKWylqh1iKTa7zBc6l";
+    class DesignerReport {
+      matrixProposal() {
+        let matrix;
+        let arr;
+        let order;
+        let boo;
+        let sum;
+        let year, yearSum, yearOrder;
+        let half, halfSum, halfOrder;
+        let num;
+
+        matrix = [ [ "전체 순서", "년도 순서", "반기 순서", "고객명", "서비스명", "제안 날짜", "제안 금액", "온오프라인", "부분 공간", "계약 여부", "제안서 아이디", "콘솔" ] ];
+        order = this.proposal.length;
+        sum = 0;
+        year = null;
+        yearSum = 0;
+        yearOrder = 1;
+        half = null;
+        halfSum = 0;
+        halfOrder = 1;
+
+        this.proposal.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
+        for (let obj of this.proposal) {
+
+          if (half !== null) {
+            if (half !== obj.date.getFullYear() + (obj.date.getMonth() < 6 ? 30000 : 60000)) {
+              for (let y = 0; y < halfOrder - 1; y++) {
+                matrix[matrix.length - 1 - y][2] = y + 1;
+              }
+              matrix.push([ "반기 합계", "", "", "", "", "", halfSum, "", "", "", "", "" ]);
+              halfSum = 0;
+              halfOrder = 1;
+            }
+          }
+
+          if (year !== null) {
+            if (year !== obj.date.getFullYear()) {
+              num = 0;
+              for (let y = 0; y < yearOrder + 1; y++) {
+                if (String(matrix[matrix.length - 2 - y][0]).trim().length === 0 || matrix[matrix.length - 2 - y][0] === "전체 순서") {
+                  break;
+                }
+                if (matrix[matrix.length - 2 - y][0] === "반기 합계") {
+                  continue;
+                } else {
+                  num++;
+                }
+                matrix[matrix.length - 2 - y][1] = num;
+              }
+              matrix.push([ "년도 합계", "", "", "", "", "", yearSum, "", "", "", "", "" ]);
+              matrix.push([ "", "", "", "", "", "", "", "", "", "", "", "" ]);
+              yearSum = 0;
+              yearOrder = 1;
+            }
+          }
+
+          arr = [];
+          arr.push(order);
+          arr.push(order);
+          arr.push(order);
+          arr.push(obj.client.name);
+          arr.push(obj.service.name);
+          arr.push(dateToString(obj.date));
+          arr.push(obj.detail.amount);
+          arr.push(/off/g.test(obj.detail.method) ? "오프라인" : "온라인");
+          arr.push(obj.detail.partial ? 'O' : 'X');
+          boo = false;
+          for (let obj2 of this.contract) {
+            if (obj.proid === obj2.project.proid) {
+              boo = true;
+            }
+          }
+          arr.push(boo ? 'O' : 'X');
+          arr.push(obj.proid);
+          arr.push(obj.console);
+          matrix.push(arr);
+
+          sum = sum + obj.detail.amount;
+          yearSum = yearSum + obj.detail.amount;
+          halfSum = halfSum + obj.detail.amount;
+          year = obj.date.getFullYear();
+          half = obj.date.getFullYear() + (obj.date.getMonth() < 6 ? 30000 : 60000);
+          order = order - 1;
+          yearOrder = yearOrder + 1;
+          halfOrder = halfOrder + 1;
+        }
+        matrix.push([ "반기 합계", "", "", "", "", "", halfSum, "", "", "", "", "" ]);
+        matrix.push([ "년도 합계", "", "", "", "", "", yearSum, "", "", "", "", "" ]);
+        matrix.push([ "전체 합계", "", "", "", "", "", sum, "", "", "", "", "" ]);
+        return matrix;
+      }
+      matrixContract() {
+        let matrix;
+        let arr;
+        let order;
+        let boo;
+        let sum, sum2;
+        let proposal;
+        let targetProject;
+        let year, yearSum, yearSum2, yearOrder;
+        let half, halfSum, halfSum2, halfOrder;
+        let num;
+
+        matrix = [ [ "전체 순서", "년도 순서", "반기 순서", "고객명", "서비스명", "시작일", "종료일", "온오프라인", "부분 공간", "정산 금액", "제안 금액", "수수료", "선금 정산일", "잔금 정산일", "프로젝트 아이디", "콘솔" ] ];
+        order = this.contract.length;
+        sum = 0;
+        sum2 = 0;
+        year = null;
+        yearSum = 0;
+        yearSum2 = 0;
+        yearOrder = 1;
+        half = null;
+        halfSum = 0;
+        halfSum2 = 0;
+        halfOrder = 1;
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const consoleInfo = "https://" + this.address.backinfo.host;
-    // const today = new Date();
-    // const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-    // const emptyDate = new Date(1800, 0, 1);
-    // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    // const allDesigners = await back.getDesignersByQuery({}, { selfMongo });
-    // const allProjects = await back.getProjectsByQuery({}, { selfMongo });
-    // const reverseMatrix = function (matrix) {
-    //   if (!Array.isArray(matrix)) {
-    //     throw new Error("must be 2 matrix");
-    //   }
-    //   let length = null;
-    //   for (let arr of matrix) {
-    //     if (!Array.isArray(arr)) {
-    //       throw new Error("invaild matrix");
-    //     }
-    //     if (length !== null) {
-    //       if (length !== arr.length) {
-    //         throw new Error("invaild matrix");
-    //       }
-    //     }
-    //     length = arr.length;
-    //   }
-    //   if (length === null) {
-    //     return [];
-    //   }
-    //   let tong;
-    //   let tempArr;
-    //   tong = [];
-    //   for (let i = 0; i < length; i++) {
-    //     tempArr = [];
-    //     for (let arr of matrix) {
-    //       tempArr.push(arr[i]);
-    //     }
-    //     tong.push(tempArr);
-    //   }
-    //   return tong;
-    // }
-    // const designerPrice = "designerPrice";
-    // const service = [
-    //   { column: "homeFurnishing", name: "홈퍼니싱", id: 'F' },
-    //   { column: "homeStyling", name: "홈스타일링", id: 'S' },
-    //   { column: "totalStyling", name: "토탈 스타일링", id: 'T' },
-    //   { column: "architecture", name: "설계 변경", id: 'XT' }
-    // ];
-    // const standards = await back.mongoRead(designerPrice, { key: 33 }, { console: true });
-    // const sheetsName = [ "제안건", "계약건", "가격" ];
-    // const parentId = "1oKc2UD6hhMyLwfAKWylqh1iKTa7zBc6l";
-    // class DesignerReport {
-    //   matrixProposal() {
-    //     let matrix;
-    //     let arr;
-    //     let order;
-    //     let boo;
-    //     let sum;
-    //     matrix = [ [ "순서", "고객명", "날짜", "제안 금액", "온오프라인", "부분 공간", "계약 여부", "제안서 아이디", "콘솔" ] ];
-    //     order = 1;
-    //     sum = 0;
-    //     for (let obj of this.proposal) {
-    //       arr = [];
-    //       arr.push(order);
-    //       arr.push(obj.client.name);
-    //       arr.push(dateToString(obj.date));
-    //       arr.push(obj.detail.amount);
-    //       arr.push(/off/g.test(obj.detail.method) ? "오프라인" : "온라인");
-    //       arr.push(obj.detail.partial ? 'O' : 'X');
-    //       boo = false;
-    //       for (let obj2 of this.contract) {
-    //         if (obj.proid === obj2.project.proid) {
-    //           boo = true;
-    //         }
-    //       }
-    //       arr.push(boo ? 'O' : 'X');
-    //       arr.push(obj.proid);
-    //       arr.push(obj.console);
-    //       matrix.push(arr);
-    //
-    //       sum = sum + obj.detail.amount;
-    //       order++;
-    //     }
-    //     matrix.push([ "합계", "", "", sum, "", "", "", "", "" ]);
-    //     return matrix;
-    //   }
-    //   matrixContract() {
-    //     let matrix;
-    //     let arr;
-    //     let order;
-    //     let boo;
-    //     let sum, sum2;
-    //     let proposal;
-    //     let targetProject;
-    //     matrix = [ [ "순서", "고객명", "시작일", "종료일", "온오프라인", "부분 공간", "정산 금액", "제안 금액", "수수료", "선금 정산일", "잔금 정산일", "프로젝트 아이디", "콘솔" ] ];
-    //     order = 1;
-    //     sum = 0;
-    //     sum2 = 0;
-    //     for (let obj of this.contract) {
-    //       proposal = null;
-    //       for (let obj2 of this.proposal) {
-    //         if (obj2.proid === obj.project.proid) {
-    //           proposal = obj2;
-    //         }
-    //       }
-    //       if (proposal === null) {
-    //         for (let project of allProjects) {
-    //           if (obj.project.proid === project.proid) {
-    //             targetProject = project;
-    //           }
-    //         }
-    //         proposal = {
-    //           detail: {
-    //             method: targetProject.proposal.detail[0].fee[0].method,
-    //             partial: targetProject.proposal.detail[0].fee[0].partial,
-    //             amount: 0
-    //           }
-    //         };
-    //       }
-    //       arr = [];
-    //       arr.push(order);
-    //       arr.push(obj.client.name);
-    //       arr.push(dateToString(obj.project.start));
-    //       arr.push(dateToString(obj.project.end));
-    //       arr.push(/off/g.test(proposal.detail.method) ? "오프라인" : "온라인");
-    //       arr.push(proposal.detail.partial ? 'O' : 'X');
-    //       arr.push(obj.payments.amount);
-    //       arr.push(proposal.detail.amount);
-    //       arr.push(obj.payments.percentage);
-    //       arr.push(dateToString(obj.payments.first));
-    //       arr.push(dateToString(obj.payments.remain));
-    //       arr.push(obj.project.proid);
-    //       arr.push(obj.console);
-    //       matrix.push(arr);
-    //
-    //       sum = sum + obj.payments.amount;
-    //       sum2 = sum2 + proposal.detail.amount;
-    //       order++;
-    //     }
-    //     matrix.push([ "합계", "", "", "", "", "", sum, sum2, "", "", "", "", "" ]);
-    //     return matrix;
-    //   }
-    //   matrixPrice() {
-    //     let matrix;
-    //     let basicTarget;
-    //     let premiumTarget;
-    //     let mapFunction;
-    //     let tempArr;
-    //     let target;
-    //     matrix = [ [ "추가값", "서비스명" ] ];
-    //     for (let str of standards[0].standard.x.string) {
-    //       matrix[0].push(str);
-    //     }
-    //
-    //     basicTarget = Object.keys(this.price.detail.basic);
-    //     premiumTarget = Object.keys(this.price.detail.premium);
-    //     mapFunction = (str) => {
-    //       for (let { column, name } of service) {
-    //         if (column === str) {
-    //           return { column, name };
-    //         }
-    //       }
-    //     }
-    //     basicTarget = basicTarget.map(mapFunction);
-    //     premiumTarget = premiumTarget.map(mapFunction);
-    //
-    //     for (let i = 0; i < basicTarget.length; i++) {
-    //       tempArr = [];
-    //       if (i === 0) {
-    //         tempArr.push(String(this.price.alpha) + '%');
-    //       } else {
-    //         tempArr.push('');
-    //       }
-    //       tempArr.push(basicTarget[i].name + ' B');
-    //       target = this.price.detail.basic[basicTarget[i].column];
-    //       for (let j = 0; j < target.length; j++) {
-    //         tempArr.push(target[j] * 10000);
-    //       }
-    //       matrix.push(tempArr);
-    //     }
-    //
-    //     for (let i = 0; i < premiumTarget.length; i++) {
-    //       tempArr = [];
-    //       tempArr.push('');
-    //       tempArr.push(premiumTarget[i].name + ' P');
-    //       target = this.price.detail.premium[premiumTarget[i].column];
-    //       for (let j = 0; j < target.length; j++) {
-    //         tempArr.push(target[j] * 10000);
-    //       }
-    //       matrix.push(tempArr);
-    //     }
-    //
-    //     tempArr = [];
-    //     tempArr.push('');
-    //     tempArr.push("수수료");
-    //     for (let num of this.fee) {
-    //       tempArr.push(num);
-    //     }
-    //     matrix.push(tempArr);
-    //
-    //     return matrix;
-    //   }
-    //   getMatrix() {
-    //     return [
-    //       { sheets: sheetsName[0], matrix: this.matrixProposal() },
-    //       { sheets: sheetsName[1], matrix: this.matrixContract() },
-    //       { sheets: sheetsName[2], matrix: this.matrixPrice() }
-    //     ];
-    //   }
-    // }
-    // let designer, desid;
-    // let projects;
-    // let clients, client;
-    // let contents;
-    // let contract;
-    // let contentsDate;
-    // let proposals;
-    // let cliidArr;
-    // let key0, key1;
-    // let rows;
-    // let matrix, newcomer, premium, fee;
-    // let designerFee;
-    // let possible;
-    // let targetService;
-    // let serviceTong;
-    // let alpha;
-    // let alphaPercentage;
-    // let homeliaison;
-    // let entireTong;
-    // let sheetsId;
-    // let sheetsTargets;
-    //
-    // for (let { desid } of allDesigners) {
-    //   entireTong = new DesignerReport();
-    //   designer = await back.getDesignerById(desid, { selfMongo });
-    //   projects = await back.getProjectsByQuery({ desid }, { selfMongo });
-    //
-    //   proposals = [];
-    //   cliidArr = [];
-    //   for (let project of allProjects) {
-    //     cliidArr.push({ cliid: project.cliid });
-    //     for (let obj of project.proposal.detail) {
-    //       if (desid === obj.desid) {
-    //         proposals.push({
-    //           proid: project.proid,
-    //           date: project.proposal.date,
-    //           client: {
-    //             cliid: project.cliid,
-    //           },
-    //           detail: {
-    //             amount: obj.fee[0].amount,
-    //             method: obj.fee[0].method,
-    //             partial: obj.fee[0].partial,
-    //           },
-    //           console: consoleInfo + "/proposal?proid=" + project.proid
-    //         });
-    //       }
-    //     }
-    //   }
-    //   if (cliidArr.length > 0) {
-    //     clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo });
-    //     for (let { cliid, name } of clients) {
-    //       for (let proposal of proposals) {
-    //         if (proposal.client.cliid === cliid) {
-    //           proposal.client.name = name;
-    //         }
-    //       }
-    //     }
-    //   }
-    //
-    //   contract = [];
-    //   cliidArr = [];
-    //   for (let project of projects) {
-    //     cliidArr.push({ cliid: project.cliid });
-    //     contents = await back.getContentsArrByQuery({ proid: project.proid }, { selfMongo });
-    //     contentsDate = emptyDate;
-    //     if (contents.length !== 0) {
-    //       contentsDate = contents[0].contents.portfolio.date;
-    //     }
-    //     contract.push({
-    //       client: {
-    //         cliid: project.cliid,
-    //       },
-    //       project: {
-    //         proid: project.proid,
-    //         start: (project.process.contract.meeting.date.valueOf() < emptyDateValue ? project.proposal.date : project.process.contract.meeting.date),
-    //         end: (project.process.contract.form.date.to.valueOf() < emptyDateValue ? ((project.process.calculation.payments.remain.date.valueOf() < emptyDateValue) ? (project.contents.photo.date.valueOf() < emptyDateValue ? contentsDate : project.contents.photo.date) : project.process.calculation.payments.remain.date) : project.process.contract.form.date.to),
-    //       },
-    //       payments: {
-    //         percentage: project.process.calculation.percentage,
-    //         amount: project.process.calculation.payments.totalAmount,
-    //         first: project.process.calculation.payments.first.date,
-    //         remain: project.process.calculation.payments.remain.date,
-    //       },
-    //       console: consoleInfo + "/project?proid=" + project.proid
-    //     });
-    //   }
-    //   if (cliidArr.length > 0) {
-    //     clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo });
-    //     for (let { cliid, name } of clients) {
-    //       for (let c of contract) {
-    //         if (c.client.cliid === cliid) {
-    //           c.client.name = name;
-    //         }
-    //       }
-    //     }
-    //   }
-    //
-    //   entireTong.proposal = proposals;
-    //   entireTong.contract = contract;
-    //
-    //   alpha = 0;
-    //   alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
-    //   alpha += (designer.analytics.project.paperWork.values.length >= 4) ? 2 : 0;
-    //   alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0
-    //   alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0
-    //   alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0
-    //
-    //   homeliaison = 0;
-    //   for (let { value } of designer.analytics.etc.personality) {
-    //     if (value) {
-    //       homeliaison = homeliaison + 1;
-    //     }
-    //   }
-    //   homeliaison += 2 - designer.analytics.etc.relation.items.indexOf(designer.analytics.etc.relation.value);
-    //
-    //   alpha += (homeliaison * (2 / 7));
-    //   alphaPercentage = (alpha / 100) + 1;
-    //   alpha = (Math.floor(alpha * 100) / 100);
-    //
-    //   key0 = designer.analytics.construct.level;
-    //   key1 = designer.analytics.styling.level;
-    //
-    //   rows = await back.mongoRead(designerPrice, { key: (key0 * 10) + key1 }, { console: true });
-    //   if (rows.length === 0) {
-    //     throw new Error("invaild key");
-    //   }
-    //   matrix = reverseMatrix(rows[0].matrix);
-    //
-    //   newcomer = standards[0].newcomer;
-    //   premium = standards[0].premium;
-    //   fee = standards[0].fee;
-    //   possible = designer.analytics.project.matrix;
-    //
-    //   targetService = [];
-    //   targetServicePremium = [];
-    //   for (let i = 0; i < possible.length; i++) {
-    //     if (possible[i][1] === 1) {
-    //       targetService.push(i);
-    //     }
-    //     if (possible[i][2] === 1) {
-    //       targetServicePremium.push(i);
-    //     }
-    //   }
-    //
-    //   serviceTong = {
-    //      basic: {},
-    //      premium: {}
-    //   };
-    //   for (let index of targetService) {
-    //     serviceTong.basic[service[index].column] = matrix[index].map((amount) => { return Math.round(amount * alphaPercentage) });
-    //   }
-    //   for (let index of targetServicePremium) {
-    //     serviceTong.premium[service[index].column] = matrix[index].map((amount) => { return Math.round(amount * premium * alphaPercentage) });
-    //   }
-    //   fee = fee.map((num) => { return designer.information.business.service.cost.percentage * (num / 30) });
-    //
-    //   entireTong.price = {};
-    //   entireTong.price.alpha = alpha;
-    //   entireTong.price.detail = serviceTong;
-    //   entireTong.fee = fee;
-    //
-    //   sheetsTargets = entireTong.getMatrix();
-    //
-    //   sheetsId = await sheets.create_newSheets_inPython(designer.designer + " 보고서", parentId);
-    //   await sheets.update_defaultSheetName_inPython(sheetsId, sheetsName[0]);
-    //   await sheets.add_newSheet_inPython(sheetsId, [ sheetsName[1], sheetsName[2] ]);
-    //   await sheets.setting_cleanView_inPython(sheetsId);
-    //
-    //   for (let { sheets: sheetsName, matrix } of sheetsTargets) {
-    //     await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
-    //   }
-    // }
+        this.contract.sort((a, b) => { return b.project.start.valueOf() - a.project.start.valueOf(); });
+
+        for (let obj of this.contract) {
+          proposal = null;
+          for (let obj2 of this.proposal) {
+            if (obj2.proid === obj.project.proid) {
+              proposal = obj2;
+            }
+          }
+          if (proposal === null) {
+            for (let project of allProjects) {
+              if (obj.project.proid === project.proid) {
+                targetProject = project;
+              }
+            }
+            proposal = {
+              detail: {
+                method: targetProject.proposal.detail[0].fee[0].method,
+                partial: targetProject.proposal.detail[0].fee[0].partial,
+                amount: 0
+              }
+            };
+          }
+
+          if (half !== null) {
+            if (half !== obj.project.start.getFullYear() + (obj.project.start.getMonth() < 6 ? 30000 : 60000)) {
+              for (let y = 0; y < halfOrder - 1; y++) {
+                matrix[matrix.length - 1 - y][2] = y + 1;
+              }
+              matrix.push([ "반기 합계", "", "", "", "", "", "", "", "", halfSum, halfSum2, "", "", "", "", "" ]);
+              halfSum = 0;
+              halfSum2 = 0;
+              halfOrder = 1;
+            }
+          }
+
+          if (year !== null) {
+            if (year !== obj.project.start.getFullYear()) {
+              num = 0;
+              for (let y = 0; y < yearOrder + 1; y++) {
+                if (String(matrix[matrix.length - 2 - y][0]).trim().length === 0 || matrix[matrix.length - 2 - y][0] === "전체 순서") {
+                  break;
+                }
+                if (matrix[matrix.length - 2 - y][0] === "반기 합계") {
+                  continue;
+                } else {
+                  num++;
+                }
+                matrix[matrix.length - 2 - y][1] = num;
+              }
+              matrix.push([ "년도 합계", "", "", "", "", "", "", "", "", yearSum, yearSum2, "", "", "", "", "" ]);
+              matrix.push([ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" ]);
+              yearSum = 0;
+              yearSum2 = 0;
+              yearOrder = 1;
+            }
+          }
+
+          arr = [];
+          arr.push(order);
+          arr.push(order);
+          arr.push(order);
+          arr.push(obj.client.name);
+          arr.push(obj.service.name);
+          arr.push(dateToString(obj.project.start));
+          arr.push(dateToString(obj.project.end));
+          arr.push(/off/g.test(proposal.detail.method) ? "오프라인" : "온라인");
+          arr.push(proposal.detail.partial ? 'O' : 'X');
+          arr.push(obj.payments.amount);
+          arr.push(proposal.detail.amount);
+          arr.push(obj.payments.percentage);
+          arr.push(dateToString(obj.payments.first));
+          arr.push(dateToString(obj.payments.remain));
+          arr.push(obj.project.proid);
+          arr.push(obj.console);
+          matrix.push(arr);
+
+          sum = sum + obj.payments.amount;
+          sum2 = sum2 + proposal.detail.amount;
+          yearSum = yearSum + obj.payments.amount;
+          yearSum2 = yearSum2 + proposal.detail.amount;
+          halfSum = halfSum + obj.payments.amount;
+          halfSum2 = halfSum2 + proposal.detail.amount;
+          year = obj.project.start.getFullYear();
+          half = obj.project.start.getFullYear() + (obj.project.start.getMonth() < 6 ? 30000 : 60000);
+          order = order - 1;
+          yearOrder = yearOrder + 1;
+          halfOrder = halfOrder + 1;
+        }
+        matrix.push([ "반기 합계", "", "", "", "", "", "", "", "", halfSum, halfSum2, "", "", "", "", "" ]);
+        matrix.push([ "년도 합계", "", "", "", "", "", "", "", "", yearSum, yearSum2, "", "", "", "", "" ]);
+        matrix.push([ "전체 합계", "", "", "", "", "", "", "", "", sum, sum2, "", "", "", "", "" ]);
+        return matrix;
+      }
+      matrixPrice() {
+        let matrix;
+        let basicTarget;
+        let premiumTarget;
+        let mapFunction;
+        let tempArr;
+        let target;
+        matrix = [ [ "추가값", "서비스명" ] ];
+        for (let str of standards[0].standard.x.string) {
+          matrix[0].push(str);
+        }
+
+        basicTarget = Object.keys(this.price.detail.basic);
+        premiumTarget = Object.keys(this.price.detail.premium);
+        mapFunction = (str) => {
+          for (let { column, name } of service) {
+            if (column === str) {
+              return { column, name };
+            }
+          }
+        }
+        basicTarget = basicTarget.map(mapFunction);
+        premiumTarget = premiumTarget.map(mapFunction);
+
+        for (let i = 0; i < basicTarget.length; i++) {
+          tempArr = [];
+          if (i === 0) {
+            tempArr.push(String(this.price.alpha) + '%');
+          } else {
+            tempArr.push('');
+          }
+          tempArr.push(basicTarget[i].name + ' B');
+          target = this.price.detail.basic[basicTarget[i].column];
+          for (let j = 0; j < target.length; j++) {
+            tempArr.push(target[j] * 10000);
+          }
+          matrix.push(tempArr);
+        }
+
+        for (let i = 0; i < premiumTarget.length; i++) {
+          tempArr = [];
+          tempArr.push('');
+          tempArr.push(premiumTarget[i].name + ' P');
+          target = this.price.detail.premium[premiumTarget[i].column];
+          for (let j = 0; j < target.length; j++) {
+            tempArr.push(target[j] * 10000);
+          }
+          matrix.push(tempArr);
+        }
+
+        tempArr = [];
+        tempArr.push('');
+        tempArr.push("수수료");
+        for (let num of this.fee) {
+          tempArr.push(num);
+        }
+        matrix.push(tempArr);
+
+        return matrix;
+      }
+      getMatrix() {
+        return [
+          { sheets: sheetsName[0], matrix: this.matrixProposal() },
+          { sheets: sheetsName[1], matrix: this.matrixContract() },
+          { sheets: sheetsName[2], matrix: this.matrixPrice() }
+        ];
+      }
+    }
+    let designer, desid;
+    let projects;
+    let clients, client;
+    let contents;
+    let contract;
+    let contentsDate;
+    let proposals;
+    let cliidArr;
+    let key0, key1;
+    let rows;
+    let matrix, newcomer, premium, fee;
+    let designerFee;
+    let possible;
+    let targetService;
+    let serviceTong;
+    let alpha;
+    let alphaPercentage;
+    let homeliaison;
+    let entireTong;
+    let sheetsId;
+    let sheetsTargets;
+    let serviceName;
+
+    for (let { desid } of allDesigners) {
+      entireTong = new DesignerReport();
+      designer = await back.getDesignerById(desid, { selfMongo });
+      projects = await back.getProjectsByQuery({ desid }, { selfMongo });
+
+      proposals = [];
+      cliidArr = [];
+      for (let project of allProjects) {
+        cliidArr.push({ cliid: project.cliid });
+        for (let obj of project.proposal.detail) {
+          if (desid === obj.desid) {
+            serviceName = "";
+            for (let { serid, name } of service) {
+              if (serid === project.service.serid) {
+                serviceName += name;
+              }
+            }
+            serviceName += " ";
+            serviceName += xValueMap[project.service.xValue];
+            proposals.push({
+              proid: project.proid,
+              date: project.proposal.date,
+              service: {
+                name: serviceName,
+                serid: project.service.serid,
+                xValue: project.service.xValue
+              },
+              client: {
+                cliid: project.cliid,
+              },
+              detail: {
+                amount: obj.fee[0].amount,
+                method: obj.fee[0].method,
+                partial: obj.fee[0].partial,
+              },
+              console: consoleInfo + "/proposal?proid=" + project.proid
+            });
+          }
+        }
+      }
+      if (cliidArr.length > 0) {
+        clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo });
+        for (let { cliid, name } of clients) {
+          for (let proposal of proposals) {
+            if (proposal.client.cliid === cliid) {
+              proposal.client.name = name;
+            }
+          }
+        }
+      }
+
+      contract = [];
+      cliidArr = [];
+      for (let project of projects) {
+        cliidArr.push({ cliid: project.cliid });
+        contents = await back.getContentsArrByQuery({ proid: project.proid }, { selfMongo });
+        contentsDate = emptyDate;
+        if (contents.length !== 0) {
+          contentsDate = contents[0].contents.portfolio.date;
+        }
+        serviceName = "";
+        for (let { serid, name } of service) {
+          if (serid === project.service.serid) {
+            serviceName += name;
+          }
+        }
+        serviceName += " ";
+        serviceName += xValueMap[project.service.xValue];
+        contract.push({
+          client: {
+            cliid: project.cliid,
+          },
+          service: {
+            name: serviceName,
+            serid: project.service.serid,
+            xValue: project.service.xValue
+          },
+          project: {
+            proid: project.proid,
+            start: (project.process.contract.meeting.date.valueOf() < emptyDateValue ? project.proposal.date : project.process.contract.meeting.date),
+            end: (project.process.contract.form.date.to.valueOf() < emptyDateValue ? ((project.process.calculation.payments.remain.date.valueOf() < emptyDateValue) ? (project.contents.photo.date.valueOf() < emptyDateValue ? contentsDate : project.contents.photo.date) : project.process.calculation.payments.remain.date) : project.process.contract.form.date.to),
+          },
+          payments: {
+            percentage: project.process.calculation.percentage,
+            amount: project.process.calculation.payments.totalAmount,
+            first: project.process.calculation.payments.first.date,
+            remain: project.process.calculation.payments.remain.date,
+          },
+          console: consoleInfo + "/project?proid=" + project.proid
+        });
+      }
+      if (cliidArr.length > 0) {
+        clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo });
+        for (let { cliid, name } of clients) {
+          for (let c of contract) {
+            if (c.client.cliid === cliid) {
+              c.client.name = name;
+            }
+          }
+        }
+      }
+
+      entireTong.proposal = proposals;
+      entireTong.contract = contract;
+
+      alpha = 0;
+      alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
+      alpha += (designer.analytics.project.paperWork.values.length >= 4) ? 2 : 0;
+      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0
+      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0
+      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0
+
+      homeliaison = 0;
+      for (let { value } of designer.analytics.etc.personality) {
+        if (value) {
+          homeliaison = homeliaison + 1;
+        }
+      }
+      homeliaison += 2 - designer.analytics.etc.relation.items.indexOf(designer.analytics.etc.relation.value);
+
+      alpha += (homeliaison * (2 / 7));
+      alphaPercentage = (alpha / 100) + 1;
+      alpha = (Math.floor(alpha * 100) / 100);
+
+      key0 = designer.analytics.construct.level;
+      key1 = designer.analytics.styling.level;
+
+      rows = await back.mongoRead(designerPrice, { key: (key0 * 10) + key1 }, { console: true });
+      if (rows.length === 0) {
+        throw new Error("invaild key");
+      }
+      matrix = reverseMatrix(rows[0].matrix);
+
+      newcomer = standards[0].newcomer;
+      premium = standards[0].premium;
+      fee = standards[0].fee;
+      possible = designer.analytics.project.matrix;
+
+      targetService = [];
+      targetServicePremium = [];
+      for (let i = 0; i < possible.length; i++) {
+        if (possible[i][1] === 1) {
+          targetService.push(i);
+        }
+        if (possible[i][2] === 1) {
+          targetServicePremium.push(i);
+        }
+      }
+
+      serviceTong = {
+         basic: {},
+         premium: {}
+      };
+      for (let index of targetService) {
+        serviceTong.basic[service[index].column] = matrix[index].map((amount) => { return Math.round(amount * alphaPercentage) });
+      }
+      for (let index of targetServicePremium) {
+        serviceTong.premium[service[index].column] = matrix[index].map((amount) => { return Math.round(amount * premium * alphaPercentage) });
+      }
+      fee = fee.map((num) => { return designer.information.business.service.cost.percentage * (num / 30) });
+
+      entireTong.price = {};
+      entireTong.price.alpha = alpha;
+      entireTong.price.detail = serviceTong;
+      entireTong.fee = fee;
+
+      sheetsTargets = entireTong.getMatrix();
+
+      sheetsId = await sheets.create_newSheets_inPython(designer.designer + " 보고서", parentId);
+      await sheets.update_defaultSheetName_inPython(sheetsId, sheetsName[0]);
+      await sheets.add_newSheet_inPython(sheetsId, [ sheetsName[1], sheetsName[2] ]);
+      await sheets.setting_cleanView_inPython(sheetsId);
+
+      for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+        await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
+      }
+
+    }
+
+    // */
 
 
 
@@ -451,32 +603,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-    // const document = new GoogleDocs();
-    // const selfMongo = this.MONGOLOCALC;
-    // const designers = await back.getDesignersByQuery({}, { selfMongo });
-    // let response, idArr, folders;
-    //
-    // idArr = [];
-    // for (let designer of designers) {
-    //   idArr.push(designer.desid);
-    // }
-    //
-    // response = await back.getHistoryProperty("designer", "$all", idArr, { selfMongo });
-    // for (let desid in response) {
-    //   console.log(response[desid].history);
-    // }
-    //
-    // folders = await back.mongoRead("folderDesigner", {}, { selfMongo });
-    // console.log(folders);
-    //
-    // for (let { docs, desid } of folders) {
-    //   await document.update_value_inPython(docs, response[desid].history);
-    //   console.log(desid, "done");
-    // }
 
 
 

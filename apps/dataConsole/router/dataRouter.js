@@ -506,7 +506,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 500);
+      }, 100);
 
       res.on('close', function () {
         clearInterval(pusher);

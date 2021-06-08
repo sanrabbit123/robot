@@ -8,6 +8,13 @@
     "service": false,
     "photo": false
   },
+  "class": {
+    "client": false,
+    "designer": false,
+    "project": false,
+    "contents": false,
+    "service": false
+  },
   "meta": {
     "title": [
       "thisPerson",

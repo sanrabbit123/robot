@@ -3289,26 +3289,28 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
     createNodes(nodeArr);
 
     //search event
-    searchInput = this.searchInput;
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
-        let target;
-        if (value === "") {
-          instance.checkListDetailLaunching("", false, true);
-        } else {
-          target = null;
-          for (let { designer, desid } of instance.designers) {
-            if (value === designer) {
-              target = desid;
+    if (this.searchInput !== undefined && this.searchInput !== null) {
+      searchInput = this.searchInput;
+      searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
+          let target;
+          if (value === "") {
+            instance.checkListDetailLaunching("", false, true);
+          } else {
+            target = null;
+            for (let { designer, desid } of instance.designers) {
+              if (value === designer) {
+                target = desid;
+              }
+            }
+            if (target !== null) {
+              instance.checkListDetailLaunching(target);
             }
           }
-          if (target !== null) {
-            instance.checkListDetailLaunching(target);
-          }
         }
-      }
-    });
+      });
+    }
 
     //standard doms event
     for (let i = 1; i < this.standardDoms.length; i++) {

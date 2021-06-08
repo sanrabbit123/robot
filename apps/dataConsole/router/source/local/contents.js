@@ -1426,6 +1426,7 @@ ContentsJs.prototype.spreadData = async function (search = null) {
     if (search === null) {
       totalMother = GeneralJs.nodes.div.cloneNode(true);
       totalMother.classList.add("totalMother");
+      totalMother.style.height = "calc(100% - " + String(this.belowHeight) + "px" + ")";
       this.totalContents.appendChild(totalMother);
       this.totalMother = totalMother;
     } else {

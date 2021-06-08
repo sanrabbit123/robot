@@ -25,7 +25,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
     const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", moduleName ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
-    let folderSize;
+    let folderSize, tempScriptString;
 
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
@@ -59,6 +59,19 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       shell.exec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
     }
     shell.exec(`cp -r ${shellLink(staticDir + "/" + moduleName)} ${shellLink(staticFolder)}`);
+
+    const staticModuleFolderList = await fileSystem(`readDir`, [ staticFolder + "/" + moduleName ]);
+    for (let i of staticDirList) {
+      if (!staticModuleFolderList.includes(i.replace(/\.js/gi, ''))) {
+        shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}/${shellLink(i.replace(/\.js/gi, ''))}`);
+      }
+      tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
+      tempScriptString = tempScriptString.replace(/^const ([A-Z][^ \=]+) = function \(/, (match, p1, offset, string) => {
+        return p1 + ".prototype.constructor = function (";
+      });
+      tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
+      await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
+    }
 
     console.log(`set static`);
 
@@ -182,7 +195,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     }
     console.log(`set middle static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString;
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -278,7 +291,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //set data patch
-      const { patch: onoffObj, meta, name, route } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
+      const { patch: onoffObj, class: classOnOffObj, meta, name, route } = JSON.parse(fileString.slice(0, [ ...fileString.matchAll(/%\/%\/g/g) ][0].index).replace(/\/<%patch%>\/ /gi, ''));
 
       //set meta info
       route.unshift(name);
@@ -310,19 +323,19 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       prototypes = Object.keys(DataPatch.prototype);
       dataPatchScript = `const DataPatch = new Function();\n`;
       if (onoffObj.entire) {
-        for (let i of prototypes) {
-          dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+        for (let z of prototypes) {
+          dataPatchScript += `DataPatch.${z} = ${DataPatch.prototype[z].toString().replace(/\n/g, '')};\n`;
         }
       } else {
-        for (let i of prototypes) {
-          prototypeBoo = /^tools/.test(i);
+        for (let z of prototypes) {
+          prototypeBoo = /^tools/.test(z);
           for (let j in onoffObj) {
             if (onoffObj[j] && !prototypeBoo) {
-              prototypeBoo = (new RegExp("^" + j)).test(i);
+              prototypeBoo = (new RegExp("^" + j)).test(z);
             }
           }
           if (prototypeBoo) {
-            dataPatchScript += `DataPatch.${i} = ${DataPatch.prototype[i].toString().replace(/\n/g, '')};\n`;
+            dataPatchScript += `DataPatch.${z} = ${DataPatch.prototype[z].toString().replace(/\n/g, '')};\n`;
           }
         }
       }
@@ -333,10 +346,19 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 
+      //front class set
+      frontClassString = '';
+      for (let c in classOnOffObj) {
+        if (classOnOffObj[c]) {
+          frontClassString += (await fileSystem(`readString`, [ `${this.dir}/router/source/class/${c}.js` ])).replace(/module\.exports = [^\n]+/gi , '');
+          frontClassString += "\n\n";
+        }
+      }
+
       //merge
       code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + svgTongString + "\n\n" + generalSvg;
       code1 = dataPatchScript;
-      code2 = generalString + "\n\n" + consoleGeneralString;
+      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString;
       code3 = fileString + "\n\n" + execString;
 
       result = '';

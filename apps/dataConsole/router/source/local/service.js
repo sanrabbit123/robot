@@ -1,3 +1,16 @@
+const ServiceJs = function () {
+  this.mother = new GeneralJs();
+  this.map = /<%map%>/;
+  this.totalContents = this.mother.totalContents;
+  this.margin = 14;
+  this.borderRadius = 22;
+  this.standardItemNames = [];
+  let { main: { titles: { items } } } = this.map;
+  for (let i = 0; i < items.length; i++) {
+    this.standardItemNames.push(items[i]);
+  }
+}
+
 class MapArray extends Array {
   constructor(arr) {
     super();
@@ -18,19 +31,6 @@ class MapArray extends Array {
       thisMap.set(obj.name, obj[anotherKey]);
     }
     return thisMap;
-  }
-}
-
-const ServiceJs = function () {
-  this.mother = new GeneralJs();
-  this.map = /<%map%>/;
-  this.totalContents = this.mother.totalContents;
-  this.margin = 14;
-  this.borderRadius = 22;
-  this.standardItemNames = [];
-  let { main: { titles: { items } } } = this.map;
-  for (let i = 0; i < items.length; i++) {
-    this.standardItemNames.push(items[i]);
   }
 }
 

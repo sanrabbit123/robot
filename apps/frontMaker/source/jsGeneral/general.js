@@ -1376,11 +1376,31 @@ GeneralJs.cleanChildren = function (dom) {
   }
 }
 
-GeneralJs.protoPatch = async function (instance, modulePath) {
+GeneralJs.protoPatch = async function (instance, modulePath, protoName = null) {
   try {
     const className = instance.constructor.name;
-    const appendScript = await GeneralJs.requestPromise(modulePath);
-    const protoFunc = new Function(className, appendScript);
+    let appendScript, protoFunc;
+    if (typeof modulePath === "string") {
+      appendScript = await GeneralJs.requestPromise(modulePath);
+    } else if (Array.isArray(modulePath)) {
+      appendScript = '';
+      for (let script of modulePath) {
+        if (typeof script !== "string") {
+          throw new Error("invaild input");
+        }
+        appendScript += await GeneralJs.requestPromise(script);
+        appendScript += "\n\n";
+      }
+    } else {
+      throw new Error("invaild input");
+    }
+    if (protoName === null || protoName === undefined) {
+      protoFunc = new Function(className, appendScript);
+    } else if (typeof protoName === "string") {
+      protoFunc = new Function(protoName, appendScript);
+    } else {
+      throw new Error("invaild input");
+    }
     protoFunc(instance.constructor);
   } catch (e) {
     console.log(e);
