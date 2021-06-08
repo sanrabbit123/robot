@@ -342,7 +342,11 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
           if (totalOrder <= 0) {
             totalOrder = connectionNumber;
           }
-          trigger = JSON.parse(readFileSync(sseFile));
+          try {
+            trigger = JSON.parse(readFileSync(sseFile));
+          } catch (e) {
+            trigger = [];
+          }
           if (trigger.length > 0) {
             orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
             order = orderRaw[0].order;
@@ -356,7 +360,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 100);
+      }, 500);
 
       res.on('close', function () {
         clearInterval(pusher);

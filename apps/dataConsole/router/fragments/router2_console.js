@@ -2132,6 +2132,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
       const { mode, db, collection } = req.body;
       let selfMongo, result;
       let whereQuery, updateQuery;
+      let ip, device, logObject;
 
       if (db === "core" || db === "back" || db === "mongo") {
         selfMongo = instance.mongo;
@@ -2187,6 +2188,20 @@ DataRouter.prototype.rou_post_generalMongo = function () {
           await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
         }
         await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
+        if (req.body.log !== undefined) {
+          if (req.body.who === undefined) {
+            throw new Error("in log, must be who");
+          }
+          ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+          device = req.headers['user-agent'] || "unknown";
+          logObject = {
+            date: (new Date()),
+            who: req.body.who,
+            where: { ip, device },
+            update: JSON.stringify(updateQuery)
+          };
+          await back.mongoCreate(collection.replace(/^sse\_/, "log_"), logObject, { selfMongo });
+        }
         result = { message: "done" };
       } else {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");

@@ -1977,172 +1977,13 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
   return checkListData;
 }
 
-DesignerJs.prototype.checkListView = async function (invisible = false) {
-  const instance = this;
-  try {
-    const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
-    const { totalMother, ea, grayBarWidth } = this;
-    const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
-    const length = designers.length;
-    let boxTong;
-    let nodeArr;
-    let tempObj;
-    let minWidth;
-    let margin;
-    let width, height;
-    let boxNumber;
-    let status;
-    let searchInput;
-
-    this.designers = new Designers(designers);
-
-    minWidth = 210;
-    margin = 8;
-
-    boxNumber = Math.floor((window.innerWidth - grayBarWidth) / (minWidth + margin));
-    width = (window.innerWidth - grayBarWidth - ((boxNumber + 1 + 4) * margin)) / boxNumber;
-
-    boxTong = createNode({
-      mother: totalMother,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(grayBarWidth) + ea,
-        paddingLeft: String(margin * 3) + ea,
-        paddingTop: String(margin * 3) + ea,
-        paddingBottom: String(margin * 3) + ea,
-        width: withOut(grayBarWidth + (margin * 3), ea),
-        height: "auto",
-        animation: !invisible ? "fadeup 0.3s ease forwards" : "invisible 0.3s ease forwards",
-      }
-    });
-
-    this.checkListBaseList = boxTong;
-
-    nodeArr = [];
-    for (let i = 0; i < length; i++) {
-
-      status = /완료/g.test(designers[i].information.contract.status);
-
-      tempObj = {
-        mother: boxTong,
-        class: [ "hoverDefault" ],
-        attribute: [
-          { desid: designers[i].desid }
-        ],
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              const desid = this.getAttribute("desid");
-              instance.checkListDetailLaunching(desid, false);
-            }
-          }
-        ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(width) + ea,
-          height: String(width) + ea,
-          marginRight: String(margin) + ea,
-          marginBottom: String(margin) + ea,
-          borderRadius: String(5) + "px",
-          background: status ? colorChip.gray1 : colorChip.gray3,
-        }
-      };
-      nodeArr.push(tempObj);
-
-      for (let j = 0; j < 9; j++) {
-        tempObj = {
-          mother: -1 * (j + 1),
-          style: {
-            position: "absolute",
-            top: String(1 + (32 * Math.floor(j / 3)) + (1 * Math.floor(j / 3))) + '%',
-            left: String(1 + (32 * (j % 3)) + (1 * (j % 3))) + '%',
-            width: String(32) + '%',
-            height: String(32) + '%',
-            borderRadius: String(3) + "px",
-            background: status ? colorChip.gray0 : colorChip.gray3,
-            opacity: String(0.2 + Math.random())
-          }
-        };
-        nodeArr.push(tempObj);
-      }
-
-      tempObj = {
-        mother: -10,
-        text: `checkList&nbsp;<b style="font-style:normal;font-family:'graphik';font-weight:100;color:${status ? colorChip.black : colorChip.deactive}">${designers[i].information.did}</b>`,
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          top: "calc(50% + " + String(8) + ea + ")",
-          fontSize: String(16) + ea,
-          textAlign: "center",
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          fontStyle: "italic",
-          color: status ? colorChip.black : colorChip.deactive,
-        }
-      };
-      nodeArr.push(tempObj);
-      tempObj = {
-        mother: -1,
-        text: designers[i].designer,
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          top: String(GeneralJs.isMac() ? -43 : -40) + ea,
-          fontSize: String(32) + ea,
-          textAlign: "center",
-          fontWeight: String(500),
-          fontStyle: "normal",
-          color: status ? colorChip.black : colorChip.deactive,
-        }
-      };
-      nodeArr.push(tempObj);
-    }
-
-    createNodes(nodeArr);
-
-    //search event
-    searchInput = this.searchInput;
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
-        let target;
-        if (value === "") {
-          instance.checkListDetailLaunching("", false, true);
-        } else {
-          target = null;
-          for (let { designer, desid } of instance.designers) {
-            if (value === designer) {
-              target = desid;
-            }
-          }
-          if (target !== null) {
-            instance.checkListDetailLaunching(target);
-          }
-        }
-      }
-    });
-
-    //standard doms event
-    for (let i = 1; i < this.standardDoms.length; i++) {
-      this.standardDoms[i].addEventListener("click", (e) => {
-        instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
-      });
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = false, removeOnly = false) {
   const instance = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = totalMother.firstChild;
   let target;
+
+  this.desid = (removeOnly ? null : desid);
 
   if (this.checkListBaseTong !== undefined && this.checkListBaseTong !== null && this.checkListBaseList !== undefined && this.checkListBaseList !== null) {
     this.checkListBaseTong.parentNode.removeChild(this.checkListBaseTong);
@@ -2214,9 +2055,10 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
+  const cookies = getCookiesAll();
   let designer;
   let information, analytics;
   let margin;
@@ -2387,6 +2229,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
         tempObj = {
           mother: eachValueTong,
           text: (typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer) : "NULL",
+          class: [ "dom_" + String(i) + "_" + String(j) ],
           attribute: [
             { x: String(i) },
             { y: String(j) },
@@ -2437,6 +2280,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                             event: async function (e) {
                               try {
                                 if (e.key === "Enter") {
+                                  const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
                                   if (updateQuery === "error") {
@@ -2445,8 +2289,8 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                                     this.parentElement.removeChild(this.parentElement.firstChild);
                                     this.parentElement.insertAdjacentHTML("beforeend", text);
                                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                    await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
                                     instance.designers.update([ whereQuery, updateQuery ]);
-                                    designer = instance.designers.pick(desid);
                                   }
                                   this.parentElement.removeChild(this.parentElement.querySelector("aside"));
                                   this.parentElement.removeChild(this.parentElement.querySelector("input"));
@@ -2500,6 +2344,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
 
         tempObj = {
           mother: eachValueTong,
+          class: [ "dom_" + String(i) + "_" + String(j) ],
           style: {
             display: "block",
             position: "relative",
@@ -2533,6 +2378,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                     const toggle = Number(this.getAttribute('toggle'));
                     const multiple = checkListData[x].children[y].multiple === true;
                     const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y));
+                    const designer = instance.designers.pick(desid);
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
@@ -2564,8 +2410,8 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                     whereQuery = { desid };
 
                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                    await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
                     instance.designers.update([ whereQuery, updateQuery ]);
-                    designer = instance.designers.pick(desid);
                   } catch (err) {
                     console.log(err);
                   }
@@ -2592,6 +2438,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
         tempMatrix = checkListData[i].children[j].value(designer);
         tempObj = {
           mother: eachValueTong,
+          class: [ "dom_" + String(i) + "_" + String(j) ],
           style: {
             display: "block",
             position: "relative",
@@ -2641,6 +2488,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                       const z = Number(this.getAttribute('z'));
                       const t = Number(this.getAttribute('t'));
                       const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(z));
+                      const designer = instance.designers.pick(desid);
                       let whereQuery, updateQuery;
 
                       for (let i = 0; i < thisButtons.length; i++) {
@@ -2655,15 +2503,13 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
 
                       if (checkListData[x].children[y].opposite === true) {
                         const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(1 - z));
-                        if (oppositeButtons !== null) {
-                          for (let i = 0; i < oppositeButtons.length; i++) {
-                            if (i < oppositeButtons.length - t - 1) {
-                              oppositeButtons[i].setAttribute("toggle", String(1));
-                              oppositeButtons[i].style.background = colorChip.green;
-                            } else {
-                              oppositeButtons[i].setAttribute("toggle", String(0));
-                              oppositeButtons[i].style.background = colorChip.gray2;
-                            }
+                        for (let i = 0; i < oppositeButtons.length; i++) {
+                          if (i < oppositeButtons.length - t - 1) {
+                            oppositeButtons[i].setAttribute("toggle", String(1));
+                            oppositeButtons[i].style.background = colorChip.green;
+                          } else {
+                            oppositeButtons[i].setAttribute("toggle", String(0));
+                            oppositeButtons[i].style.background = colorChip.gray2;
                           }
                         }
                       }
@@ -2672,8 +2518,8 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                       updateQuery = checkListData[x].children[y].update(z, t, designer);
 
                       await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
                       instance.designers.update([ whereQuery, updateQuery ]);
-                      designer = instance.designers.pick(desid);
                     } catch (err) {
                       console.log(err);
                     }
@@ -2704,6 +2550,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
 
         tempObj = {
           mother: eachValueTong,
+          class: [ "dom_" + String(i) + "_" + String(j) ],
           attribute: [
             { x: String(i) },
             { y: String(j) },
@@ -2744,14 +2591,15 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
                   const x = Number(this.getAttribute('x'));
                   const y = Number(this.getAttribute('y'));
                   if (typeof checkListData[x].children[y].update === "function") {
-                    const updateQuery = checkListData[x].children[y].update(this.value.trim());
+                    const designer = instance.designers.pick(desid);
+                    const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                     const whereQuery = { desid };
                     if (updateQuery === "error") {
                       this.value = this.getAttribute("past");
                     } else {
                       await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
                       instance.designers.update([ whereQuery, updateQuery ]);
-                      designer = instance.designers.pick(desid);
                     }
                   }
                   this.style.color = colorChip.black;
@@ -3238,4 +3086,244 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     }
   });
 
+}
+
+DesignerJs.prototype.checkListSseParsing = function (orders) {
+  const instance = this;
+  const { ea } = this;
+  const { colorChip } = GeneralJs;
+  if (!Array.isArray(orders)) {
+    throw new Error("invaild input");
+  }
+  if (orders.length > 0) {
+    for (let obj of orders) {
+      if (obj.desid === undefined || obj.position === undefined || obj.type === undefined || obj.update === undefined || obj.value === undefined) {
+        throw new Error("invaild input");
+      }
+      const { desid, position, type, update, value } = obj;
+      if (instance.desid === desid) {
+        if (update.whereQuery === undefined || update.updateQuery === undefined) {
+          throw new Error("invaild input");
+        }
+        const { whereQuery, updateQuery } = update;
+        const targetDom = document.querySelector('.' + position.class);
+
+        instance.designers.update([ whereQuery, updateQuery ]);
+
+        if (type === "string") {
+          targetDom.removeChild(targetDom.firstChild);
+          targetDom.insertAdjacentHTML("beforeend", value);
+        } else if (type === "matrix") {
+          const children = targetDom.children;
+          const length = children.length;
+          for (let z = 0; z < length; z++) {
+            if (value[z] === 1) {
+              children[z].style.color = colorChip.green;
+              children[z].setAttribute("toggle", String(1));
+            } else {
+              children[z].style.color = colorChip.gray4;
+              children[z].setAttribute("toggle", String(0));
+            }
+          }
+        } else if (type === "tendency") {
+          const children = targetDom.children;
+          const [ z, t, opposite, matrixButtonConst ] = value;
+          const factors = children[z].querySelectorAll("div");
+          const length = factors.length;
+          for (let i = 0; i < length; i++) {
+            if (i <= t) {
+              factors[i].setAttribute("toggle", String(1));
+              factors[i].style.background = colorChip.green;
+            } else {
+              factors[i].setAttribute("toggle", String(0));
+              factors[i].style.background = colorChip.gray2;
+            }
+          }
+          if (opposite) {
+            const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(position.x) + String(position.y) + String(1 - z));
+            for (let i = 0; i < oppositeButtons.length; i++) {
+              if (i < oppositeButtons.length - t - 1) {
+                oppositeButtons[i].setAttribute("toggle", String(1));
+                oppositeButtons[i].style.background = colorChip.green;
+              } else {
+                oppositeButtons[i].setAttribute("toggle", String(0));
+                oppositeButtons[i].style.background = colorChip.gray2;
+              }
+            }
+          }
+        } else if (type === "longtext") {
+          targetDom.querySelector("textarea").value = value;
+        }
+
+      }
+    }
+  }
+}
+
+DesignerJs.prototype.checkListView = async function (invisible = false) {
+  const instance = this;
+  try {
+    const { createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
+    const { totalMother, ea, grayBarWidth } = this;
+    const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
+    const length = designers.length;
+    let boxTong;
+    let nodeArr;
+    let tempObj;
+    let minWidth;
+    let margin;
+    let width, height;
+    let boxNumber;
+    let status;
+    let searchInput;
+
+    this.designers = new Designers(designers);
+    this.desid = null;
+
+    minWidth = 210;
+    margin = 8;
+
+    boxNumber = Math.floor((window.innerWidth - grayBarWidth) / (minWidth + margin));
+    width = (window.innerWidth - grayBarWidth - ((boxNumber + 1 + 4) * margin)) / boxNumber;
+
+    boxTong = createNode({
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        paddingLeft: String(margin * 3) + ea,
+        paddingTop: String(margin * 3) + ea,
+        paddingBottom: String(margin * 3) + ea,
+        width: withOut(grayBarWidth + (margin * 3), ea),
+        height: "auto",
+        animation: !invisible ? "fadeup 0.3s ease forwards" : "invisible 0.3s ease forwards",
+      }
+    });
+
+    this.checkListBaseList = boxTong;
+
+    nodeArr = [];
+    for (let i = 0; i < length; i++) {
+
+      status = /완료/g.test(designers[i].information.contract.status);
+
+      tempObj = {
+        mother: boxTong,
+        class: [ "hoverDefault" ],
+        attribute: [
+          { desid: designers[i].desid }
+        ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              const desid = this.getAttribute("desid");
+              instance.checkListDetailLaunching(desid, false);
+            }
+          }
+        ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(width) + ea,
+          height: String(width) + ea,
+          marginRight: String(margin) + ea,
+          marginBottom: String(margin) + ea,
+          borderRadius: String(5) + "px",
+          background: status ? colorChip.gray1 : colorChip.gray3,
+        }
+      };
+      nodeArr.push(tempObj);
+
+      for (let j = 0; j < 9; j++) {
+        tempObj = {
+          mother: -1 * (j + 1),
+          style: {
+            position: "absolute",
+            top: String(1 + (32 * Math.floor(j / 3)) + (1 * Math.floor(j / 3))) + '%',
+            left: String(1 + (32 * (j % 3)) + (1 * (j % 3))) + '%',
+            width: String(32) + '%',
+            height: String(32) + '%',
+            borderRadius: String(3) + "px",
+            background: status ? colorChip.gray0 : colorChip.gray3,
+            opacity: String(0.2 + Math.random())
+          }
+        };
+        nodeArr.push(tempObj);
+      }
+
+      tempObj = {
+        mother: -10,
+        text: `checkList&nbsp;<b style="font-style:normal;font-family:'graphik';font-weight:100;color:${status ? colorChip.black : colorChip.deactive}">${designers[i].information.did}</b>`,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: "calc(50% + " + String(8) + ea + ")",
+          fontSize: String(16) + ea,
+          textAlign: "center",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: status ? colorChip.black : colorChip.deactive,
+        }
+      };
+      nodeArr.push(tempObj);
+      tempObj = {
+        mother: -1,
+        text: designers[i].designer,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          top: String(GeneralJs.isMac() ? -43 : -40) + ea,
+          fontSize: String(32) + ea,
+          textAlign: "center",
+          fontWeight: String(500),
+          fontStyle: "normal",
+          color: status ? colorChip.black : colorChip.deactive,
+        }
+      };
+      nodeArr.push(tempObj);
+    }
+
+    createNodes(nodeArr);
+
+    //search event
+    searchInput = this.searchInput;
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
+        let target;
+        if (value === "") {
+          instance.checkListDetailLaunching("", false, true);
+        } else {
+          target = null;
+          for (let { designer, desid } of instance.designers) {
+            if (value === designer) {
+              target = desid;
+            }
+          }
+          if (target !== null) {
+            instance.checkListDetailLaunching(target);
+          }
+        }
+      }
+    });
+
+    //standard doms event
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      this.standardDoms[i].addEventListener("click", (e) => {
+        instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+      });
+    }
+
+    //sse
+    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    es.addEventListener("updateTong", (e) => {
+      instance.checkListSseParsing(equalJson(e.data));
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
 }
