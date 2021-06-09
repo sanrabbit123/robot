@@ -2762,7 +2762,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                       dateValue = thisCase["date"].textContent.trim();
                       if (dateValue !== "미정" && dateValue !== "해당 없음") {
                         tempArr = dateValue.split('-');
-                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.replace(/[^0-9]/g, '')));
+                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
                         const to = "photographing";
                         const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
                         const start = updateDate;
