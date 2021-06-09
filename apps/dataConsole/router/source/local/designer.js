@@ -3693,7 +3693,7 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
-    if (getObj.mode === undefined) {
+    if (getObj.desid !== undefined && getObj.mode === undefined) {
       getObj.mode = "checklist";
     }
 
@@ -3788,6 +3788,15 @@ DesignerJs.prototype.launching = async function () {
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.priceView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+
+    } else if (getObj.mode === "report") {
+
+      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.reportView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";

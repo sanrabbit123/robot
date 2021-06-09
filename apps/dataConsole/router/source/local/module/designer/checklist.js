@@ -2101,6 +2101,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let tendencyTop, tendencyHeight;
   let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
   let textAreaTop;
+  let baseTongMarginBottom;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -2112,6 +2113,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   topMargin = isMac() ? 30 : 34;
   leftMargin = 34;
   bottomMargin = isMac() ? 15 : 13;
+  baseTongMarginBottom = 80;
   size = 17;
   tendencyTop = 3;
   tendencyHeight = 16;
@@ -2150,7 +2152,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
-      marginBottom: String(80) + ea,
+      marginBottom: String(baseTongMarginBottom) + ea,
     }
   });
 
@@ -3196,9 +3198,9 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
 DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
+    const loading = await this.mother.loadingRun();
     this.backGrayBar();
     await this.spreadData(null, true);
-
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const standardBar = totalMother.firstChild;
@@ -3285,6 +3287,8 @@ DesignerJs.prototype.checkListView = async function () {
     es.addEventListener("updateTong", (e) => {
       instance.checkListSseParsing(equalJson(e.data));
     });
+
+    loading.parentNode.removeChild(loading);
 
     //launching
     this.checkListDetailLaunching(this.desid);

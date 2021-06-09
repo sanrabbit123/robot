@@ -69,7 +69,7 @@ module.exports = {
           region: {
             transportation: "자동차",
             range: 40,
-            expenses: false
+            expenses: 50
           },
           project: {
             time: {

@@ -59,7 +59,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+
+
 
     const selfMongo = this.MONGOLOCALC;
     const consoleInfo = "https://" + this.address.backinfo.host;
@@ -67,7 +68,7 @@ DevContext.prototype.launching = async function () {
     const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
     const emptyDate = new Date(1800, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const allDesigners = await back.getDesignersByQuery({}, { selfMongo });
+    const allDesigners = await back.getDesignersByQuery({ designer: "우다미" }, { selfMongo });
     const allProjects = await back.getProjectsByQuery({}, { selfMongo });
     const reverseMatrix = function (matrix) {
       if (!Array.isArray(matrix)) {
@@ -110,9 +111,10 @@ DevContext.prototype.launching = async function () {
     const xValueMap = { "M": "mini", "B": "basic", "P": "premium" };
     const standards = await back.mongoRead(designerPrice, { key: 33 }, { console: true });
     const sheetsName = [ "제안건", "계약건", "가격" ];
+    const relationItems = [ "지속가능성 높음", "그냥 평범", "확인중", "좋지 않음" ];
     const parentId = "1oKc2UD6hhMyLwfAKWylqh1iKTa7zBc6l";
     class DesignerReport {
-      matrixProposal() {
+      matrixProposal(allProjects) {
         let matrix;
         let arr;
         let order;
@@ -203,7 +205,7 @@ DevContext.prototype.launching = async function () {
         matrix.push([ "전체 합계", "", "", "", "", "", sum, "", "", "", "", "" ]);
         return matrix;
       }
-      matrixContract() {
+      matrixContract(allProjects) {
         let matrix;
         let arr;
         let order;
@@ -323,7 +325,13 @@ DevContext.prototype.launching = async function () {
         matrix.push([ "전체 합계", "", "", "", "", "", "", "", "", sum, sum2, "", "", "", "", "" ]);
         return matrix;
       }
-      matrixPrice() {
+      matrixPrice(standards) {
+        const service = [
+          { serid: "s2011_aa01s", column: "homeFurnishing", name: "홈퍼니싱", id: 'F' },
+          { serid: "s2011_aa02s", column: "homeStyling", name: "홈스타일링", id: 'S' },
+          { serid: "s2011_aa03s", column: "totalStyling", name: "토탈 스타일링", id: 'T' },
+          { serid: "s2011_aa04s", column: "architecture", name: "설계 변경", id: 'XT' }
+        ];
         let matrix;
         let basicTarget;
         let premiumTarget;
@@ -331,7 +339,7 @@ DevContext.prototype.launching = async function () {
         let tempArr;
         let target;
         matrix = [ [ "추가값", "서비스명" ] ];
-        for (let str of standards[0].standard.x.string) {
+        for (let str of standards.standard.x.string) {
           matrix[0].push(str);
         }
 
@@ -383,11 +391,12 @@ DevContext.prototype.launching = async function () {
 
         return matrix;
       }
-      getMatrix() {
+      getMatrix(allProjects, standards) {
+        const sheetsName = [ "제안건", "계약건", "가격" ];
         return [
-          { sheets: sheetsName[0], matrix: this.matrixProposal() },
-          { sheets: sheetsName[1], matrix: this.matrixContract() },
-          { sheets: sheetsName[2], matrix: this.matrixPrice() }
+          { sheets: sheetsName[0], matrix: this.matrixProposal(allProjects) },
+          { sheets: sheetsName[1], matrix: this.matrixContract(allProjects) },
+          { sheets: sheetsName[2], matrix: this.matrixPrice(standards) }
         ];
       }
     }
@@ -532,7 +541,7 @@ DevContext.prototype.launching = async function () {
           homeliaison = homeliaison + 1;
         }
       }
-      homeliaison += 2 - designer.analytics.etc.relation.items.indexOf(designer.analytics.etc.relation.value);
+      homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
 
       alpha += (homeliaison * (2 / 7));
       alphaPercentage = (alpha / 100) + 1;
@@ -580,21 +589,21 @@ DevContext.prototype.launching = async function () {
       entireTong.price.detail = serviceTong;
       entireTong.fee = fee;
 
-      sheetsTargets = entireTong.getMatrix();
-
-      sheetsId = await sheets.create_newSheets_inPython(designer.designer + " 보고서", parentId);
-      await sheets.update_defaultSheetName_inPython(sheetsId, sheetsName[0]);
-      await sheets.add_newSheet_inPython(sheetsId, [ sheetsName[1], sheetsName[2] ]);
-      await sheets.setting_cleanView_inPython(sheetsId);
-
-      for (let { sheets: sheetsName, matrix } of sheetsTargets) {
-        await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
-      }
+      // sheetsTargets = entireTong.getMatrix(allProjects, standards[0]);
+      //
+      // sheetsId = await sheets.create_newSheets_inPython(designer.designer + " 보고서", parentId);
+      // await sheets.update_defaultSheetName_inPython(sheetsId, sheetsName[0]);
+      // await sheets.add_newSheet_inPython(sheetsId, [ sheetsName[1], sheetsName[2] ]);
+      // await sheets.setting_cleanView_inPython(sheetsId);
+      //
+      // for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+      //   await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
+      // }
 
     }
 
-    */
 
+    console.log(entireTong);
 
 
 
