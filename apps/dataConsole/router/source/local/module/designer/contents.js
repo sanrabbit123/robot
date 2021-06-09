@@ -575,7 +575,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
               type: "keypress",
               event: function (e) {
                 if (e.key === "Enter") {
-                  if (/^[0-9]+시$/i.test(this.value.trim())) {
+                  if (/^[0-9]+시 [0-9][0-9]분$/i.test(this.value.trim())) {
                     this.setAttribute("value", this.value.trim());
                     updateEvent.call(this, e);
                   } else {
