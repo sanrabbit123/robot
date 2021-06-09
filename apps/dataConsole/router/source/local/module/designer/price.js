@@ -144,7 +144,7 @@ DesignerJs.prototype.priceBase = function () {
     mother: document.getElementById("totalcontents"),
     class: [ "totalMother" ],
     style: {
-      position: "relative",
+      position: "fixed",
       top: String(0),
       left: String(0),
       paddingTop: String(margin) + ea,

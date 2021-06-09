@@ -381,7 +381,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             thisCase["dateHour"].style.color = valueDom.style.color = colorChip.gray5;
           } else {
             tempArr = value.split('-');
-            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.replace(/[^0-9]/g, '')));
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
             if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
               thisCase["dateHour"].style.color = valueDom.style.color = colorChip.green;
             } else {
@@ -486,7 +486,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       });
       calendarTong.appendChild(calendar.calendarBase);
     });
-    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시`, dateToColor(date, true), "dateHour"));
+    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
@@ -523,7 +523,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             thisCase["date"].style.color = valueDom.style.color = colorChip.gray5;
           } else {
             tempArr = thisCase["date"].textContent.trim().split('-');
-            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.replace(/[^0-9]/g, '')));
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.split('시')[0].replace(/[^0-9]/g, '')), Number(value.split('시')[1].replace(/[^0-9]/g, '')));
             if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
               thisCase["date"].style.color = valueDom.style.color = colorChip.green;
             } else {

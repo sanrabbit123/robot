@@ -1526,6 +1526,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
     } else {
 
       if (instance.totalMother !== null && instance.totalMother !== undefined) {
+        instance.totalMother.classList.remove("justfadeinoriginal");
         instance.totalMother.classList.add("justfadeoutoriginal");
       }
 
@@ -3803,17 +3804,15 @@ DesignerJs.prototype.launching = async function () {
 
     } else {
 
-      this.backGrayBar();
-      await this.spreadData();
-      this.addTransFormEvent();
-      this.addSearchEvent();
-      this.addExtractEvent();
-      this.whiteResize();
-
       tempFunction = this.cardViewMaker(true);
-      tempFunction().catch(function (e) {
-        throw new Error(e);
-      });
+      await tempFunction();
+      await protoPatch(instance, `${modulePath}/checklist.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.checkListView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+      this.totalMother.classList.add("justfadeoutoriginal");
 
     }
 

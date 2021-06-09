@@ -3233,6 +3233,12 @@ DesignerJs.prototype.checkListView = async function () {
       searchInput = this.searchInput;
       searchInput.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            document.getElementById("totalcontents").removeChild(document.querySelector(".totalFather"));
+            instance.totalFather = null;
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+          }
           const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
           let target;
           if (value === "") {
