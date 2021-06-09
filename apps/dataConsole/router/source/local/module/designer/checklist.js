@@ -506,31 +506,28 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "string",
         },
         {
-          name: "출장 여부",
+          name: "한계 범위",
           value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.region.expenses ? 1 : 0,
-              designer.analytics.region.expenses ? 0 : 1,
-            ];
-            return { contents, value };
+            return String(designer.analytics.region.expenses) + "km";
           },
-          update: function (value, designer) {
-            const position = "analytics.region.expenses";
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
             let updateQuery;
+            let divText;
+            let tempArr, tempObj;
             updateQuery = {};
-            updateQuery[position] = (value[0] === 1);
-            return updateQuery;
+            divText = "";
+            text = Number(text.replace(/[^0-9]/gi, ''));
+            updateQuery["analytics.region.expenses"] = text;
+            divText = String(text) + "km";
+            if (Number.isNaN(text)) {
+              return errorObj;
+            } else {
+              return { updateQuery, text: divText };
+            }
           },
           height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
+          type: "string",
         },
         {
           name: "이동 수단",
@@ -685,6 +682,33 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           },
           update: function (value, designer) {
             const position = "analytics.project.online";
+            let updateQuery;
+            updateQuery = {};
+            updateQuery[position] = (value[0] === 1);
+            return updateQuery;
+          },
+          height: factorHeight,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+        },
+        {
+          name: "거주중",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "가능",
+              "불가능"
+            ];
+            value = [
+              designer.analytics.project.living ? 1 : 0,
+              designer.analytics.project.living ? 0 : 1,
+            ];
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            const position = "analytics.project.living";
             let updateQuery;
             updateQuery = {};
             updateQuery[position] = (value[0] === 1);
@@ -1977,40 +2001,39 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
   return checkListData;
 }
 
-DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = false, removeOnly = false) {
+DesignerJs.prototype.checkListDetailLaunching = function (desid) {
   const instance = this;
+  const { ea, belowHeight, firstTop, motherHeight } = this;
   const totalMother = document.querySelector(".totalMother");
-  const standardBar = totalMother.firstChild;
+  const standardBar = this.standardDoms[0].parentElement;
+  const { colorChip } = GeneralJs;
   let target;
 
-  this.desid = (removeOnly ? null : desid);
+  this.desid = desid;
 
-  if (this.checkListBaseTong !== undefined && this.checkListBaseTong !== null && this.checkListBaseList !== undefined && this.checkListBaseList !== null) {
+  if (this.checkListBaseTong !== undefined && this.checkListBaseTong !== null) {
     this.checkListBaseTong.parentNode.removeChild(this.checkListBaseTong);
     this.checkListBaseTong = null;
-    this.checkListBaseList.style.animation = "fadein 0.3s ease forwards";
-    standardBar.style.position = "relative";
     for (let i = 1; i < this.standardDoms.length; i++) {
-      this.standardDoms[i].style.display = "block";
+      this.standardDoms[i].style.color = colorChip.black;
     }
-    const mother = document.querySelector(".totalMother");
     if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
-      mother.removeChild(this.rInitialIcon);
+      this.rInitialIcon.parentElement.removeChild(this.rInitialIcon);
     }
     if (this.nextIcon !== undefined && this.nextIcon !== null) {
-      mother.removeChild(this.nextIcon);
+      this.nextIcon.parentElement.removeChild(this.nextIcon);
     }
     if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
-      mother.removeChild(this.mInitialIcon);
+      this.mInitialIcon.parentElement.removeChild(this.mInitialIcon);
     }
     if (this.previousIcon !== undefined && this.previousIcon !== null) {
-      mother.removeChild(this.previousIcon);
+      this.previousIcon.parentElement.removeChild(this.previousIcon);
     }
     if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
-      mother.removeChild(this.aInitialIcon);
+      this.aInitialIcon.parentElement.removeChild(this.aInitialIcon);
     }
     if (this.listIcon !== undefined && this.listIcon !== null) {
-      mother.removeChild(this.listIcon);
+      this.listIcon.parentElement.removeChild(this.listIcon);
     }
     this.listIcon = null;
     this.aInitialIcon = null;
@@ -2024,33 +2047,34 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, noAnimation = f
     }
   }
 
-  if (!removeOnly) {
-    target = null;
-    for (let i = 0; i < this.standardDoms.length; i++) {
-      if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
-        if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
-          target = i;
-        }
+  target = null;
+  for (let i = 0; i < this.standardDoms.length; i++) {
+    if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+      if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+        target = i;
       }
     }
-    for (let i = 1; i < this.standardDoms.length; i++) {
-      if (i !== target) {
-        this.standardDoms[i].style.display = "none";
-      } else {
-        this.standardDoms[i].style.display = "block";
-      }
-    }
-    standardBar.style.position = "fixed";
-    if (/fade/gi.test(this.checkListBaseList.style.animation)) {
-      this.checkListBaseList.style.animation = "fadeout 0.3s ease forwards";
-    }
-    totalMother.scrollTo({ top: 0, behavior: "smooth" });
-    this.checkListDetail(desid, noAnimation);
-    this.checkListIconSet(desid, noAnimation);
   }
+  for (let i = 1; i < this.standardDoms.length; i++) {
+    if (i !== target) {
+      this.standardDoms[i].style.color = this.standardDoms[i].getAttribute("color");
+    } else {
+      this.standardDoms[i].style.color = colorChip.green;
+      if (i !== 1) {
+        if (this.standardDoms[i].getBoundingClientRect().top > window.innerHeight - belowHeight - motherHeight - this.standardDoms[i].getBoundingClientRect().height + 10 || this.standardDoms[i].getBoundingClientRect().top < firstTop) {
+          standardBar.parentElement.scrollTo({ top: ((i - 1) * (this.standardDoms[i].getBoundingClientRect().height)) });
+        }
+      } else {
+        standardBar.parentElement.scrollTo({ top: 0 });
+      }
+    }
+  }
+  totalMother.scrollTo({ top: 0, behavior: "smooth" });
+  this.checkListDetail(desid);
+  this.checkListIconSet(desid);
 }
 
-DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
+DesignerJs.prototype.checkListDetail = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -2111,7 +2135,7 @@ DesignerJs.prototype.checkListDetail = function (desid, noAnimation = false) {
       left: String(grayBarWidth + (margin * 3)) + ea,
       width: withOut(grayBarWidth + (margin * 6), ea),
       height: "auto",
-      animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
+      animation: "",
     }
   });
   baseTong = createNode({
@@ -2793,15 +2817,15 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
   }
 }
 
-DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
+DesignerJs.prototype.checkListIconSet = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const mother = document.querySelector(".totalMother");
   const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
-  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, motherHeight } = this;
   const designer = this.designers.pick(desid);
+  let mother;
   let radius;
   let left, bottom;
   let margin;
@@ -2817,18 +2841,30 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   color = colorChip.gradientGreen;
   iconTop = 12.5;
 
+  mother = createNode({
+    mother: document.querySelector(".totalMother"),
+    style: {
+      position: "fixed",
+      height: String(motherHeight) + ea,
+      width: String(grayBarWidth) + ea,
+      left: String(0),
+      bottom: String(belowHeight) + ea,
+      background: colorChip.gray0,
+      zIndex: String(2),
+    }
+  });
+
   nodeArr = createNodes([
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom) + ea,
+        bottom: String(bottom) + ea,
         left: String(left) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2846,14 +2882,13 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        bottom: String(bottom + (radius * 2) + margin) + ea,
         left: String(left) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2871,14 +2906,13 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom) + ea,
+        bottom: String(bottom) + ea,
         left: String(left + (radius * 2) + margin) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2896,14 +2930,13 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        bottom: String(bottom + (radius * 2) + margin) + ea,
         left: String(left + (radius * 2) + margin) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2921,14 +2954,13 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom) + ea,
+        bottom: String(bottom) + ea,
         left: String(left + (radius * 2) + margin + (radius * 2) + margin) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2946,14 +2978,13 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
     {
       mother,
       style: {
-        position: "fixed",
+        position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
-        bottom: String(belowHeight + bottom + (radius * 2) + margin) + ea,
+        bottom: String(bottom + (radius * 2) + margin) + ea,
         left: String(left + (radius * 2) + margin + (radius * 2) + margin) + ea,
         background: color,
         borderRadius: String(radius * 2) + ea,
-        animation: noAnimation ? "" : "fadeup 0.3s ease forwards",
         cursor: "pointer",
       }
     },
@@ -2984,16 +3015,18 @@ DesignerJs.prototype.checkListIconSet = function (desid, noAnimation = false) {
   this.nextIcon = nextIcon;
   this.rInitialIcon = rInitialIcon;
 
-  listIcon.addEventListener("click", (e) => { instance.checkListDetailLaunching(desid, false, true); });
+  listIcon.addEventListener("click", function (e) {
+    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
+  });
 
   previousIcon.addEventListener("click", function (e) {
     const { desid: previousDesid } = instance.designers.previous(desid);
-    instance.checkListDetailLaunching(previousDesid, true);
+    instance.checkListDetailLaunching(previousDesid);
   });
 
   nextIcon.addEventListener("click", function (e) {
     const { desid: nextDesid } = instance.designers.next(desid);
-    instance.checkListDetailLaunching(nextDesid, true);
+    instance.checkListDetailLaunching(nextDesid);
   });
 
   rInitialIcon.addEventListener("click", function (e) {
@@ -3160,13 +3193,18 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
   }
 }
 
-DesignerJs.prototype.checkListView = async function (invisible = false) {
+DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
-    const { createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
-    const { totalMother, ea, grayBarWidth } = this;
+    this.backGrayBar();
+    await this.spreadData(null, true);
+
+    const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
+    const { totalMother, ea, grayBarWidth, belowHeight } = this;
+    const standardBar = totalMother.firstChild;
     const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
     const length = designers.length;
+    const getObj = returnGet();
     let boxTong;
     let nodeArr;
     let tempObj;
@@ -3176,117 +3214,17 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
     let boxNumber;
     let status;
     let searchInput;
+    let standardBar_mother;
+    let style;
+    let childrenLength, children;
+    let motherHeight;
 
     this.designers = new Designers(designers);
-    this.desid = null;
+    this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
 
     minWidth = 210;
     margin = 8;
-
-    boxNumber = Math.floor((window.innerWidth - grayBarWidth) / (minWidth + margin));
-    width = (window.innerWidth - grayBarWidth - ((boxNumber + 1 + 4) * margin)) / boxNumber;
-
-    boxTong = createNode({
-      mother: totalMother,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(grayBarWidth) + ea,
-        paddingLeft: String(margin * 3) + ea,
-        paddingTop: String(margin * 3) + ea,
-        paddingBottom: String(margin * 3) + ea,
-        width: withOut(grayBarWidth + (margin * 3), ea),
-        height: "auto",
-        animation: !invisible ? "fadeup 0.3s ease forwards" : "invisible 0.3s ease forwards",
-      }
-    });
-
-    this.checkListBaseList = boxTong;
-
-    nodeArr = [];
-    for (let i = 0; i < length; i++) {
-
-      status = /완료/g.test(designers[i].information.contract.status);
-
-      tempObj = {
-        mother: boxTong,
-        class: [ "hoverDefault" ],
-        attribute: [
-          { desid: designers[i].desid }
-        ],
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              const desid = this.getAttribute("desid");
-              instance.checkListDetailLaunching(desid, false);
-            }
-          }
-        ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(width) + ea,
-          height: String(width) + ea,
-          marginRight: String(margin) + ea,
-          marginBottom: String(margin) + ea,
-          borderRadius: String(5) + "px",
-          background: status ? colorChip.gray1 : colorChip.gray3,
-        }
-      };
-      nodeArr.push(tempObj);
-
-      for (let j = 0; j < 9; j++) {
-        tempObj = {
-          mother: -1 * (j + 1),
-          style: {
-            position: "absolute",
-            top: String(1 + (32 * Math.floor(j / 3)) + (1 * Math.floor(j / 3))) + '%',
-            left: String(1 + (32 * (j % 3)) + (1 * (j % 3))) + '%',
-            width: String(32) + '%',
-            height: String(32) + '%',
-            borderRadius: String(3) + "px",
-            background: status ? colorChip.gray0 : colorChip.gray3,
-            opacity: String(0.2 + Math.random())
-          }
-        };
-        nodeArr.push(tempObj);
-      }
-
-      tempObj = {
-        mother: -10,
-        text: `checkList&nbsp;<b style="font-style:normal;font-family:'graphik';font-weight:100;color:${status ? colorChip.black : colorChip.deactive}">${designers[i].information.did}</b>`,
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          top: "calc(50% + " + String(8) + ea + ")",
-          fontSize: String(16) + ea,
-          textAlign: "center",
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          fontStyle: "italic",
-          color: status ? colorChip.black : colorChip.deactive,
-        }
-      };
-      nodeArr.push(tempObj);
-      tempObj = {
-        mother: -1,
-        text: designers[i].designer,
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          top: String(GeneralJs.isMac() ? -43 : -40) + ea,
-          fontSize: String(32) + ea,
-          textAlign: "center",
-          fontWeight: String(500),
-          fontStyle: "normal",
-          color: status ? colorChip.black : colorChip.deactive,
-        }
-      };
-      nodeArr.push(tempObj);
-    }
-
-    createNodes(nodeArr);
+    motherHeight = 154;
 
     //search event
     if (this.searchInput !== undefined && this.searchInput !== null) {
@@ -3296,7 +3234,7 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
           const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
           let target;
           if (value === "") {
-            instance.checkListDetailLaunching("", false, true);
+            instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
           } else {
             target = null;
             for (let { designer, desid } of instance.designers) {
@@ -3313,17 +3251,43 @@ DesignerJs.prototype.checkListView = async function (invisible = false) {
     }
 
     //standard doms event
+    standardBar_mother = standardBar.cloneNode(false);
+    style = {
+      position: "fixed",
+      height: withOut(100, belowHeight + motherHeight, ea),
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      standardBar_mother.style[i] = style[i];
+    }
+    totalMother.insertBefore(standardBar_mother, standardBar);
+    standardBar_mother.appendChild(standardBar);
     for (let i = 1; i < this.standardDoms.length; i++) {
+      this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
+      this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
+      this.standardDoms[i].style.transition = "all 0s ease";
       this.standardDoms[i].addEventListener("click", (e) => {
         instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
       });
+      this.standardDoms[i].addEventListener("contextmenu", this.makeClipBoardEvent(this.standardDoms[i].getAttribute("desid")));
+      children = this.standardDoms[i].children;
+      childrenLength = children.length;
+      for (let j = 0; j < childrenLength; j++) {
+        children[j].style.color = "inherit";
+        children[j].style.transition = "all 0s ease";
+      }
     }
+    this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
+    this.motherHeight = motherHeight;
 
     //sse
     const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
     es.addEventListener("updateTong", (e) => {
       instance.checkListSseParsing(equalJson(e.data));
     });
+
+    //launching
+    this.checkListDetailLaunching(this.desid);
 
   } catch (e) {
     console.log(e);

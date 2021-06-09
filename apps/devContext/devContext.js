@@ -59,7 +59,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // /*
+    /*
 
     const selfMongo = this.MONGOLOCALC;
     const consoleInfo = "https://" + this.address.backinfo.host;
@@ -67,7 +67,7 @@ DevContext.prototype.launching = async function () {
     const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
     const emptyDate = new Date(1800, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const allDesigners = await back.getDesignersByQuery({ designer: "우다미" }, { selfMongo });
+    const allDesigners = await back.getDesignersByQuery({}, { selfMongo });
     const allProjects = await back.getProjectsByQuery({}, { selfMongo });
     const reverseMatrix = function (matrix) {
       if (!Array.isArray(matrix)) {
@@ -593,9 +593,7 @@ DevContext.prototype.launching = async function () {
 
     }
 
-    // */
-
-
+    */
 
 
 

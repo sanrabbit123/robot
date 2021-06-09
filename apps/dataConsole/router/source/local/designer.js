@@ -3693,8 +3693,8 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
-    if (getObj.desid !== undefined && getObj.mode === undefined) {
-      getObj.mode = "general";
+    if (getObj.mode === undefined) {
+      getObj.mode = "checklist";
     }
 
     getTarget = null;
@@ -3774,17 +3774,9 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "checklist") {
 
-      this.backGrayBar();
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
-      if (getObj.desid !== undefined) {
-        await this.spreadData(null, true, getObj.desid);
-        await this.checkListView(true);
-        this.checkListDetailLaunching(getObj.desid);
-      } else {
-        await this.spreadData(null, true);
-        await this.checkListView();
-      }
+      await this.checkListView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
