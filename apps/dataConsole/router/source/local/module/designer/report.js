@@ -14,8 +14,8 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
-    if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
-      this.rInitialIcon.parentElement.removeChild(this.rInitialIcon);
+    if (this.cInitialIcon !== undefined && this.cInitialIcon !== null) {
+      this.cInitialIcon.parentElement.removeChild(this.cInitialIcon);
     }
     if (this.nextIcon !== undefined && this.nextIcon !== null) {
       this.nextIcon.parentElement.removeChild(this.nextIcon);
@@ -37,7 +37,7 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
     this.previousIcon = null;
     this.mInitialIcon = null;
     this.nextIcon = null;
-    this.rInitialIcon = null;
+    this.cInitialIcon = null;
 
     if (document.getElementById("memoTong") !== null) {
       totalMother.removeChild(document.getElementById("memoTong"));
@@ -865,7 +865,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   let color;
   let iconTop;
   let nodeArr;
-  let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
+  let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, cInitialIcon;
 
   radius = 20;
   left = 40;
@@ -1024,12 +1024,12 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnRinitial(colorChip.white),
+      source: this.mother.returnCinitialGeneral(colorChip.white),
       style: {
         position: "absolute",
-        width: String(14) + ea,
-        left: String(13.5) + ea,
-        top: String(10.5) + ea,
+        width: String(17.5) + ea,
+        left: String(11) + ea,
+        top: String(10) + ea,
       }
     },
   ]);
@@ -1039,14 +1039,14 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   previousIcon = nodeArr[4];
   mInitialIcon = nodeArr[6];
   nextIcon = nodeArr[8];
-  rInitialIcon = nodeArr[10];
+  cInitialIcon = nodeArr[10];
 
   this.listIcon = listIcon;
   this.aInitialIcon = aInitialIcon;
   this.previousIcon = previousIcon;
   this.mInitialIcon = mInitialIcon;
   this.nextIcon = nextIcon;
-  this.rInitialIcon = rInitialIcon;
+  this.cInitialIcon = cInitialIcon;
 
   listIcon.addEventListener("click", function (e) {
     blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
@@ -1062,8 +1062,8 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     instance.reportDetailLaunching(nextDesid);
   });
 
-  rInitialIcon.addEventListener("click", function (e) {
-    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid);
+  cInitialIcon.addEventListener("click", function (e) {
+    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=checklist&desid=" + desid;
   });
 
   mInitialIcon.addEventListener("click", async function (e) {

@@ -3032,7 +3032,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   });
 
   rInitialIcon.addEventListener("click", function (e) {
-    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid);
+    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=report&desid=" + desid;
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
