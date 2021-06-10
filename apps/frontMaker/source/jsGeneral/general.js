@@ -370,10 +370,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     events: [
       { type: "click", event: new Function() }
     ],
-    style: {}
+    style: {},
+    children: [
+      ...nodeObject
+    ]
   }
   */
-  let dom_clone, targetStyle, ea, ratio, temp, boldObject;
+  let dom_clone, targetStyle, ea, ratio, temp, boldObject, children;
+  children = [];
   if (mode === undefined && source === undefined && style === undefined) {
     throw new Error("arguments must be mode(dom node name), style");
     return null;
@@ -428,6 +432,12 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       mother = style.mother;
     }
     delete style.mother;
+  }
+  if (style.children !== undefined) {
+    if (Array.isArray(style.children)) {
+      children = style.children;
+    }
+    delete style.children;
   }
   if (!/svg/gi.test(mode)) {
     if (GeneralJs.nodes[mode] === undefined || typeof style !== "object") {
@@ -523,6 +533,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       }
       if (mother !== null && mother.appendChild.constructor === Function) {
         mother.appendChild(dom_clone);
+      }
+      if (Array.isArray(children)) {
+        if (children.length > 0) {
+          for (let childObject of children) {
+            childObject.mother = dom_clone;
+            GeneralJs.createNode(childObject);
+          }
+        }
       }
       return dom_clone;
     }
