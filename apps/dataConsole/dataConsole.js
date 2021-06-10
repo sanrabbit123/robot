@@ -68,17 +68,17 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
     }
 
-    await sleep(300);
-
     for (let i of staticDirList) {
       tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
       tempScriptString = tempScriptString.replace(/^const ([A-Z][^ \=]+) = function \(/, (match, p1, offset, string) => {
         return p1 + ".prototype.constructor = function (";
       });
       tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
-      if (await fileSystem(`exist`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}` ])) {
-        await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
+      while (!(await fileSystem(`exist`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}` ]))) {
+        console.log("waiting....");
+        await sleep(500);
       }
+      await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
     }
 
     console.log(`set static`);
