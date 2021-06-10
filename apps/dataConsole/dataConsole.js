@@ -61,17 +61,24 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     shell.exec(`cp -r ${shellLink(staticDir + "/" + moduleName)} ${shellLink(staticFolder)}`);
 
     const staticModuleFolderList = await fileSystem(`readDir`, [ staticFolder + "/" + moduleName ]);
+
     for (let i of staticDirList) {
       if (!staticModuleFolderList.includes(i.replace(/\.js/gi, ''))) {
         shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}/${shellLink(i.replace(/\.js/gi, ''))}`);
       }
+    }
+
+    await sleep(300);
+
+    for (let i of staticDirList) {
       tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
       tempScriptString = tempScriptString.replace(/^const ([A-Z][^ \=]+) = function \(/, (match, p1, offset, string) => {
         return p1 + ".prototype.constructor = function (";
       });
       tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
-      await sleep(500);
-      await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
+      if (await fileSystem(`exist`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}` ])) {
+        await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
+      }
     }
 
     console.log(`set static`);
