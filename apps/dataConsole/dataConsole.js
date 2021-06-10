@@ -10,7 +10,7 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, sleep } = this.mother;
   // const S3HOST = this.address.s3info.host;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = address.host;
@@ -70,6 +70,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         return p1 + ".prototype.constructor = function (";
       });
       tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
+      await sleep(500);
       await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
     }
 
