@@ -316,9 +316,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         if (Number.isNaN(Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, '')))) {
-          requestObj["requests.0.request.space.pyeong"] = 0;
+          requestObj["requests.0.request.space.pyeong"] = 34;
         } else {
-          requestObj["requests.0.request.space.pyeong"] = Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, ''));
+          if (Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, '')) === 0) {
+            requestObj["requests.0.request.space.pyeong"] = 34;
+          } else {
+            requestObj["requests.0.request.space.pyeong"] = Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, ''));
+          }
         }
 
         if (filterAll(filterDate(resultObj["movingdate"])) === "거주중") {

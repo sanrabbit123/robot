@@ -60,7 +60,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    /*
 
     const selfMongo = this.MONGOLOCALC;
     const consoleInfo = "https://" + this.address.backinfo.host;
@@ -605,7 +605,7 @@ DevContext.prototype.launching = async function () {
 
     console.log(entireTong);
 
-
+    */
 
 
 

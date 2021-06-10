@@ -2102,14 +2102,17 @@ DesignerJs.prototype.reportDetail = function (desid) {
   let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
   let textAreaTop;
   let baseTongMarginBottom;
+  let factorMarginTop, factorMarginBottom;
+  let left;
+  let columnVisual;
 
   designer = this.designers.pick(desid);
   information = designer.information;
   analytics = designer.analytics;
 
   margin = 8;
-  level1Width = 210;
-  level1Left = 160;
+  level1Width = 160;
+  level1Left = 120;
   topMargin = isMac() ? 30 : 34;
   leftMargin = 34;
   bottomMargin = isMac() ? 15 : 13;
@@ -2119,11 +2122,15 @@ DesignerJs.prototype.reportDetail = function (desid) {
   tendencyHeight = 16;
   alphabetWidth = 30;
 
-  factorHeight = 38;
+  factorHeight = 34;
   factorWidth = 210;
   tendencyFactorHeight = 30;
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
+
+  factorMarginTop = 22;
+  factorMarginBottom = factorHeight - (size - 2 + 9);
+  columnVisual = 5;
 
   textAreaTop = isMac() ? -3 : -4;
 
@@ -2167,32 +2174,39 @@ DesignerJs.prototype.reportDetail = function (desid) {
     { name: "계약", children: [] },
     { name: "가격", children: [] },
   ];
-  let left;
 
-  for (let { name, matrix, width, values } of proposal) {
+  reportData[0].children.push({
+    name: "",
+    matrix: [ proposal.columns ],
+    width: proposal.width,
+    height: factorHeight + factorMarginBottom - columnVisual,
+  });
+
+  reportData[1].children.push({
+    name: "",
+    matrix: [ contract.columns ],
+    width: contract.width,
+    height: factorHeight + factorMarginBottom - columnVisual,
+  });
+
+  for (let { name, matrix, values } of proposal) {
     reportData[0].children.push({
       name,
       matrix,
-      width,
-      height: (values.length <= 3) ? (factorHeight * values.length) : (factorHeight * 3.5),
+      width: proposal.width,
+      height: (values.length >= 3) ? ((factorHeight * 3) + factorMarginBottom) : (values.length > 0 ? ((factorHeight * values.length) + factorMarginBottom) : (factorHeight + factorMarginBottom)),
     });
   }
-  for (let { name, matrix, width, values } of contract) {
+  for (let { name, matrix, values } of contract) {
     reportData[1].children.push({
       name,
       matrix,
-      width,
-      height: (values.length <= 3) ? (factorHeight * values.length) : (factorHeight * 3.5),
+      width: contract.width,
+      height: (values.length >= 3) ? ((factorHeight * 3) + factorMarginBottom) : (values.length > 0 ? ((factorHeight * values.length) + factorMarginBottom) : (factorHeight + factorMarginBottom)),
     });
   }
 
   console.log(proposal);
-  console.log(contract);
-
-
-
-
-
 
   // ================================================================================
   // DEV ============================================================================
@@ -2253,13 +2267,15 @@ DesignerJs.prototype.reportDetail = function (desid) {
         mother: eachNameTong,
         text: reportData[i].children[j].name,
         style: {
-          display: "inline-block",
+          display: "block",
           position: "relative",
-          fontSize: String(size) + ea,
-          fontWeight: String(200),
+          fontSize: String(size - 2) + ea,
+          fontWeight: String(600),
           color: colorChip.green,
           height: String(reportData[i].children[j].height) + ea,
-          width: withOut(alphabetWidth, ea),
+          width: String(100) + '%',
+          marginBottom: String(factorMarginTop) + ea,
+          borderBottom: "1px solid " + colorChip.gray4,
         }
       };
       tempArr.push(tempObj);
@@ -2276,7 +2292,9 @@ DesignerJs.prototype.reportDetail = function (desid) {
           position: "relative",
           height: String(reportData[i].children[j].height) + ea,
           width: String(100) + '%',
-          overflow: "scroll"
+          overflow: "hidden",
+          marginBottom: String(factorMarginTop) + ea,
+          borderBottom: "1px solid " + colorChip.gray4
         }
       };
       tempArr.push(tempObj);
@@ -2291,12 +2309,11 @@ DesignerJs.prototype.reportDetail = function (desid) {
             { z: String(h) },
           ],
           style: {
-            display: "block",
+            display: (h < 3) ? "block" : "none",
             position: "relative",
             height: String(factorHeight) + ea,
             width: String(100) + '%',
             left: String(0) + ea,
-            marginBottom: String(5) + ea,
             overflow: "hidden"
           }
         };
@@ -2309,12 +2326,13 @@ DesignerJs.prototype.reportDetail = function (desid) {
             style: {
               position: "absolute",
               fontSize: String(size - 2) + ea,
-              fontWeight: String(400),
+              fontWeight: String(j === 0 ? 600 : 400),
               color: colorChip.black,
               height: String(100) + '%',
               width: String(reportData[i].children[j].width[k]) + ea,
               top: String(0) + ea,
               left: String(left) + ea,
+              textAlign: "center",
             }
           };
           tempArr.push(tempObj);
@@ -3187,6 +3205,14 @@ DesignerJs.prototype.reportDataRendering = async function () {
         const timeHalfConst = "반기";
         const timeHalfArr = [ "상", "하" ];
         const timeHalfToken = [ 30000, 60000 ];
+        class TimeArray extends Array {
+          setWidth(width) {
+            this.width = width;
+          }
+          setColumns(columns) {
+            this.columns = columns;
+          }
+        }
         let proposalFirst, contactFirst;
         let timeValue0, timeValue1;
         let timeCaseBoo;
@@ -3219,7 +3245,8 @@ DesignerJs.prototype.reportDataRendering = async function () {
           timeCaseBoo = (0 <= timeValue0 - timeValue1 && timeValue0 - timeValue1 < 10000);
           timeLength = timeCaseBoo ? (((timeValue0 - timeValue1) * 2) + 1) : ((Math.abs(timeHalfToken[0] - Math.abs(timeValue0 - timeValue1)) * 2) + (timeValue0 >= timeHalfToken[1] ? 2 : 0));
           timeHalfFirst = timeValue0 >= timeHalfToken[1] ? 1 : 0;
-          timeArr = [];
+
+          timeArr = new TimeArray();
           for (let i = 0; i < timeLength; i++) {
             thisYear = today.getFullYear() - Math.ceil(i / 2);
             thisHalf = i % 2 === 0 ? timeHalfFirst : 1 - timeHalfFirst;
@@ -3259,24 +3286,41 @@ DesignerJs.prototype.reportDataRendering = async function () {
 
         totalOrder = 1;
         yearOrders = {};
+        resultObj.proposal.setWidth([
+          55,
+          55,
+          55,
+          72,
+          140,
+          120,
+          120,
+          72,
+          120,
+          80,
+          55,
+          55,
+          110,
+        ]);
+        resultObj.proposal.setColumns([
+          'E',
+          'Y',
+          'H',
+          "고객",
+          "서비스",
+          "제안 날짜",
+          "제안 금액",
+          "평수",
+          "평단가",
+          "방식",
+          "부분",
+          "계약",
+          "ID",
+        ]);
         for (let i = 0; i < resultObj.proposal.length; i++) {
           order = resultObj.proposal[i].values.length;
           if (yearOrders['y' + String(resultObj.proposal[i].year)] === undefined) {
             yearOrders['y' + String(resultObj.proposal[i].year)] = 1;
           }
-          resultObj.proposal[i].width = [
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-          ];
           for (let obj of resultObj.proposal[i].values) {
             tempArr = [];
             tempArr.push(order);
@@ -3286,6 +3330,12 @@ DesignerJs.prototype.reportDataRendering = async function () {
             tempArr.push(obj.service.name);
             tempArr.push(dateToString(obj.date));
             tempArr.push(autoComma(obj.detail.amount) + '원');
+            tempArr.push(String(obj.client.pyeong) + '평');
+            if (obj.client.pyeong === 0) {
+              alert("평수 에러 : " + obj.client.name + " 고객님의 평수가 0평으로 되어있습니다! 바르게 고쳐주세요!");
+              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + obj.client.cliid;
+            }
+            tempArr.push(autoComma(Math.round((obj.detail.amount / obj.client.pyeong) / 1000) * 1000) + '원');
             tempArr.push(/off/g.test(obj.detail.method) ? "오프라인" : "온라인");
             tempArr.push(obj.detail.partial ? 'O' : 'X');
             boo = false;
@@ -3323,29 +3373,49 @@ DesignerJs.prototype.reportDataRendering = async function () {
 
         totalOrder = 1;
         yearOrders = {};
+        resultObj.contract.setWidth([
+          55,
+          55,
+          55,
+          72,
+          140,
+          110,
+          110,
+          80,
+          55,
+          120,
+          70,
+          120,
+          72,
+          120,
+          120,
+          120,
+          110,
+        ]);
+        resultObj.contract.setColumns([
+          'E',
+          'Y',
+          'H',
+          "고객",
+          "서비스",
+          "시작일",
+          "종료일",
+          "방식",
+          "부분",
+          "정산 금액",
+          "수수료",
+          "제안 금액",
+          "평수",
+          "평단가",
+          "선금 정산일",
+          "잔금 정산일",
+          "ID",
+        ]);
         for (let i = 0; i < resultObj.contract.length; i++) {
           order = resultObj.contract[i].values.length;
           if (yearOrders['y' + String(resultObj.contract[i].year)] === undefined) {
             yearOrders['y' + String(resultObj.contract[i].year)] = 1;
           }
-          resultObj.contract[i].width = [
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-          ];
-
           for (let obj of resultObj.contract[i].values) {
 
             tempProposal = null;
@@ -3380,8 +3450,14 @@ DesignerJs.prototype.reportDataRendering = async function () {
             tempArr.push(/off/g.test(tempProposal.detail.method) ? "오프라인" : "온라인");
             tempArr.push(tempProposal.detail.partial ? 'O' : 'X');
             tempArr.push(autoComma(obj.payments.amount) + '원');
-            tempArr.push(autoComma(tempProposal.detail.amount) + '원');
             tempArr.push(String(obj.payments.percentage) + '%');
+            tempArr.push(autoComma(tempProposal.detail.amount) + '원');
+            tempArr.push(String(obj.client.pyeong) + '평');
+            if (obj.client.pyeong === 0) {
+              alert("평수 에러 : " + obj.client.name + " 고객님의 평수가 0평으로 되어있습니다! 바르게 고쳐주세요!");
+              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + obj.client.cliid;
+            }
+            tempArr.push(autoComma(Math.round((tempProposal.detail.amount / obj.client.pyeong) / 1000) * 1000) + '원');
             tempArr.push(dateToString(obj.payments.first));
             tempArr.push(dateToString(obj.payments.remain));
             tempArr.push(obj.project.proid);
@@ -3435,6 +3511,8 @@ DesignerJs.prototype.reportDataRendering = async function () {
     let targetServicePremium;
     let serviceTong;
     let tong;
+    let requests;
+    let boo;
 
     allDesigners = this.designers;
 
@@ -3472,6 +3550,17 @@ DesignerJs.prototype.reportDataRendering = async function () {
       for (let client of clients) {
         if (project.cliid === client.cliid) {
           project.name = client.name;
+          requests = client.requests;
+          boo = false;
+          for (let { request } of requests) {
+            if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+              boo = true;
+              project.pyeong = request.space.pyeong;
+            }
+          }
+          if (!boo) {
+            project.pyeong = requests[0].request.space.pyeong;
+          }
         }
       }
     }
@@ -3526,6 +3615,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
               client: {
                 name: project.name,
                 cliid: project.cliid,
+                pyeong: project.pyeong
               },
               detail: {
                 amount: obj.fee[0].amount,
@@ -3551,6 +3641,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
           client: {
             name: project.name,
             cliid: project.cliid,
+            pyeong: project.pyeong
           },
           service: {
             name: serviceName,
