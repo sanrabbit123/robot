@@ -135,7 +135,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
   factorMarginBottom = factorHeight - (size - 2 + 9);
   columnVisual = 5;
 
-  sumStartLeft = 15;
+  sumStartLeft = 12;
   overWidth = 40;
   overRadius = 6;
 
@@ -1262,16 +1262,16 @@ DesignerJs.prototype.reportDataRendering = async function () {
         ];
         const proposalConst = {
           width: [
-            55,
-            55,
-            55,
+            50,
+            50,
+            50,
             72,
-            160,
+            60,
             120,
             120,
-            72,
+            64,
             110,
-            80,
+            72,
             60,
             60,
           ],
@@ -1292,22 +1292,22 @@ DesignerJs.prototype.reportDataRendering = async function () {
         };
         const contractConst = {
           width: [
-            55,
-            55,
-            55,
+            50,
+            50,
+            50,
             72,
-            156,
+            60,
             110,
             110,
-            80,
-            55,
+            72,
+            50,
             120,
             70,
             120,
-            72,
+            64,
             110,
-            115,
-            115,
+            110,
+            110,
           ],
           columns: [
             'E',
@@ -1330,7 +1330,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
         };
         const priceConst = {
           width: [
-            55,
+            50,
             150,
             130,
             130,
@@ -1356,9 +1356,9 @@ DesignerJs.prototype.reportDataRendering = async function () {
         };
         const contentsConst = {
           width: [
-            55,
-            55,
-            55,
+            50,
+            50,
+            50,
             72,
             72,
             72,
@@ -1514,7 +1514,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
                 window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + obj.client.cliid;
               }
               tempArr.push(autoComma(Math.round((obj.detail.amount / obj.client.pyeong) / 1000) * 1000) + '원');
-              tempArr.push(/off/g.test(obj.detail.method) ? "오프라인" : "온라인");
+              tempArr.push(obj.detail.method);
               tempArr.push(obj.detail.partial ? 'O' : 'X');
               boo = false;
               for (let obj2 of this.contract) {
@@ -1756,7 +1756,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
               tempArr.push(obj.service.name);
               tempArr.push(dateToString(obj.project.start));
               tempArr.push(dateToString(obj.project.end));
-              tempArr.push(/off/g.test(tempProposal.detail.method) ? "오프라인" : "온라인");
+              tempArr.push(tempProposal.detail.method);
               tempArr.push(tempProposal.detail.partial ? 'O' : 'X');
               tempArr.push(autoComma(obj.payments.amount) + '원');
               tempArr.push(String(obj.payments.percentage) + '%');
@@ -1767,8 +1767,8 @@ DesignerJs.prototype.reportDataRendering = async function () {
                 window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + obj.client.cliid;
               }
               tempArr.push(autoComma(Math.round((tempProposal.detail.amount / obj.client.pyeong) / 1000) * 1000) + '원');
-              tempArr.push(dateToString(obj.payments.first));
-              tempArr.push(dateToString(obj.payments.remain));
+              tempArr.push(/없음/gi.test(dateToString(obj.payments.first)) ? "예정" : dateToString(obj.payments.first));
+              tempArr.push(/없음/gi.test(dateToString(obj.payments.remain)) ? "예정" : dateToString(obj.payments.remain));
               resultObj.contract[i].matrix.push(tempArr);
               order = order - 1;
               totalOrder = totalOrder + 1;
@@ -2180,13 +2180,12 @@ DesignerJs.prototype.reportDataRendering = async function () {
         for (let obj of project.proposal.detail) {
           if (desid === obj.desid) {
             serviceName = "";
-            for (let { serid, name } of service) {
+            for (let { serid, name, id } of service) {
               if (serid === project.service.serid) {
-                serviceName += name;
+                serviceName += id;
               }
             }
-            serviceName += " ";
-            serviceName += xValueMap[project.service.xValue];
+            serviceName += project.service.xValue;
             proposals.push({
               proid: project.proid,
               date: project.proposal.date,
@@ -2213,13 +2212,12 @@ DesignerJs.prototype.reportDataRendering = async function () {
       contract = [];
       for (let project of projects) {
         serviceName = "";
-        for (let { serid, name } of service) {
+        for (let { serid, name, id } of service) {
           if (serid === project.service.serid) {
-            serviceName += name;
+            serviceName += id;
           }
         }
-        serviceName += " ";
-        serviceName += xValueMap[project.service.xValue];
+        serviceName += project.service.xValue;
         contract.push({
           client: {
             name: project.name,
