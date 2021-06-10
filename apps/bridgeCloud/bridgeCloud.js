@@ -298,6 +298,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let tempArr;
         let message;
         let thisClientArr, thisClient;
+        let defaultPyeong;
+
+        defaultPyeong = 34;
 
         requestObj = {};
 
@@ -316,10 +319,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         if (Number.isNaN(Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, '')))) {
-          requestObj["requests.0.request.space.pyeong"] = 34;
+          requestObj["requests.0.request.space.pyeong"] = defaultPyeong;
         } else {
           if (Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, '')) === 0) {
-            requestObj["requests.0.request.space.pyeong"] = 34;
+            requestObj["requests.0.request.space.pyeong"] = defaultPyeong;
           } else {
             requestObj["requests.0.request.space.pyeong"] = Number(filterAll(resultObj["area"]).replace(/[^0-9\.]/g, ''));
           }
