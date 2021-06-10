@@ -132,7 +132,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
   tendencyWidthIndent = -135;
 
   factorMarginTop = 22;
-  factorMarginBottom = factorHeight - (size - 2 + (isMac() ? 9 : 8));
+  factorMarginBottom = factorHeight - (size - 2 + (isMac() ? 9 : 7));
   columnVisual = 5;
 
   sumStartLeft = 12;
