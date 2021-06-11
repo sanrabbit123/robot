@@ -268,4 +268,68 @@ GoogleSheet.prototype.update_value_inPython = async function (id, sheetName, val
   }
 }
 
+GoogleSheet.prototype.update_values = async function (id, sheetsTargets, startPoint) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    if (typeof id === "string") {
+      throw new Error("invaild id");
+    }
+    if (!Array.isArray(sheetsTargets)) {
+      throw new Error("multiple value must be [ { sheets, matrix }... ]");
+    }
+    for (let i = 0; i < sheetsTargets.length; i++) {
+      if (typeof sheetsTargets[i] !== "object") {
+        throw new Error("multiple value must be [ { sheets, matrix }... ]");
+      }
+      if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
+        throw new Error("multiple value must be [ { sheets, matrix }... ]");
+      }
+    }
+    if (sheetsTargets.length > 0) {
+      id = this.general.parsingId(id);
+      for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+        await this.update_value(id, sheetsName, matrix, [ 0, 0 ]);
+      }
+      return "success";
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleSheet.prototype.update_values_inPython = async function (id, sheetsTargets, startPoint) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    if (typeof id === "string") {
+      throw new Error("invaild id");
+    }
+    if (!Array.isArray(sheetsTargets)) {
+      throw new Error("multiple value must be [ { sheets, matrix }... ]");
+    }
+    for (let i = 0; i < sheetsTargets.length; i++) {
+      if (typeof sheetsTargets[i] !== "object") {
+        throw new Error("multiple value must be [ { sheets, matrix }... ]");
+      }
+      if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
+        throw new Error("multiple value must be [ { sheets, matrix }... ]");
+      }
+    }
+    if (sheetsTargets.length > 0) {
+      id = this.general.parsingId(id);
+      for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+        await this.update_value_inPython(id, sheetsName, matrix, [ 0, 0 ]);
+      }
+      return "success";
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = GoogleSheet;

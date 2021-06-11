@@ -621,7 +621,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "must be property 'sheetName, parentId, values'" }));
       } else {
-        console.log(req.body);
         let tapName, values, sheetsId, sheetsTargets, tempArr;
         if (req.body.multiple === undefined) {
           sheetsId = null;
@@ -675,12 +674,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           }).then(() => {
             return sheets.add_newSheet_inPython(sheetsId, tempArr);
           }).then(() => {
-            if (sheetsTargets.length > 1) {
-              for (let i = 1; i < sheetsTargets.length; i++) {
-                sheets.update_value_inPython(sheetsId, sheetsTargets[i].sheets, sheetsTargets[i].matrix, [ 0, 0 ]);
-              }
-            }
-            return sheets.update_value_inPython(sheetsId, sheetsTargets[0].sheets, sheetsTargets[0].matrix, [ 0, 0 ]);
+            return sheets.update_values_inPython(sheetsId, sheetsTargets, [ 0, 0 ]);
           }).then((arr) => {
             return sheets.setting_cleanView_inPython(sheetsId);
           }).then(() => {
