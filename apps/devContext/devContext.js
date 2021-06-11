@@ -32,6 +32,7 @@ const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
 const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
 const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js");
+const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -55,6 +56,9 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
+
+    const app = new GraphicBot();
+    await app.botOrders(0);
 
 
 
