@@ -680,13 +680,15 @@ Ghost.prototype.ghostRouter = function (needs) {
             for (let { sheets: sheetsName, matrix } of sheetsTargets) {
               promiseArr.push(sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]));
             }
-            return Promise.all(promiseArr);
-          }).then((arr) => {
-            return sheets.setting_cleanView_inPython(sheetsId);
-          }).then(() => {
-            return drive.read_webView_inPython(sheetsId);
-          }).then((link) => {
-            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+            Promise.all(promiseArr).then((arr) => {
+              return sheets.setting_cleanView_inPython(sheetsId);
+            }).then(() => {
+              return drive.read_webView_inPython(sheetsId);
+            }).then((link) => {
+              return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+            }).catch((err) => {
+              console.log(err);
+            });
           }).catch((err) => {
             console.log(err);
           });
