@@ -1,13 +1,11 @@
 const GraphicBot = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
-  const { exec } = require("child_process");
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
-  this.exec = exec;
   this.doing = 0;
   this.port = 3000;
 }
@@ -207,12 +205,15 @@ GraphicBot.prototype.keypress = function (callback) {
 
 GraphicBot.prototype.chromeOpen = async function (url) {
   const instance = this;
-  const { exec } = this;
-  const { sleep } = this.mother;
+  const { shell, shellLink, sleep } = this.mother;
   try {
-    // exec(`taskkill /IM "chrome.exe" /F`);
-    // await sleep(500);
-    exec(`open --new -a /Applications/Google\\ Chrome.app --args "${url}" --start-maximized`);
+    try {
+      shell.exec(`killall chrome`);
+    } catch (e) {
+      console.log("no chrome running");
+    }
+    await sleep(500);
+    shell.exec(`google-chrome ${url} --start-maximized`);
     await sleep(3000);
   } catch (e) {
     console.log(e);
@@ -221,9 +222,9 @@ GraphicBot.prototype.chromeOpen = async function (url) {
 
 GraphicBot.prototype.chromeClose = async function () {
   const instance = this;
-  const { exec } = this;
+  const { shell, shellLink } = this.mother;
   try {
-    exec(`taskkill /IM "chrome.exe" /F`);
+    shell.exec(`killall chrome`);
   } catch (e) {
     console.log(e);
   }
