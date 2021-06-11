@@ -272,7 +272,7 @@ GoogleSheet.prototype.update_values = async function (id, sheetsTargets, startPo
   const instance = this;
   const mother = this.general;
   try {
-    if (typeof id === "string") {
+    if (typeof id !== "string") {
       throw new Error("invaild id");
     }
     if (!Array.isArray(sheetsTargets)) {
@@ -304,7 +304,7 @@ GoogleSheet.prototype.update_values_inPython = async function (id, sheetsTargets
   const instance = this;
   const mother = this.general;
   try {
-    if (typeof id === "string") {
+    if (typeof id !== "string") {
       throw new Error("invaild id");
     }
     if (!Array.isArray(sheetsTargets)) {
