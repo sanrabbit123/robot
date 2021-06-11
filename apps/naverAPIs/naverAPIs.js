@@ -231,6 +231,11 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "선택 한", "선택한" ],
     [ "안내해 주신", "안내해주신" ],
     [ "해결 되었", "해결되었" ],
+    [ "연출 감히", "연출감이" ],
+    [ "스타일링 하게", "스타일링하게" ],
+    [ "고객님 다은", "고객님다운" ],
+    [ "명품숍", "명품샵" ],
+    [ "숍", "샵" ],
   ];
   try {
     let resultArr = [];

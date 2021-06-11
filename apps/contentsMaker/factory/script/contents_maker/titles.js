@@ -207,7 +207,7 @@ ExecMain.prototype.copyDoc = function (target) {
     this.titles.createSetting["name_card"].xy = [[0.24,-114], [this.titles.resultXLine(this_ai.layer_select("active").textFrames.getByName("rev_name_card_main"), "right") + 0.3,-114]];
     this.titles.createLines(this_ai, this.titles.createSetting["name_card"]);
   } else if (target === "nu") {
-    this_ai.layer_select("active").textFrames.getByName("number").contents = "Review " + ((this.text.r_id.slice(2).slice(0, 1) === '0') ? this.text.r_id.slice(3) : this.text.r_id.slice(2));
+    this_ai.layer_select("active").textFrames.getByName("number").contents = "Review " + this.text.r_id.slice(3);
     to_right(this_ai.layer_select("active").textFrames.getByName("number"));
   } else if (target === "resubti") {
     this_ai.layer_select("active").textFrames.getByName("rev_name_card_subsub").contents = this.text.sub_titles.rev_name_card.subsub;

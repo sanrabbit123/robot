@@ -74,19 +74,22 @@ GoogleSheet.prototype.update_value = async function (id, sheetName, values, star
   try {
     this.sheets = await this.general.get_app("sheets");
     id = this.general.parsingId(id);
+    let range;
 
-    let range = sheetName + "!";
-    range += this.abc[startPoint[0]] + String(startPoint[1] + 1) + ':';
-    range += this.abc[startPoint[0] + values[0].length - 1] + String(startPoint[1] + 1 + values.length - 1);
-
-    await this.sheets.spreadsheets.values.update({
-      spreadsheetId: id,
-      range: range,
-      valueInputOption: "RAW",
-      resource: { range: range, values: values },
-    });
-
-    return "success";
+    if (values.length > 0) {
+      range = sheetName + "!";
+      range += this.abc[startPoint[0]] + String(startPoint[1] + 1) + ':';
+      range += this.abc[startPoint[0] + values[0].length - 1] + String(startPoint[1] + 1 + values.length - 1);
+      await this.sheets.spreadsheets.values.update({
+        spreadsheetId: id,
+        range: range,
+        valueInputOption: "RAW",
+        resource: { range: range, values: values },
+      });
+      return "success";
+    } else {
+      return null;
+    }
   } catch (e) {
     console.log(e);
   }
@@ -249,15 +252,17 @@ GoogleSheet.prototype.update_value_inPython = async function (id, sheetName, val
   const instance = this;
   const mother = this.general;
   try {
-    let range = sheetName + "!";
-    range += this.abc[startPoint[0]] + String(startPoint[1] + 1) + ':';
-    range += this.abc[startPoint[0] + values[0].length - 1] + String(startPoint[1] + 1 + values.length - 1);
-
-    id = this.general.parsingId(id);
-
-    let result = await mother.pythonExecute(this.pythonApp, [ "sheets", "update" ], { id, range, values });
-    return result;
-
+    let range, result;
+    if (values.length > 0) {
+      range = sheetName + "!";
+      range += this.abc[startPoint[0]] + String(startPoint[1] + 1) + ':';
+      range += this.abc[startPoint[0] + values[0].length - 1] + String(startPoint[1] + 1 + values.length - 1);
+      id = this.general.parsingId(id);
+      result = await mother.pythonExecute(this.pythonApp, [ "sheets", "update" ], { id, range, values });
+      return result;
+    } else {
+      return null;
+    }
   } catch (e) {
     console.log(e);
   }
