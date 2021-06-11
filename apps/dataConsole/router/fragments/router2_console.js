@@ -1460,37 +1460,10 @@ DataRouter.prototype.rou_post_sendSheets = function () {
         }
 
       } else {
-
-        console.log(req.body);
-
+        
         ghostRequest("/sendSheets", req.body).then((res) => { console.log(res); }).catch((err) => { throw new Error("send sheets error"); });
         response = "will do";
 
-        // sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
-        // sheetsTargets = JSON.parse(req.body.values);
-        // if (!Array.isArray(sheetsTargets)) {
-        //   throw new Error("multiple value must be [ { sheets, matrix }... ]");
-        // }
-        // tempArr = [];
-        // for (let i = 0; i < sheetsTargets.length; i++) {
-        //   if (typeof sheetsTargets[i] !== "object") {
-        //     throw new Error("multiple value must be [ { sheets, matrix }... ]");
-        //   }
-        //   if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
-        //     throw new Error("multiple value must be [ { sheets, matrix }... ]");
-        //   }
-        //   if (i === 0) {
-        //     await sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
-        //   } else {
-        //     tempArr.push(sheetsTargets[i].sheets);
-        //   }
-        // }
-        // await sheets.add_newSheet_inPython(sheetsId, tempArr);
-        // for (let { sheets: sheetsName, matrix } of sheetsTargets) {
-        //   await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
-        // }
-        // await sheets.setting_cleanView_inPython(sheetsId);
-        // response = await drive.read_webView_inPython(sheetsId);
       }
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ link: response }));
