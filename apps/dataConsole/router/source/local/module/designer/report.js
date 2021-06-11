@@ -435,6 +435,8 @@ DesignerJs.prototype.reportDataRendering = async function () {
               const { link } = await GeneralJs.ajaxJson({
                 sheetName: this.designer.designer + " 보고서_" + dateToString(new Date()).replace(/-/g, '').slice(2),
                 multiple: true,
+                async: true,
+                channel: "#300_designer",
                 parentId,
                 values
               }, "/sendSheets", { equal: true });
@@ -2537,7 +2539,7 @@ DesignerJs.prototype.reportView = async function () {
             let viewFunction;
             instance.totalMother.removeChild(instance.totalMother.lastChild);
             instance.totalMother.removeChild(instance.totalMother.lastChild);
-            GeneralJs.blankHref(link);
+            window.alert("시트 제작이 요청되었습니다! 슬랙을 통해 링크가 갈 예정입니다!");
             clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
             GeneralJs.timeouts["extractPendingBack"] = null;
           }, 401);

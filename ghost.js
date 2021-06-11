@@ -2,10 +2,12 @@ const Ghost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+  const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.sheets = new GoogleSheet();
+  this.drive = new GoogleDrive();
   this.address = ADDRESS;
   this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
   this.alien = process.cwd() + "/alien.js";
@@ -598,6 +600,97 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ error: err }));
           throw new Error(err);
         });
+      }
+    }
+  };
+
+  //POST - createSheets
+  funcObj.post_updateSheets = {
+    link: [ "/sendSheets" ],
+    func: function (req, res) {
+      const sheets = instance.sheets;
+      const drive = instance.drive;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "must be property 'sheetName, parentId, values'" }));
+      } else {
+        let tapName, values, sheetsId, sheetsTargets, tempArr;
+        if (req.body.multiple === undefined) {
+          sheetsId = null;
+          tapName = (req.body.tapName !== undefined) ? req.body.tapName : 'default';
+          values = JSON.parse(req.body.values);
+          sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId).then((id) => {
+            sheetsId = id;
+            return sheets.update_defaultSheetName_inPython(sheetsId, tapName);
+          }).then(() => {
+            return sheets.update_value_inPython(sheetsId, tapName, values, [ 0, 0 ]);
+          }).then(() => {
+            return sheets.setting_cleanView_inPython(sheetsId);
+          }).then(() => {
+            return drive.read_webView_inPython(sheetsId);
+          }).then((link) => {
+            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+          }).catch((err) => {
+            console.log(err);
+          });
+        } else {
+          sheetsTargets = JSON.parse(req.body.values);
+          if (!Array.isArray(sheetsTargets)) {
+            console.log(req.body);
+            res.send(JSON.stringify({ error: "multiple value must be [ { sheets, matrix }... ]" }));
+            return false;
+          }
+          if (sheetsTargets.length === 0) {
+            console.log(req.body);
+            res.send(JSON.stringify({ error: "multiple value must be [ { sheets, matrix }... ]" }));
+            return false;
+          }
+          tempArr = [];
+          sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId).then((id) => {
+            sheetsId = id;
+            for (let i = 0; i < sheetsTargets.length; i++) {
+              if (typeof sheetsTargets[i] !== "object") {
+                console.log(req.body);
+                res.send(JSON.stringify({ error: "multiple value must be [ { sheets, matrix }... ]" }));
+                throw new Error("multiple value must be [ { sheets, matrix }... ]");
+              }
+              if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
+                console.log(req.body);
+                res.send(JSON.stringify({ error: "multiple value must be [ { sheets, matrix }... ]" }));
+                throw new Error("multiple value must be [ { sheets, matrix }... ]");
+              }
+              if (i !== 0) {
+                tempArr.push(sheetsTargets[i].sheets);
+              }
+            }
+            return sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
+          }).then(() => {
+            return sheets.add_newSheet_inPython(sheetsId, tempArr);
+          }).then(() => {
+            let promiseArr;
+            promiseArr = [];
+            for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+              promiseArr.push(sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]));
+            }
+            return Promise.all(promiseArr);
+          }).then((arr) => {
+            return sheets.setting_cleanView_inPython(sheetsId);
+          }).then(() => {
+            return drive.read_webView_inPython(sheetsId);
+          }).then((link) => {
+            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+        res.send(JSON.stringify({ message: "will do" }));
       }
     }
   };

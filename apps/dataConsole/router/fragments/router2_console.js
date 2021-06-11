@@ -1431,15 +1431,23 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   const back = this.back;
   const sheets = this.sheets;
   const drive = this.drive;
+  const { ghostRequest } = this.mother;
   let obj = {};
   obj.link = "/sendSheets";
   obj.func = async function (req, res) {
     try {
-      if (req.body.sheetName === undefined || req.body.parentId === undefined) {
+      if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
         throw new Error("must be sheetName, parentId");
       }
-      let sheetsId, response, values, sheetsTargets, tempArr;
-      if (req.body.multiple === undefined) {
+      let sheetsId, response, values, sheetsTargets, tempArr, async;
+
+      async = false;
+      if (req.body.async !== undefined || req.body.multiple !== undefined) {
+        async = true;
+      }
+
+      if (!async) {
+
         if (req.body.newMake !== undefined) {
           sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
           if (req.body.tapName !== undefined) {
@@ -1450,32 +1458,37 @@ DataRouter.prototype.rou_post_sendSheets = function () {
           await sheets.setting_cleanView_inPython(sheetsId);
           response = await drive.read_webView_inPython(sheetsId);
         }
+
       } else {
-        sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
-        sheetsTargets = JSON.parse(req.body.values);
-        if (!Array.isArray(sheetsTargets)) {
-          throw new Error("multiple value must be [ { sheets, matrix }... ]");
-        }
-        tempArr = [];
-        for (let i = 0; i < sheetsTargets.length; i++) {
-          if (typeof sheetsTargets[i] !== "object") {
-            throw new Error("multiple value must be [ { sheets, matrix }... ]");
-          }
-          if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
-            throw new Error("multiple value must be [ { sheets, matrix }... ]");
-          }
-          if (i === 0) {
-            await sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
-          } else {
-            tempArr.push(sheetsTargets[i].sheets);
-          }
-        }
-        await sheets.add_newSheet_inPython(sheetsId, tempArr);
-        for (let { sheets: sheetsName, matrix } of sheetsTargets) {
-          await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
-        }
-        await sheets.setting_cleanView_inPython(sheetsId);
-        response = await drive.read_webView_inPython(sheetsId);
+
+        ghostRequest("/sendSheets", req.body).catch((err) => { throw new Error("send sheets error"); });
+        response = "will do";
+
+        // sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
+        // sheetsTargets = JSON.parse(req.body.values);
+        // if (!Array.isArray(sheetsTargets)) {
+        //   throw new Error("multiple value must be [ { sheets, matrix }... ]");
+        // }
+        // tempArr = [];
+        // for (let i = 0; i < sheetsTargets.length; i++) {
+        //   if (typeof sheetsTargets[i] !== "object") {
+        //     throw new Error("multiple value must be [ { sheets, matrix }... ]");
+        //   }
+        //   if (sheetsTargets[i].sheets === undefined || sheetsTargets[i].matrix === undefined) {
+        //     throw new Error("multiple value must be [ { sheets, matrix }... ]");
+        //   }
+        //   if (i === 0) {
+        //     await sheets.update_defaultSheetName_inPython(sheetsId, sheetsTargets[0].sheets);
+        //   } else {
+        //     tempArr.push(sheetsTargets[i].sheets);
+        //   }
+        // }
+        // await sheets.add_newSheet_inPython(sheetsId, tempArr);
+        // for (let { sheets: sheetsName, matrix } of sheetsTargets) {
+        //   await sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]);
+        // }
+        // await sheets.setting_cleanView_inPython(sheetsId);
+        // response = await drive.read_webView_inPython(sheetsId);
       }
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ link: response }));
