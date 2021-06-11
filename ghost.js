@@ -675,20 +675,18 @@ Ghost.prototype.ghostRouter = function (needs) {
           }).then(() => {
             return sheets.add_newSheet_inPython(sheetsId, tempArr);
           }).then(() => {
-            let promiseArr;
-            promiseArr = [];
-            for (let { sheets: sheetsName, matrix } of sheetsTargets) {
-              promiseArr.push(sheets.update_value_inPython(sheetsId, sheetsName, matrix, [ 0, 0 ]));
+            if (sheetsTargets.length > 1) {
+              for (let i = 1; i < sheetsTargets.length; i++) {
+                sheets.update_value_inPython(sheetsId, sheetsTargets[i].sheets, sheetsTargets[i].matrix, [ 0, 0 ]);
+              }
             }
-            Promise.all(promiseArr).then((arr) => {
-              return sheets.setting_cleanView_inPython(sheetsId);
-            }).then(() => {
-              return drive.read_webView_inPython(sheetsId);
-            }).then((link) => {
-              return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
-            }).catch((err) => {
-              console.log(err);
-            });
+            return sheets.update_value_inPython(sheetsId, sheetsTargets[0].sheets, sheetsTargets[0].matrix, [ 0, 0 ]);
+          }).then((arr) => {
+            return sheets.setting_cleanView_inPython(sheetsId);
+          }).then(() => {
+            return drive.read_webView_inPython(sheetsId);
+          }).then((link) => {
+            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
           }).catch((err) => {
             console.log(err);
           });
