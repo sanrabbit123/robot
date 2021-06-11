@@ -1,6 +1,7 @@
 const GraphicBot = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const { exec } = require(`child_process`);
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -8,6 +9,7 @@ const GraphicBot = function () {
   this.list = this.dir + "/list";
   this.doing = 0;
   this.port = 3000;
+  this.exec = exec;
 }
 
 GraphicBot.prototype.keypress = function (callback) {
@@ -205,26 +207,21 @@ GraphicBot.prototype.keypress = function (callback) {
 
 GraphicBot.prototype.chromeOpen = async function (url) {
   const instance = this;
-  const { shell, shellLink, sleep } = this.mother;
-  try {
-    try {
-      shell.exec(`killall chrome`);
-    } catch (e) {
-      console.log("no chrome running");
-    }
-    await sleep(500);
-    shell.exec(`google-chrome ${url} --start-maximized`);
-    await sleep(3000);
-  } catch (e) {
-    console.log(e);
-  }
+  const { exec } = this;
+  const { sleep } = this.mother;
+  return new Promise(function (resolve, reject) {
+    exec(`killall chrome`, (error, stdout, stderr) => {
+      exec(`google-chrome ${url} --start-maximized`);
+      resolve(stdout);
+    });
+  });
 }
 
 GraphicBot.prototype.chromeClose = async function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const { exec } = this;
   try {
-    shell.exec(`killall chrome`);
+    exec(`killall chrome`);
   } catch (e) {
     console.log(e);
   }
@@ -310,7 +307,7 @@ GraphicBot.prototype.botOrders = async function (num) {
     if (typeof num !== "number") {
       throw new Error("input must be number");
     }
-    const listDir = await fileSystem(`readDir`, [ this.list ]);
+    let listDir = await fileSystem(`readDir`, [ this.list ]);
     listDir = listDir.filter((a) => { return a !== `.DS_Store` });
     listDir.sort((a, b) => { return Number(a.split('_')[0].replace(/[^0-9]/g, '')) - Number(b.split('_')[0].replace(/[^0-9]/g, '')); });
     if (listDir[num] === undefined) {

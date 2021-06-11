@@ -57,8 +57,7 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const app = new GraphicBot();
-    await app.botOrders(0);
+
 
 
 
