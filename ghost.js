@@ -621,6 +621,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "must be property 'sheetName, parentId, values'" }));
       } else {
+        console.log(req.body);
         let tapName, values, sheetsId, sheetsTargets, tempArr;
         if (req.body.multiple === undefined) {
           sheetsId = null;

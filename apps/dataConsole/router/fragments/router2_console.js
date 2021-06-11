@@ -1461,7 +1461,9 @@ DataRouter.prototype.rou_post_sendSheets = function () {
 
       } else {
 
-        ghostRequest("/sendSheets", req.body).catch((err) => { throw new Error("send sheets error"); });
+        console.log(req.body);
+
+        ghostRequest("/sendSheets", req.body).then((res) => { console.log(res); }).catch((err) => { throw new Error("send sheets error"); });
         response = "will do";
 
         // sheetsId = await sheets.create_newSheets_inPython(req.body.sheetName, req.body.parentId);
