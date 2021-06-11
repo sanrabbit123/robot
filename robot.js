@@ -488,6 +488,16 @@ Robot.prototype.spawnCatfish = async function () {
   }
 }
 
+Robot.prototype.positionWatch = async function () {
+  try {
+    const GraphicBot = require(`${process.cwd()}/apps/graphicBot/graphicBot.js`);
+    const app = new GraphicBot();
+    app.positionWatch();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -870,6 +880,13 @@ const MENU = {
       console.log(e);
     }
   },
+  positionWatch: async function () {
+    try {
+      await robot.positionWatch();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 let launchingFunc;
 

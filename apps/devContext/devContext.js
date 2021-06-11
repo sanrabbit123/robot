@@ -55,7 +55,7 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
-    
+
 
 
     /*
