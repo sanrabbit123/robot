@@ -498,6 +498,16 @@ Robot.prototype.positionWatch = async function () {
   }
 }
 
+Robot.prototype.graphicServer = async function () {
+  try {
+    const GraphicBot = require(`${process.cwd()}/apps/graphicBot/graphicBot.js`);
+    const app = new GraphicBot();
+    app.botServer();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -886,7 +896,14 @@ const MENU = {
     } catch (e) {
       console.log(e);
     }
-  }
+  },
+  graphicServer: async function () {
+    try {
+      await robot.graphicServer();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 

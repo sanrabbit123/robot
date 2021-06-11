@@ -212,7 +212,9 @@ GraphicBot.prototype.chromeOpen = async function (url) {
   return new Promise(function (resolve, reject) {
     exec(`killall chrome`, (error, stdout, stderr) => {
       exec(`google-chrome ${url} --start-maximized`);
-      resolve(stdout);
+      setTimeout(function () {
+        resolve(stdout);
+      }, 3000);
     });
   });
 }
@@ -302,7 +304,7 @@ GraphicBot.prototype.pressKey = async function (key) {
 GraphicBot.prototype.botOrders = async function (num) {
   const instance = this;
   const { bot } = this;
-  const { sleep, fileSystem } = this.mother;
+  const { sleep, fileSystem, copyToClipboard } = this.mother;
   try {
     if (typeof num !== "number") {
       throw new Error("input must be number");
@@ -365,7 +367,7 @@ GraphicBot.prototype.botOrders = async function (num) {
         await this.pressKey("f12");
         await sleep(500);
         await this.moveAndClick(1542, 1053, 500, false);
-        // clipboardy.writeSync(tempString);
+        copyToClipboard(tempString);
         await sleep(500);
         await this.pasteText();
         await sleep(500);
@@ -373,6 +375,7 @@ GraphicBot.prototype.botOrders = async function (num) {
       }
     }
     this.doing = 0;
+    return "done";
   } catch (e) {
     console.log(e);
   }
@@ -417,7 +420,7 @@ GraphicBot.prototype.botServer = async function () {
           console.log("waiting...");
           await sleep(500);
         }
-        botOrders(0).then((r) => {
+        instance.botOrders(0).then((r) => {
           console.log(r);
         }).catch((err) => {
           console.log(err);

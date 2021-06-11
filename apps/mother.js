@@ -1758,15 +1758,15 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: f
 
 Mother.prototype.copyToClipboard = function (data) {
   const os = require("os");
+  const { spawn } = require('child_process');
   let pbcopy;
   if (os.type() === 'Darwin') {
-    //mac
-    pbcopy = require('child_process').spawn('pbcopy');
-    pbcopy.stdin.write(data);
-    pbcopy.stdin.end();
+    pbcopy = spawn('pbcopy');
   } else {
-    //linux
+    pbcopy = spawn('xclip', [ '-selection', 'clipboard' ]);
   }
+  pbcopy.stdin.write(data);
+  pbcopy.stdin.end();
 }
 
 Mother.prototype.equalJson = function (jsonString) {
