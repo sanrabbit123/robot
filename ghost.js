@@ -706,7 +706,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       let target;
       target = null;
       for (let obj of map) {
-        if (obj.name === "window") {
+        if (obj.name === "graphic") {
           target = obj.ip;
           break;
         }
