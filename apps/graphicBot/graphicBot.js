@@ -394,6 +394,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         await this.pasteText();
         await sleep(500);
         await this.pressKey("enter");
+        await sleep(3000);
+        await this.pressKey("f12");
+        await sleep(500);
       }
     }
     return "done";
