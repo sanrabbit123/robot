@@ -342,7 +342,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
             await this.moveAndClick(i[0], i[1], i[2], (i[3] !== undefined ? i[3] : false));
           } else if (typeof i[2] === "object") {
             if (i[2].x !== undefined && i[2].y !== undefined && i[2].color !== undefined) {
-              while (conditionMove(i[2].x, i[2].y, i[2].color)) {
+              while (instance.conditionMove(i[2].x, i[2].y, i[2].color)) {
                 await sleep(500);
                 console.log("waiting...");
               }
