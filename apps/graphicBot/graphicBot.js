@@ -341,13 +341,15 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           if (typeof i[2] === "number") {
             await this.moveAndClick(i[0], i[1], i[2], (i[3] !== undefined ? i[3] : false));
           } else if (typeof i[2] === "object") {
-            await this.moveAndClick(i[0], i[1], 500, (i[3] !== undefined ? i[3] : false));
             if (i[2].x !== undefined && i[2].y !== undefined && i[2].color !== undefined) {
               while (conditionMove(i[2].x, i[2].y, i[2].color)) {
                 await sleep(500);
                 console.log("waiting...");
               }
+            } else {
+              throw new Error("invaild condition");
             }
+            await this.moveAndClick(i[0], i[1], 500, (i[3] !== undefined ? i[3] : false));
           }
         }
       } else if (typeof i === "string") {

@@ -58,8 +58,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
+    const bot = new GraphicBot();
+    await bot.botOrders(1);
 
 
 
