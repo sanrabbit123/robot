@@ -427,13 +427,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         console.log(message);
+        ghostRequest("/print", {}).catch((err) => {
+          console.log(err);
+        });
 
         // to slack
         if (requestObj["phone"] !== "010-2747-3403") {
           slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-          ghostRequest("/print", {}).catch((err) => {
-            console.log(err);
-          });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }

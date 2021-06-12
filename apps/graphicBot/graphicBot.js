@@ -7,9 +7,11 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
+  this.tong = this.dir + "/tong";
   this.doing = 0;
   this.port = 3000;
   this.exec = exec;
+  this.task = null;
 }
 
 GraphicBot.prototype.keypress = function (callback) {
@@ -301,7 +303,19 @@ GraphicBot.prototype.pressKey = async function (key) {
   }
 }
 
-GraphicBot.prototype.botOrders = async function (num) {
+GraphicBot.prototype.clipBoard = async function (text) {
+  const instance = this;
+  const { sleep, copyToClipboard } = this.mother;
+  try {
+    await sleep(500);
+    copyToClipboard(text);
+    await sleep(500);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GraphicBot.prototype.botOrders = async function (num, arg) {
   const instance = this;
   const { bot } = this;
   const { sleep, fileSystem, copyToClipboard } = this.mother;
@@ -315,12 +329,12 @@ GraphicBot.prototype.botOrders = async function (num) {
     if (listDir[num] === undefined) {
       throw new Error("index out error");
     }
-    const arr = require(this.list + "/" + listDir[num]);
+    const arrFunc = require(this.list + "/" + listDir[num]);
+    const arr = arrFunc(arg);
     if (!Array.isArray(arr)) {
       throw new Error("must be array");
     }
     let tempArr, tempString;
-    this.doing = 1;
     for (let i of arr) {
       if (Array.isArray(i)) {
         if (i.length >= 3) {
@@ -345,6 +359,12 @@ GraphicBot.prototype.botOrders = async function (num) {
           await this.copyText();
         } else if (i === "paste") {
           await this.pasteText();
+        } else if (/^clipBoard_/.test(i)) {
+          tempArr = i.split('_');
+          if (tempArr.length <= 1) {
+            throw new Error("invaild input");
+          }
+          await this.clipBoard(tempArr[1].trim());
         } else if (/^key_/.test(i)) {
           tempArr = i.split('_');
           if (tempArr.length <= 1) {
@@ -374,7 +394,6 @@ GraphicBot.prototype.botOrders = async function (num) {
         await this.pressKey("enter");
       }
     }
-    this.doing = 0;
     return "done";
   } catch (e) {
     console.log(e);
@@ -403,9 +422,12 @@ GraphicBot.prototype.positionWatch = function () {
 
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
   const express = require("express");
   const app = express();
   const port = this.port;
+  const orderConst = 'g';
+  const tong = this.tong;
   try {
 
     app.get("/confirm", (req, res) => {
@@ -415,16 +437,46 @@ GraphicBot.prototype.botServer = async function () {
 
     app.get("/print", async (req, res) => {
       try {
+        const taskNumber = 0;
+        let latest;
+
         res.set("Content-Type", "application/json");
-        while (instance.doing === 1) {
-          console.log("waiting...");
-          await sleep(500);
+
+        latest = Number(String(await fileSystem(`readString`, [ `${tong}/print/latest` ])).replace(/[^0-9]/g, ''));
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, String(latest + 1) ]);
+        await fileSystem(`write`, [ `${tong}/print/latest`, String(latest + 1) ]);
+
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
+          instance.task = null;
         }
-        instance.botOrders(0).then((r) => {
-          console.log(r);
-        }).catch((err) => {
-          console.log(err);
-        });
+
+        instance.task = setTimeout(async function () {
+          instance.task = null;
+          while (instance.doing === 1) {
+            console.log(`waiting...`);
+            await sleep(1000);
+          }
+          instance.doing = 1;
+          let workingList_name, workingList;
+          let tempArr;
+          let contents;
+          workingList_name = await fileSystem(`readDir`, [ tong ]);
+          workingList_name = workingList_name.filter((n) => { return (new RegExp("^" + orderConst + "_")).test(n); });
+          workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
+          workingList = [];
+          for (let name of workingList_name) {
+            tempArr = name.split('_');
+            contents = await fileSystem(`readString`, [ `${tong}/${name}` ]);
+            workingList.push({ task: Number(tempArr[1]), contents });
+            shell.exec(`rm -rf ${shellLink(tong + "/" + name)}`);
+          }
+          for (let { task, contents } of workingList) {
+            await instance.botOrders(task, contents);
+          }
+          instance.doing = 0;
+        }, 5000);
+
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
