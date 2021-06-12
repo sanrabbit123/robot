@@ -388,7 +388,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         tempString = "(" + tempString + ")();";
         await this.pressKey("f12");
         await sleep(500);
-        await this.moveAndClick(1542, 1053, 500, false);
+        await this.moveAndClick(1622, 1030, 500, false);
         copyToClipboard(tempString);
         await sleep(500);
         await this.pasteText();
