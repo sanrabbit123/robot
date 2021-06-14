@@ -705,7 +705,7 @@ BackWorker.prototype.designerCalculation = async function () {
       infoDetail = {
         desid: designer.desid,
         designer: designer.designer,
-        free: (/프리/gi.test(designer.information.business.businessInfo.classification)),
+        free: (/[프간]/gi.test(designer.information.business.businessInfo.classification)),
         business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
         first: [],
         remain: [],
@@ -736,7 +736,7 @@ BackWorker.prototype.designerCalculation = async function () {
     }
 
     infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
-    for (let { desid, designer, business, first, remain } of infoTong) {
+    for (let { desid, designer, free, business, first, remain } of infoTong) {
       if (business !== "") {
         for (let obj of first) {
           rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
@@ -752,7 +752,7 @@ BackWorker.prototype.designerCalculation = async function () {
               }
             }
           }
-          obj.receipt = boo;
+          obj.receipt = free ? true : boo;
         }
         for (let obj of remain) {
           rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
@@ -768,7 +768,7 @@ BackWorker.prototype.designerCalculation = async function () {
               }
             }
           }
-          obj.receipt = boo;
+          obj.receipt = free ? true : boo;
         }
       }
     }
