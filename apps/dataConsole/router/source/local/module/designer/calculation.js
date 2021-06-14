@@ -277,7 +277,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     amount = designer.projects[i].process.calculation.payments.first.amount;
     condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
     if (!condition) {
-      if (!/프리/gi.test(designer.information.business.businessInfo.classification)) {
+      if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
       }
     }
@@ -354,25 +354,17 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       }
     });
     amount = designer.projects[i].process.calculation.payments.remain.amount;
-    if (designer.projects[i].contents.photo.boo) {
-      if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-        if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
-          condition = true;
-        } else {
-          condition = false;
-        }
-      } else {
+    if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+      if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
         condition = true;
+      } else {
+        condition = false;
       }
     } else {
-      if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-        condition = false;
-      } else {
-        condition = true;
-      }
+      condition = true;
     }
     if (!condition) {
-      if (!/프리/gi.test(designer.information.business.businessInfo.classification)) {
+      if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
       }
     }
