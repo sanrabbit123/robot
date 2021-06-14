@@ -705,6 +705,7 @@ BackWorker.prototype.designerCalculation = async function () {
       infoDetail = {
         desid: designer.desid,
         designer: designer.designer,
+        classification: designer.information.business.businessInfo.classification,
         free: (/[프간]/gi.test(designer.information.business.businessInfo.classification)),
         business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
         first: [],
@@ -778,15 +779,15 @@ BackWorker.prototype.designerCalculation = async function () {
     tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
     tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
     tong.push(bar1);
-    for (let { designer, free, first, remain } of infoTong) {
+    for (let { designer, free, classification, first, remain } of infoTong) {
       for (let { name, amount, receipt } of first) {
         if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? "프리랜서" : "세금 계산서 발행 완료"}`);
+          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? classification : "세금 계산서 발행 완료"}`);
         }
       }
       for (let { name, amount, receipt } of remain) {
         if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? "프리랜서" : "세금 계산서 발행 완료"}`);
+          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? classification : "세금 계산서 발행 완료"}`);
         }
       }
     }
