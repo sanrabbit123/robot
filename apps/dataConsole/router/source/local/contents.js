@@ -7108,11 +7108,6 @@ ContentsJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("", "/getContentsReport", function (data) {
-        svg_icon.style.opacity = "0";
-        instance.reportContents(data, div_clone, svg_icon);
-      });
-
       GeneralJs.stacks.whiteBox = 0;
     }
   } catch (e) {

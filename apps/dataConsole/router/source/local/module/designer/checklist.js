@@ -1,5 +1,6 @@
 DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
   const instance = this;
+  const { ea } = this;
   const checkListData = [
     {
       name: "일반",
@@ -228,17 +229,6 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               mother.textContent = "팝업 보기";
             }
             instance.checkListDesignerMemo(designer.desid).call(instance.totalMother, { preventDefault: () => {}, stopPropagation: () => {} });
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "일정",
-          value: function (designer) {
-            return "일정 보기";
-          },
-          script: function (mother, designer) {
-            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=calendar&desid=" + designer.desid);
           },
           height: factorHeight,
           type: "string",
@@ -1929,6 +1919,496 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       ]
     },
     {
+      name: "일정",
+      children: [
+        {
+          name: "가능 일정",
+          value: async function (nodeArr, designer) {
+            try {
+              const [ abc, title, mother ] = nodeArr;
+              const { ajaxJson, colorChip, createNode, cleanChildren } = GeneralJs;
+              const today = new Date();
+              const futureMonth = 7;
+              const calendarData = await ajaxJson({
+                mode: "read",
+                db: "console",
+                collection: "realtimeDesigner",
+                whereQuery: {},
+              }, "/generalMongo", { equal: true });
+              let target = { possible: [] };
+              for (let obj of calendarData) {
+                if (designer.desid === obj.desid) {
+                  target = obj;
+                }
+              }
+              let { possible } = target;
+              let h;
+              let future, map;
+              let margin;
+              let num;
+              let boo, boos;
+
+              margin = 15;
+
+              map = [ { value: today, text: `${String(today.getFullYear()).slice(2)}년 ${String(today.getMonth() + 1)}월`, toggle: "off" } ];
+              future = new Date();
+              for (let i = 0; i < futureMonth; i++) {
+                future.setMonth(future.getMonth() + 1);
+                map.push({ value: new Date(future.getFullYear(), future.getMonth(), future.getDate()), text: `${String(future.getFullYear()).slice(2)}년 ${String(future.getMonth() + 1)}월`, toggle: "off" });
+              }
+
+              h = document.createDocumentFragment();
+              num = 0;
+              for (let obj of map) {
+                boo = false;
+                boos = [];
+                for (let { start, end } of possible) {
+                  boos.push(((start.getMonth() + (start.getFullYear() * 12)) <= (obj.value.getMonth() + (obj.value.getFullYear() * 12))) && ((end.getMonth() + (end.getFullYear() * 12)) >= (obj.value.getMonth() + (obj.value.getFullYear() * 12))));
+                }
+                boos = boos.filter((b) => { return b; });
+                boo = (boos.length > 0);
+                if (boo) {
+                  obj.toggle = "on";
+                }
+
+                createNode({
+                  mother: h,
+                  text: obj.text,
+                  attribute: [
+                    { year: String(obj.value.getFullYear()) },
+                    { month: String(obj.value.getMonth() + 1) },
+                    { toggle: obj.toggle },
+                  ],
+                  class: [ "hoverDefault" ],
+                  events: [
+                    {
+                      type: "click",
+                      event: function (e) {
+                        const year = Number(this.getAttribute("year"));
+                        const month = Number(this.getAttribute("month"));
+                        const toggle = this.getAttribute("toggle");
+                        let endTarget, startTarget, targetObj, firstDate, previousMonth, nextMonth, lastDate, index, targetIndex;
+
+                        firstDate = new Date(year, month - 1, 1);
+                        previousMonth = new Date(year, month - 1, 1);
+                        previousMonth.setDate(previousMonth.getDate() - 1);
+
+                        lastDate = new Date(year, month, 1);
+                        lastDate.setDate(lastDate.getDate() - 1);
+                        nextMonth = new Date(year, month, 1);
+
+                        if (toggle === "off") {
+
+                          endTarget = null;
+                          startTarget = null;
+                          targetIndex = null;
+                          index = 0;
+
+                          for (let obj of possible) {
+                            if ((obj.end.getMonth() === previousMonth.getMonth()) && (obj.end.getFullYear() === previousMonth.getFullYear()) && (obj.end.getDate() === previousMonth.getDate())) {
+                              endTarget = obj;
+                              targetIndex = index;
+                            }
+                            if ((obj.start.getMonth() === nextMonth.getMonth()) && (obj.start.getFullYear() === nextMonth.getFullYear()) && (obj.start.getDate() === nextMonth.getDate())) {
+                              startTarget = obj;
+                            }
+                            index++;
+                          }
+
+                          if (endTarget === null && startTarget === null) {
+                            possible.push({ start: firstDate, end: lastDate });
+                          } else if (endTarget === null && startTarget !== null) {
+                            startTarget.start = firstDate;
+                          } else if (endTarget !== null && startTarget === null) {
+                            endTarget.end = lastDate;
+                          } else {
+                            startTarget.start = endTarget.start;
+                            possible.splice(targetIndex, 1);
+                          }
+
+                          this.style.color = colorChip.green;
+                          this.setAttribute("toggle", "on");
+                        } else {
+                          targetObj = null;
+                          targetIndex = null;
+                          index = 0;
+                          for (let obj of possible) {
+                            if (((obj.start.getMonth() + 1 + (obj.start.getFullYear() * 12)) <= (month + (year * 12))) && ((obj.end.getMonth() + 1 + (obj.end.getFullYear() * 12)) >= (month + (year * 12)))) {
+                              targetObj = obj;
+                              targetIndex = index;
+                              break;
+                            }
+                            index++;
+                          }
+
+                          if (targetObj.end.valueOf() > lastDate.valueOf()) {
+                            if (targetObj.start.valueOf() < firstDate.valueOf()) {
+                              possible.push({ start: nextMonth, end: new Date(targetObj.end.getFullYear(), targetObj.end.getMonth(), targetObj.end.getDate()) });
+                              targetObj.end = previousMonth;
+                            } else {
+                              targetObj.start = nextMonth;
+                            }
+                          } else {
+                            if (targetObj.start.valueOf() < firstDate.valueOf()) {
+                              targetObj.end = previousMonth;
+                            } else {
+                              possible.splice(targetIndex, 1);
+                            }
+                          }
+
+                          this.style.color = colorChip.gray4;
+                          this.setAttribute("toggle", "off");
+                        }
+
+                        possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
+                        GeneralJs.ajaxJson({
+                          mode: "update",
+                          db: "console",
+                          collection: "realtimeDesigner",
+                          whereQuery: { desid: instance.desid },
+                          updateQuery: { possible: possible }
+                        }, "/generalMongo").catch((err) => {
+                          console.log(err);
+                        });
+
+                      }
+                    }
+                  ],
+                  style: {
+                    display: "inline-block",
+                    fontSize: "inherit",
+                    fontWeight: "inherit",
+                    color: boo ? colorChip.green : colorChip.gray4,
+                    marginRight: String(margin) + ea,
+                  }
+                });
+
+                if (num !== map.length - 1) {
+                  createNode({
+                    mother: h,
+                    text: '|',
+                    style: {
+                      display: "inline-block",
+                      fontSize: "inherit",
+                      fontWeight: String(200),
+                      color: colorChip.gray4,
+                      marginRight: String(margin) + ea,
+                    }
+                  });
+                }
+
+                num++;
+              }
+
+              cleanChildren(mother);
+              mother.appendChild(h);
+              mother.style.fontWeight = String(300);
+              mother.style.color = colorChip.black;
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          height: factorHeight,
+          type: "async",
+        },
+        {
+          name: "대기중",
+          value: async function (nodeArr, designer) {
+            try {
+              const [ abc, title, mother ] = nodeArr;
+              const { ajaxJson, colorChip, createNode, cleanChildren, dateToString } = GeneralJs;
+              const desid = instance.desid;
+              let h, projects;
+              let cliidArr_raw, cliidArr;
+              let clients;
+              let text;
+              let margin;
+
+              margin = 15;
+
+              projects = await ajaxJson({
+                noFlat: true,
+                whereQuery: {
+                  $and: [
+                    { "process.status": { $regex: "^[대홀]" } },
+                    { desid }
+                  ]
+                },
+              }, "/getProjects", { equal: true });
+
+              h = document.createDocumentFragment();
+
+              cliidArr_raw = [];
+              for (let { cliid } of projects) {
+                cliidArr_raw.push(cliid);
+              }
+              cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
+
+              if (cliidArr.length > 0) {
+
+                clients = await ajaxJson({
+                  noFlat: true,
+                  whereQuery: {
+                    $or: cliidArr,
+                  },
+                }, "/getClients", { equal: true });
+
+                for (let p of projects) {
+                  for (let c of clients) {
+                    if (p.cliid === c.cliid) {
+                      p.name = c.name;
+                      p.phone = c.phone;
+                      c.requests.sort((a, b) => { return a.request.timeline.valueOf() - b.request.timeline.valueOf(); });
+                      for (let r of c.requests) {
+                        if (p.proposal.date.valueOf() >= r.request.timeline.valueOf()) {
+                          p.request = r.request;
+                        }
+                      }
+                    }
+                  }
+                }
+
+                projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
+
+                for (let project of projects) {
+
+                  createNode({
+                    mother: h,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: "inherit",
+                      fontWeight: "inherit",
+                      color: "inherit",
+                      height: String(factorHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: project.name + " (" + project.phone + ")",
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: "inherit",
+                          color: colorChip.black,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: '|',
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: String(200),
+                          color: colorChip.gray4,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: project.request.space.address,
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: "inherit",
+                          color: colorChip.black,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                    ]
+                  });
+                }
+              } else {
+
+                createNode({
+                  mother: h,
+                  text: "대기중 프로젝트 없음",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: "inherit",
+                    fontWeight: "inherit",
+                    color: "inherit",
+                    height: String(factorHeight) + ea,
+                  },
+                });
+
+              }
+
+              cleanChildren(mother);
+              mother.appendChild(h);
+              for (let dom of nodeArr) {
+                dom.style.height = String(factorHeight * (projects.length === 0 ? 1 : projects.length)) + ea;
+              }
+              mother.style.fontWeight = String(300);
+              mother.style.color = colorChip.black;
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          height: factorHeight,
+          type: "async",
+        },
+        {
+          name: "진행중",
+          value: async function (nodeArr, designer) {
+            try {
+              const [ abc, title, mother ] = nodeArr;
+              const { ajaxJson, colorChip, createNode, cleanChildren, dateToString } = GeneralJs;
+              const desid = instance.desid;
+              let h, projects;
+              let cliidArr_raw, cliidArr;
+              let clients;
+              let text;
+              let margin;
+
+              margin = 15;
+
+              projects = await ajaxJson({
+                noFlat: true,
+                whereQuery: {
+                  $and: [
+                    { "process.status": { $regex: "^[진홀]" } },
+                    { desid }
+                  ]
+                },
+              }, "/getProjects", { equal: true });
+
+              h = document.createDocumentFragment();
+
+              cliidArr_raw = [];
+              for (let { cliid } of projects) {
+                cliidArr_raw.push(cliid);
+              }
+              cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
+
+              if (cliidArr.length > 0) {
+
+                clients = await ajaxJson({
+                  noFlat: true,
+                  whereQuery: {
+                    $or: cliidArr,
+                  },
+                }, "/getClients", { equal: true });
+
+                for (let p of projects) {
+                  for (let c of clients) {
+                    if (p.cliid === c.cliid) {
+                      p.name = c.name;
+                      p.phone = c.phone;
+                      c.requests.sort((a, b) => { return a.request.timeline.valueOf() - b.request.timeline.valueOf(); });
+                      for (let r of c.requests) {
+                        if (p.proposal.date.valueOf() >= r.request.timeline.valueOf()) {
+                          p.request = r.request;
+                        }
+                      }
+                    }
+                  }
+                }
+
+                projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
+
+                for (let project of projects) {
+
+                  createNode({
+                    mother: h,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: "inherit",
+                      fontWeight: "inherit",
+                      color: "inherit",
+                      height: String(factorHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: project.name + " (" + project.phone + ")",
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: "inherit",
+                          color: colorChip.black,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: '|',
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: String(200),
+                          color: colorChip.gray4,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: dateToString(project.process.contract.form.date.from) + " ~ " + dateToString(project.process.contract.form.date.to),
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: "inherit",
+                          color: colorChip.black,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: '|',
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: String(200),
+                          color: colorChip.gray4,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                      {
+                        text: project.request.space.address,
+                        style: {
+                          display: "inline-block",
+                          fontSize: "inherit",
+                          fontWeight: "inherit",
+                          color: colorChip.black,
+                          marginRight: String(margin) + ea,
+                        }
+                      },
+                    ]
+                  });
+                }
+              } else {
+
+                createNode({
+                  mother: h,
+                  text: "진행중 프로젝트 없음",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: "inherit",
+                    fontWeight: "inherit",
+                    color: "inherit",
+                    height: String(factorHeight) + ea,
+                  },
+                });
+
+              }
+
+              cleanChildren(mother);
+              mother.appendChild(h);
+              for (let dom of nodeArr) {
+                dom.style.height = String(factorHeight * (projects.length === 0 ? 1 : projects.length)) + ea;
+              }
+              mother.style.fontWeight = String(300);
+              mother.style.color = colorChip.black;
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          height: factorHeight,
+          type: "async",
+        },
+      ]
+    },
+    {
       name: "세팅",
       children: [
         {
@@ -2089,7 +2569,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let baseTong0, baseTong;
   let matrix;
   let tempArr;
-  let tempObj, nodeArr;
+  let tempObj, nodeArr, subNodeArr;
   let eachTotalTong, eachNameTong, eachValueTong;
   let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
@@ -2652,9 +3132,37 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         };
         tempArr.push(tempObj);
 
-
+      } else if (checkListData[i].children[j].type === "async") {
+        tempObj = {
+          mother: eachValueTong,
+          text: "로드중...",
+          class: [ "dom_" + String(i) + "_" + String(j) ],
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            fontWeight: String(300),
+            color: colorChip.gray4,
+            height: String(checkListData[i].children[j].height) + ea,
+            cursor: "pointer",
+          }
+        };
+        tempArr.push(tempObj);
       }
-      createNodes(tempArr);
+
+      subNodeArr = createNodes(tempArr);
+
+      if (checkListData[i].children[j].type === "async") {
+        if (typeof checkListData[i].children[j].value === "function") {
+          checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
+            console.log(err);
+          });
+        }
+      }
     }
 
   }
@@ -3195,12 +3703,12 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
   }
 }
 
-DesignerJs.prototype.checkListView = async function () {
+DesignerJs.prototype.checkListView = async function (middleMode = false) {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
     this.backGrayBar();
-    await this.spreadData(null, true);
+    await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const standardBar = totalMother.firstChild;
@@ -3285,6 +3793,7 @@ DesignerJs.prototype.checkListView = async function () {
         children[j].style.transition = "all 0s ease";
       }
     }
+
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
 

@@ -58,9 +58,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const bot = new GraphicBot();
-    await bot.botOrders(1);
-
 
 
     /*
@@ -704,14 +701,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이미영",
-    //     designer: "김은정",
-    //     link: "https://drive.google.com/drive/folders/112UC1Tj71vbNZFHhWz7WXXgr_MBLQpkF",
-    //   },
-    //   {
-    //     client: "정하나",
-    //     designer: "임은숙",
-    //     link: "https://drive.google.com/drive/folders/1QtKjorPDRex96up8VH6ehhK_KiabZCQN",
+    //     client: "이수령",
+    //     designer: "김경수",
+    //     link: "https://drive.google.com/drive/folders/1v3L9k42DuBXgsaBedP0RV2eYYnwB0ACh",
     //   },
     // ]);
 
@@ -730,7 +722,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p122");
+    // await this.getCorePortfolio("a16");
 
 
     // aspirant to designer

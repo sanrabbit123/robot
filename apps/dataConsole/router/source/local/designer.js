@@ -187,7 +187,12 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
           div_clone2.style.display = "none";
         }
       }
+    } else {
+      if (specificDesid === "middle") {
+        div_clone2.style.display = "none";
+      }
     }
+
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.textContent = desid;

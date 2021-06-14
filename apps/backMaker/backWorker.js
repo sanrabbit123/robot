@@ -718,22 +718,14 @@ BackWorker.prototype.designerCalculation = async function () {
           infoDetail.first.push({ name, amount: amount0, proposal: designer.projects[i].proposal.date, receipt: true });
         }
         amount1 = designer.projects[i].process.calculation.payments.remain.amount;
-        if (designer.projects[i].contents.photo.boo) {
-          if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-            if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
-              condition1 = true;
-            } else {
-              condition1 = false;
-            }
-          } else {
+        if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+          if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
             condition1 = true;
+          } else {
+            condition1 = false;
           }
         } else {
-          if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-            condition1 = false;
-          } else {
-            condition1 = true;
-          }
+          condition1 = true;
         }
         if (!condition1) {
           infoDetail.remain.push({ name, amount: amount1, proposal: designer.projects[i].proposal.date, receipt: true });

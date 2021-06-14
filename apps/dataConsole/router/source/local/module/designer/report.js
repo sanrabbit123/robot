@@ -1,4 +1,4 @@
-DesignerJs.prototype.reportDataRendering = async function () {
+DesignerJs.prototype.reportDataRendering = async function (desid) {
   const instance = this;
   try {
     const { ajaxJson, dateToString, autoComma } = GeneralJs;
@@ -45,6 +45,7 @@ DesignerJs.prototype.reportDataRendering = async function () {
     ];
     const xValueMap = { "M": "mini", "B": "basic", "P": "premium" };
     const relationItems = [ "지속가능성 높음", "그냥 평범", "확인중", "좋지 않음" ];
+    const { projects: allProjects, clients, contentsArr, price } = await ajaxJson({ desid }, "/getDesignerReport", { equal: true });
     class DesignerReports extends Array {
       constructor(arr, projects, price) {
         super();
@@ -1130,16 +1131,12 @@ DesignerJs.prototype.reportDataRendering = async function () {
         return resultObj;
       }
     }
-    let projects, clients;
-    let cliidArr, cliidArr_raw;
-    let desidArr, desidArr_raw;
+    let projects;
     let proposalArr;
-    let whereQuery;
-    let price, standard;
-    let allProjects, allDesigners;
+    let standard;
+    let allDesigners;
     let entireTong;
     let proposals, contract;
-    let desid;
     let alpha, alphaPercentage;
     let homeliaison;
     let key0, key1;
@@ -1154,77 +1151,14 @@ DesignerJs.prototype.reportDataRendering = async function () {
     let tong;
     let requests;
     let boo;
-    let contentsArr, contents;
+    let contents;
 
-    allDesigners = this.designers;
+    allDesigners = [ this.designers.pick(desid) ];
 
-    // desidArr_raw = [];
-    // for (let designer of this.designers) {
-    //   desidArr_raw.push(designer.desid);
-    // }
-    // desidArr_raw = Array.from(new Set(desidArr_raw));
-    // desidArr = [];
-    // proposalArr = [];
-    // for (let desid of desidArr_raw) {
-    //   desidArr.push({ desid });
-    //   proposalArr.push({ "proposal.detail": { $elemMatch: { desid } } });
-    // }
-
-    whereQuery = {};
-    // whereQuery["$or"] = desidArr.concat(proposalArr);
-    allProjects = await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true });
-    cliidArr_raw = [];
-    for (let project of allProjects) {
-      cliidArr_raw.push(project.cliid);
-    }
-    cliidArr_raw = Array.from(new Set(cliidArr_raw));
-    cliidArr = [];
-    for (let cliid of cliidArr_raw) {
-      cliidArr.push({ cliid });
-    }
-
-    whereQuery = {};
-    whereQuery["$or"] = cliidArr;
-    clients = await ajaxJson({ noFlat: true, whereQuery }, "/getClients", { equal: true });
-    for (let project of allProjects) {
-      for (let client of clients) {
-        if (project.cliid === client.cliid) {
-          project.name = client.name;
-          requests = client.requests;
-          boo = false;
-          for (let { request } of requests) {
-            if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
-              boo = true;
-              project.pyeong = request.space.pyeong;
-            }
-          }
-          if (!boo) {
-            project.pyeong = requests[0].request.space.pyeong;
-          }
-        }
-      }
-    }
-
-    price = await ajaxJson({
-      mode: "read",
-      db: "console",
-      collection: "designerPrice",
-      whereQuery: {},
-    }, "/generalMongo", { equal: true });
     for (let obj of price) {
       if (obj.key === 33) {
         standard = obj;
         break;
-      }
-    }
-
-    whereQuery = {};
-    contentsArr = await ajaxJson({ noFlat: true, whereQuery }, "/getContents", { equal: true });
-    for (let c of contentsArr) {
-      for (let client of clients) {
-        if (c.cliid === client.cliid) {
-          c.name = client.name;
-        }
       }
     }
 
@@ -1403,6 +1337,7 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
   const standardBar = this.standardDoms[0].parentElement;
   const { colorChip } = GeneralJs;
   let target;
+  let loading;
 
   this.desid = desid;
 
@@ -1464,9 +1399,19 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
       }
     }
   }
+
   totalMother.scrollTo({ top: 0, behavior: "smooth" });
-  this.reportDetail(desid);
   this.reportIconSet(desid);
+  this.mother.loadingRun().then((l) => {
+    loading = l;
+    return instance.reportDataRendering(desid);
+  }).then(() => {
+    loading.parentNode.removeChild(loading);
+    instance.reportDetail(desid);
+  }).catch((err) => {
+    console.log(err);
+  });
+
 }
 
 DesignerJs.prototype.reportDetail = function (desid) {
@@ -2431,8 +2376,6 @@ DesignerJs.prototype.reportView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
-
-    await this.reportDataRendering();
 
     minWidth = 210;
     margin = 8;

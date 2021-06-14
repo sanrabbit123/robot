@@ -1014,38 +1014,12 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_getContentsReport = function () {
-  const instance = this;
-  const SnsParsing = require(`${process.cwd()}/apps/snsParsing/snsParsing.js`);
-  const sns = new SnsParsing();
-  const back = this.back;
-  let obj = {};
-  obj.link = "/getContentsReport";
-  obj.func = async function (req, res) {
-    try {
-      let resultArr;
-
-      resultArr = {};
-
-      resultArr.data = await sns.getSnsReport();
-      resultArr.flat = resultArr.data.flatDeath();
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(resultArr));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_getDesignerReport = function () {
+DataRouter.prototype.rou_post_getAspirantInfo = function () {
   const instance = this;
   const back = this.back;
   const patch = this.patch;
   let obj = {};
-  obj.link = [ "/getDesignerReport", "/updateDesignerReport", "/viewDesignerRawPortfolio" ];
+  obj.link = [ "/getAspirantReport", "/updateAspirantReport", "/viewAspirantRawPortfolio" ];
   obj.func = async function (req, res) {
     try {
       const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
@@ -1087,7 +1061,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
       let phoneTong;
       let tempAspirants, tempAspirant;
 
-      if (req.url === "/getDesignerReport") {
+      if (req.url === "/getAspirantReport") {
 
         row = await back.getAspirantsByQuery({ "meeting.status": { "$not": { "$regex": "드" } } }, { withTools: true, selfMongo: instance.mongo, portfolioReset: true });
         realData = [];
@@ -1099,7 +1073,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
 
-      } else if (req.url === "/updateDesignerReport") {
+      } else if (req.url === "/updateAspirantReport") {
 
         whereQuery = {};
         updateQuery = {};
@@ -1130,7 +1104,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "success" }));
 
-      } else if (req.url === "/viewDesignerRawPortfolio") {
+      } else if (req.url === "/viewAspirantRawPortfolio") {
 
         whereQuery = {};
         whereQuery[updateStandard] = req.body.standard;
@@ -1140,6 +1114,93 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         res.send(JSON.stringify({ message: "success" }));
       }
 
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getDesignerReport = function () {
+  const instance = this;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/getDesignerReport";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("must be desid");
+      }
+      const { desid } = req.body;
+      const selfMongo = instance.mongo;
+      let projects;
+      let whereQuery;
+      let cliidArr_raw, cliidArr;
+      let clients;
+      let requests, boo;
+      let contentsArr;
+      let price;
+
+      res.set("Content-Type", "application/json");
+
+      whereQuery = {
+        $or: [
+          { desid },
+          { "proposal.detail": { $elemMatch: { desid } } }
+        ]
+      };
+
+      projects = await back.getProjectsByQuery(whereQuery, { selfMongo });
+      if (projects.length > 0) {
+
+        cliidArr_raw = [];
+        for (let p of projects) {
+          cliidArr_raw.push(p.cliid);
+        }
+        cliidArr_raw = Array.from(new Set(cliidArr_raw));
+        cliidArr = cliidArr_raw.map((c) => { return { cliid: c }; });
+        whereQuery = { $or: [] };
+        for (let obj of cliidArr) {
+          whereQuery["$or"].push(obj);
+        }
+        clients = (await back.getClientsByQuery(whereQuery, { selfMongo })).toNormal();
+
+        for (let project of projects) {
+          for (let client of clients) {
+            if (project.cliid === client.cliid) {
+              project.name = client.name;
+              requests = client.requests;
+              boo = false;
+              for (let { request } of requests) {
+                if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                  boo = true;
+                  project.pyeong = request.space.pyeong;
+                }
+              }
+              if (!boo) {
+                project.pyeong = requests[0].request.space.pyeong;
+              }
+            }
+          }
+        }
+
+      } else {
+        clients = [];
+      }
+
+      contentsArr = await back.getContentsArrByQuery({ desid }, { selfMongo });
+      for (let c of contentsArr) {
+        for (let client of clients) {
+          if (c.cliid === client.cliid) {
+            c.name = client.name;
+          }
+        }
+      }
+
+      price = await back.mongoRead("designerPrice", {}, { selfMongo });
+
+      res.send(JSON.stringify({ projects, clients, contentsArr, price }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
@@ -1460,7 +1521,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
         }
 
       } else {
-        
+
         ghostRequest("/sendSheets", req.body).then((res) => { console.log(res); }).catch((err) => { throw new Error("send sheets error"); });
         response = "will do";
 

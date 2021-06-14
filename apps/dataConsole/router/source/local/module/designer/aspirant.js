@@ -206,7 +206,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue + "&calendar=true", "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue + "&calendar=true", "/updateAspirantReport", function (res) {
             let statusDom;
 
             mother.setAttribute("alarm", "off");
@@ -224,7 +224,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
             if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
               statusDom.firstChild.textContent = alarmStandard[data.mode].convertValue;
-              GeneralJs.ajax("standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateDesignerReport", function (res) {});
+              GeneralJs.ajax("standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateAspirantReport", function (res) {});
             }
 
             for (let obj of data.data) {
@@ -343,7 +343,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
           targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
 
-          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateDesignerReport", function (res) {
+          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateAspirantReport", function (res) {
             let alarmCircle;
 
             if (alarmStandard[data.mode].standard === thisColumnName) {
@@ -536,7 +536,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       mother.removeChild(mother.lastChild);
     }
     loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=total", "/getDesignerReport", function (data) {
+    GeneralJs.ajax("mode=total", "/getAspirantReport", function (data) {
       loadingIcon.style.opacity = "0";
       instance.reportContents(JSON.parse(data), mother, loadingIcon);
     });
@@ -576,7 +576,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       mother.removeChild(mother.lastChild);
     }
     loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=presentation", "/getDesignerReport", function (data) {
+    GeneralJs.ajax("mode=presentation", "/getAspirantReport", function (data) {
       loadingIcon.style.opacity = "0";
       instance.reportContents(JSON.parse(data), mother, loadingIcon);
     });
@@ -616,7 +616,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       mother.removeChild(mother.lastChild);
     }
     loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=partnership", "/getDesignerReport", function (data) {
+    GeneralJs.ajax("mode=partnership", "/getAspirantReport", function (data) {
       loadingIcon.style.opacity = "0";
       instance.reportContents(JSON.parse(data), mother, loadingIcon);
     });
@@ -893,7 +893,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
               mother.removeChild(mother.lastChild);
             }
             loadingIcon.style.opacity = "1";
-            GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getDesignerReport", function (data) {
+            GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getAspirantReport", function (data) {
               loadingIcon.style.opacity = "0";
               instance.reportContents(JSON.parse(data), mother, loadingIcon, function (doms) {
                 const target = (doms.valueFilter("phone", phone))[0];
@@ -930,7 +930,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 }
               }
             }
-            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
+            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewAspirantRawPortfolio", function (data) {});
             window.open(str, "_blank");
           } else {
             alert("포트폴리오가 없습니다!");
@@ -1447,7 +1447,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 }
               }
             }
-            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewDesignerRawPortfolio", function (data) {});
+            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewAspirantRawPortfolio", function (data) {});
             window.open(str, "_blank");
           } else {
             alert("포트폴리오가 없습니다!");
@@ -1851,7 +1851,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("mode=total", "/getDesignerReport", function (data) {
+      GeneralJs.ajax("mode=total", "/getAspirantReport", function (data) {
         svg_icon.style.opacity = "0";
         instance.reportContents(JSON.parse(data), div_clone, svg_icon);
       });

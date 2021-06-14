@@ -198,7 +198,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       last = true;
     }
   }
-
   if (this.type === "photo") {
 
     map = {
@@ -3373,6 +3372,7 @@ DesignerJs.prototype.contentsView = async function () {
         { "contents.sns.portfolio.short": { $gte: new Date() } },
         { "contents.sns.interview.long": { $gte: new Date() } },
         { "contents.sns.interview.short": { $gte: new Date() } },
+        { "process.calculation.payments.remain.date": { $lte: new Date(2000, 0, 1) } }
       ]
     });
 
