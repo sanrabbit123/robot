@@ -546,11 +546,14 @@ GraphicBot.prototype.botServer = async function () {
       path = req.body.path;
       data = equalJson(req.body.data);
 
-      requestSystem(map(to) + path, data, { headers: { "Content-Type": "application/json" } }).then((res) => {
-        console.log("request done");
-      }).catch((err) => {
-        console.log(err);
-      });
+      // { json: JSON.stringify(data) }
+      console.log(data);
+
+      // requestSystem(map(to) + path, data, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      //   console.log("request done");
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
 
       res.set({
         "Content-Type": "application/json",

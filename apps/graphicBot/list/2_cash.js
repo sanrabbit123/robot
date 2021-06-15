@@ -136,7 +136,7 @@ module.exports = function () {
           });
         }
 
-        total.push(middle);
+        total.push(textArr);
         await sleep(500);
       }
 
