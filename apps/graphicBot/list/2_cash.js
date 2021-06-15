@@ -2,7 +2,7 @@ module.exports = function () {
   return [
     "https://www.hometax.go.kr/",
     "wait_3000",
-    [ 910, 112, 2000 ],
+    [ 910, 112, 3000 ],
     [ 892, 367, 500 ],
     [ 1145, 575, 1000 ],
     [ 669, 606, { x: 669, y: 606, color: "#fff4d1" } ],
