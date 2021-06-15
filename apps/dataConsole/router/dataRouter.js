@@ -1838,7 +1838,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   const back = this.back;
   const members = this.members;
   let obj = {};
-  obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory" ];
+  obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory" ];
   obj.func = async function (req, res) {
     try {
       const today = new Date();

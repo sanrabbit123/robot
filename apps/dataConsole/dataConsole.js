@@ -18,6 +18,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
+  const FRONTHOST = "https://" + this.address.frontinfo.host;
   try {
 
     //set static
@@ -84,7 +85,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -98,6 +99,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
+    frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
@@ -146,7 +148,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + svgTongString;
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + svgTongString;
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -190,6 +192,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
+  const FRONTHOST = "https://" + this.address.frontinfo.host;
   try {
 
     //set static
@@ -206,7 +209,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     }
     console.log(`set middle static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString;
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -272,6 +275,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     ghostString = "const GHOSTHOST = \"" + GHOSTHOST + "\";";
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
+    frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
@@ -368,7 +372,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + svgTongString + "\n\n" + generalSvg;
+      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + svgTongString + "\n\n" + generalSvg;
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString;
       code3 = fileString + "\n\n" + execString;

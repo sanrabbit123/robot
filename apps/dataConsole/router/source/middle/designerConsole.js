@@ -46,62 +46,163 @@ const DesignerConsoleJs = function () {
 
 DesignerConsoleJs.prototype.leftPannel = function () {
   const instance = this;
-  const { ea, designer, desid } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
-  const mother = document.querySelector(".totalMother").firstChild;
+  const { ea, designer, desid, modes } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo } = GeneralJs;
+  const totalMother = document.querySelector(".totalMother");
+  const mother = totalMother.firstChild;
+  const colorFunc = function () {
+    const doms = document.querySelectorAll(".leftTitles");
+    const menus = document.querySelectorAll(".leftMenus");
+    for (let dom of doms) {
+      dom.style.color = (dom === this.children[1]) ? colorChip.green : colorChip.black;
+    }
+    for (let dom of menus) {
+      if (dom === this) {
+        dom.setAttribute("toggle", "on");
+      } else {
+        dom.setAttribute("toggle", "off");
+      }
+    }
+  }
   const menuMap = [
     {
       title: "기본 정보",
       event: function (e) {
-        console.log("this!1");
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), 0);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            scrollTo(document.querySelector(".totalMother"), 0);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "작업 정보",
       event: function (e) {
-        console.log("this!2");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[3]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[3]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "시공 정보",
       event: function (e) {
-        console.log("this!3");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[4]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[4]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "스타일링 정보",
       event: function (e) {
-        console.log("this!4");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[5]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[5]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "기타 정보",
       event: function (e) {
-        console.log("this!5");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[6]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[6]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "일정 정보",
       event: function (e) {
-        console.log("this!6");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[8]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[8]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "세팅 정보",
       event: function (e) {
-        console.log("this!7");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[0]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[9]);
+        } else {
+          instance.checkListDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[9]);
+          });
+        }
+        instance.mode = modes[0];
+        colorFunc.call(this);
       },
     },
     {
       title: "정산 정보",
       event: function (e) {
-        console.log("this!8");
+        if (instance.mode === modes[1]) {
+          scrollTo(document.querySelector(".totalMother"), 0);
+        } else {
+          instance.reportDetailLaunching(desid, () => {
+            scrollTo(document.querySelector(".totalMother"), 0);
+          });
+        }
+        instance.mode = modes[1];
+        colorFunc.call(this);
       },
     },
     {
       title: "컨텐츠 정보",
       event: function (e) {
-        console.log("this!9");
+        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+        if (instance.mode === modes[1]) {
+          scrollTo(document.querySelector(".totalMother"), blocks[3]);
+        } else {
+          instance.reportDetailLaunching(desid, () => {
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            scrollTo(document.querySelector(".totalMother"), blocks[3]);
+          });
+        }
+        instance.mode = modes[1];
+        colorFunc.call(this);
       },
     },
   ];
@@ -128,7 +229,10 @@ DesignerConsoleJs.prototype.leftPannel = function () {
   menu = [];
   for (let i = 0; i < menuMap.length; i++) {
     menu.push({
-      class: [ "hoverDefault" ],
+      class: [ "hoverDefault", "leftMenus" ],
+      attribute: [
+        { toggle: (i === 0) ? "on" : "off" }
+      ],
       events: [
         {
           type: "click",
@@ -150,19 +254,20 @@ DesignerConsoleJs.prototype.leftPannel = function () {
             top: String(0),
             left: String(0),
             fontSize: "inherit",
-            fontWeight: "inherit",
+            fontWeight: String(300),
             color: colorChip.green,
           }
         },
         {
           text: menuMap[i].title,
+          class: [ "leftTitles" ],
           style: {
             position: "absolute",
             top: String(0),
             left: String(indent) + ea,
             fontSize: "inherit",
             fontWeight: "inherit",
-            color: "inherit",
+            color: (i === 0 ? colorChip.green : "inherit"),
           }
         },
       ]
@@ -205,9 +310,6 @@ DesignerConsoleJs.prototype.leftPannel = function () {
       ...menu
     ]
   });
-
-
-
 
 }
 
@@ -452,6 +554,8 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.belowHeight = 0;
     this.designer = designer;
     this.desid = desid;
+    this.modes = [ "checklist", "report" ];
+    this.mode = this.modes[0];
 
     if (window.localStorage.getItem("desid") === this.desid) {
       this.checkListView(true).then(() => {

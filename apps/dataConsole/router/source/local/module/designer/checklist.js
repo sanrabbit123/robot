@@ -2491,7 +2491,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
   return checkListData;
 }
 
-DesignerJs.prototype.checkListDetailLaunching = function (desid) {
+DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight } = this;
   const totalMother = document.querySelector(".totalMother");
@@ -2501,9 +2501,9 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid) {
 
   this.desid = desid;
 
-  if (this.checkListBaseTong !== undefined && this.checkListBaseTong !== null) {
-    this.checkListBaseTong.parentNode.removeChild(this.checkListBaseTong);
-    this.checkListBaseTong = null;
+  if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
+    this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
+    this.mainBaseTong = null;
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
@@ -2562,6 +2562,11 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid) {
   totalMother.scrollTo({ top: 0, behavior: "smooth" });
   this.checkListDetail(desid);
   this.checkListIconSet(desid);
+  if (callback !== null) {
+    if (typeof callback === "function") {
+      callback();
+    }
+  }
 }
 
 DesignerJs.prototype.checkListDetail = function (desid) {
@@ -2623,6 +2628,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
   baseTong0 = createNode({
     mother: totalMother,
+    class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
       top: String(margin * 3) + ea,
@@ -3192,14 +3198,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
   }
 
-  this.checkListBaseTong = baseTong0;
+  this.mainBaseTong = baseTong0;
 }
 
 DesignerJs.prototype.checkListDesignerMemo = function (desid) {
   const instance = this;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
-  const baseTong = this.checkListBaseTong;
+  const baseTong = this.mainBaseTong;
   const designer = this.designers.pick(desid);
   return async function (e) {
     try {
@@ -3417,6 +3423,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -3465,6 +3472,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -3513,6 +3521,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -3550,22 +3559,83 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   this.nextIcon = nextIcon;
   this.rInitialIcon = rInitialIcon;
 
-  listIcon.addEventListener("click", function (e) {
-    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
-  });
+  if (!this.middleMode) {
 
-  previousIcon.addEventListener("click", function (e) {
-    const { desid: previousDesid } = instance.designers.previous(desid);
-    instance.checkListDetailLaunching(previousDesid);
-  });
+    listIcon.addEventListener("click", function (e) {
+      blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
+    });
 
-  nextIcon.addEventListener("click", function (e) {
-    const { desid: nextDesid } = instance.designers.next(desid);
-    instance.checkListDetailLaunching(nextDesid);
-  });
+    previousIcon.addEventListener("click", function (e) {
+      const { desid: previousDesid } = instance.designers.previous(desid);
+      if (instance.modes.indexOf(instance.mode) === 0) {
+        instance.checkListDetailLaunching(previousDesid);
+      } else {
+        instance.reportDetailLaunching(previousDesid);
+      }
+    });
+
+    nextIcon.addEventListener("click", function (e) {
+      const { desid: nextDesid } = instance.designers.next(desid);
+      if (instance.modes.indexOf(instance.mode) === 0) {
+        instance.checkListDetailLaunching(nextDesid);
+      } else {
+        instance.reportDetailLaunching(nextDesid);
+      }
+    });
+
+  } else {
+
+    listIcon.addEventListener("click", function (e) {
+      let num = designer.information.did.replace(/[^0-9]/g, '');
+      let id;
+      id = '';
+      for (let i = 0; i < 3 - num.length; i++) {
+        id += '0';
+      }
+      id += num;
+      blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+    });
+
+    previousIcon.addEventListener("click", function (e) {
+      const targets = document.querySelectorAll(".leftMenus");
+      if (targets.length > 0) {
+        let index, target;
+        index = null;
+        for (let i = 0; i < targets.length; i++) {
+          if (targets[i].getAttribute("toggle") === "on") {
+            index = i;
+          }
+        }
+        if (index === null) {
+          throw new Error("invaild index");
+        }
+        target = targets[index - 1] === undefined ? targets[targets.length - 1] : targets[index - 1];
+        target.click();
+      }
+    });
+
+    nextIcon.addEventListener("click", function (e) {
+      const targets = document.querySelectorAll(".leftMenus");
+      if (targets.length > 0) {
+        let index, target;
+        index = null;
+        for (let i = 0; i < targets.length; i++) {
+          if (targets[i].getAttribute("toggle") === "on") {
+            index = i;
+          }
+        }
+        if (index === null) {
+          throw new Error("invaild index");
+        }
+        target = targets[index + 1] === undefined ? targets[0] : targets[index + 1];
+        target.click();
+      }
+    });
+
+  }
 
   rInitialIcon.addEventListener("click", function (e) {
-    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=report&desid=" + desid;
+    instance.reportDetailLaunching(desid);
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
@@ -3678,49 +3748,51 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
 
         instance.designers.update([ whereQuery, updateQuery ]);
 
-        if (type === "string") {
-          targetDom.removeChild(targetDom.firstChild);
-          targetDom.insertAdjacentHTML("beforeend", value);
-        } else if (type === "matrix") {
-          const children = targetDom.children;
-          const length = children.length;
-          for (let z = 0; z < length; z++) {
-            if (value[z] === 1) {
-              children[z].style.color = colorChip.green;
-              children[z].setAttribute("toggle", String(1));
-            } else {
-              children[z].style.color = colorChip.gray4;
-              children[z].setAttribute("toggle", String(0));
-            }
-          }
-        } else if (type === "tendency") {
-          const children = targetDom.children;
-          const [ z, t, opposite, matrixButtonConst ] = value;
-          const factors = children[z].querySelectorAll("div");
-          const length = factors.length;
-          for (let i = 0; i < length; i++) {
-            if (i <= t) {
-              factors[i].setAttribute("toggle", String(1));
-              factors[i].style.background = colorChip.green;
-            } else {
-              factors[i].setAttribute("toggle", String(0));
-              factors[i].style.background = colorChip.gray2;
-            }
-          }
-          if (opposite) {
-            const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(position.x) + String(position.y) + String(1 - z));
-            for (let i = 0; i < oppositeButtons.length; i++) {
-              if (i < oppositeButtons.length - t - 1) {
-                oppositeButtons[i].setAttribute("toggle", String(1));
-                oppositeButtons[i].style.background = colorChip.green;
+        if (targetDom !== null && targetDom !== undefined) {
+          if (type === "string") {
+            targetDom.removeChild(targetDom.firstChild);
+            targetDom.insertAdjacentHTML("beforeend", value);
+          } else if (type === "matrix") {
+            const children = targetDom.children;
+            const length = children.length;
+            for (let z = 0; z < length; z++) {
+              if (value[z] === 1) {
+                children[z].style.color = colorChip.green;
+                children[z].setAttribute("toggle", String(1));
               } else {
-                oppositeButtons[i].setAttribute("toggle", String(0));
-                oppositeButtons[i].style.background = colorChip.gray2;
+                children[z].style.color = colorChip.gray4;
+                children[z].setAttribute("toggle", String(0));
               }
             }
+          } else if (type === "tendency") {
+            const children = targetDom.children;
+            const [ z, t, opposite, matrixButtonConst ] = value;
+            const factors = children[z].querySelectorAll("div");
+            const length = factors.length;
+            for (let i = 0; i < length; i++) {
+              if (i <= t) {
+                factors[i].setAttribute("toggle", String(1));
+                factors[i].style.background = colorChip.green;
+              } else {
+                factors[i].setAttribute("toggle", String(0));
+                factors[i].style.background = colorChip.gray2;
+              }
+            }
+            if (opposite) {
+              const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(position.x) + String(position.y) + String(1 - z));
+              for (let i = 0; i < oppositeButtons.length; i++) {
+                if (i < oppositeButtons.length - t - 1) {
+                  oppositeButtons[i].setAttribute("toggle", String(1));
+                  oppositeButtons[i].style.background = colorChip.green;
+                } else {
+                  oppositeButtons[i].setAttribute("toggle", String(0));
+                  oppositeButtons[i].style.background = colorChip.gray2;
+                }
+              }
+            }
+          } else if (type === "longtext") {
+            targetDom.querySelector("textarea").value = value;
           }
-        } else if (type === "longtext") {
-          targetDom.querySelector("textarea").value = value;
         }
 
       }
@@ -3757,6 +3829,9 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.middleMode = middleMode;
+    this.modes = [ "checklist", "report" ];
+    this.mode = this.modes[0];
+    this.result = null;
 
     minWidth = 210;
     margin = 8;
@@ -3811,7 +3886,6 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
       this.standardDoms[i].addEventListener("click", (e) => {
         instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
       });
-      this.standardDoms[i].addEventListener("contextmenu", this.makeClipBoardEvent(this.standardDoms[i].getAttribute("desid")));
       children = this.standardDoms[i].children;
       childrenLength = children.length;
       for (let j = 0; j < childrenLength; j++) {
@@ -3833,6 +3907,9 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
 
     //launching
     this.checkListDetailLaunching(this.desid);
+
+    //add extract event
+    this.reportAddExtractEvent();
 
   } catch (e) {
     console.log(e);

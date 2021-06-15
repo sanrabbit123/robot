@@ -149,6 +149,20 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             "string",
             "string",
           ],
+          middle: [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            true,
+            true,
+            true
+          ]
         };
         const contractConst = {
           width: [
@@ -205,6 +219,24 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             "string",
             "string",
           ],
+          middle: [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            true,
+            true
+          ]
         };
         const priceConst = {
           width: [
@@ -220,7 +252,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             130,
           ],
           columns: [
-            "가산점",
+            "추가값",
             "서비스명",
             "0 - 8",
             "9 - 14",
@@ -281,6 +313,18 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             "string",
             "string"
           ],
+          middle: [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true
+          ]
         };
         const homepage = "https://home-liaison.com";
         const portfolioPath = "/portdetail.php";
@@ -1128,6 +1172,53 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
         }
         resultObj.price.push(tempArr);
 
+        if (instance.middleMode) {
+          resultObj.proposal.columns = resultObj.proposal.columns.filter((element, i) => { return proposalConst.middle[i]; });
+          resultObj.proposal.typeArr = resultObj.proposal.typeArr.filter((element, i) => { return proposalConst.middle[i]; });
+          resultObj.proposal.width = resultObj.proposal.width.filter((element, i) => { return proposalConst.middle[i]; });
+          for (let obj of resultObj.proposal) {
+            for (let m = 0; m < obj.matrix.length; m++) {
+              obj.matrix[m] = obj.matrix[m].filter((element, i) => { return proposalConst.middle[i]; });
+            }
+          }
+          for (let obj of resultObj.proposal.result.words) {
+            obj.values.pop();
+          }
+          for (let obj of resultObj.proposal.result.total.words) {
+            obj.values.pop();
+          }
+          for (let obj of resultObj.proposal.result.year.words) {
+            obj.values.pop();
+          }
+
+          resultObj.contract.columns = resultObj.contract.columns.filter((element, i) => { return contractConst.middle[i]; });
+          resultObj.contract.typeArr = resultObj.contract.typeArr.filter((element, i) => { return contractConst.middle[i]; });
+          resultObj.contract.width = resultObj.contract.width.filter((element, i) => { return contractConst.middle[i]; });
+          for (let obj of resultObj.contract) {
+            for (let m = 0; m < obj.matrix.length; m++) {
+              obj.matrix[m] = obj.matrix[m].filter((element, i) => { return contractConst.middle[i]; });
+            }
+          }
+          for (let obj of resultObj.contract.result.words) {
+            obj.values.pop();
+          }
+          for (let obj of resultObj.contract.result.total.words) {
+            obj.values.pop();
+          }
+          for (let obj of resultObj.contract.result.year.words) {
+            obj.values.pop();
+          }
+
+          resultObj.contents.columns = resultObj.contents.columns.filter((element, i) => { return contentsConst.middle[i]; });
+          resultObj.contents.typeArr = resultObj.contents.typeArr.filter((element, i) => { return contentsConst.middle[i]; });
+          resultObj.contents.width = resultObj.contents.width.filter((element, i) => { return contentsConst.middle[i]; });
+          for (let obj of resultObj.contents) {
+            for (let m = 0; m < obj.matrix.length; m++) {
+              obj.matrix[m] = obj.matrix[m].filter((element, i) => { return contentsConst.middle[i]; });
+            }
+          }
+        }
+
         return resultObj;
       }
     }
@@ -1330,7 +1421,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
   }
 }
 
-DesignerJs.prototype.reportDetailLaunching = function (desid) {
+DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight } = this;
   const totalMother = document.querySelector(".totalMother");
@@ -1341,9 +1432,9 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
 
   this.desid = desid;
 
-  if (this.reportBaseTong !== undefined && this.reportBaseTong !== null) {
-    this.reportBaseTong.parentNode.removeChild(this.reportBaseTong);
-    this.reportBaseTong = null;
+  if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
+    this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
+    this.mainBaseTong = null;
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
@@ -1408,6 +1499,11 @@ DesignerJs.prototype.reportDetailLaunching = function (desid) {
   }).then(() => {
     loading.parentNode.removeChild(loading);
     instance.reportDetail(desid);
+    if (callback !== null) {
+      if (typeof callback === "function") {
+        callback();
+      }
+    }
   }).catch((err) => {
     console.log(err);
   });
@@ -1672,6 +1768,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
 
   baseTong0 = createNode({
     mother: totalMother,
+    class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
       top: String(margin * 3) + ea,
@@ -1800,7 +1897,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
 
       tempObj = {
         mother: eachValueTong,
-        class: [ "dom_" + String(i) + "_" + String(j) ],
+        class: [ "report_" + String(i) + "_" + String(j) ],
         attribute: [
           { x: String(i) },
           { y: String(j) },
@@ -1821,7 +1918,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
         for (let h = 0; h < reportData[i].children[j].matrix.length; h++) {
           tempObj = {
             mother: -1 + (-1 * h * (reportData[i].children[j].width.length + 1)),
-            class: [ "dom_" + String(i) + "_" + String(j), "dom_" + String(i) + "_" + String(j) + "_" + String(h) ],
+            class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
             attribute: [
               { x: String(i) },
               { y: String(j) },
@@ -1863,7 +1960,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
         for (let h = 0; h < reportData[i].children[j].result.words.length; h++) {
           tempObj = {
             mother: -1 + (-1 * h * ((reportData[i].children[j].result.words[h].values.length * 2) + 1 + 1)),
-            class: [ "dom_" + String(i) + "_" + String(j), "dom_" + String(i) + "_" + String(j) + "_" + String(h) ],
+            class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
             attribute: [
               { x: String(i) },
               { y: String(j) },
@@ -1961,7 +2058,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
             let targets, temp, length;
 
             targets = [];
-            temp = document.querySelector(".dom_" + String(x) + "_" + String(y));
+            temp = document.querySelector(".report_" + String(x) + "_" + String(y));
             targets.push(temp);
             temp = document.querySelector(".name_" + String(x) + "_" + String(y));
             targets.push(temp);
@@ -2039,7 +2136,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
     });
   }
 
-  this.reportBaseTong = baseTong0;
+  this.mainBaseTong = baseTong0;
 }
 
 DesignerJs.prototype.reportIconSet = function (desid) {
@@ -2107,6 +2204,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2155,6 +2253,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2203,6 +2302,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2240,22 +2340,83 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   this.nextIcon = nextIcon;
   this.cInitialIcon = cInitialIcon;
 
-  listIcon.addEventListener("click", function (e) {
-    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
-  });
+  if (!this.middleMode) {
 
-  previousIcon.addEventListener("click", function (e) {
-    const { desid: previousDesid } = instance.designers.previous(desid);
-    instance.reportDetailLaunching(previousDesid);
-  });
+    listIcon.addEventListener("click", function (e) {
+      blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
+    });
 
-  nextIcon.addEventListener("click", function (e) {
-    const { desid: nextDesid } = instance.designers.next(desid);
-    instance.reportDetailLaunching(nextDesid);
-  });
+    previousIcon.addEventListener("click", function (e) {
+      const { desid: previousDesid } = instance.designers.previous(desid);
+      if (instance.modes.indexOf(instance.mode) === 0) {
+        instance.checkListDetailLaunching(previousDesid);
+      } else {
+        instance.reportDetailLaunching(previousDesid);
+      }
+    });
+
+    nextIcon.addEventListener("click", function (e) {
+      const { desid: nextDesid } = instance.designers.next(desid);
+      if (instance.modes.indexOf(instance.mode) === 0) {
+        instance.checkListDetailLaunching(nextDesid);
+      } else {
+        instance.reportDetailLaunching(nextDesid);
+      }
+    });
+
+  } else {
+
+    listIcon.addEventListener("click", function (e) {
+      let num = designer.information.did.replace(/[^0-9]/g, '');
+      let id;
+      id = '';
+      for (let i = 0; i < 3 - num.length; i++) {
+        id += '0';
+      }
+      id += num;
+      blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+    });
+
+    previousIcon.addEventListener("click", function (e) {
+      const targets = document.querySelectorAll(".leftMenus");
+      if (targets.length > 0) {
+        let index, target;
+        index = null;
+        for (let i = 0; i < targets.length; i++) {
+          if (targets[i].getAttribute("toggle") === "on") {
+            index = i;
+          }
+        }
+        if (index === null) {
+          throw new Error("invaild index");
+        }
+        target = targets[index - 1] === undefined ? targets[targets.length - 1] : targets[index - 1];
+        target.click();
+      }
+    });
+
+    nextIcon.addEventListener("click", function (e) {
+      const targets = document.querySelectorAll(".leftMenus");
+      if (targets.length > 0) {
+        let index, target;
+        index = null;
+        for (let i = 0; i < targets.length; i++) {
+          if (targets[i].getAttribute("toggle") === "on") {
+            index = i;
+          }
+        }
+        if (index === null) {
+          throw new Error("invaild index");
+        }
+        target = targets[index + 1] === undefined ? targets[0] : targets[index + 1];
+        target.click();
+      }
+    });
+
+  }
 
   cInitialIcon.addEventListener("click", function (e) {
-    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=checklist&desid=" + desid;
+    instance.checkListDetailLaunching(desid);
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
@@ -2346,6 +2507,66 @@ DesignerJs.prototype.reportIconSet = function (desid) {
 
 }
 
+DesignerJs.prototype.reportAddExtractEvent = function () {
+  const instance = this;
+  const { ea } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  if (this.mother.belowButtons !== undefined && this.mother.belowButtons !== null) {
+    if (this.mother.belowButtons.sub !== undefined && this.mother.belowButtons.sub !== null) {
+      if (this.mother.belowButtons.sub.extractIcon !== undefined && this.mother.belowButtons.sub.extractIcon !== null) {
+        this.mother.belowButtons.sub.extractIcon.addEventListener("click", (e) => {
+          if (instance.result !== null) {
+            const width = 50;
+            const [ back, icon ] = createNodes([
+              {
+                mother: instance.totalMother,
+                class: [ "justfadein" ],
+                style: {
+                  position: "fixed",
+                  zIndex: String(2),
+                  background: "#404040",
+                  opacity: String(0.2),
+                  width: "100%",
+                  height: "100%",
+                  top: String(0),
+                  left: String(0),
+                }
+              },
+              {
+                mother: instance.totalMother,
+                class: [ "loading" ],
+                mode: "svg",
+                source: instance.mother.returnLoading(),
+                style: {
+                  position: "fixed",
+                  zIndex: String(2),
+                  width: String(width) + ea,
+                  height: String(width) + ea,
+                  top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
+                  left: "calc(50% - " + String((width / 2)) + ea + ")",
+                }
+              }
+            ]);
+            instance.result.toSheets().then((link) => {
+              back.classList.remove("justfadein");
+              back.classList.add("justfadeout");
+              icon.style.opacity = "0";
+              GeneralJs.timeouts["extractPendingBack"] = setTimeout(() => {
+                let viewFunction;
+                instance.totalMother.removeChild(instance.totalMother.lastChild);
+                instance.totalMother.removeChild(instance.totalMother.lastChild);
+                window.alert("시트 제작이 요청되었습니다! 슬랙을 통해 링크가 갈 예정입니다!");
+                clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
+                GeneralJs.timeouts["extractPendingBack"] = null;
+              }, 401);
+            });
+          }
+        });
+      }
+    }
+  }
+}
+
 DesignerJs.prototype.reportView = async function (middleMode = false) {
   const instance = this;
   try {
@@ -2354,7 +2575,6 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
     await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
-    const { sub: { extractIcon } } = this.mother.belowButtons;
     const standardBar = totalMother.firstChild;
     const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
     const length = designers.length;
@@ -2377,6 +2597,8 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
     this.middleMode = middleMode;
+    this.modes = [ "checklist", "report" ];
+    this.mode = this.modes[1];
 
     minWidth = 210;
     margin = 8;
@@ -2425,7 +2647,6 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
       this.standardDoms[i].addEventListener("click", (e) => {
         instance.reportDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
       });
-      this.standardDoms[i].addEventListener("contextmenu", this.makeClipBoardEvent(this.standardDoms[i].getAttribute("desid")));
       children = this.standardDoms[i].children;
       childrenLength = children.length;
       for (let j = 0; j < childrenLength; j++) {
@@ -2436,60 +2657,19 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
 
+    //sse
+    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    es.addEventListener("updateTong", (e) => {
+      instance.checkListSseParsing(equalJson(e.data));
+    });
+
     loading.parentNode.removeChild(loading);
 
     //launching
     this.reportDetailLaunching(this.desid);
 
     //add extract event
-    extractIcon.addEventListener("click", (e) => {
-      if (instance.result !== null) {
-        const width = 50;
-        const [ back, icon ] = createNodes([
-          {
-            mother: instance.totalMother,
-            class: [ "justfadein" ],
-            style: {
-              position: "fixed",
-              zIndex: String(2),
-              background: "#404040",
-              opacity: String(0.2),
-              width: "100%",
-              height: "100%",
-              top: String(0),
-              left: String(0),
-            }
-          },
-          {
-            mother: instance.totalMother,
-            class: [ "loading" ],
-            mode: "svg",
-            source: instance.mother.returnLoading(),
-            style: {
-              position: "fixed",
-              zIndex: String(2),
-              width: String(width) + ea,
-              height: String(width) + ea,
-              top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
-              left: "calc(50% - " + String((width / 2)) + ea + ")",
-            }
-          }
-        ]);
-        instance.result.toSheets().then((link) => {
-          back.classList.remove("justfadein");
-          back.classList.add("justfadeout");
-          icon.style.opacity = "0";
-          GeneralJs.timeouts["extractPendingBack"] = setTimeout(() => {
-            let viewFunction;
-            instance.totalMother.removeChild(instance.totalMother.lastChild);
-            instance.totalMother.removeChild(instance.totalMother.lastChild);
-            window.alert("시트 제작이 요청되었습니다! 슬랙을 통해 링크가 갈 예정입니다!");
-            clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
-            GeneralJs.timeouts["extractPendingBack"] = null;
-          }, 401);
-        });
-      }
-    });
+    this.reportAddExtractEvent();
 
   } catch (e) {
     console.log(e);

@@ -36,6 +36,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   let temp, target;
   let num, leftPosition;
   let sortEventFunction;
+  let desidDom, desidArr;
 
   temp = {
     desid: standard.standard.desid.name,
@@ -161,6 +162,8 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
     }
   }
 
+  desidDom = [];
+  desidArr = [];
   num = (standard.search === null ? 0 : 1);
   for (let { desid, designer } of target) {
     if (num === 1) {
@@ -224,8 +227,10 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
     if (num !== 0) {
       if (!localMode) {
         div_clone2.addEventListener("click", this.whiteViewMaker(num));
-        div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(desid));
+        // div_clone2.addEventListener("contextmenu", this.makeClipBoardEvent(desid));
       }
+      desidDom.push({ desid, dom: div_clone2 });
+      desidArr.push(desid);
     }
 
     if (num !== 0) {
@@ -258,6 +263,35 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
       }, 401);
     }
   }
+
+  GeneralJs.ajax({
+    idArr: desidArr,
+    method: "designer",
+    property: "important"
+  }, "/getHistoryProperty", function (obj) {
+    const desidObj = JSON.parse(obj);
+    let boo, tempFunction;
+
+    if (desidObj !== null) {
+      for (let { desid, dom } of desidDom) {
+        if (desidObj[desid] === undefined) {
+          boo = false;
+        } else {
+          if (desidObj[desid]) {
+            boo = true;
+          } else {
+            boo = false;
+          }
+        }
+        dom.setAttribute("important", "false");
+        dom.addEventListener("contextmenu", instance.makeImportantEvent(desid));
+        if (boo) {
+          tempFunction = instance.makeImportantEvent(desid, !boo);
+          tempFunction.call(dom, { type: "click" });
+        }
+      }
+    }
+  });
 
 }
 
@@ -1503,6 +1537,66 @@ DesignerJs.prototype.spreadData = async function (search = null, localMode = fal
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
+  }
+}
+
+DesignerJs.prototype.makeImportantEvent = function (id, update = true) {
+  const instance = this;
+  const cookies = GeneralJs.getCookiesAll();
+  return async function (e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    try {
+      let alarmCircle, alarmStyle;
+      let children, length;
+      let ea;
+      let value;
+
+      ea = "px";
+      children = this.children;
+      length = children.length;
+
+      if (this.getAttribute("important") === "false") {
+
+        value = 1;
+        this.setAttribute("important", "true");
+
+        alarmStyle = {
+          position: "absolute",
+          transform: "scale(0.4)",
+          transformOrigin: "100% 0%",
+          right: String(-8.5) + ea,
+          top: (GeneralJs.isMac() ? String(3) : String(1)) + ea,
+          zIndex: String(0),
+        };
+
+        for (let i = 0; i < length; i++) {
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          for (let j in alarmStyle) {
+            alarmCircle.style[j] = alarmStyle[j];
+          }
+          children[i].appendChild(alarmCircle);
+        }
+
+      } else {
+
+        value = 0;
+        this.setAttribute("important", "false");
+        for (let i = 0; i < length; i++) {
+          children[i].removeChild(children[i].querySelector("svg"));
+        }
+
+      }
+
+      if (update) {
+        await GeneralJs.ajaxPromise("id=" + id + "&column=important&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateDesignerHistory");
+      }
+
+    } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+      console.log(e);
+    }
   }
 }
 
@@ -3780,7 +3874,7 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "checklist") {
 
-      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.checkListView();
       this.addTransFormEvent();
@@ -3800,7 +3894,7 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "report") {
 
-      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.reportView();
       this.addTransFormEvent();
@@ -3811,7 +3905,7 @@ DesignerJs.prototype.launching = async function () {
 
       tempFunction = this.cardViewMaker(true);
       await tempFunction();
-      await protoPatch(instance, `${modulePath}/checklist.js`);
+      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.checkListView();
       this.addTransFormEvent();
