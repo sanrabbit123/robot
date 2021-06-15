@@ -537,7 +537,7 @@ GraphicBot.prototype.botServer = async function () {
 
     app.post("/receive", (req, res) => {
       if (req.body.to === undefined || req.body.path === undefined || req.body.data === undefined) {
-        throw new Error("must be to, data");
+        throw new Error("must be to, data, path");
       }
 
       let to, path, data;
