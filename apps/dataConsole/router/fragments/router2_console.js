@@ -1198,7 +1198,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
         }
       }
 
-      price = await back.mongoRead("designerPrice", {}, { selfMongo });
+      price = await back.mongoRead("designerPrice", {}, { selfMongo: instance.mongolocal });
 
       res.send(JSON.stringify({ projects, clients, contentsArr, price }));
     } catch (e) {
