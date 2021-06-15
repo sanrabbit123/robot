@@ -125,20 +125,21 @@ module.exports = function () {
           middle.push({
             method: textArr[index - 1],
             time: stringToDate(textArr[index].trim()),
-            // business: ,
-            // from: ,
-            supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
-            vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
-            service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
-            total: Number(textArr[index + 4].replace(/[^0-9\-]/g, '')),
-            id: textArr[index + 5],
-            issuance: textArr[index + 6],
-            deal: /승인/gi.test(textArr[index + 7]),
-            etc: textArr[index + 8],
+            business: textArr[index + 2],
+            from: textArr[index + 3],
+            item: textArr[index + 5],
+            supply: Number(textArr[index + 6].replace(/[^0-9\-]/g, '')),
+            vat: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
+            service: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
+            total: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
+            id: textArr[index + 10],
+            issuance: textArr[index + 11],
+            deal: /승인/gi.test(textArr[index + 12]),
+            etc: textArr[index + 15],
           });
         }
 
-        total.push(textArr);
+        total.push(middle);
         await sleep(500);
       }
 

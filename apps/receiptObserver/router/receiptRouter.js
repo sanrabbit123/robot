@@ -143,14 +143,16 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   obj.func = async function (req, res) {
     try {
 
-      if (req.body.cashOut !== undefined) {
+      const json = equalJson(req.body.json);
 
-        const { cashOut } = req.body;
+      if (json.cashOut !== undefined) {
+
+        const { cashOut } = json;
         console.log(cashOut);
 
-      } else if (req.body.cashIn !== undefined) {
+      } else if (json.cashIn !== undefined) {
 
-        const { cashIn } = req.body;
+        const { cashIn } = json;
         console.log(cashIn);
 
       }
