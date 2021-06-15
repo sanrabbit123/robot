@@ -496,11 +496,11 @@ GraphicBot.prototype.botServer = async function () {
   const address = this.address;
   const map = function (to) {
     if (/python/gi.test(to)) {
-      return "https://" + address.pythoninfo.host;
+      return "https://" + address.pythoninfo.host + ":3000";
     } else if (/back/gi.test(to)) {
-      return "https://" + address.backinfo.host;
+      return "https://" + address.backinfo.host + ":3000";
     } else if (/bridge/gi.test(to)) {
-      return "https://" + address.bridgeinfo.host;
+      return "https://" + address.bridgeinfo.host + ":3000";
     } else if (/office/gi.test(to)) {
       return "https://" + address.officeinfo.ghost.host;
     } else if (/home/gi.test(to)) {
@@ -546,8 +546,6 @@ GraphicBot.prototype.botServer = async function () {
       path = req.body.path;
       data = equalJson(req.body.data);
 
-      console.log(map(to) + path);
-      console.log(data);
       requestSystem(map(to) + path, data, { headers: { "Content-Type": "application/json" } }).then((res) => {
         console.log("request done");
       }).catch((err) => {
