@@ -517,6 +517,7 @@ GraphicBot.prototype.botServer = async function () {
 
     let frontGeneralString, frontGeneral;
     frontGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    frontGeneralString += "const document = { createElement: (str) => { console.log(str); } };\n\n" + frontGeneralString;
     frontGeneralString += "\n\n" + "module.exports = GeneralJs";
     await fileSystem(`write`, [ `${process.cwd()}/temp/frontGeneral.js`, frontGeneralString ]);
     frontGeneral = require(`${process.cwd()}/temp/frontGeneral.js`);
