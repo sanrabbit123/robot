@@ -384,7 +384,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         this.value = this.value.replace(/[^0-9]/g, '');
         if (this.value.length === 4) {
           if (certification === this.value) {
-            instance.checkListView().then(() => {
+            instance.checkListView(true).then(() => {
               instance.checkListDetailLaunching(instance.desid);
               instance.leftPannel();
               total.style.animation = "justfadeoutoriginal 0.2s ease forwards";

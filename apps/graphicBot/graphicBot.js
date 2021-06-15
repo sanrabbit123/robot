@@ -1,10 +1,12 @@
 const GraphicBot = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const { exec } = require(`child_process`);
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
   this.tong = this.dir + "/tong";
@@ -12,6 +14,8 @@ const GraphicBot = function () {
   this.port = 3000;
   this.exec = exec;
   this.task = null;
+  this.front = 0;
+  this.frontGeneral = null;
 }
 
 GraphicBot.prototype.keypress = function (callback) {
@@ -323,6 +327,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     if (typeof num !== "number") {
       throw new Error("input must be number");
     }
+    if (this.frontGeneral === null) {
+      throw new Error("front render first");
+    }
     let listDir = await fileSystem(`readDir`, [ this.list ]);
     listDir = listDir.filter((a) => { return a !== `.DS_Store` });
     listDir.sort((a, b) => { return Number(a.split('_')[0].replace(/[^0-9]/g, '')) - Number(b.split('_')[0].replace(/[^0-9]/g, '')); });
@@ -335,6 +342,18 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       throw new Error("must be array");
     }
     let tempArr, tempString;
+    let frontFirst, frontEnd;
+
+    frontFirst = "\n\n";
+    frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
+    frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
+    frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
+    frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n"
+    frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n"
+
+    frontEnd = "\n\n\n\n";
+    frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
+
     for (let i of arr) {
       if (Array.isArray(i)) {
         if (i.length >= 3) {
@@ -384,8 +403,8 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await sleep(Number(tempArr[1].trim().replace(/[^0-9]/g, '')));
         }
       } else if (typeof i === "function") {
-        tempString = i.toString();
-        tempString = "(" + tempString + ")();";
+        tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
+        tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd "\n\n})();";
         await this.pressKey("f12");
         await sleep(500);
         await this.moveAndClick(1622, 1030, 500, false);
@@ -393,8 +412,14 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         await sleep(500);
         await this.pasteText();
         await sleep(500);
+        instance.front = 1;
         await this.pressKey("enter");
-        await sleep(5000);
+        await sleep(500);
+        while (instance.front === 1) {
+          console.log("front waiting...");
+          await sleep(1000);
+        }
+        await sleep(500);
         await this.pressKey("f12");
         await sleep(500);
       }
@@ -425,19 +450,116 @@ GraphicBot.prototype.positionWatch = function () {
   }, 100);
 }
 
-GraphicBot.prototype.botServer = async function () {
+GraphicBot.prototype.startWork = function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
+  return async function () {
+    try {
+      instance.task = null;
+      while (instance.doing === 1) {
+        console.log(`waiting...`);
+        await sleep(5000);
+      }
+      instance.doing = 1;
+      let workingList_name, workingList;
+      let tempArr;
+      let contents;
+      workingList_name = await fileSystem(`readDir`, [ instance.tong ]);
+      workingList_name = workingList_name.filter((n) => { return (new RegExp("^g_")).test(n); });
+      workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
+      workingList = [];
+      for (let name of workingList_name) {
+        tempArr = name.split('_');
+        contents = await fileSystem(`readString`, [ `${instance.tong}/${name}` ]);
+        workingList.push({ task: Number(tempArr[1]), contents });
+        shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
+      }
+      for (let { task, contents } of workingList) {
+        await instance.botOrders(task, contents);
+      }
+      instance.doing = 0;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+GraphicBot.prototype.botServer = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink, equalJson, requestSystem } = this.mother;
   const express = require("express");
+  const bodyParser = require("body-parser");
   const app = express();
   const port = this.port;
   const orderConst = 'g';
   const tong = this.tong;
+  const address = this.address;
+  const map = function (to) {
+    if (/python/gi.test(to)) {
+      return "https://" + address.pythoninfo.host;
+    } else if (/back/gi.test(to)) {
+      return "https://" + address.backinfo.host;
+    } else if (/bridge/gi.test(to)) {
+      return "https://" + address.bridgeinfo.host;
+    } else if (/office/gi.test(to)) {
+      return "https://" + address.officeinfo.ghost.host;
+    } else if (/home/gi.test(to)) {
+      return "https://" + address.homeinfo.ghost.host;
+    } else {
+      throw new Error("invaild input");
+    }
+  }
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
   try {
 
-    app.get("/frontEnd", (req, res) => {
-      res.set("Content-Type", "application/json");
-      res.send({ doing: instance.doing });
+    let frontGeneralString, frontGeneral;
+    frontGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    frontGeneralString += "\n\n" + "module.exports = GeneralJs";
+    await fileSystem(`write`, [ `${process.cwd()}/temp/frontGeneral.js`, frontGeneralString ]);
+    frontGeneral = require(`${process.cwd()}/temp/frontGeneral.js`);
+    this.frontGeneral = frontGeneral;
+
+
+    app.post("/frontEnd", (req, res) => {
+      instance.front = 0;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    });
+
+    app.post("/receive", (req, res) => {
+      if (req.body.to === undefined || req.body.path === undefined || req.body.data === undefined) {
+        throw new Error("must be to, data");
+      }
+
+      let to, path, data;
+
+      to = req.body.to;
+      path = req.body.path;
+      data = equalJson(req.body.data);
+
+      console.log(map(to + path));
+      console.log(data);
+      // requestSystem(map(to + path), data, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      //   console.log("request done");
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
     });
 
     app.get("/confirm", (req, res) => {
@@ -449,44 +571,41 @@ GraphicBot.prototype.botServer = async function () {
       try {
         const taskNumber = 0;
         let latest;
-
-        res.set("Content-Type", "application/json");
-
         latest = Number(String(await fileSystem(`readString`, [ `${tong}/print/latest` ])).replace(/[^0-9]/g, ''));
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, String(latest + 1) ]);
         await fileSystem(`write`, [ `${tong}/print/latest`, String(latest + 1) ]);
-
         if (instance.task !== null) {
           clearTimeout(instance.task);
           instance.task = null;
         }
+        instance.task = setTimeout(instance.startWork(), 5000);
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+      }
+    });
 
-        instance.task = setTimeout(async function () {
+    app.get("/cash", async (req, res) => {
+      try {
+        const taskNumber = 2;
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
           instance.task = null;
-          while (instance.doing === 1) {
-            console.log(`waiting...`);
-            await sleep(5000);
-          }
-          instance.doing = 1;
-          let workingList_name, workingList;
-          let tempArr;
-          let contents;
-          workingList_name = await fileSystem(`readDir`, [ tong ]);
-          workingList_name = workingList_name.filter((n) => { return (new RegExp("^" + orderConst + "_")).test(n); });
-          workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
-          workingList = [];
-          for (let name of workingList_name) {
-            tempArr = name.split('_');
-            contents = await fileSystem(`readString`, [ `${tong}/${name}` ]);
-            workingList.push({ task: Number(tempArr[1]), contents });
-            shell.exec(`rm -rf ${shellLink(tong + "/" + name)}`);
-          }
-          for (let { task, contents } of workingList) {
-            await instance.botOrders(task, contents);
-          }
-          instance.doing = 0;
-        }, 5000);
-
+        }
+        instance.task = setTimeout(instance.startWork(), 5000);
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
         res.send({ message: "will do" });
       } catch (e) {
         console.log(e);
