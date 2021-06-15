@@ -134,6 +134,42 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_cashReceipt = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, fileSystem } = this.mother;
+  let obj = {};
+  obj.link = "/cashReceipt";
+  obj.func = async function (req, res) {
+    try {
+
+      if (req.body.cashOut !== undefined) {
+
+        const { cashOut } = req.body;
+        console.log(cashOut);
+
+      } else if (req.body.cashIn !== undefined) {
+
+        const { cashIn } = req.body;
+        console.log(cashIn);
+
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
