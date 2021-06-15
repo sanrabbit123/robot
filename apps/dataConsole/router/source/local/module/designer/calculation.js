@@ -73,6 +73,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let classificationWidth;
   let sumMargin;
   let sumCaseTop;
+  let tempDate;
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -278,7 +279,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
     if (!condition) {
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
-        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
+        tempDate = designer.projects[i].proposal.date;
+        tempDate.setDate(tempDate.getDate() + 1);
+        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       }
     }
     if (!condition) {
@@ -365,7 +368,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     }
     if (!condition) {
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
-        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber);
+        tempDate = designer.projects[i].process.calculation.payments.first.date;
+        tempDate.setDate(tempDate.getDate() + 1);
+        condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       }
     }
     if (!condition) {
@@ -965,7 +970,7 @@ DesignerJs.prototype.calculationView = async function () {
           this.push(i);
         }
       }
-      search(amount, business) {
+      search(amount, business, date) {
         if (typeof amount !== "number" || typeof business !== "string") {
           throw new Error("invaild input");
         }
@@ -973,11 +978,13 @@ DesignerJs.prototype.calculationView = async function () {
         business = business.replace(/-/g, '');
         boo = true;
         for (let i of this) {
-          if (i.who.from.business.replace(/-/g, '') === business) {
-            for (let { supply, vat } of i.items) {
-              if (supply + vat === amount) {
-                boo = false;
-                break;
+          if (i.date.valueOf() > date.valueOf()) {
+            if (i.who.from.business.replace(/-/g, '') === business) {
+              for (let { supply, vat } of i.items) {
+                if (supply + vat === amount) {
+                  boo = false;
+                  break;
+                }
               }
             }
           }
@@ -1043,7 +1050,6 @@ DesignerJs.prototype.calculationView = async function () {
     taxBill.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
     this.taxBill = new TaxSearch(taxBill);
-
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
     this.designers.setClients(clients);
