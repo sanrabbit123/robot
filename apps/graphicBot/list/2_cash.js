@@ -91,7 +91,7 @@ module.exports = function () {
       let tempObj;
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
-      buttons[2].click();
+      buttons[3].click();
 
       await sleep(1000);
 
@@ -125,6 +125,8 @@ module.exports = function () {
           middle.push({
             method: textArr[index - 1],
             time: stringToDate(textArr[index].trim()),
+            // business: ,
+            // from: ,
             supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
             vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
             service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
