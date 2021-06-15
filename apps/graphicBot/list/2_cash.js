@@ -70,5 +70,7 @@ module.exports = function () {
       await ajaxPromise({ to: "python", path: "/cash", data: total }, RECEIVECONST);
 
     },
+    "wait_2000",
+    "close"
   ];
 };
