@@ -657,6 +657,7 @@ BackWorker.prototype.designerCalculation = async function () {
     let tempString;
     let infoTong, infoDetail;
     let rows, boo;
+    let tempDate;
 
     whereQuery = {
       $and: [
@@ -716,7 +717,9 @@ BackWorker.prototype.designerCalculation = async function () {
         amount0 = designer.projects[i].process.calculation.payments.first.amount;
         condition0 = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
         if (!condition0) {
-          infoDetail.first.push({ name, amount: amount0, proposal: designer.projects[i].proposal.date, receipt: true });
+          tempDate = designer.projects[i].proposal.date;
+          tempDate.setDate(tempDate.getDate() + 1);
+          infoDetail.first.push({ name, amount: amount0, proposal: tempDate, receipt: true });
         }
         amount1 = designer.projects[i].process.calculation.payments.remain.amount;
         if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
@@ -729,7 +732,9 @@ BackWorker.prototype.designerCalculation = async function () {
           condition1 = true;
         }
         if (!condition1) {
-          infoDetail.remain.push({ name, amount: amount1, firstCalculation: designer.projects[i].process.calculation.payments.first.date, receipt: true });
+          tempDate = designer.projects[i].process.calculation.payments.first.date;
+          tempDate.setDate(tempDate.getDate() + 1);
+          infoDetail.remain.push({ name, amount: amount1, firstCalculation: tempDate, receipt: true });
         }
       }
 
@@ -740,7 +745,7 @@ BackWorker.prototype.designerCalculation = async function () {
     for (let { desid, designer, free, business, first, remain } of infoTong) {
       if (business !== "") {
         for (let obj of first) {
-          rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
+          rows = await back.mongoRead(collection, { date: { $gt: obj.proposal } }, { selfMongo: PYTHONMONGOC });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
           boo = false;
           for (let i of rows) {
@@ -756,7 +761,7 @@ BackWorker.prototype.designerCalculation = async function () {
           obj.receipt = free ? true : boo;
         }
         for (let obj of remain) {
-          rows = await back.mongoRead(collection, { date: { $gte: obj.firstCalculation } }, { selfMongo: PYTHONMONGOC });
+          rows = await back.mongoRead(collection, { date: { $gt: obj.firstCalculation } }, { selfMongo: PYTHONMONGOC });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
           boo = false;
           for (let i of rows) {
