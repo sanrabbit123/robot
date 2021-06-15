@@ -8,6 +8,53 @@ const DataConsole = function () {
   this.middleModuleDir = this.middleDir + "/module";
 }
 
+DataConsole.prototype.mediaQuery = function (code) {
+  const conditions = [
+    "window.innerWidth > 1540",
+    "window.innerWidth <= 1540 && window.innerWidth > 1050",
+    "window.innerWidth <= 1050 && window.innerWidth > 900",
+    "window.innerWidth <= 900 && window.innerWidth > 760",
+    "window.innerWidth <= 760"
+  ];
+  const updateProtoConst = "GeneralJs.stacks.updateMiddleMedialQueryConditions";
+  const matchReg = /[\n;]([^\n\;]*)\<\%\%([^\%]+)\%\%\>[;]?/g;
+  const replacer = function (match, p1, p2, offset, string) {
+    const safeWall = "\n\n";
+    let tempValue, tempArr, tempStr;
+
+    tempValue = p1.replace(/[\n;]/g, '').replace(/\<\%\%/g, '').trim();
+    tempArr = p2.replace(/\<\%\%/g, '').replace(/\%\%\>/g, '').trim().split(",");
+    tempStr = "";
+    if (tempArr.length > conditions.length) {
+      throw new Error("parse error");
+    }
+    for (let j = 0; j < tempArr.length; j++) {
+      tempStr += " } else if (" + conditions[j] + ") { ";
+      tempStr += "\n"
+      tempStr += tempValue;
+      tempStr += " ";
+      tempStr += tempArr[j];
+      tempStr += ";\n";
+    }
+    tempStr = safeWall + tempStr.slice(7) + " }" + safeWall;
+    return tempStr;
+  }
+  let updateProto;
+
+  updateProto = '';
+  updateProto += updateProtoConst;
+  updateProto += " = ";
+  updateProto += "[";
+  for (let i of conditions) {
+    updateProto += "(";
+    updateProto += i;
+    updateProto += "),";
+  }
+  updateProto += "];\n";
+
+  return { conditions: updateProto, code: code.replace(matchReg, replacer) };
+}
+
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep } = this.mother;
@@ -28,6 +75,8 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", moduleName ]).includes(fileName)); });
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     let folderSize, tempScriptString;
+    let tempMediaResult;
+    let subModuleList;
 
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       shell.exec(`mkdir ${shellLink(staticFolder)}`);
@@ -60,7 +109,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     if (staticFolderList.includes(moduleName)) {
       shell.exec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
     }
-    shell.exec(`cp -r ${shellLink(staticDir + "/" + moduleName)} ${shellLink(staticFolder)}`);
+    shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
 
     const staticModuleFolderList = await fileSystem(`readDir`, [ staticFolder + "/" + moduleName ]);
 
@@ -71,16 +120,37 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     }
 
     for (let i of staticDirList) {
+
+      //self module
       tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${i}` ]);
       tempScriptString = tempScriptString.replace(/^const ([A-Z][^ \=]+) = function \(/, (match, p1, offset, string) => {
         return p1 + ".prototype.constructor = function (";
       });
       tempScriptString = tempScriptString.replace(/\.prototype\.launching = /g, ".prototype.launching_pastFunction = ");
+      if (/<%%/gi.test(tempScriptString)) {
+        tempMediaResult = this.mediaQuery(tempScriptString);
+        tempScriptString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+      }
       while (!(await fileSystem(`exist`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}` ]))) {
         console.log("waiting....");
         await sleep(500);
       }
       await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${i}`, tempScriptString ]);
+
+      //sub module
+      if (await fileSystem(`exist`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}` ])) {
+        subModuleList = await fileSystem(`readDir`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}` ]);
+        subModuleList = subModuleList.filter((f) => { return f !== `.DS_Store`; });
+        for (let subFile of subModuleList) {
+          tempScriptString = await fileSystem(`readString`, [ `${staticDir}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}` ]);
+          if (/<%%/gi.test(tempScriptString)) {
+            tempMediaResult = this.mediaQuery(tempScriptString);
+            tempScriptString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+          }
+          await fileSystem(`write`, [ `${staticFolder}/${moduleName}/${i.replace(/\.js/gi, '')}/${subFile}`, tempScriptString ]);
+        }
+      }
+
     }
 
     console.log(`set static`);
@@ -145,6 +215,12 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
             dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
           }
         }
+      }
+
+      //set media query
+      if (/<%%/gi.test(fileString)) {
+        tempMediaResult = this.mediaQuery(fileString);
+        fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 
       //merge
@@ -358,7 +434,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       //set media query
       if (/<%%/gi.test(fileString)) {
-        tempMediaResult = DataMiddle.mediaQuery(fileString);
+        tempMediaResult = this.mediaQuery(fileString);
         fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
       }
 

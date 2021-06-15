@@ -24,7 +24,8 @@ const DesignerJs = function () {
   this.aspirants = [];
   this.aspirants_searchInput = null;
   this.whiteSse = null;
-  this.ea = "px";
+  this.ea = <%% "px", "px", "px", "px", "vw" %%>;
+  this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   this.designers = [];
 }
 

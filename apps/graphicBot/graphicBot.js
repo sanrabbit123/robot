@@ -435,6 +435,11 @@ GraphicBot.prototype.botServer = async function () {
   const tong = this.tong;
   try {
 
+    app.get("/frontEnd", (req, res) => {
+      res.set("Content-Type", "application/json");
+      res.send({ doing: instance.doing });
+    });
+
     app.get("/confirm", (req, res) => {
       res.set("Content-Type", "application/json");
       res.send({ doing: instance.doing });
@@ -460,7 +465,7 @@ GraphicBot.prototype.botServer = async function () {
           instance.task = null;
           while (instance.doing === 1) {
             console.log(`waiting...`);
-            await sleep(1000);
+            await sleep(5000);
           }
           instance.doing = 1;
           let workingList_name, workingList;
