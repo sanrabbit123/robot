@@ -44,6 +44,173 @@ const DesignerConsoleJs = function () {
   this.totalContents = document.getElementById("totalcontents");
 }
 
+DesignerConsoleJs.prototype.leftPannel = function () {
+  const instance = this;
+  const { ea, designer, desid } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const mother = document.querySelector(".totalMother").firstChild;
+  const menuMap = [
+    {
+      title: "기본 정보",
+      event: function (e) {
+        console.log("this!1");
+      },
+    },
+    {
+      title: "작업 정보",
+      event: function (e) {
+        console.log("this!2");
+      },
+    },
+    {
+      title: "시공 정보",
+      event: function (e) {
+        console.log("this!3");
+      },
+    },
+    {
+      title: "스타일링 정보",
+      event: function (e) {
+        console.log("this!4");
+      },
+    },
+    {
+      title: "기타 정보",
+      event: function (e) {
+        console.log("this!5");
+      },
+    },
+    {
+      title: "일정 정보",
+      event: function (e) {
+        console.log("this!6");
+      },
+    },
+    {
+      title: "세팅 정보",
+      event: function (e) {
+        console.log("this!7");
+      },
+    },
+    {
+      title: "정산 정보",
+      event: function (e) {
+        console.log("this!8");
+      },
+    },
+    {
+      title: "컨텐츠 정보",
+      event: function (e) {
+        console.log("this!9");
+      },
+    },
+  ];
+  let margin;
+  let size;
+  let barHeight;
+  let marginBottom;
+  let indent;
+  let menu;
+  let menuMargin;
+  let firstBold, secondBold;
+
+  cleanChildren(mother);
+
+  margin = 40;
+  size = 16;
+  barHeight = 19;
+  marginBottom = 23;
+  indent = 16;
+  menuMargin = 15;
+  firstBold = 600;
+  secondBold = 400;
+
+  menu = [];
+  for (let i = 0; i < menuMap.length; i++) {
+    menu.push({
+      class: [ "hoverDefault" ],
+      events: [
+        {
+          type: "click",
+          event: menuMap[i].event,
+        }
+      ],
+      style: {
+        position: "relative",
+        fontSize: "inherit",
+        fontWeight: "inherit",
+        color: "inherit",
+        marginBottom: String(menuMargin) + ea,
+      },
+      children: [
+        {
+          text: String(i + 1),
+          style: {
+            position: "relative",
+            top: String(0),
+            left: String(0),
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            color: colorChip.green,
+          }
+        },
+        {
+          text: menuMap[i].title,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(indent) + ea,
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            color: "inherit",
+          }
+        },
+      ]
+    });
+  }
+
+  createNode({
+    mother,
+    style: {
+      position: "relative",
+      top: String(margin) + ea,
+      marginLeft: String(margin) + ea,
+      marginRight: String(margin) + ea,
+      width: withOut(100, margin * 2, ea),
+      height: withOut(100, margin * 2, ea),
+      fontSize: String(size) + ea,
+      fontWeight: String(secondBold),
+      color: colorChip.black
+    },
+    children: [
+      {
+        text: "안녕하세요,<br>" + designer.designer + " 디자이너님!",
+        style: {
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: String(firstBold),
+          color: "inherit",
+          lineHeight: String(1.5),
+        }
+      },
+      {
+        style: {
+          position: "relative",
+          height: String(barHeight) + ea,
+          width: String(100) + '%',
+          borderBottom: "1px solid " + colorChip.gray4,
+          marginBottom: String(marginBottom) + ea,
+        }
+      },
+      ...menu
+    ]
+  });
+
+
+
+
+}
+
 DesignerConsoleJs.prototype.initialLogin = function () {
   const instance = this;
   const { ea } = this;
@@ -82,7 +249,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
   vaildFunction = function (input, value) {
     let newInput, certification;
 
-    certification = "1000";
+    certification = "0000";
 
     GeneralJs.ajaxJson({ noFlat: true, whereQuery: { "information.phone": value.trim() } }, "/getDesigners", { equal: true }).then((designers) => {
       if (designers.length === 0) {
@@ -91,6 +258,8 @@ DesignerConsoleJs.prototype.initialLogin = function () {
       } else {
         const [ designer ] = designers;
         window.alert(`${designer.designer} 디자이너님 안녕하세요! 인증번호를 입력해주세요!`);
+        instance.designer = designer;
+        instance.desid = designer.desid;
         newInput = input.cloneNode(true);
         input.parentNode.appendChild(newInput);
         newInput.value = "";
@@ -115,6 +284,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
           if (certification === this.value) {
             instance.checkListView().then(() => {
               instance.checkListDetailLaunching(instance.desid);
+              instance.leftPannel();
               total.style.animation = "justfadeoutoriginal 0.2s ease forwards";
               return GeneralJs.sleep(200);
             }).then(() => {
@@ -272,19 +442,21 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "checklist.js",
       "report.js",
     ];
+    const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+    await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 
     loading.parentElement.removeChild(loading);
-
-    await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 
     this.constructor();
     this.grayBarWidth = 210;
     this.belowHeight = 0;
+    this.designer = designer;
     this.desid = desid;
 
     if (window.localStorage.getItem("desid") === this.desid) {
       this.checkListView(true).then(() => {
         instance.checkListDetailLaunching(instance.desid);
+        instance.leftPannel();
       }).catch((err) => {
         console.log(err);
       });

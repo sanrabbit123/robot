@@ -729,7 +729,7 @@ BackWorker.prototype.designerCalculation = async function () {
           condition1 = true;
         }
         if (!condition1) {
-          infoDetail.remain.push({ name, amount: amount1, proposal: designer.projects[i].proposal.date, receipt: true });
+          infoDetail.remain.push({ name, amount: amount1, firstCalculation: designer.projects[i].process.calculation.payments.first.date, receipt: true });
         }
       }
 
@@ -756,7 +756,7 @@ BackWorker.prototype.designerCalculation = async function () {
           obj.receipt = free ? true : boo;
         }
         for (let obj of remain) {
-          rows = await back.mongoRead(collection, { date: { $gte: obj.proposal } }, { selfMongo: PYTHONMONGOC });
+          rows = await back.mongoRead(collection, { date: { $gte: obj.firstCalculation } }, { selfMongo: PYTHONMONGOC });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
           boo = false;
           for (let i of rows) {

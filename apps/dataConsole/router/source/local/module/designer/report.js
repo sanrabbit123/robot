@@ -2346,12 +2346,12 @@ DesignerJs.prototype.reportIconSet = function (desid) {
 
 }
 
-DesignerJs.prototype.reportView = async function () {
+DesignerJs.prototype.reportView = async function (middleMode = false) {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
     this.backGrayBar();
-    await this.spreadData(null, true);
+    await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const { sub: { extractIcon } } = this.mother.belowButtons;
@@ -2376,6 +2376,7 @@ DesignerJs.prototype.reportView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
+    this.middleMode = middleMode;
 
     minWidth = 210;
     margin = 8;

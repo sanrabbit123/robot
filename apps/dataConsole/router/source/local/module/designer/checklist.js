@@ -243,6 +243,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           },
           height: factorHeight,
           type: "string",
+          middle: false,
         },
         {
           name: "계좌번호",
@@ -440,6 +441,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           },
           height: factorHeight * 1.1,
           type: "string",
+          middle: false,
         },
       ]
     },
@@ -614,6 +616,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
+          middle: false,
         },
         {
           name: "부분 공간",
@@ -655,6 +658,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
+          middle: false,
         },
         {
           name: "온라인",
@@ -682,6 +686,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "거주중",
@@ -709,6 +714,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "고객 예산 범위",
@@ -783,6 +789,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
+          middle: false,
         },
         {
           name: "1차 제안 시간",
@@ -905,6 +912,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "시공 감리",
@@ -1256,6 +1264,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "제안 방식",
@@ -1800,7 +1809,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             let contents, value;
             contents = [
               "빠름",
-              "느림"
+              "보통"
             ];
             value = [
               designer.analytics.etc.personality[2].value ? 1 : 0,
@@ -1915,6 +1924,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
       ]
     },
@@ -2582,6 +2592,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
   let textAreaTop;
   let baseTongMarginBottom;
+  let checkListData;
+  let middleAdjustTong;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -2607,7 +2619,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
   textAreaTop = isMac() ? -3 : -4;
 
-  const checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
+  checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -2699,6 +2711,9 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     eachNameTong = nodeArr[2];
     eachValueTong = nodeArr[3];
 
+    if (this.middleMode) {
+      middleAdjustTong = [];
+    }
     for (let j = 0; j < checkListData[i].children.length; j++) {
       tempArr = [];
       tempObj = {
@@ -3154,14 +3169,24 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         tempArr.push(tempObj);
       }
 
-      subNodeArr = createNodes(tempArr);
-
-      if (checkListData[i].children[j].type === "async") {
-        if (typeof checkListData[i].children[j].value === "function") {
-          checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
-            console.log(err);
-          });
+      if (!this.middleMode || checkListData[i].children[j].middle !== false) {
+        subNodeArr = createNodes(tempArr);
+        if (checkListData[i].children[j].type === "async") {
+          if (typeof checkListData[i].children[j].value === "function") {
+            checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
+              console.log(err);
+            });
+          }
         }
+        if (this.middleMode) {
+          middleAdjustTong.push(subNodeArr[0]);
+        }
+      }
+    }
+
+    if (this.middleMode) {
+      for (let j = 0; j < middleAdjustTong.length; j++) {
+        middleAdjustTong[j].textContent = String.fromCharCode(65 + i) + String(j + 1);
       }
     }
 
@@ -3731,6 +3756,7 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
 
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
+    this.middleMode = middleMode;
 
     minWidth = 210;
     margin = 8;
