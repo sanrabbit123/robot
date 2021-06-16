@@ -217,12 +217,12 @@ DesignerConsoleJs.prototype.leftPannel = function () {
 
   cleanChildren(mother);
 
-  margin = 40;
-  size = 16;
+  margin = <%% 40, 35, 35, 35, 35 %%>;
+  size = <%% 16, 15, 15, 15, 15 %%>;
   barHeight = 19;
   marginBottom = 23;
   indent = 16;
-  menuMargin = 15;
+  menuMargin = <%% 15, 13, 13, 13, 13 %%>;
   firstBold = 600;
   secondBold = 400;
 
@@ -550,7 +550,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     loading.parentElement.removeChild(loading);
 
     this.constructor();
-    this.grayBarWidth = 210;
+    this.grayBarWidth = <%% 210, 200, 200, 200, 210 %%>;
     this.belowHeight = 0;
     this.designer = designer;
     this.desid = desid;

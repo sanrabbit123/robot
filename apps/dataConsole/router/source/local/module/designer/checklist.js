@@ -2619,15 +2619,15 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   leftMargin = 34;
   bottomMargin = isMac() ? 15 : 13;
   baseTongMarginBottom = 80;
-  size = <%% 17, 15, 15, 15, 3 %%>;
+  size = <%% 16, 15, 15, 15, 3 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
   alphabetWidth = 30;
 
-  factorHeight = 38;
+  factorHeight = <%% 38, 36, 36, 36, 10 %%>;
   factorWidth = <%% 210, 172, 172, 172, 210 %%>;
   tendencyFactorHeight = 30;
-  tendencyIndent = 105;
+  tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
   tendencyWidthIndent = -135;
 
   textAreaTop = isMac() ? -3 : -4;
@@ -3383,10 +3383,10 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = 20;
-  left = 40;
-  bottom = 40;
-  margin = 6;
+  radius = <%% 20, 20, 20, 20, 20 %%>;
+  left = <%% 40, 35, 35, 35, 35 %%>;
+  bottom = <%% 40, 35, 35, 35, 35 %%>;
+  margin = <%% 6, 6, 6, 6, 6 %%>;
   color = colorChip.gradientGreen;
   iconTop = 12.5;
 
@@ -3843,7 +3843,7 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
 
     minWidth = <%% 210, 210, 210, 210, 210 %%>;
     margin = 8;
-    motherHeight = 154;
+    motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     //search event
     if (this.searchInput !== undefined && this.searchInput !== null) {

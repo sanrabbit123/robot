@@ -1,13 +1,13 @@
 const DesignerJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
-  this.module = {
-    paddingTop: 38,
-    height: 18,
-    marginBottom: 18,
-    initialLine: 14,
-    initialMargin: 14,
-  }
+  this.module = {};
+  this.module.paddingTop = 38;
+  this.module.height = <%% 18, 16, 16, 16, 18 %%>;
+  this.module.marginBottom = 18;
+  this.module.initialLine = 14;
+  this.module.initialMargin = 14;
+
   this.grayBarWidth = null;
   this.belowHeight = null;
   this.whiteBox = null;
@@ -35,9 +35,21 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   let style, style2, style3;
   let ea = "px";
   let temp, target;
-  let num, leftPosition;
+  let num, leftPosition, secondLeftPosition;
   let sortEventFunction;
   let desidDom, desidArr;
+  let size;
+
+  size = <%% 14, 13, 13, 13, 3 %%>;
+
+  leftPosition = new Array(2);
+  secondLeftPosition = new Array(2);
+
+  leftPosition[0] = <%% 57, 56, 56, 56, 57 %%>;
+  leftPosition[1] = <%% 141, 136, 136, 136, 141 %%>;
+
+  secondLeftPosition[0] = <%% 38, 36, 36, 36, 38 %%>;
+  secondLeftPosition[1] = <%% 135, 131, 131, 131, 135 %%>;
 
   temp = {
     desid: standard.standard.desid.name,
@@ -72,7 +84,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   style3 = {
     position: "absolute",
     height: String(this.module.height + this.module.marginBottom) + ea,
-    fontSize: String(14) + ea,
+    fontSize: String(size) + ea,
     fontWeight: String(600),
     color: "#2fa678",
   };
@@ -88,11 +100,6 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   } else {
     div_clone = this.totalMother.children[0];
   }
-
-  leftPosition = [
-    57,
-    141,
-  ];
 
   sortEventFunction = function (index) {
     return function (e) {
@@ -174,10 +181,8 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
       delete style2.zIndex;
       delete style2.background;
       delete style2.width;
-      leftPosition = [
-        38,
-        135,
-      ];
+      leftPosition[0] = secondLeftPosition[0];
+      leftPosition[1] = secondLeftPosition[1];
     }
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -196,7 +201,6 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
         div_clone2.style.display = "none";
       }
     }
-
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.textContent = desid;
@@ -314,6 +318,9 @@ DesignerJs.prototype.infoArea = function (info) {
   let onoffDummy;
   let thisOnOff;
   let originalColumns;
+  let size;
+
+  size = <%% 14, 13, 13, 13, 3 %%>;
 
   temp = {};
   columns = [];
@@ -377,7 +384,7 @@ DesignerJs.prototype.infoArea = function (info) {
     position: "absolute",
     marginBottom: String(this.module.marginBottom) + ea,
     height: String(this.module.height) + ea,
-    fontSize: String(14) + ea,
+    fontSize: String(size) + ea,
     fontWeight: String(600),
     color: "#2fa678",
     textAlign: "center",
@@ -3794,6 +3801,9 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
+    this.grayBarWidth = <%% 210, 200, 200, 200, 210 %%>;
+    this.mother.grayBarWidth = <%% 210, 200, 200, 210, 210 %%>;
+
     if (getObj.desid !== undefined && getObj.mode === undefined) {
       getObj.mode = "checklist";
     }
@@ -3875,8 +3885,6 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "checklist") {
 
-      this.grayBarWidth = <%% 210, 210, 210, 210, 210 %%>;
-      this.mother.grayBarWidth = <%% 210, 210, 210, 210, 210 %%>;
       await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.checkListView();
