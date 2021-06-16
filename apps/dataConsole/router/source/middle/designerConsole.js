@@ -222,7 +222,7 @@ DesignerConsoleJs.prototype.leftPannel = function () {
   barHeight = 19;
   marginBottom = 23;
   indent = 16;
-  menuMargin = <%% 15, 13, 13, 13, 13 %%>;
+  menuMargin = <%% 15, 13, 13, 13, 15 %%>;
   firstBold = 600;
   secondBold = 400;
 
