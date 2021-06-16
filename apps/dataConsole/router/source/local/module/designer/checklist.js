@@ -269,6 +269,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                             }
                           }
                         ]);
+                        inputBox.focus();
                       }
                     }
                   }
@@ -413,6 +414,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                             }
                           }
                         ]);
+                        inputBox.focus();
                       }
                     }
                   }
@@ -539,7 +541,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           height: desktop ? factorHeight * 2.1 : factorHeight * 4.7,
           width: factorWidth,
           totalWidth: factorWidth * 3,
-          factorHeight: desktop ? factorHeight : factorHeight * 0.9,
+          factorHeight: factorHeight,
           type: "matrix",
         },
         {
@@ -3250,13 +3252,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             ],
             class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j), matrixButtonConst + String(i) + String(j) + String(k) ],
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: desktop ? "inline-block" : (tempMatrix.contents.length > 2 ? "block" : "inline-block"),
               position: "relative",
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: desktop ? String(checkListData[i].children[j].width) + ea : String(100) + '%',
+              width: desktop ? String(checkListData[i].children[j].width) + ea : String(tempMatrix.contents.length > 2 ? 100 : 45) + '%',
               color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
-              height: String(checkListData[i].children[j].factorHeight) + ea,
+              height: String(checkListData[i].children[j].factorHeight * (desktop ? 1 : 0.9)) + ea,
               transition: "all 0.1s ease",
             }
           };

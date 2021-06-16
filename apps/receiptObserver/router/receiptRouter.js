@@ -149,11 +149,13 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
 
         const { cashOut } = json;
         console.log(cashOut);
+        await fileSystem(`write`, [ `${process.cwd()}/temp/cashOut.json`, JSON.stringify(cashOut, null, 2) ]);
 
       } else if (json.cashIn !== undefined) {
 
         const { cashIn } = json;
         console.log(cashIn);
+        await fileSystem(`write`, [ `${process.cwd()}/temp/cashIn.json`, JSON.stringify(cashIn, null, 2) ]);
 
       }
 
