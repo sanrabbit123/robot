@@ -3875,6 +3875,8 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "checklist") {
 
+      this.grayBarWidth = <%% 210, 210, 210, 210, 210 %%>;
+      this.mother.grayBarWidth = <%% 210, 210, 210, 210, 210 %%>;
       await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.checkListView();

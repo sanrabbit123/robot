@@ -2114,6 +2114,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               mother.appendChild(h);
               mother.style.fontWeight = String(300);
               mother.style.color = colorChip.black;
+              mother.style.overflow = "hidden";
+              mother.style.width = String((80 + (margin * 2)) * (futureMonth + 1)) + ea;
 
             } catch (e) {
               console.log(e);
@@ -2192,6 +2194,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       fontWeight: "inherit",
                       color: "inherit",
                       height: String(factorHeight) + ea,
+                      overflow: "hidden",
+                      width: String(1000) + ea,
                     },
                     children: [
                       {
@@ -2251,6 +2255,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               }
               mother.style.fontWeight = String(300);
               mother.style.color = colorChip.black;
+              mother.style.overflow = "hidden";
 
             } catch (e) {
               console.log(e);
@@ -2329,6 +2334,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       fontWeight: "inherit",
                       color: "inherit",
                       height: String(factorHeight) + ea,
+                      overflow: "hidden",
+                      width: String(1000) + ea,
                     },
                     children: [
                       {
@@ -2408,6 +2415,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               }
               mother.style.fontWeight = String(300);
               mother.style.color = colorChip.black;
+              mother.style.overflow = "hidden";
 
             } catch (e) {
               console.log(e);
@@ -2605,19 +2613,19 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   analytics = designer.analytics;
 
   margin = 8;
-  level1Width = 210;
-  level1Left = 160;
+  level1Width = <%% 210, 172, 172, 172, 210 %%>;
+  level1Left = <%% 160, 136, 136, 136, 160 %%>;
   topMargin = isMac() ? 30 : 34;
   leftMargin = 34;
   bottomMargin = isMac() ? 15 : 13;
   baseTongMarginBottom = 80;
-  size = 17;
+  size = <%% 17, 15, 15, 15, 3 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
   alphabetWidth = 30;
 
   factorHeight = 38;
-  factorWidth = 210;
+  factorWidth = <%% 210, 172, 172, 172, 210 %%>;
   tendencyFactorHeight = 30;
   tendencyIndent = 105;
   tendencyWidthIndent = -135;
