@@ -15,7 +15,10 @@ module.exports = function (arg, info) {
     "paste",
     "wait_500",
     [ 1145, 575, 1000 ],
-    [ 669, 606, { x: 669, y: 606, color: "#fff4d1" } ],
+    async function () {
+      await sleep(500);
+      document.getElementById("myMenuQuickLi2").click();
+    },
     "wait_3000",
     async function () {
 
@@ -82,14 +85,28 @@ module.exports = function (arg, info) {
 
     },
     "wait_2000",
+    [ 1045, 112, 500 ],
     "close",
     "wait_1000",
     "https://www.hometax.go.kr/",
     "wait_3000",
     [ 910, 112, 3000 ],
     [ 892, 367, 500 ],
+    [ 836, 554, 500, true ],
+    "key_delete",
+    "clipBoard_" + String(info.hometax.id),
+    "paste",
+    "key_tab",
+    "wait_500",
+    "key_delete",
+    "clipBoard_" + String(info.hometax.pwd),
+    "paste",
+    "wait_500",
     [ 1145, 575, 1000 ],
-    [ 771, 605, { x: 771, y: 605, color: "#fff4d1" } ],
+    async function () {
+      await sleep(500);
+      document.getElementById("myMenuQuickLi3").click();
+    },
     "wait_3000",
     async function () {
 
@@ -159,6 +176,7 @@ module.exports = function (arg, info) {
 
     },
     "wait_2000",
+    [ 1045, 112, 500 ],
     "close",
   ];
 };
