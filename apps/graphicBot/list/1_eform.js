@@ -1,4 +1,4 @@
-module.exports = function (proid) {
+module.exports = function (proid, info) {
   return [
     "https://eform.io/signin",
     "wait_3000",

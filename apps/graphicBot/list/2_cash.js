@@ -1,9 +1,19 @@
-module.exports = function () {
+module.exports = function (arg, info) {
   return [
     "https://www.hometax.go.kr/",
     "wait_3000",
     [ 910, 112, 3000 ],
     [ 892, 367, 500 ],
+    [ 836, 554, 500, true ],
+    "key_delete",
+    "clipBoard_" + String(info.hometax.id),
+    "paste",
+    "key_tab",
+    "wait_500",
+    "key_delete",
+    "clipBoard_" + String(info.hometax.pwd),
+    "paste",
+    "wait_500",
     [ 1145, 575, 1000 ],
     [ 669, 606, { x: 669, y: 606, color: "#fff4d1" } ],
     "wait_3000",

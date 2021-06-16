@@ -3,6 +3,23 @@ const GraphicBot = function () {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const { exec } = require(`child_process`);
+  class InfoArray extends Array {
+    constructor(arr) {
+      super();
+      for (let i of arr) {
+        if (typeof i !== "object") {
+          throw new Error("invaild infoObj");
+        }
+        if (i.name === undefined || i.user === undefined || i.password === undefined) {
+          throw new Error("invaild infoObj");
+        }
+        this.push(i);
+      }
+      for (let obj of this) {
+        this[obj.name] = { id: obj.user, user: obj.user, pwd: obj.password, password: obj.password };
+      }
+    }
+  }
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -16,6 +33,15 @@ const GraphicBot = function () {
   this.task = null;
   this.front = 0;
   this.frontGeneral = null;
+  this.info = null;
+  for (let obj of ADDRESS.officeinfo.map) {
+    if (obj.name === "graphic") {
+      this.info = new InfoArray(obj.info);
+    }
+  }
+  if (this.info === null || this.info === undefined) {
+    throw new Error("invaild infoObj");
+  }
 }
 
 GraphicBot.prototype.keypress = function (callback) {
@@ -337,7 +363,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       throw new Error("index out error");
     }
     const arrFunc = require(this.list + "/" + listDir[num]);
-    const arr = arrFunc(arg);
+    const arr = arrFunc(arg, this.info);
     if (!Array.isArray(arr)) {
       throw new Error("must be array");
     }

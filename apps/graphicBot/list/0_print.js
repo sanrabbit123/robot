@@ -1,4 +1,4 @@
-module.exports = function (order) {
+module.exports = function (order, info) {
   return [
     "https://docs.google.com/forms/d/1D8CNQFtRr_hiuUXdMXYAgYCk6nFC5cAdkezzp-3mlcw/edit#response=ACYDBNiCgtcAcyCU-zXdikuXuDs3owKcORZECv3atp2XqBYVqlqEHuL6x8CJbube2CYZeHE",
     "wait_3000",
