@@ -1,4 +1,4 @@
-DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
+DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -434,6 +434,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               mother.appendChild(h);
               mother.style.overflow = "hidden";
               mother.style.width = desktop ? (String(totalWidth) + ea) : String(100) + '%';
+              mother.style.fontWeight = String(400);
 
             } catch (e) {
               console.log(e);
@@ -694,8 +695,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = tempArr2;
             return updateQuery;
           },
-          textHeight: 14,
-          height: factorHeight,
+          textHeight: desktop ? 14 : 6.5,
+          height: desktop ? factorHeight : factorHeight * 1.8,
           type: "longtext",
         },
         {
@@ -835,7 +836,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return updateQuery;
           },
-          height: factorHeight * 2,
+          height: desktop ? factorHeight * 2 : factorHeight * 7.3,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -877,7 +878,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1008,7 +1009,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.project.operationBudget": { min: (contents[min][0] * 10000), max: (contents[max][1] * 10000) } };
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 4.6,
           width: factorWidth,
           totalWidth: factorWidth * 5,
           factorHeight: factorHeight,
@@ -1051,7 +1052,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.project.time.first": contents[target] };
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1095,12 +1096,13 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.project.paperWork": target };
           },
-          height: factorHeight * 2.1,
+          height: desktop ? factorHeight * 2.1 : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
+          half: true
         },
       ]
     },
@@ -1132,12 +1134,13 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.construct.level": target };
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 1.8,
           width: factorWidth,
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
           middle: false,
+          half: true,
         },
         {
           name: "시공 감리",
@@ -1208,7 +1211,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1255,7 +1258,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 2.9,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1304,7 +1307,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1351,7 +1354,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 2.9,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1400,7 +1403,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1447,7 +1450,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position] = target;
             return updateQuery;
           },
-          height: factorHeight * 1.1,
+          height: desktop ? factorHeight * 1.1 : factorHeight * 2.9,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1484,12 +1487,13 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.styling.level": target };
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 1.8,
           width: factorWidth,
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
           middle: false,
+          half: true,
         },
         {
           name: "제안 방식",
@@ -1677,7 +1681,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.styling.fabric.method": target };
           },
-          height: factorHeight * 1.5,
+          height: desktop ? factorHeight * 1.5 : factorHeight * 2.9,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -1734,7 +1738,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position + contents[z]] = t + 1;
             return updateQuery;
           },
-          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          height: (tendencyFactorHeight * 8) + (desktop ? factorHeight * 0.7 : mobileTendencyVisualMargin),
           width: factorWidth - tendencyIndent,
           totalWidth: (factorWidth * 4) + tendencyWidthIndent,
           factorHeight: tendencyFactorHeight,
@@ -1779,7 +1783,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position + contents[z]] = t + 1;
             return updateQuery;
           },
-          height: (tendencyFactorHeight * 4) + (factorHeight * 0.7),
+          height: (tendencyFactorHeight * 4) + (desktop ? factorHeight * 0.7 : mobileTendencyVisualMargin),
           width: factorWidth - tendencyIndent,
           totalWidth: (factorWidth * 4) + tendencyWidthIndent,
           factorHeight: tendencyFactorHeight,
@@ -1801,7 +1805,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             ];
             contentsMother = {
               darkWood: "다크 우드",
-              whiteWood: "화이트 우드",
+              whiteWood: "밝은 우드",
               highContrast: "고대비",
               vivid: "비비드",
               white: "화이트",
@@ -1836,7 +1840,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position + contents[z]] = t + 1;
             return updateQuery;
           },
-          height: (tendencyFactorHeight * 8) + (factorHeight * 0.7),
+          height: (tendencyFactorHeight * 8) + (desktop ? factorHeight * 0.7 : mobileTendencyVisualMargin),
           width: factorWidth - tendencyIndent,
           totalWidth: (factorWidth * 4) + tendencyWidthIndent,
           factorHeight: tendencyFactorHeight,
@@ -1876,7 +1880,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             updateQuery[position + contents[1 - z]] = 10 - (t + 1);
             return updateQuery;
           },
-          height: (tendencyFactorHeight * 2) + (factorHeight * 0.5),
+          height: (tendencyFactorHeight * 2) + (desktop ? factorHeight * 0.5 : mobileTendencyVisualMargin),
           width: factorWidth - tendencyIndent,
           totalWidth: (factorWidth * 4) + tendencyWidthIndent,
           factorHeight: tendencyFactorHeight,
@@ -1943,7 +1947,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "정리 수납 상담",
+          name: "정리 수납",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -2144,7 +2148,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "analytics.etc.relation": target };
           },
-          height: factorHeight * 1.1,
+          height: desktop ? factorHeight * 1.1 : factorHeight * 3.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -2887,6 +2891,9 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let baseTongMarginBottom;
   let checkListData;
   let middleAdjustTong;
+  let mobileTendencyTop;
+  let mobileTendencyVisualMargin;
+  let mobileTendencyIntend;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -2900,19 +2907,24 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
   baseTongMarginBottom = 80;
   size = <%% 16, 15, 15, 15, 4 %%>;
-  tendencyTop = 3;
-  tendencyHeight = 16;
+
+  tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
+  tendencyHeight = <%% 16, 16, 16, 16, 4 %%>;
   alphabetWidth = <%% 30, 30, 30, 30, 7 %%>;
 
   factorHeight = <%% 38, 36, 36, 36, 8.5 %%>;
   factorWidth = <%% 210, 172, 172, 172, 210 %%>;
-  tendencyFactorHeight = 30;
+  tendencyFactorHeight = <%% 30, 30, 30, 30, 7 %%>;
   tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
   tendencyWidthIndent = -135;
 
-  textAreaTop = isMac() ? -3 : -4;
+  textAreaTop = <%% (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), -0.7 %%>;
 
-  checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight);
+  mobileTendencyTop = 8;
+  mobileTendencyVisualMargin = 11;
+  mobileTendencyIntend = 20;
+
+  checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -3144,7 +3156,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           background: colorChip.white,
                           border: String(0),
                           outline: String(0),
-                          width: String(this.getBoundingClientRect().width) + ea,
+                          width: desktop ? String(this.getBoundingClientRect().width) + ea : String(100) + '%',
                           zIndex: String(1),
                         }
                       }
@@ -3252,11 +3264,12 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             ],
             class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j), matrixButtonConst + String(i) + String(j) + String(k) ],
             style: {
-              display: desktop ? "inline-block" : (tempMatrix.contents.length > 2 ? "block" : "inline-block"),
+              display: desktop ? "inline-block" : ((tempMatrix.contents.length <= 2 || checkListData[i].children[j].half === true) ? "inline-block" : "block"),
               position: "relative",
+              top: desktop ? "" : String(0.1) + ea,
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: desktop ? String(checkListData[i].children[j].width) + ea : String(tempMatrix.contents.length > 2 ? 100 : 45) + '%',
+              width: desktop ? String(checkListData[i].children[j].width) + ea : String((tempMatrix.contents.length <= 2 || checkListData[i].children[j].half === true) ? 45 : 100) + '%',
               color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
               height: String(checkListData[i].children[j].factorHeight * (desktop ? 1 : 0.9)) + ea,
               transition: "all 0.1s ease",
@@ -3277,8 +3290,10 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             fontSize: String(size) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            width: String(checkListData[i].children[j].totalWidth) + ea,
-            height: String(checkListData[i].children[j].height) + ea,
+            width: String(desktop ? checkListData[i].children[j].totalWidth : 100 - (leftMargin * 2)) + ea,
+            height: String(checkListData[i].children[j].height - (desktop ? 0 : mobileTendencyTop)) + ea,
+            paddingTop: desktop ? "" : String(mobileTendencyTop) + ea,
+            left: desktop ? "" : String(0 - level1Width) + ea,
           }
         };
         tempArr.push(tempObj);
@@ -3293,14 +3308,18 @@ DesignerJs.prototype.checkListDetail = function (desid) {
               position: "relative",
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: String(checkListData[i].children[j].totalWidth) + ea,
+              width: String(desktop ? checkListData[i].children[j].totalWidth : 100 - (leftMargin * 2)) + ea,
               color: colorChip.black,
               height: String(checkListData[i].children[j].factorHeight) + ea,
             }
           };
           tempArr.push(tempObj);
           for (let l = 0; l < 10; l++) {
-            temp = (checkListData[i].children[j].totalWidth - checkListData[i].children[j].width) / 10;
+            if (desktop) {
+              temp = (checkListData[i].children[j].totalWidth - checkListData[i].children[j].width) / 10;
+            } else {
+              temp = (100 - (leftMargin * 2) - mobileTendencyIntend) / 10;
+            }
             tempObj = {
               mother: -1 + (l * -1),
               attribute: [
@@ -3362,7 +3381,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
               style: {
                 position: "absolute",
                 width: String(temp) + ea,
-                left: String(checkListData[i].children[j].width + (temp * l)) + ea,
+                left: String((desktop ? checkListData[i].children[j].width : mobileTendencyIntend) + (temp * l)) + ea,
                 background: colorChip[l <= tempMatrix.value[k] ? "green" : "gray2"],
                 top: String(tendencyTop) + ea,
                 height: String(tendencyHeight) + ea,
@@ -3445,7 +3464,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             display: "block",
             position: "absolute",
             width: String(100) + '%',
-            height: withOut(checkListData[i].children[j].textHeight, ea),
+            height: desktop ? withOut(checkListData[i].children[j].textHeight, ea) : String(checkListData[i].children[j].textHeight * checkListData[i].children[j].value(designer).length * 2) + ea,
             top: String(textAreaTop) + ea,
             left: String(0),
             fontSize: String(size) + ea,

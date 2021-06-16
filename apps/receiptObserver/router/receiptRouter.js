@@ -137,25 +137,108 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
 ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, fileSystem } = this.mother;
+  const { equalJson, fileSystem, slack_bot } = this.mother;
+  class CashOut {
+    constructor(o) {
+      this.id = o.id;
+      this.date = o.time;
+      this.deal = o.deal;
+      this.method = 0;
+      this.amount = {
+        supply: o.supply,
+        vat: o.vat,
+        service: o.service,
+        total: o.total,
+      };
+      this.etc = {
+        business: o.method,
+        remark: o.etc,
+        issuance: o.issuance
+      };
+    }
+    toMessage() {
+
+    }
+  }
+  class CashIn {
+    constructor(o) {
+      this.id = o.id;
+      this.date = o.date;
+      this.deal = o.deal;
+      this.method = 1;
+      this.who = {
+        business: o.business,
+        company: o.from
+      };
+      this.amount = {
+        supply: o.supply,
+        vat: o.vat,
+        service: o.service,
+        total: o.total,
+      };
+      this.etc = {
+        item: o.item,
+        remark: o.etc,
+        issuance: o.issuance
+      };
+    }
+    toMessage() {
+
+    }
+  }
+  // method 0 : input / 1 : output
+
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res) {
     try {
-
+      if (req.body.json === undefined) {
+        throw new Error("must be json");
+      }
       const json = equalJson(req.body.json);
+      const collection = "cashReceipt";
+      const selfMongo = instance.mongolocal;
+      let rows;
 
       if (json.cashOut !== undefined) {
 
-        const { cashOut } = json;
-        console.log(cashOut);
-        await fileSystem(`write`, [ `${process.cwd()}/temp/cashOut.json`, JSON.stringify(cashOut, null, 2) ]);
+        const { cashOut: cashOut_raw } = json;
+        let cashOut;
+
+        cashOut = [];
+        for (let arr of cashOut_raw) {
+          for (let obj of arr) {
+            cashOut.push(new CashOut(obj));
+          }
+        }
+
+        for (let obj of cashOut) {
+          rows = await back.mongoRead(collection, { $and: [ { method: 0 }, { id: obj.id } ] }, { selfMongo });
+          if (rows.length === 0) {
+            await slack_bot.chat.postMessage({ text: obj.toMessage(), channel: "#701_taxbill" });
+            await back.mongoCreate(collection, obj, { selfMongo });
+          }
+        }
 
       } else if (json.cashIn !== undefined) {
 
-        const { cashIn } = json;
-        console.log(cashIn);
-        await fileSystem(`write`, [ `${process.cwd()}/temp/cashIn.json`, JSON.stringify(cashIn, null, 2) ]);
+        const { cashIn: cashIn_raw } = json;
+        let cashIn;
+
+        cashIn = [];
+        for (let arr of cashIn_raw) {
+          for (let obj of arr) {
+            cashIn.push(new CashIn(obj));
+          }
+        }
+
+        for (let obj of cashIn) {
+          rows = await back.mongoRead(collection, { $and: [ { method: 1 }, { id: obj.id } ] }, { selfMongo });
+          if (rows.length === 0) {
+            await slack_bot.chat.postMessage({ text: obj.toMessage(), channel: "#701_taxbill" });
+            await back.mongoCreate(collection, obj, { selfMongo: instance.mongolocal });
+          }
+        }
 
       }
 
