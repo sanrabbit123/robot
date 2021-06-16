@@ -1,7 +1,7 @@
 module.exports = function (arg, info) {
   return [
     "https://www.hometax.go.kr/",
-    "wait_3000",
+    "wait_2000",
     [ 910, 112, 3000 ],
     [ 892, 367, 500 ],
     [ 836, 554, 500, true ],
@@ -88,7 +88,7 @@ module.exports = function (arg, info) {
     "close",
     "wait_1000",
     "https://www.hometax.go.kr/",
-    "wait_3000",
+    "wait_2000",
     [ 910, 112, 3000 ],
     [ 892, 367, 500 ],
     [ 836, 554, 500, true ],
@@ -116,7 +116,7 @@ module.exports = function (arg, info) {
       let tempObj;
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
-      buttons[2].click();
+      buttons[3].click();
 
       await sleep(1000);
 
