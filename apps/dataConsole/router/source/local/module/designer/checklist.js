@@ -676,27 +676,27 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
         {
           name: "주소",
           value: function (designer) {
-            return (designer.information.address.length === 0) ? "주소 없음" : designer.information.address[0];
+            return designer.information.address;
           },
-          update: function (text, designer) {
-            const errorObj = { updateQuery: "error", text: "error" };
-            let updateQuery;
-            let divText;
+          update: function (value, designer) {
+            const position = "information.address";
+            const error = "error";
+            let updateQuery, tempArr, tempArr2, text;
             updateQuery = {};
-            divText = "";
-            if (text === '') {
-              return errorObj;
-            } else {
-              if (/없음/gi.test(text)) {
-                updateQuery["information.address"] = [ text ];
-              } else {
-                updateQuery["information.address.0"] = text;
+            tempArr = value.split('\n');
+            tempArr2 = [];
+            for (let words of tempArr) {
+              if (words.trim().replace(/ /gi, '') !== '') {
+                text = words.trim();
+                tempArr2.push(words.trim());
               }
             }
-            return { updateQuery, text };
+            updateQuery[position] = tempArr2;
+            return updateQuery;
           },
+          textHeight: 14,
           height: factorHeight,
-          type: "string",
+          type: "longtext",
         },
         {
           name: "유효 범위",
@@ -2957,7 +2957,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         text: checkListData[i].name,
         style: {
           position: "absolute",
-          fontSize: String(size + (mobile ? 1.2 : 0)) + ea,
+          fontSize: String(size + (mobile ? 1 : 0)) + ea,
           fontWeight: String(700),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
@@ -3449,7 +3449,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             top: String(textAreaTop) + ea,
             left: String(0),
             fontSize: String(size) + ea,
-            fontWeight: String(200),
+            fontWeight: String(400),
             color: colorChip.black,
             border: String(0),
             outline: String(0),
