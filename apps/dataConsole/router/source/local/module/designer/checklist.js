@@ -2304,7 +2304,6 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                         possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
                         GeneralJs.stacks["designer_possible"] = possible;
 
-
                         const sseFunc = function () {
                           const today = new Date();
                           let filtered = value.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
@@ -2370,7 +2369,9 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                     fontSize: "inherit",
                     fontWeight: "inherit",
                     color: boo ? colorChip.green : colorChip.gray4,
-                    marginRight: String(margin) + ea,
+                    marginRight: String(desktop ? margin : 0) + ea,
+                    marginBottom: String(desktop ? 0 : 2.5) + ea,
+                    width: desktop ? "auto" : String(45) + '%',
                   }
                 });
 
@@ -2379,7 +2380,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                     mother: h,
                     text: '|',
                     style: {
-                      display: "inline-block",
+                      display: desktop ? "inline-block" : "none",
                       fontSize: "inherit",
                       fontWeight: String(200),
                       color: colorChip.gray4,
@@ -2397,13 +2398,13 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               mother.style.fontWeight = String(300);
               mother.style.color = colorChip.black;
               mother.style.overflow = "hidden";
-              mother.style.width = String((80 + (margin * 2)) * (futureMonth + 1)) + ea;
+              mother.style.width = desktop ? String((80 + (margin * 2)) * (futureMonth + 1)) + ea : String(100) + '%';
 
             } catch (e) {
               console.log(e);
             }
           },
-          height: factorHeight,
+          height: desktop ? factorHeight : factorHeight * 3.8,
           type: "async",
         },
         {
@@ -2475,7 +2476,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       fontSize: "inherit",
                       fontWeight: "inherit",
                       color: "inherit",
-                      height: String(factorHeight) + ea,
+                      height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
                       overflow: "hidden",
                       width: String(1000) + ea,
                     },
@@ -2483,17 +2484,17 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: project.name + " (" + project.phone + ")",
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "block",
                           fontSize: "inherit",
                           fontWeight: "inherit",
                           color: colorChip.black,
-                          marginRight: String(margin) + ea,
+                          marginRight: String(desktop ? margin : 0) + ea,
                         }
                       },
                       {
                         text: '|',
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: String(200),
                           color: colorChip.gray4,
@@ -2503,7 +2504,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: project.request.space.address,
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: "inherit",
                           color: colorChip.black,
@@ -2517,7 +2518,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
 
                 createNode({
                   mother: h,
-                  text: "대기중 프로젝트 없음",
+                  text: desktop ? "대기중 프로젝트 없음" : "없음",
                   style: {
                     display: "block",
                     position: "relative",
@@ -2615,7 +2616,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       fontSize: "inherit",
                       fontWeight: "inherit",
                       color: "inherit",
-                      height: String(factorHeight) + ea,
+                      height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
                       overflow: "hidden",
                       width: String(1000) + ea,
                     },
@@ -2623,17 +2624,17 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: project.name + " (" + project.phone + ")",
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "block",
                           fontSize: "inherit",
                           fontWeight: "inherit",
                           color: colorChip.black,
-                          marginRight: String(margin) + ea,
+                          marginRight: String(desktop ? margin : 0) + ea,
                         }
                       },
                       {
                         text: '|',
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: String(200),
                           color: colorChip.gray4,
@@ -2643,7 +2644,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: dateToString(project.process.contract.form.date.from) + " ~ " + dateToString(project.process.contract.form.date.to),
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: "inherit",
                           color: colorChip.black,
@@ -2653,7 +2654,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: '|',
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: String(200),
                           color: colorChip.gray4,
@@ -2663,7 +2664,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                       {
                         text: project.request.space.address,
                         style: {
-                          display: "inline-block",
+                          display: desktop ? "inline-block" : "none",
                           fontSize: "inherit",
                           fontWeight: "inherit",
                           color: colorChip.black,
@@ -2677,7 +2678,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
 
                 createNode({
                   mother: h,
-                  text: "진행중 프로젝트 없음",
+                  text: desktop ? "진행중 프로젝트 없음" : "없음",
                   style: {
                     display: "block",
                     position: "relative",
@@ -2778,6 +2779,9 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       ]
     }
   ];
+  if (mobile) {
+    checkListData.pop();
+  }
   return checkListData;
 }
 
@@ -2921,7 +2925,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   textAreaTop = <%% (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), -0.7 %%>;
 
   mobileTendencyTop = 8;
-  mobileTendencyVisualMargin = 11;
+  mobileTendencyVisualMargin = 13;
   mobileTendencyIntend = 20;
 
   checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
