@@ -275,6 +275,17 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             "number",
             "number",
           ],
+          middle: [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+          ]
         };
         const contentsConst = {
           width: [
@@ -323,7 +334,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
             true,
             true,
             true,
-            true
+            false
           ]
         };
         const homepage = "https://home-liaison.com";
@@ -1217,6 +1228,14 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
               obj.matrix[m] = obj.matrix[m].filter((element, i) => { return contentsConst.middle[i]; });
             }
           }
+
+          resultObj.price.columns = resultObj.price.columns.filter((element, i) => { return priceConst.middle[i]; });
+          resultObj.price.typeArr = resultObj.price.typeArr.filter((element, i) => { return priceConst.middle[i]; });
+          resultObj.price.width = resultObj.price.width.filter((element, i) => { return priceConst.middle[i]; });
+          for (let m = 0; m < resultObj.price.length; m++) {
+            resultObj.price[m] = resultObj.price[m].filter((element, i) => { return priceConst.middle[i]; });
+          }
+
         }
 
         return resultObj;
