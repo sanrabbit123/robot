@@ -325,9 +325,8 @@ GraphicBot.prototype.pressKey = async function (key) {
   const { bot } = this;
   const { sleep } = this.mother;
   try {
-    await sleep(500);
     bot.keyTap(key);
-    await sleep(1000);
+    await sleep(500);
   } catch (e) {
     console.log(e);
   }
@@ -337,7 +336,6 @@ GraphicBot.prototype.clipBoard = async function (text) {
   const instance = this;
   const { sleep, copyToClipboard } = this.mother;
   try {
-    await sleep(500);
     copyToClipboard(text);
     await sleep(500);
   } catch (e) {

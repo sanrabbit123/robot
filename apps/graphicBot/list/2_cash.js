@@ -9,11 +9,9 @@ module.exports = function (arg, info) {
     "clipBoard_" + String(info.hometax.id),
     "paste",
     "key_tab",
-    "wait_500",
     "key_delete",
     "clipBoard_" + String(info.hometax.pwd),
     "paste",
-    "wait_500",
     [ 1145, 575, 1000 ],
     async function () {
       await sleep(500);
@@ -86,6 +84,7 @@ module.exports = function (arg, info) {
     },
     "wait_2000",
     [ 1045, 112, 500 ],
+    "key_enter",
     "close",
     "wait_1000",
     "https://www.hometax.go.kr/",
@@ -97,11 +96,9 @@ module.exports = function (arg, info) {
     "clipBoard_" + String(info.hometax.id),
     "paste",
     "key_tab",
-    "wait_500",
     "key_delete",
     "clipBoard_" + String(info.hometax.pwd),
     "paste",
-    "wait_500",
     [ 1145, 575, 1000 ],
     async function () {
       await sleep(500);
@@ -177,6 +174,7 @@ module.exports = function (arg, info) {
     },
     "wait_2000",
     [ 1045, 112, 500 ],
+    "key_enter",
     "close",
   ];
 };
