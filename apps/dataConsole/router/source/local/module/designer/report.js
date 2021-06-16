@@ -1556,6 +1556,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
   let overTargets;
   let overWidth, overRadius;
   let offConst;
+  let mediaWidthRatio;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -1567,22 +1568,24 @@ DesignerJs.prototype.reportDetail = function (desid) {
   this.price = price;
   this.contents = contents;
 
+  mediaWidthRatio = <%% 1, 0.82, 0.82, 0.82, 0.82 %%>;
+
   margin = 8;
-  level1Width = 130;
-  level1Left = 120;
+  level1Width = <%% 130, 110, 110, 110, 110 %%>;
+  level1Left = <%% 120, 110, 110, 110, 110 %%>;
   topMargin = isMac() ? 30 : 34;
   leftMargin = 34;
   bottomMargin = isMac() ? 15 : 13;
   baseTongMarginBottom = 80;
-  size = 17;
+  size = <%% 16, 15, 15, 15, 3 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
   alphabetWidth = 30;
 
-  factorHeight = 34;
-  factorWidth = 210;
+  factorHeight = <%% 34, 32, 32, 32, 10 %%>;
+  factorWidth = <%% 210, 172, 172, 172, 210 %%>;
   tendencyFactorHeight = 30;
-  tendencyIndent = 105;
+  tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
   tendencyWidthIndent = -135;
 
   factorMarginTop = 22;
@@ -1945,14 +1948,14 @@ DesignerJs.prototype.reportDetail = function (desid) {
                 fontWeight: String(j === 0 ? 600 : 400),
                 color: colorChip.black,
                 height: String(100) + '%',
-                width: String(reportData[i].children[j].width[k]) + ea,
+                width: String(reportData[i].children[j].width[k] * mediaWidthRatio) + ea,
                 top: String(0) + ea,
                 left: String(left) + ea,
                 textAlign: "center",
               }
             };
             tempArr.push(tempObj);
-            left += reportData[i].children[j].width[k];
+            left += reportData[i].children[j].width[k] * mediaWidthRatio;
           }
         }
       } else if (reportData[i].children[j].result !== undefined) {
@@ -2006,14 +2009,14 @@ DesignerJs.prototype.reportDetail = function (desid) {
                 fontWeight: String(400),
                 color: colorChip.green,
                 height: String(100) + '%',
-                width: String(reportData[i].children[j].result.words[h].values[k].width[0]) + ea,
+                width: String(reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio) + ea,
                 top: String(0) + ea,
                 left: String(left) + ea,
                 textAlign: "left",
               }
             };
             tempArr.push(tempObj);
-            left += reportData[i].children[j].result.words[h].values[k].width[0];
+            left += reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio;
 
             tempObj = {
               mother: -3 + (-2 * k),
@@ -2024,14 +2027,14 @@ DesignerJs.prototype.reportDetail = function (desid) {
                 fontWeight: String(400),
                 color: colorChip.black,
                 height: String(100) + '%',
-                width: String(reportData[i].children[j].result.words[h].values[k].width[1]) + ea,
+                width: String(reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio) + ea,
                 top: String(0) + ea,
                 left: String(left) + ea,
                 textAlign: "left",
               }
             };
             tempArr.push(tempObj);
-            left += reportData[i].children[j].result.words[h].values[k].width[1];
+            left += reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio;
           }
         }
       }
@@ -2156,10 +2159,10 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, cInitialIcon;
 
-  radius = 20;
-  left = 40;
-  bottom = 40;
-  margin = 6;
+  radius = <%% 20, 20, 20, 20, 20 %%>;
+  left = <%% 40, 35, 35, 35, 35 %%>;
+  bottom = <%% 40, 35, 35, 35, 35 %%>;
+  margin = <%% 6, 6, 6, 6, 6 %%>;
   color = colorChip.gradientGreen;
   iconTop = 12.5;
 
@@ -2582,8 +2585,6 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
     let boxTong;
     let nodeArr;
     let tempObj;
-    let minWidth;
-    let margin;
     let width, height;
     let boxNumber;
     let status;
@@ -2600,9 +2601,7 @@ DesignerJs.prototype.reportView = async function (middleMode = false) {
     this.modes = [ "checklist", "report" ];
     this.mode = this.modes[1];
 
-    minWidth = 210;
-    margin = 8;
-    motherHeight = 154;
+    motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     //search event
     if (this.searchInput !== undefined && this.searchInput !== null) {

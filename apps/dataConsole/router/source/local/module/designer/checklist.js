@@ -3823,8 +3823,6 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
     let boxTong;
     let nodeArr;
     let tempObj;
-    let minWidth;
-    let margin;
     let width, height;
     let boxNumber;
     let status;
@@ -3841,8 +3839,6 @@ DesignerJs.prototype.checkListView = async function (middleMode = false) {
     this.mode = this.modes[0];
     this.result = null;
 
-    minWidth = <%% 210, 210, 210, 210, 210 %%>;
-    margin = 8;
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     //search event
