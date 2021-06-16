@@ -116,7 +116,7 @@ module.exports = function (arg, info) {
       let tempObj;
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
-      buttons[3].click();
+      buttons[2].click();
 
       await sleep(1000);
 
