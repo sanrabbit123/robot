@@ -1,6 +1,9 @@
 DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight) {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const cookies = GeneralJs.getCookiesAll();
   const checkListData = [
     {
       name: "일반",
@@ -134,88 +137,308 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       children: [
         {
           name: "경력",
-          value: function (designer) {
-            const { information } = designer;
-            const { relatedY, relatedM, startY, startM } = information.business.career;
-            return `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-          },
-          update: function (text, designer) {
-            const errorObj = { updateQuery: "error", text: "error" };
-            let updateQuery;
-            let tempArr;
-            let arr0, arr1;
-            let relatedY, relatedM, startY, startM;
-            let divText;
-            updateQuery = {};
-            divText = "";
-            if (!/\|/g.test(text)) {
-              return errorObj;
-            } else {
-              tempArr = text.split('|');
-              if (tempArr.length !== 2) {
-                return errorObj;
-              } else {
-                if (/년/g.test(tempArr[0]) && /년/g.test(tempArr[1])) {
-                  arr0 = tempArr[0].split('년');
-                  arr1 = tempArr[1].split('년');
-                  if (arr0.length === 2 && arr1.length === 2) {
-                    if (arr0[0].replace(/[^0-9]/gi, '').length === 0) {
-                      return errorObj;
+          value: async function (nodeArr, designer) {
+            try {
+              const [ abc, title, mother ] = nodeArr;
+              const { ajaxJson, colorChip, createNode, createNodes, cleanChildren } = GeneralJs;
+              const { information } = designer;
+              const { relatedY, relatedM, startY, startM } = information.business.career;
+              const desid = designer.desid;
+              let h;
+              let margin;
+              let totalWidth;
+
+              h = document.createDocumentFragment();
+              margin = 15;
+              totalWidth = 800;
+
+              createNode({
+                mother: h,
+                text: `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`,
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      if (/div/gi.test(e.target.nodeName)) {
+                        const [ cancelBox, inputBox ] = createNodes([
+                          {
+                            mother: this,
+                            mode: "aside",
+                            events: [
+                              {
+                                type: "click",
+                                event: function (e) {
+                                  this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                  this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "fixed",
+                              top: String(0) + ea,
+                              left: String(0) + ea,
+                              width: String(100) + '%',
+                              height: String(100) + '%',
+                              background: "transparent",
+                              zIndex: String(1),
+                            }
+                          },
+                          {
+                            mother: this,
+                            mode: "input",
+                            attribute: [
+                              { type: "text" },
+                              { value: this.textContent },
+                              { past: this.textContent },
+                            ],
+                            events: [
+                              {
+                                type: "keypress",
+                                event: async function (e) {
+                                  try {
+                                    if (e.key === "Enter") {
+                                      const designer = instance.designers.pick(desid);
+                                      const whereQuery = { desid };
+                                      let updateQuery;
+                                      let text;
+                                      let relatedY, relatedM;
+                                      let tempArr;
+                                      if (/년/g.test(this.value)) {
+                                        tempArr = this.value.split('년');
+                                        if (tempArr.length !== 2) {
+                                          text = this.getAttribute("past");
+                                          this.value = text;
+                                        } else {
+                                          relatedY = Number(tempArr[0].replace(/[^0-9]/g, ''));
+                                          relatedM = Number(tempArr[1].replace(/[^0-9]/g, ''));
+                                          if (Number.isNaN(relatedY) || Number.isNaN(relatedM)) {
+                                            text = this.getAttribute("past");
+                                            this.value = text;
+                                          } else {
+                                            updateQuery = {};
+                                            updateQuery["information.business.career.relatedY"] = relatedY;
+                                            updateQuery["information.business.career.relatedM"] = relatedM;
+                                            text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`
+                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                            await ajaxJson({
+                                              mode: "sse",
+                                              db: "console",
+                                              collection: "sse_checklistDesigner",
+                                              log: true,
+                                              who: cookies.homeliaisonConsoleLoginedEmail,
+                                              updateQuery: {
+                                                desid,
+                                                type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
+                                                value: text,
+                                                position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
+                                                update: { whereQuery, updateQuery }
+                                              }
+                                            }, "/generalMongo");
+                                            instance.designers.update([ whereQuery, updateQuery ]);
+                                          }
+                                        }
+                                      } else {
+                                        text = this.getAttribute("past");
+                                        this.value = text;
+                                      }
+                                      this.parentElement.removeChild(this.parentElement.firstChild);
+                                      this.parentElement.insertAdjacentHTML("beforeend", text);
+                                      this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                      this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                    }
+                                  } catch (err) {
+                                    console.log(err);
+                                  }
+                                }
+                              }
+                            ],
+                            style: {
+                              display: "block",
+                              position: "absolute",
+                              fontSize: "inherit",
+                              fontWeight: String(400),
+                              top: String(0),
+                              left: String(0),
+                              color: colorChip.green,
+                              background: colorChip.white,
+                              border: String(0),
+                              outline: String(0),
+                              width: String(this.getBoundingClientRect().width) + ea,
+                              zIndex: String(1),
+                            }
+                          }
+                        ]);
+                      }
                     }
-                    if (arr0[1].replace(/[^0-9]/gi, '').length === 0) {
-                      return errorObj;
-                    }
-                    if (arr1[0].replace(/[^0-9]/gi, '').length === 0) {
-                      return errorObj;
-                    }
-                    if (arr1[1].replace(/[^0-9]/gi, '').length === 0) {
-                      return errorObj;
-                    }
-                    if (Number.isNaN(Number(arr0[0].replace(/[^0-9]/gi, '')))) {
-                      return errorObj;
-                    }
-                    if (Number.isNaN(Number(arr0[1].replace(/[^0-9]/gi, '')))) {
-                      return errorObj;
-                    }
-                    if (Number.isNaN(Number(arr1[0].replace(/[^0-9]/gi, '')))) {
-                      return errorObj;
-                    }
-                    if (Number.isNaN(Number(arr1[1].replace(/[^0-9]/gi, '')))) {
-                      return errorObj;
-                    }
-                    relatedY = Number(arr0[0].replace(/[^0-9]/gi, ''));
-                    relatedM = Number(arr0[1].replace(/[^0-9]/gi, ''));
-                    startY = Number(arr1[0].replace(/[^0-9]/gi, ''));
-                    startM = Number(arr1[1].replace(/[^0-9]/gi, ''));
-                    if (relatedY < 0) {
-                      return errorObj;
-                    }
-                    if (relatedM < 0 || relatedM > 12) {
-                      return errorObj;
-                    }
-                    if (startY < 1900 || startY > 4000) {
-                      return errorObj;
-                    }
-                    if (startM <= 0 || startM > 12) {
-                      return errorObj;
-                    }
-                    updateQuery["information.business.career.relatedY"] = relatedY;
-                    updateQuery["information.business.career.relatedM"] = relatedM;
-                    updateQuery["information.business.career.startY"] = startY;
-                    updateQuery["information.business.career.startM"] = startM;
-                    divText = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-                  } else {
-                    return errorObj;
                   }
-                } else {
-                  return errorObj;
+                ],
+                style: {
+                  display: desktop ? "inline-block" : "block",
+                  position: "relative",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  color: colorChip.black,
+                  marginRight: String(margin) + ea,
+                  width: desktop ? "auto" : String(100) + '%',
+                  marginBottom: String(desktop ? 0 : 1.5) + ea,
                 }
-              }
+              });
+              createNode({
+                mother: h,
+                text: '|',
+                style: {
+                  display: desktop ? "inline-block" : "none",
+                  position: "relative",
+                  fontSize: "inherit",
+                  fontWeight: String(200),
+                  color: colorChip.gray4,
+                  marginRight: String(margin) + ea,
+                }
+              });
+              createNode({
+                mother: h,
+                text: `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`,
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      if (/div/gi.test(e.target.nodeName)) {
+                        const [ cancelBox, inputBox ] = createNodes([
+                          {
+                            mother: this,
+                            mode: "aside",
+                            events: [
+                              {
+                                type: "click",
+                                event: function (e) {
+                                  this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                  this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "fixed",
+                              top: String(0) + ea,
+                              left: String(0) + ea,
+                              width: String(100) + '%',
+                              height: String(100) + '%',
+                              background: "transparent",
+                              zIndex: String(1),
+                            }
+                          },
+                          {
+                            mother: this,
+                            mode: "input",
+                            attribute: [
+                              { type: "text" },
+                              { value: this.textContent },
+                              { past: this.textContent },
+                            ],
+                            events: [
+                              {
+                                type: "keypress",
+                                event: async function (e) {
+                                  try {
+                                    if (e.key === "Enter") {
+                                      const designer = instance.designers.pick(desid);
+                                      const whereQuery = { desid };
+                                      let updateQuery;
+                                      let text;
+                                      let startY, startM;
+                                      let tempArr;
+                                      if (/년/g.test(this.value)) {
+                                        tempArr = this.value.split('년');
+                                        if (tempArr.length !== 2) {
+                                          text = this.getAttribute("past");
+                                          this.value = text;
+                                        } else {
+                                          startY = Number(tempArr[0].replace(/[^0-9]/g, ''));
+                                          startM = Number(tempArr[1].replace(/[^0-9]/g, ''));
+                                          if (Number.isNaN(startY) || Number.isNaN(startM)) {
+                                            text = this.getAttribute("past");
+                                            this.value = text;
+                                          } else {
+                                            updateQuery = {};
+                                            updateQuery["information.business.career.startY"] = startY;
+                                            updateQuery["information.business.career.startM"] = startM;
+                                            text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`,
+                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                            await ajaxJson({
+                                              mode: "sse",
+                                              db: "console",
+                                              collection: "sse_checklistDesigner",
+                                              log: true,
+                                              who: cookies.homeliaisonConsoleLoginedEmail,
+                                              updateQuery: {
+                                                desid,
+                                                type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
+                                                value: text,
+                                                position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
+                                                update: { whereQuery, updateQuery }
+                                              }
+                                            }, "/generalMongo");
+                                            instance.designers.update([ whereQuery, updateQuery ]);
+                                          }
+                                        }
+                                      } else {
+                                        text = this.getAttribute("past");
+                                        this.value = text;
+                                      }
+                                      this.parentElement.removeChild(this.parentElement.firstChild);
+                                      this.parentElement.insertAdjacentHTML("beforeend", text);
+                                      this.parentElement.removeChild(this.parentElement.querySelector("aside"));
+                                      this.parentElement.removeChild(this.parentElement.querySelector("input"));
+                                    }
+                                  } catch (err) {
+                                    console.log(err);
+                                  }
+                                }
+                              }
+                            ],
+                            style: {
+                              display: "block",
+                              position: "absolute",
+                              fontSize: "inherit",
+                              fontWeight: String(400),
+                              top: String(0),
+                              left: String(0),
+                              color: colorChip.green,
+                              background: colorChip.white,
+                              border: String(0),
+                              outline: String(0),
+                              width: String(this.getBoundingClientRect().width) + ea,
+                              zIndex: String(1),
+                            }
+                          }
+                        ]);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  display: desktop ? "inline-block" : "block",
+                  position: "relative",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  color: colorChip.black,
+                  marginRight: String(margin) + ea,
+                  width: desktop ? "auto" : String(100) + '%',
+                }
+              });
+
+              cleanChildren(mother);
+              mother.appendChild(h);
+              mother.style.overflow = "hidden";
+              mother.style.width = desktop ? (String(totalWidth) + ea) : String(100) + '%';
+
+            } catch (e) {
+              console.log(e);
             }
-            return { updateQuery, text: divText };
           },
-          height: factorHeight,
-          type: "string",
+          height: (desktop ? factorHeight : factorHeight * 1.75),
+          type: "async",
         },
         {
           name: "경력 상세",
@@ -284,7 +507,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "string",
         },
         {
-          name: "사업자 분류",
+          name: "사업자",
           value: function (designer) {
             let contents, value;
             contents = [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
@@ -313,14 +536,14 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             }
             return { "information.business.businessInfo.classification": target };
           },
-          height: factorHeight * 2.1,
+          height: desktop ? factorHeight * 2.1 : factorHeight * 4.7,
           width: factorWidth,
           totalWidth: factorWidth * 3,
-          factorHeight: factorHeight,
+          factorHeight: desktop ? factorHeight : factorHeight * 0.9,
           type: "matrix",
         },
         {
-          name: "사업자 등록번호",
+          name: "등록번호",
           value: function (designer) {
             return (designer.information.business.businessInfo.businessNumber === '') ? "사업자 등록번호 없음" : designer.information.business.businessInfo.businessNumber;
           },
@@ -1308,7 +1531,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "빌트인 가구 제작",
+          name: "빌트인 제작",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1335,7 +1558,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "디자인 가구 제작",
+          name: "가구 제작",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1362,7 +1585,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "커튼 패브릭 제작",
+          name: "커튼 제작",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1389,7 +1612,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "베딩 패브릭 제작",
+          name: "베딩 제작",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1416,7 +1639,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "패브릭 발주 방식",
+          name: "패브릭 발주",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1691,7 +1914,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "조립 설치 서비스",
+          name: "설치 서비스",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1994,10 +2217,12 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                     {
                       type: "click",
                       event: function (e) {
+                        const possible = GeneralJs.stacks["designer_possible"];
                         const year = Number(this.getAttribute("year"));
                         const month = Number(this.getAttribute("month"));
                         const toggle = this.getAttribute("toggle");
                         let endTarget, startTarget, targetObj, firstDate, previousMonth, nextMonth, lastDate, index, targetIndex;
+                        let boo, boos;
 
                         firstDate = new Date(year, month - 1, 1);
                         previousMonth = new Date(year, month - 1, 1);
@@ -2071,13 +2296,63 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                         }
 
                         possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
+                        GeneralJs.stacks["designer_possible"] = possible;
+
+
+                        const sseFunc = function () {
+                          const today = new Date();
+                          let filtered = value.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+                          let tempFunc = new Function("const obj = " + filtered + "; return obj;");
+                          possible = tempFunc();
+                          let boo, boos;
+                          let map = [ { value: today, toggle: "off" } ];
+                          let future = new Date();
+                          for (let i = 0; i < 7; i++) {
+                            future.setMonth(future.getMonth() + 1);
+                            map.push({ value: new Date(future.getFullYear(), future.getMonth(), future.getDate()), toggle: "off" });
+                          }
+                          for (let o of map) {
+                            boo = false;
+                            boos = [];
+                            for (let { start, end } of possible) {
+                              boos.push(((start.getMonth() + (start.getFullYear() * 12)) <= (o.value.getMonth() + (o.value.getFullYear() * 12))) && ((end.getMonth() + (end.getFullYear() * 12)) >= (o.value.getMonth() + (o.value.getFullYear() * 12))));
+                            }
+                            boos = boos.filter((b) => { return b; });
+                            boo = (boos.length > 0);
+                            if (boo) {
+                              o.toggle = "on";
+                            }
+                          }
+                          let targets = mother.querySelectorAll(".hoverDefault");
+                          for (let i = 0; i < targets.length; i++) {
+                            targets[i].style.color = (map[i].toggle === "on" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4);
+                            targets[i].setAttribute("toggle", map[i].toggle);
+                          }
+                          GeneralJs.stacks["designer_possible"] = possible;
+                        }
+
                         GeneralJs.ajaxJson({
                           mode: "update",
                           db: "console",
                           collection: "realtimeDesigner",
                           whereQuery: { desid: instance.desid },
-                          updateQuery: { possible: possible }
-                        }, "/generalMongo").catch((err) => {
+                          updateQuery: { possible }
+                        }, "/generalMongo").then(() => {
+                          return GeneralJs.ajaxJson({
+                            mode: "sse",
+                            db: "console",
+                            collection: "sse_checklistDesigner",
+                            log: true,
+                            who: cookies.homeliaisonConsoleLoginedEmail,
+                            updateQuery: {
+                              desid: instance.desid,
+                              type: ("async__function__{ " + sseFunc.toString().replace(/\n/g, '').trim().replace(/=/gi, "__equal__").replace(/&/gi, "__ampersand__").replace(/\+/gi, "__plus__").replace(/\}$/, '').replace(/^function \(\) \{/gi, '') + " }"),
+                              value: JSON.stringify(possible),
+                              position: { x: 8, y: 0, class: "dom_" + String(8) + "_" + String(0) },
+                              update: { whereQuery: { desid: instance.desid }, updateQuery: {} }
+                            }
+                          }, "/generalMongo");
+                        }).catch((err) => {
                           console.log(err);
                         });
 
@@ -2110,6 +2385,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
                 num++;
               }
 
+              GeneralJs.stacks["designer_possible"] = possible;
               cleanChildren(mother);
               mother.appendChild(h);
               mother.style.fontWeight = String(300);
@@ -2586,6 +2862,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   const { totalMother, ea, grayBarWidth } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
   const cookies = getCookiesAll();
+  const mobile = this.media[4];
+  const desktop = !mobile;
   let designer;
   let information, analytics;
   let margin;
@@ -2613,18 +2891,18 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   analytics = designer.analytics;
 
   margin = 8;
-  level1Width = <%% 210, 172, 172, 172, 210 %%>;
-  level1Left = <%% 160, 136, 136, 136, 160 %%>;
-  topMargin = isMac() ? 30 : 34;
-  leftMargin = 34;
-  bottomMargin = isMac() ? 15 : 13;
+  level1Width = <%% 210, 172, 172, 172, 34 %%>;
+  level1Left = <%% 160, 136, 136, 136, 0 %%>;
+  topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
+  leftMargin = <%% 34, 34, 34, 34, 8 %%>;
+  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
   baseTongMarginBottom = 80;
-  size = <%% 16, 15, 15, 15, 3 %%>;
+  size = <%% 16, 15, 15, 15, 4 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
-  alphabetWidth = 30;
+  alphabetWidth = <%% 30, 30, 30, 30, 7 %%>;
 
-  factorHeight = <%% 38, 36, 36, 36, 10 %%>;
+  factorHeight = <%% 38, 36, 36, 36, 8.5 %%>;
   factorWidth = <%% 210, 172, 172, 172, 210 %%>;
   tendencyFactorHeight = 30;
   tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
@@ -2639,9 +2917,9 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
-      top: String(margin * 3) + ea,
-      left: String(grayBarWidth + (margin * 3)) + ea,
-      width: withOut(grayBarWidth + (margin * 6), ea),
+      top: String(desktop ? margin * 3 : 0) + ea,
+      left: String(grayBarWidth + (desktop ? margin * 3 : 0)) + ea,
+      width: withOut(grayBarWidth + (desktop ? margin * 6 : 0), ea),
       height: "auto",
       animation: "",
     }
@@ -2654,7 +2932,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
       left: String(0) + ea,
       width: String(100) + '%',
       borderRadius: String(5) + ea,
-      border: "1px solid " + colorChip.gray4,
+      border: desktop ? ("1px solid " + colorChip.gray4) : "",
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
@@ -2669,7 +2947,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         style: {
           position: "relative",
           width: String(100) + '%',
-          borderBottom: i !== checkListData.length - 1 ? "1px solid " + colorChip.gray4 : "",
+          borderBottom: (desktop ? (i !== checkListData.length - 1 ? "1px solid " + colorChip.gray4 : "") : ""),
         }
       },
       {
@@ -2677,11 +2955,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         text: checkListData[i].name,
         style: {
           position: "absolute",
-          fontSize: String(size) + ea,
+          fontSize: String(size + (mobile ? 1.2 : 0)) + ea,
           fontWeight: String(700),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
           left: String(leftMargin) + ea,
+          background: colorChip.white,
+          paddingRight: String(desktop ? 0 : 3.5) + ea,
+          zIndex: String(desktop ? 0 : 1),
         }
       },
       {
@@ -2689,8 +2970,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         style: {
           position: "absolute",
           width: String(level1Width) + ea,
-          top: String(0) + ea,
-          left: String(level1Left) + ea,
+          top: String(desktop ? 0 : size + 1.2 + (topMargin * 1.2)) + ea,
+          left: String(desktop ? level1Left : leftMargin) + ea,
           paddingTop: String(topMargin) + ea,
         }
       },
@@ -2698,9 +2979,9 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         mother: -3,
         style: {
           position: "relative",
-          width: withOut(level1Width + level1Left, ea),
-          top: String(0) + ea,
-          left: String(level1Width + level1Left) + ea,
+          width: withOut((desktop ? level1Width + level1Left : (leftMargin * 2) + level1Width), ea),
+          top: String(desktop ? 0 : size + 1.2 + (topMargin * 1.2)) + ea,
+          left: String(desktop ? level1Width + level1Left : leftMargin + level1Width) + ea,
           height: String(100) + '%',
           paddingTop: String(topMargin) + ea,
           paddingBottom: String(bottomMargin) + ea,
@@ -2714,7 +2995,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           fontSize: String(size) + ea,
           fontWeight: String(200),
           color: colorChip.green,
-          bottom: String(topMargin + (isMac() ? 0 : -3)) + ea,
+          bottom: String(desktop ? topMargin + (isMac() ? 0 : -3) : (topMargin * 1.2) - 4) + ea,
           right: String(leftMargin) + ea,
           zIndex: String(2),
         }
@@ -2724,6 +3005,20 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     eachTotalTong = nodeArr[0];
     eachNameTong = nodeArr[2];
     eachValueTong = nodeArr[3];
+
+    if (mobile) {
+      createNode({
+        mother: eachTotalTong,
+        style: {
+          position: "absolute",
+          top: String(topMargin + 1 + 3.1) + ea,
+          left: String(leftMargin) + ea,
+          width: withOut(leftMargin * 2, ea),
+          borderBottom: "1px dashed " + colorChip.green,
+          opacity: String(0.8),
+        }
+      });
+    }
 
     if (this.middleMode) {
       middleAdjustTong = [];
@@ -2751,7 +3046,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           display: "inline-block",
           position: "relative",
           fontSize: String(size) + ea,
-          fontWeight: String(500),
+          fontWeight: String(desktop ? 500 : 600),
           color: colorChip.black,
           height: String(checkListData[i].children[j].height) + ea,
           width: withOut(alphabetWidth, ea),
@@ -2886,7 +3181,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             fontSize: String(size) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            width: String(checkListData[i].children[j].totalWidth) + ea,
+            width: desktop ? String(checkListData[i].children[j].totalWidth) + ea : String(100) + '%',
             height: String(checkListData[i].children[j].height) + ea,
           }
         };
@@ -2955,11 +3250,11 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             ],
             class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j), matrixButtonConst + String(i) + String(j) + String(k) ],
             style: {
-              display: "inline-block",
+              display: desktop ? "inline-block" : "block",
               position: "relative",
               fontSize: String(size) + ea,
               fontWeight: String(300),
-              width: String(checkListData[i].children[j].width) + ea,
+              width: desktop ? String(checkListData[i].children[j].width) + ea : String(100) + '%',
               color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
               height: String(checkListData[i].children[j].factorHeight) + ea,
               transition: "all 0.1s ease",
@@ -3373,6 +3668,8 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, motherHeight } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
   const designer = this.designers.pick(desid);
   let mother;
   let radius;
@@ -3383,16 +3680,17 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 20 %%>;
-  left = <%% 40, 35, 35, 35, 35 %%>;
-  bottom = <%% 40, 35, 35, 35, 35 %%>;
-  margin = <%% 6, 6, 6, 6, 6 %%>;
+  radius = <%% 20, 20, 20, 20, 0 %%>;
+  left = <%% 40, 35, 35, 35, 0 %%>;
+  bottom = <%% 40, 35, 35, 35, 0 %%>;
+  margin = <%% 6, 6, 6, 6, 0 %%>;
   color = colorChip.gradientGreen;
   iconTop = 12.5;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
     style: {
+      display: desktop ? "block" : "none",
       position: "fixed",
       height: String(motherHeight) + ea,
       width: String(grayBarWidth) + ea,
@@ -3753,6 +4051,7 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
         }
         const { whereQuery, updateQuery } = update;
         const targetDom = document.querySelector('.' + position.class);
+        let tempFunction, tempArr, tempString;
 
         instance.designers.update([ whereQuery, updateQuery ]);
 
@@ -3800,6 +4099,13 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
             }
           } else if (type === "longtext") {
             targetDom.querySelector("textarea").value = value;
+          } else if (/^async/.test(type) && /__function__/g.test(type)) {
+            tempArr = type.split("__function__");
+            if (tempArr.length === 2) {
+              tempString = tempArr[1].trim().replace(/^\{/, '').replace(/\}$/, '').trim().replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&').replace(/__plus__/gi, '+');
+              tempFunction = new Function("mother", "value", tempString);
+              tempFunction(targetDom, value);
+            }
           }
         }
 

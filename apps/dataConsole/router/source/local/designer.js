@@ -31,6 +31,8 @@ const DesignerJs = function () {
 
 DesignerJs.prototype.standardBar = function (standard, localMode = false, specificDesid = null) {
   const instance = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -40,16 +42,16 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   let desidDom, desidArr;
   let size;
 
-  size = <%% 14, 13, 13, 13, 3 %%>;
+  size = <%% 14, 13, 13, 13, 0 %%>;
 
   leftPosition = new Array(2);
   secondLeftPosition = new Array(2);
 
-  leftPosition[0] = <%% 57, 56, 56, 56, 57 %%>;
-  leftPosition[1] = <%% 141, 136, 136, 136, 141 %%>;
+  leftPosition[0] = <%% 57, 56, 56, 56, 0 %%>;
+  leftPosition[1] = <%% 141, 136, 136, 136, 0 %%>;
 
-  secondLeftPosition[0] = <%% 38, 36, 36, 36, 38 %%>;
-  secondLeftPosition[1] = <%% 135, 131, 131, 131, 135 %%>;
+  secondLeftPosition[0] = <%% 38, 36, 36, 36, 0 %%>;
+  secondLeftPosition[1] = <%% 135, 131, 131, 131, 0 %%>;
 
   temp = {
     desid: standard.standard.desid.name,
@@ -61,7 +63,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   }
 
   style = {
-    display: "block",
+    display: desktop ? "block" : "none",
     position: "relative",
     background: GeneralJs.colorChip.gray0,
     top: String(0),
@@ -71,7 +73,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   };
 
   style2 = {
-    display: "block",
+    display: desktop ? "block" : "none",
     position: "fixed",
     height: String(this.module.height + this.module.marginBottom) + ea,
     paddingTop: String(this.module.paddingTop) + ea,
@@ -82,6 +84,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   };
 
   style3 = {
+    display: desktop ? "blcok" : "none",
     position: "absolute",
     height: String(this.module.height + this.module.marginBottom) + ea,
     fontSize: String(size) + ea,
@@ -3801,8 +3804,8 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
-    this.grayBarWidth = <%% 210, 200, 200, 200, 210 %%>;
-    this.mother.grayBarWidth = <%% 210, 200, 200, 210, 210 %%>;
+    this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
+    this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
 
     if (getObj.desid !== undefined && getObj.mode === undefined) {
       getObj.mode = "checklist";
