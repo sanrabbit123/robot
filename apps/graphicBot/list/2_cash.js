@@ -31,6 +31,7 @@ module.exports = function () {
 
       total = [];
       for (let i = 0; i < pageNumber; i++) {
+        pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
         pageButtons[i].click();
         await sleep(2000);
 
@@ -91,7 +92,7 @@ module.exports = function () {
       let tempObj;
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
-      buttons[3].click();
+      buttons[2].click();
 
       await sleep(1000);
 
@@ -104,6 +105,7 @@ module.exports = function () {
 
       total = [];
       for (let i = 0; i < pageNumber; i++) {
+        pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
         pageButtons[i].click();
         await sleep(2000);
 
