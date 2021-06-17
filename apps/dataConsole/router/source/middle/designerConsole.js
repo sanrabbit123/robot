@@ -550,7 +550,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     loading.parentElement.removeChild(loading);
 
     this.constructor();
-    this.grayBarWidth = <%% 210, 200, 200, 200, 210 %%>;
+    this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.belowHeight = 0;
     this.designer = designer;
     this.desid = desid;

@@ -58,6 +58,34 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    // const selfMongo = this.MONGOLOCALC;
+    // const designers = await back.getDesignersByQuery({}, { selfMongo });
+    // let p, c, a, matrix;
+    // a = [];
+    // for (let { desid, designer } of designers) {
+    //   p = await back.getProjectsByQuery({ "proposal.detail": { $elemMatch: { desid } } }, { selfMongo });
+    //   c = await back.getProjectsByQuery({ desid }, { selfMongo });
+    //   if (p.length === 0) {
+    //     a.push({ n: 0, c: c.length, p: p.length, desid, designer });
+    //   } else {
+    //     a.push({ n: Math.round((c.length / p.length) * 1000) / 10, c: c.length, p: p.length, desid, designer });
+    //   }
+    // }
+    // a.sort((c, d) => { return d.n - c.n });
+    // matrix = [ [ "디자이너 이름", "제안수", "계약수", "계약율", "콘솔 링크" ] ];
+    // for (let { n, c, p, desid, designer } of a) {
+    //   matrix.push([ designer, p, c, n, ("https://homeliaison-console.xyz/designer?mode=checklist&desid=" + desid) ]);
+    // }
+    // const parentId = "1sxXUmSQThr9Vfvzg_H-1T4KNh1z5eyJg";
+    // console.log(matrix);
+    // const id = await sheets.create_newSheets_inPython("디자이너 계약율", parentId);
+    // await sheets.setting_cleanView_inPython(id);
+    // await sheets.update_value_inPython(id, "", matrix, [ 0, 0 ]);
+
+
+
+
     /*
 
     const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
