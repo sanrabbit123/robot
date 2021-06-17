@@ -270,7 +270,7 @@ Robot.prototype.cashReceipt = async function () {
         port = obj.port.express[0];
       }
     }
-    console.log(`curl https://${ghost.host}:${String(port)}/cash`);
+    shell.exec(`curl http://${ghost.host}:${String(port)}/cash`);
   } catch (e) {
     console.log(e);
   }
