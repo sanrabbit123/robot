@@ -431,7 +431,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
   size = <%% 34, 34, 34, 34, 7 %%>;
 
   width = <%% 276, 276, 276, 276, 57 %%>;
-  height = <%% 170, 170, 170, 170, 40 %%>;
+  height = <%% 170, 170, 170, 170, 38 %%>;
 
   left0 = 0;
   left1 = <%% 156, 156, 156, 156, 32 %%>;
@@ -444,7 +444,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
   loadingTopMargin = <%% 5, 5, 5, 5, 1 %%>;
   loadingMargin = <%% 11, 11, 11, 11, 3 %%>;
 
-  size2 = <%% 16, 16, 16, 16, 3.6 %%>;
+  size2 = <%% 16, 16, 16, 16, 3.8 %%>;
 
   total = {};
 
