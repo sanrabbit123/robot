@@ -614,7 +614,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
                   border: String(0),
                   outline: String(0),
                   width: String(100) + '%',
-                  height: String(desktop ? 98 : 97) + '%',
+                  height: String(desktop ? 98 : 96) + '%',
                   top: String(0),
                   left: String(0),
                   fontSize: String(size2) + ea,
