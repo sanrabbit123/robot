@@ -2973,7 +2973,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         text: checkListData[i].name,
         style: {
           position: "absolute",
-          fontSize: String(size + (mobile ? 1 : 0)) + ea,
+          fontSize: String(size + (mobile ? 0.8 : 0)) + ea,
           fontWeight: String(700),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
