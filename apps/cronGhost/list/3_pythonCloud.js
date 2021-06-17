@@ -8,7 +8,8 @@ module.exports = [
     }
   },
   {
-    name: "cashReceipt",
+    name: "cashReceipt2",
+    order: "cashReceipt",
     time: {
       day_of_week: "mon",
       hour: 18,

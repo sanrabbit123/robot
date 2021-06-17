@@ -55,13 +55,21 @@ CronGhost.prototype.middlePython = function (listNum) {
   const targetList = this.list[listNum];
   let script, scriptString;
 
-  script = function (name) {
-    return `async def ${name}():` + `\n` + `    await run([ 'node', ROBOT, '${name}' ])`;
+  script = function (name, order = null) {
+    if (order === null) {
+      return `async def ${name}():` + `\n` + `    await run([ 'node', ROBOT, '${name}' ])`;
+    } else {
+      return `async def ${name}():` + `\n` + `    await run([ 'node', ROBOT, '${order}' ])`;
+    }
   }
 
   scriptString = '';
-  for (let { name } of targetList) {
-    scriptString += script(name);
+  for (let obj of targetList) {
+    if (obj.order !== undefined) {
+      scriptString += script(obj.name, obj.order);
+    } else {
+      scriptString += script(obj.name, null);
+    }
     scriptString += "\n\n";
   }
 
