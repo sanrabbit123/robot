@@ -45,7 +45,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { ea, belowHeight, taxBill } = this;
+  const { ea, belowHeight, taxBill, cashReceipt } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, isMac, autoComma } = GeneralJs;
   const { designer: name, desid } = designer;
   const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -278,10 +278,12 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     amount = designer.projects[i].process.calculation.payments.first.amount;
     condition = (designer.projects[i].process.calculation.payments.first.date.valueOf() > emptyDateValue);
     if (!condition) {
+      tempDate = designer.projects[i].proposal.date;
+      tempDate.setDate(tempDate.getDate() + 1);
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
-        tempDate = designer.projects[i].proposal.date;
-        tempDate.setDate(tempDate.getDate() + 1);
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
+      } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+        condition = cashReceipt.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       }
     }
     if (!condition) {
@@ -367,10 +369,12 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       condition = true;
     }
     if (!condition) {
+      tempDate = designer.projects[i].process.calculation.payments.first.date;
+      tempDate.setDate(tempDate.getDate() + 1);
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
-        tempDate = designer.projects[i].process.calculation.payments.first.date;
-        tempDate.setDate(tempDate.getDate() + 1);
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
+      } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+        condition = cashReceipt.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       }
     }
     if (!condition) {
@@ -960,6 +964,7 @@ DesignerJs.prototype.calculationView = async function () {
     let clients;
     let proposalDate;
     let taxBill;
+    let cashReceipt;
 
     loading = await this.mother.loadingRun();
 
@@ -985,6 +990,34 @@ DesignerJs.prototype.calculationView = async function () {
                   boo = false;
                   break;
                 }
+              }
+            }
+          }
+        }
+        return boo;
+      }
+    }
+
+    class CashReceipt extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(amount, business, date) {
+        if (typeof amount !== "number" || typeof business !== "string") {
+          throw new Error("invaild input");
+        }
+        let boo;
+        business = business.replace(/-/g, '');
+        boo = true;
+        for (let i of this) {
+          if (i.date.valueOf() > date.valueOf()) {
+            if (i.who.business.replace(/-/g, '') === business) {
+              if (i.amount.total === amount || i.amount.supply === amount) {
+                boo = false;
+                break;
               }
             }
           }
@@ -1049,7 +1082,16 @@ DesignerJs.prototype.calculationView = async function () {
     }, PYTHONHOST + "/generalMongo", { equal: true });
     taxBill.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
+    cashReceipt = await ajaxJson({
+      mode: "read",
+      db: "python",
+      collection: "cashReceipt",
+      whereQuery: { date: { $gte: proposalDate[0].date } },
+    }, PYTHONHOST + "/generalMongo", { equal: true });
+    cashReceipt.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
     this.taxBill = new TaxSearch(taxBill);
+    this.cashReceipt = new CashReceipt(cashReceipt);
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
     this.designers.setClients(clients);
