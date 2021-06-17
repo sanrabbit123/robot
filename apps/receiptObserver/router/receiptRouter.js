@@ -137,7 +137,7 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
 ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, fileSystem, slack_bot } = this.mother;
+  const { equalJson, fileSystem, slack_bot, dateToString, autoComma } = this.mother;
   class CashOut {
     constructor(o) {
       this.id = o.id;
@@ -157,7 +157,16 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       };
     }
     toMessage() {
-
+      let arr;
+      arr = [
+        `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
+        ``,
+        `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
+        `- 공급가 : ${autoComma(this.amount.supply)}원`,
+        `- 세액 : ${autoComma(this.amount.vat)}원`,
+        `- 소비자가 : ${autoComma(this.amount.total)}원`,
+      ];
+      return arr.join("\n");
     }
   }
   class CashIn {
@@ -183,7 +192,18 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       };
     }
     toMessage() {
-
+      let arr;
+      arr = [
+        `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
+        ``,
+        `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
+        `- 수신자 : ${this.who.company} (${this.who.business})`,
+        `- 품목 : ${this.item}`,
+        `- 공급가 : ${autoComma(this.amount.supply)}원`,
+        `- 세액 : ${autoComma(this.amount.vat)}원`,
+        `- 소비자가 : ${autoComma(this.amount.total)}원`,
+      ];
+      return arr.join("\n");
     }
   }
   // method 0 : input / 1 : output
