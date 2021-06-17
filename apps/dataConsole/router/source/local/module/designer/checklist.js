@@ -3711,7 +3711,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   bottom = <%% 40, 35, 35, 35, 7.2 %%>;
   margin = <%% 6, 6, 6, 6, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.5 %%>;
+  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
