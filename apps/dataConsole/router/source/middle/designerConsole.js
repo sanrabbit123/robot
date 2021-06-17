@@ -428,28 +428,28 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
   cssInjection(`.greenInput::placeholder { color: ${colorChip.green};font-weight: 500; opacity: 0.9 }`);
 
-  size = 34;
+  size = <%% 34, 34, 34, 34, 7 %%>;
 
-  width = 276;
-  height = 170;
+  width = <%% 276, 276, 276, 276, 57 %%>;
+  height = <%% 170, 170, 170, 170, 40 %%>;
 
   left0 = 0;
-  left1 = 156;
+  left1 = <%% 156, 156, 156, 156, 32 %%>;
 
-  whiteWidth = 236;
-  whiteHeight = 40;
-  whiteTop = 56;
+  whiteWidth = <%% 236, 236, 236, 236, 47 %%>;
+  whiteHeight = <%% 40, 40, 40, 40, 9 %%>;
+  whiteTop = <%% 56, 56, 56, 56, 12 %%>;
 
-  loadingWidth = 29;
-  loadingTopMargin = 5;
-  loadingMargin = 11;
+  loadingWidth = <%% 29, 29, 29, 29, 7 %%>;
+  loadingTopMargin = <%% 5, 5, 5, 5, 1 %%>;
+  loadingMargin = <%% 11, 11, 11, 11, 3 %%>;
 
-  size2 = 16;
+  size2 = <%% 16, 16, 16, 16, 3.6 %%>;
 
   total = {};
 
   vaildFunction = function (input, value) {
-    let newInput, certification;
+    let newInput, certification, pass;
 
     certification = "0000";
 
@@ -457,6 +457,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
       if (designers.length === 0) {
         window.alert("전화번호를 정확히 입력해주세요!");
         input.value = "";
+        pass = false;
       } else {
         const [ designer ] = designers;
         window.alert(`${designer.designer} 디자이너님 안녕하세요! 인증번호를 입력해주세요!`);
@@ -468,6 +469,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         newInput.setAttribute("placeholder", "인증번호를 입력해주세요!");
         input.style.display = "none";
         newInput.focus();
+        pass = true;
 
         //DEV ================================================================
         return (new Promise((resolve, reject) => { resolve("success") }));
@@ -480,25 +482,27 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
       }
     }).then((message) => {
-      newInput.addEventListener("keyup", function (e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
-        if (this.value.length === 4) {
-          if (certification === this.value) {
-            instance.consoleView().then(() => {
-              total.style.animation = "justfadeoutoriginal 0.2s ease forwards";
-              return GeneralJs.sleep(200);
-            }).then(() => {
-              total.parentNode.removeChild(total);
-              localStorage.setItem('desid', instance.desid);
-            }).catch((err) => {
-              console.log(err);
-            });
-          } else {
-            window.alert("인증번호를 정확히 입력해주세요!");
-            this.value = "";
+      if (pass) {
+        newInput.addEventListener("keyup", function (e) {
+          this.value = this.value.replace(/[^0-9]/g, '');
+          if (this.value.length === 4) {
+            if (certification === this.value) {
+              instance.consoleView().then(() => {
+                total.style.animation = "justfadeoutoriginal 0.2s ease forwards";
+                return GeneralJs.sleep(200);
+              }).then(() => {
+                total.parentNode.removeChild(total);
+                localStorage.setItem('desid', instance.desid);
+              }).catch((err) => {
+                console.log(err);
+              });
+            } else {
+              window.alert("인증번호를 정확히 입력해주세요!");
+              this.value = "";
+            }
           }
-        }
-      });
+        });
+      }
     }).catch((err) => {
       console.log(err);
     });
