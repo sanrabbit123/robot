@@ -385,6 +385,8 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   let options;
   let form;
   let finalConfig;
+  let getData;
+  let querystring;
 
   method = "get";
   dataKeys = Object.keys(data);
@@ -412,6 +414,12 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   if (configBoo) {
     if (/json/gi.test(JSON.stringify(config))) {
       jsonBoo = true;
+    } else if (config.method === "get") {
+      method = "get";
+      querystring = require('querystring');
+      getData = "?";
+      getData += querystring.stringify(data);
+      url = url + getData;
     }
   }
 
@@ -1866,5 +1874,7 @@ Mother.prototype.stringToDate = function (str) {
     return (new Date(Number(tempArr2[0]), Number(tempArr2[1]) - 1, Number(tempArr2[2]), Number(tempArr3[0]), Number(tempArr3[1]), Number(tempArr3[2])));
   }
 }
+
+
 
 module.exports = Mother;

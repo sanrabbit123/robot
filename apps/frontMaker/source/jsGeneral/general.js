@@ -861,8 +861,10 @@ GeneralJs.addHrefEvent = function (dom, to) {
 }
 
 GeneralJs.objectToRawquery = function (dataObj) {
+  if (typeof dataObj !== "object") {
+    throw new Error("invaild input, must be object");
+  }
   let dataString;
-
   dataString = '';
   for (let i in dataObj) {
     dataString += i.replace(/[\=\&]/gi, '');

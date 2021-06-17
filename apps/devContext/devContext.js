@@ -19,7 +19,7 @@ const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
 const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
 const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
-const ImmovablesServer = require(APP_PATH + "/immovablesServer/immovablesServer.js");
+const AddressParser = require(APP_PATH + "/addressParser/addressParser.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
@@ -44,6 +44,59 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.getAddress = async function (address, pointMode = false) {
+  if (typeof address !== "string") {
+    throw new Error("invaild input, address must be string");
+  }
+  const instance = this;
+  const { requestSystem } = this.mother;
+  try {
+    const mapKey = "A9ECB4F3-AE34-3A28-AD0F-59DAA7AC0A0B";
+    const url = "http://api.vworld.kr/req/search"
+    let data, res, result;
+    let tempArr, roadBoo;
+
+    tempArr = address.split(' ');
+    roadBoo = true;
+    for (let i of tempArr) {
+      if (/[동가리]$/i.test(i.trim())) {
+        roadBoo = false;
+      }
+    }
+
+    data = {
+      request: "search",
+      key: mapKey,
+      type: "address",
+      query: address,
+      format: "json",
+      errorformat: "json",
+      category: (roadBoo ? "road" : "parcel")
+    };
+    res = await requestSystem(url, data, { method: "get" });
+
+    result = null;
+
+    if (res.data.response.status === "OK") {
+      if (res.data.response.result !== undefined) {
+        if (Array.isArray(res.data.response.result.items)) {
+          if (res.data.response.result.items.length > 0) {
+            result = res.data.response.result.items[0];
+            result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
+          }
+        }
+      }
+    }
+
+    if (result !== null && pointMode) {
+      result = result.point.y + "," + result.point.x;
+    }
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -55,6 +108,46 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
     const sheets = new GoogleSheet();
+
+
+
+
+
+    // const result = [
+    //   {
+    //     name: '부산',
+    //     to: '부산광역시 동래구 명륜동 782',
+    //     amount: 200000,
+    //     m: 380069,
+    //     s: 14070
+    //   },
+    //   {
+    //     name: '속초',
+    //     to: '강원도 속초시 금호동 489-74',
+    //     amount: 150000,
+    //     m: 167336,
+    //     s: 11741
+    //   },
+    //   {
+    //     name: '세종',
+    //     to: '세종특별자치시 새롬동 601',
+    //     amount: 150000,
+    //     m: 150283,
+    //     s: 10301
+    //   },
+    //   {
+    //     name: '대구',
+    //     to: '대구광역시 북구 침산동 233-3',
+    //     amount: 150000,
+    //     m: 278896,
+    //     s: 11521
+    //   }
+    // ];
+    // const address = new AddressParser();
+    // console.log(await address.getTravelExpenses('세종특별자치시 새롬동 601', '대구광역시 북구 침산동 233-3', new Date(2021, 7, 10, 3, 30)));
+
+
+
 
 
 
