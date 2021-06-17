@@ -415,9 +415,11 @@ DesignerConsoleJs.prototype.leftPannel = function () {
 
 DesignerConsoleJs.prototype.initialLogin = function () {
   const instance = this;
-  const { ea } = this;
+  const { ea, media } = this;
   const { createNode, createNodes, withOut, colorChip, cssInjection, autoHypenPhone } = GeneralJs;
   const totalContents = document.getElementById("totalcontents");
+  const mobile = media[4];
+  const desktop = !mobile;
   let width, height, size;
   let left0, left1;
   let whiteWidth, whiteHeight, whiteTop;
