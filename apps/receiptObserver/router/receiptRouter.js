@@ -235,7 +235,6 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         for (let obj of cashOut) {
           rows = await back.mongoRead(collection, { $and: [ { method: 0 }, { id: obj.id } ] }, { selfMongo });
           if (rows.length === 0) {
-            await slack_bot.chat.postMessage({ text: obj.toMessage(), channel: "#701_taxbill" });
             await back.mongoCreate(collection, obj, { selfMongo });
           }
         }
