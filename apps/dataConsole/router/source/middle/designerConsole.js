@@ -384,9 +384,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         this.value = this.value.replace(/[^0-9]/g, '');
         if (this.value.length === 4) {
           if (certification === this.value) {
-            instance.checkListView(true).then(() => {
-              instance.checkListDetailLaunching(instance.desid);
-              instance.leftPannel();
+            instance.consoleView().then(() => {
               total.style.animation = "justfadeoutoriginal 0.2s ease forwards";
               return GeneralJs.sleep(200);
             }).then(() => {
@@ -532,6 +530,107 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 }
 
+DesignerConsoleJs.prototype.consoleView = async function () {
+  const instance = this;
+  const { ea, desid, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  try {
+    await this.checkListView();
+    this.checkListDetailLaunching(desid);
+    this.leftPannel();
+    if (mobile) {
+      const totalContents = document.getElementById("totalcontents");
+      const totalMother = document.querySelector(".totalMother");
+      let mobileNavigator;
+      let naviHeight;
+      let style;
+      let size;
+      let fontTop;
+      let fontLeft;
+
+      naviHeight = 60;
+      size = 20;
+      fontTop = 13;
+      fontLeft = 7.2;
+
+      mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(naviHeight) + "px",
+        zIndex: String(2),
+        background: "transparent"
+      };
+      for (let i in style) {
+        mobileNavigator.style[i] = style[i];
+      }
+      totalContents.insertBefore(mobileNavigator, totalMother);
+
+      createNodes([
+        {
+          mother: mobileNavigator,
+          style: {
+            position: "relative",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+          }
+        },
+        {
+          mother: -1,
+          style: {
+            position: "absolute",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            background: colorChip.black,
+            opacity: String(0.85),
+            backdropFilter: "blur(" + String(10) + "px" + ")",
+            top: String(0),
+            left: String(0)
+          }
+        },
+        {
+          mother: -2,
+          text: "Designer",
+          style: {
+            position: "absolute",
+            fontSize: String(size) + "px",
+            fontFamily: "graphik",
+            fontWeight: String(400),
+            fontStyle: "italic",
+            color: colorChip.white,
+            top: String(fontTop) + "px",
+            left: String(fontLeft) + ea,
+          }
+        },
+        {
+          mother: -3,
+          text: "console",
+          style: {
+            position: "absolute",
+            fontSize: String(size) + "px",
+            fontFamily: "graphik",
+            fontWeight: String(200),
+            color: colorChip.white,
+            top: String(fontTop) + "px",
+            left: "calc(" + String(fontLeft) + ea + " + " + String() + "px" + ")",
+          }
+        },
+      ]);
+
+
+
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerConsoleJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -558,12 +657,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.mode = this.modes[0];
 
     if (window.localStorage.getItem("desid") === this.desid) {
-      this.checkListView(true).then(() => {
-        instance.checkListDetailLaunching(instance.desid);
-        instance.leftPannel();
-      }).catch((err) => {
-        console.log(err);
-      });
+      await this.consoleView();
     } else {
       this.initialLogin();
     }

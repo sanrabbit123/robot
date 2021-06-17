@@ -2935,7 +2935,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
-      top: String(desktop ? margin * 3 : 0) + ea,
+      top: desktop ? String(margin * 3) + ea : (this.middleMode ? String(60) + "px" : String(0)),
       left: String(grayBarWidth + (desktop ? margin * 3 : 0)) + ea,
       width: withOut(grayBarWidth + (desktop ? margin * 6 : 0), ea),
       height: "auto",
@@ -3307,7 +3307,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           tempObj = {
             mother: -1 + (k * -11),
             text: tempMatrix.contents[k],
-            class: [ "hoverDefault_lite" ],
+            class: [ (desktop ? "hoverDefault_lite" : "tendencyMother") ],
             style: {
               display: "block",
               position: "relative",
@@ -3382,7 +3382,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                   }
                 }
               ],
-              class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j) + String(k) ],
+              class: [ (desktop ? "hoverDefault_lite" : "tendencyDetail"), matrixButtonConst + String(i) + String(j) + String(k) ],
               style: {
                 position: "absolute",
                 width: String(temp) + ea,
@@ -4140,10 +4140,11 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
   }
 }
 
-DesignerJs.prototype.checkListView = async function (middleMode = false) {
+DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
+    const middleMode = /middle/gi.test(window.location.pathname);
     this.backGrayBar();
     await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;

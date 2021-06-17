@@ -2589,10 +2589,11 @@ DesignerJs.prototype.reportAddExtractEvent = function () {
   }
 }
 
-DesignerJs.prototype.reportView = async function (middleMode = false) {
+DesignerJs.prototype.reportView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
+    const middleMode = /middle/gi.test(window.location.pathname);
     this.backGrayBar();
     await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
