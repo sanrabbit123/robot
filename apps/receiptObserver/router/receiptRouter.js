@@ -172,7 +172,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   class CashIn {
     constructor(o) {
       this.id = o.id;
-      this.date = o.date;
+      this.date = o.time;
       this.deal = o.deal;
       this.method = 1;
       this.who = {
