@@ -3706,12 +3706,12 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 5 %%>;
+  radius = <%% 20, 20, 20, 20, 6 %%>;
   left = <%% 40, 35, 35, 35, 0 %%>;
   bottom = <%% 40, 35, 35, 35, 7.2 %%>;
   margin = <%% 6, 6, 6, 6, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3 %%>;
+  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.5 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),

@@ -716,7 +716,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
           if (direction === "down") {
             mobileNavigator.style.top = String(popupTop) + "px";
           } else {
-            mobileNavigator.style.bottom = String(12) + ea;
+            mobileNavigator.style.bottom = String(14) + ea;
           }
           mobileNavigator.style.right = String(0);
           mobileNavigator.style.zIndex = String(3);
