@@ -46,10 +46,12 @@ const DesignerConsoleJs = function () {
 
 DesignerConsoleJs.prototype.leftPannel = function () {
   const instance = this;
-  const { ea, designer, desid, modes } = this;
+  const { ea, designer, desid, modes, media } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo } = GeneralJs;
   const totalMother = document.querySelector(".totalMother");
   const mother = totalMother.firstChild;
+  const mobile = media[4];
+  const desktop = !mobile;
   const colorFunc = function () {
     const doms = document.querySelectorAll(".leftTitles");
     const menus = document.querySelectorAll(".leftMenus");
@@ -217,99 +219,116 @@ DesignerConsoleJs.prototype.leftPannel = function () {
 
   cleanChildren(mother);
 
-  margin = <%% 40, 35, 35, 35, 35 %%>;
-  size = <%% 16, 15, 15, 15, 15 %%>;
-  barHeight = 19;
-  marginBottom = 23;
-  indent = 16;
-  menuMargin = <%% 15, 13, 13, 13, 15 %%>;
-  firstBold = 600;
-  secondBold = 400;
+  if (desktop) {
 
-  menu = [];
-  for (let i = 0; i < menuMap.length; i++) {
-    menu.push({
-      class: [ "hoverDefault", "leftMenus" ],
-      attribute: [
-        { toggle: (i === 0) ? "on" : "off" }
-      ],
-      events: [
-        {
-          type: "click",
-          event: menuMap[i].event,
-        }
-      ],
-      style: {
-        position: "relative",
-        fontSize: "inherit",
-        fontWeight: "inherit",
-        color: "inherit",
-        marginBottom: String(menuMargin) + ea,
-      },
-      children: [
-        {
-          text: String(i + 1),
-          style: {
-            position: "relative",
-            top: String(0),
-            left: String(0),
-            fontSize: "inherit",
-            fontWeight: String(300),
-            color: colorChip.green,
-          }
-        },
-        {
-          text: menuMap[i].title,
-          class: [ "leftTitles" ],
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(indent) + ea,
-            fontSize: "inherit",
-            fontWeight: "inherit",
-            color: (i === 0 ? colorChip.green : "inherit"),
-          }
-        },
-      ]
-    });
-  }
+    margin = <%% 40, 35, 35, 35, 35 %%>;
+    size = <%% 16, 15, 15, 15, 15 %%>;
+    barHeight = 19;
+    marginBottom = 23;
+    indent = 16;
+    menuMargin = <%% 15, 13, 13, 13, 15 %%>;
+    firstBold = 600;
+    secondBold = 400;
 
-  createNode({
-    mother,
-    style: {
-      position: "relative",
-      top: String(margin) + ea,
-      marginLeft: String(margin) + ea,
-      marginRight: String(margin) + ea,
-      width: withOut(100, margin * 2, ea),
-      height: withOut(100, margin * 2, ea),
-      fontSize: String(size) + ea,
-      fontWeight: String(secondBold),
-      color: colorChip.black
-    },
-    children: [
-      {
-        text: "안녕하세요,<br>" + designer.designer + " 디자이너님!",
+    menu = [];
+    for (let i = 0; i < menuMap.length; i++) {
+      menu.push({
+        class: [ "hoverDefault", "leftMenus" ],
+        attribute: [
+          { toggle: (i === 0) ? "on" : "off" }
+        ],
+        events: [
+          {
+            type: "click",
+            event: menuMap[i].event,
+          }
+        ],
         style: {
           position: "relative",
           fontSize: "inherit",
-          fontWeight: String(firstBold),
+          fontWeight: "inherit",
           color: "inherit",
-          lineHeight: String(1.5),
-        }
+          marginBottom: String(menuMargin) + ea,
+        },
+        children: [
+          {
+            text: String(i + 1),
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              fontSize: "inherit",
+              fontWeight: String(300),
+              color: colorChip.green,
+            }
+          },
+          {
+            text: menuMap[i].title,
+            class: [ "leftTitles" ],
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(indent) + ea,
+              fontSize: "inherit",
+              fontWeight: "inherit",
+              color: (i === 0 ? colorChip.green : "inherit"),
+            }
+          },
+        ]
+      });
+    }
+    createNode({
+      mother,
+      style: {
+        position: "relative",
+        top: String(margin) + ea,
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        width: withOut(100, margin * 2, ea),
+        height: withOut(100, margin * 2, ea),
+        fontSize: String(size) + ea,
+        fontWeight: String(secondBold),
+        color: colorChip.black
       },
-      {
-        style: {
-          position: "relative",
-          height: String(barHeight) + ea,
-          width: String(100) + '%',
-          borderBottom: "1px solid " + colorChip.gray4,
-          marginBottom: String(marginBottom) + ea,
-        }
-      },
-      ...menu
-    ]
-  });
+      children: [
+        {
+          text: "안녕하세요,<br>" + designer.designer + " 디자이너님!",
+          style: {
+            position: "relative",
+            fontSize: "inherit",
+            fontWeight: String(firstBold),
+            color: "inherit",
+            lineHeight: String(1.5),
+          }
+        },
+        {
+          style: {
+            position: "relative",
+            height: String(barHeight) + ea,
+            width: String(100) + '%',
+            borderBottom: "1px solid " + colorChip.gray4,
+            marginBottom: String(marginBottom) + ea,
+          }
+        },
+        ...menu
+      ]
+    });
+  } else {
+
+    mother.style.display = "none";
+
+    this.mobileNavigator = createNode({
+      mother,
+      style: {
+        position: "absolute",
+        width: String(30) + ea,
+        height: String(60) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+      }
+    });
+
+  }
 
 }
 
@@ -549,11 +568,22 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       let size;
       let fontTop;
       let fontLeft;
+      let naviDesignerWidth;
+      let naviBetweenMargin;
+      let iconTop;
+      let iconWidth;
+      let iconIndent;
 
       naviHeight = 60;
       size = 20;
-      fontTop = 13;
+      fontTop = 12;
       fontLeft = 7.2;
+      naviDesignerWidth = 85;
+      naviBetweenMargin = 7;
+      iconTop = 17;
+      iconWidth = size + 1;
+      iconIndent = 3;
+      popupTop = 33
 
       mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -588,7 +618,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
             width: String(100) + '%',
             height: String(100) + '%',
             background: colorChip.black,
-            opacity: String(0.85),
+            opacity: String(0.9),
             backdropFilter: "blur(" + String(10) + "px" + ")",
             top: String(0),
             left: String(0)
@@ -618,11 +648,42 @@ DesignerConsoleJs.prototype.consoleView = async function () {
             fontWeight: String(200),
             color: colorChip.white,
             top: String(fontTop) + "px",
-            left: "calc(" + String(fontLeft) + ea + " + " + String() + "px" + ")",
+            left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
           }
         },
+        {
+          mother: -4,
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const mobileNavigator = instance.mobileNavigator.cloneNode(true);
+                this.appendChild(mobileNavigator);
+              }
+            }
+          ],
+          style: {
+            position: "absolute",
+            top: String(iconTop) + "px",
+            right: String(fontLeft) + ea,
+            width: String(iconWidth) + "px",
+            height: String(iconWidth) + "px",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: this.mother.returnHamburger(colorChip.white),
+              style: {
+                position: "absolute",
+                top: String(iconIndent) + "px",
+                right: String(0),
+                height: withOut(100, iconIndent * 2, "px"),
+              }
+            }
+          ]
+        },
       ]);
-
 
 
     }
