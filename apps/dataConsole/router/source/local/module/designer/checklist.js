@@ -2979,7 +2979,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
           top: String(topMargin + 1) + ea,
           left: String(leftMargin) + ea,
           background: colorChip.white,
-          paddingRight: String(desktop ? 0 : 3.5) + ea,
+          paddingRight: String(desktop ? 0 : 3) + ea,
           zIndex: String(desktop ? 0 : 1),
         }
       },
@@ -3029,7 +3029,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         mother: eachTotalTong,
         style: {
           position: "absolute",
-          top: String(topMargin + 1 + 3.1) + ea,
+          top: String(topMargin + 1 + 3.2) + ea,
           left: String(leftMargin) + ea,
           width: withOut(leftMargin * 2, ea),
           borderBottom: "1px dashed " + colorChip.green,
