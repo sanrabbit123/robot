@@ -236,6 +236,7 @@ AddressParser.prototype.getAllImmovables = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   try {
+
     //static setting
     const home = process.env.HOME;
     const homeDir = await fileSystem(`readDir`, [ home ]);
