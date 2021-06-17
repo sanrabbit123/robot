@@ -259,6 +259,23 @@ Robot.prototype.taxBill = async function () {
   }
 }
 
+Robot.prototype.cashReceipt = async function () {
+  try {
+    const { shell, shellLink } = this.mother;
+    const { officeinfo: { map, ghost } } = this.address;
+    const target = "graphic";
+    let port;
+    for (let obj of map) {
+      if (obj.name === target) {
+        port = obj.port.express[0];
+      }
+    }
+    console.log(`curl https://${ghost.host}:${String(port)}/cash`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.bridgeCloud = async function (sw) {
   try {
     const BridgeCloud = require(`${process.cwd()}/apps/bridgeCloud/bridgeCloud.js`);
@@ -904,6 +921,13 @@ const MENU = {
       console.log(e);
     }
   },
+  cashReceipt: async function () {
+    try {
+      await robot.cashReceipt();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 let launchingFunc;
 
