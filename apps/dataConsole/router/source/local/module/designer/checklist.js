@@ -3706,23 +3706,24 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 0 %%>;
+  radius = <%% 20, 20, 20, 20, 5 %%>;
   left = <%% 40, 35, 35, 35, 0 %%>;
-  bottom = <%% 40, 35, 35, 35, 0 %%>;
+  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
   margin = <%% 6, 6, 6, 6, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = 12.5;
+  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
     style: {
-      display: desktop ? "block" : "none",
+      display: "block",
       position: "fixed",
-      height: String(motherHeight) + ea,
-      width: String(grayBarWidth) + ea,
-      left: String(0),
+      height: String(desktop ? motherHeight : (bottom + (radius * 2))) + ea,
+      width: String(desktop ? grayBarWidth : (bottom + (radius * 2))) + ea,
+      left: desktop ? String(0) : "",
+      right: desktop ? "" : String(0),
       bottom: String(belowHeight) + ea,
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : "transparent",
       zIndex: String(2),
     }
   });
@@ -3780,6 +3781,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
+        display: ((instance.middleMode && mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -3829,6 +3831,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
+        display: ((instance.middleMode && mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -3915,7 +3918,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
       }
     });
 
-  } else {
+  } else if (desktop) {
 
     listIcon.addEventListener("click", function (e) {
       let num = designer.information.did.replace(/[^0-9]/g, '');
