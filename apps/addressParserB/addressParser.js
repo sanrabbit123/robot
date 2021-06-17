@@ -250,6 +250,7 @@ AddressParser.prototype.getAllImmovables = async function () {
     }
     shell.exec(`mkdir ${shellLink(targetPath)}`);
 
+
     //date matrix setting
     const dateMatrix = [
       [ "202009" ]
