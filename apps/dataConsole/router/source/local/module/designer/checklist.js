@@ -3009,7 +3009,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         mother: -4,
         text: String.fromCharCode(65 + i),
         style: {
-          display: desktop ? "block" : "absolute",
+          display: desktop ? "block" : "none",
           position: "absolute",
           fontSize: String(size) + ea,
           fontWeight: String(200),
