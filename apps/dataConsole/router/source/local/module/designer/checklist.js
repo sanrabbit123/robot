@@ -2909,7 +2909,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
-  baseTongMarginBottom = 80;
+  baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
   size = <%% 16, 15, 15, 15, 4 %%>;
 
   tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
