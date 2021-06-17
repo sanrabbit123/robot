@@ -162,9 +162,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
         ``,
         `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
-        `- 공급가 : ${autoComma(this.amount.supply)}원`,
-        `- 세액 : ${autoComma(this.amount.vat)}원`,
-        `- 소비자가 : ${autoComma(this.amount.total)}원`,
+        `- 금액 : ${autoComma(this.amount.total)}원`,
       ];
       return arr.join("\n");
     }
@@ -197,11 +195,9 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
         ``,
         `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
-        `- 수신자 : ${this.who.company} (${this.who.business})`,
-        `- 품목 : ${this.item}`,
-        `- 공급가 : ${autoComma(this.amount.supply)}원`,
-        `- 세액 : ${autoComma(this.amount.vat)}원`,
-        `- 소비자가 : ${autoComma(this.amount.total)}원`,
+        `- 발신자 : ${this.who.company} (${this.who.business})`,
+        `- 품목 : ${this.etc.item}`,
+        `- 금액 : ${autoComma(this.amount.total)}원`,
       ];
       return arr.join("\n");
     }
@@ -254,7 +250,6 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         for (let obj of cashIn) {
           rows = await back.mongoRead(collection, { $and: [ { method: 1 }, { id: obj.id } ] }, { selfMongo });
           if (rows.length === 0) {
-            console.log(obj);
             await slack_bot.chat.postMessage({ text: obj.toMessage(), channel: "#701_taxbill" });
             await back.mongoCreate(collection, obj, { selfMongo: instance.mongolocal });
           }
