@@ -444,7 +444,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
   loadingTopMargin = <%% 5, 5, 5, 5, 1 %%>;
   loadingMargin = <%% 11, 11, 11, 11, 3 %%>;
 
-  size2 = <%% 16, 16, 16, 16, 3.8 %%>;
+  size2 = <%% 16, 16, 16, 16, 3.6 %%>;
 
   total = {};
 
@@ -612,7 +612,7 @@ DesignerConsoleJs.prototype.initialLogin = function () {
                   border: String(0),
                   outline: String(0),
                   width: String(100) + '%',
-                  height: String(98) + '%',
+                  height: String(desktop ? 98 : 97) + '%',
                   top: String(0),
                   left: String(0),
                   fontSize: String(size2) + ea,
