@@ -645,6 +645,7 @@ BackWorker.prototype.designerCalculation = async function () {
     const selfMongo = MONGOC;
     const bar1 = "================================================================";
     const collection = "taxBill";
+    const collection2 = "cashReceipt";
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let projects, clients, designers;
     let desidArr_raw, desidArr;
@@ -707,7 +708,8 @@ BackWorker.prototype.designerCalculation = async function () {
         desid: designer.desid,
         designer: designer.designer,
         classification: designer.information.business.businessInfo.classification,
-        free: (/[프간]/gi.test(designer.information.business.businessInfo.classification)),
+        free: (/프리/gi.test(designer.information.business.businessInfo.classification)),
+        simple: (/간이/gi.test(designer.information.business.businessInfo.classification)),
         business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),
         first: [],
         remain: [],
@@ -742,7 +744,7 @@ BackWorker.prototype.designerCalculation = async function () {
     }
 
     infoTong = infoTong.filter((obj) => { return (obj.first.length > 0 || obj.remain.length > 0); });
-    for (let { desid, designer, free, business, first, remain } of infoTong) {
+    for (let { desid, designer, free, simple, business, first, remain } of infoTong) {
       if (business !== "") {
         for (let obj of first) {
           rows = await back.mongoRead(collection, { date: { $gt: obj.proposal } }, { selfMongo: PYTHONMONGOC });
@@ -752,6 +754,18 @@ BackWorker.prototype.designerCalculation = async function () {
             if (i.who.from.business.replace(/-/g, '') === business) {
               for (let { supply, vat } of i.items) {
                 if (supply + vat === obj.amount) {
+                  boo = true;
+                  break;
+                }
+              }
+            }
+          }
+          if (simple) {
+            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: obj.proposal } } ] }, { selfMongo: PYTHONMONGOC });
+            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+            for (let i of rows) {
+              if (i.who.business.replace(/-/g, '') === business) {
+                if (i.amount.total === obj.amount || i.amount.supply === obj.amount) {
                   boo = true;
                   break;
                 }
@@ -774,6 +788,18 @@ BackWorker.prototype.designerCalculation = async function () {
               }
             }
           }
+          if (simple) {
+            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: obj.firstCalculation } } ] }, { selfMongo: PYTHONMONGOC });
+            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+            for (let i of rows) {
+              if (i.who.business.replace(/-/g, '') === business) {
+                if (i.amount.total === obj.amount || i.amount.supply === obj.amount) {
+                  boo = true;
+                  break;
+                }
+              }
+            }
+          }
           obj.receipt = free ? true : boo;
         }
       }
@@ -784,15 +810,15 @@ BackWorker.prototype.designerCalculation = async function () {
     tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
     tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/designer?mode=calculation`);
     tong.push(bar1);
-    for (let { designer, free, classification, first, remain } of infoTong) {
+    for (let { designer, free, simple, classification, first, remain } of infoTong) {
       for (let { name, amount, receipt } of first) {
         if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? classification : "세금 계산서 발행 완료"}`);
+          tong.push(`- ${designer}D ${name}C : 선금 ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
         }
       }
       for (let { name, amount, receipt } of remain) {
         if (receipt) {
-          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? classification : "세금 계산서 발행 완료"}`);
+          tong.push(`- ${designer}D ${name}C : 잔금 ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
         }
       }
     }
