@@ -94,13 +94,42 @@ class ProposalMap extends Array {
 class ProposalMapGenerator {
   analyticsMap(designer) {
     const today = new Date();
-    const { information: { business: { career: { startY, startM } } }, analytics } = designer;
-    const { styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { manufacture } }, purchase: { setting: { install, storage } }, project: { time: { first, entire }, paperWork } } = analytics;
+    const { information: { business: { career: { startY, startM, relatedY, relatedM } } }, analytics } = designer;
+    const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix } } = analytics;
+    const service = [
+      "홈퍼니싱",
+      "홈스타일링",
+      "토탈 스타일링",
+      "설계 변경",
+    ];
+    const constructMethod = [
+      "직접 계약, 직접 관리",
+      "직접 계약, 외주 감리",
+      "협업사 계약",
+      "공정별 연결",
+    ];
     let map = new ProposalMap();
     let career, monthAmount;
+    let matrixTong;
+    let constructTong;
 
     monthAmount = ((today.getFullYear()) * 12 + (today.getMonth() + 1)) - ((startY * 12) + startM);
-    career = String(Math.floor(monthAmount / 12)) + '년' + ' ' + String(monthAmount % 12) + "개월";
+    career = `${String(Math.floor(monthAmount / 12))}년 ${String(monthAmount % 12)}개월`;
+
+    matrixTong = [];
+    for (let i = 0; i < service.length; i++) {
+      if (matrix[i].filter((j) => { return j === 1; }).length !== 0) {
+        matrixTong.push(service[i]);
+      }
+    }
+
+    constructTong = [];
+    for (let { contract } of constructCase) {
+      for (let i of contract) {
+        constructTong.push(i);
+      }
+    }
+    constructTong = Array.from(new Set(constructTong));
 
     map.set("career", {
       name: "경력",
@@ -108,19 +137,17 @@ class ProposalMapGenerator {
       standard: null,
       value: career
     });
-    map.set("paperWork", {
-      name: "페이퍼 워크",
+    map.set("related", {
+      name: "유관 경력",
+      type: "string",
+      standard: null,
+      value: `${String(relatedY)}년 ${String(relatedM)}개월`
+    });
+    map.set("matrix", {
+      name: "활동 범위",
       type: "checkbox",
-      standard: [
-        "도면",
-        "3D",
-        "컨셉 제안",
-        "마감재 제안",
-        "제품 리스트",
-        "참고 이미지",
-        "드로잉",
-      ],
-      value: paperWork
+      standard: service,
+      value: matrixTong
     });
     map.set("method", {
       name: "제안 방식",
@@ -149,14 +176,11 @@ class ProposalMapGenerator {
       ],
       value: (design ? "가능" : "불가능")
     });
-    map.set("fabric", {
-      name: "패브릭 직접 제작",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (manufacture ? "가능" : "불가능")
+    map.set("construct", {
+      name: "시공 방식",
+      type: "checkbox",
+      standard: constructMethod,
+      value: constructTong
     });
     map.set("first", {
       name: "1차 제안 시간",
@@ -164,29 +188,23 @@ class ProposalMapGenerator {
       standard: null,
       value: String(Math.floor(first / 7)) + "주 이내",
     });
-    map.set("entire", {
-      name: "전체 제안 시간",
-      type: "string",
-      standard: null,
-      value: String(Math.floor(entire / 7)) + "주 이내",
-    });
-    map.set("install", {
-      name: "조립, 설치 서비스",
+    map.set("curtain", {
+      name: "커튼 패브릭 제작",
       type: "radio",
       standard: [
-        "제공",
-        "미제공"
+        "가능",
+        "불가능"
       ],
-      value: (install ? "제공" : "미제공")
+      value: (curtain ? "가능" : "불가능")
     });
-    map.set("storage", {
-      name: "정리 수납 서비스",
+    map.set("bedding", {
+      name: "베딩 패브릭 제작",
       type: "radio",
       standard: [
-        "제공",
-        "미제공"
+        "가능",
+        "불가능"
       ],
-      value: (storage ? "제공" : "미제공")
+      value: (bedding ? "가능" : "불가능")
     });
     map.set("styleTendency", {
       name: "스타일 경향성",
@@ -1723,8 +1741,6 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   let leftIndent, width0, width1, height;
   let initNumber;
   let maxNumber;
-  let maxInitNumber;
-  let leftNumber;
   let titleDom;
   let titleSize;
   let titleIndent;
@@ -1746,8 +1762,6 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
   initNumber = 2;
   maxNumber = 6;
-  maxInitNumber = (maxNumber * 2) - initNumber;
-  leftNumber = map.length - maxInitNumber;
 
   leftIndent = <%% 20, 6, 6, 6, 0 %%>;
   width1 = <%% 360, 320, 450, 353, 60 %%>;
@@ -1772,7 +1786,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
   valueIndent = <%% 140, 120, 150, 130, 30 %%>;
 
-  checkboxMarginRight = <%% 30, 24, 24, 24, 5.6 %%>;
+  checkboxMarginRight = <%% 35, 24, 24, 24, 5.6 %%>;
   radioMarginRight = <%% 35, 32, 32, 32, 5.6 %%>;
 
   valueDomBarLeft = <%% 60, 58, 58, 60, 13 %%>;
@@ -1795,9 +1809,9 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
     propertyBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      top: String(top + ((margin + height) * (i < maxNumber ? i : i - (maxNumber - initNumber)))) + ea,
-      left: String(left + (i < maxNumber ? 0 : (width1 + leftIndent))) + ea,
-      width: String(i < 2 ? width0 : width1) + ea,
+      top: String(top + ((margin + height) * ((i < 2 || i === map.length - 1) ? 0 : (i < (maxNumber + 1) ? i - 1 : i - (maxNumber + 1 - initNumber))))) + ea,
+      left: String(left + ((i < (maxNumber + 1) && i !== 1) ? 0 : (width1 + leftIndent))) + ea,
+      width: String((i === 2 || i === 6) ? width0 : width1) + ea,
       height: String(height) + ea,
     };
     if (media[2] || media[3]) {
@@ -1809,7 +1823,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         }
       }
     }
-    if (i >= maxInitNumber) {
+    if (i === map.length - 1) {
       style.top = String(top) + ea;
       style.left = String(left + (leftIndent * 2) + (width1 * 2) - tendencyVisualLeft) + ea;
       style.height = String((height * maxNumber) + (margin * (maxNumber - 1))) + ea;
