@@ -202,6 +202,21 @@ Mother.prototype.fileSystem = function (sw, arr) {
         });
       });
       break;
+    case "readJson":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.readFile(arr[0], "utf8", (err, data) => {
+          if (err) { reject(err); }
+          else {
+            try {
+              resolve(JSON.parse(data));
+            } catch (e) {
+              reject(e);
+            }
+          }
+        });
+      });
+      break;
     case "readDir":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
@@ -224,6 +239,16 @@ Mother.prototype.fileSystem = function (sw, arr) {
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }
         fs.writeFile(arr[0], arr[1], "binary", (err) => {
+          if (err) { reject(err); }
+          else { resolve("success"); }
+        });
+      });
+      break;
+    case "writeJson":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
+        if (typeof arr[0] !== "string" || typeof arr[1] !== "object") { reject("second argument must be string, object array"); }
+        fs.writeFile(arr[0], JSON.stringify(arr[1], null, 2), "utf8", (err) => {
           if (err) { reject(err); }
           else { resolve("success"); }
         });
@@ -1778,6 +1803,17 @@ Mother.prototype.copyToClipboard = function (data) {
 }
 
 Mother.prototype.equalJson = function (jsonString) {
+  const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+  const json = tempFunc();
+  return json;
+}
+
+Mother.prototype.copyJson = function (obj) {
+  if (typeof obj !== "object") {
+    throw new Error("must be object input");
+  }
+  const jsonString = JSON.stringify(obj);
   const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
   const tempFunc = new Function("const obj = " + filtered + "; return obj;");
   const json = tempFunc();

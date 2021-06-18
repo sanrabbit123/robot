@@ -317,6 +317,10 @@ const withToolsArr = function (Designers) {
     return this.search(desid);
   }
 
+  Designers.prototype.pick = function (desid) {
+    return this.search(desid);
+  }
+
   return Designers;
 }
 

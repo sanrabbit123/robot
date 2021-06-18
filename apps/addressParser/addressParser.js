@@ -94,7 +94,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
 }
 
 AddressParser.prototype.getDistance = async function (from, to, when = null) {
-  if (typeof from !== "string" || typeof to !== "string") {
+  if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
   const instance = this;
@@ -102,12 +102,14 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
   const { url, key } = this.token.googleDirections;
   try {
     class Distance {
-      constructor(m, s) {
-        if (typeof m !== "number" || typeof s !== "number") {
+      constructor(m, s, from, to) {
+        if (typeof m !== "number" || typeof s !== "number" || from === undefined || to === undefined) {
           throw new Error("invaild input");
         }
         this.meters = m;
         this.seconds = s;
+        this.from = from;
+        this.to = to;
       }
       get m() {
         return this.meters;
@@ -139,11 +141,67 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
     }
     const mode = "transit";
     let origin, destination, res, result, departure_time;
+    let origin_obj, destination_obj;
     let meters, seconds;
 
     departure_time = String(when.valueOf() / 1000);
-    origin = await this.getAddress(from, true);
-    destination = await this.getAddress(to, true);
+    if (typeof from === "string") {
+      origin_obj = await this.getAddress(from);
+      if (origin_obj === null) {
+        return null;
+      }
+      origin = origin_obj.point.value;
+    } else if (typeof from === "object") {
+      if (typeof from.point !== "object") {
+        throw new Error("invaild from");
+        return null;
+      } else {
+        if (typeof from.point.value !== "string") {
+          throw new Error("invaild from");
+          return null;
+        } else {
+          if (/^[0-9]/.test(from.point.value) && /[0-9]$/.test(from.point.value) && /,/g.test(from.point.value)) {
+            origin_obj = from;
+            origin = from.point.value;
+          } else {
+            throw new Error("invaild from");
+            return null;
+          }
+        }
+      }
+    } else {
+      throw new Error("invaild from");
+      return null;
+    }
+
+    if (typeof to === "string") {
+      destination_obj = await this.getAddress(to);
+      if (destination_obj === null) {
+        return null;
+      }
+      destination = destination_obj.point.value;
+    } else if (typeof to === "object") {
+      if (typeof to.point !== "object") {
+        throw new Error("invaild to");
+        return null;
+      } else {
+        if (typeof to.point.value !== "string") {
+          throw new Error("invaild to");
+          return null;
+        } else {
+          if (/^[0-9]/.test(to.point.value) && /[0-9]$/.test(to.point.value) && /,/g.test(to.point.value)) {
+            destination_obj = to;
+            destination = to.point.value;
+          } else {
+            throw new Error("invaild to");
+            return null;
+          }
+        }
+      }
+    } else {
+      throw new Error("invaild to");
+      return null;
+    }
 
     result = null;
 
@@ -173,7 +231,7 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
     meters = res.data.routes[0].legs[0].distance.value;
     seconds = res.data.routes[0].legs[0].duration.value;
 
-    result = new Distance(meters, seconds);
+    result = new Distance(meters, seconds, origin_obj, destination_obj);
 
     return result;
   } catch (e) {
@@ -182,7 +240,7 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
 }
 
 AddressParser.prototype.getTravelExpenses = async function (from, to, when = null) {
-  if (typeof from !== "string" || typeof to !== "string") {
+  if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
   const instance = this;
@@ -205,6 +263,8 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, when = nul
     result = Math.round(result / 1000) * 1000;
 
     return {
+      from: distance.from,
+      to: distance.to,
       amount: result,
       string: autoComma(result) + '원',
       distance: {

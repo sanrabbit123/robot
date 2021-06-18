@@ -47,7 +47,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -57,20 +57,82 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const selfMongo = this.MONGOLOCALC;
-    const designers = await back.getDesignersByQuery({}, { selfMongo });
-    let num;
 
-    num = 1;
-    for (let designer of designers) {
-      if (designer.information.address.length !== 0) {
-        console.log(num, designer.designer, designer.desid, designer.information.address[0].value);
-      } else {
-        console.log(num, designer.designer, designer.desid, "주소 없음");
-      }
-      num++;
-    }
 
+
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    // const travelExpensesSamples = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json` ]);
+    // const data = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples_min.json` ]);
+    // const parentId = "1FY4RqqGeMNpYs9HJhWA6xJxJFHFiQpup";
+    // const defaultName = "전체";
+    // let matrix_standard, matrix, tempArr, num;
+    // let pastDesid, pastDesigner, pastAddress;
+    // let sheetsId;
+    // let designerNames, designerDesid;
+    // let designerName;
+    //
+    // sheetsId = await sheets.create_newSheets_inPython("디자이너 출장비 샘플", parentId);
+    // await sheets.update_defaultSheetName_inPython(sheetsId, defaultName);
+    //
+    // matrix_standard = [ [ "순번", "디자이너 아이디", "디자이너", "디자이너 주소", "고객 주소", "거리", "시간", "출장비", "출장비(숫자)" ] ];
+    //
+    // matrix = copyJson(matrix_standard);
+    // pastDesid = null;
+    // pastDesigner = null;
+    // pastAddress = null;
+    // num = 0;
+    // designerNames = [];
+    // designerDesid = [];
+    // for (let obj of data) {
+    //   matrix.push([
+    //     data.length - num,
+    //     ((obj.desid === pastDesid) ?  '' : obj.desid),
+    //     ((obj.designer === pastDesigner) ?  '' : obj.designer),
+    //     ((obj.from === pastAddress) ?  '' : obj.from),
+    //     obj.to,
+    //     obj.distance,
+    //     obj.time,
+    //     obj.amount,
+    //     Number(obj.amount.replace(/[^0-9]/g, '')),
+    //   ]);
+    //   if (obj.designer !== pastDesigner) {
+    //     designerNames.push(obj.designer);
+    //   }
+    //   if (obj.desid !== pastDesid) {
+    //     designerDesid.push(obj.desid);
+    //   }
+    //   pastDesid = obj.desid;
+    //   pastDesigner = obj.designer;
+    //   pastAddress = obj.from;
+    //   num++;
+    // }
+    //
+    // await sheets.add_newSheet_inPython(sheetsId, designerNames);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, defaultName, matrix, [ 0, 0 ]);
+    //
+    // for (let desid of designerDesid) {
+    //   designerName = designers.pick(desid).designer;
+    //   matrix = copyJson(matrix_standard);
+    //   num = 0;
+    //   for (let obj of data) {
+    //     if (obj.desid === desid) {
+    //       matrix.push([
+    //         travelExpensesSamples[desid].length - num,
+    //         ((num !== 0) ?  '' : obj.desid),
+    //         ((num !== 0) ?  '' : obj.designer),
+    //         ((num !== 0) ?  '' : obj.from),
+    //         obj.to,
+    //         obj.distance,
+    //         obj.time,
+    //         obj.amount,
+    //         Number(obj.amount.replace(/[^0-9]/g, '')),
+    //       ]);
+    //       num++;
+    //     }
+    //   }
+    //   await sheets.update_value_inPython(sheetsId, designerName, matrix, [ 0, 0 ]);
+    // }
 
 
 

@@ -2265,9 +2265,9 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         updateQuery = equalJson(req.body.updateQuery);
         result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
         if (result.length === 0) {
-          await back.mongoCreate(collection, { id: "sse", order: [ updateQuery ] }, { selfMongo });
+          await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
         } else {
-          result[0].order.push(updateQuery);
+          result[0].order.push(JSON.stringify(updateQuery));
           await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
         }
         await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);

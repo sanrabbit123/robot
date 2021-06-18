@@ -300,7 +300,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem } = this.mother;
+  const { fileSystem, equalJson } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   const { readFileSync } = require(`fs`);
   let connectionNumber = 0;
@@ -350,6 +350,11 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
           if (trigger.length > 0) {
             orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
             order = orderRaw[0].order;
+            for (let i = 0; i < order.length; i++) {
+              if (/^[\{\[]/.test(order[i].trim()) && /[\}\]]$/.test(order[i].trim())) {
+                order[i] = equalJson(order[i]);
+              }
+            }
             res.write(`event: updateTong\ndata: ${JSON.stringify(order)}\n\n`);
             totalOrder = totalOrder - 1;
             if (totalOrder <= 0) {
