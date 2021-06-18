@@ -449,6 +449,8 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const { fileSystem, equalJson } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   const { readFileSync } = require(`fs`);
+  const os = require(`os`);
+  let connectionNumber_raw = 0;
   let connectionNumber = 0;
   let totalOrder = 0;
   let obj = {};
@@ -480,10 +482,12 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
         await fileSystem(`write`, [ sseFile, JSON.stringify([]) ]);
       }
 
-      connectionNumber = connectionNumber + 1;
+      connectionNumber_raw = connectionNumber_raw + 1;
+      connectionNumber = os.cpus().length * connectionNumber_raw;
       totalOrder = connectionNumber;
 
       const pusher = setInterval(async function () {
+        console.log(connectionNumber);
         try {
           if (totalOrder <= 0) {
             totalOrder = connectionNumber;
@@ -516,7 +520,8 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       res.on('close', function () {
         clearInterval(pusher);
         res.end();
-        connectionNumber = connectionNumber - 1;
+        connectionNumber_raw = connectionNumber_raw - 1;
+        connectionNumber = os.cpus().length * connectionNumber_raw;
       });
 
     } catch (e) {
