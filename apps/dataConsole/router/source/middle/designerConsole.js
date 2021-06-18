@@ -453,8 +453,23 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
   vaildFunction = function (input, value) {
     let newInput, certification, pass;
+    let randomArr, randomKey, randomStr, randomValue;
 
-    certification = "0000";
+    randomArr = window.crypto.getRandomValues(new Uint32Array(10));
+    randomKey = randomArr[Math.floor(Math.random() * 10)];
+    randomStr = String(randomKey);
+
+    if (randomStr.length > 4) {
+      randomValue = randomStr.slice(0, 4);
+    } else {
+      randomValue = randomStr;
+      for (let i = randomStr.length; i < 4; i++) {
+        randomValue += String(Math.floor(Math.random() * 10));
+      }
+      randomValue = randomStr;
+    }
+
+    certification = randomValue;
 
     GeneralJs.ajaxJson({ noFlat: true, whereQuery: { "information.phone": value.trim() } }, "/getDesigners", { equal: true }).then((designers) => {
       if (designers.length === 0) {
@@ -474,14 +489,11 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         newInput.focus();
         pass = true;
 
-        //DEV ================================================================
-        return (new Promise((resolve, reject) => { resolve("success") }));
-        // return GeneralJs.ajaxPromise({
-        //   name: "배창규", //designer.designer
-        //   phone: "010-2747-3403", //designer.information.phone
-        //   certification,
-        // }, BRIDGEHOST + "/certification");
-        //DEV ================================================================
+        return GeneralJs.ajaxPromise({
+          name: designer.designer,
+          phone: designer.information.phone,
+          certification,
+        }, BRIDGEHOST + "/certification");
 
       }
     }).then((message) => {

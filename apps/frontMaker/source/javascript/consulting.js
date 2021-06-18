@@ -166,7 +166,6 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   }
 
   randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
-  // GeneralJs.ajax(randomValueAjaxData, "/engine/Smssend.php", function (data) {});
   GeneralJs.ajax(randomValueAjaxData, "https://homeliaison-bridge.xyz:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;

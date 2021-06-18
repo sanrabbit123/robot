@@ -3615,7 +3615,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             text: designer.designer + " 디자이너 상세 경력",
             style: {
               position: "absolute",
-              top: String(innerMargin - (desktop ? 1 : 1)) + ea,
+              top: String(innerMargin - (desktop ? 1 : 1.2)) + ea,
               left: String(innerMargin + (desktop ? 1 : 0.1)) + ea,
               fontSize: String(size) + ea,
               fontWeight: String(600),
@@ -3643,7 +3643,6 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               left: String(innerMargin) + ea,
               width: withOut((innerMargin - 2) * 2, ea),
               height: withOut(innerMargin * 2, ea),
-              background: "aqua",
             }
           },
           {
@@ -3680,7 +3679,7 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
               top: String(0),
               left: String(0),
               width: String(100) + '%',
-              fontSize: String(size - 1) + ea,
+              fontSize: String(size - (desktop ? 1 : 0.2)) + ea,
               fontWeight: String(400),
               color: colorChip.black,
               border: String(0),
