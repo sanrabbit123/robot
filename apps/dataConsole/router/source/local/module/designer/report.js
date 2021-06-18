@@ -1359,9 +1359,9 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
       alpha = 0;
       alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
       alpha += (designer.analytics.project.paperWork.length >= 4) ? 2 : 0;
-      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0
-      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0
-      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0
+      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
+      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
+      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {
@@ -1372,6 +1372,8 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
       homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation);
 
       alpha += (homeliaison * (2 / 7));
+      //인기도
+      alpha += 1;
       alphaPercentage = (alpha / 100) + 1;
       alpha = (Math.floor(alpha * 100) / 100);
 

@@ -57,10 +57,45 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    const app = new AddressParser();
+    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    const designerAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/designerAddress.json` ]);
+    const clientAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/clientAddress.json` ]);
+    // let travelExpensesSamples, json;
+    // travelExpensesSamples = {};
+    // for (let desid in designerAddress) {
+    //   travelExpensesSamples[desid] = [];
+    //   for (let obj of clientAddress) {
+    //     json = await app.getTravelExpenses(designerAddress[desid], obj, new Date(2021, 5, 12, 13, 30, 10));
+    //     console.log(json);
+    //     travelExpensesSamples[desid].push(json);
+    //   }
+    // }
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json`, travelExpensesSamples ]);
 
 
 
-    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    // const travelExpensesSamples = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json` ]);
+    // let tong;
+    // tong = [];
+    // for (let desid in travelExpensesSamples) {
+    //   for (let obj of travelExpensesSamples[desid]) {
+    //     tong.push({
+    //       "desid": desid,
+    //       "designer": designers.pick(desid).designer,
+    //       "from": obj.from.address[((/^서울/.test(obj.from.address.road) || /^경기/.test(obj.from.address.road) || /^인천/.test(obj.from.address.road)) ? "road" : "parcel")],
+    //       "to": obj.to.address[((/^달구/.test(obj.from.address.road) || /^정림/.test(obj.from.address.road)) ? "parcel" : "road")],
+    //       "distance": obj.distance.string,
+    //       "time": obj.time.string,
+    //       "amount": obj.string
+    //     })
+    //   }
+    // }
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples_min.json`, tong ]);
+
+
+
+
     // const travelExpensesSamples = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json` ]);
     // const data = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples_min.json` ]);
     // const parentId = "1FY4RqqGeMNpYs9HJhWA6xJxJFHFiQpup";
@@ -133,6 +168,11 @@ DevContext.prototype.launching = async function () {
     //   }
     //   await sheets.update_value_inPython(sheetsId, designerName, matrix, [ 0, 0 ]);
     // }
+
+
+
+
+
 
 
 

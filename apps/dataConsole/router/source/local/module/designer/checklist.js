@@ -4051,8 +4051,6 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     }
   });
 
-  console.log(this.designers.returnFriendDesigners());
-
   aInitialIcon.addEventListener("click", function (e) {
     const expiredString = expiredStringReturn();
     if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {

@@ -246,8 +246,9 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, when = nul
   const instance = this;
   const { autoComma } = this.mother;
   try {
-    const mConst = 0.5;
-    const sConst = 1.2;
+    const mConst = 0.201875;
+    const sConst = 0.473005;
+    const consultingConst = 30000;
     const distance = await this.getDistance(from, to, when);
     let m, s, result;
 
@@ -259,8 +260,8 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, when = nul
 
     m = distance.m;
     s = distance.s;
-    result = (mConst * m) + (sConst * s);
-    result = Math.round(result / 1000) * 1000;
+    result = (mConst * m * 2) + (sConst * s * 2);
+    result = (Math.round(result / 1000) * 1000) + consultingConst;
 
     return {
       from: distance.from,

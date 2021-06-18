@@ -204,8 +204,8 @@
           }
         ]
       },
-      "amount": 149000,
-      "string": "149,000원",
+      "amount": 150000,
+      "string": "150,000원",
       "distance": {
         "meters": 277660,
         "string": "278km"
@@ -216,12 +216,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -429,8 +429,8 @@
           }
         ]
       },
-      "amount": 210000,
-      "string": "210,000원",
+      "amount": 199000,
+      "string": "199,000원",
       "distance": {
         "meters": 376859,
         "string": "377km"
@@ -441,12 +441,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -789,8 +789,8 @@
           }
         ]
       },
-      "amount": 202000,
-      "string": "202,000원",
+      "amount": 193000,
+      "string": "193,000원",
       "distance": {
         "meters": 374502,
         "string": "375km"
@@ -801,12 +801,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -1014,8 +1014,8 @@
           }
         ]
       },
-      "amount": 185000,
-      "string": "185,000원",
+      "amount": 179000,
+      "string": "179,000원",
       "distance": {
         "meters": 338613,
         "string": "339km"
@@ -1026,12 +1026,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -1314,8 +1314,8 @@
           }
         ]
       },
-      "amount": 161000,
-      "string": "161,000원",
+      "amount": 159000,
+      "string": "159,000원",
       "distance": {
         "meters": 292806,
         "string": "293km"
@@ -1326,12 +1326,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -1539,8 +1539,8 @@
           }
         ]
       },
-      "amount": 58000,
-      "string": "58,000원",
+      "amount": 76000,
+      "string": "76,000원",
       "distance": {
         "meters": 96472,
         "string": "96km"
@@ -1551,12 +1551,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -1762,8 +1762,8 @@
           }
         ]
       },
-      "amount": 138000,
-      "string": "138,000원",
+      "amount": 141000,
+      "string": "141,000원",
       "distance": {
         "meters": 256386,
         "string": "256km"
@@ -1774,12 +1774,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -1987,8 +1987,8 @@
           }
         ]
       },
-      "amount": 186000,
-      "string": "186,000원",
+      "amount": 180000,
+      "string": "180,000원",
       "distance": {
         "meters": 339791,
         "string": "340km"
@@ -1999,12 +1999,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -2347,8 +2347,8 @@
           }
         ]
       },
-      "amount": 203000,
-      "string": "203,000원",
+      "amount": 194000,
+      "string": "194,000원",
       "distance": {
         "meters": 376747,
         "string": "377km"
@@ -2359,12 +2359,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -2707,8 +2707,8 @@
           }
         ]
       },
-      "amount": 70000,
-      "string": "70,000원",
+      "amount": 86000,
+      "string": "86,000원",
       "distance": {
         "meters": 114250,
         "string": "114km"
@@ -2719,12 +2719,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -2977,8 +2977,8 @@
           }
         ]
       },
-      "amount": 105000,
-      "string": "105,000원",
+      "amount": 115000,
+      "string": "115,000원",
       "distance": {
         "meters": 192260,
         "string": "192km"
@@ -2989,12 +2989,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -3292,8 +3292,8 @@
           }
         ]
       },
-      "amount": 156000,
-      "string": "156,000원",
+      "amount": 155000,
+      "string": "155,000원",
       "distance": {
         "meters": 284829,
         "string": "285km"
@@ -3304,12 +3304,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -3532,8 +3532,8 @@
           }
         ]
       },
-      "amount": 71000,
-      "string": "71,000원",
+      "amount": 87000,
+      "string": "87,000원",
       "distance": {
         "meters": 123633,
         "string": "124km"
@@ -3544,12 +3544,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -3757,8 +3757,8 @@
           }
         ]
       },
-      "amount": 79000,
-      "string": "79,000원",
+      "amount": 94000,
+      "string": "94,000원",
       "distance": {
         "meters": 142436,
         "string": "142km"
@@ -3769,12 +3769,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -4117,8 +4117,8 @@
           }
         ]
       },
-      "amount": 122000,
-      "string": "122,000원",
+      "amount": 128000,
+      "string": "128,000원",
       "distance": {
         "meters": 228047,
         "string": "228km"
@@ -4129,12 +4129,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -4342,8 +4342,8 @@
           }
         ]
       },
-      "amount": 63000,
-      "string": "63,000원",
+      "amount": 81000,
+      "string": "81,000원",
       "distance": {
         "meters": 104451,
         "string": "104km"
@@ -4354,12 +4354,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -4635,8 +4635,8 @@
           }
         ]
       },
-      "amount": 80000,
-      "string": "80,000원",
+      "amount": 94000,
+      "string": "94,000원",
       "distance": {
         "meters": 143647,
         "string": "144km"
@@ -4647,12 +4647,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -4950,8 +4950,8 @@
           }
         ]
       },
-      "amount": 46000,
-      "string": "46,000원",
+      "amount": 67000,
+      "string": "67,000원",
       "distance": {
         "meters": 82099,
         "string": "82km"
@@ -4962,12 +4962,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -5310,8 +5310,8 @@
           }
         ]
       },
-      "amount": 69000,
-      "string": "69,000원",
+      "amount": 85000,
+      "string": "85,000원",
       "distance": {
         "meters": 113053,
         "string": "113km"
@@ -5322,12 +5322,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -5535,8 +5535,8 @@
           }
         ]
       },
-      "amount": 139000,
-      "string": "139,000원",
+      "amount": 142000,
+      "string": "142,000원",
       "distance": {
         "meters": 258248,
         "string": "258km"
@@ -5547,12 +5547,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -5732,8 +5732,8 @@
           }
         ]
       },
-      "amount": 178000,
-      "string": "178,000원",
+      "amount": 173000,
+      "string": "173,000원",
       "distance": {
         "meters": 323540,
         "string": "324km"
@@ -5744,12 +5744,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -5927,8 +5927,8 @@
           }
         ]
       },
-      "amount": 221000,
-      "string": "221,000원",
+      "amount": 208000,
+      "string": "208,000원",
       "distance": {
         "meters": 394554,
         "string": "395km"
@@ -5939,12 +5939,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -6257,8 +6257,8 @@
           }
         ]
       },
-      "amount": 231000,
-      "string": "231,000원",
+      "amount": 217000,
+      "string": "217,000원",
       "distance": {
         "meters": 423043,
         "string": "423km"
@@ -6269,12 +6269,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -6452,8 +6452,8 @@
           }
         ]
       },
-      "amount": 208000,
-      "string": "208,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 378271,
         "string": "378km"
@@ -6464,12 +6464,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -6722,8 +6722,8 @@
           }
         ]
       },
-      "amount": 189000,
-      "string": "189,000원",
+      "amount": 182000,
+      "string": "182,000원",
       "distance": {
         "meters": 338686,
         "string": "339km"
@@ -6734,12 +6734,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -6917,8 +6917,8 @@
           }
         ]
       },
-      "amount": 76000,
-      "string": "76,000원",
+      "amount": 91000,
+      "string": "91,000원",
       "distance": {
         "meters": 126818,
         "string": "127km"
@@ -6929,12 +6929,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -7110,8 +7110,8 @@
           }
         ]
       },
-      "amount": 168000,
-      "string": "168,000원",
+      "amount": 165000,
+      "string": "165,000원",
       "distance": {
         "meters": 304926,
         "string": "305km"
@@ -7122,12 +7122,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -7305,8 +7305,8 @@
           }
         ]
       },
-      "amount": 209000,
-      "string": "209,000원",
+      "amount": 198000,
+      "string": "198,000원",
       "distance": {
         "meters": 379449,
         "string": "379km"
@@ -7317,12 +7317,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -7635,8 +7635,8 @@
           }
         ]
       },
-      "amount": 234000,
-      "string": "234,000원",
+      "amount": 219000,
+      "string": "219,000원",
       "distance": {
         "meters": 426404,
         "string": "426km"
@@ -7647,12 +7647,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -7965,8 +7965,8 @@
           }
         ]
       },
-      "amount": 92000,
-      "string": "92,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 151388,
         "string": "151km"
@@ -7977,12 +7977,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -8205,8 +8205,8 @@
           }
         ]
       },
-      "amount": 133000,
-      "string": "133,000원",
+      "amount": 137000,
+      "string": "137,000원",
       "distance": {
         "meters": 237781,
         "string": "238km"
@@ -8217,12 +8217,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -8490,8 +8490,8 @@
           }
         ]
       },
-      "amount": 184000,
-      "string": "184,000원",
+      "amount": 178000,
+      "string": "178,000원",
       "distance": {
         "meters": 330709,
         "string": "331km"
@@ -8502,12 +8502,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -8700,8 +8700,8 @@
           }
         ]
       },
-      "amount": 98000,
-      "string": "98,000원",
+      "amount": 108000,
+      "string": "108,000원",
       "distance": {
         "meters": 168001,
         "string": "168km"
@@ -8712,12 +8712,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -8895,8 +8895,8 @@
           }
         ]
       },
-      "amount": 109000,
-      "string": "109,000원",
+      "amount": 118000,
+      "string": "118,000원",
       "distance": {
         "meters": 192906,
         "string": "193km"
@@ -8907,12 +8907,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -9225,8 +9225,8 @@
           }
         ]
       },
-      "amount": 150000,
-      "string": "150,000원",
+      "amount": 151000,
+      "string": "151,000원",
       "distance": {
         "meters": 273927,
         "string": "274km"
@@ -9237,12 +9237,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -9420,8 +9420,8 @@
           }
         ]
       },
-      "amount": 84000,
-      "string": "84,000원",
+      "amount": 98000,
+      "string": "98,000원",
       "distance": {
         "meters": 139928,
         "string": "140km"
@@ -9432,12 +9432,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -9683,8 +9683,8 @@
           }
         ]
       },
-      "amount": 110000,
-      "string": "110,000원",
+      "amount": 118000,
+      "string": "118,000원",
       "distance": {
         "meters": 192187,
         "string": "192km"
@@ -9695,12 +9695,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -9968,8 +9968,8 @@
           }
         ]
       },
-      "amount": 71000,
-      "string": "71,000원",
+      "amount": 87000,
+      "string": "87,000원",
       "distance": {
         "meters": 121756,
         "string": "122km"
@@ -9980,12 +9980,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -10298,8 +10298,8 @@
           }
         ]
       },
-      "amount": 128000,
-      "string": "128,000원",
+      "amount": 133000,
+      "string": "133,000원",
       "distance": {
         "meters": 221392,
         "string": "221km"
@@ -10310,12 +10310,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -10493,8 +10493,8 @@
           }
         ]
       },
-      "amount": 169000,
-      "string": "169,000원",
+      "amount": 166000,
+      "string": "166,000원",
       "distance": {
         "meters": 306788,
         "string": "307km"
@@ -10505,12 +10505,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -10720,8 +10720,8 @@
           }
         ]
       },
-      "amount": 196000,
-      "string": "196,000원",
+      "amount": 188000,
+      "string": "188,000원",
       "distance": {
         "meters": 356399,
         "string": "356km"
@@ -10732,12 +10732,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -10945,8 +10945,8 @@
           }
         ]
       },
-      "amount": 245000,
-      "string": "245,000원",
+      "amount": 227000,
+      "string": "227,000원",
       "distance": {
         "meters": 430537,
         "string": "431km"
@@ -10957,12 +10957,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -11305,8 +11305,8 @@
           }
         ]
       },
-      "amount": 252000,
-      "string": "252,000원",
+      "amount": 233000,
+      "string": "233,000원",
       "distance": {
         "meters": 456995,
         "string": "457km"
@@ -11317,12 +11317,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -11530,8 +11530,8 @@
           }
         ]
       },
-      "amount": 227000,
-      "string": "227,000원",
+      "amount": 213000,
+      "string": "213,000원",
       "distance": {
         "meters": 412150,
         "string": "412km"
@@ -11542,12 +11542,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -11830,8 +11830,8 @@
           }
         ]
       },
-      "amount": 207000,
-      "string": "207,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 371545,
         "string": "372km"
@@ -11842,12 +11842,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -12055,8 +12055,8 @@
           }
         ]
       },
-      "amount": 100000,
-      "string": "100,000원",
+      "amount": 111000,
+      "string": "111,000원",
       "distance": {
         "meters": 163152,
         "string": "163km"
@@ -12067,12 +12067,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -12278,8 +12278,8 @@
           }
         ]
       },
-      "amount": 188000,
-      "string": "188,000원",
+      "amount": 181000,
+      "string": "181,000원",
       "distance": {
         "meters": 338878,
         "string": "339km"
@@ -12290,12 +12290,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -12503,8 +12503,8 @@
           }
         ]
       },
-      "amount": 228000,
-      "string": "228,000원",
+      "amount": 214000,
+      "string": "214,000원",
       "distance": {
         "meters": 413328,
         "string": "413km"
@@ -12515,12 +12515,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -12863,8 +12863,8 @@
           }
         ]
       },
-      "amount": 254000,
-      "string": "254,000원",
+      "amount": 235000,
+      "string": "235,000원",
       "distance": {
         "meters": 459240,
         "string": "459km"
@@ -12875,12 +12875,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -13223,8 +13223,8 @@
           }
         ]
       },
-      "amount": 103000,
-      "string": "103,000원",
+      "amount": 112000,
+      "string": "112,000원",
       "distance": {
         "meters": 162236,
         "string": "162km"
@@ -13235,12 +13235,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -13505,12 +13505,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -13808,8 +13808,8 @@
           }
         ]
       },
-      "amount": 201000,
-      "string": "201,000원",
+      "amount": 192000,
+      "string": "192,000원",
       "distance": {
         "meters": 363683,
         "string": "364km"
@@ -13820,12 +13820,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -14048,8 +14048,8 @@
           }
         ]
       },
-      "amount": 119000,
-      "string": "119,000원",
+      "amount": 126000,
+      "string": "126,000원",
       "distance": {
         "meters": 204856,
         "string": "205km"
@@ -14060,12 +14060,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -14273,8 +14273,8 @@
           }
         ]
       },
-      "amount": 130000,
-      "string": "130,000원",
+      "amount": 134000,
+      "string": "134,000원",
       "distance": {
         "meters": 226859,
         "string": "227km"
@@ -14285,12 +14285,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -14633,8 +14633,8 @@
           }
         ]
       },
-      "amount": 171000,
-      "string": "171,000원",
+      "amount": 167000,
+      "string": "167,000원",
       "distance": {
         "meters": 307041,
         "string": "307km"
@@ -14645,12 +14645,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -14858,8 +14858,8 @@
           }
         ]
       },
-      "amount": 110000,
-      "string": "110,000원",
+      "amount": 119000,
+      "string": "119,000원",
       "distance": {
         "meters": 173646,
         "string": "174km"
@@ -14870,12 +14870,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -15151,8 +15151,8 @@
           }
         ]
       },
-      "amount": 130000,
-      "string": "130,000원",
+      "amount": 135000,
+      "string": "135,000원",
       "distance": {
         "meters": 226140,
         "string": "226km"
@@ -15163,12 +15163,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -15466,8 +15466,8 @@
           }
         ]
       },
-      "amount": 100000,
-      "string": "100,000원",
+      "amount": 110000,
+      "string": "110,000원",
       "distance": {
         "meters": 165173,
         "string": "165km"
@@ -15478,12 +15478,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -15826,8 +15826,8 @@
           }
         ]
       },
-      "amount": 100000,
-      "string": "100,000원",
+      "amount": 111000,
+      "string": "111,000원",
       "distance": {
         "meters": 157988,
         "string": "158km"
@@ -15838,12 +15838,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16051,8 +16051,8 @@
           }
         ]
       },
-      "amount": 190000,
-      "string": "190,000원",
+      "amount": 183000,
+      "string": "183,000원",
       "distance": {
         "meters": 340740,
         "string": "341km"
@@ -16063,12 +16063,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -16143,8 +16143,8 @@
           }
         ]
       },
-      "amount": 176000,
-      "string": "176,000원",
+      "amount": 172000,
+      "string": "172,000원",
       "distance": {
         "meters": 320491,
         "string": "320km"
@@ -16155,12 +16155,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16233,8 +16233,8 @@
           }
         ]
       },
-      "amount": 221000,
-      "string": "221,000원",
+      "amount": 208000,
+      "string": "208,000원",
       "distance": {
         "meters": 392923,
         "string": "393km"
@@ -16245,12 +16245,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16458,8 +16458,8 @@
           }
         ]
       },
-      "amount": 225000,
-      "string": "225,000원",
+      "amount": 211000,
+      "string": "211,000원",
       "distance": {
         "meters": 406782,
         "string": "407km"
@@ -16470,12 +16470,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16548,8 +16548,8 @@
           }
         ]
       },
-      "amount": 207000,
-      "string": "207,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 376242,
         "string": "376km"
@@ -16560,12 +16560,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16713,8 +16713,8 @@
           }
         ]
       },
-      "amount": 160000,
-      "string": "160,000원",
+      "amount": 159000,
+      "string": "159,000원",
       "distance": {
         "meters": 278147,
         "string": "278km"
@@ -16725,12 +16725,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16803,8 +16803,8 @@
           }
         ]
       },
-      "amount": 60000,
-      "string": "60,000원",
+      "amount": 78000,
+      "string": "78,000원",
       "distance": {
         "meters": 92586,
         "string": "93km"
@@ -16815,12 +16815,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16891,8 +16891,8 @@
           }
         ]
       },
-      "amount": 169000,
-      "string": "169,000원",
+      "amount": 166000,
+      "string": "166,000원",
       "distance": {
         "meters": 303817,
         "string": "304km"
@@ -16903,12 +16903,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -16981,8 +16981,8 @@
           }
         ]
       },
-      "amount": 208000,
-      "string": "208,000원",
+      "amount": 198000,
+      "string": "198,000원",
       "distance": {
         "meters": 377420,
         "string": "377km"
@@ -16993,12 +16993,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17206,8 +17206,8 @@
           }
         ]
       },
-      "amount": 227000,
-      "string": "227,000원",
+      "amount": 213000,
+      "string": "213,000원",
       "distance": {
         "meters": 409027,
         "string": "409km"
@@ -17218,12 +17218,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17431,8 +17431,8 @@
           }
         ]
       },
-      "amount": 101000,
-      "string": "101,000원",
+      "amount": 112000,
+      "string": "112,000원",
       "distance": {
         "meters": 166980,
         "string": "167km"
@@ -17443,12 +17443,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17566,8 +17566,8 @@
           }
         ]
       },
-      "amount": 133000,
-      "string": "133,000원",
+      "amount": 137000,
+      "string": "137,000원",
       "distance": {
         "meters": 235520,
         "string": "236km"
@@ -17578,12 +17578,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17746,8 +17746,8 @@
           }
         ]
       },
-      "amount": 181000,
-      "string": "181,000원",
+      "amount": 176000,
+      "string": "176,000원",
       "distance": {
         "meters": 327775,
         "string": "328km"
@@ -17758,12 +17758,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17851,8 +17851,8 @@
           }
         ]
       },
-      "amount": 89000,
-      "string": "89,000원",
+      "amount": 102000,
+      "string": "102,000원",
       "distance": {
         "meters": 150741,
         "string": "151km"
@@ -17863,12 +17863,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -17941,8 +17941,8 @@
           }
         ]
       },
-      "amount": 92000,
-      "string": "92,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 153943,
         "string": "154km"
@@ -17953,12 +17953,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18166,8 +18166,8 @@
           }
         ]
       },
-      "amount": 151000,
-      "string": "151,000원",
+      "amount": 152000,
+      "string": "152,000원",
       "distance": {
         "meters": 271133,
         "string": "271km"
@@ -18178,12 +18178,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18256,8 +18256,8 @@
           }
         ]
       },
-      "amount": 67000,
-      "string": "67,000원",
+      "amount": 84000,
+      "string": "84,000원",
       "distance": {
         "meters": 107286,
         "string": "107km"
@@ -18268,12 +18268,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18414,8 +18414,8 @@
           }
         ]
       },
-      "amount": 111000,
-      "string": "111,000원",
+      "amount": 119000,
+      "string": "119,000원",
       "distance": {
         "meters": 191078,
         "string": "191km"
@@ -18426,12 +18426,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18594,8 +18594,8 @@
           }
         ]
       },
-      "amount": 59000,
-      "string": "59,000원",
+      "amount": 77000,
+      "string": "77,000원",
       "distance": {
         "meters": 96703,
         "string": "97km"
@@ -18606,12 +18606,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18819,8 +18819,8 @@
           }
         ]
       },
-      "amount": 95000,
-      "string": "95,000원",
+      "amount": 106000,
+      "string": "106,000원",
       "distance": {
         "meters": 150093,
         "string": "150km"
@@ -18831,12 +18831,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -18909,8 +18909,8 @@
           }
         ]
       },
-      "amount": 170000,
-      "string": "170,000원",
+      "amount": 167000,
+      "string": "167,000원",
       "distance": {
         "meters": 305679,
         "string": "306km"
@@ -18921,12 +18921,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -19016,8 +19016,8 @@
           }
         ]
       },
-      "amount": 166000,
-      "string": "166,000원",
+      "amount": 164000,
+      "string": "164,000원",
       "distance": {
         "meters": 306481,
         "string": "306km"
@@ -19028,12 +19028,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19121,8 +19121,8 @@
           }
         ]
       },
-      "amount": 209000,
-      "string": "209,000원",
+      "amount": 199000,
+      "string": "199,000원",
       "distance": {
         "meters": 375233,
         "string": "375km"
@@ -19133,12 +19133,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19361,8 +19361,8 @@
           }
         ]
       },
-      "amount": 215000,
-      "string": "215,000원",
+      "amount": 204000,
+      "string": "204,000원",
       "distance": {
         "meters": 395190,
         "string": "395km"
@@ -19373,12 +19373,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19466,8 +19466,8 @@
           }
         ]
       },
-      "amount": 196000,
-      "string": "196,000원",
+      "amount": 188000,
+      "string": "188,000원",
       "distance": {
         "meters": 361212,
         "string": "361km"
@@ -19478,12 +19478,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19646,8 +19646,8 @@
           }
         ]
       },
-      "amount": 178000,
-      "string": "178,000원",
+      "amount": 173000,
+      "string": "173,000원",
       "distance": {
         "meters": 321627,
         "string": "322km"
@@ -19658,12 +19658,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19751,8 +19751,8 @@
           }
         ]
       },
-      "amount": 61000,
-      "string": "61,000원",
+      "amount": 79000,
+      "string": "79,000원",
       "distance": {
         "meters": 101777,
         "string": "102km"
@@ -19763,12 +19763,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19866,12 +19866,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -19959,8 +19959,8 @@
           }
         ]
       },
-      "amount": 197000,
-      "string": "197,000원",
+      "amount": 189000,
+      "string": "189,000원",
       "distance": {
         "meters": 362390,
         "string": "362km"
@@ -19971,12 +19971,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -20199,8 +20199,8 @@
           }
         ]
       },
-      "amount": 218000,
-      "string": "218,000원",
+      "amount": 205000,
+      "string": "205,000원",
       "distance": {
         "meters": 397435,
         "string": "397km"
@@ -20211,12 +20211,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -20439,8 +20439,8 @@
           }
         ]
       },
-      "amount": 64000,
-      "string": "64,000원",
+      "amount": 82000,
+      "string": "82,000원",
       "distance": {
         "meters": 107405,
         "string": "107km"
@@ -20451,12 +20451,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -20589,8 +20589,8 @@
           }
         ]
       },
-      "amount": 121000,
-      "string": "121,000원",
+      "amount": 128000,
+      "string": "128,000원",
       "distance": {
         "meters": 220722,
         "string": "221km"
@@ -20601,12 +20601,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -20784,8 +20784,8 @@
           }
         ]
       },
-      "amount": 172000,
-      "string": "172,000원",
+      "amount": 169000,
+      "string": "169,000원",
       "distance": {
         "meters": 313650,
         "string": "314km"
@@ -20796,12 +20796,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -20904,8 +20904,8 @@
           }
         ]
       },
-      "amount": 76000,
-      "string": "76,000원",
+      "amount": 91000,
+      "string": "91,000원",
       "distance": {
         "meters": 125682,
         "string": "126km"
@@ -20916,12 +20916,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21009,8 +21009,8 @@
           }
         ]
       },
-      "amount": 93000,
-      "string": "93,000원",
+      "amount": 105000,
+      "string": "105,000원",
       "distance": {
         "meters": 168917,
         "string": "169km"
@@ -21021,12 +21021,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21249,8 +21249,8 @@
           }
         ]
       },
-      "amount": 139000,
-      "string": "139,000원",
+      "amount": 142000,
+      "string": "142,000원",
       "distance": {
         "meters": 256868,
         "string": "257km"
@@ -21261,12 +21261,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21354,8 +21354,8 @@
           }
         ]
       },
-      "amount": 66000,
-      "string": "66,000원",
+      "amount": 83000,
+      "string": "83,000원",
       "distance": {
         "meters": 109756,
         "string": "110km"
@@ -21366,12 +21366,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21527,8 +21527,8 @@
           }
         ]
       },
-      "amount": 94000,
-      "string": "94,000원",
+      "amount": 106000,
+      "string": "106,000원",
       "distance": {
         "meters": 168198,
         "string": "168km"
@@ -21539,12 +21539,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21722,8 +21722,8 @@
           }
         ]
       },
-      "amount": 58000,
-      "string": "58,000원",
+      "amount": 76000,
+      "string": "76,000원",
       "distance": {
         "meters": 101847,
         "string": "102km"
@@ -21734,12 +21734,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -21962,8 +21962,8 @@
           }
         ]
       },
-      "amount": 68000,
-      "string": "68,000원",
+      "amount": 85000,
+      "string": "85,000원",
       "distance": {
         "meters": 113663,
         "string": "114km"
@@ -21974,12 +21974,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -22079,12 +22079,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -22294,8 +22294,8 @@
           }
         ]
       },
-      "amount": 136000,
-      "string": "136,000원",
+      "amount": 140000,
+      "string": "140,000원",
       "distance": {
         "meters": 248944,
         "string": "249km"
@@ -22306,12 +22306,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -22519,8 +22519,8 @@
           }
         ]
       },
-      "amount": 186000,
-      "string": "186,000원",
+      "amount": 180000,
+      "string": "180,000원",
       "distance": {
         "meters": 326368,
         "string": "326km"
@@ -22531,12 +22531,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -22879,8 +22879,8 @@
           }
         ]
       },
-      "amount": 201000,
-      "string": "201,000원",
+      "amount": 192000,
+      "string": "192,000원",
       "distance": {
         "meters": 362375,
         "string": "362km"
@@ -22891,12 +22891,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -23104,8 +23104,8 @@
           }
         ]
       },
-      "amount": 171000,
-      "string": "171,000원",
+      "amount": 168000,
+      "string": "168,000원",
       "distance": {
         "meters": 304425,
         "string": "304km"
@@ -23116,12 +23116,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -23404,8 +23404,8 @@
           }
         ]
       },
-      "amount": 148000,
-      "string": "148,000원",
+      "amount": 149000,
+      "string": "149,000원",
       "distance": {
         "meters": 264090,
         "string": "264km"
@@ -23416,12 +23416,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -23629,8 +23629,8 @@
           }
         ]
       },
-      "amount": 66000,
-      "string": "66,000원",
+      "amount": 83000,
+      "string": "83,000원",
       "distance": {
         "meters": 108437,
         "string": "108km"
@@ -23641,12 +23641,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -23852,8 +23852,8 @@
           }
         ]
       },
-      "amount": 129000,
-      "string": "129,000원",
+      "amount": 134000,
+      "string": "134,000원",
       "distance": {
         "meters": 228938,
         "string": "229km"
@@ -23864,12 +23864,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -24077,8 +24077,8 @@
           }
         ]
       },
-      "amount": 172000,
-      "string": "172,000원",
+      "amount": 169000,
+      "string": "169,000원",
       "distance": {
         "meters": 305603,
         "string": "306km"
@@ -24089,12 +24089,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -24437,8 +24437,8 @@
           }
         ]
       },
-      "amount": 203000,
-      "string": "203,000원",
+      "amount": 194000,
+      "string": "194,000원",
       "distance": {
         "meters": 364620,
         "string": "365km"
@@ -24449,12 +24449,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -24797,8 +24797,8 @@
           }
         ]
       },
-      "amount": 93000,
-      "string": "93,000원",
+      "amount": 105000,
+      "string": "105,000원",
       "distance": {
         "meters": 148616,
         "string": "149km"
@@ -24809,12 +24809,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -25067,8 +25067,8 @@
           }
         ]
       },
-      "amount": 92000,
-      "string": "92,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 163544,
         "string": "164km"
@@ -25079,12 +25079,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -25382,8 +25382,8 @@
           }
         ]
       },
-      "amount": 143000,
-      "string": "143,000원",
+      "amount": 145000,
+      "string": "145,000원",
       "distance": {
         "meters": 256113,
         "string": "256km"
@@ -25394,12 +25394,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -25622,8 +25622,8 @@
           }
         ]
       },
-      "amount": 58000,
-      "string": "58,000원",
+      "amount": 77000,
+      "string": "77,000원",
       "distance": {
         "meters": 94916,
         "string": "95km"
@@ -25634,12 +25634,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -25847,8 +25847,8 @@
           }
         ]
       },
-      "amount": 97000,
-      "string": "97,000원",
+      "amount": 108000,
+      "string": "108,000원",
       "distance": {
         "meters": 170445,
         "string": "170km"
@@ -25859,12 +25859,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -26207,8 +26207,8 @@
           }
         ]
       },
-      "amount": 109000,
-      "string": "109,000원",
+      "amount": 118000,
+      "string": "118,000원",
       "distance": {
         "meters": 199331,
         "string": "199km"
@@ -26219,12 +26219,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -26432,8 +26432,8 @@
           }
         ]
       },
-      "amount": 48000,
-      "string": "48,000원",
+      "amount": 68000,
+      "string": "68,000원",
       "distance": {
         "meters": 73769,
         "string": "74km"
@@ -26444,12 +26444,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -26725,8 +26725,8 @@
           }
         ]
       },
-      "amount": 97000,
-      "string": "97,000원",
+      "amount": 108000,
+      "string": "108,000원",
       "distance": {
         "meters": 169726,
         "string": "170km"
@@ -26737,12 +26737,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -27040,8 +27040,8 @@
           }
         ]
       },
-      "amount": 60000,
-      "string": "60,000원",
+      "amount": 79000,
+      "string": "79,000원",
       "distance": {
         "meters": 103375,
         "string": "103km"
@@ -27052,12 +27052,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -27400,8 +27400,8 @@
           }
         ]
       },
-      "amount": 91000,
-      "string": "91,000원",
+      "amount": 103000,
+      "string": "103,000원",
       "distance": {
         "meters": 147546,
         "string": "148km"
@@ -27412,12 +27412,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -27625,8 +27625,8 @@
           }
         ]
       },
-      "amount": 131000,
-      "string": "131,000원",
+      "amount": 135000,
+      "string": "135,000원",
       "distance": {
         "meters": 230800,
         "string": "231km"
@@ -27637,12 +27637,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -27743,8 +27743,8 @@
           }
         ]
       },
-      "amount": 167000,
-      "string": "167,000원",
+      "amount": 165000,
+      "string": "165,000원",
       "distance": {
         "meters": 306041,
         "string": "306km"
@@ -27755,12 +27755,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -27859,8 +27859,8 @@
           }
         ]
       },
-      "amount": 214000,
-      "string": "214,000원",
+      "amount": 203000,
+      "string": "203,000원",
       "distance": {
         "meters": 376844,
         "string": "377km"
@@ -27871,12 +27871,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28110,8 +28110,8 @@
           }
         ]
       },
-      "amount": 220000,
-      "string": "220,000원",
+      "amount": 207000,
+      "string": "207,000원",
       "distance": {
         "meters": 401470,
         "string": "401km"
@@ -28122,12 +28122,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28226,8 +28226,8 @@
           }
         ]
       },
-      "amount": 198000,
-      "string": "198,000원",
+      "amount": 190000,
+      "string": "190,000원",
       "distance": {
         "meters": 360457,
         "string": "360km"
@@ -28238,12 +28238,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28417,8 +28417,8 @@
           }
         ]
       },
-      "amount": 178000,
-      "string": "178,000원",
+      "amount": 173000,
+      "string": "173,000원",
       "distance": {
         "meters": 320603,
         "string": "321km"
@@ -28429,12 +28429,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28533,8 +28533,8 @@
           }
         ]
       },
-      "amount": 66000,
-      "string": "66,000원",
+      "amount": 83000,
+      "string": "83,000원",
       "distance": {
         "meters": 108640,
         "string": "109km"
@@ -28545,12 +28545,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28647,8 +28647,8 @@
           }
         ]
       },
-      "amount": 156000,
-      "string": "156,000원",
+      "amount": 155000,
+      "string": "155,000원",
       "distance": {
         "meters": 283353,
         "string": "283km"
@@ -28659,12 +28659,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -28763,8 +28763,8 @@
           }
         ]
       },
-      "amount": 199000,
-      "string": "199,000원",
+      "amount": 191000,
+      "string": "191,000원",
       "distance": {
         "meters": 361635,
         "string": "362km"
@@ -28775,12 +28775,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29014,8 +29014,8 @@
           }
         ]
       },
-      "amount": 221000,
-      "string": "221,000원",
+      "amount": 208000,
+      "string": "208,000원",
       "distance": {
         "meters": 403715,
         "string": "404km"
@@ -29026,12 +29026,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29265,8 +29265,8 @@
           }
         ]
       },
-      "amount": 82000,
-      "string": "82,000원",
+      "amount": 96000,
+      "string": "96,000원",
       "distance": {
         "meters": 130503,
         "string": "131km"
@@ -29277,12 +29277,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29426,8 +29426,8 @@
           }
         ]
       },
-      "amount": 123000,
-      "string": "123,000원",
+      "amount": 129000,
+      "string": "129,000원",
       "distance": {
         "meters": 219883,
         "string": "220km"
@@ -29438,12 +29438,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29632,8 +29632,8 @@
           }
         ]
       },
-      "amount": 172000,
-      "string": "172,000원",
+      "amount": 169000,
+      "string": "169,000원",
       "distance": {
         "meters": 311990,
         "string": "312km"
@@ -29644,12 +29644,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29763,8 +29763,8 @@
           }
         ]
       },
-      "amount": 87000,
-      "string": "87,000원",
+      "amount": 100000,
+      "string": "100,000원",
       "distance": {
         "meters": 140566,
         "string": "141km"
@@ -29775,12 +29775,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -29879,8 +29879,8 @@
           }
         ]
       },
-      "amount": 97000,
-      "string": "97,000원",
+      "amount": 108000,
+      "string": "108,000원",
       "distance": {
         "meters": 170649,
         "string": "171km"
@@ -29891,12 +29891,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -30130,8 +30130,8 @@
           }
         ]
       },
-      "amount": 142000,
-      "string": "142,000원",
+      "amount": 144000,
+      "string": "144,000원",
       "distance": {
         "meters": 255348,
         "string": "255km"
@@ -30142,12 +30142,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -30246,8 +30246,8 @@
           }
         ]
       },
-      "amount": 78000,
-      "string": "78,000원",
+      "amount": 93000,
+      "string": "93,000원",
       "distance": {
         "meters": 127190,
         "string": "127km"
@@ -30258,12 +30258,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -30430,8 +30430,8 @@
           }
         ]
       },
-      "amount": 97000,
-      "string": "97,000원",
+      "amount": 108000,
+      "string": "108,000원",
       "distance": {
         "meters": 169930,
         "string": "170km"
@@ -30442,12 +30442,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -30636,8 +30636,8 @@
           }
         ]
       },
-      "amount": 61000,
-      "string": "61,000원",
+      "amount": 79000,
+      "string": "79,000원",
       "distance": {
         "meters": 103578,
         "string": "104km"
@@ -30648,12 +30648,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -30887,8 +30887,8 @@
           }
         ]
       },
-      "amount": 83000,
-      "string": "83,000원",
+      "amount": 97000,
+      "string": "97,000원",
       "distance": {
         "meters": 131839,
         "string": "132km"
@@ -30899,12 +30899,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -31015,12 +31015,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -31230,8 +31230,8 @@
           }
         ]
       },
-      "amount": 163000,
-      "string": "163,000원",
+      "amount": 161000,
+      "string": "161,000원",
       "distance": {
         "meters": 301011,
         "string": "301km"
@@ -31242,12 +31242,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -31455,8 +31455,8 @@
           }
         ]
       },
-      "amount": 203000,
-      "string": "203,000원",
+      "amount": 194000,
+      "string": "194,000원",
       "distance": {
         "meters": 366142,
         "string": "366km"
@@ -31467,12 +31467,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -31815,8 +31815,8 @@
           }
         ]
       },
-      "amount": 206000,
-      "string": "206,000원",
+      "amount": 196000,
+      "string": "196,000원",
       "distance": {
         "meters": 380996,
         "string": "381km"
@@ -31827,12 +31827,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -32040,8 +32040,8 @@
           }
         ]
       },
-      "amount": 193000,
-      "string": "193,000원",
+      "amount": 186000,
+      "string": "186,000원",
       "distance": {
         "meters": 355742,
         "string": "356km"
@@ -32052,12 +32052,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -32340,8 +32340,8 @@
           }
         ]
       },
-      "amount": 173000,
-      "string": "173,000원",
+      "amount": 169000,
+      "string": "169,000원",
       "distance": {
         "meters": 306809,
         "string": "307km"
@@ -32352,12 +32352,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -32565,8 +32565,8 @@
           }
         ]
       },
-      "amount": 57000,
-      "string": "57,000원",
+      "amount": 75000,
+      "string": "75,000원",
       "distance": {
         "meters": 93558,
         "string": "94km"
@@ -32577,12 +32577,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -32788,8 +32788,8 @@
           }
         ]
       },
-      "amount": 150000,
-      "string": "150,000원",
+      "amount": 151000,
+      "string": "151,000원",
       "distance": {
         "meters": 278030,
         "string": "278km"
@@ -32800,12 +32800,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -33013,8 +33013,8 @@
           }
         ]
       },
-      "amount": 194000,
-      "string": "194,000원",
+      "amount": 187000,
+      "string": "187,000원",
       "distance": {
         "meters": 356920,
         "string": "357km"
@@ -33025,12 +33025,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -33373,8 +33373,8 @@
           }
         ]
       },
-      "amount": 208000,
-      "string": "208,000원",
+      "amount": 198000,
+      "string": "198,000원",
       "distance": {
         "meters": 383241,
         "string": "383km"
@@ -33385,12 +33385,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -33733,8 +33733,8 @@
           }
         ]
       },
-      "amount": 72000,
-      "string": "72,000원",
+      "amount": 88000,
+      "string": "88,000원",
       "distance": {
         "meters": 116517,
         "string": "117km"
@@ -33745,12 +33745,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -34003,8 +34003,8 @@
           }
         ]
       },
-      "amount": 118000,
-      "string": "118,000원",
+      "amount": 125000,
+      "string": "125,000원",
       "distance": {
         "meters": 213113,
         "string": "213km"
@@ -34015,12 +34015,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -34318,8 +34318,8 @@
           }
         ]
       },
-      "amount": 169000,
-      "string": "169,000원",
+      "amount": 166000,
+      "string": "166,000원",
       "distance": {
         "meters": 308180,
         "string": "308km"
@@ -34330,12 +34330,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -34558,8 +34558,8 @@
           }
         ]
       },
-      "amount": 82000,
-      "string": "82,000원",
+      "amount": 96000,
+      "string": "96,000원",
       "distance": {
         "meters": 143490,
         "string": "143km"
@@ -34570,12 +34570,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -34783,8 +34783,8 @@
           }
         ]
       },
-      "amount": 91000,
-      "string": "91,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 164081,
         "string": "164km"
@@ -34795,12 +34795,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -35143,8 +35143,8 @@
           }
         ]
       },
-      "amount": 136000,
-      "string": "136,000원",
+      "amount": 140000,
+      "string": "140,000원",
       "distance": {
         "meters": 248656,
         "string": "249km"
@@ -35155,12 +35155,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -35368,8 +35368,8 @@
           }
         ]
       },
-      "amount": 64000,
-      "string": "64,000원",
+      "amount": 81000,
+      "string": "81,000원",
       "distance": {
         "meters": 105192,
         "string": "105km"
@@ -35380,12 +35380,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -35661,8 +35661,8 @@
           }
         ]
       },
-      "amount": 92000,
-      "string": "92,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 165292,
         "string": "165km"
@@ -35673,12 +35673,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -35976,8 +35976,8 @@
           }
         ]
       },
-      "amount": 57000,
-      "string": "57,000원",
+      "amount": 76000,
+      "string": "76,000원",
       "distance": {
         "meters": 99940,
         "string": "100km"
@@ -35988,12 +35988,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -36336,8 +36336,8 @@
           }
         ]
       },
-      "amount": 73000,
-      "string": "73,000원",
+      "amount": 89000,
+      "string": "89,000원",
       "distance": {
         "meters": 117849,
         "string": "118km"
@@ -36348,12 +36348,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -36573,12 +36573,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -36651,8 +36651,8 @@
           }
         ]
       },
-      "amount": 164000,
-      "string": "164,000원",
+      "amount": 162000,
+      "string": "162,000원",
       "distance": {
         "meters": 299171,
         "string": "299km"
@@ -36663,12 +36663,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -36739,8 +36739,8 @@
           }
         ]
       },
-      "amount": 205000,
-      "string": "205,000원",
+      "amount": 195000,
+      "string": "195,000원",
       "distance": {
         "meters": 367392,
         "string": "367km"
@@ -36751,12 +36751,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -36962,8 +36962,8 @@
           }
         ]
       },
-      "amount": 205000,
-      "string": "205,000원",
+      "amount": 195000,
+      "string": "195,000원",
       "distance": {
         "meters": 377792,
         "string": "378km"
@@ -36974,12 +36974,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37050,8 +37050,8 @@
           }
         ]
       },
-      "amount": 194000,
-      "string": "194,000원",
+      "amount": 186000,
+      "string": "186,000원",
       "distance": {
         "meters": 353902,
         "string": "354km"
@@ -37062,12 +37062,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37213,8 +37213,8 @@
           }
         ]
       },
-      "amount": 175000,
-      "string": "175,000원",
+      "amount": 171000,
+      "string": "171,000원",
       "distance": {
         "meters": 314317,
         "string": "314km"
@@ -37225,12 +37225,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37301,8 +37301,8 @@
           }
         ]
       },
-      "amount": 61000,
-      "string": "61,000원",
+      "amount": 79000,
+      "string": "79,000원",
       "distance": {
         "meters": 101798,
         "string": "102km"
@@ -37313,12 +37313,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37387,8 +37387,8 @@
           }
         ]
       },
-      "amount": 149000,
-      "string": "149,000원",
+      "amount": 150000,
+      "string": "150,000원",
       "distance": {
         "meters": 274826,
         "string": "275km"
@@ -37399,12 +37399,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37475,8 +37475,8 @@
           }
         ]
       },
-      "amount": 195000,
-      "string": "195,000원",
+      "amount": 187000,
+      "string": "187,000원",
       "distance": {
         "meters": 355080,
         "string": "355km"
@@ -37487,12 +37487,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37698,8 +37698,8 @@
           }
         ]
       },
-      "amount": 207000,
-      "string": "207,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 380037,
         "string": "380km"
@@ -37710,12 +37710,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -37921,8 +37921,8 @@
           }
         ]
       },
-      "amount": 82000,
-      "string": "82,000원",
+      "amount": 96000,
+      "string": "96,000원",
       "distance": {
         "meters": 139232,
         "string": "139km"
@@ -37933,12 +37933,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38054,8 +38054,8 @@
           }
         ]
       },
-      "amount": 119000,
-      "string": "119,000원",
+      "amount": 126000,
+      "string": "126,000원",
       "distance": {
         "meters": 213412,
         "string": "213km"
@@ -38066,12 +38066,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38232,8 +38232,8 @@
           }
         ]
       },
-      "amount": 170000,
-      "string": "170,000원",
+      "amount": 167000,
+      "string": "167,000원",
       "distance": {
         "meters": 306340,
         "string": "306km"
@@ -38244,12 +38244,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38335,8 +38335,8 @@
           }
         ]
       },
-      "amount": 82000,
-      "string": "82,000원",
+      "amount": 96000,
+      "string": "96,000원",
       "distance": {
         "meters": 140238,
         "string": "140km"
@@ -38347,12 +38347,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38423,8 +38423,8 @@
           }
         ]
       },
-      "amount": 91000,
-      "string": "91,000원",
+      "amount": 103000,
+      "string": "103,000원",
       "distance": {
         "meters": 160877,
         "string": "161km"
@@ -38435,12 +38435,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38646,8 +38646,8 @@
           }
         ]
       },
-      "amount": 137000,
-      "string": "137,000원",
+      "amount": 140000,
+      "string": "140,000원",
       "distance": {
         "meters": 249558,
         "string": "250km"
@@ -38658,12 +38658,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38734,8 +38734,8 @@
           }
         ]
       },
-      "amount": 70000,
-      "string": "70,000원",
+      "amount": 86000,
+      "string": "86,000원",
       "distance": {
         "meters": 113647,
         "string": "114km"
@@ -38746,12 +38746,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -38890,8 +38890,8 @@
           }
         ]
       },
-      "amount": 92000,
-      "string": "92,000원",
+      "amount": 104000,
+      "string": "104,000원",
       "distance": {
         "meters": 162088,
         "string": "162km"
@@ -38902,12 +38902,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -39068,8 +39068,8 @@
           }
         ]
       },
-      "amount": 56000,
-      "string": "56,000원",
+      "amount": 75000,
+      "string": "75,000원",
       "distance": {
         "meters": 96736,
         "string": "97km"
@@ -39080,12 +39080,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -39291,8 +39291,8 @@
           }
         ]
       },
-      "amount": 83000,
-      "string": "83,000원",
+      "amount": 97000,
+      "string": "97,000원",
       "distance": {
         "meters": 140528,
         "string": "141km"
@@ -39303,12 +39303,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -39379,8 +39379,8 @@
           }
         ]
       },
-      "amount": 151000,
-      "string": "151,000원",
+      "amount": 152000,
+      "string": "152,000원",
       "distance": {
         "meters": 276688,
         "string": "277km"
@@ -39391,12 +39391,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
@@ -39606,8 +39606,8 @@
           }
         ]
       },
-      "amount": 166000,
-      "string": "166,000원",
+      "amount": 164000,
+      "string": "164,000원",
       "distance": {
         "meters": 304303,
         "string": "304km"
@@ -39618,12 +39618,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -39831,8 +39831,8 @@
           }
         ]
       },
-      "amount": 207000,
-      "string": "207,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 373055,
         "string": "373km"
@@ -39843,12 +39843,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -40191,8 +40191,8 @@
           }
         ]
       },
-      "amount": 207000,
-      "string": "207,000원",
+      "amount": 197000,
+      "string": "197,000원",
       "distance": {
         "meters": 383241,
         "string": "383km"
@@ -40203,12 +40203,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -40416,8 +40416,8 @@
           }
         ]
       },
-      "amount": 196000,
-      "string": "196,000원",
+      "amount": 188000,
+      "string": "188,000원",
       "distance": {
         "meters": 359034,
         "string": "359km"
@@ -40428,12 +40428,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -40716,8 +40716,8 @@
           }
         ]
       },
-      "amount": 177000,
-      "string": "177,000원",
+      "amount": 173000,
+      "string": "173,000원",
       "distance": {
         "meters": 319449,
         "string": "319km"
@@ -40728,12 +40728,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -40941,8 +40941,8 @@
           }
         ]
       },
-      "amount": 64000,
-      "string": "64,000원",
+      "amount": 81000,
+      "string": "81,000원",
       "distance": {
         "meters": 107247,
         "string": "107km"
@@ -40953,12 +40953,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -41176,12 +41176,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -41389,8 +41389,8 @@
           }
         ]
       },
-      "amount": 197000,
-      "string": "197,000원",
+      "amount": 189000,
+      "string": "189,000원",
       "distance": {
         "meters": 360212,
         "string": "360km"
@@ -41401,12 +41401,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -41749,8 +41749,8 @@
           }
         ]
       },
-      "amount": 210000,
-      "string": "210,000원",
+      "amount": 199000,
+      "string": "199,000원",
       "distance": {
         "meters": 385486,
         "string": "385km"
@@ -41761,12 +41761,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -42109,8 +42109,8 @@
           }
         ]
       },
-      "amount": 70000,
-      "string": "70,000원",
+      "amount": 86000,
+      "string": "86,000원",
       "distance": {
         "meters": 112919,
         "string": "113km"
@@ -42121,12 +42121,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -42379,8 +42379,8 @@
           }
         ]
       },
-      "amount": 121000,
-      "string": "121,000원",
+      "amount": 128000,
+      "string": "128,000원",
       "distance": {
         "meters": 218544,
         "string": "219km"
@@ -42391,12 +42391,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -42694,8 +42694,8 @@
           }
         ]
       },
-      "amount": 172000,
-      "string": "172,000원",
+      "amount": 169000,
+      "string": "169,000원",
       "distance": {
         "meters": 311472,
         "string": "311km"
@@ -42706,12 +42706,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -42934,8 +42934,8 @@
           }
         ]
       },
-      "amount": 86000,
-      "string": "86,000원",
+      "amount": 99000,
+      "string": "99,000원",
       "distance": {
         "meters": 148764,
         "string": "149km"
@@ -42946,12 +42946,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -43159,8 +43159,8 @@
           }
         ]
       },
-      "amount": 93000,
-      "string": "93,000원",
+      "amount": 105000,
+      "string": "105,000원",
       "distance": {
         "meters": 166326,
         "string": "166km"
@@ -43171,12 +43171,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -43519,8 +43519,8 @@
           }
         ]
       },
-      "amount": 139000,
-      "string": "139,000원",
+      "amount": 142000,
+      "string": "142,000원",
       "distance": {
         "meters": 254690,
         "string": "255km"
@@ -43531,12 +43531,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -43744,8 +43744,8 @@
           }
         ]
       },
-      "amount": 71000,
-      "string": "71,000원",
+      "amount": 87000,
+      "string": "87,000원",
       "distance": {
         "meters": 118215,
         "string": "118km"
@@ -43756,12 +43756,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -44037,8 +44037,8 @@
           }
         ]
       },
-      "amount": 94000,
-      "string": "94,000원",
+      "amount": 106000,
+      "string": "106,000원",
       "distance": {
         "meters": 167537,
         "string": "168km"
@@ -44049,12 +44049,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -44352,8 +44352,8 @@
           }
         ]
       },
-      "amount": 59000,
-      "string": "59,000원",
+      "amount": 77000,
+      "string": "77,000원",
       "distance": {
         "meters": 102185,
         "string": "102km"
@@ -44364,12 +44364,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -44712,8 +44712,8 @@
           }
         ]
       },
-      "amount": 71000,
-      "string": "71,000원",
+      "amount": 87000,
+      "string": "87,000원",
       "distance": {
         "meters": 114251,
         "string": "114km"
@@ -44724,12 +44724,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     },
@@ -44937,8 +44937,8 @@
           }
         ]
       },
-      "amount": 153000,
-      "string": "153,000원",
+      "amount": 154000,
+      "string": "154,000원",
       "distance": {
         "meters": 282137,
         "string": "282km"
@@ -44949,12 +44949,12 @@
       },
       "standard": {
         "distance": {
-          "value": 0.5,
-          "string": "미터당 0.5원"
+          "value": 0.201875,
+          "string": "미터당 0.201875원"
         },
         "time": {
-          "value": 1.2,
-          "string": "초당 1.2원"
+          "value": 0.473005,
+          "string": "초당 0.473005원"
         }
       }
     }
