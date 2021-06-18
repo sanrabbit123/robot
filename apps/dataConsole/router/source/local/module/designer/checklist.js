@@ -3441,6 +3441,15 @@ DesignerJs.prototype.checkListDetail = function (desid) {
               }
             },
             {
+              type: "keydown",
+              event: function (e) {
+                if (e.key === "Enter" || e.key === "Tab") {
+                  e.preventDefault();
+                  this.blur();
+                }
+              }
+            },
+            {
               type: "blur",
               event: async function (e) {
                 try {

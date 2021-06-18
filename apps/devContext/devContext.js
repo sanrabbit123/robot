@@ -44,59 +44,6 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
-DevContext.prototype.getAddress = async function (address, pointMode = false) {
-  if (typeof address !== "string") {
-    throw new Error("invaild input, address must be string");
-  }
-  const instance = this;
-  const { requestSystem } = this.mother;
-  try {
-    const mapKey = "A9ECB4F3-AE34-3A28-AD0F-59DAA7AC0A0B";
-    const url = "http://api.vworld.kr/req/search"
-    let data, res, result;
-    let tempArr, roadBoo;
-
-    tempArr = address.split(' ');
-    roadBoo = true;
-    for (let i of tempArr) {
-      if (/[동가리]$/i.test(i.trim())) {
-        roadBoo = false;
-      }
-    }
-
-    data = {
-      request: "search",
-      key: mapKey,
-      type: "address",
-      query: address,
-      format: "json",
-      errorformat: "json",
-      category: (roadBoo ? "road" : "parcel")
-    };
-    res = await requestSystem(url, data, { method: "get" });
-
-    result = null;
-
-    if (res.data.response.status === "OK") {
-      if (res.data.response.result !== undefined) {
-        if (Array.isArray(res.data.response.result.items)) {
-          if (res.data.response.result.items.length > 0) {
-            result = res.data.response.result.items[0];
-            result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
-          }
-        }
-      }
-    }
-
-    if (result !== null && pointMode) {
-      result = result.point.y + "," + result.point.x;
-    }
-    return result;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -108,6 +55,21 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
     const sheets = new GoogleSheet();
+
+
+    const selfMongo = this.MONGOLOCALC;
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    let num;
+
+    num = 1;
+    for (let designer of designers) {
+      if (designer.information.address.length !== 0) {
+        console.log(num, designer.designer, designer.desid, designer.information.address[0].value);
+      } else {
+        console.log(num, designer.designer, designer.desid, "주소 없음");
+      }
+      num++;
+    }
 
 
 
