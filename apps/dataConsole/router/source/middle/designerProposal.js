@@ -10,7 +10,7 @@
   },
   "class": {
     "client": false,
-    "designer": false,
+    "designer": true,
     "project": false,
     "contents": false,
     "service": false
@@ -36,28 +36,6 @@
     "DP"
   ]
 } %/%/g
-
-class Designers extends Array {
-  constructor(arr) {
-    super();
-    for (let i of arr) {
-      this.push(i);
-    }
-  }
-  searchDesigner(desid) {
-    let target = null;
-    for (let obj of this) {
-      if (obj.desid === desid) {
-        target = obj;
-        break;
-      }
-    }
-    return target;
-  }
-  search(desid) {
-    return this.searchDesigner(desid);
-  }
-}
 
 class ProposalMapFactor {
   constructor(obj) {
@@ -1736,7 +1714,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
-  const thisDesigner = this.designers.search(desid);
+  const thisDesigner = this.designers.pick(desid);
   const map = this.map.analyticsMap(thisDesigner);
   let propertyBox;
   let pointClone;
@@ -2120,7 +2098,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
-  const thisDesigner = this.designers.search(desid);
+  const thisDesigner = this.designers.pick(desid);
   GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
     const contentsArr = JSON.parse(res);
     const web = {
