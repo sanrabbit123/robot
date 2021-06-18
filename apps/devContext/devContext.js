@@ -780,13 +780,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "임재신";
-    // const pid = "p122";
-    // const rid = "re116";
+    // const client = "정창훈";
+    // const pid = "p98";
+    // const rid = "re092";
     // const links = [
-    //   "https://docs.google.com/document/d/1YvLB6LFW87Tr_LuAOTUx5wDo_fVUuTuYRwDzkNVZxe4/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/11iOY9O2NJ-SeYAC3QjepDmoY2kKFngjg7w-FA7tbris/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1W_RxnyqkIx7UQAHBcgnF-cJeH0K2w-8S?usp=sharing",
+    //   "https://docs.google.com/document/d/1DqydDUs0GL4WvkVXQ6cyq8KK2F8yTp-NqZSyOf1ah0A/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1oHKbzViu7EinXAT23z4aSzngB0kgXTw_wcRck5iYKdI/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1dTGL_g4dNtM-2dR9KpK-mEMyC2We91wZ?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -837,11 +837,11 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p122");
+    // await this.spellCheck("p98");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a16");
+    // await this.getCorePortfolio("p98");
 
 
     // aspirant to designer

@@ -5684,10 +5684,118 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
         console.log(e);
       }
     }
+    const designerChange = async function (thisCase, column, value) {
+      try {
+        const { ajaxJson, autoComma } = GeneralJs;
+        const { proid } = thisCase;
+        let targetIndex, targetDom, targetDomChildren, tempArr, desid;
+        let selectedDesigner, updateQuery;
+        let classification, percentage, method;
+        let bankName, bankTo;
+        let calculate;
+        let ratio, supply;
+
+        for (let i = 0; i < instance.cases.length; i++) {
+          if (instance.cases[i] !== null) {
+            if (instance.cases[i].proid === proid) {
+              targetIndex = i;
+            }
+          }
+        }
+        targetDom = document.querySelector('.' + proid);
+        targetDomChildren = targetDom.children;
+
+        tempArr = value.split(' ');
+        desid = tempArr[1].trim();
+        supply = Number(thisCase.remainSupply.replace(/[^0-9\-\.]/g, ''));
+        selectedDesigner = await ajaxJson({
+          noFlat: true,
+          whereQuery: { desid },
+        }, "/getDesigners");
+        if (selectedDesigner.length === 0) {
+          return;
+        } else {
+          selectedDesigner = selectedDesigner[0];
+        }
+        updateQuery = { desid };
+
+        classification = selectedDesigner.information.business.businessInfo.classification;
+        percentage = Number(selectedDesigner.information.business.service.cost.percentage);
+        method = "사업자(일반)";
+        if (/사업자/g.test(classification)) {
+          if (/일반/g.test(classification)) {
+            method = "사업자(일반)";
+          } else {
+            method = "사업자(간이)";
+          }
+        } else {
+          method = "프리랜서";
+        }
+        updateQuery["process.calculation.method"] = method;
+        updateQuery["process.calculation.percentage"] = Number(percentage);
+
+        if (selectedDesigner.information.business.account.length > 0) {
+          bankName = selectedDesigner.information.business.account[0].bankName + " " + String(selectedDesigner.information.business.account[0].accountNumber);
+          bankTo = selectedDesigner.information.business.account[0].to;
+          updateQuery["process.calculation.info.account"] = bankName;
+          updateQuery["process.calculation.info.proof"] = bankTo;
+          updateQuery["process.calculation.info.to"] = bankTo;
+        }
+
+        if (/일반/gi.test(method)) {
+          calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
+        } else if (/간이/gi.test(method)) {
+          calculate = Math.round(supply * (1 - (percentage / 100)));
+        } else if (/프리/gi.test(method)) {
+          ratio = 0.967;
+          calculate = Math.round((supply - (supply * (percentage / 100))) * ratio);
+        } else {
+          calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
+        }
+        updateQuery["process.calculation.payments.totalAmount"] = calculate;
+        updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+        updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+        await ajaxJson({ whereQuery: { proid }, updateQuery }, "/rawUpdateProject");
+
+        instance.cases[targetIndex].calculationInfo = "계좌번호 " + bankName + " / 수신자 " + bankTo + " / 증명 " + bankTo;
+        instance.cases[targetIndex].method = method;
+        instance.cases[targetIndex].paymentsTotalAmount = calculate;
+        instance.cases[targetIndex].paymentsFirstAmount = Math.round(calculate / 2);
+        instance.cases[targetIndex].paymentsRemainAmount = Math.round(calculate / 2);
+        instance.cases[targetIndex].percentage = percentage;
+
+        for (let dom of targetDomChildren) {
+          if (dom.getAttribute("column") === "calculationInfo") {
+            dom.textContent = "계좌번호 " + bankName + " / 수신자 " + bankTo + " / 증명 " + bankTo;
+          }
+          if (dom.getAttribute("column") === "method") {
+            dom.textContent = method;
+          }
+          if (dom.getAttribute("column") === "paymentsTotalAmount") {
+            dom.textContent = autoComma(calculate);
+          }
+          if (dom.getAttribute("column") === "paymentsFirstAmount") {
+            dom.textContent = autoComma(Math.round(calculate / 2));
+          }
+          if (dom.getAttribute("column") === "paymentsRemainAmount") {
+            dom.textContent = autoComma(Math.round(calculate / 2));
+          }
+          if (dom.getAttribute("column") === "percentage") {
+            dom.textContent = String(percentage);
+          }
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     const dictionary = {
       meetingDate: realtimeDesigner,
       formDateFrom: realtimeDesigner,
       formDateTo: realtimeDesigner,
+      designer: designerChange,
     };
 
     let tempFunction;
