@@ -33,8 +33,7 @@
   "name": "designerProposal",
   "route": [
     "proposal",
-    "DP",
-    "survey"
+    "DP"
   ]
 } %/%/g
 

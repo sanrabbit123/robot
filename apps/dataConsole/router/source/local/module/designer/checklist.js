@@ -3541,10 +3541,12 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
 DesignerJs.prototype.checkListDesignerMemo = function (desid) {
   const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
   const baseTong = this.mainBaseTong;
   const designer = this.designers.pick(desid);
+  const mobile = media[4];
+  const desktop = !mobile;
   return async function (e) {
     try {
       if (document.getElementById("memoTong") === null) {
@@ -3556,11 +3558,15 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
         let size;
         let resObj, history, career;
         let nodeArr;
+        let mobileBottom, mobileHeight;
 
-        margin = 40;
-        innerMargin = 15;
-        titleHeight = 28;
-        size = 16;
+        margin = <%% 40, 40, 40, 40, 7 %%>;
+        innerMargin = <%% 15, 15, 15, 15, 4 %%>;
+        titleHeight = <%% 28, 28, 28, 28, 6.4 %%>;
+        size = <%% 16, 16, 16, 16, 4 %%>;
+
+        mobileBottom = 16;
+        mobileHeight = 56;
 
         resObj = await ajaxJson({ method: "designer", property: "history", idArr: [ desid ] }, "/getHistoryTotal");
         if (resObj[desid] === undefined) {
@@ -3591,14 +3597,15 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
           ],
           style: {
             position: "fixed",
-            width: "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 3) - " + String(margin) + ea + ")",
-            height: "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 1.5) - " + String(margin) + ea + ")",
-            bottom: String(belowHeight + margin) + ea,
+            width: desktop ? "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 3) - " + String(margin) + ea + ")" : "calc(100% - " + String(margin * 2) + ea + ")",
+            height: desktop ? "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 1.5) - " + String(margin) + ea + ")" : String(mobileHeight) + ea,
+            bottom: String(desktop ? belowHeight + margin : mobileBottom + margin) + ea,
             right: String(margin) + ea,
             borderRadius: String(3) + "px",
             boxShadow: "0px 5px 18px -9px " + colorChip.shadow,
             animation: "fadeup 0.3s ease forwards",
             background: colorChip.gradientGreen2,
+            zIndex: String(3),
           }
         });
 
@@ -3608,8 +3615,8 @@ DesignerJs.prototype.checkListDesignerMemo = function (desid) {
             text: designer.designer + " 디자이너 상세 경력",
             style: {
               position: "absolute",
-              top: String(innerMargin - 1) + ea,
-              left: String(innerMargin + 1) + ea,
+              top: String(innerMargin - (desktop ? 1 : 1)) + ea,
+              left: String(innerMargin + (desktop ? 1 : 0.1)) + ea,
               fontSize: String(size) + ea,
               fontWeight: String(600),
               color: colorChip.white,

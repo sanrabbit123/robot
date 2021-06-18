@@ -34,7 +34,8 @@
   "route": [
     "designerConsole",
     "console",
-    "DC"
+    "DC",
+    "survey"
   ]
 } %/%/g
 
