@@ -174,6 +174,19 @@ class Designers extends Array {
     return new Designers(arr);
   }
 
+  returnFriendDesigners() {
+    let arr = [];
+    if (this.length === 0) {
+      throw new Error("no designer error");
+    }
+    for (let designer of this) {
+      if (/완료/gi.test(designer.information.contract.status)) {
+        arr.push(designer);
+      }
+    }
+    return new Designers(arr);
+  }
+
   update(queryArr) {
     if (!Array.isArray(queryArr)) {
       throw new Error("must be query arr");

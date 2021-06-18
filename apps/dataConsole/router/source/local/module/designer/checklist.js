@@ -3712,6 +3712,29 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
+  const expiredStringReturn = function () {
+    const today = new Date();
+    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
+    let expiredString = '';
+    if (today.getDay() !== 0 && today.getDay() !== 6) {
+      today.setDate(today.getDate() + 7);
+    } else {
+      if (today.getDay() !== 0) {
+        today.setDate(today.getDate() + 9);
+      } else {
+        today.setDate(today.getDate() + 8);
+      }
+    }
+    expiredString += String(today.getMonth() + 1) + "월";
+    expiredString += " ";
+    expiredString += String(today.getDate()) + "일";
+    expiredString += " ";
+    expiredString += dayArr[today.getDay()] + "요일";
+    expiredString += " ";
+    expiredString += String(14) + "시";
+
+    return expiredString;
+  }
   let mother;
   let radius;
   let left, bottom;
@@ -4028,47 +4051,54 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     }
   });
 
+  console.log(this.designers.returnFriendDesigners());
+
   aInitialIcon.addEventListener("click", function (e) {
-    const today = new Date();
-    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
-    let expiredString = '';
-
-    if (today.getDay() !== 0 && today.getDay() !== 6) {
-      //pyeong-day
-      today.setDate(today.getDate() + 7);
-    } else {
-      if (today.getDay() !== 0) {
-        //saturday
-        today.setDate(today.getDate() + 9);
-      } else {
-        //sunday
-        today.setDate(today.getDate() + 8);
-      }
-    }
-
-    expiredString += String(today.getMonth() + 1) + "월";
-    expiredString += " ";
-    expiredString += String(today.getDate()) + "일";
-    expiredString += " ";
-    expiredString += dayArr[today.getDay()] + "요일";
-    expiredString += " ";
-    expiredString += String(14) + "시";
-
+    const expiredString = expiredStringReturn();
     if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-      GeneralJs.ajax("method=designerCheckList&name=" + designer.designer + "&phone=" + designer.information.phone + "&option=" + JSON.stringify({ date: expiredString, desid: desid, host: "ADDRESS[homeinfo(ghost)]" }), "/alimTalk", function (rawJson) {
+      GeneralJs.ajaxJson({
+        method: "designerCheckList",
+        name: designer.designer,
+        phone: designer.information.phone,
+        option: {
+          date: expiredString,
+          desid: desid,
+          host: "ADDRESS[homeinfo(ghost)]"
+        }
+      }, "/alimTalk").then((json) => {
         let middleDate, deadDate;
-        if (JSON.parse(rawJson).message !== "success") {
+        if (json.message !== "success") {
           throw new Error("alimTalk error");
         } else {
           instance.mother.greenAlert("알림톡이 전송되었습니다!");
-          //set deadline
-          middleDate = new Date();
-          middleDate.setHours(middleDate.getHours() + 8);
-          deadDate = new Date();
-          deadDate.setDate(deadDate.getDate() + 9);
-          GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid, mode: "set" }), "/manageDeadline", function (res) {});
         }
+      }).catch((err) => {
+        console.log(err);
       });
+    } else {
+      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
+    }
+  });
+
+  aInitialIcon.addEventListener("contextmenu", async function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const expiredString = expiredStringReturn();
+    if (window.confirm("모든 디자이너들에게 알림톡을 모두 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
+
+      const targetDesigners = instance.designers.returnFriendDesigners();
+      for (let d of targetDesigners) {
+        await GeneralJs.ajaxJson({
+          method: "designerCheckList",
+          name: d.designer,
+          phone: d.information.phone,
+          option: {
+            date: expiredString,
+            desid: d.desid,
+            host: "ADDRESS[homeinfo(ghost)]"
+          }
+        }, "/alimTalk");
+      }
     } else {
       instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
     }
