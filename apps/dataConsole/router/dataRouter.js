@@ -446,7 +446,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 DataRouter.prototype.rou_get_SpecificServerSent = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem } = this.mother;
+  const { fileSystem, equalJson } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   const { readFileSync } = require(`fs`);
   let connectionNumber = 0;
@@ -496,6 +496,11 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
           if (trigger.length > 0) {
             orderRaw = await back.mongoRead(sseConst, { id: idConst }, { selfMongo: instance.mongolocal });
             order = orderRaw[0].order;
+            for (let i = 0; i < order.length; i++) {
+              if (/^[\{\[]/.test(order[i].trim()) && /[\}\]]$/.test(order[i].trim())) {
+                order[i] = equalJson(order[i]);
+              }
+            }
             res.write(`event: updateTong\ndata: ${JSON.stringify(order)}\n\n`);
             totalOrder = totalOrder - 1;
             if (totalOrder <= 0) {
@@ -2790,9 +2795,9 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         updateQuery = equalJson(req.body.updateQuery);
         result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
         if (result.length === 0) {
-          await back.mongoCreate(collection, { id: "sse", order: [ updateQuery ] }, { selfMongo });
+          await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
         } else {
-          result[0].order.push(updateQuery);
+          result[0].order.push(JSON.stringify(updateQuery));
           await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
         }
         await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
