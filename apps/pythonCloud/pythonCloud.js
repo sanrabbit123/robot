@@ -192,10 +192,8 @@ PythonCloud.prototype.routingCloud = function () {
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-          tongDir = tongDir.map((i) => { return i !== `.DS_Store`; });
+          tongDir = tongDir.filter((i) => { return i !== `.DS_Store`; });
           tongBoo = tongDir.includes(tongName);
-          console.log(instance.tong);
-          console.log(tongDir);
           if (!tongBoo) {
             shell.exec(`mkdir ${shellLink(targetTong)};`);
           }
