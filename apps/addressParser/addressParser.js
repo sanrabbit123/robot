@@ -9,6 +9,8 @@ const AddressParser = function () {
   this.jsonDir = this.dir + "/json";
   this.pythonApp = this.dir + "/python/app.py";
   this.serveFolderName = "immovablesServerStaticFolder";
+  this.priceStandardKey = 33;
+  this.priceCollection = "designerPrice";
   this.token = {
     vworld: {
       url: "http://api.vworld.kr/req/search",
@@ -244,11 +246,17 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, when = nul
     throw new Error("invaild input => String: from address, String: to address");
   }
   const instance = this;
+  const { priceStandardKey, priceCollection } = this;
+  const back = this.back;
   const { autoComma } = this.mother;
   try {
-    const mConst = 0.201875;
-    const sConst = 0.473005;
-    const consultingConst = 30000;
+    const priceStandard = await back.mongoRead(priceCollection, { key: priceStandardKey }, { console: true });
+    if (priceStandard.length === 0) {
+      throw new Error("price collection error");
+    }
+    const mConst = priceStandard[0].travel.unit.meters;
+    const sConst = priceStandard[0].travel.unit.seconds;
+    const consultingConst = priceStandard[0].travel.consulting.hours * priceStandard[0].travel.consulting.labor;
     const distance = await this.getDistance(from, to, when);
     let m, s, result;
 

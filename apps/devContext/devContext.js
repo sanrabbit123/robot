@@ -57,10 +57,14 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const app = new AddressParser();
-    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
-    const designerAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/designerAddress.json` ]);
-    const clientAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/clientAddress.json` ]);
+
+
+
+
+    // const app = new AddressParser();
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    // const designerAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/designerAddress.json` ]);
+    // const clientAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/clientAddress.json` ]);
     // let travelExpensesSamples, json;
     // travelExpensesSamples = {};
     // for (let desid in designerAddress) {
