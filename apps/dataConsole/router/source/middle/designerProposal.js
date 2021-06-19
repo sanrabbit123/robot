@@ -91,140 +91,6 @@ class ProposalMap extends Array {
 
 }
 
-class ProposalMapGenerator {
-  analyticsMap(designer) {
-    const today = new Date();
-    const { information: { business: { career: { startY, startM, relatedY, relatedM } } }, analytics } = designer;
-    const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix } } = analytics;
-    const service = [
-      "홈퍼니싱",
-      "홈스타일링",
-      "토탈 스타일링",
-      "설계 변경",
-    ];
-    const constructMethod = [
-      "직접 계약, 직접 관리",
-      "직접 계약, 외주 감리",
-      "협업사 계약",
-      "공정별 연결",
-    ];
-    let map = new ProposalMap();
-    let career, monthAmount;
-    let matrixTong;
-    let constructTong;
-
-    monthAmount = ((today.getFullYear()) * 12 + (today.getMonth() + 1)) - ((startY * 12) + startM);
-    career = `${String(Math.floor(monthAmount / 12))}년 ${String(monthAmount % 12)}개월`;
-
-    matrixTong = [];
-    for (let i = 0; i < service.length; i++) {
-      if (matrix[i].filter((j) => { return j === 1; }).length !== 0) {
-        matrixTong.push(service[i]);
-      }
-    }
-
-    constructTong = [];
-    for (let { contract } of constructCase) {
-      for (let i of contract) {
-        constructTong.push(i);
-      }
-    }
-    constructTong = Array.from(new Set(constructTong));
-
-    map.set("career", {
-      name: "경력",
-      type: "string",
-      standard: null,
-      value: career
-    });
-    map.set("related", {
-      name: "유관 경력",
-      type: "string",
-      standard: null,
-      value: `${String(relatedY)}년 ${String(relatedM)}개월`
-    });
-    map.set("matrix", {
-      name: "활동 범위",
-      type: "checkbox",
-      standard: service,
-      value: matrixTong
-    });
-    map.set("method", {
-      name: "제안 방식",
-      type: "radio",
-      standard: [
-        "순차 제안",
-        "한번에 제안"
-      ],
-      value: method
-    });
-    map.set("builtin", {
-      name: "빌트인 가구 제작",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (builtin ? "가능" : "불가능")
-    });
-    map.set("furniture", {
-      name: "디자인 가구 제작",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (design ? "가능" : "불가능")
-    });
-    map.set("construct", {
-      name: "시공 방식",
-      type: "checkbox",
-      standard: constructMethod,
-      value: constructTong
-    });
-    map.set("first", {
-      name: "1차 제안 시간",
-      type: "string",
-      standard: null,
-      value: String(Math.floor(first / 7)) + "주 이내",
-    });
-    map.set("curtain", {
-      name: "커튼 패브릭 제작",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (curtain ? "가능" : "불가능")
-    });
-    map.set("bedding", {
-      name: "베딩 패브릭 제작",
-      type: "radio",
-      standard: [
-        "가능",
-        "불가능"
-      ],
-      value: (bedding ? "가능" : "불가능")
-    });
-    map.set("styleTendency", {
-      name: "스타일 경향성",
-      type: "tendency",
-      standard: [
-        { column: "classic", name: "클래식" },
-        { column: "exotic", name: "엑조틱" },
-        { column: "mixmatch", name: "믹스매치" },
-        { column: "modern", name: "모던" },
-        { column: "natural", name: "내추럴" },
-        { column: "oriental", name: "동양" },
-        { column: "scandinavian", name: "북유럽" },
-        { column: "vintage", name: "빈티지" }
-      ],
-      value: styleTendency
-    });
-    return map;
-  }
-}
-
 class WordsDictionary {
   constructor() {
     class Words extends Array {
@@ -392,7 +258,7 @@ class WordsDictionary {
 
 const DesignerProposalJs = function () {
   this.mother = new GeneralJs();
-  this.map = new ProposalMapGenerator();
+  // this.map = new ProposalMapGenerator();
   this.margin = 0;
   this.mode = "desktop";
   this.sero = false;
@@ -400,7 +266,6 @@ const DesignerProposalJs = function () {
   this.frontPage = "https://home-liaison.com";
   this.naviHeight = 72;
   this.standardWidth = 1400;
-  this.ea = "px";
   this.baseTong = null;
   this.backHeight = 0;
   this.project = null;
@@ -460,6 +325,145 @@ DesignerProposalJs.styleTextParsing = function (text) {
 }
 
 //method
+
+DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
+  const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const today = new Date();
+  const { information: { business: { career: { startY, startM, relatedY, relatedM } } }, analytics } = designer;
+  const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix } } = analytics;
+  const service = [
+    "홈퍼니싱",
+    "홈스타일링",
+    "토탈 스타일링",
+    "설계 변경",
+  ];
+  if (mobile) {
+    service.pop();
+  }
+  const constructMethod = [
+    "직접 계약, 직접 감리",
+    "직접 계약, 외주 감리",
+    "협업사 계약",
+    "공정별 연결",
+  ];
+  let map = new ProposalMap();
+  let career, monthAmount;
+  let matrixTong;
+  let constructTong;
+
+  monthAmount = ((today.getFullYear()) * 12 + (today.getMonth() + 1)) - ((startY * 12) + startM);
+  career = `${String(Math.floor(monthAmount / 12))}년 ${String(monthAmount % 12)}개월`;
+
+  matrixTong = [];
+  for (let i = 0; i < service.length; i++) {
+    if (matrix[i].filter((j) => { return j === 1; }).length !== 0) {
+      matrixTong.push(service[i]);
+    }
+  }
+
+  constructTong = [];
+  for (let { contract } of constructCase) {
+    for (let i of contract) {
+      constructTong.push(i);
+    }
+  }
+  constructTong = Array.from(new Set(constructTong));
+
+  map.set("career", {
+    name: "경력",
+    type: "string",
+    standard: null,
+    value: career
+  });
+  map.set("related", {
+    name: "유관 경력",
+    type: "string",
+    standard: null,
+    value: `${String(relatedY)}년 ${String(relatedM)}개월`
+  });
+  map.set("matrix", {
+    name: "활동 범위",
+    type: "checkbox",
+    standard: service,
+    value: matrixTong
+  });
+  map.set("method", {
+    name: "제안 방식",
+    type: "radio",
+    standard: [
+      "순차 제안",
+      "한번에 제안"
+    ],
+    value: method
+  });
+  map.set("builtin", {
+    name: "빌트인 가구 제작",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (builtin ? "가능" : "불가능")
+  });
+  map.set("furniture", {
+    name: "디자인 가구 제작",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (design ? "가능" : "불가능")
+  });
+  map.set("construct", {
+    name: "시공 방식",
+    type: "checkbox",
+    standard: constructMethod,
+    value: constructTong
+  });
+  map.set("first", {
+    name: "1차 제안 시간",
+    type: "string",
+    standard: null,
+    value: String(Math.floor(first / 7)) + "주 이내",
+  });
+  map.set("curtain", {
+    name: "커튼 패브릭 제작",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (curtain ? "가능" : "불가능")
+  });
+  map.set("bedding", {
+    name: "베딩 패브릭 제작",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (bedding ? "가능" : "불가능")
+  });
+  map.set("styleTendency", {
+    name: "스타일 경향성",
+    type: "tendency",
+    standard: [
+      { column: "classic", name: "클래식" },
+      { column: "exotic", name: "엑조틱" },
+      { column: "mixmatch", name: "믹스매치" },
+      { column: "modern", name: "모던" },
+      { column: "natural", name: "내추럴" },
+      { column: "oriental", name: "동양" },
+      { column: "scandinavian", name: "북유럽" },
+      { column: "vintage", name: "빈티지" }
+    ],
+    value: styleTendency
+  });
+  return map;
+}
 
 DesignerProposalJs.prototype.setBackground = function () {
   const instance = this;
@@ -1733,7 +1737,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.pick(desid);
-  const map = this.map.analyticsMap(thisDesigner);
+  const map = this.proposalMapGenerator(thisDesigner);
   let propertyBox;
   let pointClone;
   let pointRadius, pointTop;
@@ -1786,14 +1790,14 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
   valueIndent = <%% 140, 120, 150, 130, 30 %%>;
 
-  checkboxMarginRight = <%% 35, 24, 24, 24, 5.6 %%>;
+  checkboxMarginRight = <%% 35, 32, 32, 24, 5.6 %%>;
   radioMarginRight = <%% 35, 32, 32, 32, 5.6 %%>;
 
   valueDomBarLeft = <%% 60, 58, 58, 60, 13 %%>;
   valueDomValueWidth = <%% 13, 13, 13, 60, 3.8 %%>;
   valueDomValueMargin = <%% 10, 10, 10, 60, 0 %%>;
 
-  tendencyVisualLeft = <%% 30, 30, 30, 10, 10 %%>;
+  tendencyVisualLeft = <%% 60, 52, 30, 10, 10 %%>;
   tendencyTop = <%% 33, 33, 33, 33, 6.5 %%>;
   tendencyMargin = <%% 3, 3, 3, 3, 0.5 %%>;
 
@@ -1809,25 +1813,27 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
     propertyBox = GeneralJs.nodes.div.cloneNode(true);
     style = {
       position: "absolute",
-      top: String(top + ((margin + height) * ((i < 2 || i === map.length - 1) ? 0 : (i < (maxNumber + 1) ? i - 1 : i - (maxNumber + 1 - initNumber))))) + ea,
+      top: String(top + ((margin + height) * ((i < 2 || ((media[0] || media[1]) && i === map.length - 1)) ? 0 : (i < (maxNumber + 1) ? i - 1 : i - (maxNumber + 1 - initNumber))))) + ea,
       left: String(left + ((i < (maxNumber + 1) && i !== 1) ? 0 : (width1 + leftIndent))) + ea,
       width: String((i === 2 || i === 6) ? width0 : width1) + ea,
       height: String(height) + ea,
     };
-    if (media[2] || media[3]) {
-      if (i >= maxNumber) {
-        if (media[2]) {
-          style.width = String(297) + ea;
-        } else if (media[3]) {
-          style.width = String(267) + ea;
-        }
+    // if (media[2] || media[3]) {
+    //   if (i >= maxNumber) {
+    //     if (media[2]) {
+    //       style.width = String(297) + ea;
+    //     } else if (media[3]) {
+    //       style.width = String(267) + ea;
+    //     }
+    //   }
+    // }
+    if (media[0] || media[1]) {
+      if (i === map.length - 1) {
+        style.top = String(top) + ea;
+        style.left = String(left + (leftIndent * 2) + (width1 * 2) - tendencyVisualLeft) + ea;
+        style.height = String((height * maxNumber) + (margin * (maxNumber - 1))) + ea;
+        style.width = "calc(100% - " + String((left * 2) + width0 + leftIndent - tendencyVisualLeft) + ea + ")";
       }
-    }
-    if (i === map.length - 1) {
-      style.top = String(top) + ea;
-      style.left = String(left + (leftIndent * 2) + (width1 * 2) - tendencyVisualLeft) + ea;
-      style.height = String((height * maxNumber) + (margin * (maxNumber - 1))) + ea;
-      style.width = "calc(100% - " + String((left * 2) + width0 + leftIndent - tendencyVisualLeft) + ea + ")";
     }
     if (mobile) {
       style.top = String(top + ((margin + height) * (i + heightException))) + ea;
@@ -1908,6 +1914,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (map[i].type === "radio") {
         map[i].value = [ map[i].value ];
       }
+      map[i].value = map[i].value.map((h) => { return h.replace(/[^가-힣]/gi, ''); });
 
       valueDom = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -1924,7 +1931,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (mobile) {
         delete style.left;
         style.right = String(0) + ea;
-        style.width = String(76) + '%';
+        style.width = String(82) + '%';
         style.textAlign = "right";
       }
       for (let j in style) {
@@ -1938,8 +1945,8 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           display: "inline-block",
           position: "relative",
           fontSize: "inherit",
-          fontWeight: (map[i].value.includes(map[i].standard[z]) ? String(400) : "inherit"),
-          color: (map[i].value.includes(map[i].standard[z]) ? GeneralJs.colorChip.green : "inherit"),
+          fontWeight: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? String(400) : "inherit"),
+          color: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? GeneralJs.colorChip.green : "inherit"),
           wordSpacing: String(wordSpacing) + "px",
           marginRight: String(map[i].type === "checkbox" ? checkboxMarginRight : radioMarginRight) + ea,
           top: String(0) + ea,
@@ -1959,7 +1966,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           valueDomStandard.style[j] = style[j];
         }
 
-        if (map[i].value.includes(map[i].standard[z])) {
+        if (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, ''))) {
           valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.green));
         } else {
           valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray3));
