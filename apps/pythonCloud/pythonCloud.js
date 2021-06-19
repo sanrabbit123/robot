@@ -1,7 +1,8 @@
 const PythonCloud = function () {
-  const address = require(`${process.cwd()}/apps/infoObj.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
+  this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/pythonCloud";
   this.tong = this.dir + "/tong";
   this.formidable = require('formidable');
@@ -26,9 +27,9 @@ PythonCloud.running = {
   analytics: false,
 };
 
-PythonCloud.prototype.routingCloud = function (macAddress = null) {
+PythonCloud.prototype.routingCloud = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem } = this.mother;
+  const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem, sleep, pythonExecute } = this.mother;
   let funcObj = {};
 
   //GET test
@@ -173,55 +174,25 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
     try {
       const form = instance.formidable({ multiples: true });
       form.parse(req, async function (err, fields, files) {
-        console.log("this!");
         if (!err) {
-          let tongName = "illustrator";
-          let targetTong = `${instance.tong}/${tongName}`;
+          const targetComputer = "uragen";
+          const tongName = "illustrator";
+          const targetTong = `${instance.tong}/${tongName}`;
           let tongBoo = false;
           let tongDir;
           let targetTongList;
+          let macAddress;
 
-          const zeroAddition = function (number) {
-            if (number < 10) {
-              return `0${String(number)}`;
-            } else {
-              return String(number);
-            }
-          }
-          const objToQuery = function (obj) {
-            let str = '';
-            for (let i in obj) {
-              str += i.replace(/[\=\&]/g, '');
-              str += '=';
-              if (typeof obj[i] === "number" || typeof obj[i] === "boolean") {
-                str += String(obj[i].replace(/[\=\&]/g, ''));
-              } else if (obj[i] !== null && typeof obj[i] === "object") {
-                str += JSON.stringify(obj[i].replace(/[\=\&]/g, ''));
-              } else {
-                str += obj[i].replace(/[\=\&]/g, '');
-              }
-              str += '&';
-            }
-            return str.slice(0, -1);
-          }
-          const today = new Date();
-          const todayString = `${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}${String(today.getMilliseconds())}`;
-          const waitingRunning = async function waitingRunning() {
-            try {
-              if (PythonCloud.running[tongName]) {
-                await instance.mother.sleep(500);
-                await waitingRunning();
-              } else {
-                clearTimeout(PythonCloud.timeout[tongName]);
-                PythonCloud.timeout[tongName] = null;
-              }
-            } catch (e) {
-              console.log(e);
+          macAddress = null;
+          for (let obj of instance.address.homeinfo.map) {
+            if (obj.name === targetComputer) {
+              macAddress = obj.mac;
             }
           }
 
           //make tong
           tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+          tongDir = tongDir.map((i) => { return i !== `.DS_Store`; });
           tongBoo = tongDir.includes(tongName);
           if (!tongBoo) {
             shell.exec(`mkdir ${shellLink(targetTong)};`);
@@ -236,50 +207,36 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
           }
 
           //write stack
-          await fileSystem(`write`, [ targetTong + "/" + tongName + "_order_" + todayString + ".json", JSON.stringify(fields) ]);
+          await fileSystem(`writeJson`, [ targetTong + "/" + tongName + "_order_" + String((new Date()).valueOf()) + ".json", fields ]);
           PythonCloud.firstDo[tongName] = false;
 
           //debounce clean
-          if (PythonCloud.timeout[tongName] !== null) {
-            await waitingRunning();
+          while (PythonCloud.timeout[tongName] !== null) {
+            if (PythonCloud.running[tongName]) {
+              await sleep(500);
+            } else {
+              clearTimeout(PythonCloud.timeout[tongName]);
+              PythonCloud.timeout[tongName] = null;
+            }
           }
 
           //debounce timeout : illustrator
           PythonCloud.timeout.illustrator = setTimeout(async function () {
             PythonCloud.running.illustrator = true;
             const tongDir = await fileSystem(`readDir`, [ targetTong ]);
-            const waitingRequest = async function waitingRequest(url) {
-              try {
-                let aiResponse;
-                aiResponse = await requestSystem(url);
-                if (!/pass/gi.test(aiResponse.data)) {
-                  await instance.mother.sleep(1000);
-                  await waitingRequest(url);
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            }
             if (macAddress !== null) {
-
-              const { ip } = await instance.mother.pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
+              const { ip } = await pythonExecute(instance.pythonApp, [ "getIp" ], { macAddress });
               let targetJsons;
               let aiResponse;
-
               targetJsons = [];
               for (let i of tongDir) {
-                if (i !== `.DS_Store`) {
-                  targetJsons.push(JSON.parse(await fileSystem(`readString`, [ targetTong + "/" + i ])));
-                }
+                targetJsons.push(await fileSystem(`readJson`, [ `${targetTong}/${i}` ]));
               }
-
               if (ip !== null) {
                 for (let i of targetJsons) {
-                  await waitingRequest("http://" + ip + ":8080/illustrator?" + objToQuery(i));
-                  console.log(i.id + " request");
+                  await requestSystem("http://" + ip + ":8080", i, { method: "get" });
                 }
               }
-
             }
             for (let i of tongDir) {
               shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
@@ -310,7 +267,6 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
     }
   }
 
-  //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
     resultObj[i.split('_')[0]].push({ link: "/" + i.split('_')[1], func: funcObj[i] });
@@ -321,36 +277,17 @@ PythonCloud.prototype.routingCloud = function (macAddress = null) {
 PythonCloud.prototype.serverLaunching = async function () {
   const instance = this;
   const http = require("http");
-  const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
+  const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo, ipCheck } = this.mother;
   const { parse } = require("url");
   const express = require("express");
   const useragent = require("express-useragent");
-
-  //express
   const app = express();
   app.use(useragent.express());
 
   try {
+    let get, post, router;
 
-    //set address info
-    const { name, rawObj: address } = await this.mother.ipCheck();
-    if (name === "unknown") {
-      throw new Error("invalid address");
-    }
-
-    //set router
-    let get, post, router, inner;
-
-    console.log(address);
-
-    if (address.host === "localhost") {
-      inner = address.polling.inner;
-      router = this.routingCloud(address.polling.mac);
-    } else {
-      inner = address.ip.inner;
-      router = this.routingCloud(null);
-    }
-
+    router = this.routingCloud();
     get = router.get;
     post = router.post;
     for (let obj of get) {
@@ -360,8 +297,7 @@ PythonCloud.prototype.serverLaunching = async function () {
       app.post(obj.link, obj.func);
     }
 
-    //server on
-    http.createServer(app).listen(3000, inner, () => {
+    http.createServer(app).listen(3000, () => {
       console.log(`Server running`);
     });
   } catch (e) {
