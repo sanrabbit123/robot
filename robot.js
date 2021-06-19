@@ -229,6 +229,16 @@ Robot.prototype.officePolling = async function (sw, boo = true) {
   }
 }
 
+Robot.prototype.robotPass = async function () {
+  try {
+    const PythonCloud = require(`${process.cwd()}/apps/pythonCloud/pythonCloud.js`);
+    const app = new PythonCloud();
+    await app.serverLaunching();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.pythonCloud = async function () {
   try {
     const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
@@ -924,6 +934,13 @@ const MENU = {
   cashReceipt: async function () {
     try {
       await robot.cashReceipt();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  robotPass: async function () {
+    try {
+      await robot.robotPass();
     } catch (e) {
       console.log(e);
     }
