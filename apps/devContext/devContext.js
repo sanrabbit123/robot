@@ -57,6 +57,14 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+
+
+
+
+
+
+
+
     // const app = new AddressParser();
     // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOC, withTools: true });
     // const designerAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/designerAddress.json` ]);
@@ -73,18 +81,10 @@ DevContext.prototype.launching = async function () {
     // }
     // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json`, travelExpensesSamples ]);
 
-
-
-
-
     // console.log(await app.addressInspection([
     //   { id: 1, address: "부산 동래구 명륜동 782" },
     //   { id: 2, address: "강원도 속초시 금호동 489-74" },
     // ]))
-
-
-
-
 
     // 부산광역시 동래구 명륜동 782
     // 강원도 속초시 금호동 489-74

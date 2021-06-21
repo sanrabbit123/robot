@@ -16,9 +16,9 @@ const AddressParser = function () {
       url: "http://api.vworld.kr/req/search",
       key: "A9ECB4F3-AE34-3A28-AD0F-59DAA7AC0A0B"
     },
-    googleDirections: {
-      url: "https://maps.googleapis.com/maps/api/directions/json",
-      key: "AIzaSyDL_6xND6KHPO5u6J6LIZCk0yMi1H_GnuY"
+    tMap: {
+      url: "https://apis.openapi.sk.com/tmap/routes?version=1",
+      key: "l7xxa22f35e01b7d4814a4eb247b28a84c3a"
     },
     jusoRoad: {
       url: "https://www.juso.go.kr/addrlink/addrLinkApi.do",
@@ -31,7 +31,7 @@ const AddressParser = function () {
   };
 }
 
-AddressParser.prototype.convertXY = function (x, y) {
+AddressParser.prototype.convertXY = function (x, y, reverse = false) {
   if (typeof x !== "number" || typeof y !== "number") {
     throw new Error("invaild input");
   }
@@ -45,7 +45,11 @@ AddressParser.prototype.convertXY = function (x, y) {
 
   p = proj4.toPoint([ x, y ]);
 
-  return proj4.transform(grs80, wgs84, p);
+  if (!reverse) {
+    return proj4.transform(grs80, wgs84, p);
+  } else {
+    return proj4.transform(wgs84, grs80, p);
+  }
 }
 
 AddressParser.prototype.getAddress = async function (address, pointMode = false) {
@@ -156,6 +160,8 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
                             convertResult = this.convertXY(Number(res2.data.results.juso[0].entX), Number(res2.data.results.juso[0].entY));
                             tempResult.point.x = convertResult.x;
                             tempResult.point.y = convertResult.y;
+                            tempResult.point.h = Number(res2.data.results.juso[0].entX);
+                            tempResult.point.v = Number(res2.data.results.juso[0].entY);
                             tempResult.point.value = String(convertResult.y) + "," + String(convertResult.x);
                             firstBoo = true;
                             result = tempResult;
@@ -194,8 +200,11 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
               result = res.data.response.result.items[0];
               result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
               result.point.value = result.point.y + "," + result.point.x;
-              result.point.y = Number(result.point.y);
+              convertResult = this.convertXY(Number(result.point.x), Number(result.point.y));
               result.point.x = Number(result.point.x);
+              result.point.y = Number(result.point.y);
+              result.point.h = convertResult.x;
+              result.point.v = convertResult.y;
               result.info = {};
               result.info.bldnm = result.address.bldnm;
               result.info.bldnmdc = result.address.bldnmdc;
@@ -218,13 +227,13 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
   }
 }
 
-AddressParser.prototype.getDistance = async function (from, to, when = null) {
+AddressParser.prototype.getDistance = async function (from, to) {
   if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
   const instance = this;
   const { requestSystem, stringToDate } = this.mother;
-  const { url, key } = this.token.googleDirections;
+  const { url, key } = this.token.tMap;
   try {
     class Distance {
       constructor(m, s, from, to) {
@@ -252,30 +261,16 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
         return this.seconds;
       }
     }
-    if (when === undefined || when === null) {
-      when = new Date();
-    }
-    if (!(when instanceof Date)) {
-      if (typeof when !== "string") {
-        throw new Error("invaild input when");
-      }
-      when = stringToDate(when);
-      if (!(when instanceof Date)) {
-        throw new Error("invaild input when");
-      }
-    }
-    const mode = "transit";
-    let origin, destination, res, result, departure_time;
-    let origin_obj, destination_obj;
-    let meters, seconds;
 
-    departure_time = String(when.valueOf() / 1000);
+    let origin, destination, res, result;
+    let meters, seconds;
+    let data;
+
     if (typeof from === "string") {
-      origin_obj = await this.getAddress(from);
-      if (origin_obj === null) {
+      origin = await this.getAddress(from);
+      if (origin === null) {
         return null;
       }
-      origin = origin_obj.point.value;
     } else if (typeof from === "object") {
       if (typeof from.point !== "object") {
         throw new Error("invaild from");
@@ -286,8 +281,7 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
           return null;
         } else {
           if (/^[0-9]/.test(from.point.value) && /[0-9]$/.test(from.point.value) && /,/g.test(from.point.value)) {
-            origin_obj = from;
-            origin = from.point.value;
+            origin = from;
           } else {
             throw new Error("invaild from");
             return null;
@@ -300,11 +294,10 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
     }
 
     if (typeof to === "string") {
-      destination_obj = await this.getAddress(to);
-      if (destination_obj === null) {
+      destination = await this.getAddress(to);
+      if (destination === null) {
         return null;
       }
-      destination = destination_obj.point.value;
     } else if (typeof to === "object") {
       if (typeof to.point !== "object") {
         throw new Error("invaild to");
@@ -315,8 +308,7 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
           return null;
         } else {
           if (/^[0-9]/.test(to.point.value) && /[0-9]$/.test(to.point.value) && /,/g.test(to.point.value)) {
-            destination_obj = to;
-            destination = to.point.value;
+            destination = to;
           } else {
             throw new Error("invaild to");
             return null;
@@ -333,30 +325,42 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
     if (origin === null || destination === null) {
       return result;
     }
-    res = await requestSystem(url, { origin, destination, mode, key, departure_time }, { method: "get" });
-    if (!Array.isArray(res.data.routes)) {
+
+    data = {
+      startX: origin.point.x,
+      startY: origin.point.y,
+      endX: destination.point.x,
+      endY: destination.point.y,
+      totalValue: 2,
+      reqCoordType: "WGS84GEO",
+      speed: 60,
+    };
+
+    res = await requestSystem(url, data, { headers: { "appKey": key, "Content-type": "application/json" } });
+
+    if (res.data === undefined) {
       return result;
     }
-    if (res.data.routes.length === 0) {
+    if (!Array.isArray(res.data.features)) {
       return result;
     }
-    if (!Array.isArray(res.data.routes[0].legs)) {
+    if (res.data.features.length === 0) {
       return result;
     }
-    if (res.data.routes[0].legs.length === 0) {
+    if (res.data.features[0].properties === undefined) {
       return result;
     }
-    if (typeof res.data.routes[0].legs[0].distance !== "object" || typeof res.data.routes[0].legs[0].duration !== "object") {
+    if (res.data.features[0].properties.totalDistance === undefined) {
       return result;
     }
-    if (typeof res.data.routes[0].legs[0].distance.value !== "number" || typeof res.data.routes[0].legs[0].duration.value !== "number") {
+    if (res.data.features[0].properties.totalTime === undefined) {
       return result;
     }
 
-    meters = res.data.routes[0].legs[0].distance.value;
-    seconds = res.data.routes[0].legs[0].duration.value;
+    meters = res.data.features[0].properties.totalDistance;
+    seconds = res.data.features[0].properties.totalTime;
 
-    result = new Distance(meters, seconds, origin_obj, destination_obj);
+    result = new Distance(meters, seconds, origin, destination);
 
     return result;
   } catch (e) {
@@ -364,7 +368,7 @@ AddressParser.prototype.getDistance = async function (from, to, when = null) {
   }
 }
 
-AddressParser.prototype.getTravelExpenses = async function (from, to, when = null) {
+AddressParser.prototype.getTravelExpenses = async function (from, to) {
   if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
@@ -380,13 +384,21 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, when = nul
     const mConst = priceStandard[0].travel.unit.meters;
     const sConst = priceStandard[0].travel.unit.seconds;
     const consultingConst = priceStandard[0].travel.consulting.hours * priceStandard[0].travel.consulting.labor;
-    const distance = await this.getDistance(from, to, when);
+    const distance = await this.getDistance(from, to);
     let m, s, result;
 
     result = null;
 
     if (distance === null) {
-      return result;
+      return {
+        from: null,
+        to: null,
+        amount: null,
+        string: null,
+        distance: null,
+        time: null,
+        standard: null
+      };
     }
 
     m = distance.m;

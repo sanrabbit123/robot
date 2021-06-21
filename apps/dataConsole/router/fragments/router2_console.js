@@ -2364,6 +2364,12 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
           }
           result = await addressApp.addressInspection(addressArr);
         }
+      } else if (mode === "distance") {
+        if (req.body.from === undefined || req.body.to === undefined) {
+          throw new Error("must be from, to");
+        }
+        const { from, to } = req.body;
+        result = await addressApp.getTravelExpenses(from, to);
       }
 
       res.set({ "Content-Type": "application/json" });
