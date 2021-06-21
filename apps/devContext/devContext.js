@@ -843,7 +843,7 @@ DevContext.prototype.launching = async function () {
 
     // get drive folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/18L-hSXjsmksMrOOb3rZzMbXylQRb7pYM");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1TYBQbFgLGkaWwepzQ22xXGQ9XeGLn8az?usp=sharing");
 
 
     // naverBlog to json
