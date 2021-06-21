@@ -256,6 +256,39 @@ BridgeCloud.prototype.bridgeToSheets = async function (obj) {
   }
 }
 
+BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
+  if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+  const app = new AddressParser();
+  const back = this.back;
+  try {
+    let arr;
+
+    //client
+    if (/^c/gi.test(id)) {
+      arr = await app.addressInspection([ { id, address: rawString } ]);
+      if (arr.length === 0) {
+        return { result: true, id };
+      } else {
+        const res = await app.getAddress(rawString);
+        if (res === null) {
+          return { result: false, id };
+        } else {
+          const { address: { road } } = res;
+          await back.updateClient([ { cliid: id }, { "requests.0.request.space.address": (road + " " + rawString) } ], { selfMongo: MONGOC });
+          return { result: true, id };
+        }
+      }
+    }
+  } catch (e) {
+    slack_bot.chat.postMessage({ text: "주소 연산 중 오류 생김", channel: "#error_log" });
+    console.log(e);
+  }
+}
+
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
   const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep } = this.mother;
@@ -299,6 +332,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let message;
         let thisClientArr, thisClient;
         let defaultPyeong;
+        let cliid;
 
         defaultPyeong = 34;
 
@@ -382,10 +416,20 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         console.log(requestObj);
         if (requestObj["phone"] !== "010-2747-3403") {
           if (!pastInfo_boo) {
-            await instance.back.createClient(requestObj, { selfMongo: MONGOC });
+            cliid = await instance.back.createClient(requestObj, { selfMongo: MONGOC });
           } else {
             await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
+            cliid = ifOverlap[0].cliid;
           }
+          instance.parsingAddress(cliid, requestObj["requests.0.request.space.address"], MONGOC).then((r) => {
+            const { result, id } = r;
+            if (!result) {
+              slack_bot.chat.postMessage({ text: "표준 주소 체계 위반 사례, 바르게 고쳐주세요! : https://" + instance.address.backinfo.host + "/client?cliid=" + id, channel: "#401_consulting" });
+            }
+          }).catch((err) => {
+            slack_bot.chat.postMessage({ text: "주소 연산 중 오류 생김", channel: "#error_log" });
+            console.log(err);
+          });
         }
 
         //send slack message
