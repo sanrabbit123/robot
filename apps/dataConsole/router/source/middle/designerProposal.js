@@ -1370,6 +1370,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   let portfolioBoxHeight;
   let feeBox;
   let feeHeight, feeMarginBottom;
+  let feeDetailBox, feeDetailBoxTitle;
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1708,6 +1709,40 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   portfolioBox.appendChild(portfolioBoxTitle);
   this.designerPortfolio(portfolioBox, desid);
   mother.appendChild(portfolioBox);
+
+  //designer fee detail
+  feeDetailBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
+    height: String(portfolioBoxHeight) + ea,
+    marginTop: String(analyticsBoxTopMargin) + ea,
+    boxSizing: "border-box",
+    borderRadius: String(3) + "px",
+    border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+    background: mobile ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
+  };
+  for (let i in style) {
+    feeDetailBox.style[i] = style[i];
+  }
+  feeDetailBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+  feeDetailBoxTitle.textContent = "디자이너비 상세 사항";
+  style = {
+    position: "absolute",
+    left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
+    top: String(descriptionTitleTop) + ea,
+    fontSize: String(descriptionTitleSize) + ea,
+    fontWeight: String(600),
+  };
+  for (let i in style) {
+    feeDetailBoxTitle.style[i] = style[i];
+  }
+  feeDetailBox.appendChild(feeDetailBoxTitle);
+  this.designerFeeDetail(feeDetailBox, desid, info.fee);
+  mother.appendChild(feeDetailBox);
 
   //designer fee
   feeBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2194,7 +2229,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
       }
 
       titleDom = GeneralJs.nodes.div.cloneNode(true);
-      titleDom.textContent = title.portfolio;
+      titleDom.textContent = (title.portfolio.length >= 40) ? title.portfolio.split(' ').slice(0, -1).join(' ') : title.portfolio;
       style = {
         display: "inline-block",
         position: "relative",
@@ -2293,37 +2328,28 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
 }
 
+DesignerProposalJs.prototype.feeToString = function (fee, percentage = 1, noMethod = false) {
+  const instance = this;
+  const { autoComma } = GeneralJs;
+  let moneyText;
+  let money;
+  moneyText = '';
+  for (let { amount, method, partial } of fee) {
+    money = amount * percentage;
+    money = Math.round(money / 1000) * 1000;
+    moneyText += (noMethod ? "" : (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ')) + autoComma(money) + "원";
+    moneyText += ", ";
+  }
+  moneyText = moneyText.slice(0, -2);
+  return moneyText;
+}
+
 DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
   const { ea, media } = this;
   const { withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
-  const feeToString = function (fee) {
-    const moneyString = function (m) {
-      let target = String(m);
-      let textLength = target.length;
-      let sliceString;
-      let fragments;
-      sliceString = target.slice(textLength % 3);
-      fragments = [];
-      for (let i = 0; i < Math.floor(textLength / 3); i++) {
-        fragments.push(sliceString.slice((3 * i), (3 * (i + 1))));
-      }
-      if (textLength % 3 !== 0) {
-        fragments.unshift(target.slice(0, textLength % 3));
-      }
-      return `${fragments.join(',')}원`;
-    }
-    let moneyText;
-    moneyText = '';
-    for (let { amount, method, partial } of fee) {
-      moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ') + moneyString(amount);
-      moneyText += ", ";
-    }
-    moneyText = moneyText.slice(0, -2);
-    return moneyText;
-  }
   let arrowBox, arrowHead, moneyBox, vatBox;
   let style;
   let wordSpacing;
@@ -2387,7 +2413,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   }
 
   moneyBox = GeneralJs.nodes.div.cloneNode(true);
-  moneyBox.textContent = feeToString(fee);
+  moneyBox.textContent = this.feeToString(fee);
   style = {
     position: "absolute",
     bottom: String(feeBottom) + ea,
@@ -2447,6 +2473,122 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   //     arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
   //   }, 0);
   // }
+
+}
+
+DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
+  const instance = this;
+  const { ea, media } = this;
+  const { dateToString, autoComma } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { top, bottom, left } = this.subBoxMargin;
+  const thisDesigner = this.designers.pick(desid);
+  const percentage = 0.8;
+  GeneralJs.ajax({}, "/parsingAddress", function (res) {
+    const contentsArr = JSON.parse(res);
+    const addressCompress = function (address) {
+      let tempArr, targetIndex;
+      tempArr = address.split(' ');
+      for (let i = 0; i < tempArr.length; i++) {
+        if (/[동로가리길]$/i.test(tempArr[i])) {
+          targetIndex = i;
+        }
+      }
+      return tempArr.slice(0, targetIndex + 1).join(' ');
+    }
+    let sourceArr;
+    let style;
+    let num;
+    let entireDom;
+    let entireHeight, entireMarginBottom;
+    let titleDom, amountDom;
+    let wordSpacing, fontSize;
+    let marginTop, marginBottom;
+    let mobilePaddingTop;
+
+    marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
+    marginBottom = <%% left - 3, left - 3, bottom, bottom, 5.1 %%>;
+
+    entireHeight = <%% 20, 21, 20, 18, 4 %%>;
+    entireMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+
+    fontSize = <%% 15, 15, 15, 13.5, 2.9 %%>;
+    wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+    sourceArr = [
+      { title: thisDesigner.designer + " 디자이너 디자인 용역비", amount: instance.feeToString(fee, percentage, true) },
+      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: instance.feeToString(fee, 1 - percentage, true) },
+      { title: "출장비 " + (desktop ? ("(디자이너 주소 : " + addressCompress(thisDesigner.information.address[0]) + ", 거리 : " + String(297) + "km" + ")") : ("(거리 : " + String(297) + "km" + ")")), amount: autoComma(1000000) + "원" }
+    ];
+
+    num = 0;
+    for (let { title, amount } of sourceArr) {
+      entireDom = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+        height: String(entireHeight) + ea,
+        marginLeft: String(left) + ea,
+        width: "calc(100% - " + String(left * 2) + ea + ")",
+        marginBottom: String(entireMarginBottom) + ea,
+      };
+      if (num === 0) {
+        style.marginTop = String(marginTop) + ea;
+      }
+      for (let j in style) {
+        entireDom.style[j] = style[j];
+      }
+
+      titleDom = GeneralJs.nodes.div.cloneNode(true);
+      titleDom.textContent = title;
+      style = {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        left: String(0) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.black,
+        wordSpacing: String(wordSpacing) + "px",
+      };
+      for (let j in style) {
+        titleDom.style[j] = style[j];
+      }
+      entireDom.appendChild(titleDom);
+
+      amountDom = GeneralJs.nodes.div.cloneNode(true);
+      amountDom.textContent = amount + " (vat 별도)";
+      amountDom.classList.add("hoverDefault");
+      style = {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        right: String(0) + ea,
+        top: String(0) + ea,
+        color: GeneralJs.colorChip.green,
+        wordSpacing: String(wordSpacing) + "px",
+      };
+      if (mobile) {
+        style.fontSize = String(fontSize + 0.3) + ea;
+        style.top = String(-0.15) + ea;
+      }
+      for (let j in style) {
+        amountDom.style[j] = style[j];
+      }
+      entireDom.appendChild(amountDom);
+
+      mother.appendChild(entireDom);
+      num = num + 1;
+    }
+
+    if (desktop) {
+      mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+    } else {
+      mobilePaddingTop = 8.6;
+      mother.style.height = String(mobilePaddingTop + marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+      mother.style.paddingTop = String(mobilePaddingTop) + ea;
+    }
+  });
 
 }
 

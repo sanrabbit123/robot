@@ -2132,23 +2132,6 @@ DataRouter.prototype.rou_post_calculateService = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_calendarArr = function () {
-  const instance = this;
-  let obj = {};
-  obj.link = "/calendarArr";
-  obj.func = async function (req, res) {
-    try {
-      const resultArr = await instance.getCalendar(Number(req.body.length));
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(resultArr));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
   const back = this.back;
@@ -2880,6 +2863,46 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_parsingAddress = function () {
+  const instance = this;
+  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+  const addressApp = new AddressParser();
+  const back = this.back;
+  const calendar = this.calendar;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/parsingAddress" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("must be mode => inspection");
+      }
+      const { mode } = req.body;
+      let result;
+
+      if (mode === "inspection") {
+        if (req.body.addressArr === undefined) {
+          throw new Error("must be addressArr");
+        }
+        const addressArr = JSON.parse(req.body.addressArr);
+        for (let obj of addressArr) {
+          if (obj.id === undefined || obj.address === undefined) {
+            throw new Error("invaild address array => [ { id, address }... ]");
+          }
+          result = await addressApp.addressInspection(addressArr);
+        }
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(result));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

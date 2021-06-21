@@ -19,8 +19,33 @@ const AddressParser = function () {
     googleDirections: {
       url: "https://maps.googleapis.com/maps/api/directions/json",
       key: "AIzaSyDL_6xND6KHPO5u6J6LIZCk0yMi1H_GnuY"
+    },
+    jusoRoad: {
+      url: "https://www.juso.go.kr/addrlink/addrLinkApi.do",
+      key: "U01TX0FVVEgyMDIxMDYyMTEzMjkxMjExMTMwNDk=",
+    },
+    jusoLocation: {
+      url: "https://www.juso.go.kr/addrlink/addrCoordApi.do",
+      key: "U01TX0FVVEgyMDIxMDYyMTEzNDE1MzExMTMwNTI=",
     }
   };
+}
+
+AddressParser.prototype.convertXY = function (x, y) {
+  if (typeof x !== "number" || typeof y !== "number") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const proj4 = require(`${this.dir}/module/proj4.js`);
+  let grs80, wgs84, p;
+
+  proj4.defs["EPSG:5179"] = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
+  grs80 = proj4.Proj(proj4.defs["EPSG:5179"]);
+  wgs84 = proj4.Proj(proj4.defs["EPSG:4326"]);
+
+  p = proj4.toPoint([ x, y ]);
+
+  return proj4.transform(grs80, wgs84, p);
 }
 
 AddressParser.prototype.getAddress = async function (address, pointMode = false) {
@@ -29,11 +54,15 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
   }
   const instance = this;
   const { requestSystem } = this.mother;
-  const { url, key } = this.token.vworld;
+  const { url: vworldUrl, key: vworldKey } = this.token.vworld;
+  const { url: roadUrl, key: roadKey } = this.token.jusoRoad;
+  const { url: locationUrl, key: locationKey } = this.token.jusoLocation;
   try {
-    let data, res, result;
+    let data, res, res2, result;
     let tempArr, roadBoo;
     let index;
+    let firstBoo;
+    let tempResult, convertResult;
 
     tempArr = address.split(' ');
     roadBoo = true;
@@ -59,28 +88,122 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
     tempArr = tempArr.map((i) => { return i.trim(); });
     address = tempArr.join(" ");
 
-    data = {
-      request: "search",
-      key: key,
-      type: "address",
-      query: address,
-      format: "json",
-      errorformat: "json",
-      category: (roadBoo ? "road" : "parcel")
-    };
-    res = await requestSystem(url, data, { method: "get" });
-
+    //first search
+    firstBoo = false;
     result = null;
 
-    if (res.data.response.status === "OK") {
-      if (res.data.response.result !== undefined) {
-        if (Array.isArray(res.data.response.result.items)) {
-          if (res.data.response.result.items.length > 0) {
-            result = res.data.response.result.items[0];
-            result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
-            result.point.value = result.point.y + "," + result.point.x;
-            result.point.y = Number(result.point.y);
-            result.point.x = Number(result.point.x);
+    res = await requestSystem(roadUrl, {
+      confmKey: roadKey,
+      currentPage: 1,
+      countPerPage: 50,
+      keyword: address,
+      resultType: "json",
+      hstryYn: "Y",
+    }, { method: "get" });
+
+    if (res.data !== undefined) {
+      if (res.data.results !== undefined) {
+        if (res.data.results.common !== undefined) {
+          if (res.data.results.common.errorMessage === "정상") {
+            if (Array.isArray(res.data.results.juso)) {
+              if (res.data.results.juso.length > 0) {
+                tempResult = {
+                  address: {
+                    zipcode: res.data.results.juso[0].zipNo,
+                    road: res.data.results.juso[0].roadAddr,
+                    parcel: res.data.results.juso[0].jibunAddr,
+                    english: res.data.results.juso[0].engAddr,
+                  },
+                  info: {
+                    rn: res.data.results.juso[0].rn,
+                    emdNm: res.data.results.juso[0].emdNm,
+                    emdNo: res.data.results.juso[0].emdNo,
+                    sggNm: res.data.results.juso[0].sggNm,
+                    siNm: res.data.results.juso[0].siNm,
+                    bdNm: res.data.results.juso[0].bdNm,
+                    admCd: res.data.results.juso[0].admCd,
+                    udrtYn: res.data.results.juso[0].udrtYn,
+                    lnbrMnnm: res.data.results.juso[0].lnbrMnnm,
+                    lnbrSlno: res.data.results.juso[0].lnbrSlno,
+                    buldMnnm: res.data.results.juso[0].buldMnnm,
+                    bdKdcd: res.data.results.juso[0].bdKdcd,
+                    liNm: res.data.results.juso[0].liNm,
+                    rnMgtSn: res.data.results.juso[0].rnMgtSn,
+                    mtYn: res.data.results.juso[0].mtYn,
+                    bdMgtSn: res.data.results.juso[0].bdMgtSn,
+                    buldSlno: res.data.results.juso[0].buldSlno,
+                  },
+                  point: {},
+                  queryResult: JSON.parse(JSON.stringify(res.data.results.juso)),
+                };
+
+                res2 = await requestSystem(locationUrl, {
+                  confmKey: locationKey,
+                  admCd: tempResult.info.admCd,
+                  rnMgtSn: tempResult.info.rnMgtSn,
+                  udrtYn: tempResult.info.udrtYn,
+                  buldMnnm: Number(tempResult.info.buldMnnm),
+                  buldSlno: Number(tempResult.info.buldSlno),
+                  resultType: "json",
+                }, { method: "get" });
+
+                if (res2.data !== undefined) {
+                  if (res2.data.results !== undefined) {
+                    if (res2.data.results.common !== undefined) {
+                      if (res2.data.results.common.errorMessage === "정상") {
+                        if (Array.isArray(res2.data.results.juso)) {
+                          if (res2.data.results.juso.length > 0) {
+                            convertResult = this.convertXY(Number(res2.data.results.juso[0].entX), Number(res2.data.results.juso[0].entY));
+                            tempResult.point.x = convertResult.x;
+                            tempResult.point.y = convertResult.y;
+                            tempResult.point.value = String(convertResult.y) + "," + String(convertResult.x);
+                            firstBoo = true;
+                            result = tempResult;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    //second search
+    if (!firstBoo) {
+      data = {
+        request: "search",
+        key: vworldKey,
+        type: "address",
+        query: address,
+        format: "json",
+        errorformat: "json",
+        category: (roadBoo ? "road" : "parcel")
+      };
+      res = await requestSystem(vworldUrl, data, { method: "get" });
+
+      result = null;
+
+      if (res.data.response.status === "OK") {
+        if (res.data.response.result !== undefined) {
+          if (Array.isArray(res.data.response.result.items)) {
+            if (res.data.response.result.items.length > 0) {
+              result = res.data.response.result.items[0];
+              result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
+              result.point.value = result.point.y + "," + result.point.x;
+              result.point.y = Number(result.point.y);
+              result.point.x = Number(result.point.x);
+              result.info = {};
+              result.info.bldnm = result.address.bldnm;
+              result.info.bldnmdc = result.address.bldnmdc;
+              delete result.id;
+              delete result.address.category;
+              delete result.address.bldnm;
+              delete result.address.bldnmdc;
+            }
           }
         }
       }
@@ -389,6 +512,87 @@ AddressParser.prototype.getAllImmovables = async function () {
 
     return "done";
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AddressParser.prototype.addressInspection = async function (addressArr) {
+  if (!Array.isArray(addressArr)) {
+    throw new Error("input must be address array");
+  }
+  for (let obj of addressArr) {
+    if (obj.id === undefined || typeof obj.address !== "string") {
+      throw new Error(`address array => [ { id: "", address: "" }... ]`);
+    }
+  }
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const inspection = async function (id, address) {
+      if (id === undefined || address === undefined) {
+        throw new Error("invaild input");
+      }
+      if (typeof address !== "string") {
+        throw new Error("input must be string");
+      }
+      try {
+        const addressArr = address.split(' ').map((i) => { return i.trim(); });
+        if (addressArr.length < 2) {
+          return { boo: false, message: "ERROR: 주소가 아님" };
+        }
+        let targetIndex;
+        let searchResult;
+        let first;
+        let road, parcel;
+
+        targetIndex = null;
+
+        for (let i = 0; i < addressArr.length; i++) {
+          if (/[동로가리길]$/i.test(addressArr[i])) {
+            targetIndex = i;
+          }
+        }
+        if (targetIndex === null) {
+          return { boo: false, message: "ERROR: 지번명 또는 도로명 알 수 없음" };
+        }
+        if (addressArr[targetIndex + 1] === undefined) {
+          return { boo: false, message: "ERROR: 건물 번호 없음" };
+        }
+        if (/[로길]$/i.test(addressArr[targetIndex])) {
+          if (addressArr[targetIndex + 1].replace(/[0-9\-\.]/gi, '') !== '') {
+            return { boo: false, message: "ERROR: 건물 번호가 이상함" };
+          }
+        }
+
+        searchResult = await instance.getAddress(address);
+        if (searchResult === null) {
+          return { boo: false, message: "ERROR: 검색 결과가 없음" };
+        }
+
+        first = addressArr[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+        road = searchResult.address.road.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+        parcel = searchResult.address.parcel.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+        if (first !== road && first !== parcel) {
+          return { boo: false, message: "ERROR: 광역 단계 일치하지 않음" };
+        }
+
+        return { boo: true, message: "SUCCESS" };
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    let inspectionResult;
+
+    failAddress = [];
+    for (let { id, address } of addressArr) {
+      inspectionResult = await inspection(id, address);
+      if (!inspectionResult.boo) {
+        failAddress.push({ id, address, message: inspectionResult.message });
+      }
+    }
+
+    return failAddress;
   } catch (e) {
     console.log(e);
   }

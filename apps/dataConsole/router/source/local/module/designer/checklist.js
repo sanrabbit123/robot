@@ -3453,18 +3453,21 @@ DesignerJs.prototype.checkListDetail = function (desid) {
               type: "blur",
               event: async function (e) {
                 try {
-                  const x = Number(this.getAttribute('x'));
-                  const y = Number(this.getAttribute('y'));
-                  if (typeof checkListData[x].children[y].update === "function") {
-                    const designer = instance.designers.pick(desid);
-                    const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
-                    const whereQuery = { desid };
-                    if (updateQuery === "error") {
-                      this.value = this.getAttribute("past");
-                    } else {
-                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
-                      instance.designers.update([ whereQuery, updateQuery ]);
+                  this.value = this.value.trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '');
+                  if (this.value !== this.getAttribute("past")) {
+                    const x = Number(this.getAttribute('x'));
+                    const y = Number(this.getAttribute('y'));
+                    if (typeof checkListData[x].children[y].update === "function") {
+                      const designer = instance.designers.pick(desid);
+                      const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
+                      const whereQuery = { desid };
+                      if (updateQuery === "error") {
+                        this.value = this.getAttribute("past");
+                      } else {
+                        await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                        await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                        instance.designers.update([ whereQuery, updateQuery ]);
+                      }
                     }
                   }
                   this.style.color = colorChip.black;
@@ -4210,6 +4213,7 @@ DesignerJs.prototype.checkListView = async function () {
     let style;
     let childrenLength, children;
     let motherHeight;
+    let searchResult;
 
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
@@ -4236,14 +4240,9 @@ DesignerJs.prototype.checkListView = async function () {
           if (value === "") {
             instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
           } else {
-            target = null;
-            for (let { designer, desid } of instance.designers) {
-              if (value === designer) {
-                target = desid;
-              }
-            }
-            if (target !== null) {
-              instance.checkListDetailLaunching(target);
+            searchResult = instance.designers.search(value);
+            if (searchResult.length > 0) {
+              instance.checkListDetailLaunching(searchResult[0].desid);
             }
           }
         }

@@ -699,53 +699,67 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
 
   if (button === "on") {
     return function (e) {
-      if (instance.toggleSetting.first === 0) {
-        ProposalJs.toggleTimeout.first = setTimeout(function () {
+      const id = this.getAttribute("cus_id");
+      const address = this.getAttribute("cus_address");
+      GeneralJs.ajaxJson({
+        mode: "inspection",
+        addressArr: [ { id, address } ]
+      }, "/parsingAddress").then((inspectionArr) => {
+        if (inspectionArr.length !== 0) {
+          window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+          window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
+        } else {
+          if (instance.toggleSetting.first === 0) {
+            ProposalJs.toggleTimeout.first = setTimeout(function () {
 
-          instance.below_launching("second", button);
-          domBox.get("고객 선택").style.height = "3.2vh";
-          domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
+              instance.below_launching("second", button);
+              domBox.get("고객 선택").style.height = "3.2vh";
+              domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
 
-          domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
-          domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
-          domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
+              domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
+              domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
+              domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
 
-          service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
-          for (let i of service) {
-            i.style.background = "white";
-            i.children[0].style.color = "#2fa678";
-            i.children[0].style.fontSize = "1.7vh";
+              service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
+              for (let i of service) {
+                i.style.background = "white";
+                i.children[0].style.color = "#2fa678";
+                i.children[0].style.fontSize = "1.7vh";
+              }
+
+              if (/^M/g.test(window.navigator.platform)) {
+                for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
+                for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
+                for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
+              } else {
+                for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "0px"; }
+                for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-1px"; }
+                for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-4px"; }
+              }
+
+              service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
+              for (let i of service_input) {
+                if (i.checked) {
+                  i.nextElementSibling.style.background = "#2fa678";
+                  i.nextElementSibling.children[0].style.color = "white";
+                }
+              }
+              title.style.color = "#2fa678";
+              contents.style.background = "white";
+
+              if (document.querySelector("#pp_title_sub_b") !== null) {
+                document.querySelector("#pp_title_sub_b").remove();
+              }
+
+              title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_address="' + address + '" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+
+              instance.toggleSetting.first = 1;
+            }, 300);
           }
-
-          if (/^M/g.test(window.navigator.platform)) {
-            for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-            for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-            for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
-          } else {
-            for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "0px"; }
-            for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-1px"; }
-            for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-4px"; }
-          }
-
-          service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-          for (let i of service_input) {
-            if (i.checked) {
-              i.nextElementSibling.style.background = "#2fa678";
-              i.nextElementSibling.children[0].style.color = "white";
-            }
-          }
-          title.style.color = "#2fa678";
-          contents.style.background = "white";
-
-          if (document.querySelector("#pp_title_sub_b") !== null) {
-            document.querySelector("#pp_title_sub_b").remove();
-          }
-
-          title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
-
-          instance.toggleSetting.first = 1;
-        }, 300);
-      }
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   } else if (button === "off") {
     return function (e) {
@@ -872,6 +886,7 @@ ProposalJs.prototype.firstProcess = async function () {
     label_clone.setAttribute("for", "pp_clients_input" + String(i));
     label_clone.setAttribute("cus_value", clients.data[i].standard.name);
     label_clone.setAttribute("cus_id", clients.data[i].standard.cliid);
+    label_clone.setAttribute("cus_address", clients.data[i].info.address);
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     div_clone2.classList.add("garim");
@@ -1271,6 +1286,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   fourth.events.designer = function (e) {
     const desid = this.getAttribute("cus_desid");
     const thisNum = this.getAttribute("cus_num");
+    const address = this.getAttribute("cus_address");
     const getnode = function (num, boo = true) {
       if (boo) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[num].style;
@@ -1278,66 +1294,84 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[1].children[0].style;
       }
     }
-    getnode(0).color = "#2fa678";
-    getnode(1).background = "#2fa678";
-    getnode(1, false).color = "white";
 
-    let target;
-    if ((target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"))) !== null) {
-      while (target.firstChild) {
-        target.removeChild(target.lastChild);
-      }
-      target.textContent = this.getAttribute("cus_value") + " 디자이너의 사진 선택";
-    }
-
-    target = document.querySelectorAll('.pp_designer_selected_box_value')[Number(this.getAttribute("cus_num"))];
-    if (target.textContent !== "") {
-      target.textContent = '';
-    }
-
-    GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners", function (raw_designers) {
-      const { information: { business: { service: { cost: { matrix: { service } } } } } } = JSON.parse(raw_designers)[0];
-      const inputTargets = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
-      const inputTarget = inputTargets[Number(thisNum)];
-      if (service.length > 0) {
-        GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ cliid: document.getElementById("pp_title_sub_b").getAttribute("cus_id") }), "/getClients", function (raw_clients) {
-          const client = JSON.parse(raw_clients)[0];
-          let data = '';
-          let rawService, serviceTarget;
-
-          rawService = document.getElementById("pp_title2_sub_b").getAttribute("cus_id");
-          serviceTarget = [];
-          if (/홈퍼/g.test(rawService)) {
-            serviceTarget.push(0);
-          } else if (/홈스/g.test(rawService)) {
-            serviceTarget.push(1);
-          } else if (/토탈/g.test(rawService) || /설계/g.test(rawService)) {
-            serviceTarget.push(2);
-          }
-          if (/mini/g.test(rawService)) {
-            serviceTarget.push('M');
-          } else if (/basic/g.test(rawService)) {
-            serviceTarget.push('B');
-          } else if (/pre/g.test(rawService)) {
-            serviceTarget.push('P');
-          }
-
-          data += "serviceArr=";
-          data += JSON.stringify(service);
-          data += "&pyeong=";
-          data += String(client.requests[0].request.space.pyeong);
-          data += "&thisService=";
-          data += JSON.stringify(serviceTarget);
-
-          GeneralJs.ajax(data, "/calculateService", function (raw_result) {
-            const { result } = JSON.parse(raw_result);
-            inputTarget.value = GeneralJs.autoComma(result);
-          });
-        });
+    GeneralJs.ajaxJson({
+      mode: "inspection",
+      addressArr: [ { id: desid, address: address } ]
+    }, "/parsingAddress").then((inspectionArr) => {
+      if (inspectionArr.length !== 0) {
+        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
       } else {
-        inputTarget.value = GeneralJs.autoComma(0);
-      }
 
+        this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.setAttribute("desid", desid);
+        this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.setAttribute("address", address);
+
+        getnode(0).color = "#2fa678";
+        getnode(1).background = "#2fa678";
+        getnode(1, false).color = "white";
+
+        let target;
+        if ((target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"))) !== null) {
+          while (target.firstChild) {
+            target.removeChild(target.lastChild);
+          }
+          target.textContent = this.getAttribute("cus_value") + " 디자이너의 사진 선택";
+        }
+
+        target = document.querySelectorAll('.pp_designer_selected_box_value')[Number(this.getAttribute("cus_num"))];
+        if (target.textContent !== "") {
+          target.textContent = '';
+        }
+
+        GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners", function (raw_designers) {
+          const { information: { business: { service: { cost: { matrix: { service } } } } } } = JSON.parse(raw_designers)[0];
+          const inputTargets = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
+          const inputTarget = inputTargets[Number(thisNum)];
+          if (service.length > 0) {
+            GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ cliid: document.getElementById("pp_title_sub_b").getAttribute("cus_id") }), "/getClients", function (raw_clients) {
+              const client = JSON.parse(raw_clients)[0];
+              let data = '';
+              let rawService, serviceTarget;
+
+              rawService = document.getElementById("pp_title2_sub_b").getAttribute("cus_id");
+              serviceTarget = [];
+              if (/홈퍼/g.test(rawService)) {
+                serviceTarget.push(0);
+              } else if (/홈스/g.test(rawService)) {
+                serviceTarget.push(1);
+              } else if (/토탈/g.test(rawService) || /설계/g.test(rawService)) {
+                serviceTarget.push(2);
+              }
+              if (/mini/g.test(rawService)) {
+                serviceTarget.push('M');
+              } else if (/basic/g.test(rawService)) {
+                serviceTarget.push('B');
+              } else if (/pre/g.test(rawService)) {
+                serviceTarget.push('P');
+              }
+
+              data += "serviceArr=";
+              data += JSON.stringify(service);
+              data += "&pyeong=";
+              data += String(client.requests[0].request.space.pyeong);
+              data += "&thisService=";
+              data += JSON.stringify(serviceTarget);
+
+              GeneralJs.ajax(data, "/calculateService", function (raw_result) {
+                const { result } = JSON.parse(raw_result);
+                inputTarget.value = GeneralJs.autoComma(result);
+              });
+            });
+          } else {
+            inputTarget.value = GeneralJs.autoComma(0);
+          }
+
+        });
+
+      }
+    }).catch((err) => {
+      console.log(err);
     });
   }
 
@@ -1378,7 +1412,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   //디자이너 이름
-  designers = JSON.parse(await GeneralJs.ajaxPromise("", "/getDesigners"));
+  designers = await GeneralJs.ajaxJson("", "/getDesigners");
   designers = designers.data;
 
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
@@ -1414,6 +1448,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       div_clone3.setAttribute("cus_desid", designer.standard.desid);
       div_clone3.setAttribute("cus_value", designer.standard.designer);
       div_clone3.setAttribute("cus_num", String(n));
+      div_clone3.setAttribute("cus_address", designer.info.address);
       div_clone3.addEventListener("click", fourth.events.designer);
 
       label_clone.appendChild(div_clone3);
@@ -1556,7 +1591,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     instance.totalTong.fifthScrollmove = {}
 
     if (instance.pastMaps[0] === undefined) {
-      console.log("out past");
       for (let i = 0; i < num; i++) {
         div_clone = GeneralJs.nodes.div.cloneNode(true);
         div_clone.classList.add("pp_designer_selected");
@@ -3723,8 +3757,10 @@ ProposalJs.prototype.load_processLoad_third = function () {
 
 ProposalJs.save_init = async function (update = false) {
   const instance = this;
+  const { createNodes, colorChip, withOut } = GeneralJs;
   try {
     let target, temp, temp2, standard_id;
+    let addressArr;
     let temp_arr = [];
     let temp_num = 0;
     let result_obj = {};
@@ -3732,6 +3768,41 @@ ProposalJs.save_init = async function (update = false) {
     let tempObj_raw, tempObj;
     let tagParsingObj, descriptionObj, descriptionArr;
     let thisClient, proposalHistory;
+    let inspectionResult;
+    let loadingWidth;
+    let belowHeight;
+    let loadingCancelBox, loadingLoadingIcon;
+
+    loadingWidth = 50;
+    belowHeight = 123;
+
+    [ loadingCancelBox, loadingLoadingIcon ] = createNodes([
+      {
+        mother: document.body,
+        style: {
+          position: "fixed",
+          width: String(100) + '%',
+          height: String(100) + '%',
+          top: String(0),
+          left: String(0),
+          opacity: String(0),
+          background: colorChip.black,
+          animation: "justfadein 0.3s ease forwards",
+        }
+      },
+      {
+        mother: document.body,
+        mode: "svg",
+        source: GeneralJs.prototype.returnLoading(),
+        class: [ "loading" ],
+        style: {
+          position: "fixed",
+          width: String(loadingWidth) + "px",
+          top: "calc(calc(calc(100% - " + String(belowHeight) + "px) / 2) - " + String(loadingWidth / 2) + "px" + ")",
+          left: withOut(50, loadingWidth / 2, "px"),
+        }
+      }
+    ]);
 
     if (!update) {
       // 0 make proid
@@ -3742,10 +3813,21 @@ ProposalJs.save_init = async function (update = false) {
       target = document.getElementById("pp_firstprocess_box").children[0];
       if (target.querySelector("#pp_title_sub_b") === null) {
         alert("고객을 선택해주세요!");
+        loadingCancelBox.remove();
+        loadingLoadingIcon.remove();
         return "fail";
       } else {
         target = target.querySelector("#pp_title_sub_b");
         result_obj["cliid"] = target.getAttribute("cus_id");
+        inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr: [ { id: result_obj["cliid"], address: target.getAttribute("cus_address") } ] }, "/parsingAddress");
+        if (inspectionResult.length !== 0) {
+          window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionResult[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+          window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionResult[0].id;
+          loadingCancelBox.remove();
+          loadingLoadingIcon.remove();
+          return "fail";
+        }
+
       }
     }
 
@@ -3753,6 +3835,8 @@ ProposalJs.save_init = async function (update = false) {
     target = document.getElementById("pp_secondprocess_box").children[0];
     if (target.querySelector("#pp_title2_sub_b") === null) {
       alert("서비스를 선택해주세요!");
+      loadingCancelBox.remove();
+      loadingLoadingIcon.remove();
       return "fail";
     } else {
       target = target.querySelector("#pp_title2_sub_b");
@@ -3781,12 +3865,14 @@ ProposalJs.save_init = async function (update = false) {
     // 3 details
     if (document.querySelectorAll('.pp_designer_selected').length === 0) {
       alert("디자이너를 선택해주세요!");
+      loadingCancelBox.remove();
+      loadingLoadingIcon.remove();
       return "fail";
     } else {
       temp = document.querySelectorAll('.pp_designer_selected');
-
       result_obj["proposal.detail"] = new Array(temp.length);
 
+      addressArr = [];
       for (let i = 0; i < temp.length; i++) {
         result_obj["proposal.detail"][i] = {};
         temp2 = temp[i].querySelector(".pp_designer_selected_box_contents_designers_total");
@@ -3794,6 +3880,7 @@ ProposalJs.save_init = async function (update = false) {
         for (let input of temp2.querySelectorAll("input")) {
           if (input.checked) {
             result_obj["proposal.detail"][i].desid = input.value;
+            addressArr.push({ id: result_obj["proposal.detail"][i].desid, address: input.nextElementSibling.querySelector(".garim").getAttribute("cus_address") });
           }
         }
         if (!result_obj["proposal.detail"][i].desid) {
@@ -3853,6 +3940,15 @@ ProposalJs.save_init = async function (update = false) {
         result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
         result_obj["proposal.detail"][i].description = descriptionArr;
       }
+      inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr }, "/parsingAddress");
+      if (inspectionResult.length !== 0) {
+        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + JSON.stringify(inspectionResult, null, 2) + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionResult[0].id;
+        loadingCancelBox.remove();
+        loadingLoadingIcon.remove();
+        return "fail";
+      }
+
     }
 
     if (!update) {
@@ -3870,6 +3966,9 @@ ProposalJs.save_init = async function (update = false) {
     if (document.querySelector(".pp_fifth_whitebox") !== null) {
       document.querySelector(".pp_fifth_whitebox").remove();
     }
+
+    loadingCancelBox.remove();
+    loadingLoadingIcon.remove();
 
     document.getElementById("hiddenListViewButton").click();
 

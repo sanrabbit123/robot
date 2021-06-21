@@ -57,12 +57,8 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-
-
-
-
     // const app = new AddressParser();
-    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC, withTools: true });
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOC, withTools: true });
     // const designerAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/designerAddress.json` ]);
     // const clientAddress = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/clientAddress.json` ]);
     // let travelExpensesSamples, json;
@@ -78,6 +74,20 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json`, travelExpensesSamples ]);
 
 
+
+
+
+    // console.log(await app.addressInspection([
+    //   { id: 1, address: "부산 동래구 명륜동 782" },
+    //   { id: 2, address: "강원도 속초시 금호동 489-74" },
+    // ]))
+
+
+
+
+
+    // 부산광역시 동래구 명륜동 782
+    // 강원도 속초시 금호동 489-74
 
     // const travelExpensesSamples = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json` ]);
     // let tong;
@@ -888,9 +898,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이수령",
-    //     designer: "김경수",
-    //     link: "https://drive.google.com/drive/folders/1v3L9k42DuBXgsaBedP0RV2eYYnwB0ACh",
+    //     client: "차은정",
+    //     designer: "김은설",
+    //     link: "https://drive.google.com/drive/folders/19jqQEryLmgNjHl17SalPPIMnPZKpBbiz",
     //   },
     // ]);
 
