@@ -663,7 +663,7 @@ BackWorker.prototype.designerCalculation = async function () {
     whereQuery = {
       $and: [
         { desid: { $regex: "^d" } },
-        { "process.status": { $regex: "^[진홀]" } },
+        { "process.status": { $regex: "^[대진홀]" } },
         { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
       ]
     };

@@ -2490,7 +2490,7 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   //
   // }, "/parsingAddress", function (res) {
     // const contentsArr = JSON.parse(res);
-    console.log("this!");
+
     const addressCompress = function (address) {
       let tempArr, targetIndex;
       tempArr = address.split(' ');
