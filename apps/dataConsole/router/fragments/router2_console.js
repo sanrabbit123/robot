@@ -2348,7 +2348,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   obj.func = async function (req, res) {
     try {
       if (req.body.mode === undefined) {
-        throw new Error("must be mode => inspection");
+        throw new Error("must be mode => inspection, distance");
       }
       const { mode } = req.body;
       let result;

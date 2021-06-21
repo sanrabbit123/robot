@@ -2485,8 +2485,12 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.pick(desid);
   const percentage = 0.8;
-  GeneralJs.ajax({}, "/parsingAddress", function (res) {
-    const contentsArr = JSON.parse(res);
+  // GeneralJs.ajax({
+  //   mode: "inspection",
+  //
+  // }, "/parsingAddress", function (res) {
+    // const contentsArr = JSON.parse(res);
+    console.log("this!");
     const addressCompress = function (address) {
       let tempArr, targetIndex;
       tempArr = address.split(' ');
@@ -2588,7 +2592,7 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
       mother.style.height = String(mobilePaddingTop + marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
       mother.style.paddingTop = String(mobilePaddingTop) + ea;
     }
-  });
+  // });
 
 }
 
