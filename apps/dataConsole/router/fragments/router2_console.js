@@ -2181,14 +2181,14 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
 DataRouter.prototype.rou_post_webHookGoogle = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem } = this.mother;
+  const { mongo, mongoconsoleinfo, requestSystem } = this.mother;
   const uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
-
   let obj = {};
   obj.link = "/webHookGoogle";
   obj.public = true;
   obj.func = async function (req, res) {
     try {
+      let boo;
       res.set({ "Content-Type": "application/json" });
       if (req.body.who === "uragen" && req.body.where === "homeliaison" && req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle) {
         if (req.body.mode === "read" || req.body.mode === "update" || req.body.mode === "create") {
@@ -2196,8 +2196,34 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
             res.send(JSON.stringify({ "message": "error" }));
           } else {
             if (Array.isArray(req.body.queries)) {
-              instance.mother.slack_bot.chat.postMessage({ text: req.body, channel: "#error_log" });
-              res.send(JSON.stringify({ "message": "ok" }));
+              boo = true;
+              for (let obj of req.body.queries) {
+                if (typeof obj !== "object") {
+                  boo = false;
+                } else {
+                  if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
+                    boo = false;
+                  } else {
+                    if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
+                      boo = false;
+                    } else {
+                      boo = true;
+                    }
+                  }
+                }
+              }
+              if (boo) {
+                const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+                await selfMongo.connect();
+                for (let { whereQuery, updateQuery } of req.body.queries) {
+                  await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                }
+                await selfMongo.close();
+                instance.mother.slack_bot.chat.postMessage({ text: "시트 업데이트 감지 : " + req.body.collection, channel: "#error_log" });
+                res.send(JSON.stringify({ "message": "ok" }));
+              } else {
+                res.send(JSON.stringify({ "message": "error" }));
+              }
             } else {
               res.send(JSON.stringify({ "message": "error" }));
             }
