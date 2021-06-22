@@ -2195,8 +2195,12 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
           if (req.body.collection === undefined || req.body.collection === null) {
             res.send(JSON.stringify({ "message": "error" }));
           } else {
-            instance.mother.slack_bot.chat.postMessage({ text: typeof req.body.queries, channel: "#error_log" });
-            res.send(JSON.stringify({ "message": "ok" }));
+            if (Array.isArray(req.body.queries)) {
+              instance.mother.slack_bot.chat.postMessage({ text: req.body, channel: "#error_log" });
+              res.send(JSON.stringify({ "message": "ok" }));
+            } else {
+              res.send(JSON.stringify({ "message": "error" }));
+            }
           }
         } else {
           res.send(JSON.stringify({ "message": "error" }));
