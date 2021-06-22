@@ -896,8 +896,13 @@ BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { r
     priceStandard = priceStandard[0];
     price = price[0];
 
-
     
+
+
+
+
+
+
 
 
 

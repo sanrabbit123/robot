@@ -2195,37 +2195,41 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
           if (req.body.collection === undefined || req.body.collection === null) {
             res.send(JSON.stringify({ "message": "error" }));
           } else {
-            if (Array.isArray(req.body.queries)) {
-              boo = true;
-              for (let obj of req.body.queries) {
-                if (typeof obj !== "object") {
-                  boo = false;
-                } else {
-                  if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
+            if (typeof req.body.collection !== "string") {
+              res.send(JSON.stringify({ "message": "error" }));
+            } else {
+              if (Array.isArray(req.body.queries)) {
+                boo = true;
+                for (let obj of req.body.queries) {
+                  if (typeof obj !== "object") {
                     boo = false;
                   } else {
-                    if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
+                    if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
                       boo = false;
                     } else {
-                      boo = true;
+                      if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
+                        boo = false;
+                      } else {
+                        boo = true;
+                      }
                     }
                   }
                 }
-              }
-              if (boo) {
-                const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-                await selfMongo.connect();
-                for (let { whereQuery, updateQuery } of req.body.queries) {
-                  await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                if (boo) {
+                  const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+                  await selfMongo.connect();
+                  for (let { whereQuery, updateQuery } of req.body.queries) {
+                    await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                  }
+                  await selfMongo.close();
+                  instance.mother.slack_bot.chat.postMessage({ text: "시트로부터의 업데이트 감지 : " + req.body.collection, channel: "#error_log" });
+                  res.send(JSON.stringify({ "message": "ok" }));
+                } else {
+                  res.send(JSON.stringify({ "message": "error" }));
                 }
-                await selfMongo.close();
-                instance.mother.slack_bot.chat.postMessage({ text: "시트 업데이트 감지 : " + req.body.collection, channel: "#error_log" });
-                res.send(JSON.stringify({ "message": "ok" }));
               } else {
                 res.send(JSON.stringify({ "message": "error" }));
               }
-            } else {
-              res.send(JSON.stringify({ "message": "error" }));
             }
           }
         } else {
