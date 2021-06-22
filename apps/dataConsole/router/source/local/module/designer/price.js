@@ -1969,7 +1969,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       let size;
 
       top = <%% 16, 19, 19, 19, 19 %%>;
-      width = 72;
+      width = 160;
       size = <%% 28, 24, 24, 24, 24 %%>;
       height = (top * 2) + size + 19;
 
@@ -1987,9 +1987,139 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
         }
       });
 
+      for (let i = 0; i < length; i++) {
+        createNodes([
+          {
+            mother: matrixBase,
+            class: [ className ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const targets = document.querySelectorAll('.' + className);
+                  for (let dom of targets) {
+                    dom.parentElement.removeChild(dom);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              height: "calc(100% / " + String(length) + ")",
+              width: String(100) + '%',
+              left: String(0),
+              top: "calc(calc(100% / " + String(length) + ") * " + String(i) + ")",
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: -1,
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+            }
+          },
+          {
+            mother: -1,
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+            style: {
+              position: "absolute",
+              width: String(width) + ea,
+              height: String(height) + ea,
+              left: withOut(50, (width / 2), ea),
+              top: withOut(50, (height / 2), ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeup 0.3s ease forwards",
+            }
+          },
+          {
+            mother: -1,
+            text: '-' + String(100) + "만원",
+            attribute: [
+              { index: String(i) }
+            ],
+            class: [ classNameValue ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  e.stopPropagation();
+                  const index = Number(this.getAttribute("index"));
+                  const input = createNode({
+                    mother: this.parentNode,
+                    mode: "input",
+                    attribute: [
+                      { type: "text" },
+                      { value: this.textContent },
+                      { index: String(index) },
+                    ],
+                    events: [
+                      {
+                        type: "keydown",
+                        event: async function (e) {
+                          try {
+                            if (e.key === "Tab" || e.key === "Enter") {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              const index = Number(this.getAttribute("index"));
+                              const children = document.querySelectorAll('.' + classNameValue);
+                              const next = (children[index + 1] === undefined) ? children[0] : children[index + 1];
+                              const mother = children[index].parentElement;
+                              instance.price.pick(3, 3).fee[index] = Number(this.value.replace(/[^0-9]/g, ''));
 
+                              // await ajaxJson({
+                              //   mode: "update",
+                              //   db: "console",
+                              //   collection: "designerPrice",
+                              //   whereQuery: { key: 33 },
+                              //   updateQuery: { fee: instance.price.pick(3, 3).fee }
+                              // }, "/generalMongo");
 
-
+                              mother.querySelector("div").textContent = String(instance.price.pick(3, 3).fee[index]) + '%';
+                              mother.removeChild(mother.querySelector("input"));
+                              if (e.key === "Tab") {
+                                next.click();
+                              }
+                            }
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }
+                      }
+                    ],
+                    style: {
+                      position: "absolute",
+                      fontSize: String(size) + ea,
+                      fontWeight: String(200),
+                      color: colorChip.red,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      top: String(top) + ea,
+                      border: String(0),
+                      outline: String(0),
+                    }
+                  });
+                  input.focus();
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontWeight: String(200),
+              color: colorChip.green,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(top) + ea,
+            }
+          }
+        ]);
+      }
 
     } else {
       const targets = document.querySelectorAll('.' + className);
