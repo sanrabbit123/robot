@@ -59,7 +59,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await work.getDesignerFee();
+    // await work.getDesignerFee();
 
 
 

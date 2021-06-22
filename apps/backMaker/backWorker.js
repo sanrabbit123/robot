@@ -835,7 +835,7 @@ BackWorker.prototype.designerCalculation = async function () {
   }
 }
 
-BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { requestNumber: 0, selfMongo: null, selfLocalMongo: null }) {
+BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { selfMongo: null, selfLocalMongo: null }) {
   if (typeof desid !== "string") {
     throw new Error("invaild desid");
   } else {
@@ -843,22 +843,31 @@ BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { r
       throw new Error("invaild desid");
     }
   }
-  if (typeof cliid !== "string") {
-    throw new Error("invaild cliid");
+  if (typeof proid !== "string") {
+    throw new Error("invaild proid");
   } else {
-    if (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid)) {
-      throw new Error("invaild cliid");
+    if (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+      throw new Error("invaild proid");
     }
   }
   const instance = this;
   const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
   const back = this.back;
+  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
+  const addressApp = new AddressParser();
   try {
     let MONGOC, MONGOLOCALC;
     let requestNumber;
-    let designer, client;
+    let designer, client, project;
     let priceStandard, price;
     let priceStandardConst, priceStandardCollection;
+    let designerAddress, clientAddress;
+    let travelInfo;
+    let proposalDate;
+    let request;
+    let x, y;
+    let onlineBoo, partialBoo, premiumBoo;
+    let newcomerBoo;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
@@ -877,17 +886,40 @@ BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { r
       MONGOLOCALC = option.selfLocalMongo;
     }
 
-    if (option.requestNumber === null || option.requestNumber === undefined) {
-      requestNumber = 0;
-    } else {
-      requestNumber = option.requestNumber;
-    }
-
     designer = await back.getDesignerById(desid, { selfMongo: MONGOC });
-    client = await back.getClientById(cliid, { selfMongo: MONGOC });
-    if (designer === null || client === null) {
+    project = await back.getProjectById(proid, { selfMongo: MONGOC });
+    if (designer === null || project === null) {
       throw new Error("invaild designer or client");
     }
+    if (designer.information.address.length === 0) {
+      throw new Error("there is no designer address");
+    }
+    client = await back.getClientById(project.cliid, { selfMongo: MONGOC });
+
+    requestNumber = 0;
+    proposalDate = project.proposal.date.valueOf();
+    for (let i = 0; i < client.requests.length; i++) {
+      if (i === 0) {
+        if (proposalDate >= client.requests[i].request.timeline.valueOf()) {
+          requestNumber = i;
+        }
+      } else {
+        if (proposalDate <= client.requests[i - 1].request.timeline.valueOf() && proposalDate >= client.requests[i].request.timeline.valueOf()) {
+          requestNumber = i;
+        }
+      }
+    }
+    if (client.requests[requestNumber] === undefined) {
+      throw new Error("invaild client request number");
+    }
+    request = client.requests[requestNumber].request;
+
+    designerAddress = await addressApp.getAddress(designer.information.address[0].value);
+    clientAddress = await addressApp.getAddress(request.space.address.value);
+    if (designerAddress === null || clientAddress === null) {
+      throw new Error("invaild address");
+    }
+
     priceStandard = await back.mongoRead(priceStandardCollection, { key: priceStandardConst }, { selfMongo: MONGOLOCALC });
     price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
     if (priceStandard.length !== 1 || price.length !== 1) {
@@ -896,7 +928,36 @@ BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { r
     priceStandard = priceStandard[0];
     price = price[0];
 
-    
+    travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
+    if (travelInfo === null) {
+      throw new Error("invaild travelInfo");
+    }
+
+    x = null;
+    for (let i = 0; i < priceStandard.standard.x.value.length; i++) {
+      if (priceStandard.standard.x.value[i][0] <= request.space.pyeong.value && request.space.pyeong.value <= priceStandard.standard.x.value[i][1]) {
+        x = i;
+      }
+    }
+    if (x === null) {
+      throw new Error("pyeong error");
+    }
+
+    y = Number((project.service.serid.split('_'))[1].replace(/[^0-9]/g, '').replace(/^0/, '').replace(/^0/, '').replace(/^0/, '')) - 1;
+    if (Number.isNaN(y)) {
+      throw new Error("service error");
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

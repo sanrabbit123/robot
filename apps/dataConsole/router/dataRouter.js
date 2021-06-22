@@ -2713,6 +2713,74 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_webHookGoogle = function () {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoconsoleinfo, requestSystem } = this.mother;
+  const uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+  let obj = {};
+  obj.link = "/webHookGoogle";
+  obj.public = true;
+  obj.func = async function (req, res) {
+    try {
+      let boo;
+      res.set({ "Content-Type": "application/json" });
+      if (req.body.who === "uragen" && req.body.where === "homeliaison" && req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle) {
+        if (req.body.mode === "read" || req.body.mode === "update" || req.body.mode === "create") {
+          if (req.body.collection === undefined || req.body.collection === null) {
+            res.send(JSON.stringify({ "message": "error" }));
+          } else {
+            if (typeof req.body.collection !== "string") {
+              res.send(JSON.stringify({ "message": "error" }));
+            } else {
+              if (Array.isArray(req.body.queries)) {
+                boo = true;
+                for (let obj of req.body.queries) {
+                  if (typeof obj !== "object") {
+                    boo = false;
+                  } else {
+                    if (obj.whereQuery === undefined || obj.updateQuery === undefined) {
+                      boo = false;
+                    } else {
+                      if (typeof obj.whereQuery !== "object" || typeof obj.updateQuery !== "object") {
+                        boo = false;
+                      } else {
+                        boo = true;
+                      }
+                    }
+                  }
+                }
+                if (boo) {
+                  const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+                  await selfMongo.connect();
+                  for (let { whereQuery, updateQuery } of req.body.queries) {
+                    await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                  }
+                  await selfMongo.close();
+                  instance.mother.slack_bot.chat.postMessage({ text: "시트로부터의 업데이트 감지 : " + req.body.collection, channel: "#error_log" });
+                  res.send(JSON.stringify({ "message": "ok" }));
+                } else {
+                  res.send(JSON.stringify({ "message": "error" }));
+                }
+              } else {
+                res.send(JSON.stringify({ "message": "error" }));
+              }
+            }
+          }
+        } else {
+          res.send(JSON.stringify({ "message": "error" }));
+        }
+      } else {
+        res.send(JSON.stringify({ "message": "error" }));
+      }
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;

@@ -686,8 +686,13 @@ DesignerJs.prototype.pricePannel = function () {
       58.58,
       10.84,
       58.58,
+      72.42,
+      10.84,
+      72.42,
+      72.42,
     ]
   };
+  const priceTravelButton = "priceTravelButton";
   let motherHeight;
   let size;
   let margin;
@@ -706,6 +711,8 @@ DesignerJs.prototype.pricePannel = function () {
   let newcomerEvent;
   let premiumRatioEvent;
   let newcomerRatioEvent;
+  let onlineEvent;
+  let onlineViewEvent;
 
   price = this.price.pick(3, 3);
 
@@ -719,6 +726,9 @@ DesignerJs.prototype.pricePannel = function () {
   clickEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
+    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+      instance.priceTravel().call(document.getElementById(priceTravelButton));
+    }
     const key = Number(this.getAttribute("key"));
     const target = document.getElementById("key" + String(key));
     let num;
@@ -737,6 +747,9 @@ DesignerJs.prototype.pricePannel = function () {
   caseEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
+    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+      instance.priceTravel().call(document.getElementById(priceTravelButton));
+    }
     if (document.querySelector('.' + "caseTarget") === null) {
       instance.priceAllCase(false);
     } else {
@@ -746,6 +759,9 @@ DesignerJs.prototype.pricePannel = function () {
   premiumEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
+    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+      instance.priceTravel().call(document.getElementById(priceTravelButton));
+    }
     const doms = instance.doms;
     const { matrix } = instance.price.pick(...instance.key);
     let x, y;
@@ -767,6 +783,9 @@ DesignerJs.prototype.pricePannel = function () {
   newcomerEvent = function (e) {
     e.preventDefault();
     e.stopPropagation();
+    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+      instance.priceTravel().call(document.getElementById(priceTravelButton));
+    }
     const doms = instance.doms;
     const { matrix } = instance.price.pick(...instance.key);
     let x, y;
@@ -789,6 +808,9 @@ DesignerJs.prototype.pricePannel = function () {
     try {
       e.preventDefault();
       e.stopPropagation();
+      if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+        instance.priceTravel().call(document.getElementById(priceTravelButton));
+      }
       const ratio = instance.premium.ratio;
       if (1 <= ratio && ratio < 2) {
         instance.premium.ratio = Math.round((ratio + (e.type === "click" ? 0.1 : -0.1)) * 10) / 10;
@@ -815,6 +837,9 @@ DesignerJs.prototype.pricePannel = function () {
     try {
       e.preventDefault();
       e.stopPropagation();
+      if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+        instance.priceTravel().call(document.getElementById(priceTravelButton));
+      }
       const ratio = Math.round(instance.newcomer.ratio * 10) / 10;
       if (0 < ratio && ratio < 1) {
         instance.newcomer.ratio = Math.round((ratio + (e.type === "click" ? -0.1 : 0.1)) * 10) / 10;
@@ -836,6 +861,15 @@ DesignerJs.prototype.pricePannel = function () {
     } catch (e) {
       console.log(e);
     }
+  }
+  onlineEvent = function (e) {
+    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
+      instance.priceTravel().call(document.getElementById(priceTravelButton));
+    }
+
+
+
+    console.log("this!1");
   }
 
   belowPannel.addEventListener("selectstart", (e) => { e.preventDefault(); });
@@ -1113,6 +1147,74 @@ DesignerJs.prototype.pricePannel = function () {
   ratio3 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
+    text: "온라인 관리",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: this.priceOnlineAdjust(),
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontSize: String(size) + ea,
+      fontWeight: String(500),
+      top: String(top) + ea,
+      right: String(accumulate) + ea,
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  accumulate += widthSpec.right[8] + betweenWords;
+  ratioValue3 = createNode({
+    mother: belowPannel,
+    id: "newcomerBoo",
+    class: [ "hoverDefault_lite" ],
+    text: "N",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: onlineEvent,
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontSize: String(size) + ea,
+      fontWeight: String(600),
+      top: String(top) + ea,
+      right: String(accumulate) + ea,
+      color: colorChip.green,
+      cursor: "pointer",
+    }
+  });
+
+  accumulate += widthSpec.right[9] + between;
+  ratio3 = createNode({
+    mother: belowPannel,
+    class: [ "hoverDefault_lite" ],
+    text: "온라인 적용",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: onlineEvent,
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontSize: String(size) + ea,
+      fontWeight: String(500),
+      top: String(top) + ea,
+      right: String(accumulate) + ea,
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  accumulate += widthSpec.right[10] + betweenWords;
+  ratio3 = createNode({
+    mother: belowPannel,
+    class: [ "hoverDefault_lite" ],
+    id: priceTravelButton,
     text: "출장비 관리",
     events: [
       {
@@ -1841,6 +1943,54 @@ DesignerJs.prototype.priceFeeAdjust = function () {
           }
         ]);
       }
+    } else {
+      const targets = document.querySelectorAll('.' + className);
+      for (let dom of targets) {
+        dom.parentElement.removeChild(dom);
+      }
+    }
+  }
+}
+
+DesignerJs.prototype.priceOnlineAdjust = function () {
+  const instance = this;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  return function (e) {
+    if (/디자이너/gi.test(document.getElementById("priceTravelButton").textContent)) {
+      instance.priceTravel().call(document.getElementById("priceTravelButton"));
+    }
+    const { ea, matrixBase, seroStandards } = instance;
+    const length = seroStandards.length;
+    const className = "onlineTarget";
+    const classNameValue = "onlineTargetValue";
+    if (document.querySelector('.' + className) === null) {
+      let top;
+      let height, width;
+      let size;
+
+      top = <%% 16, 19, 19, 19, 19 %%>;
+      width = 72;
+      size = <%% 28, 24, 24, 24, 24 %%>;
+      height = (top * 2) + size + 19;
+
+      createNode({
+        mother: matrixBase,
+        class: [ className ],
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.gray5,
+          opacity: String(0.6),
+        }
+      });
+
+
+
+
+
     } else {
       const targets = document.querySelectorAll('.' + className);
       for (let dom of targets) {
