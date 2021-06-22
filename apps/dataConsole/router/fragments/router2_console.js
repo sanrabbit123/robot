@@ -2178,18 +2178,32 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_webHookSheets = function () {
+DataRouter.prototype.rou_post_webHookGoogle = function () {
   const instance = this;
   const back = this.back;
   const { requestSystem } = this.mother;
+  const uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+
   let obj = {};
-  obj.link = "/webHookSheets";
+  obj.link = "/webHookGoogle";
   obj.public = true;
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json" });
-      instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(req.body, null, 2), channel: "#error_log" });
-      res.send(JSON.stringify({ "message": "ok" }));
+      if (req.body.who === "uragen" && req.body.where === "homeliaison" && req.body.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle === uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle) {
+        if (req.body.mode === "read" || req.body.mode === "update" || req.body.mode === "create") {
+          if (req.body.collection === undefined || req.body.collection === null) {
+            res.send(JSON.stringify({ "message": "error" }));
+          } else {
+            instance.mother.slack_bot.chat.postMessage({ text: req.body.queries, channel: "#error_log" });
+            res.send(JSON.stringify({ "message": "ok" }));
+          }
+        } else {
+          res.send(JSON.stringify({ "message": "error" }));
+        }
+      } else {
+        res.send(JSON.stringify({ "message": "error" }));
+      }
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
