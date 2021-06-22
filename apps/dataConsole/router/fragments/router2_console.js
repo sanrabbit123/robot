@@ -2178,6 +2178,26 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_webHookSheets = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/webHookSheets";
+  obj.public = true;
+  obj.func = async function (req, res) {
+    try {
+      res.set({ "Content-Type": "application/json" });
+      instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      res.send(JSON.stringify({ "message": "ok" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
