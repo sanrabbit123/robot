@@ -835,4 +835,83 @@ BackWorker.prototype.designerCalculation = async function () {
   }
 }
 
+BackWorker.prototype.getDesignerFee = async function (desid, cliid, option = { requestNumber: 0, selfMongo: null, selfLocalMongo: null }) {
+  if (typeof desid !== "string") {
+    throw new Error("invaild desid");
+  } else {
+    if (!/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(desid)) {
+      throw new Error("invaild desid");
+    }
+  }
+  if (typeof cliid !== "string") {
+    throw new Error("invaild cliid");
+  } else {
+    if (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid)) {
+      throw new Error("invaild cliid");
+    }
+  }
+  const instance = this;
+  const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
+  const back = this.back;
+  try {
+    let MONGOC, MONGOLOCALC;
+    let requestNumber;
+    let designer, client;
+    let priceStandard, price;
+    let priceStandardConst, priceStandardCollection;
+
+    priceStandardCollection = "designerPrice";
+    priceStandardConst = 33;
+
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      await MONGOLOCALC.connect();
+    } else {
+      MONGOLOCALC = option.selfLocalMongo;
+    }
+
+    if (option.requestNumber === null || option.requestNumber === undefined) {
+      requestNumber = 0;
+    } else {
+      requestNumber = option.requestNumber;
+    }
+
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOC });
+    client = await back.getClientById(cliid, { selfMongo: MONGOC });
+    if (designer === null || client === null) {
+      throw new Error("invaild designer or client");
+    }
+    priceStandard = await back.mongoRead(priceStandardCollection, { key: priceStandardConst }, { selfMongo: MONGOLOCALC });
+    price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
+    if (priceStandard.length !== 1 || price.length !== 1) {
+      throw new Error("invaild price");
+    }
+    priceStandard = priceStandard[0];
+    price = price[0];
+
+
+    
+
+
+
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      await MONGOC.close();
+    }
+
+    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+      await MONGOLOCALC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackWorker;

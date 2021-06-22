@@ -3940,14 +3940,14 @@ ProposalJs.save_init = async function (update = false) {
         result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
         result_obj["proposal.detail"][i].description = descriptionArr;
       }
-      inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr }, "/parsingAddress");
-      if (inspectionResult.length !== 0) {
-        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + JSON.stringify(inspectionResult, null, 2) + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionResult[0].id;
-        loadingCancelBox.remove();
-        loadingLoadingIcon.remove();
-        return "fail";
-      }
+      // inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr }, "/parsingAddress");
+      // if (inspectionResult.length !== 0) {
+      //   window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + JSON.stringify(inspectionResult, null, 2) + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+      //   window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionResult[0].id;
+      //   loadingCancelBox.remove();
+      //   loadingLoadingIcon.remove();
+      //   return "fail";
+      // }
 
     }
 
