@@ -132,7 +132,7 @@ DesignerJs.prototype.priceBase = function () {
   belowPannelHeight = 90;
   titleMargin_top = 38;
   titleMargin_left = 54;
-  titleSize = 22;
+  titleSize = 21;
   titleFontHeight = titleSize + 2;
   belowBottom = 40;
   feeButton = 6;
@@ -252,6 +252,8 @@ DesignerJs.prototype.priceBase = function () {
     }
   ]);
   this.matrixBase = matrixBase;
+  this.garoZone = garoZone;
+  this.seroZone = seroZone;
 
   length = garo * sero;
   nodeArr = [];
@@ -357,7 +359,7 @@ DesignerJs.prototype.priceNumbers = function () {
   allCaseLaunching = (document.querySelector('.' + "caseTarget") !== null);
   doms.removeAll();
 
-  size = 32;
+  size = <%% 30, 26, 26, 26, 26 %%>;
   height = size + 4;
   divVisualSpecific = 8;
   inputVisualSpecific = divVisualSpecific - 3;
@@ -595,8 +597,8 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   let topStart, between;
   let lineHeight;
 
-  subSize = 5;
-  size = 18;
+  subSize = <%% 5, 4, 4, 4, 4 %%>;
+  size = <%% 18, 15, 15, 15, 15 %%>;
   topStart = isMac() ? 10 : 11;
   between = isMac() ? 7 : 6;
   lineHeight = 29;
@@ -669,19 +671,21 @@ DesignerJs.prototype.pricePannel = function () {
   const standard = [ "하", "중", "상" ];
   const widthSpec = {
     left: [
-      100.890625,
-      15.578125,
-      132.03125,
-      15.578125,
+      89.47,
+      13.84,
+      117.14,
+      13.84,
+      89.47,
     ],
     right: [
-      20.890625,
-      97.15625,
-      12.1875,
-      97.15625,
-      26.5625,
-      66.015625,
-      12.1875,
+      18.56,
+      86.25,
+      10.84,
+      86.25,
+      23.61,
+      58.58,
+      10.84,
+      58.58,
     ]
   };
   let motherHeight;
@@ -706,9 +710,9 @@ DesignerJs.prototype.pricePannel = function () {
   price = this.price.pick(3, 3);
 
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
-  size = 18;
+  size = 16;
   margin = 24;
-  top = isMac() ? 15 : 18;
+  top = isMac() ? 17 : 20;
   between = 8;
   betweenWords = margin * 1;
 
@@ -1105,6 +1109,570 @@ DesignerJs.prototype.pricePannel = function () {
     }
   });
 
+  accumulate += widthSpec.right[7] + betweenWords;
+  ratio3 = createNode({
+    mother: belowPannel,
+    class: [ "hoverDefault_lite" ],
+    text: "출장비 관리",
+    events: [
+      {
+        type: [ "click", "contextmenu" ],
+        event: this.priceTravel(),
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontSize: String(size) + ea,
+      fontWeight: String(500),
+      top: String(top) + ea,
+      right: String(accumulate) + ea,
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+}
+
+DesignerJs.prototype.priceTravel = function () {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  return async function (e) {
+    try {
+      let samples;
+      if (/출/gi.test(this.textContent)) {
+        samples = await ajaxJson({ mode: "sample" }, "/parsingAddress");
+        this.textContent = "디자이너비 관리";
+        const travelBase = instance.matrixBase.cloneNode(false);
+        instance.matrixBase.style.display = "none";
+        instance.garoZone.style.opacity = String(0.2);
+        instance.seroZone.style.opacity = String(0.2);
+        instance.travelBase = travelBase;
+        instance.samples = samples;
+        instance.matrixBase.parentElement.appendChild(travelBase);
+        instance.priceTravelDetail();
+      } else {
+        this.textContent = "출장비 관리"
+        instance.matrixBase.parentElement.removeChild(instance.travelBase);
+        instance.matrixBase.style.display = "block";
+        instance.garoZone.style.opacity = String(1);
+        instance.seroZone.style.opacity = String(1);
+        instance.travelBase = null;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+DesignerJs.prototype.priceTravelDetail = function () {
+  const instance = this;
+  const { ea, travelBase, samples, belowHeight } = this;
+  const { createNode, createNodes, withOut, colorChip, autoComma, cleanChildren, ajaxJson } = GeneralJs;
+  let leftMargin, margin, baseTong;
+  let size;
+  let blockHeight;
+  let between, betweenWords;
+  let tong;
+  let designerTong, contentsTong;
+  let designerTongWidth;
+  let lineTop;
+  let blockMargin, contentsMargin;
+  let addressWidth, distanceWidth, timeWidth, amountWidth;
+  let contentsTongWidth;
+  let totalTongWidth;
+  let temp, temp2, temp3, temp4;
+  let ratio;
+  let num;
+  let smallBoo;
+  let veryBigBoo;
+  let totalPaddingBottom;
+  let updateEvent, saveEvent;
+  let updateClassName;
+  let buttonBottom;
+  let buttonRight;
+  let buttonWidth;
+  let buttonHeight;
+  let buttonTextTop;
+
+  size = 15;
+  margin = 28;
+  leftMargin = 32;
+  blockHeight = 20;
+  travelBase.style.overflow = "scroll";
+  between = 14;
+  betweenWords = 6;
+  designerTongWidth = 230;
+  contentsTongWidth = 500;
+  addressWidth = 260;
+  distanceWidth = 60;
+  timeWidth = 85;
+  amountWidth = 75;
+  lineTop = 3;
+  blockMargin = 20;
+  contentsMargin = 12;
+  totalTongWidth = 760;
+  totalPaddingBottom = 160;
+  buttonBottom = 147;
+  buttonRight = 57;
+  buttonWidth = 56;
+  buttonHeight = 34;
+  buttonTextTop = 6;
+
+  temp = (((window.innerWidth - (60 + 54)) - (leftMargin * (4.5))) / 2);
+  temp2 = temp - distanceWidth - timeWidth - amountWidth;
+  temp3 = temp2 * (designerTongWidth / (designerTongWidth + addressWidth));
+  temp4 = temp2 * (addressWidth / (designerTongWidth + addressWidth));
+  designerTongWidth = temp3;
+  addressWidth = temp4;
+  contentsTongWidth = addressWidth + distanceWidth + timeWidth + amountWidth + (betweenWords * 3);
+  totalTongWidth = designerTongWidth + contentsTongWidth;
+
+  smallBoo = false;
+  if (designerTongWidth < 200) {
+    smallBoo = true;
+  }
+  veryBigBoo = false;
+  if (window.innerWidth > 1760) {
+    veryBigBoo = true;
+  }
+
+  updateClassName = "updateTarget";
+
+  updateEvent = function (e) {
+    const self = this;
+    let cancelBox, inputBox;
+    cancelBox = createNode({
+      mother: this,
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            self.removeChild(self.lastChild);
+            self.removeChild(self.lastChild);
+          }
+        }
+      ],
+      style: {
+        position: "fixed",
+        width: String(100) + '%',
+        height: String(100) + '%',
+        top: String(0) + ea,
+        left: String(0) + ea,
+        zIndex: String(1),
+      }
+    });
+    inputBox = createNode({
+      mother: this,
+      mode: "input",
+      attribute: [
+        { type: "text" },
+        { value: this.textContent },
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        {
+          type: "keydown",
+          event: function (e) {
+            if (e.key === "Enter" || e.key === "Tab") {
+              e.preventDefault();
+              this.blur();
+            }
+          }
+        },
+        {
+          type: "blur",
+          event: function (e) {
+            let targets, tong, temp, amount;
+            e.preventDefault();
+            this.parentElement.firstChild.textContent = this.value;
+            this.parentElement.setAttribute("value", this.value.replace(/[^0-9\.]/gi, ''));
+
+            targets = document.querySelectorAll('.' + updateClassName);
+            tong = {};
+            for (let dom of targets) {
+              tong[dom.getAttribute("name")] = Number(dom.getAttribute("value").replace(/[^0-9\.]/gi, ''));
+            }
+
+            instance.samples.standard.unit.meters = tong.meters;
+            instance.samples.standard.unit.seconds = tong.seconds;
+            instance.samples.standard.consulting.hours = tong.hours;
+            instance.samples.standard.consulting.labor = tong.labor;
+
+            for (let obj of instance.samples.designers) {
+              for (let obj2 of obj.detail) {
+                temp = (obj2.distance * tong.meters * 2) + (tong.seconds * obj2.time * 2);
+                amount = (Math.round(temp / 1000) * 1000) + (tong.hours * tong.labor);
+                obj2.amount = amount;
+                obj2.amountString = autoComma(amount) + '원';
+              }
+            }
+
+            instance.priceTravelDetail();
+          }
+        }
+      ],
+      style: {
+        position: "absolute",
+        width: String(100) + '%',
+        height: String(100) + '%',
+        top: String(0) + ea,
+        left: String(0) + ea,
+        zIndex: String(1),
+        border: String(0),
+        outline: String(0),
+        fontSize: "inherit",
+        fontWeight: "inherit",
+        color: "inherit",
+      }
+    });
+    inputBox.focus();
+  }
+
+  saveEvent = function (e) {
+    let targets, tong, temp, amount;
+
+    targets = document.querySelectorAll('.' + updateClassName);
+    tong = {};
+    for (let dom of targets) {
+      tong[dom.getAttribute("name")] = Number(dom.getAttribute("value").replace(/[^0-9\.]/gi, ''));
+    }
+
+    instance.samples.standard.unit.meters = tong.meters;
+    instance.samples.standard.unit.seconds = tong.seconds;
+    instance.samples.standard.consulting.hours = tong.hours;
+    instance.samples.standard.consulting.labor = tong.labor;
+
+    for (let obj of instance.samples.designers) {
+      for (let obj2 of obj.detail) {
+        temp = (obj2.distance * tong.meters * 2) + (tong.seconds * obj2.time * 2);
+        amount = (Math.round(temp / 1000) * 1000) + (tong.hours * tong.labor);
+        obj2.amount = amount;
+        obj2.amountString = autoComma(amount) + '원';
+      }
+    }
+
+    ajaxJson({
+      mode: "update",
+      db: "console",
+      collection: "designerPrice",
+      whereQuery: { key: 33 },
+      updateQuery: {
+        "travel.unit.meters": tong.meters,
+        "travel.unit.seconds": tong.seconds,
+        "travel.consulting.hours": tong.hours,
+        "travel.consulting.labor": tong.labor,
+      }
+    }, "/generalMongo").then((json) => {
+      window.alert("저장되었습니다!");
+    }).catch((err) => {
+      console.log(err);
+    });
+
+  }
+
+  cleanChildren(travelBase);
+
+  baseTong = createNode({
+    mother: travelBase,
+    style: {
+      position: "relative",
+      top: String(margin) + ea,
+      left: String(leftMargin) + ea,
+      width: withOut(100, leftMargin * 2, ea),
+      paddingBottom: String(totalPaddingBottom) + ea,
+      background: colorChip.white,
+    }
+  });
+
+  createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      display: "block",
+      fontSize: String(size) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      width: String(100) + '%',
+      height: String(blockHeight) + ea,
+      marginBottom: String(blockMargin) + ea,
+    },
+    children: [
+      {
+        text: "미터당 가격 : ",
+        style: {
+          display: "inline-block",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          paddingRight: String(betweenWords) + ea,
+        }
+      },
+      {
+        text: String(samples.standard.unit.meters) + "원",
+        events: [ { type: "click", event: updateEvent } ],
+        class: [ updateClassName ],
+        attribute: [ { name: "meters" }, { value: String(samples.standard.unit.meters) } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: colorChip.green,
+          cursor: "pointer",
+          paddingRight: String(between) + ea,
+        }
+      },
+      {
+        text: "초당 가격 : ",
+        style: {
+          display: "inline-block",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          paddingRight: String(betweenWords) + ea,
+        }
+      },
+      {
+        text: String(samples.standard.unit.seconds) + "원",
+        events: [ { type: "click", event: updateEvent } ],
+        class: [ updateClassName ],
+        attribute: [ { name: "seconds" }, { value: String(samples.standard.unit.seconds) } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: colorChip.green,
+          paddingRight: String(between) + ea,
+        }
+      },
+      {
+        text: "1회 미팅 시간 : ",
+        style: {
+          display: "inline-block",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          paddingRight: String(betweenWords) + ea,
+        }
+      },
+      {
+        text: String(samples.standard.consulting.hours) + "시간",
+        events: [ { type: "click", event: updateEvent } ],
+        class: [ updateClassName ],
+        attribute: [ { name: "hours" }, { value: String(samples.standard.consulting.hours) } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: colorChip.green,
+          paddingRight: String(between) + ea,
+        }
+      },
+      {
+        text: "시간당 인건비 : ",
+        style: {
+          display: "inline-block",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          paddingRight: String(betweenWords) + ea,
+        }
+      },
+      {
+        text: autoComma(samples.standard.consulting.labor) + "원",
+        events: [ { type: "click", event: updateEvent } ],
+        class: [ updateClassName ],
+        attribute: [ { name: "labor", value: String(samples.standard.consulting.labor) } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: colorChip.green,
+          paddingRight: String(between) + ea,
+        }
+      },
+    ]
+  });
+
+  num = 0;
+  for (let { desid, designer, address, detail } of samples.designers) {
+    tong = createNode({
+      mother: baseTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(size) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+        width: String(totalTongWidth) + ea,
+        marginBottom: String(blockMargin) + ea,
+        marginRight: String(num % 2 === 0 ? (leftMargin - betweenWords + (leftMargin * 0.5)) : 0) + ea,
+      }
+    });
+    [ designerTong, contentsTong ] = createNodes([
+      {
+        mother: tong,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(designerTongWidth) + ea,
+          height: String(100) + '%',
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            text: designer,
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(600),
+              color: "inherit",
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+          {
+            text: desid,
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(200),
+              color: colorChip.gray5,
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+          {
+            text: address.replace(/ \([^\)]+\)/gi, '').slice(0, 27).split(' ').slice(0, (smallBoo ? 2 : (veryBigBoo ? 20 : 3))).join(' '),
+            style: {
+              display: "block",
+              fontSize: "inherit",
+              fontWeight: String(400),
+              color: "inherit",
+              marginTop: String(lineTop) + ea,
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+        ]
+      },
+      {
+        mother: tong,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(contentsTongWidth) + ea,
+          height: String(100) + '%',
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          verticalAlign: "top",
+        }
+      }
+    ]);
+
+    for (let { amountString: amount, distanceString: distance, timeString: time, to } of detail) {
+      createNode({
+        mother: contentsTong,
+        style: {
+          display: "block",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          height: String(100) + '%',
+          marginBottom: String(contentsMargin) + ea,
+        },
+        children: [
+          {
+            text: to.replace(/ \([^\)]+\)/gi, '').slice(0, 27).split(' ').slice(0, (smallBoo ? 2 : (veryBigBoo ? 20 : 3))).join(' '),
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(400),
+              color: "inherit",
+              width: String(addressWidth) + ea,
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+          {
+            text: distance,
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(200),
+              color: colorChip.gray5,
+              width: String(distanceWidth) + ea,
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+          {
+            text: time,
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(200),
+              color: colorChip.gray5,
+              width: String(timeWidth) + ea,
+              paddingRight: String(betweenWords) + ea,
+            }
+          },
+          {
+            text: amount,
+            style: {
+              display: "inline-block",
+              fontSize: "inherit",
+              fontWeight: String(400),
+              color: colorChip.green,
+              width: String(amountWidth) + ea,
+            }
+          },
+        ]
+      })
+    }
+
+    num++;
+  }
+
+  createNode({
+    mother: travelBase,
+    class: [ "hoverDefault_lite" ],
+    events: [ { type: "click", event: saveEvent } ],
+    style: {
+      position: "fixed",
+      bottom: String(belowHeight + buttonBottom) + ea,
+      right: String(buttonRight) + ea,
+      width: String(buttonWidth) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(3) + "px",
+      background: colorChip.gradientGreen,
+    },
+    children: [
+      {
+        text: "저장",
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(500),
+          color: colorChip.white,
+          width: String(100) + '%',
+          textAlign: "center",
+          top: String(buttonTextTop) + ea,
+        }
+      }
+    ]
+  });
+
 }
 
 DesignerJs.prototype.priceFeeAdjust = function () {
@@ -1121,9 +1689,9 @@ DesignerJs.prototype.priceFeeAdjust = function () {
       let height, width;
       let size;
 
-      top = 15;
+      top = <%% 16, 19, 19, 19, 19 %%>;
       width = 72;
-      size = 32;
+      size = <%% 28, 24, 24, 24, 24 %%>;
       height = (top * 2) + size + 19;
 
       createNode({

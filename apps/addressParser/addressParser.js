@@ -7,6 +7,13 @@ const AddressParser = function () {
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/addressParser";
   this.jsonDir = this.dir + "/json";
+  this.sampleDir = this.jsonDir + "/samples";
+  this.samples = {
+    client: this.sampleDir + "/clientAddress.json",
+    designer: this.sampleDir + "/clientAddress.json",
+    travel: this.sampleDir + "/travelExpensesSamples.json",
+    travelMin: this.sampleDir + "/travelExpensesSamples_min.json",
+  };
   this.pythonApp = this.dir + "/python/app.py";
   this.serveFolderName = "immovablesServerStaticFolder";
   this.priceStandardKey = 33;

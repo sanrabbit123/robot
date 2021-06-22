@@ -2342,7 +2342,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   const addressApp = new AddressParser();
   const back = this.back;
   const calendar = this.calendar;
-  const { equalJson } = this.mother;
+  const { equalJson, autoComma, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/parsingAddress" ];
   obj.func = async function (req, res) {
@@ -2370,6 +2370,36 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
         }
         const { from, to } = req.body;
         result = await addressApp.getTravelExpenses(from, to);
+      } else if (mode === "sample" || mode === "samples") {
+        const priceStandard = await back.mongoRead(`designerPrice`, { key: 33 }, { selfMongo: instance.mongolocal });
+        const { travel: { unit, consulting } } = priceStandard[0];
+        let travelSamples_min, temp, amount, tong;
+        travelSamples_min = await fileSystem(`readJson`, [ addressApp.samples.travelMin ]);
+        for (let obj of travelSamples_min) {
+          temp = (unit.meters * obj.distance * 2) + (unit.seconds * obj.time * 2);
+          amount = (Math.round(temp / 1000) * 1000) + (consulting.hours * consulting.labor);
+          obj.amount = amount;
+          obj.amountString = autoComma(amount) + '원';
+        }
+        tong = { standard: {  unit, consulting } };
+        for (let obj of travelSamples_min) {
+          if (tong[obj.desid] === undefined) {
+            tong[obj.desid] = {};
+            tong[obj.desid].detail = [];
+          }
+          tong[obj.desid].detail.push(obj);
+          tong[obj.desid].designer = obj.designer;
+          tong[obj.desid].desid = obj.desid;
+          tong[obj.desid].address = obj.from;
+        }
+        tong.designers = [];
+        for (let i in tong) {
+          if (i !== "designers" && i !== "standard") {
+            tong.designers.push(JSON.parse(JSON.stringify(tong[i])));
+            delete tong[i];
+          }
+        }
+        result = tong;
       }
 
       res.set({ "Content-Type": "application/json" });

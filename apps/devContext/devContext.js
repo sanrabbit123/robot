@@ -62,6 +62,34 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+
+
+
+
+
+    // const clientTargets = [
+    //   "전라북도 익산시 무왕로 1195",
+    //   "전라북도 정읍시 서부로 39",
+    //   "대구광역시 북구 연암로 135-6",
+    //   "대구광역시 수성구 범어동 551-7",
+    //   "광주광역시 광산구 어등대로653번길 90",
+    //   "전라남도 여수시 웅천남1로 52",
+    //   "전라남도 목포시 용당로331번길 40",
+    //   "울산 남구 신선로 45",
+    //   "부산광역시 해운대구 해운대로76번길 55",
+    //   "부산광역시 동래구 명륜로 170",
+    //   "강원 고성군 죽왕면 가향길 20-2",
+    //   "강원 춘천시 춘주로 176-22",
+    //   "강원 강릉시 선수촌로 79-14",
+    //   "충청북도 충주시 예성로 401",
+    //   "충청북도 청주시 청원구 공항로150번길 51-12",
+    //   "충청남도 아산시 배방읍 용연로 54",
+    //   "충청남도 천안시 서북구 한들3로 85-9",
+    //   "충남 서산시 성연면 성연5로 92-7",
+    //   "대전광역시 서구 대덕대로195번길 63",
+    //   "세종특별자치시 남세종로 302",
+    // ];
 
 
     // const app = new AddressParser();
@@ -73,20 +101,16 @@ DevContext.prototype.launching = async function () {
     // for (let desid in designerAddress) {
     //   travelExpensesSamples[desid] = [];
     //   for (let obj of clientAddress) {
-    //     json = await app.getTravelExpenses(designerAddress[desid], obj, new Date(2021, 5, 12, 13, 30, 10));
+    //     json = await app.getTravelExpenses(designerAddress[desid], obj);
+    //     await sleep(1000);
     //     console.log(json);
     //     travelExpensesSamples[desid].push(json);
     //   }
     // }
+    // console.log(travelExpensesSamples);
     // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json`, travelExpensesSamples ]);
 
-    // console.log(await app.addressInspection([
-    //   { id: 1, address: "부산 동래구 명륜동 782" },
-    //   { id: 2, address: "강원도 속초시 금호동 489-74" },
-    // ]))
 
-    // 부산광역시 동래구 명륜동 782
-    // 강원도 속초시 금호동 489-74
 
     // const travelExpensesSamples = await fileSystem(`readJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples.json` ]);
     // let tong;
@@ -96,15 +120,19 @@ DevContext.prototype.launching = async function () {
     //     tong.push({
     //       "desid": desid,
     //       "designer": designers.pick(desid).designer,
-    //       "from": obj.from.address[((/^서울/.test(obj.from.address.road) || /^경기/.test(obj.from.address.road) || /^인천/.test(obj.from.address.road)) ? "road" : "parcel")],
-    //       "to": obj.to.address[((/^달구/.test(obj.from.address.road) || /^정림/.test(obj.from.address.road)) ? "parcel" : "road")],
-    //       "distance": obj.distance.string,
-    //       "time": obj.time.string,
-    //       "amount": obj.string
-    //     })
+    //       "from": obj.from.address.road,
+    //       "to": obj.to.address.road,
+    //       "distance": obj.distance.meters,
+    //       "distanceString": obj.distance.string,
+    //       "time": obj.time.seconds,
+    //       "timeString": obj.time.string,
+    //       "amount": obj.amount,
+    //       "amountString": obj.string,
+    //     });
     //   }
     // }
     // await fileSystem(`writeJson`, [ `${process.cwd()}/apps/addressParser/json/samples/travelExpensesSamples_min.json`, tong ]);
+
 
 
 
