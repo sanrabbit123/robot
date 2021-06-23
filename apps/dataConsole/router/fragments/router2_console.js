@@ -2220,6 +2220,7 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
                   if (coreTargets.includes(req.body.collection)) {
                     for (let { whereQuery, updateQuery } of req.body.queries) {
                       await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+                      console.log(whereQuery, updateQuery);
                     }
                   } else {
                     const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
