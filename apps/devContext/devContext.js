@@ -62,11 +62,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-    // await work.getDesignerFee();
-
-
+    // const tong = await work.getDesignerFee("p2106_aa49s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
+    // console.log(tong);
+    // for (let obj of tong) {
+    //   console.log(obj);
+    // }
 
 
 

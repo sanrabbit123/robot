@@ -835,14 +835,7 @@ BackWorker.prototype.designerCalculation = async function () {
   }
 }
 
-BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { selfMongo: null, selfLocalMongo: null }) {
-  if (typeof desid !== "string") {
-    throw new Error("invaild desid");
-  } else {
-    if (!/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(desid)) {
-      throw new Error("invaild desid");
-    }
-  }
+BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMongo: null, selfLocalMongo: null }) {
   if (typeof proid !== "string") {
     throw new Error("invaild proid");
   } else {
@@ -850,15 +843,19 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
       throw new Error("invaild proid");
     }
   }
+  const newcomers = [ "곽수빈" ];
   const instance = this;
   const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
   const back = this.back;
   const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
   const addressApp = new AddressParser();
+  const today = new Date();
+  const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
   try {
     let MONGOC, MONGOLOCALC;
     let requestNumber;
-    let designer, client, project;
+    let designers, desidArr;
+    let client, project;
     let priceStandard, price;
     let priceStandardConst, priceStandardCollection;
     let designerAddress, clientAddress;
@@ -866,11 +863,17 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
     let proposalDate;
     let request;
     let x, y;
-    let onlineBoo, partialBoo, premiumBoo;
-    let newcomerBoo;
+    let onlineBoo, partialBoo, premiumBoo, newcomerBoo, distanceBoo;
+    let tong;
+    let proposal;
+    let fee;
+    let homeliaison, alpha, alphaPercentage;
+    let onlineFee;
+    let relationItems;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
+    onlineRatio = 0.8;
 
     if (option.selfMongo === null || option.selfMongo === undefined) {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -886,16 +889,11 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
       MONGOLOCALC = option.selfLocalMongo;
     }
 
-    designer = await back.getDesignerById(desid, { selfMongo: MONGOC });
     project = await back.getProjectById(proid, { selfMongo: MONGOC });
-    if (designer === null || project === null) {
+    if (project === null) {
       throw new Error("invaild designer or client");
     }
-    if (designer.information.address.length === 0) {
-      throw new Error("there is no designer address");
-    }
     client = await back.getClientById(project.cliid, { selfMongo: MONGOC });
-
     requestNumber = 0;
     proposalDate = project.proposal.date.valueOf();
     for (let i = 0; i < client.requests.length; i++) {
@@ -914,24 +912,16 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
     }
     request = client.requests[requestNumber].request;
 
-    designerAddress = await addressApp.getAddress(designer.information.address[0].value);
     clientAddress = await addressApp.getAddress(request.space.address.value);
-    if (designerAddress === null || clientAddress === null) {
-      throw new Error("invaild address");
+    if (clientAddress === null) {
+      throw new Error("invaild client address");
     }
 
     priceStandard = await back.mongoRead(priceStandardCollection, { key: priceStandardConst }, { selfMongo: MONGOLOCALC });
-    price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
-    if (priceStandard.length !== 1 || price.length !== 1) {
-      throw new Error("invaild price");
+    if (priceStandard.length !== 1) {
+      throw new Error("invaild price standard");
     }
     priceStandard = priceStandard[0];
-    price = price[0];
-
-    travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
-    if (travelInfo === null) {
-      throw new Error("invaild travelInfo");
-    }
 
     x = null;
     for (let i = 0; i < priceStandard.standard.x.value.length; i++) {
@@ -948,24 +938,122 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
       throw new Error("service error");
     }
 
+    desidArr = [];
+    for (let { desid } of project.proposal.detail) {
+      desidArr.push({ desid });
+    }
+    designers = await back.getDesignersByQuery({ $or: desidArr }, { selfMongo: MONGOC });
+    if (designers.length === 0) {
+      throw new Error("no designer error");
+    }
 
+    tong = [];
+    for (let designer of designers) {
 
+      proposal = project.selectProposal(designer.desid);
+      if (proposal === null) {
+        throw new Error("invaild desid");
+      }
 
+      onlineBoo = false;
+      for (let obj of proposal.fee) {
+        if (/online/.test(obj.method)) {
+          onlineBoo = true;
+        }
+      }
+      premiumBoo = (project.service.xValue === 'P');
+      newcomerBoo = newcomers.includes(designer.designer);
 
+      designerAddress = await addressApp.getAddress(designer.information.address[0].value);
+      if (designerAddress === null) {
+        throw new Error("invaild designer address");
+      }
+      travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
+      if (travelInfo === null) {
+        throw new Error("invaild travelInfo");
+      }
+      distanceBoo = (travelInfo.distance.meters > (designer.analytics.region.range * 1000));
 
+      price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
+      if (price.length !== 1) {
+        throw new Error("invaild price");
+      }
+      price = price[0];
 
+      fee = price.matrix[x][y] * 10000;
 
+      if (newcomerBoo) {
+        fee = fee * priceStandard.newcomer;
+      }
 
+      if (premiumBoo) {
+        fee = fee * priceStandard.premium;
+      }
 
+      alpha = 0;
+      alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
+      alpha += (designer.analytics.project.paperWork.values.length >= 4) ? 2 : 0;
+      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
+      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
+      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
 
+      homeliaison = 0;
+      for (let { value } of designer.analytics.etc.personality) {
+        if (value) {
+          homeliaison = homeliaison + 1;
+        }
+      }
+      relationItems = designer.analytics.etc.relation.items;
+      homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
 
+      alpha += (homeliaison * (2 / 7));
+      //인기도
+      alpha += 1;
+      alphaPercentage = (alpha / 100) + 1;
 
+      fee = alphaPercentage * fee;
 
+      if (onlineBoo) {
+        onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
+        if (priceStandard.online.minus.min > onlineFee) {
+          onlineFee = priceStandard.online.minus.min;
+        }
+        if (priceStandard.online.minus.max < onlineFee) {
+          onlineFee = priceStandard.online.minus.max;
+        }
+        fee = fee - onlineFee;
+        if (priceStandard.online.absolute.min > fee) {
+          fee = priceStandard.online.absolute.min;
+        }
+      }
 
+      if (distanceBoo) {
+        fee = fee + travelInfo.amount;
+      }
 
-
-
-
+      tong.push({
+        desid: designer.desid,
+        designer: designer.designer,
+        cliid: client.cliid,
+        client: client.name,
+        proid: project.proid,
+        detail: {
+          original: fee,
+          alpha: alpha,
+          newcomer: newcomerBoo,
+          premium: premiumBoo,
+          online: onlineBoo,
+          distance: (distanceBoo ? travelInfo.amount : 0),
+          xy: { x, y },
+          pyeong: request.space.pyeong.value,
+          level: {
+            construct: designer.analytics.construct.level,
+            styling: designer.analytics.styling.level,
+          },
+        },
+        fee: (Math.round(fee / 10000) * 10000)
+      });
+    }
 
     if (option.selfMongo === null || option.selfMongo === undefined) {
       await MONGOC.close();
@@ -974,6 +1062,8 @@ BackWorker.prototype.getDesignerFee = async function (desid, proid, option = { s
     if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
       await MONGOLOCALC.close();
     }
+
+    return tong;
 
   } catch (e) {
     console.log(e);

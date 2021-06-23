@@ -736,14 +736,13 @@ DataConsole.prototype.connect = async function (testMode = false) {
     for (let obj of rouObj.post) {
       if (obj.public !== true) {
         app.post(obj.link, function (req, res) {
-          let __wallLogicBoo, __vailHosts, __validPort, __authorization, __originTarget;
+          let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers;
 
-          __validPort = 3000;
           __vailHosts = [
             instance.address.backinfo.host,
             instance.address.homeinfo.ghost.host,
-            "localhost",
-            "localhost:" + String(__validPort),
+            "localhost:3000",
+            "localhost:8080",
           ];
 
           __wallLogicBoo = false;
@@ -764,11 +763,13 @@ DataConsole.prototype.connect = async function (testMode = false) {
           if (!__wallLogicBoo) {
             res.set("Content-Type", "application/json");
             res.send(JSON.stringify({ message: "OK" }));
-            console.log(req);
-            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
+            __headers = req.headers;
+            __headers = JSON.parse(JSON.stringify(__headers));
+            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" });
           } else {
             obj.func(req, res);
           }
+
         });
       } else {
         app.post(obj.link, obj.func);

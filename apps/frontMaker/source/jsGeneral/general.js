@@ -54,14 +54,14 @@ GeneralJs.postWall = function (xhr) {
   if (!(xhr instanceof XMLHttpRequest)) {
     throw new Error("invaild input");
   }
-  const target = String((Math.pow(((Math.pow(Number(String(((Math.abs(Math.pow((((Math.pow(47, 5) * 4) - ((Math.pow(47, 3) * 10) + ((Math.pow(47, 2) * Math.pow(10, 2)) + ((Math.pow(47, 2) * 4) - ((47 * Math.pow(2, 4)) + 13)))) * 4 * 5) >> 2) & (47047 * 5), 2) >> 4) << 2) % 163) - 100).replace(/-/g ,'').split('').reverse().join('')) * 2, Math.pow(2, 2)) + Math.pow(10, 2))) << 100 << 2 << 2, 2) * 1000) - ((Math.pow(47, 5) * 10) - (((Math.pow(47, 3) * Math.pow(3, 2)) + (((47 * 47 * 3) - ((47 + 4) * 10)) * 10)) * 64) + ((100 << 100 << 100 | 100 << 200) * 200)));
-  let arr = [];
+  const target = "879617562858";
+  let res = '';
   for (let i = target.length - 1; i > -1; i--) {
     if (i % 2 === 1) {
-      arr.push(String.fromCharCode(Number(target.slice(((i - 1) * 1), ((i + 1) * 1))[1] + target.slice(((i - 1) * 1), ((i + 1) * 1))[0])));
+      res += String.fromCharCode(Number(target.slice(((i - 1) * 1), ((i + 1) * 1))[1] + target.slice(((i - 1) * 1), ((i + 1) * 1))[0]));
     }
   }
-  xhr.setRequestHeader("Authorization", "Basic " + SvgTong["___" + arr.join('') + "___"]);
+  xhr.setRequestHeader("Authorization", "Basic " + SvgTong["___" + res + "___"]);
 }
 
 GeneralJs.ajax = function (data, url, callback) {

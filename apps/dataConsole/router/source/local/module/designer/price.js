@@ -676,6 +676,7 @@ DesignerJs.prototype.pricePannel = function () {
       117.14,
       13.84,
       89.47,
+      89.47,
     ],
     right: [
       18.56,
@@ -686,8 +687,6 @@ DesignerJs.prototype.pricePannel = function () {
       58.58,
       10.84,
       58.58,
-      72.42,
-      10.84,
       72.42,
       72.42,
     ]
@@ -862,15 +861,6 @@ DesignerJs.prototype.pricePannel = function () {
       console.log(e);
     }
   }
-  onlineEvent = function (e) {
-    if (/디자이너/gi.test(document.getElementById(priceTravelButton).textContent)) {
-      instance.priceTravel().call(document.getElementById(priceTravelButton));
-    }
-
-
-
-    console.log("this!1");
-  }
 
   belowPannel.addEventListener("selectstart", (e) => { e.preventDefault(); });
 
@@ -954,6 +944,23 @@ DesignerJs.prototype.pricePannel = function () {
     class: [ "hoverDefault_lite" ],
     text: "모든 경우 보기",
     events: [ { type: "click", event: caseEvent } ],
+    style: {
+      position: "absolute",
+      fontSize: String(size) + ea,
+      fontWeight: String(500),
+      top: String(top) + ea,
+      left: String(accumulate) + ea,
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  accumulate += widthSpec.left[4] + betweenWords;
+  title2 = createNode({
+    mother: belowPannel,
+    class: [ "hoverDefault_lite" ],
+    text: "디자이너 판단",
+    events: [ { type: "click", event: this.priceDesignersLevel() } ],
     style: {
       position: "absolute",
       fontSize: String(size) + ea,
@@ -1166,51 +1173,6 @@ DesignerJs.prototype.pricePannel = function () {
   });
 
   accumulate += widthSpec.right[8] + betweenWords;
-  ratioValue3 = createNode({
-    mother: belowPannel,
-    id: "newcomerBoo",
-    class: [ "hoverDefault_lite" ],
-    text: "N",
-    events: [
-      {
-        type: [ "click", "contextmenu" ],
-        event: onlineEvent,
-      }
-    ],
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(600),
-      top: String(top) + ea,
-      right: String(accumulate) + ea,
-      color: colorChip.green,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.right[9] + between;
-  ratio3 = createNode({
-    mother: belowPannel,
-    class: [ "hoverDefault_lite" ],
-    text: "온라인 적용",
-    events: [
-      {
-        type: [ "click", "contextmenu" ],
-        event: onlineEvent,
-      }
-    ],
-    style: {
-      position: "absolute",
-      fontSize: String(size) + ea,
-      fontWeight: String(500),
-      top: String(top) + ea,
-      right: String(accumulate) + ea,
-      color: colorChip.black,
-      cursor: "pointer",
-    }
-  });
-
-  accumulate += widthSpec.right[10] + betweenWords;
   ratio3 = createNode({
     mother: belowPannel,
     class: [ "hoverDefault_lite" ],
@@ -1232,6 +1194,333 @@ DesignerJs.prototype.pricePannel = function () {
       cursor: "pointer",
     }
   });
+
+}
+
+DesignerJs.prototype.priceDesignersLevel = function () {
+  const instance = this;
+  return function (e) {
+    let samples;
+    if (instance.levelBase === undefined || instance.levelBase === null) {
+      const levelBase = instance.matrixBase.cloneNode(false);
+      instance.matrixBase.style.display = "none";
+      instance.garoZone.style.opacity = String(0.2);
+      instance.seroZone.style.opacity = String(0.2);
+      instance.levelBase = levelBase;
+      instance.samples = samples;
+      instance.matrixBase.parentElement.appendChild(levelBase);
+      instance.priceDesignersLevelDetail();
+    } else {
+      instance.matrixBase.parentElement.removeChild(instance.levelBase);
+      instance.matrixBase.style.display = "block";
+      instance.garoZone.style.opacity = String(1);
+      instance.seroZone.style.opacity = String(1);
+      instance.levelBase = null;
+    }
+  }
+}
+
+DesignerJs.prototype.priceDesignersLevelDetail = function () {
+  const instance = this;
+  const { ea, levelBase, designers } = this;
+  const { createNode, createNodes, withOut, colorChip, autoComma, cleanChildren, ajaxJson } = GeneralJs;
+  const levelWords = [ '하', '중', '상' ];
+  const className = "baguni";
+  let leftMargin, margin, baseTong;
+  let size;
+  let blocks;
+  let blockMargin;
+  let titleHeight;
+  let innerMargin;
+  let textTop;
+  let x, y;
+  let designerBlock;
+  let blockSplit;
+  let innerBlockMargin;
+  let innerBlockSize;
+  let innerBlockTextTop;
+  let innerBlockHeight;
+  let baguni;
+  let dropEvent;
+  let dragenterEvent;
+  let dragleaveEvent;
+  let dragoverEvent;
+
+  size = 15;
+  margin = 28;
+  leftMargin = 32;
+  blockMargin = 12;
+  titleHeight = 30;
+  innerMargin = 8;
+  textTop = 1;
+  innerBlockMargin = 5;
+  innerBlockSize = 13;
+  innerBlockTextTop = 6;
+  innerBlockHeight = 32;
+  blockSplit = 6;
+
+  cleanChildren(levelBase);
+
+  designerBlock = function (designer, fiveBoo = false) {
+    let block, name;
+    let style;
+
+    block = GeneralJs.nodes.div.cloneNode(true);
+    block.setAttribute("x", String(designer.analytics.construct.level - 1));
+    block.setAttribute("y", String(designer.analytics.styling.level - 1));
+    block.setAttribute("draggable", "true");
+    block.setAttribute("desid", designer.desid);
+    block.id = designer.desid;
+    style = {
+      position: "relative",
+      display: "inline-block",
+      marginRight: String(fiveBoo ? 0 : innerBlockMargin) + ea,
+      marginBottom: String(innerBlockMargin) + ea,
+      background: colorChip.white,
+      width: "calc(calc(100% - " + String(innerBlockMargin * (blockSplit - 1)) + ea + ") / " + String(blockSplit) + ")",
+      height: String(innerBlockHeight) + ea,
+      borderRadius: String(3) + "px",
+      cursor: "pointer",
+      transition: "all 0s ease",
+    }
+    block.addEventListener("dragstart", function (e) {
+      e.dataTransfer.setData("dragData", this.getAttribute("desid"));
+      console.log("this!");
+    });
+    block.addEventListener("dragenter", (e) => { e.preventDefault(); });
+    block.addEventListener("dragleave", (e) => { e.preventDefault(); });
+    block.addEventListener("dragover", (e) => { e.preventDefault(); });
+    block.addEventListener("drop", (e) => { e.preventDefault(); });
+    for (let i in style) {
+      block.style[i] = style[i];
+    }
+
+    name = GeneralJs.nodes.div.cloneNode(true);
+    name.textContent = designer.designer;
+    style = {
+      position: "absolute",
+      top: String(innerBlockTextTop) + ea,
+      width: String(100) + '%',
+      textAlign: "center",
+      fontSize: String(innerBlockSize) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      wordSpacing: String(-1),
+      transition: "all 0s ease",
+    }
+    for (let i in style) {
+      name.style[i] = style[i];
+    }
+
+    block.appendChild(name);
+
+    return block;
+  }
+
+  baseTong = createNode({
+    mother: levelBase,
+    style: {
+      position: "relative",
+      top: String(margin - textTop) + ea,
+      left: String(leftMargin) + ea,
+      width: withOut(100, leftMargin * 2, ea),
+      height: withOut(100, margin + (margin - textTop), ea),
+    }
+  });
+
+  blocks = [];
+  dragenterEvent = function (e) {
+    e.preventDefault();
+    const x = Number(this.getAttribute('x'));
+    const y = Number(this.getAttribute('y'));
+    const thisTarget = blocks["xy" + String(x) + String(y)];
+    const baguni = thisTarget.querySelector('.' + className);
+    const pan = baguni.parentElement.parentElement;
+    pan.style.background = colorChip.whiteGreen;
+  }
+  dragoverEvent = function (e) {
+    e.preventDefault();
+    const x = Number(this.getAttribute('x'));
+    const y = Number(this.getAttribute('y'));
+    const thisTarget = blocks["xy" + String(x) + String(y)];
+    const baguni = thisTarget.querySelector('.' + className);
+    const pan = baguni.parentElement.parentElement;
+    pan.style.background = colorChip.whiteGreen;
+  }
+  dragleaveEvent = function (e) {
+    e.preventDefault();
+    const x = Number(this.getAttribute('x'));
+    const y = Number(this.getAttribute('y'));
+    const thisTarget = blocks["xy" + String(x) + String(y)];
+    const baguni = thisTarget.querySelector('.' + className);
+    const pan = baguni.parentElement.parentElement;
+    pan.style.background = colorChip.gray1;
+  }
+  dropEvent = function (e) {
+    e.preventDefault();
+    const desid = e.dataTransfer.getData("dragData");
+    const designerDom = document.getElementById(desid);
+    const x = Number(this.getAttribute('x'));
+    const y = Number(this.getAttribute('y'));
+    const fromX = Number(designerDom.getAttribute('x'));
+    const fromY = Number(designerDom.getAttribute('y'));
+    const thisTarget = blocks["xy" + String(x) + String(y)];
+    const fromTarget = blocks["xy" + String(fromX) + String(fromY)];
+    const baguni = thisTarget.querySelector('.' + className);
+    const fromBaguni = fromTarget.querySelector('.' + className);
+    const pan = baguni.parentElement.parentElement;
+    let length, fromLength;
+    let whereQuery, updateQuery;
+    pan.style.background = colorChip.gray1;
+    baguni.appendChild(designerDom);
+
+    length = baguni.children.length;
+    fromLength = fromBaguni.children.length;
+    for (let i = 0; i < length; i++) {
+      baguni.children[i].style.marginRight = String(i % blockSplit === (blockSplit - 1) ? 0 : innerBlockMargin) + ea;
+    }
+    for (let i = 0; i < fromLength; i++) {
+      fromBaguni.children[i].style.marginRight = String(i % blockSplit === (blockSplit - 1) ? 0 : innerBlockMargin) + ea;
+    }
+
+    designerDom.setAttribute('x', String(x));
+    designerDom.setAttribute('y', String(y));
+    whereQuery = { desid };
+    updateQuery = { "analytics.construct.level": (x + 1), "analytics.styling.level": (y + 1) };
+    instance.designers.update([ whereQuery, updateQuery ]);
+    ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner").catch((err) => { console.log(err); });
+  }
+  for (let i = 0; i < 9; i++) {
+    x = i % 3;
+    y = 2 - Math.floor(i / 3);
+    blocks.push(createNode({
+      mother: baseTong,
+      attribute: [
+        { x: String(x) },
+        { y: String(y) },
+      ],
+      events: [
+        {
+          type: "dragenter",
+          event: (e) => { e.preventDefault(); }
+        },
+        {
+          type: "dragleave",
+          event: (e) => { e.preventDefault(); }
+        },
+        {
+          type: "dragover",
+          event: (e) => { e.preventDefault(); }
+        },
+      ],
+      style: {
+        position: "relative",
+        display: "inline-block",
+        width: "calc(calc(100% - " + String(blockMargin * 2) + ea + ") / 3)",
+        height: "calc(calc(100% - " + String(blockMargin * 2) + ea + ") / 3)",
+        marginRight: String(i % 3 === 2 ? 0 : blockMargin) + ea,
+        marginBottom: String(Math.floor(i / 3) === 2 ? 0 : blockMargin) + ea,
+      },
+      children: [
+        {
+          text: `시공 능력 <b style="color:${colorChip.green}">${levelWords[x]}</b>&nbsp;&nbsp;&nbsp;&nbsp;스타일링 능력 <b style="color:${colorChip.green}">${levelWords[y]}</b>`,
+          style: {
+            position: "absolute",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+            width: String(100) + '%',
+            textAlign: "center",
+            top: String(textTop) + ea,
+            left: String(0) + ea,
+          }
+        },
+        {
+          style: {
+            position: "relative",
+            top: String(titleHeight) + ea,
+            paddingTop: String(innerMargin) + ea,
+            height: withOut(titleHeight + innerMargin, ea),
+            borderRadius: String(3) + "px",
+            background: colorChip.gray1,
+            overflow: "hidden",
+            transition: "all 0.4s ease",
+          },
+          children: [
+            {
+              attribute: [
+                { x: String(x) },
+                { y: String(y) },
+              ],
+              events: [
+                {
+                  type: "dragenter",
+                  event: dragenterEvent
+                },
+                {
+                  type: "dragleave",
+                  event: dragleaveEvent
+                },
+                {
+                  type: "dragover",
+                  event: dragoverEvent
+                },
+                {
+                  type: "drop",
+                  event: dropEvent
+                }
+              ],
+              style: {
+                position: "relative",
+                marginLeft: String(innerMargin) + ea,
+                width: withOut(innerMargin * 2, ea),
+                height: withOut(innerMargin, ea),
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  class: [ className ],
+                  attribute: [
+                    { x: String(x) },
+                    { y: String(y) },
+                  ],
+                  events: [
+                    {
+                      type: "dragenter",
+                      event: dragenterEvent
+                    },
+                    {
+                      type: "dragleave",
+                      event: dragleaveEvent
+                    },
+                    {
+                      type: "dragover",
+                      event: dragoverEvent
+                    },
+                    {
+                      type: "drop",
+                      event: dropEvent
+                    }
+                  ],
+                  style: {
+                    position: "relative",
+                    width: String(100) + '%',
+                    height: "auto",
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }));
+    blocks["xy" + String(x) + String(y)] = blocks[blocks.length - 1];
+  }
+
+  for (let designer of designers) {
+    baguni = blocks["xy" + String(designer.analytics.construct.level - 1) + String(designer.analytics.styling.level - 1)].querySelector('.' + className);
+    baguni.appendChild(designerBlock(designer, baguni.children.length % blockSplit === (blockSplit - 1)));
+  }
 
 }
 
@@ -1783,8 +2072,8 @@ DesignerJs.prototype.priceFeeAdjust = function () {
   return function (e) {
     const { ea, matrixBase, garoStandards } = instance;
     const length = garoStandards.length;
-    const className = "feeTarget";
-    const classNameValue = "feeTargetValue";
+    const className = "grayTarget";
+    const classNameValue = "grayTargetValue";
     const fee = instance.price.pick(3, 3).fee;
     if (document.querySelector('.' + className) === null) {
       let top;
@@ -1819,9 +2108,20 @@ DesignerJs.prototype.priceFeeAdjust = function () {
               {
                 type: "click",
                 event: function (e) {
-                  const targets = document.querySelectorAll('.' + className);
+                  let targets, boo;
+                  targets = document.querySelectorAll('.' + classNameValue);
+                  boo = false;
                   for (let dom of targets) {
-                    dom.parentElement.removeChild(dom);
+                    if (dom.parentElement.querySelector("input") !== null) {
+                      boo = true;
+                      dom.parentElement.removeChild(dom.parentElement.querySelector("input"));
+                    }
+                  }
+                  if (!boo) {
+                    targets = document.querySelectorAll('.' + className);
+                    for (let dom of targets) {
+                      dom.parentElement.removeChild(dom);
+                    }
                   }
                 }
               }
@@ -1954,24 +2254,41 @@ DesignerJs.prototype.priceFeeAdjust = function () {
 
 DesignerJs.prototype.priceOnlineAdjust = function () {
   const instance = this;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, autoComma } = GeneralJs;
   return function (e) {
     if (/디자이너/gi.test(document.getElementById("priceTravelButton").textContent)) {
       instance.priceTravel().call(document.getElementById("priceTravelButton"));
     }
     const { ea, matrixBase, seroStandards } = instance;
     const length = seroStandards.length;
-    const className = "onlineTarget";
-    const classNameValue = "onlineTargetValue";
+    const className = "grayTarget";
+    const classNameValue = "grayTargetValue";
+    const online = instance.price.pick(3, 3).online;
+
     if (document.querySelector('.' + className) === null) {
       let top;
       let height, width;
       let size;
+      let subPannel, subPannelBase;
+      let subPannelMargin, subPannelWidth, subPannelHeight;
+      let smallSize;
+      let nodeArr;
+      let subPannelLeftMargin, subPannelTopMargin, subPannelTextTop, lineHeight, subPannelInputWidth, subPannelInputHeight;
 
       top = <%% 16, 19, 19, 19, 19 %%>;
-      width = 160;
+      width = 120;
       size = <%% 28, 24, 24, 24, 24 %%>;
       height = (top * 2) + size + 19;
+      subPannelMargin = 32;
+      subPannelWidth = 352;
+      subPannelHeight = 148;
+      smallSize = 16;
+      subPannelLeftMargin = 24;
+      subPannelTopMargin = 21;
+      subPannelTextTop = 2.5;
+      lineHeight = 38;
+      subPannelInputWidth = 160;
+      subPannelInputHeight = 29;
 
       createNode({
         mother: matrixBase,
@@ -1996,9 +2313,20 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
               {
                 type: "click",
                 event: function (e) {
-                  const targets = document.querySelectorAll('.' + className);
+                  let targets, boo;
+                  targets = document.querySelectorAll('.' + classNameValue);
+                  boo = false;
                   for (let dom of targets) {
-                    dom.parentElement.removeChild(dom);
+                    if (dom.parentElement.querySelector("input") !== null) {
+                      boo = true;
+                      dom.parentElement.removeChild(dom.parentElement.querySelector("input"));
+                    }
+                  }
+                  if (!boo) {
+                    targets = document.querySelectorAll('.' + className);
+                    for (let dom of targets) {
+                      dom.parentElement.removeChild(dom);
+                    }
                   }
                 }
               }
@@ -2039,7 +2367,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
           },
           {
             mother: -1,
-            text: '-' + String(100) + "만원",
+            text: String(online.matrix[i]) + "회",
             attribute: [
               { index: String(i) }
             ],
@@ -2070,17 +2398,17 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
                               const children = document.querySelectorAll('.' + classNameValue);
                               const next = (children[index + 1] === undefined) ? children[0] : children[index + 1];
                               const mother = children[index].parentElement;
-                              instance.price.pick(3, 3).fee[index] = Number(this.value.replace(/[^0-9]/g, ''));
+                              instance.price.pick(3, 3).online.matrix[index] = Number(this.value.replace(/[^0-9]/g, ''));
 
-                              // await ajaxJson({
-                              //   mode: "update",
-                              //   db: "console",
-                              //   collection: "designerPrice",
-                              //   whereQuery: { key: 33 },
-                              //   updateQuery: { fee: instance.price.pick(3, 3).fee }
-                              // }, "/generalMongo");
+                              await ajaxJson({
+                                mode: "update",
+                                db: "console",
+                                collection: "designerPrice",
+                                whereQuery: { key: 33 },
+                                updateQuery: { online: instance.price.pick(3, 3).online }
+                              }, "/generalMongo");
 
-                              mother.querySelector("div").textContent = String(instance.price.pick(3, 3).fee[index]) + '%';
+                              mother.querySelector("div").textContent = String(instance.price.pick(3, 3).online.matrix[index]) + '회';
                               mother.removeChild(mother.querySelector("input"));
                               if (e.key === "Tab") {
                                 next.click();
@@ -2120,6 +2448,140 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
           }
         ]);
       }
+
+      subPannel = createNode({
+        mother: matrixBase,
+        class: [ className ],
+        style: {
+          position: "absolute",
+          width: String(subPannelWidth) + ea,
+          height: String(subPannelHeight) + ea,
+          right: String(subPannelMargin) + ea,
+          bottom: String(subPannelMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeup 0.3s ease forwards",
+        }
+      });
+
+      subPannelBase = createNode({
+        mother: subPannel,
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          fontSize: String(smallSize) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
+        }
+      });
+
+      subContents = [
+        { name: "온라인 감소치 최소값", value: online.minus.min, position: "online.minus.min" },
+        { name: "온라인 감소치 최대값", value: online.minus.max, position: "online.minus.max" },
+        { name: "온라인 절대량 최소값", value: online.absolute.min, position: "online.absolute.min" },
+      ];
+
+      nodeArr = [];
+
+      for (let i = 0; i < subContents.length; i++) {
+        nodeArr.push({
+          mother: subPannelBase,
+          text: subContents[i].name,
+          style: {
+            position: "absolute",
+            fontSize: "inherit",
+            fontWeight: String(300),
+            color: "inherit",
+            left: String(subPannelLeftMargin) + ea,
+            top: String(subPannelTopMargin + subPannelTextTop + (lineHeight * i)) + ea,
+          }
+        });
+        nodeArr.push({
+          mother: subPannelBase,
+          style: {
+            position: "absolute",
+            width: String(subPannelInputWidth) + ea,
+            height: String(subPannelInputHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            right: String(subPannelLeftMargin) + ea,
+            top: String(subPannelTopMargin + (lineHeight * i)) + ea,
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            color: "inherit",
+          },
+          children: [
+            {
+              mode: "input",
+              attribute: [
+                { index: String(i) },
+                { type: "text" },
+                { value: autoComma(subContents[i].value) + '원' },
+              ],
+              events: [
+                {
+                  type: "focus",
+                  event: function (e) {
+                    this.style.color = colorChip.green;
+                  }
+                },
+                {
+                  type: "blur",
+                  event: function (e) {
+                    const index = Number(this.getAttribute("index"));
+                    const position = subContents[index].position;
+                    let whereQuery, updateQuery;
+
+                    whereQuery = { key: 33 };
+                    updateQuery = {};
+                    updateQuery[position] = Number(this.value.trim().replace(/[^0-9]/gi, ''));
+
+                    ajaxJson({
+                      mode: "update",
+                      db: "console",
+                      collection: "designerPrice",
+                      whereQuery: whereQuery,
+                      updateQuery: updateQuery
+                    }, "/generalMongo").catch((err) => {
+                      console.log(err);
+                    });
+
+                    instance.price.update([ whereQuery, updateQuery ]);
+                    this.value = autoComma(Number(this.value.trim().replace(/[^0-9]/gi, ''))) + '원';
+                    this.style.color = colorChip.black;
+                  }
+                },
+                {
+                  type: "keydown",
+                  event: function (e) {
+                    if (e.key === "Enter") {
+                      this.blur();
+                    }
+                  }
+                }
+              ],
+              style: {
+                position: "absolute",
+                width: String(100) + '%',
+                height: String(95) + '%',
+                fontSize: String(smallSize - 1) + ea,
+                fontWeight: "inherit",
+                color: "inherit",
+                border: String(0),
+                outline: String(0),
+                background: "transparent",
+                textAlign: "center",
+              }
+            }
+          ]
+        });
+      }
+
+      createNodes(nodeArr);
 
     } else {
       const targets = document.querySelectorAll('.' + className);
@@ -2209,10 +2671,35 @@ DesignerJs.prototype.priceView = async function () {
         }
         return { price: (new PriceMatrix(arr)), standard };
       }
+      update(queryArr) {
+        if (!Array.isArray(queryArr)) {
+          throw new Error("must be query arr");
+        }
+        if (queryArr.length !== 2) {
+          throw new Error("must be query arr");
+        }
+        const [ whereQuery, updateQuery ] = queryArr;
+        if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+          throw new Error("invaild query");
+        }
+        if (whereQuery.key === undefined) {
+          throw new Error("invaild whereQuery");
+        }
+        let tempArr, targetObj;
+        for (let position in updateQuery) {
+          tempArr = position.split('.');
+          targetObj = this.pick(Math.floor(whereQuery.key / 10), whereQuery.key % 10);
+          for (let i = 0; i < tempArr.length - 1; i++) {
+            targetObj = targetObj[tempArr[i]];
+          }
+          targetObj[tempArr[tempArr.length - 1]] = updateQuery[position];
+        }
+      }
     }
 
     loading = await this.mother.loadingRun();
 
+    this.designers = new Designers(await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true }));
     this.domClassName = "priceDom";
     this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
     this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 999' ];
