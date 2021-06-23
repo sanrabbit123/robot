@@ -718,7 +718,7 @@ DesignerJs.prototype.pricePannel = function () {
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 16;
   margin = 24;
-  top = isMac() ? 17 : 18;
+  top = isMac() ? 17 : 19;
   between = 8;
   betweenWords = margin * 1;
 
@@ -2276,7 +2276,6 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       let subPannelLeftMargin, subPannelTopMargin, subPannelTextTop, lineHeight, subPannelInputWidth, subPannelInputHeight;
 
       top = 16;
-      top = isMac() ? top : top + 13;
       width = 120;
       size = 28;
       height = (top * 2) + size + 19;
@@ -2444,7 +2443,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
               color: colorChip.green,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(top) + ea,
+              top: String(top + (isMac() ? 0 : 6)) + ea,
             }
           }
         ]);
