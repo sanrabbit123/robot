@@ -2275,10 +2275,10 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       let nodeArr;
       let subPannelLeftMargin, subPannelTopMargin, subPannelTextTop, lineHeight, subPannelInputWidth, subPannelInputHeight;
 
-      top = <%% 16, 19, 19, 19, 19 %%>;
-      top = isMac() ? top : top + 3;
+      top = 16;
+      top = isMac() ? top : top + 8;
       width = 120;
-      size = <%% 28, 24, 24, 24, 24 %%>;
+      size = 28;
       height = (top * 2) + size + 19;
       subPannelMargin = 32;
       subPannelWidth = 352;
@@ -2286,7 +2286,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       smallSize = 16;
       subPannelLeftMargin = 24;
       subPannelTopMargin = 21;
-      subPannelTextTop = isMac() ? 2.5 : 3.5;
+      subPannelTextTop = 2.5;
       lineHeight = 38;
       subPannelInputWidth = 160;
       subPannelInputHeight = 29;
@@ -2568,7 +2568,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
               style: {
                 position: "absolute",
                 width: String(100) + '%',
-                height: String(95) + '%',
+                height: String(isMac() ? 95 : 98) + '%',
                 fontSize: String(smallSize - 1) + ea,
                 fontWeight: "inherit",
                 color: "inherit",
