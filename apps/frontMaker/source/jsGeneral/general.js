@@ -50,6 +50,20 @@ GeneralJs.colorChip = {
 
 GeneralJs.mimeTypes = { aac: "audio/aac", abw: "application/x-abiword", arc: "application/octet-stream", avi: "video/x-msvideo", azw: "application/vnd.amazon.ebook", bin: "application/octet-stream", bz: "application/x-bzip", bz2: "application/x-bzip2", csh: "application/x-csh", css: "text/css", csv: "text/csv", doc: "application/msword", epub: "application/epub+zip", gif: "image/gif", htm: "text/html", html: "text/html", ico: "image/x-icon", ics: "text/calendar", jar: "application/java-archive", jpeg: "image/jpeg", jpg: "image/jpeg", mjs: "application/js", js: "application/js", json: "application/json", mid: "audio/midi", midi: "audio/midi", mpeg: "video/mpeg", mpkg: "application/vnd.apple.installer+xml", odp: "application/vnd.oasis.opendocument.presentation", ods: "application/vnd.oasis.opendocument.spreadsheet", odt: "application/vnd.oasis.opendocument.text", oga: "audio/ogg", ogv: "video/ogg", ogx: "application/ogg", pdf: "application/pdf", ppt: "application/vnd.ms-powerpoint", rar: "application/x-rar-compressed", rtf: "application/rtf", sh: "application/x-sh", svg: "image/svg+xml", swf: "application/x-shockwave-flash", tar: "application/x-tar", tif: "image/tiff", tiff: "image/tiff", ttf: "application/x-font-ttf", vsd: "application/vnd.visio", wav: "audio/x-wav", weba: "audio/webm", webm: "video/webm", webp: "image/webp", woff: "application/x-font-woff", xhtml: "application/xhtml+xml", xls: "application/vnd.ms-excel", xml: "application/xml", xul: "application/vnd.mozilla.xul+xml", zip: "application/zip", "3gp": "video/3gpp", "3g2": "video/3gpp2", "7z": "application/x-7z-compressed" };
 
+GeneralJs.postWall = function (xhr) {
+  if (!(xhr instanceof XMLHttpRequest)) {
+    throw new Error("invaild input");
+  }
+  const target = String((Math.pow(((Math.pow(Number(String(((Math.abs(Math.pow((((Math.pow(47, 5) * 4) - ((Math.pow(47, 3) * 10) + ((Math.pow(47, 2) * Math.pow(10, 2)) + ((Math.pow(47, 2) * 4) - ((47 * Math.pow(2, 4)) + 13)))) * 4 * 5) >> 2) & (47047 * 5), 2) >> 4) << 2) % 163) - 100).replace(/-/g ,'').split('').reverse().join('')) * 2, Math.pow(2, 2)) + Math.pow(10, 2))) << 100 << 2 << 2, 2) * 1000) - ((Math.pow(47, 5) * 10) - (((Math.pow(47, 3) * Math.pow(3, 2)) + (((47 * 47 * 3) - ((47 + 4) * 10)) * 10)) * 64) + ((100 << 100 << 100 | 100 << 200) * 200)));
+  let arr = [];
+  for (let i = target.length - 1; i > -1; i--) {
+    if (i % 2 === 1) {
+      arr.push(String.fromCharCode(Number(target.slice(((i - 1) * 1), ((i + 1) * 1))[1] + target.slice(((i - 1) * 1), ((i + 1) * 1))[0])));
+    }
+  }
+  xhr.setRequestHeader("Authorization", "Basic " + SvgTong["___" + arr.join('') + "___"]);
+}
+
 GeneralJs.ajax = function (data, url, callback) {
   if (data === undefined && url === undefined && callback === undefined) {
     throw new Error("must be arguments (data, url, callback)");
@@ -103,6 +117,7 @@ GeneralJs.ajax = function (data, url, callback) {
   if (typeof data === "string") {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   }
+  GeneralJs.postWall(xhr);
   xhr.send(data);
 }
 
@@ -151,6 +166,7 @@ GeneralJs.ajaxPromise = function (data, url) {
     if (typeof data === "string") {
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }
+    GeneralJs.postWall(xhr);
     xhr.send(data);
   });
 }
@@ -182,6 +198,7 @@ GeneralJs.ajaxForm = function (data, url) {
        statusText: xhr.statusText
      });
     };
+    GeneralJs.postWall(xhr);
     xhr.send(data);
   });
 }

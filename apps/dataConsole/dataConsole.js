@@ -1,7 +1,9 @@
 const DataConsole = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
+  this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/dataConsole";
   this.sourceDir = this.dir + "/router/source";
   this.middleDir = this.sourceDir + "/middle";
@@ -155,7 +157,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
     console.log(`set static`);
 
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, trapString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -174,7 +176,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
-    // polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+    trapString = await this.back.setAjaxAuthorization();
 
     //write local js
     console.log(`set target :`, staticDirList);
@@ -224,7 +226,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + svgTongString;
+      code0 = svgTongString + "\n\n" + trapString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -260,8 +262,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const instance = this;
   const { minify } = require("terser");
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
-  const { fileSystem, shell, shellLink, babelSystem, treeParsing } = this.mother;
-  // const S3HOST = this.address.s3info.host;
+  const { fileSystem, shell, shellLink, babelSystem, treeParsing, cryptoString } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -298,6 +299,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let resultFromArr;
     let tempArr;
     let tempMediaResult;
+    let trapString;
 
     //module transform
     moduleTrans = async function (tree, name) {
@@ -358,6 +360,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     generalSvg = await fileSystem(`readString`, [ `${process.cwd()}/apps/mapMaker/svgTong/general_async.js` ]);
     generalSvg += "\n\n";
     generalSvg += await fileSystem(`readString`, [ `${process.cwd()}/apps/mapMaker/svgTong/general.js` ]);
+    trapString = await this.back.setAjaxAuthorization();
 
     //write local js
     console.log(`set middle target :`, staticDirList);
@@ -448,9 +451,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n" + svgTongString + "\n\n" + generalSvg;
-      code1 = dataPatchScript;
-      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString;
+      code0 = svgTongString + "\n\n" + trapString + "\n\n" + generalSvg + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n";
+      code1 = dataPatchScript + "\n\n";
+      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
       code3 = fileString + "\n\n" + execString;
 
       result = '';
@@ -474,19 +477,13 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
       result += "\n\n";
 
-      // result = await babelSystem(result);
-      // console.log(`${i} babel compile success`);
-      // finalMinifyObj = await minify(polyfillString + "\n\n" + result, { mangle: { keep_classnames: true, keep_fnames: true } });
-      // finalMinifyString = finalMinifyObj.code;
-      // await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, finalMinifyString ]);
-
       console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
       if (moduleBoo) {
 
-        // finalMinifyObj = await minify(result, { mangle: { keep_classnames: true, keep_fnames: true } });
-        // result = finalMinifyObj.code;
-        // finalMinifyObj = await minify(moduleString, { mangle: { keep_classnames: true, keep_fnames: true } });
-        // moduleString = finalMinifyObj.code;
+        finalMinifyObj = await minify(result);
+        result = finalMinifyObj.code;
+        finalMinifyObj = await minify(moduleString);
+        moduleString = finalMinifyObj.code;
 
         treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
@@ -506,8 +503,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       } else {
 
-        // finalMinifyObj = await minify(result, { mangle: { keep_classnames: true, keep_fnames: true } });
-        // result = finalMinifyObj.code;
+        finalMinifyObj = await minify(result);
+        result = finalMinifyObj.code;
 
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
         resultFromArr.push(`${staticFolder}/middle/${i}`);
@@ -729,42 +726,50 @@ DataConsole.prototype.connect = async function (testMode = false) {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
+    const routerHash = await this.back.getAjaxAuthorization();
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);
     }
-    if (isGhost) {
-      for (let obj of rouObj.post) {
-        if (obj.public !== true) {
+    for (let obj of rouObj.post) {
+      if (obj.public !== true) {
+        app.post(obj.link, function (req, res) {
+          let __wallLogicBoo, __vailHosts, __validPort, __authorization, __originTarget;
 
-          // SOLVE THIS =====================================================================================================================================
+          __validPort = 3000;
+          __vailHosts = [
+            instance.address.backinfo.host,
+            instance.address.backinfo.host + ":" + String(__validPort),
+            instance.address.homeinfo.ghost.host,
+            instance.address.homeinfo.ghost.host + ":" + String(__validPort),
+            "localhost",
+            "localhost:" + String(__validPort),
+          ];
 
-          app.post(obj.link, function (req, res) {
-            let __ghostWallLogic, __ghostHost;
-            __ghostWallLogic = false;
-            __ghostHost = instance.address.homeinfo.ghost.host;
-            if (typeof req.headers.origin === "string") {
-              __ghostWallLogic = (new RegExp(__ghostHost, "gi")).test(req.headers.origin);
+          __wallLogicBoo = false;
+
+          __originTarget = (typeof req.headers.origin === "string") ? req.headers.origin : "";
+          for (let host of __vailHosts) {
+            __wallLogicBoo = (__originTarget.trim() === host);
+            if (__wallLogicBoo) {
+              break;
             }
-            if (!__ghostWallLogic) {
-              res.set("Content-Type", "application/json");
-              res.send(JSON.stringify({ message: "ok" }));
-              return;
-            } else {
-              obj.func(req, res);
-            }
-          });
+          }
 
-          // SOLVE THIS =====================================================================================================================================
+          __authorization = req.headers["authorization"] || req.headers["Authorization"];
+          __wallLogicBoo = (__authorization === routerHash);
 
-        } else {
-          app.post(obj.link, obj.func);
-        }
-      }
-    } else {
-      for (let obj of rouObj.post) {
+          if (!__wallLogicBoo) {
+            res.set("Content-Type", "text/html");
+            res.send(`<!DOCTYPE html><head><title>error</title></head><body><script>window.location.href = "https://home-liaison.com";</script></body>`);
+            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole) => " + JSON.stringify(req, null, 2), channel: "#error_log" });
+          } else {
+            obj.func(req, res);
+          }
+        });
+      } else {
         app.post(obj.link, obj.func);
       }
     }
