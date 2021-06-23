@@ -718,7 +718,7 @@ DesignerJs.prototype.pricePannel = function () {
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 16;
   margin = 24;
-  top = isMac() ? 17 : 20;
+  top = isMac() ? 17 : 17;
   between = 8;
   betweenWords = margin * 1;
 
@@ -1223,7 +1223,7 @@ DesignerJs.prototype.priceDesignersLevel = function () {
 DesignerJs.prototype.priceDesignersLevelDetail = function () {
   const instance = this;
   const { ea, levelBase, designers } = this;
-  const { createNode, createNodes, withOut, colorChip, autoComma, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, autoComma, cleanChildren, ajaxJson, isMac } = GeneralJs;
   const levelWords = [ '하', '중', '상' ];
   const className = "baguni";
   let leftMargin, margin, baseTong;
@@ -1255,7 +1255,7 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
   textTop = 1;
   innerBlockMargin = 5;
   innerBlockSize = 13;
-  innerBlockTextTop = 6;
+  innerBlockTextTop = isMac() ? 6 : 8;
   innerBlockHeight = 32;
   blockSplit = 6;
 

@@ -743,6 +743,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
             instance.address.homeinfo.ghost.host,
             "localhost:3000",
             "localhost:8080",
+            instance.address.officeinfo.ghost.host,
           ];
 
           __wallLogicBoo = false;
