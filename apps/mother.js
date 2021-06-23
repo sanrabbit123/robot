@@ -441,10 +441,11 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       jsonBoo = true;
     } else if (config.method === "get") {
       method = "get";
-      querystring = require('querystring');
+      querystring = require("querystring");
       getData = "?";
       getData += querystring.stringify(data);
       url = url + getData;
+      delete config.method;
     }
   }
 
