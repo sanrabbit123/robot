@@ -741,16 +741,14 @@ DataConsole.prototype.connect = async function (testMode = false) {
           __validPort = 3000;
           __vailHosts = [
             instance.address.backinfo.host,
-            instance.address.backinfo.host + ":" + String(__validPort),
             instance.address.homeinfo.ghost.host,
-            instance.address.homeinfo.ghost.host + ":" + String(__validPort),
             "localhost",
             "localhost:" + String(__validPort),
           ];
 
           __wallLogicBoo = false;
 
-          __originTarget = (typeof req.headers.origin === "string") ? req.headers.origin : "";
+          __originTarget = req.headers["origin"] || "invaild";
           for (let host of __vailHosts) {
             __wallLogicBoo = (__originTarget.trim() === host);
             if (__wallLogicBoo) {
@@ -758,8 +756,10 @@ DataConsole.prototype.connect = async function (testMode = false) {
             }
           }
 
-          __authorization = req.headers["authorization"] || req.headers["Authorization"];
-          __wallLogicBoo = (__authorization === routerHash);
+          if (__wallLogicBoo) {
+            __authorization = req.headers["authorization"] || req.headers["Authorization"];
+            __wallLogicBoo = (__authorization === routerHash);
+          }
 
           if (!__wallLogicBoo) {
             res.set("Content-Type", "text/html");
