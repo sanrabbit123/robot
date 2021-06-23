@@ -2276,7 +2276,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       let subPannelLeftMargin, subPannelTopMargin, subPannelTextTop, lineHeight, subPannelInputWidth, subPannelInputHeight;
 
       top = <%% 16, 19, 19, 19, 19 %%>;
-      top = isMac() ? top + 3;
+      top = isMac() ? top : top + 3;
       width = 120;
       size = <%% 28, 24, 24, 24, 24 %%>;
       height = (top * 2) + size + 19;
