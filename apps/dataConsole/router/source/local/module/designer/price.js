@@ -718,7 +718,7 @@ DesignerJs.prototype.pricePannel = function () {
   motherHeight = Number(belowPannel.style.height.replace(/[^0-9]/gi, ''));
   size = 16;
   margin = 24;
-  top = isMac() ? 17 : 17;
+  top = isMac() ? 17 : 18;
   between = 8;
   betweenWords = margin * 1;
 
@@ -2254,7 +2254,7 @@ DesignerJs.prototype.priceFeeAdjust = function () {
 
 DesignerJs.prototype.priceOnlineAdjust = function () {
   const instance = this;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, autoComma, isMac } = GeneralJs;
   return function (e) {
     if (/디자이너/gi.test(document.getElementById("priceTravelButton").textContent)) {
       instance.priceTravel().call(document.getElementById("priceTravelButton"));
@@ -2276,6 +2276,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       let subPannelLeftMargin, subPannelTopMargin, subPannelTextTop, lineHeight, subPannelInputWidth, subPannelInputHeight;
 
       top = <%% 16, 19, 19, 19, 19 %%>;
+      top = isMac() ? top + 3;
       width = 120;
       size = <%% 28, 24, 24, 24, 24 %%>;
       height = (top * 2) + size + 19;
@@ -2285,7 +2286,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
       smallSize = 16;
       subPannelLeftMargin = 24;
       subPannelTopMargin = 21;
-      subPannelTextTop = 2.5;
+      subPannelTextTop = isMac() ? 2.5 : 3.5;
       lineHeight = 38;
       subPannelInputWidth = 160;
       subPannelInputHeight = 29;
