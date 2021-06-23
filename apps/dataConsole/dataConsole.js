@@ -761,14 +761,16 @@ DataConsole.prototype.connect = async function (testMode = false) {
             __wallLogicBoo = (__authorization === routerHash);
           }
 
-          if (!__wallLogicBoo) {
-            res.set("Content-Type", "text/html");
-            res.send(`<!DOCTYPE html><head><title>error</title></head><body><script>window.location.href = "https://home-liaison.com";</script></body>`);
-            console.log(req);
-            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
-          } else {
-            obj.func(req, res);
-          }
+          obj.func(req, res);
+
+          // if (!__wallLogicBoo) {
+          //   res.set("Content-Type", "application/json");
+          //   res.send(JSON.stringify({ message: "OK" }));
+          //   console.log(req);
+          //   instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
+          // } else {
+          //   obj.func(req, res);
+          // }
         });
       } else {
         app.post(obj.link, obj.func);
