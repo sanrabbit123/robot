@@ -2718,6 +2718,7 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
   const back = this.back;
   const { mongo, mongoconsoleinfo, requestSystem } = this.mother;
   const uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+  const coreTargets = [ "designer", "project", "contents", "service" ];
   let obj = {};
   obj.link = "/webHookGoogle";
   obj.public = true;
@@ -2751,12 +2752,19 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
                   }
                 }
                 if (boo) {
-                  const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-                  await selfMongo.connect();
-                  for (let { whereQuery, updateQuery } of req.body.queries) {
-                    await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                  if (coreTargets.includes(req.body.collection)) {
+                    for (let { whereQuery, updateQuery } of req.body.queries) {
+                      await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+                      console.log(whereQuery, updateQuery);
+                    }
+                  } else {
+                    const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+                    await selfMongo.connect();
+                    for (let { whereQuery, updateQuery } of req.body.queries) {
+                      await back.mongoUpdate(req.body.collection, [ whereQuery, updateQuery ], { selfMongo });
+                    }
+                    await selfMongo.close();
                   }
-                  await selfMongo.close();
                   instance.mother.slack_bot.chat.postMessage({ text: "시트로부터의 업데이트 감지 : " + req.body.collection, channel: "#error_log" });
                   res.send(JSON.stringify({ "message": "ok" }));
                 } else {
