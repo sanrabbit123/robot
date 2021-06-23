@@ -764,7 +764,8 @@ DataConsole.prototype.connect = async function (testMode = false) {
           if (!__wallLogicBoo) {
             res.set("Content-Type", "text/html");
             res.send(`<!DOCTYPE html><head><title>error</title></head><body><script>window.location.href = "https://home-liaison.com";</script></body>`);
-            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole) => " + JSON.stringify(req, null, 2), channel: "#error_log" });
+            console.log(req);
+            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
           } else {
             obj.func(req, res);
           }
