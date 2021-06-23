@@ -2443,7 +2443,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
               color: colorChip.green,
               width: String(100) + '%',
               textAlign: "center",
-              top: String(top + (isMac() ? 0 : 6)) + ea,
+              top: String(top + (isMac() ? 0 : 5)) + ea,
             }
           }
         ]);
@@ -2567,7 +2567,7 @@ DesignerJs.prototype.priceOnlineAdjust = function () {
               style: {
                 position: "absolute",
                 width: String(100) + '%',
-                height: String(isMac() ? 95 : 99) + '%',
+                height: String(isMac() ? 95 : 100) + '%',
                 fontSize: String(smallSize - 1) + ea,
                 fontWeight: "inherit",
                 color: "inherit",
