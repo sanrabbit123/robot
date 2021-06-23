@@ -750,10 +750,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
 
           __originTarget = req.headers["origin"] || "invaild";
           for (let host of __vailHosts) {
-            console.log(__originTarget.trim());
-            console.log(host);
-            console.log(__originTarget.trim() === host)
-            __wallLogicBoo = (__originTarget.trim() === host);
+            __wallLogicBoo = (__originTarget.trim() === ("https://" + host));
             if (__wallLogicBoo) {
               break;
             }
@@ -764,18 +761,14 @@ DataConsole.prototype.connect = async function (testMode = false) {
             __wallLogicBoo = (__authorization === routerHash);
           }
 
-          console.log(__wallLogicBoo);
-
-          obj.func(req, res);
-
-          // if (!__wallLogicBoo) {
-          //   res.set("Content-Type", "application/json");
-          //   res.send(JSON.stringify({ message: "OK" }));
-          //   console.log(req);
-          //   instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
-          // } else {
-          //   obj.func(req, res);
-          // }
+          if (!__wallLogicBoo) {
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify({ message: "OK" }));
+            console.log(req);
+            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole)", channel: "#error_log" });
+          } else {
+            obj.func(req, res);
+          }
         });
       } else {
         app.post(obj.link, obj.func);
