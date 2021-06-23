@@ -750,6 +750,9 @@ DataConsole.prototype.connect = async function (testMode = false) {
 
           __originTarget = req.headers["origin"] || "invaild";
           for (let host of __vailHosts) {
+            console.log(__originTarget.trim());
+            console.log(host);
+            console.log(__originTarget.trim() === host)
             __wallLogicBoo = (__originTarget.trim() === host);
             if (__wallLogicBoo) {
               break;
@@ -760,6 +763,8 @@ DataConsole.prototype.connect = async function (testMode = false) {
             __authorization = req.headers["authorization"] || req.headers["Authorization"];
             __wallLogicBoo = (__authorization === routerHash);
           }
+
+          console.log(__wallLogicBoo);
 
           obj.func(req, res);
 
