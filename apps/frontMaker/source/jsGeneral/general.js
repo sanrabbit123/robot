@@ -1545,8 +1545,9 @@ GeneralJs.stringToDate = function (str) {
   if (str === "예정" || str === "진행중" || str === "미정") {
     return (new Date(3800, 0, 1));
   }
+  str = str.trim();
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
-    throw new Error("not date string");
+    throw new Error("not date string : " + str);
   }
   let tempArr, tempArr2, tempArr3;
   if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
