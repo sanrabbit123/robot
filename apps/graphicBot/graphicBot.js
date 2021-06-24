@@ -20,9 +20,11 @@ const GraphicBot = function () {
       }
     }
   }
-  this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
+  this.screenSize = this.bot.getScreenSize();
+  this.chromeHeight = 139;
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
@@ -369,11 +371,15 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     let frontFirst, frontEnd;
 
     frontFirst = "\n\n";
+    frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
+    frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
+    frontFirst += "const INPUTCONST = \"http://localhost:3000/injectionInput\"\n\n";
+
+    frontFirst = "\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
-    frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n"
-    frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n"
+    frontFirst += "const stringToDate = " + this.frontGeneral.injectionInput.toString() + ";\n\n";
 
     frontEnd = "\n\n\n\n";
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
@@ -508,9 +514,70 @@ GraphicBot.prototype.startWork = function () {
   }
 }
 
+GraphicBot.prototype.addFrontMethods = function () {
+  const instance = this;
+  if (this.frontGeneral === null) {
+    throw new Error("front render first");
+  }
+
+  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null) {
+    try {
+      if (input === undefined || typeof value !== "string" || typeof iframeBoo !== "boolean") {
+        throw new Error("invaild input");
+      }
+      if (iframeBoo === true && (iframe === null || iframe === undefined)) {
+        throw new Error("if iframe is true, must be iframe dom input");
+      }
+      const chromeHeight = 106;
+      const inputId = input.id;
+      let iframeRect, iframes, thisIframe;
+      let rect;
+      let x, y;
+
+      if (iframeBoo) {
+        thisIframe = iframe;
+      } else {
+        iframeRect = {
+          top: 0,
+          left: 0
+        };
+        if (inputId !== "") {
+          if (document.getElementById(inputId) === null && document.querySelector("iframe") !== null) {
+            iframes = document.querySelectorAll("iframe");
+            thisIframe = null;
+            for (let i of iframes) {
+              if (i.contentWindow.document.getElementById(inputId) !== null) {
+                thisIframe = i;
+                break;
+              }
+            }
+            if (thisIframe === null) {
+              throw new Error("cannot find input");
+            } else {
+              iframeBoo = true;
+              iframeRect = thisIframe.getBoundingClientRect();
+            }
+          } else {
+            iframeBoo = false;
+          }
+        }
+      }
+      rect = input.getBoundingClientRect();
+      x = iframeRect.left + rect.left + (rect.width / 2);
+      y = chromeHeight + iframeRect.top + rect.top + (rect.height / 2);
+
+      await ajaxPromise({ x, y, value }, INPUTCONST);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+}
+
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, equalJson, requestSystem } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep } = this.mother;
   const express = require("express");
   const bodyParser = require("body-parser");
   const app = express();
@@ -546,7 +613,7 @@ GraphicBot.prototype.botServer = async function () {
     await fileSystem(`write`, [ `${process.cwd()}/temp/frontGeneral.js`, frontGeneralString ]);
     frontGeneral = require(`${process.cwd()}/temp/frontGeneral.js`);
     this.frontGeneral = frontGeneral;
-
+    this.addFrontMethods();
 
     app.post("/frontEnd", (req, res) => {
       instance.front = 0;
@@ -577,6 +644,42 @@ GraphicBot.prototype.botServer = async function () {
       }).catch((err) => {
         console.log(err);
       });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    });
+
+    app.post("/injectionInput", (req, res) => {
+      if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
+        throw new Error("must be to, data, path");
+      }
+      const { x, y, value } = req.body;
+      const screenSize = instance.screenSize;
+      const chromeHeight = instance.chromeHeight;
+      const robot = instance.bot;
+      let indent;
+
+      if (y >= screenSize.height) {
+        robot.moveMouse(screenSize.width / 2, screenSize.height / 2);
+        robot.scrollMouse(0, 900000);
+        indent = (screenSize.height - chromeHeight) / 2;
+        robot.scrollMouse(0, (-1 * y) + indent);
+        robot.moveMouse(x, indent);
+      } else {
+        robot.moveMouse(x, y);
+      }
+
+      await sleep(500);
+      robot.mouseClick("left");
+      robot.mouseClick("left", true);
+      await instance.pressKey("delete");
+      await instance.clipBoard(value);
+      await instance.pasteText();
 
       res.set({
         "Content-Type": "application/json",
