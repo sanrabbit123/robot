@@ -666,6 +666,7 @@ GraphicBot.prototype.botServer = async function () {
       let indent, text;
       let tempArr, tempObj;
       let customX;
+      let ratio;
 
       x = Number(x);
       y = Number(y);
@@ -675,16 +676,17 @@ GraphicBot.prototype.botServer = async function () {
       customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
       customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
 
+      ratio = 0.06;
+
       if (y >= screenSize.height) {
         robot.moveMouse(customX, customY);
         console.log(y + screenSize.height + chromeHeight);
-        console.log((-1 * y) + indent);
         console.log(y)
-        robot.scrollMouse(0, y + screenSize.height + chromeHeight);
+        robot.scrollMouse(0, y + screenSize.height);
         indent = (screenSize.height - chromeHeight) / 2;
         console.log(indent)
-        robot.scrollMouse(0, (-1 * y) + indent);
-        robot.moveMouse(x, indent);
+        robot.scrollMouse(0, (indent - y) * ratio);
+        robot.moveMouse(x, indent * ratio);
       } else {
         robot.moveMouse(x, y);
       }
