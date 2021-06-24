@@ -512,7 +512,7 @@ GraphicBot.prototype.addFrontMethods = function () {
     throw new Error("front render first");
   }
 
-  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null) {
+  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null, customX = null, customY = null) {
     try {
       if (input === undefined || typeof value !== "string" || typeof iframeBoo !== "boolean") {
         throw new Error("invaild input");
@@ -524,6 +524,7 @@ GraphicBot.prototype.addFrontMethods = function () {
       let iframeRect, iframes, thisIframe;
       let rect;
       let x, y;
+      let data;
 
       if (iframeBoo) {
         thisIframe = iframe;
@@ -557,7 +558,16 @@ GraphicBot.prototype.addFrontMethods = function () {
       x = iframeRect.left + rect.left + (rect.width / 2);
       y = iframeRect.top + rect.top + (rect.height / 2);
 
-      await ajaxPromise({ x, y, value }, INPUTCONST);
+      data = { x, y, value };
+
+      if (customX !== undefined && customX !== null && typeof customX === "number") {
+        data.customX = customX;
+      }
+      if (customY !== undefined && customY !== null && typeof customY === "number") {
+        data.customY = customY;
+      }
+
+      await ajaxPromise(data, INPUTCONST);
 
     } catch (e) {
       console.log(e);
@@ -655,19 +665,20 @@ GraphicBot.prototype.botServer = async function () {
       let { x, y, value } = req.body;
       let indent, text;
       let tempArr, tempObj;
+      let customX;
 
       x = Number(x);
       y = Number(y);
       x = x + chromeLeft;
       y = y + chromeHeight;
 
-      console.log(x, y);
+      customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
+      customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
 
       if (y >= screenSize.height) {
-        robot.moveMouse(chromeLeft + (screenSize.width / 2), screenSize.height / 2);
+        robot.moveMouse(customX, customY);
         robot.scrollMouse(0, y + screenSize.height + chromeHeight);
         indent = (screenSize.height - chromeHeight) / 2;
-        console.log((-1 * y) + indent);
         robot.scrollMouse(0, (-1 * y) + indent);
         robot.moveMouse(x, indent);
       } else {

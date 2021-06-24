@@ -10,7 +10,7 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
         document.querySelector('.sc-kHOZQx').click();
       }
-      
+
       const menuId = "btnMenuMyForms";
       while (document.getElementById(menuId) === null) {
         await sleep(500);
@@ -66,9 +66,8 @@ module.exports = function (proid, info) {
       ];
 
       for (let { id, value } of map) {
-        await injectionInput(document.getElementById(id), value);
+        await injectionInput(document.getElementById(id), value, false, null, 120);
       }
-
 
     }
   ];
