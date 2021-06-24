@@ -676,7 +676,7 @@ GraphicBot.prototype.botServer = async function () {
       customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
       customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
 
-      ratio = 0.06;
+      ratio = 0.03;
 
       if (y >= screenSize.height) {
         robot.moveMouse(customX, customY);
