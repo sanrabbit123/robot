@@ -40,6 +40,7 @@ module.exports = function (proid, info) {
     },
     async function () {
 
+      console.log("request!");
       await injectionInput(document.getElementById("field_TEXT_5faa618f9da73962a9050ef4"), "배창규");
       await injectionInput(document.getElementById("field_TEXT_5faa6196b3c0673961000001"), "주소");
       await injectionInput(document.getElementById("field_TEXT_5faa618f9da73962a9050ef6"), "배창규");
