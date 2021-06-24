@@ -4,6 +4,9 @@ module.exports = function (arg, info) {
     "key_f12",
     async function () {
       const loginButtonId = "group88615548";
+      while (document.getElementById(loginButtonId) === null) {
+        await sleep(500);
+      }
       document.getElementById(loginButtonId).click();
     },
     async function () {
@@ -14,6 +17,12 @@ module.exports = function (arg, info) {
         id: "iptUserId",
         pwd: "iptUserPw"
       };
+      while (document.getElementById(iframeId) === null) {
+        await sleep(500);
+      }
+      while (document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId) === null) {
+        await sleep(500);
+      }
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
@@ -21,10 +30,12 @@ module.exports = function (arg, info) {
     },
     async function () {
       const firstTargetButtonId = "myMenuQuickLi2";
+      while (document.getElementById(firstTargetButtonId) === null) {
+        await sleep(500);
+      }
       document.getElementById(firstTargetButtonId).click();
     },
     async function () {
-
       const iframeId = "txppIframe";
       let buttons;
       let pageNumber, pageButtons;
@@ -33,10 +44,15 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
+      while (document.getElementById(iframeId) === null) {
+        await sleep(500);
+      }
+      while (document.getElementById(iframeId).contentWindow.document.querySelector('.w2radio_label') === null) {
+        await sleep(500);
+      }
+
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
       buttons[1].click();
-
-      await sleep(1000);
 
       document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
 
@@ -92,14 +108,18 @@ module.exports = function (arg, info) {
     },
     async function () {
       const homeButtonId = "hdGroup820";
+      while (document.getElementById(homeButtonId) === null) {
+        await sleep(500);
+      }
       document.getElementById(homeButtonId).click();
     },
     async function () {
-      await sleep(500);
+      while (document.getElementById("myMenuQuickLi3") === null) {
+        await sleep(500);
+      }
       document.getElementById("myMenuQuickLi3").click();
     },
     async function () {
-
       const iframeId = "txppIframe";
       let buttons;
       let pageNumber, pageButtons;
@@ -108,10 +128,15 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
+      while (document.getElementById(iframeId) === null) {
+        await sleep(500);
+      }
+      while (document.getElementById(iframeId).contentWindow.document.querySelector('.w2radio_label') === null) {
+        await sleep(500);
+      }
+
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
       buttons[2].click();
-
-      await sleep(1000);
 
       document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
 
