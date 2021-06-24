@@ -405,6 +405,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         if (/^http/.test(i)) {
           await this.chromeOpen(i);
           await this.pressKey("f12");
+          await sleep(1000);
         } else if (i === "close") {
           await this.chromeClose();
         } else if (i === "copy") {
