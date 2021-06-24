@@ -573,6 +573,7 @@ GraphicBot.prototype.addFrontMethods = function () {
       throw new Error("invaild input");
     }
     await ajaxPromise({ positionX, positionY, amount }, HOSTCONST + "/scroll");
+    await sleep(1000);
   }
 }
 
