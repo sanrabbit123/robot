@@ -438,9 +438,8 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
         await this.moveAndClick(1622, 1030, 500, false);
-        await instance.bot.typeString(tempString);
-        // copyToClipboard(tempString);
-        // await this.pasteText();
+        copyToClipboard(tempString);
+        await this.pasteText();
         instance.front = 1;
         await this.pressKey("enter");
         while (instance.front === 1) {

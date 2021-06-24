@@ -1797,8 +1797,11 @@ Mother.prototype.copyToClipboard = function (data) {
   if (os.type() === 'Darwin') {
     pbcopy = spawn('pbcopy');
   } else {
+    console.log("this!");
     pbcopy = spawn('xclip', [ '-selection', 'clipboard' ]);
   }
+  console.log(pbcopy);
+  console.log(data);
   pbcopy.stdin.write(data);
   pbcopy.stdin.end();
 }
