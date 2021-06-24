@@ -380,6 +380,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
     frontFirst += "const injectionInput = " + this.frontGeneral.injectionInput.toString() + ";\n\n";
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";
+    frontFirst += "const clickElement = " + this.frontGeneral.clickElement.toString() + ";\n\n";
 
     frontEnd = "\n\n\n\n";
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
@@ -576,6 +577,58 @@ GraphicBot.prototype.addFrontMethods = function () {
     await ajaxPromise({ positionX, positionY, amount }, HOSTCONST + "/scroll");
     await sleep(1000);
   }
+
+  this.frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null) {
+    if (dom === undefined || dom === null) {
+      throw new Error("must be dom");
+    }
+    if (iframeBoo === true && (iframe === null || iframe === undefined)) {
+      throw new Error("if iframe is true, must be iframe dom input");
+    }
+    const domId = dom.id;
+    let iframeRect, iframes, thisIframe;
+    let rect;
+    let x, y;
+    let data;
+
+    if (iframeBoo) {
+      thisIframe = iframe;
+    } else {
+      iframeRect = {
+        top: 0,
+        left: 0
+      };
+      if (domId !== "") {
+        if (document.getElementById(domId) === null && document.querySelector("iframe") !== null) {
+          iframes = document.querySelectorAll("iframe");
+          thisIframe = null;
+          for (let i of iframes) {
+            if (i.contentWindow.document.getElementById(domId) !== null) {
+              thisIframe = i;
+              break;
+            }
+          }
+          if (thisIframe === null) {
+            throw new Error("cannot find input");
+          } else {
+            iframeBoo = true;
+            iframeRect = thisIframe.getBoundingClientRect();
+          }
+        } else {
+          iframeBoo = false;
+        }
+      }
+    }
+    rect = dom.getBoundingClientRect();
+    x = iframeRect.left + rect.left + (rect.width / 2);
+    y = iframeRect.top + rect.top + (rect.height / 2);
+
+    data = { x, y };
+
+    await ajaxPromise(data, HOSTCONST + "/clickElement");
+
+  }
+
 }
 
 GraphicBot.prototype.botServer = async function () {
@@ -660,7 +713,7 @@ GraphicBot.prototype.botServer = async function () {
 
     app.post("/injectionInput", async (req, res) => {
       if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
-        throw new Error("must be to, data, path");
+        throw new Error("must x, y, path");
       }
       const { screenSize, chromeHeight, chromeLeft } = instance;
       const robot = instance.bot;
@@ -696,6 +749,31 @@ GraphicBot.prototype.botServer = async function () {
       await instance.pressKey("delete");
       await instance.clipBoard(text);
       await instance.pasteText();
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    });
+
+    app.post("/clickElement", async (req, res) => {
+      if (req.body.x === undefined || req.body.y === undefined) {
+        throw new Error("must be x, y");
+      }
+      const { screenSize, chromeHeight, chromeLeft } = instance;
+      const robot = instance.bot;
+      let { x, y } = req.body;
+
+      x = Number(x);
+      y = Number(y);
+      x = x + chromeLeft;
+      y = y + chromeHeight;
+
+      robot.moveMouse(x, y);
+      robot.mouseClick("left");
 
       res.set({
         "Content-Type": "application/json",

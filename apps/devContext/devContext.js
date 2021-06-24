@@ -59,9 +59,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const graphic = new GraphicBot();
-
-    graphic.bot.scrollMouse(0, 1000);
 
 
 

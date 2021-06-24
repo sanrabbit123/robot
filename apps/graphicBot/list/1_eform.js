@@ -45,16 +45,39 @@ module.exports = function (proid, info) {
         { id: "field_TEXT_5faa618f9da73962a9050ef4", value: "배창규" },
         { id: "field_TEXT_5faa6196b3c0673961000001", value: "주소" },
         { id: "field_TEXT_5faa618f9da73962a9050ef6", value: "배창규" },
-        // { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2000-01-01" },
-        // { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2020-01-01" },
-        // { id: "field_DATE_5faa618f9da73962a9050efa", value: "2020-01-02" },
       ];
 
       for (let { id, value } of map) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(scrollXPoint, "center", -18);
+      await scrollWindow(scrollXPoint, "center", -12);
+
+      await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef7"));
+      while (document.querySelector('.MuiPickersCalendar-week') === null) {
+        await sleep(500);
+      }
+      let calendarBox = {
+        left: document.querySelectorAll('.MuiPickersCalendarHeader-iconButton')[0].getBoundingClientRect(),
+        right: document.querySelectorAll('.MuiPickersCalendarHeader-iconButton')[1].getBoundingClientRect(),
+        return: document.querySelectorAll('.MuiButton-textPrimary')[2].getBoundingClientRect(),
+        first: document.querySelector('.MuiPickersCalendar-week').firstChild.getBoundingClientRect()
+      };
+      calendarBox = JSON.parse(JSON.stringify(calendarBox));
+
+      await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef9"));
+
+      // map = [
+      //   { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2000-01-01" },
+      //   { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2020-01-01" },
+      //   { id: "field_DATE_5faa618f9da73962a9050efa", value: "2020-01-02" },
+      // ];
+      //
+      // for (let { id, value } of map) {
+      //   await calendarInput(document.getElementById(id), value, calendarBox);
+      // }
+
+      await scrollWindow(scrollXPoint, "center", -6);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050ef5", value: "배창규" },
