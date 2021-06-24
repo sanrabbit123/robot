@@ -3,7 +3,9 @@ module.exports = function (arg, info) {
     "https://www.hometax.go.kr/",
     async function () {
       const loginButtonId = "group88615548";
-      document.getElementById(loginButtonId).click();
+      setTimeout(function () {
+        document.getElementById(loginButtonId).click();
+      }, 100);
     },
     async function () {
       const iframeId = "txppIframe";
