@@ -650,22 +650,25 @@ GraphicBot.prototype.botServer = async function () {
       if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
         throw new Error("must be to, data, path");
       }
-      const { x, y, value } = req.body;
       const { screenSize, chromeHeight, chromeLeft } = instance;
       const robot = instance.bot;
+      let { x, y, value } = req.body;
       let indent, text;
       let tempArr, tempObj;
 
-      console.log(x, y, value);
-      console.log(screenSize, chromeHeight, chromeLeft);
+      x = Number(x);
+      y = Number(y);
+      x = x + chromeLeft;
+      y = y + chromeHeight;
+
       if (y >= screenSize.height) {
         robot.moveMouse(chromeLeft + (screenSize.width / 2), screenSize.height / 2);
         robot.scrollMouse(0, y + screenSize.height + chromeHeight);
         indent = (screenSize.height - chromeHeight) / 2;
-        robot.scrollMouse(0, (-1 * (y + chromeHeight)) + indent);
-        robot.moveMouse(chromeLeft + x, indent);
+        robot.scrollMouse(0, (-1 * y) + indent);
+        robot.moveMouse(x, indent);
       } else {
-        robot.moveMouse(chromeLeft + x, chromeHeight + y);
+        robot.moveMouse(x, y);
       }
 
       if (/^info\./gi.test(value)) {
