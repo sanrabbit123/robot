@@ -734,7 +734,8 @@ DataConsole.prototype.connect = async function (testMode = false) {
       app.get(obj.link, obj.func);
     }
     for (let obj of rouObj.post) {
-      if (obj.public !== true) {
+      // if (obj.public !== true) {
+      if (false) {
         app.post(obj.link, function (req, res) {
           let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers;
 
