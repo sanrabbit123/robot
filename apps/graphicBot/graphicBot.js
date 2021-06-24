@@ -654,7 +654,7 @@ GraphicBot.prototype.botServer = async function () {
       res.send({ message: "OK" });
     });
 
-    app.post("/injectionInput", (req, res) => {
+    app.post("/injectionInput", async (req, res) => {
       if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
         throw new Error("must be to, data, path");
       }
