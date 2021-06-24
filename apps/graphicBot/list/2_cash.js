@@ -2,8 +2,11 @@ module.exports = function (arg, info) {
   return [
     "https://www.hometax.go.kr/",
     async function () {
-      const iframeId = "txppIframe";
       const loginButtonId = "group88615548";
+      document.getElementById(loginButtonId).click();
+    },
+    async function () {
+      const iframeId = "txppIframe";
       const idLoginButtonId = "anchor15";
       const returnButtonId = "anchor25";
       const firstTargetButtonId = "myMenuQuickLi2";
@@ -11,9 +14,6 @@ module.exports = function (arg, info) {
         id: "iptUserPw",
         pwd: "iptUserId"
       };
-
-      document.getElementById(loginButtonId).click();
-      await sleep(1000);
 
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
 
