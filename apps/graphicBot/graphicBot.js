@@ -433,6 +433,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await sleep(Number(tempArr[1].trim().replace(/[^0-9]/g, '')));
         }
       } else if (typeof i === "function") {
+        console.log("receive order");
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
         await this.pressKey("f12");
