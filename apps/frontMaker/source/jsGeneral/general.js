@@ -117,7 +117,7 @@ GeneralJs.ajax = function (data, url, callback) {
   if (typeof data === "string") {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   }
-  //GeneralJs.postWall(xhr);
+  GeneralJs.postWall(xhr);
   xhr.send(data);
 }
 
@@ -166,7 +166,7 @@ GeneralJs.ajaxPromise = function (data, url) {
     if (typeof data === "string") {
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }
-    //GeneralJs.postWall(xhr);
+    GeneralJs.postWall(xhr);
     xhr.send(data);
   });
 }
@@ -198,7 +198,7 @@ GeneralJs.ajaxForm = function (data, url) {
        statusText: xhr.statusText
      });
     };
-    //GeneralJs.postWall(xhr);
+    GeneralJs.postWall(xhr);
     xhr.send(data);
   });
 }

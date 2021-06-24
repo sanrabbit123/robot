@@ -480,10 +480,10 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
       if (moduleBoo) {
 
-        finalMinifyObj = await minify(result);
-        result = finalMinifyObj.code;
-        finalMinifyObj = await minify(moduleString);
-        moduleString = finalMinifyObj.code;
+        // finalMinifyObj = await minify(result);
+        // result = finalMinifyObj.code;
+        // finalMinifyObj = await minify(moduleString);
+        // moduleString = finalMinifyObj.code;
 
         treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
@@ -503,8 +503,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       } else {
 
-        finalMinifyObj = await minify(result);
-        result = finalMinifyObj.code;
+        // finalMinifyObj = await minify(result);
+        // result = finalMinifyObj.code;
 
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
         resultFromArr.push(`${staticFolder}/middle/${i}`);
