@@ -656,6 +656,8 @@ GraphicBot.prototype.botServer = async function () {
       let indent, text;
       let tempArr, tempObj;
 
+      console.log(x, y, value);
+      console.log(screenSize, chromeHeight, chromeLeft);
       if (y >= screenSize.height) {
         robot.moveMouse(chromeLeft + (screenSize.width / 2), screenSize.height / 2);
         robot.scrollMouse(0, y + screenSize.height + chromeHeight);
