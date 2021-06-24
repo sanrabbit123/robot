@@ -3719,13 +3719,13 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     const today = new Date();
     const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
     let expiredString = '';
-    if (today.getDay() !== 0 && today.getDay() !== 6) {
-      today.setDate(today.getDate() + 7);
+    if (today.getDay() !== 5 && today.getDay() !== 6) {
+      today.setDate(today.getDate() + 1);
     } else {
-      if (today.getDay() !== 0) {
-        today.setDate(today.getDate() + 9);
+      if (today.getDay() === 5) {
+        today.setDate(today.getDate() + 3);
       } else {
-        today.setDate(today.getDate() + 8);
+        today.setDate(today.getDate() + 2);
       }
     }
     expiredString += String(today.getMonth() + 1) + "월";
@@ -3734,7 +3734,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     expiredString += " ";
     expiredString += dayArr[today.getDay()] + "요일";
     expiredString += " ";
-    expiredString += String(14) + "시";
+    expiredString += String(12) + "시";
 
     return expiredString;
   }
