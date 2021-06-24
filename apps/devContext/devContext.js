@@ -57,9 +57,6 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const matrix = getDateMatrix(new Date(2021, 5))
-    console.log(matrix);
-    console.log(matrix.returnSundayMatrix());
 
 
 
@@ -944,7 +941,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p98");
+    // await this.spellCheck("p97");
 
 
     // get corePortfolio by pid
