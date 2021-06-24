@@ -23,21 +23,6 @@ module.exports = function (arg, info) {
       const firstTargetButtonId = "myMenuQuickLi2";
       document.getElementById(firstTargetButtonId).click();
     },
-    // [ 910, 112, 3000 ],
-    // [ 892, 367, 500 ],
-    // [ 836, 554, 500, true ],
-    // "key_delete",
-    // "clipBoard_" + String(info.hometax.id),
-    // "paste",
-    // "key_tab",
-    // "key_delete",
-    // "clipBoard_" + String(info.hometax.pwd),
-    // "paste",
-    // [ 1145, 575, 1000 ],
-    // async function () {
-    //   await sleep(500);
-    //   document.getElementById("myMenuQuickLi2").click();
-    // },
     async function () {
 
       const iframeId = "txppIframe";
@@ -72,6 +57,8 @@ module.exports = function (arg, info) {
           textArr.push(dom.textContent);
         }
         textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
+        textArr = textArr.map((i) => { return i.trim(); });
+        textArr = textArr.filter((i) => { return i !== '' });
 
         timeIndex = [];
         for (let j = 0; j < textArr.length; j++) {
@@ -107,26 +94,6 @@ module.exports = function (arg, info) {
       const homeButtonId = "hdGroup820";
       document.getElementById(homeButtonId).click();
     },
-
-
-    // "wait_2000",
-    // [ 1045, 112, 500 ],
-    // "key_enter",
-    // "close",
-    // "wait_1000",
-    // "https://www.hometax.go.kr/",
-    // "wait_2000",
-    // [ 910, 112, 3000 ],
-    // [ 892, 367, 500 ],
-    // [ 836, 554, 500, true ],
-    // "key_delete",
-    // "clipBoard_" + String(info.hometax.id),
-    // "paste",
-    // "key_tab",
-    // "key_delete",
-    // "clipBoard_" + String(info.hometax.pwd),
-    // "paste",
-    // [ 1145, 575, 1000 ],
     async function () {
       await sleep(500);
       document.getElementById("myMenuQuickLi3").click();
@@ -172,11 +139,12 @@ module.exports = function (arg, info) {
           }
         }
         textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
+        textArr = textArr.map((i) => { return i.trim(); });
+        textArr = textArr.filter((i) => { return i !== '' });
 
         middle = [];
         for (let index of timeIndex) {
           middle.push({
-            method: textArr[index - 1],
             time: stringToDate(textArr[index].trim()),
             business: textArr[index + 2],
             from: textArr[index + 3],
@@ -199,9 +167,6 @@ module.exports = function (arg, info) {
       await ajaxPromise({ to: "python", path: "/cashReceipt", data: { cashIn: total } }, RECEIVECONST);
 
     },
-    // "wait_2000",
-    // [ 1045, 112, 500 ],
-    // "key_enter",
     "close",
   ];
 };
