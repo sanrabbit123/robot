@@ -24,7 +24,7 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.screenSize = this.bot.getScreenSize();
-  this.chromeHeight = 139;
+  this.chromeHeight = 129;
   this.chromeLeft = 56;
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
@@ -660,6 +660,8 @@ GraphicBot.prototype.botServer = async function () {
       y = Number(y);
       x = x + chromeLeft;
       y = y + chromeHeight;
+
+      console.log(x, y);
 
       if (y >= screenSize.height) {
         robot.moveMouse(chromeLeft + (screenSize.width / 2), screenSize.height / 2);
