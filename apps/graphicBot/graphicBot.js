@@ -903,8 +903,10 @@ GraphicBot.prototype.botServer = async function () {
         dateY = dateY - 7;
       }
 
-      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * dateY) + (calendarBox.first.width / 2);
-      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * dateX) + (calendarBox.first.height / 2);
+      console.log(matrix.matrix[dateX][dateY]);
+
+      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY - 1)) + (calendarBox.first.width / 2);
+      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX - 1)) + (calendarBox.first.height / 2);
 
       robot.moveMouse(calendarX, calendarY);
       robot.mouseClick("left");
