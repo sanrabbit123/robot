@@ -14,15 +14,13 @@ module.exports = function (arg, info) {
         id: "iptUserPw",
         pwd: "iptUserId"
       };
-
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
-
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), info.hometax.id);
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), info.hometax.pwd);
-
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
-
-      await sleep(1000);
+    },
+    async function () {
+      const firstTargetButtonId = "myMenuQuickLi2";
       document.getElementById(firstTargetButtonId).click();
     },
     // [ 910, 112, 3000 ],
