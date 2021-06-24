@@ -37,7 +37,9 @@ module.exports = function (proid, info) {
 
       await sleep(1000);
 
-      let map;
+      let map, scrollXPoint;
+
+      scrollXPoint = 120;
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050ef4", value: "배창규" },
@@ -52,7 +54,7 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(120, "center", -18);
+      await scrollWindow(scrollXPoint, "center", -18);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050ef5", value: "배창규" },
@@ -73,7 +75,7 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(120, "center", -16);
+      await scrollWindow(scrollXPoint, "center", -16);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050f05", value: "330000" },
@@ -84,18 +86,18 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(120, "center", -170);
+      await scrollWindow(scrollXPoint, "center", -172);
 
-      // map = [
-      //   { id: "field_TEXT_5faa618f9da73962a9050f16", value: "배창규" },
-      //   { id: "field_TEXT_5faa618f9da73962a9050f1a", value: "배창규" },
-      //   { id: "field_TEXT_5faa61beb3c0673961000002", value: "주소" },
-      //   { id: "field_TEXT_5faa618f9da73962a9050f19", value: "배창규" },
-      // ];
-      //
-      // for (let { id, value } of map) {
-      //   await injectionInput(document.getElementById(id), value);
-      // }
+      map = [
+        { id: "field_TEXT_5faa618f9da73962a9050f16", value: "배창규" },
+        { id: "field_TEXT_5faa618f9da73962a9050f1a", value: "배창규" },
+        { id: "field_TEXT_5faa61beb3c0673961000002", value: "주소" },
+        { id: "field_TEXT_5faa618f9da73962a9050f19", value: "배창규" },
+      ];
+
+      for (let { id, value } of map) {
+        await injectionInput(document.getElementById(id), value);
+      }
 
     }
   ];
