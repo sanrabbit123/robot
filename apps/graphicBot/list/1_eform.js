@@ -54,6 +54,8 @@ module.exports = function (proid, info) {
       await scrollWindow(scrollXPoint, "center", -12);
 
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef7"));
+      await sleep(500);
+
       while (document.querySelector('.MuiPickersCalendar-week') === null) {
         await sleep(500);
       }
@@ -65,7 +67,10 @@ module.exports = function (proid, info) {
       };
       calendarBox = JSON.parse(JSON.stringify(calendarBox));
 
+      await sleep(500);
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef9"));
+
+      console.log(calendarBox);
 
       // map = [
       //   { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2000-01-01" },
