@@ -734,8 +734,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
       app.get(obj.link, obj.func);
     }
     for (let obj of rouObj.post) {
-      // if (obj.public !== true) {
-      if (false) {
+      if (obj.public !== true) {
         app.post(obj.link, function (req, res) {
           let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers;
 
@@ -757,10 +756,10 @@ DataConsole.prototype.connect = async function (testMode = false) {
             }
           }
 
-          if (__wallLogicBoo) {
-            __authorization = req.headers["authorization"] || req.headers["Authorization"];
-            __wallLogicBoo = (__authorization === routerHash);
-          }
+          // if (__wallLogicBoo) {
+          //   __authorization = req.headers["authorization"] || req.headers["Authorization"];
+          //   __wallLogicBoo = (__authorization === routerHash);
+          // }
 
           if (!__wallLogicBoo) {
             res.set("Content-Type", "application/json");
