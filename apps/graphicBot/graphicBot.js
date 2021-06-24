@@ -374,7 +374,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst = "\n\n";
     frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
     frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
-    frontFirst += "const INPUTCONST = \"http://localhost:3000/injectionInput\"\n\n";
+    frontFirst += "const HOSTCONST = \"http://localhost:3000\"\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
@@ -512,7 +512,7 @@ GraphicBot.prototype.addFrontMethods = function () {
     throw new Error("front render first");
   }
 
-  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null, customX = null, customY = null) {
+  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null) {
     try {
       if (input === undefined || typeof value !== "string" || typeof iframeBoo !== "boolean") {
         throw new Error("invaild input");
@@ -560,20 +560,19 @@ GraphicBot.prototype.addFrontMethods = function () {
 
       data = { x, y, value };
 
-      if (customX !== undefined && customX !== null && typeof customX === "number") {
-        data.customX = customX;
-      }
-      if (customY !== undefined && customY !== null && typeof customY === "number") {
-        data.customY = customY;
-      }
-
-      await ajaxPromise(data, INPUTCONST);
+      await ajaxPromise(data, HOSTCONST + "/injectionInput");
 
     } catch (e) {
       console.log(e);
     }
   }
 
+  this.frontGeneral.scrollWindow = async function (positionX, positionY, amount) {
+    if (positionX === undefined || positionY === undefined || typeof amount !== "number") {
+      throw new Error("invaild input");
+    }
+    await ajaxPromise({ positionX, positionY, amount }, HOSTCONST + "/scroll");
+  }
 }
 
 GraphicBot.prototype.botServer = async function () {
@@ -663,10 +662,9 @@ GraphicBot.prototype.botServer = async function () {
       const { screenSize, chromeHeight, chromeLeft } = instance;
       const robot = instance.bot;
       let { x, y, value } = req.body;
-      let indent, text;
+      let text;
       let tempArr, tempObj;
       let customX;
-      let ratio;
 
       x = Number(x);
       y = Number(y);
@@ -676,20 +674,7 @@ GraphicBot.prototype.botServer = async function () {
       customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
       customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
 
-      ratio = 0.03;
-
-      if (y >= screenSize.height) {
-        robot.moveMouse(customX, customY);
-        console.log(y + screenSize.height + chromeHeight);
-        console.log(y)
-        robot.scrollMouse(0, y + screenSize.height);
-        indent = (screenSize.height - chromeHeight) / 2;
-        console.log(indent)
-        robot.scrollMouse(0, (indent - y) * ratio);
-        robot.moveMouse(x, indent);
-      } else {
-        robot.moveMouse(x, y);
-      }
+      robot.moveMouse(x, y);
 
       if (/^info\./gi.test(value)) {
         tempArr = value.split('.');
@@ -708,6 +693,30 @@ GraphicBot.prototype.botServer = async function () {
       await instance.pressKey("delete");
       await instance.clipBoard(text);
       await instance.pasteText();
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    });
+
+    app.post("/scroll", async (req, res) => {
+      if (req.body.positionX === undefined || req.body.positionY === undefined || req.body.amount === undefined) {
+        throw new Error("must be positionX, positionY, amount");
+      }
+      const { screenSize, chromeLeft } = instance;
+      const robot = instance.bot;
+      let { positionX, positionY, amount } = req.body;
+
+      positionX = /center/gi.test(positionX) ? (chromeLeft + (screenSize.width / 2)) : Number(positionX.replace(/[^0-9\-\.]/g, ''));
+      positionY = /center/gi.test(positionY) ? (screenSize.height / 2) : Number(positionY.replace(/[^0-9\-\.]/g, ''));
+      amount = Number(amount.replace(/[^0-9\-\.]/g, ''));
+
+      robot.moveMouse(positionX, positionY);
+      robot.scrollMouse(0, amount);
 
       res.set({
         "Content-Type": "application/json",
