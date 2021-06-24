@@ -25,6 +25,7 @@ const GraphicBot = function () {
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.screenSize = this.bot.getScreenSize();
   this.chromeHeight = 139;
+  this.chromeLeft = 56;
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
@@ -519,7 +520,6 @@ GraphicBot.prototype.addFrontMethods = function () {
       if (iframeBoo === true && (iframe === null || iframe === undefined)) {
         throw new Error("if iframe is true, must be iframe dom input");
       }
-      const chromeHeight = 106;
       const inputId = input.id;
       let iframeRect, iframes, thisIframe;
       let rect;
@@ -555,7 +555,7 @@ GraphicBot.prototype.addFrontMethods = function () {
       }
       rect = input.getBoundingClientRect();
       x = iframeRect.left + rect.left + (rect.width / 2);
-      y = chromeHeight + iframeRect.top + rect.top + (rect.height / 2);
+      y = iframeRect.top + rect.top + (rect.height / 2);
 
       await ajaxPromise({ x, y, value }, INPUTCONST);
 
@@ -651,20 +651,19 @@ GraphicBot.prototype.botServer = async function () {
         throw new Error("must be to, data, path");
       }
       const { x, y, value } = req.body;
-      const screenSize = instance.screenSize;
-      const chromeHeight = instance.chromeHeight;
+      const { screenSize, chromeHeight, chromeLeft } = instance;
       const robot = instance.bot;
       let indent, text;
       let tempArr, tempObj;
 
       if (y >= screenSize.height) {
-        robot.moveMouse(screenSize.width / 2, screenSize.height / 2);
+        robot.moveMouse(chromeLeft + (screenSize.width / 2), screenSize.height / 2);
         robot.scrollMouse(0, y + screenSize.height + chromeHeight);
         indent = (screenSize.height - chromeHeight) / 2;
-        robot.scrollMouse(0, (-1 * y) + indent);
-        robot.moveMouse(x, indent);
+        robot.scrollMouse(0, (-1 * (y + chromeHeight)) + indent);
+        robot.moveMouse(chromeLeft + x, indent);
       } else {
-        robot.moveMouse(x, y);
+        robot.moveMouse(chromeLeft + x, chromeHeight + y);
       }
 
       if (/^info\./gi.test(value)) {
