@@ -72,6 +72,8 @@ module.exports = function (arg, info) {
           textArr.push(dom.textContent);
         }
 
+        console.log(textArr);
+
         timeIndex = [];
         for (let j = 0; j < textArr.length; j++) {
           if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(textArr[j].trim())) {
