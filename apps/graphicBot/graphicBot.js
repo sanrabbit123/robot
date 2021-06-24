@@ -374,7 +374,6 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
     frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
     frontFirst += "const INPUTCONST = \"http://localhost:3000/injectionInput\"\n\n";
-
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
