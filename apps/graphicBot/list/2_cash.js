@@ -131,6 +131,9 @@ module.exports = function (arg, info) {
         for (let dom of domTargets) {
           textArr.push(dom.textContent);
         }
+        textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
+        textArr = textArr.map((i) => { return i.trim(); });
+        textArr = textArr.filter((i) => { return i !== '' });
 
         timeIndex = [];
         for (let j = 0; j < textArr.length; j++) {
@@ -138,9 +141,6 @@ module.exports = function (arg, info) {
             timeIndex.push(j);
           }
         }
-        textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
-        textArr = textArr.map((i) => { return i.trim(); });
-        textArr = textArr.filter((i) => { return i !== '' });
 
         middle = [];
         for (let index of timeIndex) {
