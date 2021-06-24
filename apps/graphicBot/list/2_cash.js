@@ -6,7 +6,7 @@ module.exports = function (arg, info) {
       await ajaxPromise({ to: 0, data: 0 }, ENDCONST);
       document.getElementById(loginButtonId).click();
     },
-    "wait_3000",
+    "wait_2000",
     async function () {
       const iframeId = "txppIframe";
       const idLoginButtonId = "anchor15";
@@ -21,11 +21,11 @@ module.exports = function (arg, info) {
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
-    // "wait_3000",
-    // async function () {
-    //   const firstTargetButtonId = "myMenuQuickLi2";
-    //   document.getElementById(firstTargetButtonId).click();
-    // },
+    "wait_2000",
+    async function () {
+      const firstTargetButtonId = "myMenuQuickLi2";
+      document.getElementById(firstTargetButtonId).click();
+    },
     // [ 910, 112, 3000 ],
     // [ 892, 367, 500 ],
     // [ 836, 554, 500, true ],
