@@ -12,11 +12,11 @@ module.exports = function (arg, info) {
       const returnButtonId = "anchor25";
       const firstTargetButtonId = "myMenuQuickLi2";
       const inputs = {
-        id: "iptUserPw",
-        pwd: "iptUserId"
+        id: "iptUserId",
+        pwd: "iptUserPw"
       };
 
-      await sleep(2000);
+      await sleep(3000);
 
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
@@ -24,6 +24,9 @@ module.exports = function (arg, info) {
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
     async function () {
+
+      await sleep(3000);
+
       const firstTargetButtonId = "myMenuQuickLi2";
       document.getElementById(firstTargetButtonId).click();
     },

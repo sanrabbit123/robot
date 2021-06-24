@@ -683,7 +683,7 @@ GraphicBot.prototype.botServer = async function () {
       robot.mouseClick("left");
       robot.mouseClick("left", true);
       await instance.pressKey("delete");
-      await instance.clipBoard(value);
+      await instance.clipBoard(text);
       await instance.pasteText();
 
       res.set({
