@@ -70,6 +70,8 @@ module.exports = function (proid, info) {
       await sleep(200);
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef9"));
 
+      await sleep(1000);
+
       map = [
         { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2021-07-21" },
         { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2021-09-01" },
