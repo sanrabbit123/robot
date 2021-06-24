@@ -572,6 +572,7 @@ GraphicBot.prototype.addFrontMethods = function () {
     if (positionX === undefined || positionY === undefined || typeof amount !== "number") {
       throw new Error("invaild input");
     }
+    await sleep(200);
     await ajaxPromise({ positionX, positionY, amount }, HOSTCONST + "/scroll");
     await sleep(1000);
   }

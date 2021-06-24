@@ -84,7 +84,7 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(120, "center", -150);
+      await scrollWindow(120, "center", -180);
 
       // map = [
       //   { id: "field_TEXT_5faa618f9da73962a9050f16", value: "배창규" },
