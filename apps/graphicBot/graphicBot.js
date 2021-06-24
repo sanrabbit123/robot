@@ -24,7 +24,7 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.screenSize = this.bot.getScreenSize();
-  this.chromeHeight = 109;
+  this.chromeHeight = 100;
   this.chromeLeft = 56;
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
@@ -316,7 +316,7 @@ GraphicBot.prototype.pasteText = async function () {
   try {
     bot.keyToggle("control", "down");
     bot.keyTap("v");
-    await sleep(500);
+    await sleep(100);
     bot.keyToggle("control", "up");
   } catch (e) {
     console.log(e);

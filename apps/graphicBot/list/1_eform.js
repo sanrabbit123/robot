@@ -37,13 +37,13 @@ module.exports = function (proid, info) {
         await sleep(500);
       }
       document.querySelector(popupQuery).querySelector("button").click();
-    },
-    async function () {
 
-      console.log("request!");
+      await sleep(1000);
+
       await injectionInput(document.getElementById("field_TEXT_5faa618f9da73962a9050ef4"), "배창규");
       await injectionInput(document.getElementById("field_TEXT_5faa6196b3c0673961000001"), "주소");
       await injectionInput(document.getElementById("field_TEXT_5faa618f9da73962a9050ef6"), "배창규");
+
     }
   ];
 };
