@@ -686,7 +686,7 @@ GraphicBot.prototype.botServer = async function () {
         indent = (screenSize.height - chromeHeight) / 2;
         console.log(indent)
         robot.scrollMouse(0, (indent - y) * ratio);
-        robot.moveMouse(x, indent * ratio);
+        robot.moveMouse(x, indent);
       } else {
         robot.moveMouse(x, y);
       }
