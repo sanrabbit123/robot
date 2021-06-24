@@ -1243,6 +1243,69 @@ GeneralJs.getDateMatrix = function (year, month) {
     return arr;
   }
 
+  DateMatrix.prototype.returnSundayMatrix = function () {
+    let arr, boo;
+    let tempArr;
+    let tong;
+    let length;
+
+    arr = [];
+    for (let matrix of this.matrix) {
+      for (let i of matrix) {
+        arr.push(i);
+      }
+    }
+    arr.unshift(null);
+
+    boo = true;
+    for (let i = 0; i < 7; i++) {
+      if (arr[i] !== null) {
+        boo = false;
+      }
+    }
+
+    if (boo) {
+      for (let i = 0; i < 7; i++) {
+        arr.shift();
+      }
+    }
+
+    tong = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (i % 7 === 0) {
+        tempArr = [];
+      }
+      tempArr.push(arr[i]);
+      if (i % 7 === 6 || i === arr.length - 1) {
+        tong.push(tempArr);
+      }
+    }
+
+    if (tong[tong.length - 1].length === 0) {
+      tong.pop();
+    }
+
+    length = tong[tong.length - 1].length;
+    if (length !== 7) {
+      for (let i = 0; i < 7 - length; i++) {
+        tong[tong.length - 1].push(null);
+      }
+    }
+
+    boo = true;
+    for (let i = 0; i < 7; i++) {
+      if (tong[tong.length - 1][i] !== null) {
+        boo = false;
+      }
+    }
+
+    if (boo) {
+      tong.pop();
+    }
+
+    return tong;
+  }
+
   const DateFactor = function (year, month, date, index) {
     this.year = year;
     this.month = month;

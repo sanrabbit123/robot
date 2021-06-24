@@ -57,9 +57,9 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    // const matrix = getDateMatrix(new Date(2021, 5))
-    // console.log(matrix);
-
+    const matrix = getDateMatrix(new Date(2021, 5))
+    console.log(matrix);
+    console.log(matrix.returnSundayMatrix());
 
 
 

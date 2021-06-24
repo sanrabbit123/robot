@@ -883,9 +883,10 @@ GraphicBot.prototype.botServer = async function () {
       }
 
       matrix = getDateMatrix(value);
+      matrix = matrix.returnSundayMatrix();
 
-      for (let i = 0; i < matrix.matrix[0].length; i++) {
-        if (matrix.matrix[0][i] !== null) {
+      for (let i = 0; i < matrix[0].length; i++) {
+        if (matrix[0][i] !== null) {
           startPoint = i;
           break;
         }
@@ -898,8 +899,6 @@ GraphicBot.prototype.botServer = async function () {
         dateX = dateX + 1;
         dateY = dateY - 7;
       }
-
-      console.log(matrix.matrix[dateX][dateY]);
 
       calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY + 1)) + (calendarBox.first.width / 2);
       calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX + 1)) + (calendarBox.first.height / 2);
