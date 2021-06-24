@@ -378,9 +378,11 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
+    frontFirst += "const getDateMatrix = " + this.frontGeneral.getDateMatrix.toString() + ";\n\n";
     frontFirst += "const injectionInput = " + this.frontGeneral.injectionInput.toString() + ";\n\n";
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";
     frontFirst += "const clickElement = " + this.frontGeneral.clickElement.toString() + ";\n\n";
+    frontFirst += "const calendarInput = " + this.frontGeneral.calendarInput.toString() + ";\n\n";
 
     frontEnd = "\n\n\n\n";
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
@@ -629,11 +631,66 @@ GraphicBot.prototype.addFrontMethods = function () {
 
   }
 
+  this.frontGeneral.calendarInput = async function (input, value, calendarBox, iframeBoo = false, iframe = null) {
+    try {
+      if (input === undefined || typeof value !== "string" || typeof calendarBox !== "object") {
+        throw new Error("invaild input");
+      }
+      if (iframeBoo === true && (iframe === null || iframe === undefined)) {
+        throw new Error("if iframe is true, must be iframe dom input");
+      }
+      const inputId = input.id;
+      let iframeRect, iframes, thisIframe;
+      let rect;
+      let x, y;
+      let data;
+
+      if (iframeBoo) {
+        thisIframe = iframe;
+      } else {
+        iframeRect = {
+          top: 0,
+          left: 0
+        };
+        if (inputId !== "") {
+          if (document.getElementById(inputId) === null && document.querySelector("iframe") !== null) {
+            iframes = document.querySelectorAll("iframe");
+            thisIframe = null;
+            for (let i of iframes) {
+              if (i.contentWindow.document.getElementById(inputId) !== null) {
+                thisIframe = i;
+                break;
+              }
+            }
+            if (thisIframe === null) {
+              throw new Error("cannot find input");
+            } else {
+              iframeBoo = true;
+              iframeRect = thisIframe.getBoundingClientRect();
+            }
+          } else {
+            iframeBoo = false;
+          }
+        }
+      }
+      rect = input.getBoundingClientRect();
+      x = iframeRect.left + rect.left + (rect.width / 2);
+      y = iframeRect.top + rect.top + (rect.height / 2);
+
+      data = { x, y, value, calendarBox };
+
+      await ajaxPromise(data, HOSTCONST + "/calendarInput");
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
 }
 
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix } = this.mother;
   const express = require("express");
   const bodyParser = require("body-parser");
   const app = express();
@@ -713,7 +770,7 @@ GraphicBot.prototype.botServer = async function () {
 
     app.post("/injectionInput", async (req, res) => {
       if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
-        throw new Error("must x, y, path");
+        throw new Error("must x, y, value");
       }
       const { screenSize, chromeHeight, chromeLeft } = instance;
       const robot = instance.bot;
@@ -774,6 +831,88 @@ GraphicBot.prototype.botServer = async function () {
 
       robot.moveMouse(x, y);
       robot.mouseClick("left");
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    });
+
+    app.post("/calendarInput", async (req, res) => {
+      if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined || req.body.calendarBox === undefined) {
+        throw new Error("must x, y, value, calendarBox");
+      }
+      const { screenSize, chromeHeight, chromeLeft } = instance;
+      const robot = instance.bot;
+      let { x, y, value, calendarBox } = req.body;
+      let today;
+      let move;
+      let matrix;
+      let startPoint;
+      let dateX, dateY;
+      let calendarX, calendarY;
+
+      x = Number(x);
+      y = Number(y);
+      x = x + chromeLeft;
+      y = y + chromeHeight;
+      today = new Date();
+      value = stringToDate(value);
+      calendarBox = JSON.parse(calendarBox);
+      move = ((today.getFullYear() * 12) + today.getMonth()) - ((value.getFullYear() * 12) + value.getMonth());
+
+      robot.moveMouse(x, y);
+      robot.mouseClick("left");
+      await sleep(500);
+
+      if (move > 0) {
+        for (let i = 0; i < move; i++) {
+          robot.moveMouse(calendarBox.left.left + (calendarBox.left.width / 2) + chromeLeft, calendarBox.left.top + (calendarBox.left.height / 2) + chromeHeight);
+          robot.mouseClick("left");
+          await sleep(500);
+        }
+      } else if (move < 0) {
+        for (let i = 0; i < Math.abs(move); i++) {
+          robot.moveMouse(calendarBox.right.left + (calendarBox.right.width / 2) + chromeLeft, calendarBox.right.top + (calendarBox.right.height / 2) + chromeHeight);
+          robot.mouseClick("left");
+          await sleep(500);
+        }
+      }
+
+      matrix = getDateMatrix(value);
+
+      for (let i = 0; i < matrix.matrix[0].length; i++) {
+        if (matrix.matrix[0][i] !== null) {
+          startPoint = i;
+          break;
+        }
+      }
+
+      dateX = Math.floor(value.getDate() / 7);
+      if (value.getDate() % 7 === 0) {
+        dateY = 6;
+      } else {
+        dateY = (value.getDate() % 7) - 1;
+      }
+      dateY = dateY + startPoint;
+      if (dateY >= 7) {
+        dateX = dateX + 1;
+        dateY = dateY - 7;
+      }
+
+      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * dateY) + (calendarBox.first.width / 2);
+      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * dateX) + (calendarBox.first.height / 2);
+
+      robot.moveMouse(calendarX, calendarY);
+      robot.mouseClick("left");
+      await sleep(500);
+
+      robot.moveMouse(calendarBox.return.left + (calendarBox.return.width / 2) + chromeLeft, calendarBox.return.top + (calendarBox.return.height / 2) + chromeHeight);
+      robot.mouseClick("left");
+      await sleep(500);
 
       res.set({
         "Content-Type": "application/json",

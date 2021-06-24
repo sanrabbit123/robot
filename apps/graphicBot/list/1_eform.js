@@ -54,7 +54,7 @@ module.exports = function (proid, info) {
       await scrollWindow(scrollXPoint, "center", -12);
 
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef7"));
-      await sleep(500);
+      await sleep(200);
 
       while (document.querySelector('.MuiPickersCalendar-week') === null) {
         await sleep(500);
@@ -67,20 +67,18 @@ module.exports = function (proid, info) {
       };
       calendarBox = JSON.parse(JSON.stringify(calendarBox));
 
-      await sleep(500);
+      await sleep(200);
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef9"));
 
-      console.log(calendarBox);
+      map = [
+        { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2021-07-21" },
+        { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2021-09-01" },
+        { id: "field_DATE_5faa618f9da73962a9050efa", value: "2021-02-02" },
+      ];
 
-      // map = [
-      //   { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2000-01-01" },
-      //   { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2020-01-01" },
-      //   { id: "field_DATE_5faa618f9da73962a9050efa", value: "2020-01-02" },
-      // ];
-      //
-      // for (let { id, value } of map) {
-      //   await calendarInput(document.getElementById(id), value, calendarBox);
-      // }
+      for (let { id, value } of map) {
+        await calendarInput(document.getElementById(id), value, calendarBox);
+      }
 
       await scrollWindow(scrollXPoint, "center", -6);
 

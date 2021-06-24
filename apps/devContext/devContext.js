@@ -47,7 +47,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -57,7 +57,8 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-
+    // const matrix = getDateMatrix(new Date(2021, 5))
+    // console.log(matrix);
 
 
 
