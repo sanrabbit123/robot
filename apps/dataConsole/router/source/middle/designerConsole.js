@@ -490,8 +490,8 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         pass = true;
 
         return GeneralJs.ajaxPromise({
-          name: "배창규",
-          phone: "010-2747-3403",
+          name: designer.designer,
+          phone: designer.information.phone,
           certification,
         }, BRIDGEHOST + "/certification");
 
