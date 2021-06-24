@@ -4,7 +4,7 @@ module.exports = function (arg, info) {
     async function () {
       const loginButtonId = "group88615548";
       await ajaxPromise({ to: 0, data: 0 }, ENDCONST);
-      document.getElementById(loginButtonId).click();
+      // document.getElementById(loginButtonId).click();
     },
     async function () {
       const iframeId = "txppIframe";
