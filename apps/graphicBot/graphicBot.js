@@ -404,8 +404,6 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       } else if (typeof i === "string") {
         if (/^http/.test(i)) {
           await this.chromeOpen(i);
-          await this.pressKey("f12");
-          await sleep(1000);
         } else if (i === "close") {
           await this.chromeClose();
         } else if (i === "copy") {
@@ -437,15 +435,21 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       } else if (typeof i === "function") {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
+        await this.pressKey("f12");
         await this.moveAndClick(1622, 1030, 500, false);
         copyToClipboard(tempString);
         await this.pasteText();
+        await sleep(500);
         instance.front = 1;
         await this.pressKey("enter");
+        await sleep(500);
         while (instance.front === 1) {
           console.log("front waiting...");
           await sleep(1000);
         }
+        await sleep(500);
+        await this.pressKey("f12");
+        await sleep(500);
       }
     }
     return "done";

@@ -5,7 +5,6 @@ module.exports = function (arg, info) {
       const loginButtonId = "group88615548";
       document.getElementById(loginButtonId).click();
     },
-    "wait_5000",
     async function () {
       const iframeId = "txppIframe";
       const idLoginButtonId = "anchor15";
@@ -20,7 +19,6 @@ module.exports = function (arg, info) {
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), info.hometax.pwd);
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
-    "wait_5000",
     async function () {
       const firstTargetButtonId = "myMenuQuickLi2";
       document.getElementById(firstTargetButtonId).click();
