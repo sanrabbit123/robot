@@ -435,21 +435,15 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       } else if (typeof i === "function") {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
-        // await this.pressKey("f12");
         await this.moveAndClick(1622, 1030, 500, false);
         copyToClipboard(tempString);
         await this.pasteText();
-        // await sleep(500);
         instance.front = 1;
         await this.pressKey("enter");
-        // await sleep(500);
         while (instance.front === 1) {
           console.log("front waiting...");
           await sleep(1000);
         }
-        // await sleep(500);
-        // await this.pressKey("f12");
-        // await sleep(500);
       }
     }
     return "done";
@@ -660,7 +654,8 @@ GraphicBot.prototype.botServer = async function () {
       const screenSize = instance.screenSize;
       const chromeHeight = instance.chromeHeight;
       const robot = instance.bot;
-      let indent;
+      let indent, text;
+      let tempArr, tempObj;
 
       if (y >= screenSize.height) {
         robot.moveMouse(screenSize.width / 2, screenSize.height / 2);
@@ -670,6 +665,18 @@ GraphicBot.prototype.botServer = async function () {
         robot.moveMouse(x, indent);
       } else {
         robot.moveMouse(x, y);
+      }
+
+      if (/^info\./gi.test(value)) {
+        tempArr = value.split('.');
+        tempArr.shift();
+        tempObj = instance.info;
+        for (let i of tempArr) {
+          tempObj = tempObj[i];
+        }
+        text = tempObj;
+      } else {
+        text = value;
       }
 
       await sleep(500);

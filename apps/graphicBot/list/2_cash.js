@@ -15,9 +15,12 @@ module.exports = function (arg, info) {
         id: "iptUserPw",
         pwd: "iptUserId"
       };
+
+      await sleep(2000);
+
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
-      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), info.hometax.id);
-      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), info.hometax.pwd);
+      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
+      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
     async function () {
