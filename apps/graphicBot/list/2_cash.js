@@ -11,7 +11,6 @@ module.exports = function (arg, info) {
       const iframeId = "txppIframe";
       const idLoginButtonId = "anchor15";
       const returnButtonId = "anchor25";
-      const firstTargetButtonId = "myMenuQuickLi2";
       const inputs = {
         id: "iptUserId",
         pwd: "iptUserPw"
@@ -22,11 +21,11 @@ module.exports = function (arg, info) {
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
-    "wait_3000",
-    async function () {
-      const firstTargetButtonId = "myMenuQuickLi2";
-      document.getElementById(firstTargetButtonId).click();
-    },
+    // "wait_3000",
+    // async function () {
+    //   const firstTargetButtonId = "myMenuQuickLi2";
+    //   document.getElementById(firstTargetButtonId).click();
+    // },
     // [ 910, 112, 3000 ],
     // [ 892, 367, 500 ],
     // [ 836, 554, 500, true ],
