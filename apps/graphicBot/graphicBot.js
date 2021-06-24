@@ -892,11 +892,7 @@ GraphicBot.prototype.botServer = async function () {
       }
 
       dateX = Math.floor(value.getDate() / 7);
-      if (value.getDate() % 7 === 0) {
-        dateY = 6;
-      } else {
-        dateY = (value.getDate() % 7) - 1;
-      }
+      dateY = (value.getDate() % 7) - 1;
       dateY = dateY + startPoint;
       if (dateY >= 7) {
         dateX = dateX + 1;
@@ -905,8 +901,8 @@ GraphicBot.prototype.botServer = async function () {
 
       console.log(matrix.matrix[dateX][dateY]);
 
-      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY - 1)) + (calendarBox.first.width / 2);
-      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX - 1)) + (calendarBox.first.height / 2);
+      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY + 1)) + (calendarBox.first.width / 2);
+      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX + 1)) + (calendarBox.first.height / 2);
 
       robot.moveMouse(calendarX, calendarY);
       robot.mouseClick("left");
