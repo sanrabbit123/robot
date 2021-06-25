@@ -140,6 +140,10 @@ module.exports = function (proid, info) {
       document.getElementById("sendFormName").value = "홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
 
       tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
+      while (tempArr.length < 3) {
+        await sleep(500);
+        tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
+      }
       tempArr[0].value = "배창규";
       tempArr[1].value = "uragenbooks@gmail.com";
       tempArr[2].value = String("010-2747-3403").replace(/[^0-9]/g, '');
