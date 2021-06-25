@@ -17,10 +17,6 @@ module.exports = function (proid, info) {
         let tempArr;
         let data, raw;
 
-        console.log(client.requests[requestNumber]);
-
-        console.log(request, analytics);
-
         if (document.getElementById(idId) !== null) {
           await injectionInput(document.getElementById(idId), "info.eform.id");
           await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
@@ -111,6 +107,8 @@ module.exports = function (proid, info) {
           await injectionInput(document.getElementById(id), value, true);
         }
 
+        console.log(project.process.contract.remain.calculation);
+        console.log(project.process.contract.first.calculation)
         map = [
           { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.supply - project.process.contract.first.calculation.amount) },
           { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.consumer) },
