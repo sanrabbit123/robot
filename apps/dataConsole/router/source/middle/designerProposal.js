@@ -766,7 +766,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 13, 12, 11, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
+  factorBarTop = <%% 12, 11, 11, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
   factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
   factorArrowHeadTop = <%% 39, 37, 39, 23 + (GeneralJs.isMac() ? 0 : 1), 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
@@ -814,7 +814,8 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   }
   designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
 
-  serviceBarTop = <%% 56, 55, 56, 56, 56 %%>;
+  serviceBarTop = <%% 56, 55, 54, 56, 56 %%>;
+  serviceBarTop = serviceBarTop + (GeneralJs.isMac() ? 0 : -2);
   serviceBarLeft = <%% 0, 1, 0, 0, 0 %%>;
   serviceBarWidth = <%% 66, 38, 37, 39, 39 %%>;
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
