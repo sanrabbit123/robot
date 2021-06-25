@@ -52,7 +52,7 @@ module.exports = function (proid, info) {
       ];
 
       for (let { id, value } of map) {
-        await injectionInput(document.getElementById(id), value);
+        await injectionInput(document.getElementById(id), value, true);
       }
 
       scrollTo(document.getElementById("canvasBox"), document.getElementById("field_DATE_5faa618f9da73962a9050ef7"), document.getElementById("header").getBoundingClientRect().height * 3);
@@ -103,7 +103,7 @@ module.exports = function (proid, info) {
       scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
 
       for (let { id, value } of map) {
-        await injectionInput(document.getElementById(id), value);
+        await injectionInput(document.getElementById(id), value, true);
       }
 
       map = [
@@ -114,7 +114,7 @@ module.exports = function (proid, info) {
       scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
 
       for (let { id, value } of map) {
-        await injectionInput(document.getElementById(id), value);
+        await injectionInput(document.getElementById(id), value, true);
       }
 
       map = [
@@ -127,7 +127,7 @@ module.exports = function (proid, info) {
       scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
 
       for (let { id, value } of map) {
-        await injectionInput(document.getElementById(id), value);
+        await injectionInput(document.getElementById(id), value, true);
       }
 
       document.querySelectorAll("#header .btn-router")[1].click();
@@ -137,18 +137,21 @@ module.exports = function (proid, info) {
       }
 
       tempArr = dateToString(today).split('-');
-      document.getElementById("sendFormName").value = "홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+
+      await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
       tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
       while (tempArr.length < 3) {
         await sleep(500);
         tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
       }
-      tempArr[0].value = "배창규";
-      tempArr[1].value = "uragenbooks@gmail.com";
-      tempArr[2].value = String("010-2747-3403").replace(/[^0-9]/g, '');
 
-      await clickElement(document.getElementById("react-select-3--value"));
+      await injectionInput(tempArr[0], "배창규", true);
+      await injectionInput(tempArr[1], "uragenbooks@gmail.com", true);
+      await injectionInput(tempArr[2], String("010-2747-3403").replace(/[^0-9]/g, ''), true);
+
+      await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
+      await sleep(500);
       await clickElement(document.querySelector(".Select-menu-outer").children[3]);
 
     }

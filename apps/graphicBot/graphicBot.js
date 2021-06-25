@@ -518,9 +518,9 @@ GraphicBot.prototype.addFrontMethods = function () {
     throw new Error("front render first");
   }
 
-  this.frontGeneral.injectionInput = async function (input, value, iframeBoo = false, iframe = null) {
+  this.frontGeneral.injectionInput = async function (input, value, speedUp = false, iframeBoo = false, iframe = null) {
     try {
-      if (input === undefined || typeof value !== "string" || typeof iframeBoo !== "boolean") {
+      if (input === undefined || typeof value !== "string") {
         throw new Error("invaild input");
       }
       if (iframeBoo === true && (iframe === null || iframe === undefined)) {
@@ -564,7 +564,7 @@ GraphicBot.prototype.addFrontMethods = function () {
       x = iframeRect.left + rect.left + (rect.width / 2);
       y = iframeRect.top + rect.top + (rect.height / 2);
 
-      data = { x, y, value };
+      data = { x, y, value, speedUp: speedUp ? "true" : "false" };
 
       await ajaxPromise(data, HOSTCONST + "/injectionInput");
 
@@ -780,6 +780,7 @@ GraphicBot.prototype.botServer = async function () {
       let text;
       let tempArr, tempObj;
       let customX;
+      let speedUp;
 
       x = Number(x);
       y = Number(y);
@@ -788,6 +789,12 @@ GraphicBot.prototype.botServer = async function () {
 
       customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
       customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
+
+      if (req.body.speedUp === undefined) {
+        speedUp = false;
+      } else {
+        speedUp = (req.body.speedUp === "true");
+      }
 
       robot.moveMouse(x, y);
 
@@ -804,8 +811,10 @@ GraphicBot.prototype.botServer = async function () {
       }
 
       robot.mouseClick("left");
-      robot.mouseClick("left", true);
-      await instance.pressKey("delete");
+      if (!speedUp) {
+        robot.mouseClick("left", true);
+        await instance.pressKey("delete");
+      }
       await instance.clipBoard(text);
       await instance.pasteText();
 
