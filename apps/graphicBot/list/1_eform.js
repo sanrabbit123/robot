@@ -17,6 +17,10 @@ module.exports = function (proid, info) {
         let tempArr;
         let data, raw;
 
+        console.log(client.requests[requestNumber]);
+
+        console.log(request, analytics);
+
         if (document.getElementById(idId) !== null) {
           await injectionInput(document.getElementById(idId), "info.eform.id");
           await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
