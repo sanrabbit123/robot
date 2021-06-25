@@ -159,7 +159,10 @@ module.exports = function (proid, info) {
 
       console.log(document.querySelector(".Select-menu-outer"));
       console.log(document.querySelector(".Select-menu-outer").children);
-
+      for (let dom of document.querySelector(".Select-menu-outer").children) {
+        console.log(dom);
+        console.log(dom.children);
+      }
 
 
     }
