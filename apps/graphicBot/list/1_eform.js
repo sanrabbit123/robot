@@ -51,7 +51,7 @@ module.exports = function (proid, info) {
         await injectionInput(document.getElementById(id), value);
       }
 
-      await scrollWindow(scrollXPoint, "center", -12);
+      scrollTo(document.getElementById("canvasBox"), document.getElementById("field_DATE_5faa618f9da73962a9050ef7"), document.getElementById("header").getBoundingClientRect().height * 3);
 
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef7"));
       await sleep(200);
@@ -69,7 +69,6 @@ module.exports = function (proid, info) {
 
       await sleep(200);
       await clickElement(document.getElementById("field_DATE_5faa618f9da73962a9050ef9"));
-
       await sleep(1000);
 
       map = [
@@ -81,8 +80,6 @@ module.exports = function (proid, info) {
       for (let { id, value } of map) {
         await calendarInput(document.getElementById(id), value, calendarBox);
       }
-
-      await scrollWindow(scrollXPoint, "center", -6);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050ef5", value: "배창규" },
@@ -99,22 +96,22 @@ module.exports = function (proid, info) {
         { id: "field_TEXT_5faa618f9da73962a9050f03", value: "홈스타일링" },
       ];
 
+      scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0]), document.getElementById("header").getBoundingClientRect().height * 3);
+
       for (let { id, value } of map) {
         await injectionInput(document.getElementById(id), value);
       }
-
-      await scrollWindow(scrollXPoint, "center", -16);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050f05", value: "330000" },
         { id: "field_TEXT_5faa618f9da73962a9050f06", value: "33000" },
       ];
 
+      scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0]), document.getElementById("header").getBoundingClientRect().height * 3);
+
       for (let { id, value } of map) {
         await injectionInput(document.getElementById(id), value);
       }
-
-      await scrollWindow(scrollXPoint, "center", -172);
 
       map = [
         { id: "field_TEXT_5faa618f9da73962a9050f16", value: "배창규" },
