@@ -57,6 +57,12 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
+    const res = await requestSystem("http://172.30.1.4:3000/form", clients[0], { headers: { "Content-type": "application/json" } });
+    console.log(res);
+
+
+
     /*
 
     const MONGOC = this.MONGOC;
@@ -107,7 +113,7 @@ DevContext.prototype.launching = async function () {
     // console.log(designers[0])
     // console.log(designers[0].analytics.etc.personality)
 
-    
+
 
 
 

@@ -4,6 +4,7 @@ module.exports = function (proid, info) {
     "key_f12",
     async function () {
       try {
+        const client = equalJson(JSON.stringify(POSTCONST));
         const today = new Date();
         const idId = "sign-in-id";
         const passwordId = "sign-in-pw";
@@ -159,7 +160,7 @@ module.exports = function (proid, info) {
         }
         await clickElement(document.getElementById("react-select-9--option-3"));
 
-        console.log(POSTCONST);
+        console.log(client);
 
         // await sleep(500);
         // document.querySelectorAll('.btn-router')[1].click();
