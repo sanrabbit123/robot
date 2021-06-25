@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
     const designer = await back.getDesignerById(project.desid, { selfMongo });
 
 
-    const res = await requestSystem("http://172.30.1.4:3000/form", { requestNumber: 0, client, designer, project }, { headers: { "Content-type": "application/json" } });
+    const res = await requestSystem("http://172.30.1.4:3000/form", { requestNumber: 0, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
     console.log(res);
 
 
