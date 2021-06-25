@@ -372,6 +372,13 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     let frontFirst, frontEnd;
 
     frontFirst = "\n\n";
+    if (typeof arg === "string") {
+      frontFirst += "const POSTCONST = \"" + arg + "\"\n\n";
+    } else if (typeof arg === "object") {
+      frontFirst += "const POSTCONST = " + JSON.stringify(arg) + "\n\n";
+    } else {
+      frontFirst += "const POSTCONST = " + String(arg) + "\n\n";
+    }
     frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
     frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
     frontFirst += "const HOSTCONST = \"http://localhost:3000\"\n\n";
@@ -481,6 +488,25 @@ GraphicBot.prototype.positionWatch = function () {
 GraphicBot.prototype.startWork = function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
+  const isJson = function (str) {
+    if (typeof str !== "string") {
+      throw new Error("must be string input");
+    }
+    let json;
+    str = str.trim();
+    if (/^[\{\[]/.test(str) && /[\}\]]$/.test(str)) {
+      try {
+        json = JSON.parse(str);
+        if (typeof json === "object" && json !== null) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   return async function () {
     try {
       instance.task = null;
@@ -503,7 +529,11 @@ GraphicBot.prototype.startWork = function () {
         shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
       }
       for (let { task, contents } of workingList) {
-        await instance.botOrders(task, contents);
+        if (isJson(contents)) {
+          await instance.botOrders(task, JSON.parse(contents));
+        } else {
+          await instance.botOrders(task, contents);
+        }
       }
       instance.doing = 0;
     } catch (e) {
@@ -971,7 +1001,7 @@ GraphicBot.prototype.botServer = async function () {
           clearTimeout(instance.task);
           instance.task = null;
         }
-        instance.task = setTimeout(instance.startWork(), 5000);
+        instance.task = setTimeout(instance.startWork(), 3000);
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -992,7 +1022,7 @@ GraphicBot.prototype.botServer = async function () {
           clearTimeout(instance.task);
           instance.task = null;
         }
-        instance.task = setTimeout(instance.startWork(), 5000);
+        instance.task = setTimeout(instance.startWork(), 3000);
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -1005,15 +1035,15 @@ GraphicBot.prototype.botServer = async function () {
       }
     });
 
-    app.get("/form", async (req, res) => {
+    app.post("/form", async (req, res) => {
       try {
         const taskNumber = 1;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
           instance.task = null;
         }
-        instance.task = setTimeout(instance.startWork(), 5000);
+        instance.task = setTimeout(instance.startWork(), 3000);
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
