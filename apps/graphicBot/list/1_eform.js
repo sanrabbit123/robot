@@ -135,9 +135,9 @@ module.exports = function (proid, info) {
         while (document.querySelector("#sendFormName") === null || document.querySelector("#sendFormName") === undefined) {
           await sleep(500);
         }
+        await sleep(1000);
 
         tempArr = dateToString(today).split('-');
-
         await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
         tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
@@ -160,6 +160,12 @@ module.exports = function (proid, info) {
 
         await sleep(500);
         document.querySelectorAll('.btn-router')[1].click();
+        await sleep(500);
+
+        while (document.querySelector(".confirm") === null) {
+          await sleep(500);
+        }
+        document.querySelector(".confirm").click();
 
       } catch (e) {
         console.log(e);
