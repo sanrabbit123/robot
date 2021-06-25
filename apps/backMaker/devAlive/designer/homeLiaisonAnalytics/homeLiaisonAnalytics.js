@@ -148,20 +148,22 @@ PurchaseAnalytics.prototype.toNormal = function () {
 //styling
 
 const StylingFabric = function (json) {
-  this.curtain = json.curtain;
-  this.bedding = json.bedding;
-  this.method = new Menu(json.method, [
+  this.curtain = new Menu(json.curtain, [
     "업체 연결",
     "기성 제품 추천",
     "직접 제작"
-  ], false);
+  ], true);
+  this.bedding = new Menu(json.bedding, [
+    "업체 연결",
+    "기성 제품 추천",
+    "직접 제작"
+  ], true);
 }
 
 StylingFabric.prototype.toNormal = function () {
   let obj = {};
-  obj.curtain = this.curtain;
-  obj.bedding = this.bedding;
-  obj.method = this.method.toNormal();
+  obj.curtain = this.curtain.toNormal();
+  obj.bedding = this.bedding.toNormal();
   return obj;
 }
 
@@ -409,6 +411,7 @@ const RegionAnalytics = function (json) {
   this.transportation = new Menu(json.transportation, [ "자동차", "대중교통" ], false);
   this.range = json.range;
   this.expenses = json.expenses;
+  this.construct = json.construct;
 }
 
 RegionAnalytics.prototype.toNormal = function () {
@@ -416,6 +419,7 @@ RegionAnalytics.prototype.toNormal = function () {
   obj.transportation = this.transportation.toNormal();
   obj.range = this.range;
   obj.expenses = this.expenses;
+  obj.construct = this.construct;
   return obj;
 }
 

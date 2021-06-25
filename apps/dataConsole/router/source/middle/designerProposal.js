@@ -258,7 +258,6 @@ class WordsDictionary {
 
 const DesignerProposalJs = function () {
   this.mother = new GeneralJs();
-  // this.map = new ProposalMapGenerator();
   this.margin = 0;
   this.mode = "desktop";
   this.sero = false;
@@ -344,15 +343,17 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
     service.pop();
   }
   const constructMethod = [
-    "직접 계약, 직접 감리",
-    "직접 계약, 외주 감리",
-    "협업사 계약",
-    "공정별 연결",
+    "고객 시공사",
+    "홈리에종 시공사",
+    "디자이너 시공사",
   ];
   let map = new ProposalMap();
   let career, monthAmount;
   let matrixTong;
   let constructTong;
+  let serviceNumber;
+
+  serviceNumber = Number(this.project.service.serid.split('_')[1].replace(/[^0-9]/gi, '').replace(/^0/gi, '')) - 2;
 
   monthAmount = ((today.getFullYear()) * 12 + (today.getMonth() + 1)) - ((startY * 12) + startM);
   career = `${String(Math.floor(monthAmount / 12))}년 ${String(monthAmount % 12)}개월`;
@@ -365,15 +366,21 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
   }
 
   constructTong = [];
-  for (let { contract } of constructCase) {
-    for (let i of contract) {
+  if (serviceNumber === -1) {
+    for (let { possible } of constructCase) {
+      for (let i of possible) {
+        constructTong.push(i);
+      }
+    }
+  } else {
+    for (let i of constructCase[serviceNumber].possible) {
       constructTong.push(i);
     }
   }
   constructTong = Array.from(new Set(constructTong));
 
   map.set("career", {
-    name: "경력",
+    name: "스타일링 경력",
     type: "string",
     standard: null,
     value: career
@@ -418,7 +425,7 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
     value: (design ? "가능" : "불가능")
   });
   map.set("construct", {
-    name: "시공 방식",
+    name: "시공 가능",
     type: "checkbox",
     standard: constructMethod,
     value: constructTong
@@ -430,22 +437,22 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
     value: String(Math.floor(first / 7)) + "주 이내",
   });
   map.set("curtain", {
-    name: "커튼 패브릭 제작",
-    type: "radio",
+    name: "커튼 패브릭",
+    type: "checkbox",
     standard: [
-      "가능",
-      "불가능"
+      "기성",
+      "제작"
     ],
-    value: (curtain ? "가능" : "불가능")
+    value: curtain.map((i) => { return ((/업체/gi.test(i) || /기성/gi.test(i)) ? "기성" : "제작"); }),
   });
   map.set("bedding", {
-    name: "베딩 패브릭 제작",
-    type: "radio",
+    name: "베딩 패브릭",
+    type: "checkbox",
     standard: [
-      "가능",
-      "불가능"
+      "기성",
+      "제작"
     ],
-    value: (bedding ? "가능" : "불가능")
+    value: bedding.map((i) => { return ((/업체/gi.test(i) || /기성/gi.test(i)) ? "기성" : "제작"); }),
   });
   map.set("styleTendency", {
     name: "스타일 경향성",
@@ -1415,7 +1422,8 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   //title
   designerTitle = GeneralJs.nodes.div.cloneNode(true);
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
+  // designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + this.abc[this.abcStatic] + "</b>");
   style = {
     position: "relative",
     marginLeft: String(desktop ? leftMargin : 0) + ea,
@@ -1875,7 +1883,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       style.left = String(left) + ea;
       style.width = "calc(100% - " + String(left * 2) + ea + ")";
       if (map[i].standard !== null) {
-        if (map[i].standard.length >= 4) {
+        if (JSON.parse(JSON.stringify(map[i].standard)).join('').length >= 20) {
           heightException = heightException + 0.9;
           style.height = String(height * 2) + ea;
         }
@@ -1966,7 +1974,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       if (mobile) {
         delete style.left;
         style.right = String(0) + ea;
-        style.width = String(82) + '%';
+        style.width = String(80) + '%';
         style.textAlign = "right";
       }
       for (let j in style) {
@@ -3100,7 +3108,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 108, 108, 108, 84, 20 %%>;
+  buttonWidth = <%% 92, 92, 92, 74, 17 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
   buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
@@ -3187,7 +3195,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
       designerButton.style[i] = style[i];
     }
     designerButtonText = GeneralJs.nodes.div.cloneNode(true);
-    designerButtonText.textContent = this.proposal.detail[z].designer;
+    designerButtonText.textContent = this.abc[z];
     style = {
       position: "absolute",
       top: String(buttonTextTop) + ea,
@@ -3297,7 +3305,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   style = {
     display: "inline-block",
     position: "relative",
-    width: String(buttonWidth * 1.5) + ea,
+    width: String(buttonWidth * 1.7) + ea,
     height: String(100) + '%',
     background: GeneralJs.colorChip.green,
     borderRadius: String(3) + "px",

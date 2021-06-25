@@ -17,7 +17,7 @@ module.exports = {
           detail: [],
         },
         process: {
-          status: "드랍",
+          status: "대기",
           action: "응대 대기",
           detail: [],
           outreason: [],

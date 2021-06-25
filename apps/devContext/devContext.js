@@ -57,6 +57,58 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    /*
+
+    const MONGOC = this.MONGOC;
+
+    const designers = await MONGOC.db(`miro81`).collection(`designer`).find({}).toArray();
+    let whereQuery, updateQuery;
+    let tempArr, tempObj;
+
+    for (let designer of designers) {
+      whereQuery = { desid: designer.desid };
+      updateQuery = {};
+      updateQuery["analytics.region.construct"] = 50;
+
+      tempArr = designer.analytics.styling.fabric.curtain ? [ "직접 제작" ] : [];
+      if (designer.analytics.styling.fabric.method !== "") {
+        tempArr.push(designer.analytics.styling.fabric.method);
+      }
+      tempArr = Array.from(new Set(tempArr));
+      updateQuery["analytics.styling.fabric.curtain"] = JSON.parse(JSON.stringify(tempArr));
+
+      tempArr = designer.analytics.styling.fabric.bedding ? [ "직접 제작" ] : [];
+      if (designer.analytics.styling.fabric.method !== "") {
+        tempArr.push(designer.analytics.styling.fabric.method);
+      }
+      tempArr = Array.from(new Set(tempArr));
+      updateQuery["analytics.styling.fabric.bedding"] = JSON.parse(JSON.stringify(tempArr));
+
+      tempObj = JSON.parse(JSON.stringify(designer.analytics.etc.personality[1]));
+      designer.analytics.etc.personality.splice(1, 1);
+      designer.analytics.etc.personality.unshift(tempObj);
+
+      updateQuery["analytics.etc.personality"] = designer.analytics.etc.personality;
+
+      await MONGOC.db(`miro81`).collection(`designer`).updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+
+      updateQuery = {};
+      updateQuery["analytics.styling.fabric.method"] = "";
+      await MONGOC.db(`miro81`).collection(`designer`).updateOne(whereQuery, { $unset: updateQuery });
+      console.log(whereQuery);
+    }
+
+
+    */
+
+
+
+    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC });
+    // console.log(designers)
+    // console.log(designers[0])
+    // console.log(designers[0].analytics.etc.personality)
+
 
 
 
@@ -884,13 +936,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "정창훈";
-    // const pid = "p98";
-    // const rid = "re092";
+    // const client = "박성창";
+    // const pid = "p97";
+    // const rid = "re091";
     // const links = [
-    //   "https://docs.google.com/document/d/1DqydDUs0GL4WvkVXQ6cyq8KK2F8yTp-NqZSyOf1ah0A/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/1oHKbzViu7EinXAT23z4aSzngB0kgXTw_wcRck5iYKdI/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1dTGL_g4dNtM-2dR9KpK-mEMyC2We91wZ?usp=sharing",
+    //   "https://docs.google.com/document/d/1UIhhFBgUsZyklGAQdW9svlK_kmVhyJoQAQaLXHKLJV4/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/13NGZH4ux3oriPY2J7Dz9_JLiN_gPE7pq4dhHytMfjjE/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1QzWo1_LqGDnFvUzPM2yomC2QT5neR3EX",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -908,7 +960,7 @@ DevContext.prototype.launching = async function () {
     // channel = "#200_web";
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
-
+    //
 
     // kakao token
     // const app = new KakaoTalk();
@@ -945,7 +997,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p98");
+    // await this.getCorePortfolio("p97");
 
 
     // aspirant to designer

@@ -1,4 +1,4 @@
-const DESIGNER_DIR = process.cwd() + "/apps/backMaker/devAlive/designer";
+const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
 const Designer = require(DESIGNER_DIR + "/designer.js");
 
 class Designers extends Array {
@@ -314,6 +314,10 @@ const withToolsArr = function (Designers) {
   }
 
   Designers.prototype.find = function (desid) {
+    return this.search(desid);
+  }
+
+  Designers.prototype.pick = function (desid) {
     return this.search(desid);
   }
 

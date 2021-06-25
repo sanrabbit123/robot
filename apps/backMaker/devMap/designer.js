@@ -69,7 +69,8 @@ module.exports = {
           region: {
             transportation: "자동차",
             range: 40,
-            expenses: 50
+            expenses: 50,
+            construct: 50
           },
           project: {
             time: {
@@ -148,9 +149,8 @@ module.exports = {
               design: false
             },
             fabric: {
-              curtain: false,
-              bedding: false,
-              method: "업체 연결",
+              curtain: [ "업체 연결" ],
+              bedding: [ "업체 연결" ]
             }
           },
           purchase: {
@@ -162,8 +162,8 @@ module.exports = {
           },
           etc: {
             personality: [
-              { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
               { name: "현장(최초) 미팅 전 심도 있게 준비하는 편", value: false },
+              { name: "고객 미팅 회수에 연연하지 않는 편", value: false },
               { name: "디자인 제안 속도가 상대적으로 빠른 편", value: false },
               { name: "디자인 기획을 리드하는 편", value: false },
               { name: "디자인 기획시 고객에게 맞추는 편", value: false },

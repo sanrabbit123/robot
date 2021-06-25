@@ -1,11 +1,11 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
-const DESIGNER_DIR = process.cwd() + "/apps/backMaker/devAlive/designer";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
+const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
 const { DateParse, Menu, Address } = require(GENERAL_DIR + "/generator.js");
 
 //contract ------------------------------------------------------------------------
 
 const Contract = function (json) {
-  this.status = new Menu(json.status, [ "협약 완료", "협약 해지", "신청 대기", "컨택중" ], false);
+  this.status = new Menu(json.status, [ "협약 완료", "협약 휴직", "협약 해지", "신청 대기", "컨택중" ], false);
   this.date = new DateParse(json.date);
 }
 

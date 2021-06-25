@@ -38,7 +38,6 @@ ContentsSns.prototype.toNormal = function () {
   return obj;
 }
 
-
 const ContentsShareDesigner = function (json) {
   this.photo = new DateParse(json.photo);
   this.contents = new DateParse(json.contents);

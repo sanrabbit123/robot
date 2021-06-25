@@ -1078,10 +1078,6 @@ const withToolsArr = function (Clients) {
     return this.search(cliid);
   }
 
-  Clients.prototype.sayHello = function () {
-    console.log("hi");
-  }
-
   return Clients;
 }
 

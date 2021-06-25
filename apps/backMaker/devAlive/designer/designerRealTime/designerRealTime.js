@@ -1,5 +1,5 @@
-const GENERAL_DIR = process.cwd() + "/apps/backMaker/devAlive/general";
-const DESIGNER_DIR = process.cwd() + "/apps/backMaker/devAlive/designer";
+const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
+const DESIGNER_DIR = process.cwd() + "/apps/backMaker/alive/designer";
 
 const AvailableDate = function (json) {
   this.value = json;

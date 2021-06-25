@@ -560,6 +560,38 @@ const withToolsArr = function (Projects) {
     return this.search(proid);
   }
 
+  Projects.prototype.searchByCliid = function (cliid, isContract = false) {
+    if (cliid === undefined) {
+      throw new Error("must be cliid");
+    }
+    let result = null;
+    let final = null;
+    if (!isContract) {
+      for (let i of this) {
+        if (i.cliid === cliid) {
+          result = i;
+          break;
+        }
+      }
+      return result;
+    } else {
+      result = [];
+      for (let i of this) {
+        if (/^d/.test(i.desid)) {
+          if (i.cliid === cliid) {
+            result.push(i);
+          }
+        }
+      }
+      final = [];
+      for (let i of result) {
+        if (i.process.contract.first.date.valueOf() > (new Date(2000, 0, 1).valueOf())) {
+          final.push(i);
+        }
+      }
+      return final;
+    }
+  }
   return Projects;
 }
 

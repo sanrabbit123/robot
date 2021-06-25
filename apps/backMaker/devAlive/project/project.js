@@ -40,4 +40,17 @@ Project.prototype.toNormal = function () {
   return obj;
 }
 
+Project.prototype.selectProposal = function (desid) {
+  if (typeof desid !== "string") {
+    throw new Error("must be desid");
+  }
+  let target = null;
+  for (let obj of this.proposal.detail) {
+    if (obj.desid === desid) {
+      target = obj;
+    }
+  }
+  return target;
+}
+
 module.exports = Project;

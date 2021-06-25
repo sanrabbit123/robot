@@ -748,6 +748,30 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "string",
         },
         {
+          name: "시공 한계 범위",
+          value: function (designer) {
+            return String(designer.analytics.region.construct) + "km";
+          },
+          update: function (text, designer) {
+            const errorObj = { updateQuery: "error", text: "error" };
+            let updateQuery;
+            let divText;
+            let tempArr, tempObj;
+            updateQuery = {};
+            divText = "";
+            text = Number(text.replace(/[^0-9]/gi, ''));
+            updateQuery["analytics.region.construct"] = text;
+            divText = String(text) + "km";
+            if (Number.isNaN(text)) {
+              return errorObj;
+            } else {
+              return { updateQuery, text: divText };
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
           name: "이동 수단",
           value: function (designer) {
             let contents, value;
@@ -1591,61 +1615,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "커튼 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.fabric.curtain ? 1 : 0,
-              designer.analytics.styling.fabric.curtain ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.styling.fabric.curtain";
-            let updateQuery;
-            updateQuery = {};
-            updateQuery[position] = (value[0] === 1);
-            return updateQuery;
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "베딩 제작",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.styling.fabric.bedding ? 1 : 0,
-              designer.analytics.styling.fabric.bedding ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.styling.fabric.bedding";
-            let updateQuery;
-            updateQuery = {};
-            updateQuery[position] = (value[0] === 1);
-            return updateQuery;
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
-        {
-          name: "패브릭 발주",
+          name: "커튼 패브릭",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -1655,7 +1625,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
             ];
             value = [];
             for (let i of contents) {
-              if (designer.analytics.styling.fabric.method === i) {
+              if (designer.analytics.styling.fabric.curtain.includes(i)) {
                 value.push(1);
               } else {
                 value.push(0);
@@ -1670,22 +1640,67 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
               "기성 제품 추천",
               "직접 제작"
             ];
-            target = null;
+            target = [];
             for (let i = 0; i < contents.length; i++) {
               if (value[i] === 1) {
-                target = contents[i];
+                target.push(contents[i]);
               }
             }
-            if (target === null) {
-              target = contents[0];
+            if (target.length === 0) {
+              target = [ contents[0] ];
             }
-            return { "analytics.styling.fabric.method": target };
+            return { "analytics.styling.fabric.curtain": target };
+          },
+          height: desktop ? factorHeight : factorHeight * 1.8,
+          width: factorWidth,
+          totalWidth: factorWidth * 4,
+          factorHeight: factorHeight,
+          type: "matrix",
+          multiple: true,
+        },
+        {
+          name: "베딩 패브릭",
+          value: function (designer) {
+            let contents, value;
+            contents = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (designer.analytics.styling.fabric.bedding.includes(i)) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return { contents, value };
+          },
+          update: function (value, designer) {
+            let contents, target;
+            contents = [
+              "업체 연결",
+              "기성 제품 추천",
+              "직접 제작"
+            ];
+            target = [];
+            for (let i = 0; i < contents.length; i++) {
+              if (value[i] === 1) {
+                target.push(contents[i]);
+              }
+            }
+            if (target.length === 0) {
+              target = [ contents[0] ];
+            }
+            return { "analytics.styling.fabric.bedding": target };
           },
           height: desktop ? factorHeight * 1.5 : factorHeight * 2.9,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          multiple: true,
         },
         {
           name: "스타일 경향성",
@@ -1924,8 +1939,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           value: function (designer) {
             let contents, value;
             contents = [
-              "제공",
-              "미제공"
+              "직접",
+              "연결"
             ];
             value = [
               designer.analytics.purchase.setting.install ? 1 : 0,
@@ -1951,8 +1966,8 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           value: function (designer) {
             let contents, value;
             contents = [
-              "가능",
-              "불가능"
+              "연결",
+              "미제공"
             ];
             value = [
               designer.analytics.purchase.setting.storage ? 1 : 0,
@@ -1979,7 +1994,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       name: "성격",
       children: [
         {
-          name: "미팅 적극성",
+          name: "미팅 준비성",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -2006,7 +2021,7 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "미팅 준비성",
+          name: "응대 적극성",
           value: function (designer) {
             let contents, value;
             contents = [
@@ -2087,12 +2102,12 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
           type: "matrix",
         },
         {
-          name: "고객 맞춤",
+          name: "고객 공감 대응",
           value: function (designer) {
             let contents, value;
             contents = [
-              "적극",
-              "소극"
+              "높음",
+              "낮음"
             ];
             value = [
               designer.analytics.etc.personality[4].value ? 1 : 0,
@@ -4216,7 +4231,7 @@ DesignerJs.prototype.checkListView = async function () {
     let searchResult;
 
     this.designers = new Designers(designers);
-    this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
+    this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
     this.modes = [ "checklist", "report" ];
     this.mode = this.modes[0];
