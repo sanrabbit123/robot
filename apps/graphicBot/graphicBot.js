@@ -388,6 +388,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const dateToString = " + this.frontGeneral.dateToString.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
     frontFirst += "const getDateMatrix = " + this.frontGeneral.getDateMatrix.toString() + ";\n\n";
+    frontFirst += "const serviceParsing = " + this.frontGeneral.serviceParsing.toString() + ";\n\n";
+    frontFirst += "const autoComma = " + this.frontGeneral.autoComma.toString() + ";\n\n";
+
     frontFirst += "const injectionInput = " + this.frontGeneral.injectionInput.toString() + ";\n\n";
     frontFirst += "const scrollTo = " + this.frontGeneral.scrollTo.toString() + ";\n\n";
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";

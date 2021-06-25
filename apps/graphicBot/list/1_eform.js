@@ -4,7 +4,8 @@ module.exports = function (proid, info) {
     "key_f12",
     async function () {
       try {
-        const client = equalJson(JSON.stringify(POSTCONST));
+        const { requestNumber, client, project, designer } = equalJson(JSON.stringify(POSTCONST));
+        const { request, analytics } = client.requests[requestNumber];
         const today = new Date();
         const idId = "sign-in-id";
         const passwordId = "sign-in-pw";
@@ -12,7 +13,7 @@ module.exports = function (proid, info) {
         const menuId = "btnMenuMyForms";
         const buttonQuery = ".bePCOT";
         const popupQuery = "section.sc-fvxABq";
-        let map, scrollXPoint;
+        let map;
         let tempArr;
         let data, raw;
 
@@ -45,12 +46,10 @@ module.exports = function (proid, info) {
 
         await sleep(1000);
 
-        scrollXPoint = 120;
-
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050ef4", value: "배창규" },
-          { id: "field_TEXT_5faa6196b3c0673961000001", value: "주소" },
-          { id: "field_TEXT_5faa618f9da73962a9050ef6", value: "배창규" },
+          { id: "field_TEXT_5faa618f9da73962a9050ef4", value: client.name },
+          { id: "field_TEXT_5faa6196b3c0673961000001", value: request.space.address },
+          { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.name },
         ];
 
         for (let { id, value } of map) {
@@ -78,9 +77,9 @@ module.exports = function (proid, info) {
         await sleep(1000);
 
         map = [
-          { id: "field_DATE_5faa618f9da73962a9050ef7", value: "2021-07-21" },
-          { id: "field_DATE_5faa618f9da73962a9050ef9", value: "2021-09-01" },
-          { id: "field_DATE_5faa618f9da73962a9050efa", value: "2021-02-02" },
+          { id: "field_DATE_5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) },
+          { id: "field_DATE_5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) },
+          { id: "field_DATE_5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) },
         ];
 
         for (let { id, value } of map) {
@@ -88,18 +87,18 @@ module.exports = function (proid, info) {
         }
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050ef5", value: "배창규" },
-          { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: "가족구성원" },
-          { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: "주소" },
-          { id: "field_TEXT_5faa618f9da73962a9050f01", value: "1,000만원" },
-          { id: "field_TEXT_5faa618f9da73962a9050f02", value: "전경화" },
-          { id: "field_TEXT_5faa618f9da73962a9050efb", value: "자가" },
-          { id: "field_TEXT_5faa618f9da73962a9050efd", value: "2020-01-01" },
-          { id: "field_TEXT_5faa618f9da73962a9050efe", value: "2020-01-01" },
-          { id: "field_TEXT_5faa618f9da73962a9050efc", value: "2020-01-01" },
-          { id: "field_TEXT_5faa618f9da73962a9050eff", value: "34평" },
-          { id: "field_TEXT_AREA_5faa618f9da73962a9050f00", value: "방 3개 / 화장실 2개" },
-          { id: "field_TEXT_5faa618f9da73962a9050f03", value: "홈스타일링" },
+          { id: "field_TEXT_5faa618f9da73962a9050ef5", value: client.name },
+          { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: request.family },
+          { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: request.space.address },
+          { id: "field_TEXT_5faa618f9da73962a9050f01", value: request.budget },
+          { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer },
+          { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
+          { id: "field_TEXT_5faa618f9da73962a9050efd", value: dateToString(analytics.date.space.precheck) },
+          { id: "field_TEXT_5faa618f9da73962a9050efe", value: dateToString(analytics.date.space.empty) },
+          { id: "field_TEXT_5faa618f9da73962a9050efc", value: dateToString(analytics.date.space.movein) },
+          { id: "field_TEXT_5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
+          { id: "field_TEXT_AREA_5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
+          { id: "field_TEXT_5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
         ];
 
         scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
@@ -109,8 +108,8 @@ module.exports = function (proid, info) {
         }
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050f05", value: "330000" },
-          { id: "field_TEXT_5faa618f9da73962a9050f06", value: "33000" },
+          { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.supply - project.process.contract.first.calculation.amount) },
+          { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.consumer) },
         ];
 
         scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
@@ -120,10 +119,10 @@ module.exports = function (proid, info) {
         }
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050f16", value: "배창규" },
-          { id: "field_TEXT_5faa618f9da73962a9050f1a", value: "배창규" },
-          { id: "field_TEXT_5faa61beb3c0673961000002", value: "주소" },
-          { id: "field_TEXT_5faa618f9da73962a9050f19", value: "배창규" },
+          { id: "field_TEXT_5faa618f9da73962a9050f16", value: client.name },
+          { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.name },
+          { id: "field_TEXT_5faa61beb3c0673961000002", value: request.space.address },
+          { id: "field_TEXT_5faa618f9da73962a9050f19", value: client.name },
         ];
 
         scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
@@ -140,7 +139,7 @@ module.exports = function (proid, info) {
         await sleep(1000);
 
         tempArr = dateToString(today).split('-');
-        await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
+        await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + client.name + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
         tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
         while (tempArr.length < 3) {
@@ -148,9 +147,9 @@ module.exports = function (proid, info) {
           tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
         }
 
-        await injectionInput(tempArr[0], "배창규", true);
-        await injectionInput(tempArr[1], "uragenbooks@gmail.com", true);
-        await injectionInput(tempArr[2], String("010-2747-3403").replace(/[^0-9]/g, ''), true);
+        await injectionInput(tempArr[0], client.name, true);
+        await injectionInput(tempArr[1], client.email, true);
+        await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
         await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
         await sleep(1000);
@@ -160,7 +159,10 @@ module.exports = function (proid, info) {
         }
         await clickElement(document.getElementById("react-select-9--option-3"));
 
-        console.log(client);
+
+
+
+
 
         // await sleep(500);
         // document.querySelectorAll('.btn-router')[1].click();

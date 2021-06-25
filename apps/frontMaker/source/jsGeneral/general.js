@@ -1624,6 +1624,42 @@ GeneralJs.stringToDate = function (str) {
   }
 }
 
+GeneralJs.serviceParsing = function (serviceObj) {
+  if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
+    throw new Error("invaild service object");
+  }
+  const { online, serid, xValue } = serviceObj;
+  let finalWords;
+
+  if (online) {
+    finalWords = "온라인 ";
+  } else {
+    finalWords = "오프라인 ";
+  }
+
+  if (/aa01s/gi.test(serid)) {
+    finalWords += "홈퍼니싱 ";
+  } else if (/aa02s/gi.test(serid)) {
+    finalWords += "홈스타일링 ";
+  } else if (/aa03s/gi.test(serid)) {
+    finalWords += "토탈 스타일링 ";
+  } else {
+    throw new Error("invaild service object");
+  }
+
+  if (/M/gi.test(xValue)) {
+    finalWords += "mini";
+  } else if (/B/gi.test(xValue)) {
+    finalWords += "basic ";
+  } else if (/P/gi.test(xValue)) {
+    finalWords += "premium";
+  } else {
+    throw new Error("invaild service object");
+  }
+
+  return finalWords;
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

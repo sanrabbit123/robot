@@ -57,8 +57,13 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
-    const res = await requestSystem("http://172.30.1.4:3000/form", clients[0], { headers: { "Content-type": "application/json" } });
+    const selfMongo = this.MONGOLOCALC;
+    const project = await back.getProjectById("p2106_aa16s", { selfMongo });
+    const client = await back.getClientById(project.cliid, { selfMongo });
+    const designer = await back.getDesignerById(project.desid, { selfMongo });
+
+
+    const res = await requestSystem("http://172.30.1.4:3000/form", { requestNumber: 0, client, designer, project }, { headers: { "Content-type": "application/json" } });
     console.log(res);
 
 
