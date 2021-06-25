@@ -124,18 +124,20 @@ module.exports = function (proid, info) {
         { id: "field_TEXT_5faa618f9da73962a9050f19", value: "배창규" },
       ];
 
+      scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
+
       for (let { id, value } of map) {
         await injectionInput(document.getElementById(id), value);
       }
 
       document.querySelectorAll("#header .btn-router")[1].click();
 
-      await sleep(500);
+      await sleep(1000);
 
       tempArr = dateToString(today).split('-');
       document.getElementById("sendFormName").value = "홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
 
-      tempArr = document.querySelector(".receiver-ul").querySelectorAll("input")
+      tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
       tempArr[0].value = "배창규";
       tempArr[1].value = "uragenbooks@gmail.com";
       tempArr[2].value = String("010-2747-3403").replace(/[^0-9]/g, '');
