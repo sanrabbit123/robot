@@ -152,7 +152,15 @@ module.exports = function (proid, info) {
 
       await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
       await sleep(500);
-      await clickElement(document.querySelector(".Select-menu-outer").children[3]);
+
+      while (document.querySelector(".Select-menu-outer") === null) {
+        await sleep(500);
+      }
+
+      console.log(document.querySelector(".Select-menu-outer"));
+      console.log(document.querySelector(".Select-menu-outer").children);
+
+
 
     }
   ];
