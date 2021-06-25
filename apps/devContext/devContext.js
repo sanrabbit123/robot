@@ -57,14 +57,12 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const selfMongo = this.MONGOLOCALC;
-    const project = await back.getProjectById("p2106_aa16s", { selfMongo });
-    const client = await back.getClientById(project.cliid, { selfMongo });
-    const designer = await back.getDesignerById(project.desid, { selfMongo });
-
-
-    const res = await requestSystem("http://172.30.1.4:3000/form", { requestNumber: 0, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
-    console.log(res);
+    // const selfMongo = this.MONGOLOCALC;
+    // const project = await back.getProjectById("p2106_aa16s", { selfMongo });
+    // const client = await back.getClientById(project.cliid, { selfMongo });
+    // const designer = await back.getDesignerById(project.desid, { selfMongo });
+    // const res = await requestSystem("http://172.30.1.4:3000/form", { requestNumber: 0, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+    // console.log(res);
 
 
 
