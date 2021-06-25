@@ -107,11 +107,9 @@ module.exports = function (proid, info) {
           await injectionInput(document.getElementById(id), value, true);
         }
 
-        console.log(project.process.contract.remain.calculation);
-        console.log(project.process.contract.first.calculation)
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.supply - project.process.contract.first.calculation.amount) },
-          { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.consumer) },
+          { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.supply - project.process.contract.first.calculation.amount) },
+          { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
         ];
 
         scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
