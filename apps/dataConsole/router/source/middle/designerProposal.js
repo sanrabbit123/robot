@@ -649,7 +649,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   }
   const spaceToString = function (obj) {
     const { bathroom, room, valcony } = obj;
-    return `${String(room)} / ${String(bathroom)} / 확장${valcony ? "" : " 없음"}`;
+    return `방 ${String(room)}${desktop ? "개" : ""}, 화장실 ${String(bathroom)}${desktop ? "개" : ""}`;
   }
   let whiteBlock;
   let style;
@@ -725,21 +725,36 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 630, 672, 570, 478, 630 %%>;
+  factorBoxWidth = <%% 940, 672, 570, 478, 630 %%>;
   factorBoxTop = <%% 100, 100, 100, 82, 9 %%>;
   factorBoxTopVisual = <%% 3, 11, 9, 1, 3 %%>;
 
   factorPaddingLeft = <%% 10, 10, 10, 10, 16 %%>;
   factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
   factorSize = <%% 17.5, 17.5, 17.5, 14, 3.5 %%>;
-  factors = [
-    { title: "예산", value: request.budget },
-    { title: "가족 구성원", value: request.family },
-    { title: "면적", value: String(request.space.pyeong) + "평" },
-    { title: "계약 형태", value: request.space.contract },
-    { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
-    { title: "공간 상태", value: spaceToString(request.space.spec) }
-  ];
+
+  if (media[0]) {
+    factors = [
+      { title: "추천 서비스", value: GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') },
+      { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
+      { title: "대상 면적", value: String(request.space.pyeong) + "평" },
+      { title: "대상 공간", value: spaceToString(request.space.spec) },
+      { title: "출장비 여부", value: "없음" },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
+      { title: "계약 형태", value: request.space.contract },
+      { title: "예산", value: request.budget },
+    ];
+  } else {
+    factors = [
+      { title: "추천 서비스", value: (desktop ? GeneralJs.serviceParsing(this.project.service).split(' ').slice(1).join(' ') : GeneralJs.serviceParsing(this.project.service).split(' ')[1]) },
+      { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
+      { title: "대상 면적", value: String(request.space.pyeong) + "평" },
+      { title: "대상 공간", value: spaceToString(request.space.spec) },
+      { title: "출장비 여부", value: "없음" },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected) },
+    ];
+  }
+
   factorsValueDoms = new Array(factors.length);
   factorsBarDoms = new Array(factors.length);
   factorsBarHeadDoms = new Array(factors.length);
@@ -1073,6 +1088,10 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     paddingRight: String(factorPaddingLeft * 2) + ea,
   };
 
+  if (media[0]) {
+    factorStyle.width = "calc(calc(100% / " + String(3) + ") - " + String(factorPaddingLeft * 3) + ea + ")";
+  }
+
   factorTitleStyle = {
     position: "absolute",
     fontSize: String(factorSize) + ea,
@@ -1113,6 +1132,15 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   };
 
   for (let i = 0; i < factors.length; i++) {
+
+    if (media[0]) {
+      if (i === 1) {
+        factorStyle.marginRight = String(factorPaddingLeft * 10) + ea;
+      } else {
+        factorStyle.marginRight = String(0) + ea;
+      }
+    }
+
     clientFactor = GeneralJs.nodes.div.cloneNode(true);
     for (let j in factorStyle) {
       clientFactor.style[j] = factorStyle[j];
@@ -1132,13 +1160,6 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     clientFactor.appendChild(factorBar);
     factorsBarDoms[i] = factorBar;
 
-    // factorArrowHead = GeneralJs.nodes.div.cloneNode(true);
-    // for (let j in factorArrowHeadStyle) {
-    //   factorArrowHead.style[j] = factorArrowHeadStyle[j];
-    // }
-    // clientFactor.appendChild(factorArrowHead);
-    // factorsBarHeadDoms[i] = factorArrowHead;
-
     factorValue = GeneralJs.nodes.div.cloneNode(true);
     factorValue.textContent = factors[i].value;
     for (let j in factorValueStyle) {
@@ -1150,111 +1171,88 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     factorBox.appendChild(clientFactor);
   }
 
-  //fix arrow width and head
-  // GeneralJs.timeouts["factorsValueDoms"] = setTimeout(function () {
-  //   let width;
-  //   let spaceException;
-  //   for (let i = 0; i < factorsValueDoms.length; i++) {
-  //     width = factorsBarDoms[i].getBoundingClientRect().width - factorsValueDoms[i].getBoundingClientRect().width - factorValueMargin;
-  //     if (desktop && !GeneralJs.isMac()) {
-  //       spaceException = ([ ...factorsValueDoms[i].textContent.matchAll(/[ ]/g) ]).length;
-  //       if (spaceException > 2) {
-  //         spaceException = spaceException / 2;
-  //       }
-  //       spaceException = (2 * spaceException);
-  //       width = width + spaceException;
-  //     } else if (mobile) {
-  //       width = width + 4;
-  //     }
-  //     factorsBarDoms[i].style.width = String(width + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
-  //     factorsBarHeadDoms[i].style.left = String(width - factorValueHeadMargin + (GeneralJs.isMac() || mobile ? 0 : 0)) + "px";
-  //   }
-  //   clearTimeout(GeneralJs.timeouts["factorsValueDoms"]);
-  //   GeneralJs.timeouts["factorsValueDoms"] = null;
-  // }, 0);
-
   rightBox.appendChild(factorBox);
 
-  if (media[0]) {
-    //designer box
-    designerBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      bottom: String(factorValueBottom - factorBoxTopVisual + 1) + ea,
-      right: String(titleLeft) + ea,
-      width: String(desigerBoxWidth) + ea,
-      height: String(desigerBoxHeight) + ea,
-    };
-    for (let i in style) {
-      designerBox.style[i] = style[i];
-    }
-
-    designerTitle = GeneralJs.nodes.div.cloneNode(true);
-    designerTitle.textContent = "추천 디자이너 :";
-    style = {
-      position: "absolute",
-      top: String(designerFactorTitleTop) + ea,
-      left: String(1) + ea,
-      fontSize: String(designerFactorTitleSize) + ea,
-      fontWeight: String(400),
-    };
-    for (let i in style) {
-      designerTitle.style[i] = style[i];
-    }
-    designerBox.appendChild(designerTitle);
-    pastBlocks.push(designerTitle);
-
-    for (let i = 0; i < targetDesigners.length; i++) {
-      if (i % 3 === 0) {
-        for (let dom of pastBlocks) {
-          dom.style.top = String(Number(dom.style.top.replace(/[^0-9\.\-]/gi, '')) - (targetDesignerBoxIndent * Math.floor(i / 3))) + ea;
-        }
-      }
-      designerFactor = GeneralJs.nodes.div.cloneNode(true);
-      designerFactor.textContent = targetDesigners[targetDesigners.length - 1 - i];
-      style = {
-        fontSize: String(designerFactorSize) + ea,
-        fontWeight: String(500),
-        width: "calc(100% / 3)",
-        display: "inline-block",
-        position: "absolute",
-        top: String(targetDesignerBoxTop) + ea,
-        textAlign: ([ "left", "center", "right" ])[3 - 1 - (i % 3)],
-        left: "calc(calc(100% / 3) * " + String(3 - 1 - (i % 3)) + ")",
-      };
-      for (let j in style) {
-        designerFactor.style[j] = style[j];
-      }
-      if (i % 3 !== 1) {
-        designerBar = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          borderRight: "1px solid " + GeneralJs.colorChip.green,
-          height: String(designerFactorHeight) + ea,
-          bottom: String(designerBarBottom) + ea,
-          left: String(designerBarLeft) + ea,
-        };
-        if (i % 3 === 2) {
-          style.borderLeft = style.borderRight;
-          style.right = style.left;
-          delete style.borderRight;
-          delete style.left;
-        }
-        for (let j in style) {
-          designerBar.style[j] = style[j];
-        }
-        designerFactor.appendChild(designerBar);
-      }
-      designerBox.appendChild(designerFactor);
-      pastBlocks.push(designerFactor);
-    }
-
-    if (targetDesigners.length % 3 === 1) {
-      designerBar.parentNode.removeChild(designerBar);
-    }
-
-    rightBox.appendChild(designerBox);
-  }
+  // if (media[0]) {
+  //   //designer box
+  //   designerBox = GeneralJs.nodes.div.cloneNode(true);
+  //   style = {
+  //     position: "absolute",
+  //     bottom: String(factorValueBottom - factorBoxTopVisual + 1) + ea,
+  //     right: String(titleLeft) + ea,
+  //     width: String(desigerBoxWidth) + ea,
+  //     height: String(desigerBoxHeight) + ea,
+  //   };
+  //   for (let i in style) {
+  //     designerBox.style[i] = style[i];
+  //   }
+  //
+  //   designerTitle = GeneralJs.nodes.div.cloneNode(true);
+  //   designerTitle.textContent = "추천 디자이너 :";
+  //   style = {
+  //     position: "absolute",
+  //     top: String(designerFactorTitleTop) + ea,
+  //     left: String(1) + ea,
+  //     fontSize: String(designerFactorTitleSize) + ea,
+  //     fontWeight: String(400),
+  //   };
+  //   for (let i in style) {
+  //     designerTitle.style[i] = style[i];
+  //   }
+  //   designerBox.appendChild(designerTitle);
+  //   pastBlocks.push(designerTitle);
+  //
+  //   for (let i = 0; i < targetDesigners.length; i++) {
+  //     if (i % 3 === 0) {
+  //       for (let dom of pastBlocks) {
+  //         dom.style.top = String(Number(dom.style.top.replace(/[^0-9\.\-]/gi, '')) - (targetDesignerBoxIndent * Math.floor(i / 3))) + ea;
+  //       }
+  //     }
+  //     designerFactor = GeneralJs.nodes.div.cloneNode(true);
+  //     designerFactor.textContent = targetDesigners[targetDesigners.length - 1 - i];
+  //     style = {
+  //       fontSize: String(designerFactorSize) + ea,
+  //       fontWeight: String(500),
+  //       width: "calc(100% / 3)",
+  //       display: "inline-block",
+  //       position: "absolute",
+  //       top: String(targetDesignerBoxTop) + ea,
+  //       textAlign: ([ "left", "center", "right" ])[3 - 1 - (i % 3)],
+  //       left: "calc(calc(100% / 3) * " + String(3 - 1 - (i % 3)) + ")",
+  //     };
+  //     for (let j in style) {
+  //       designerFactor.style[j] = style[j];
+  //     }
+  //     if (i % 3 !== 1) {
+  //       designerBar = GeneralJs.nodes.div.cloneNode(true);
+  //       style = {
+  //         position: "absolute",
+  //         borderRight: "1px solid " + GeneralJs.colorChip.green,
+  //         height: String(designerFactorHeight) + ea,
+  //         bottom: String(designerBarBottom) + ea,
+  //         left: String(designerBarLeft) + ea,
+  //       };
+  //       if (i % 3 === 2) {
+  //         style.borderLeft = style.borderRight;
+  //         style.right = style.left;
+  //         delete style.borderRight;
+  //         delete style.left;
+  //       }
+  //       for (let j in style) {
+  //         designerBar.style[j] = style[j];
+  //       }
+  //       designerFactor.appendChild(designerBar);
+  //     }
+  //     designerBox.appendChild(designerFactor);
+  //     pastBlocks.push(designerFactor);
+  //   }
+  //
+  //   if (targetDesigners.length % 3 === 1) {
+  //     designerBar.parentNode.removeChild(designerBar);
+  //   }
+  //
+  //   rightBox.appendChild(designerBox);
+  // }
 
   whiteBlock.appendChild(rightBox);
 

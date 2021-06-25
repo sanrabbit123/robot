@@ -5,14 +5,10 @@ const BridgeCloud = function () {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
-
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/bridgeCloud";
-
   this.cloudHost = { inner: this.address.bridgeinfo.ip.inner, outer: this.mother.bridgeinfoObj.host, port: 3000 };
-
   this.formidable = require("formidable");
-
   this.ignorePhone = [ "010-2747-3403" ];
   this.frontHost = "https://" + this.address.frontinfo.host;
 }

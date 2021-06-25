@@ -1134,10 +1134,10 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       name: "시공",
       children: [
         {
-          name: "시공 능력",
+          name: "시공 유형",
           value: function (designer) {
             let contents, value;
-            contents = [ "1단계", "2단계", "3단계" ];
+            contents = [ "F", "J", "S" ];
             value = [ 0, 0, 0 ];
             if (value[designer.analytics.construct.level - 1] === undefined) {
               throw new Error("level error");
@@ -1487,10 +1487,10 @@ DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tenden
       name: "스타일링",
       children: [
         {
-          name: "스타일링 능력",
+          name: "스타일링 유형",
           value: function (designer) {
             let contents, value;
-            contents = [ "1단계", "2단계", "3단계" ];
+            contents = [ "F", "J", "S" ];
             value = [ 0, 0, 0 ];
             if (value[designer.analytics.styling.level - 1] === undefined) {
               throw new Error("level error");

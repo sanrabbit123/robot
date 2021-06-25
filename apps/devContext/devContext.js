@@ -102,14 +102,12 @@ DevContext.prototype.launching = async function () {
 
     */
 
-
-
     // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC });
     // console.log(designers)
     // console.log(designers[0])
     // console.log(designers[0].analytics.etc.personality)
 
-
+    
 
 
 
