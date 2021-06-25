@@ -49,7 +49,7 @@ module.exports = function (proid, info) {
         map = [
           { id: "field_TEXT_5faa618f9da73962a9050ef4", value: client.name },
           { id: "field_TEXT_5faa6196b3c0673961000001", value: request.space.address },
-          { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.name },
+          { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.phone },
         ];
 
         for (let { id, value } of map) {
@@ -120,7 +120,7 @@ module.exports = function (proid, info) {
 
         map = [
           { id: "field_TEXT_5faa618f9da73962a9050f16", value: client.name },
-          { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.name },
+          { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.phone },
           { id: "field_TEXT_5faa61beb3c0673961000002", value: request.space.address },
           { id: "field_TEXT_5faa618f9da73962a9050f19", value: client.name },
         ];
@@ -131,33 +131,33 @@ module.exports = function (proid, info) {
           await injectionInput(document.getElementById(id), value, true);
         }
 
-        // document.querySelectorAll("#header .btn-router")[1].click();
-        //
-        // while (document.querySelector("#sendFormName") === null || document.querySelector("#sendFormName") === undefined) {
-        //   await sleep(500);
-        // }
-        // await sleep(1000);
-        //
-        // tempArr = dateToString(today).split('-');
-        // await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + client.name + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
-        //
-        // tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
-        // while (tempArr.length < 3) {
-        //   await sleep(500);
-        //   tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
-        // }
-        //
-        // await injectionInput(tempArr[0], client.name, true);
-        // await injectionInput(tempArr[1], client.email, true);
-        // await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
-        //
-        // await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
-        // await sleep(1000);
-        //
-        // while (document.querySelector(".Select-menu-outer") === null) {
-        //   await sleep(500);
-        // }
-        // await clickElement(document.getElementById("react-select-9--option-3"));
+        document.querySelectorAll("#header .btn-router")[1].click();
+
+        while (document.querySelector("#sendFormName") === null || document.querySelector("#sendFormName") === undefined) {
+          await sleep(500);
+        }
+        await sleep(1000);
+
+        tempArr = dateToString(today).split('-');
+        await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + client.name + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
+
+        tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
+        while (tempArr.length < 3) {
+          await sleep(500);
+          tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
+        }
+
+        await injectionInput(tempArr[0], client.name, true);
+        await injectionInput(tempArr[1], client.email, true);
+        await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
+
+        await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
+        await sleep(1000);
+
+        while (document.querySelector(".Select-menu-outer") === null) {
+          await sleep(500);
+        }
+        await clickElement(document.getElementById("react-select-9--option-3"));
 
 
 
