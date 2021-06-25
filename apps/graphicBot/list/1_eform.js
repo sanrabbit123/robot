@@ -5,9 +5,7 @@ module.exports = function (proid, info) {
     async function () {
       try {
         const { requestNumber, client, project, designer } = equalJson(JSON.stringify(POSTCONST));
-        console.log(requestNumber);
-        console.log(client.requests[requestNumber]);
-        const { request, analytics } = client.requests[requestNumber];
+        const [ request, analytics ] = client.requests[requestNumber];
         const today = new Date();
         const idId = "sign-in-id";
         const passwordId = "sign-in-pw";
