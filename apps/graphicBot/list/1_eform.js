@@ -132,7 +132,9 @@ module.exports = function (proid, info) {
 
       document.querySelectorAll("#header .btn-router")[1].click();
 
-      await sleep(1000);
+      while (document.querySelector("#sendFormName") === null || document.querySelector("#sendFormName") === undefined) {
+        await sleep(500);
+      }
 
       tempArr = dateToString(today).split('-');
       document.getElementById("sendFormName").value = "홈스타일링계약서_" + "배창규" + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
