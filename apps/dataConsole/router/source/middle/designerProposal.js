@@ -694,10 +694,15 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   let pastBlocks;
   let designerBarBottom, designerBarLeft;
   let factorBarWhiteMargin;
+  let serviceBar;
+  let barStyle;
+  let serviceBarTop, serviceBarLeft, serviceBarWidth;
+  let indexNumberBottom;
+  let factorMarginBottom;
 
-  blockHeight = <%% this.backHeight - 460, this.backHeight - 460, this.backHeight - 460, this.backHeight - 540, this.backHeight - 460 %%>;
+  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 52, 50, 32, 52 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
   titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
@@ -725,13 +730,14 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
-  factorBoxWidth = <%% 940, 672, 570, 478, 630 %%>;
+  factorBoxWidth = <%% 940, 672, 576, 478, 630 %%>;
   factorBoxTop = <%% 100, 100, 100, 82, 9 %%>;
-  factorBoxTopVisual = <%% 3, 11, 9, 1, 3 %%>;
+  factorBoxTopVisual = <%% 12, 11, 9, 1, 3 %%>;
 
-  factorPaddingLeft = <%% 10, 10, 10, 10, 16 %%>;
+  factorPaddingLeft = <%% 10, 10, 11, 10, 16 %%>;
   factorPaddingTop = <%% 10, 10, 10, 2, 5.5 %%>;
   factorSize = <%% 17.5, 17.5, 17.5, 14, 3.5 %%>;
+  factorMarginBottom = <%% 40, 40, 40, 0, 0 %%>;
 
   if (media[0]) {
     factors = [
@@ -760,7 +766,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorsBarHeadDoms = new Array(factors.length);
 
   factorBarWidth = <%% 200, 200, 200, 200, 200 %%>;
-  factorBarTop = <%% 43, 41, 43, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
+  factorBarTop = <%% 13, 12, 11, 26 + (GeneralJs.isMac() ? 0 : 1), 8.5 %%>;
   factorArrowHeadWidth = <%% 8, 8, 8, 6, 0 %%>;
   factorArrowHeadTop = <%% 39, 37, 39, 23 + (GeneralJs.isMac() ? 0 : 1), 7 %%>;
   factorArrowHeadLeft = <%% 188, 188, 188, 188, 188 %%>;
@@ -807,6 +813,11 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     designerBarBottom = designerBarBottom + (GeneralJs.isMac() ? 0 : 3);
   }
   designerBarLeft = <%% 6, 6, 6, 6, 6 %%>;
+
+  serviceBarTop = <%% 56, 55, 56, 56, 56 %%>;
+  serviceBarLeft = <%% 0, 1, 0, 0, 0 %%>;
+  serviceBarWidth = <%% 66, 38, 37, 39, 39 %%>;
+  indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
 
   //total white box
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
@@ -935,7 +946,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       fontSize: String(indexFont) + ea,
       fontWeight: String(indexFontWeight),
       wordSpacing: String(wordSpacing) + ea,
-      bottom: String(0) + ea,
+      bottom: String(indexNumberBottom) + ea,
       left: String(titleLeft) + ea,
       color: GeneralJs.colorChip.gray4,
     };
@@ -1064,7 +1075,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     position: "relative",
     top: String(factorBoxTop + factorBoxTopVisual) + ea,
     width: String(factorBoxWidth) + ea,
-    height: "calc(100% - " + String(factorBoxTop) + ea + ")",
+    height: "calc(100% - " + String(factorBoxTop - factorBoxTopVisual) + ea + ")",
   };
   if (mobile) {
     style = {
@@ -1084,8 +1095,9 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     position: "relative",
     width: "calc(calc(100% / " + String(2) + ") - " + String(factorPaddingLeft * 2) + ea + ")",
     height: "calc(calc(100% / " + String(3) + ") - " + String(factorPaddingTop * 2) + ea + ")",
-    paddingBottom: String(factorPaddingTop * 2) + ea,
+    paddingBottom: String((!media[3] && !media[4]) ? factorPaddingTop * 0.5 : factorPaddingTop * 2) + ea,
     paddingRight: String(factorPaddingLeft * 2) + ea,
+    marginBottom: String(factorMarginBottom) + ea,
   };
 
   if (media[0]) {
@@ -1099,11 +1111,14 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     top: String(0),
     left: String(0),
     wordSpacing: String(initWordingWordSpacing) + "px",
+    background: GeneralJs.colorChip.white,
+    paddingRight: String(desktop ? 10 : 0) + ea,
+    zIndex: String(1),
   };
 
   factorBarStyle = {
     position: "absolute",
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
     width: withOut(factorValueRight, ea),
     top: String(factorBarTop) + ea,
   };
@@ -1122,7 +1137,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   factorValueStyle = {
     position: "absolute",
     fontSize: String(factorSize) + ea,
-    fontWeight: String(300),
+    fontWeight: String(500),
     color: GeneralJs.colorChip.green,
     bottom: String(factorValueBottom) + ea,
     right: String(factorValueRight) + ea,
@@ -1131,7 +1146,18 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     paddingLeft: String(factorBarWhiteMargin) + ea,
   };
 
+  if (!media[3] && !media[4]) {
+    factorValueStyle.bottom = "";
+    factorValueStyle.top = String(0);
+  }
+
   for (let i = 0; i < factors.length; i++) {
+
+    if (i === 2) {
+      factorStyle.marginBottom = String(0);
+      factorValueStyle.fontWeight = String(300);
+      factorValueStyle.color = GeneralJs.colorChip.black;
+    }
 
     if (media[0]) {
       if (i === 1) {
@@ -1169,6 +1195,21 @@ DesignerProposalJs.prototype.insertInitBox = function () {
     factorsValueDoms[i] = factorValue;
 
     factorBox.appendChild(clientFactor);
+  }
+
+  if (!media[3] && !media[4]) {
+    serviceBar = GeneralJs.nodes.div.cloneNode(true);
+    barStyle = {
+      position: "absolute",
+      borderBottom: "1px dashed " + GeneralJs.colorChip.gray4,
+      top: String(serviceBarTop) + ea,
+      left: String(serviceBarLeft) + ea,
+      width: withOut(serviceBarWidth, ea),
+    };
+    for (let i in barStyle) {
+      serviceBar.style[i] = barStyle[i];
+    }
+    factorBox.appendChild(serviceBar);
   }
 
   rightBox.appendChild(factorBox);
@@ -1809,7 +1850,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   maxNumber = 6;
 
   leftIndent = <%% 20, 6, 6, 6, 0 %%>;
-  width1 = <%% 360, 320, 450, 353, 60 %%>;
+  width1 = <%% 360, 320, 390, 353, 60 %%>;
   width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
   height = <%% 26, 24, 19, 16, 4.8 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
