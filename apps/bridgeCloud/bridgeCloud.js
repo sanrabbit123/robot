@@ -10,7 +10,6 @@ const BridgeCloud = function () {
   this.dir = process.cwd() + "/apps/bridgeCloud";
 
   this.cloudHost = { inner: this.address.bridgeinfo.ip.inner, outer: this.mother.bridgeinfoObj.host, port: 3000 };
-  this.bridge = { home: this.address.homeinfo.polling.inner, office: this.address.officeinfo.polling.inner, cloud: this.cloudHost.inner };
 
   this.formidable = require("formidable");
 
