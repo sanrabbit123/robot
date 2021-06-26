@@ -613,7 +613,7 @@ GraphicBot.prototype.positionWatch = async function () {
     boo = false;
     pastBoo = false;
 
-    for (let y = 0; y < screenSize.height.length; y++) {
+    for (let y = 0; y < screenSize.height; y++) {
       robot.moveMouse((screenSize.width * r), y);
       color = robot.getPixelColor(x, y);
       colorArr = colorParsing(color);
