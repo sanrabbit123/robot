@@ -52,7 +52,7 @@ ReceiptRouter.prototype.rou_get_bluePrint = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
-      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
+      res.send(html);
     } catch (e) {
       console.log(e);
     }
