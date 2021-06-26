@@ -526,6 +526,7 @@ GraphicBot.prototype.positionWatch = async function () {
   let mouse, color, colorArr;
   let boo, pastBoo;
   let xArr, yArr;
+  let ratio;
 
   robot.setMouseDelay(1);
 
@@ -537,6 +538,8 @@ GraphicBot.prototype.positionWatch = async function () {
 
   xArr = [];
   yArr = [];
+
+  ratio = [ (1 / 10), (1 / 2), (1 / 10) ];
 
   boo = false;
   pastBoo = false;
@@ -604,6 +607,23 @@ GraphicBot.prototype.positionWatch = async function () {
       console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
     pastBoo = boo;
+  }
+
+  for (let r of ratio) {
+    boo = false;
+    pastBoo = false;
+
+    for (let y = 0; y < screenSize.height.length; y++) {
+      robot.moveMouse((screenSize.width * r), y);
+      color = robot.getPixelColor(x, y);
+      colorArr = colorParsing(color);
+      boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+      if (boo === !pastBoo) {
+        yArr.push(y);
+        console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
+      }
+      pastBoo = boo;
+    }
   }
 
   xArr.sort((a, b) => { return a - b; });
