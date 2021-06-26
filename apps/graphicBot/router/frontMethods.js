@@ -190,6 +190,8 @@ FrontMethods.prototype.addFrontMethods = async function () {
       }
     }
 
+    return frontGeneral;
+
   } catch (e) {
     console.log(e);
   }
