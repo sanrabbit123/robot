@@ -451,7 +451,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       } else if (typeof i === "function") {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
-        await sleep(1000);
+        await sleep(3000);
         await this.moveAndClick(1622, 1030, 500, false);
         await this.clipBoard(tempString);
         await this.pasteText();
