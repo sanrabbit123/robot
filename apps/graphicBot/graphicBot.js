@@ -457,10 +457,11 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
         if (frontFirstLaunching === 0) {
           await this.pressKey("f12");
+          await sleep(500);
         } else {
           await sleep(2000);
         }
-        await this.moveAndClick(screenSize.width * (9 / 10), screenSize.height - 25, 100);
+        await this.moveAndClick(screenSize.width * (9 / 10), screenSize.height - 25, 500);
         await this.clipBoard(tempString);
         await this.pasteText();
         instance.front = 1;
