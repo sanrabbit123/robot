@@ -42,7 +42,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
 ReceiptRouter.prototype.rou_get_bluePrint = function () {
   const instance = this;
   let obj = {};
-  obj.link = '/';
+  obj.link = '/bluePrint';
   obj.func = async function (req, res) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #00ff00;}</style></head><body></body></html>`;
