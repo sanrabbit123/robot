@@ -158,11 +158,6 @@ module.exports = function (proid, info) {
         }
         await clickElement(document.getElementById("react-select-9--option-3"));
 
-
-
-
-
-
         // await sleep(500);
         // document.querySelectorAll('.btn-router')[1].click();
         // await sleep(500);

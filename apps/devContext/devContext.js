@@ -64,7 +64,7 @@ DevContext.prototype.launching = async function () {
     // const res = await requestSystem("https://home-liaison.servehttp.com:55556/form", { requestNumber: 0, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
     // console.log(res);
 
-    console.log(await requestSystem("https://home-liaison.servehttp.com:55556/cash"));
+    // console.log(await requestSystem("https://home-liaison.servehttp.com:55556/cash"));
 
     // const res = await requestSystem("https://home-liaison.servehttp.com:55556/toAiServer", { type: "proposal", id: "p2106_aa59s" }, { headers: { "Content-type": "application/json" } });
     // console.log(res);

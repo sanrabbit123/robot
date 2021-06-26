@@ -1048,7 +1048,6 @@ GraphicBot.prototype.getChromeSize = async function () {
   const { bot: robot } = this;
   try {
     await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
-    await sleep(500);
     await this.pressKey("f12");
     await sleep(500);
 
