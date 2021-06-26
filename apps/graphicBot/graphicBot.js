@@ -494,11 +494,11 @@ GraphicBot.prototype.positionWatch = async function () {
   const instance = this;
   const { bot: robot } = this;
 
-  const { sleep } = this.mother;
+  const { sleep, colorParsing } = this.mother;
 
   await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
 
-  await sleep(1000);
+  await sleep(500);
 
   await this.pressKey("f12");
 
