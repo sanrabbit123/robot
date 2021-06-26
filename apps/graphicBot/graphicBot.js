@@ -24,8 +24,13 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
   this.screenSize = this.bot.getScreenSize();
-  this.chromeHeight = 100;
-  this.chromeLeft = 56;
+  this.chromeSize = {
+    top: 99,
+    bottom: 0,
+    left: 56,
+    right: 1548,
+    cursor: 25,
+  };
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
@@ -492,91 +497,22 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
 
 GraphicBot.prototype.positionWatch = async function () {
   const instance = this;
-  const { bot: robot } = this;
-
-  const { sleep, colorParsing } = this.mother;
-
-  await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
-
-  await sleep(500);
-
-  await this.pressKey("f12");
-
-  await sleep(500);
-
-  // let mouse, color, keyName;
-  // keyName = null;
-  // this.keypress((ch, key) => {
-  //   keyName = key.name;
-  //   if (key && key.ctrl && key.name == 'c') {
-  //     process.exit();
-  //   }
-  // });
-  // setInterval(() => {
-  //   mouse = bot.getMousePos();
-  //   color = bot.getPixelColor(mouse.x, mouse.y);
-  //   if (keyName === "z") {
-  //     console.log("x:" + mouse.x + " y:" + mouse.y + " color: #" + color);
-  //   }
-  // }, 100);
-
-  let screenSize;
-  let mouse, color, colorArr;
-  let boo, pastBoo;
-  let xArr, yArr;
-  let ratio;
-  let x, y;
-
-  robot.setMouseDelay(1);
-
-  screenSize = robot.getScreenSize();
-
-  xArr = [];
-  yArr = [];
-
-  ratio = [ (1 / 10), (1 / 2), (9 / 10) ];
-
-  boo = false;
-  pastBoo = false;
-
-  for (let x = 0; x < screenSize.width; x++) {
-    robot.moveMouse(x, (screenSize.height / 2));
-    color = robot.getPixelColor(x, (screenSize.height / 2));
-    colorArr = colorParsing(color);
-    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
-    if (boo === !pastBoo) {
-      xArr.push(x);
+  const { bot } = this;
+  let mouse, color, keyName;
+  keyName = null;
+  this.keypress((ch, key) => {
+    keyName = key.name;
+    if (key && key.ctrl && key.name == 'c') {
+      process.exit();
     }
-    pastBoo = boo;
-  }
-
-  for (let r of ratio) {
-    boo = false;
-    pastBoo = false;
-
-    for (let y = 0; y < screenSize.height; y++) {
-      robot.moveMouse((screenSize.width * r), y);
-      color = robot.getPixelColor((screenSize.width * r), y);
-      colorArr = colorParsing(color);
-      boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
-      if (boo === !pastBoo) {
-        yArr.push(y);
-      }
-      pastBoo = boo;
+  });
+  setInterval(() => {
+    mouse = bot.getMousePos();
+    color = bot.getPixelColor(mouse.x, mouse.y);
+    if (keyName === "z") {
+      console.log("x:" + mouse.x + " y:" + mouse.y + " color: #" + color);
     }
-  }
-
-  xArr.sort((a, b) => { return a - b; });
-  yArr.sort((a, b) => { return a - b; });
-
-  console.log(xArr);
-  console.log(yArr);
-  console.log(screenSize);
-
-  robot.setMouseDelay(10);
-
-  await this.chromeClose();
-
+  }, 100);
 }
 
 GraphicBot.prototype.startWork = function () {
@@ -713,7 +649,9 @@ GraphicBot.prototype.botRouter = function () {
         if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
           throw new Error("must x, y, value");
         }
-        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
         const robot = instance.bot;
         let { x, y, value } = req.body;
         let text;
@@ -777,7 +715,9 @@ GraphicBot.prototype.botRouter = function () {
         if (req.body.x === undefined || req.body.y === undefined) {
           throw new Error("must be x, y");
         }
-        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
         const robot = instance.bot;
         let { x, y } = req.body;
 
@@ -809,7 +749,9 @@ GraphicBot.prototype.botRouter = function () {
         if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined || req.body.calendarBox === undefined) {
           throw new Error("must x, y, value, calendarBox");
         }
-        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
         const robot = instance.bot;
         let { x, y, value, calendarBox } = req.body;
         let today;
@@ -895,7 +837,9 @@ GraphicBot.prototype.botRouter = function () {
         if (req.body.positionX === undefined || req.body.positionY === undefined || req.body.amount === undefined) {
           throw new Error("must be positionX, positionY, amount");
         }
-        const { screenSize, chromeLeft } = instance;
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
         const robot = instance.bot;
         let { positionX, positionY, amount } = req.body;
 
@@ -1098,6 +1042,80 @@ GraphicBot.prototype.botRouter = function () {
   return resultObj;
 }
 
+GraphicBot.prototype.getChromeSize = async function () {
+  const instance = this;
+  const { sleep, colorParsing } = this.mother;
+  const { bot: robot } = this;
+  try {
+    await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
+    await sleep(500);
+    await this.pressKey("f12");
+    await sleep(500);
+
+    let screenSize;
+    let mouse, color, colorArr;
+    let boo, pastBoo;
+    let xArr, yArr;
+    let ratio;
+    let x, y;
+
+    robot.setMouseDelay(1);
+
+    screenSize = robot.getScreenSize();
+
+    xArr = [];
+    yArr = [];
+
+    ratio = [ (1 / 10), (1 / 2), (9 / 10) ];
+
+    boo = false;
+    pastBoo = false;
+
+    for (let x = 0; x < screenSize.width; x++) {
+      robot.moveMouse(x, (screenSize.height / 2));
+      color = robot.getPixelColor(x, (screenSize.height / 2));
+      colorArr = colorParsing(color);
+      boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+      if (boo === !pastBoo) {
+        xArr.push(x);
+      }
+      pastBoo = boo;
+    }
+
+    for (let r of ratio) {
+      boo = false;
+      pastBoo = false;
+
+      for (let y = 0; y < screenSize.height; y++) {
+        robot.moveMouse((screenSize.width * r), y);
+        color = robot.getPixelColor((screenSize.width * r), y);
+        colorArr = colorParsing(color);
+        boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+        if (boo === !pastBoo) {
+          yArr.push(y);
+        }
+        pastBoo = boo;
+      }
+    }
+
+    xArr.sort((a, b) => { return a - b; });
+    yArr.sort((a, b) => { return a - b; });
+
+    this.chromeSize.top = yArr[0];
+    this.chromeSize.bottom = (yArr[0] === yArr[yArr.length - 1]) ? 0 : ((yArr[yArr.length - 1] > (this.screenSize.height / 2)) ? yArr[yArr.length - 1] : 0);
+    this.chromeSize.left = (xArr[0] === xArr[xArr.length - 1]) ? 0 : xArr[0];
+    this.chromeSize.right = xArr[xArr.length - 1];
+
+    console.log(this.screenSize);
+    console.log(this.chromeSize);
+
+    robot.setMouseDelay(10);
+    await this.chromeClose();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
@@ -1159,6 +1177,8 @@ GraphicBot.prototype.botServer = async function () {
     for (let obj of routerObj.post) {
       app.post(obj.link, obj.func);
     }
+
+    await this.getChromeSize();
 
     https.createServer(pems, app).listen(this.port, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
