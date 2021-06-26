@@ -460,7 +460,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else {
           await sleep(2000);
         }
-        await this.moveAndClick(screenSize.width * (7 / 8), screenSize.height - 25, 100);
+        await this.moveAndClick(screenSize.width * (9 / 10), screenSize.height - 25, 100);
         await this.clipBoard(tempString);
         await this.pasteText();
         instance.front = 1;
