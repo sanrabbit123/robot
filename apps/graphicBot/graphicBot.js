@@ -540,8 +540,8 @@ GraphicBot.prototype.positionWatch = async function () {
   pastBoo = false;
 
   for (let x = 0; x < screenSize.width; x++) {
-    robot.moveMouse(x, (screenSize.height));
-    color = robot.getPixelColor(x, (screenSize.height));
+    robot.moveMouse(x, (screenSize.height / 2));
+    color = robot.getPixelColor(x, (screenSize.height / 2));
     colorArr = colorParsing(color);
     boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
     if (boo === !pastBoo) {
