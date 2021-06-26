@@ -46,13 +46,13 @@ const GraphicBot = function () {
     throw new Error("invaild infoObj");
   }
   this.running = {
-    illustrator: true,
+    illustrator: false,
   };
   this.firstDo = {
-    illustrator: null,
+    illustrator: true,
   };
   this.timeout = {
-    illustrator: false,
+    illustrator: null,
   };
 }
 
@@ -972,43 +972,41 @@ GraphicBot.prototype.botRouter = function () {
         await fileSystem(`writeJson`, [ targetTong + "/" + tongName + "_order_" + String((new Date()).valueOf()) + ".json", req.body ]);
         instance.firstDo[tongName] = false;
 
-        console.log(instance.timeout[tongName]);
+        //debounce clean
+        while (instance.timeout[tongName] !== null) {
+          if (instance.running[tongName]) {
+            await sleep(500);
+          } else {
+            clearTimeout(instance.timeout[tongName]);
+            instance.timeout[tongName] = null;
+          }
+        }
 
-        // //debounce clean
-        // while (instance.timeout[tongName] !== null) {
-        //   if (instance.running[tongName]) {
-        //     await sleep(500);
-        //   } else {
-        //     clearTimeout(instance.timeout[tongName]);
-        //     instance.timeout[tongName] = null;
-        //   }
-        // }
-        //
-        // //debounce timeout : illustrator
-        // instance.timeout[tongName] = setTimeout(async function () {
-        //   instance.running[tongName] = true;
-        //   const tongDir = await fileSystem(`readDir`, [ targetTong ]);
-        //   if (ip !== null) {
-        //     let targetJsons;
-        //     let aiResponse;
-        //     targetJsons = [];
-        //     for (let i of tongDir) {
-        //       targetJsons.push(await fileSystem(`readJson`, [ `${targetTong}/${i}` ]));
-        //     }
-        //     if (ip !== null) {
-        //       for (let i of targetJsons) {
-        //         await requestSystem("http://" + ip + ":8080", i, { method: "get" });
-        //       }
-        //     }
-        //   }
-        //   for (let i of tongDir) {
-        //     shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
-        //   }
-        //   instance.running[tongName] = false;
-        //   clearTimeout(instance.timeout[tongName]);
-        //   instance.firstDo[tongName] = true;
-        //   instance.timeout[tongName] = null;
-        // }, 2000);
+        //debounce timeout : illustrator
+        instance.timeout[tongName] = setTimeout(async function () {
+          instance.running[tongName] = true;
+          const tongDir = await fileSystem(`readDir`, [ targetTong ]);
+          if (ip !== null) {
+            let targetJsons;
+            let aiResponse;
+            targetJsons = [];
+            for (let i of tongDir) {
+              targetJsons.push(await fileSystem(`readJson`, [ `${targetTong}/${i}` ]));
+            }
+            if (ip !== null) {
+              for (let i of targetJsons) {
+                await requestSystem("http://" + ip + ":8080", i, { method: "get" });
+              }
+            }
+          }
+          for (let i of tongDir) {
+            shell.exec(`rm -rf ${shellLink(targetTong)}/${i}`);
+          }
+          instance.running[tongName] = false;
+          clearTimeout(instance.timeout[tongName]);
+          instance.firstDo[tongName] = true;
+          instance.timeout[tongName] = null;
+        }, 2000);
 
         res.set({
           "Content-Type": "application/json",
